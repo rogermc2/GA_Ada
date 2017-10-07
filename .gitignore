@@ -4,4 +4,5 @@ bin
 .DS_Store
 .#*#
 *~
+*.html
 bivectors
