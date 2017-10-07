@@ -1,0 +1,68 @@
+V "GNAT Lib v2017"
+A -gnatA
+A -gnatyc
+A -gnatyl
+A -gnatyu
+A -gnatyx
+A -gnatc
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+P NO FX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U multivector_type_base%s  multivector_type_base.ads  e51cd68d EE OO PK
+W ga_maths%s		ga_maths.adb		ga_maths.ali
+
+D ada.ads		20170516105951 76789da1 ada%s
+D a-numeri.ads		20170516105951 bb51c45a ada.numerics%s
+D a-ngelfu.ads		20170516105954 7e738940 ada.numerics.generic_elementary_functions%s
+D a-ngrear.ads		20170516105955 86992c51 ada.numerics.generic_real_arrays%s
+D ga_maths.ads		20171005023450 eccdf5ce ga_maths%s
+D interfac.ads		20170516105950 5ab55268 interfaces%s
+D multivector_type_base.ads  20171005023450 09d12343 multivector_type_base%s
+X 5 ga_maths.ads
+9K9*GA_Maths 100e13 7|2w6 14r52 22r25
+16M10*Unsigned_Integer
+21M13*Grade_Usage{16M10} 7|14r61 22r34
+X 7 multivector_type_base.ads
+4K9*Multivector_Type_Base 18E10 28l5 28e26
+6E10*M_Type_Type 7e59
+6n26*Invalid_Type{6E10}
+6n40*Unused_Type{6E10}
+6n53*Zero{6E10}
+6n59*Vector_Space_Model{6E10}
+6n79*Blade{6E10}
+7n26*Bivector{6E10}
+7n36*Trivector{6E10}
+7n47*Even_Versor{6E10}
+8E10*Object_Type 8e53 13r55 16r36 20r25
+8n26*Multivector{8E10} 20r40
+8n39*Versor{8E10}
+8n47*Blade{8E10}
+9E10*Parity 9e37 15r36 23r25
+9n21*None{9E10} 15r46 23r35
+9n27*Even{9E10}
+9n33*Odd{9E10}
+10R10*Type_Base 12r35 18c10 24e15
+12V14*Get_Type_Base{10R10}
+13U15*Set_Type_Base 13>30 13>46 14>30 14>47 15>30
+13b30 Zero{boolean}
+13e46 Object{8E10}
+14i30 Grade{integer}
+14m47 GU{5|21M13}
+15e30 Par{9E10}
+16U15*Set_M_Type 16>27
+16e27 M_Type{8E10}
+19b9*M_Zero{boolean}
+20e9*M_Type{8E10}
+21i9*M_Top_Grade{integer}
+22m9*M_GU{5|21M13}
+23e9*M_Parity{9E10}
+26E10 Flag 26e25
+26n19 Valid{26E10}
+

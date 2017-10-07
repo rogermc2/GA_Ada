@@ -1,0 +1,103 @@
+V "GNAT Lib v2017"
+A -gnatA
+A -gnatyc
+A -gnatyl
+A -gnatyu
+A -gnatyx
+A -mmacosx-version-min=10.12.6
+A -mtune=core2
+A -fPIC
+P ZX
+
+RN
+RV NO_FLOATING_POINT
+RV NO_UNCHECKED_CONVERSION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U ftgl%s		ftgl.ads		70d8c8d7 EE OO PK IU
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_conversion%s
+W gl%s			gl.adb			gl.ali
+W gl.types%s		gl-types.ads		gl-types.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+
+D ada.ads		20170516105951 76789da1 ada%s
+D a-unccon.ads		20170516105954 31484697 ada.unchecked_conversion%s
+D ftgl.ads		20170303224401 a87d00fc ftgl%s
+D gl.ads		20170303224401 b5cd5543 gl%s
+D gl-algebra.ads	20170323021544 87897079 gl.algebra%s
+D gl-matrices.ads	20170420013537 7eb1e31d gl.matrices%s
+D gl-types.ads		20170308072531 bdcc9f27 gl.types%s
+D gl-vectors.ads	20170323021544 236bf575 gl.vectors%s
+D interfac.ads		20170516105950 5ab55268 interfaces%s
+D i-c.ads		20170516105948 5421119b interfaces.c%s
+D i-cpoint.ads		20170516105956 ee8a93ec interfaces.c.pointers%s
+D system.ads		20170516105953 085b6ffb system%s
+D s-exctab.ads		20170516105954 54135002 system.exception_table%s
+D s-parame.ads		20170516105955 7e2a0d7f system.parameters%s
+D s-stalib.ads		20170516105955 09bd3940 system.standard_library%s
+D s-unstyp.ads		20170516105953 34867c83 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 20e8 3|19r14 60r27
+X 2 a-unccon.ads
+20v14*Unchecked_Conversion 3|19w18 60r31
+X 3 ftgl.ads
+22K9*FTGL 51E4 130l5 130e9
+25R9*Render_Mode 27e14 28r26 41r8 46r39 48r8 51r26
+26b7*Front{boolean} 42r7
+26b14*Back{boolean} 43r7
+26b20*Side{boolean} 44r7
+28r4*Render_All{25R9} 51c4
+30E9*Text_Alignment 30e57 53r8 54r8
+30n28*Left{30E9} 53r28
+30n34*Center{30E9} 53r39
+30n42*Right{30E9} 53r52
+30n49*Justify{30E9} 53r64
+32I9*Bounding_Box_Index<short_short_integer> 33r32
+33A9*Bounding_Box(7|44F9)<32I9> 56r26 57r17
+35E9*Charset 37e68 64r8 129r8
+35n21*None{35E9} 64r21
+35n27*Adobe_Custom{35E9} 110r21
+35n41*Adobe_Expert{35E9} 105r21
+35n55*Adobe_Standard{35E9} 100r21
+36n21*Apple_Roman{35E9} 125r21
+36n34*Big5{35E9} 85r21
+36n40*GB2312{35E9} 80r21
+36n48*Johab{35E9} 95r21
+36n55*Adobe_Latin_1{35E9} 115r21
+37n21*Old_Latin_2{35E9} 120r21
+37n34*SJIS{35E9} 75r21
+37n40*MS_Symbol{35E9} 65r21
+37n51*Unicode{35E9} 70r21
+37n60*Wansung{35E9} 90r21
+39X4*FTGL_Error
+59A12 Raw_Charset{10|79A9}<10|60M9> 60r53
+60V13 To_Rep[2|20]{integer}
+X 4 gl.ads
+19K9*GL 3|17r6 33r55 4|59e7
+X 5 gl-algebra.ads
+23+9 Element_Type
+25V19 "+"{23+9} 6|20i19 8|20i19
+26V19 "-"{23+9} 6|21i19 8|21i19
+27V19 "-"{23+9} 6|22i19 8|22i19
+28V19 "*"{23+9} 6|23i19 8|23i19
+29V19 "/"{23+9} 8|24i19
+X 7 gl-types.ads
+21K12*Types 3|17w9 33r58 7|186e13
+44F9*Single<10|64F9> 3|33r64
+X 9 interfac.ads
+38K9*Interfaces 3|20r14 48r29 54r32 59r27 9|184e15
+X 10 i-c.ads
+18K20*C 3|20w25 48r40 54r43 59r38 10|230e17
+35I9*int<integer> 3|48r42 54r45
+64F9*C_float<float>
+72E9*char<character>
+79A9*char_array(72E9)<60M9> 3|59r40
+

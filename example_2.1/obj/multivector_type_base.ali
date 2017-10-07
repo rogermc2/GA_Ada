@@ -1,0 +1,76 @@
+V "GNAT Lib v6"
+A -gnatA
+A -gnatyc
+A -gnatyl
+A -gnatyu
+A -gnatyx
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+P ZX
+
+RN
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U multivector_type_base%b  multivector_type_base.adb  d3cfc1a3 NE OO PK
+
+U multivector_type_base%s  multivector_type_base.ads  dbe22179 EE NE OO PK
+W ga_maths%s		ga_maths.adb		ga_maths.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-numeri.ads		20080324174807 bb51c45a ada.numerics%s
+D a-ngelfu.ads		20151016131424 b8fdcb46 ada.numerics.generic_elementary_functions%s
+D a-ngrear.ads		20120307145339 86992c51 ada.numerics.generic_real_arrays%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D ga_maths.ads		20171007030247 d233023a ga_maths%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D multivector_type_base.ads  20171006071006 09d12343 multivector_type_base%s
+D multivector_type_base.adb  20171006071006 da1ee2e0 multivector_type_base%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+X 6 ga_maths.ads
+9K9*GA_Maths 104e13 8|2w6 14r52 22r25 9|21r52
+16M10*Unsigned_Integer
+21M13*Grade_Usage{16M10} 8|14r61 22r34 9|21r61
+X 8 multivector_type_base.ads
+4K9*Multivector_Type_Base 18E10 28l5 28e26 9|2b14 33l5 33t26
+6E10*M_Type_Type 7e59
+6n26*Invalid_Type{6E10}
+6n40*Unused_Type{6E10}
+6n53*Zero{6E10}
+6n59*Vector_Space_Model{6E10}
+6n79*Blade{6E10}
+7n26*Bivector{6E10}
+7n36*Trivector{6E10}
+7n47*Even_Versor{6E10}
+8E10*Object_Type 8e53 13r55 16r36 20r25 9|13r36 20r55
+8n26*Multivector{8E10} 20r40
+8n39*Versor{8E10}
+8n47*Blade{8E10}
+9E10*Parity 9e37 15r36 23r25 9|22r36
+9n21*None{9E10} 15r46 23r35 9|22r46
+9n27*Even{9E10}
+9n33*Odd{9E10}
+10R10*Type_Base 12r35 18c10 24e15 9|4r25 6r35
+12V14*Get_Type_Base{10R10} 9|6b14 9l9 9t22
+13U15*Set_Type_Base 13>30 13>46 14>30 14>47 15>30 9|20b15 29l9 29t22
+13b30 Zero{boolean} 9|20b30 24r36
+13e46 Object{8E10} 9|20b46 25r36
+14i30 Grade{integer} 9|21b30 26r41
+14m47 GU{6|21M13} 9|21b47 27r34
+15e30 Par{9E10} 9|22b30 28r38
+16U15*Set_M_Type 16>27 9|13b15 16l9 16t19
+16e27 M_Type{8E10} 9|13b27 15r36
+19b9*M_Zero{boolean} 9|24m26
+20e9*M_Type{8E10} 9|15m26 25m26
+21i9*M_Top_Grade{integer} 9|26m26
+22m9*M_GU{6|21M13} 9|27m26
+23e9*M_Parity{9E10} 9|28m26
+26E10 Flag 26e25
+26n19 Valid{26E10}
+X 9 multivector_type_base.adb
+4r5 Current_Type_Base{8|10R10} 8r16 15m8 24m8 25m8 26m8 27m8 28m8
+

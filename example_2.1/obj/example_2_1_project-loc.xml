@@ -1,0 +1,909 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project>
+    <vfs_file>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_file>
+    <file_marker column=" 19" line=" 16" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/examples/freetype_gl/single_storage/src/texture_manager.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/implementation/gl-objects.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 3" line=" 44" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/implementation/gl-objects.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/implementation/gl-pixels.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 3" line=" 44" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/implementation/gl-objects.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/interface/gl-pixels.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 53" line=" 348" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/interface/gl-pixels.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 346" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/src/gl/interface/gl-pixels.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 67" line=" 43" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/example_2.1/src/bivectors.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 53" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 43" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 61" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 64" line=" 43" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 57" line=" 19" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 24" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/ga_maths.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 57" line=" 19" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 43" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 45" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 43" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 160" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 35" line=" 178" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 68" line=" 147" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 68" line=" 146" >
+      <vfs_project>/Education/Geometric_Algebra/GA_Ada/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file>/Education/Geometric_Algebra/GA_Ada/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_file>
+    <file_marker column=" 24" line=" 123">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 124">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 125">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 130">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 131">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 132">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 133">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 231">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 232">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 233">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 234">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 73" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 51">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 65">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 66">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 42" line=" 67">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 42" line=" 68">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 41" line=" 69">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 41" line=" 70">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 41" line=" 71">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 41" line=" 72">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 47" line=" 115">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 47" line=" 116">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 105">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 80">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 23" line=" 158">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 81" line=" 79">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 19">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 65" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 44" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 29">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 44" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 44" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 71" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 33">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 120">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 127">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 40" line=" 171">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 129">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 135">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 40" line=" 171">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 184">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 64" line=" 178">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 33">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 47">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 34">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 34">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 59" line=" 24">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 34">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-api.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 59" line=" 24">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 47" line=" 36">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 47">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 104">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 105">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 35" line=" 156">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 161">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 33">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 64" line=" 178">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 75" line=" 215">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 74">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 42" line=" 169">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 46">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 46" line=" 84">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 85">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 89">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-image.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 74">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 74">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 68" line=" 91">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 41">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 68" line=" 91">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 227">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 51" line=" 236">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 241">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 68" line=" 91">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 92">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 60" line=" 80">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 59">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-glyphs.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 120">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 50" line=" 127">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 53" line=" 169">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 227">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 51" line=" 236">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 238">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 50" line=" 244">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 43">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 104">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-faces.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 24">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 34">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 242">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 27" line=" 249">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 248">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 29">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 48" line=" 134">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 74" line=" 134">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 52" line=" 172">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 51" line=" 175">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 66" line=" 210">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 74" line=" 30">
+      <vfs_project >/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/src/freetype/ft-ogl.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 27" line=" 249">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 242">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 11">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 16">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_maths.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga_draw.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e3ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e3ga.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e3ga_utilities.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e3ga_utilities.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 43" line=" 5">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 47" line=" 20">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 28" line=" 32">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_maths.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/geosphere.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/geosphere.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/gl_util.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/gl_util.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/gl_util.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_analysis.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_analysis.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_analysis_e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_analysis_e2ga.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_type_base.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/multivector_type_base.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 48" line=" 19">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 4">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/ga_draw.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 164">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 169">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 4">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/silo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 162">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 238">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 23" line=" 39">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/Reference_Implementation/src/e2ga.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 14">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/bivectors.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 20">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/bivectors.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 68">
+      <vfs_project  />
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 90">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 131">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 138">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 163">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 20">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/bivectors.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 54" line=" 161">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 54" line=" 161">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 56">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 54" line=" 161">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 7" line=" 91">
+      <vfs_project >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/example_2_1_project.gpr</vfs_project>
+      <vfs_file >/Ada_Source/OpenGLAda/examples/geometric_algebra/example_2.1/src/main_loop.adb</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>
