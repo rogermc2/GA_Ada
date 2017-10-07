@@ -4,4 +4,10 @@ bin
 .DS_Store
 .#*#
 *~
+*.html
+*.o
+*.cswi
+*.ali
+*.xml
+*.db
 bivectors
