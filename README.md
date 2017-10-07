@@ -1,10 +1,10 @@
 
-This project is based on the examples and exercises in Geometric Algebra for Computer Science by Dorst, Fonijne and Mann, using Glfw version 3.
+This project seeks to implement in Ada the "reference_implementation" (ga_sandbox-1.0.7) together with the  examples and exercises contained in the book Geometric Algebra for Computer Science by Dorst, Fonijne and Mann.
 Geometric Algebra for Computer Science website:
 http://www.cgl.uwaterloo.ca/smann/GA/reference_impl.html
 
-OpenGL graphic support is provided by github.com/flyx/OpenGLAda.
-OpenGLAda is distributed under the terms of the ISC License. The Ada 2012 logo that is used in the SOIL tests is distributed under the terms of the CC BY-ND 3.0 license, the original author is AdaCore.
+OpenGL graphic support is provided by github.com/flyx/OpenGLAda,using Glfw version 3,.
+OpenGLAda is distributed under the terms of the ISC License.
 
 The version numbers in the shader programs may need modification depending on your
 platform.
