@@ -1,2 +1,0 @@
-main_loop.adb:163:79: expected type "Multivector" defined at e2ga.ads:58
-main_loop.adb:163:79: found type "Bivector" defined at e2ga.ads:10
