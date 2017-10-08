@@ -45,8 +45,6 @@ package body E2GA is
       MV.Grade_Use := BV.Grade_Usage;
       MV.Coordinates := BV_Coords;
       return Multivector_String (MV, Text);
-      --          return Ada.Strings.Unbounded.To_Unbounded_String (Text & Fixed_4'Image (num)
-      --                 & " e1^e2");
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -138,12 +136,14 @@ package body E2GA is
    end Get_MV_Type;
 
    --  ----------------------------------------------------------------------------
+   --  Implements e2ga.cpp (line 1524)  char *string(const mv & obj, char *str,
+   --  int maxLength, const char *fp /* = NULL */)
    --  goal: print [+|-] MV.Coord (k) (* Basis_Vector_1 ^ ... ^ Basis_Vector_N)
    --  theString := theString & float'Image (Abs (Coordinate));
    function Multivector_String (MV : Multivector; Text : String := "") return String is
       use Interfaces;
       use Ada.Strings.Unbounded;
-      String_Start     : Unbounded_String := To_Unbounded_String ("TEST   ");
+      String_Start     : Unbounded_String := To_Unbounded_String ("");
       String_End       : Unbounded_String := To_Unbounded_String ("");
       theString        : Unbounded_String := String_Start;
       Basis_Index      : Integer := 1;
@@ -152,9 +152,10 @@ package body E2GA is
       Coordinate       : float;
    begin
       theString := theString & Text;
-      for Vector_Index in Unsigned_32 range 1 .. 3 loop
-         if  Unsigned_32 (MV.Grade_Use) = Shift_Left (Vector_Index, 1) then
-            for Grade_Index in Integer range 1 .. MV.MV_Size loop
+      --  Print all coordinates (x, y, z)
+      for Vector_Index in Integer range 1 .. 3 loop
+         if  Unsigned_32 (MV.Grade_Use) = Shift_Left (Unsigned_32 (Vector_Index), 1) then
+            for Grade_Index in Integer range 1 .. MV_Grade_Size (Vector_Index) loop
                Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
                    MV.Coordinates (Coord_Index);
                theString := theString & float'Image (Coordinate);
