@@ -14,7 +14,7 @@ package E2GA is
 
    type Bivector is record
       Grade_Usage : GA_Maths.Grade_Usage := 2; --  m_gu
-      e1e2_Coord  : Bivector_Coords; -- Coordinate of e1^e2.
+      e1e2_Coord  : Bivector_Coords;           -- Coordinate of e1^e2.
    end record;
 
    type Coords_4 is record
