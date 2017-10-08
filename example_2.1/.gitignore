@@ -5,9 +5,4 @@ bin
 .#*#
 *~
 *.html
-*.o
-*.cswi
-*.ali
-*.xml
-*.db
 bivectors
