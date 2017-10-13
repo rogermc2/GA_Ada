@@ -1,4 +1,4 @@
-#version 410
+#version 410 core
 
 uniform vec3 vector_colour;
 

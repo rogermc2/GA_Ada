@@ -1,0 +1,10 @@
+lib
+obj
+bin
+.DS_Store
+*/.DS_Store
+.#*#
+*~
+*.html
+*.*.orig
+bivectors
