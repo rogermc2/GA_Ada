@@ -154,7 +154,6 @@ package body E2GA is
       Name_Index       : Integer range 1 .. 2;
       Coordinate       : float;
    begin
-      Put_Line ("MV size 1: " & Integer'Image (MV.MV_Size));
       theString := theString & Text;
       --  Print all coordinates (x, y, z)
       New_Line;
@@ -166,28 +165,17 @@ package body E2GA is
       --          Print symbol
       --          If not last symbol print ^
       for Grade in Grade_Index'Range loop  --  i
-         New_Line;
-         Put_Line ("Grade: " & Integer'Image (Grade));
-         Put_Line ("Grade_Use: " & Unsigned_Integer'Image (MV.Grade_Use));
-         Put_Line ("Grade_Use Check: " & Unsigned_32'Image (Shift_Left (Unsigned_32 (Grade), 1)));
-         if  Unsigned_32 (MV.Grade_Use) /=
+           if  Unsigned_32 (MV.Grade_Use) /=
              Shift_Left (Unsigned_32 (Grade), 1) then
             if Basis_Index - MV_Grade_Size (Grade) > 0 then
-               Put_Line ("Grade check failed, Grade, Basis_Index: " &
-                             Integer'Image (Grade) &
-                             Integer'Image (Basis_Index) );
                Basis_Index := Basis_Index + MV_Grade_Size (Grade);
             end if;
-         else
+           else
             --  int mv_gradeSize[3] = {1, 2, 1 };
             --  Bivector grade size is 2?
             --  Loop on grade
-            Put_Line ("Grade size: " & Integer'Image (MV_Grade_Size (Grade)));
             for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
                --  Print sign and coordinate value
-               Put_Line ("MV size: " & Integer'Image (MV.MV_Size));
-               Put_Line ("Basis_Index, Coord_Index: " &
-                        Integer'Image (Basis_Index) & Integer'Image (Coord_Index));
                Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
                              Abs (MV.Coordinates (Coord_Index));
                theString := theString & float'Image (Coordinate);
@@ -200,10 +188,6 @@ package body E2GA is
 
                   Basis_Elem_Index := 1;  --  bei
                   while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
-                     Put_Line ("Basis_Index, Basis_Elem_Index: " &
-                                   Integer'Image (Basis_Index) & Integer'Image (Basis_Elem_Index));
-                     Put_Line ("MV_Basis_Elements: " &
-                                   Integer'Image (MV_Basis_Elements (Basis_Index, Basis_Elem_Index)));
                      if Basis_Elem_Index /= 1 then
                         theString := theString & "^";
                      end if;
@@ -214,7 +198,7 @@ package body E2GA is
                   Basis_Index := Basis_Index + 1;
                end if;  --  Grade
             end loop;  --  Grade_Index
-         end if;  --  MV.Grade_Use
+           end if;  --  MV.Grade_Use
          if Grade < 2 then
             Coord_Index := Coord_Index + 1;
             Basis_Index := Basis_Index + 1;
