@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
       Colour_Location := GL.Objects.Programs.Uniform_Location
-          (Render_Graphic_Program, "vector_colour");
+          (Render_Graphic_Program, "vectorb,.m_colour");
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
@@ -130,6 +130,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
+         Put_Line ("Display Parallelogram.");
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
@@ -288,7 +289,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Setup_Graphic.Draw_Text.");
+         Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
          raise;
    end Setup_Graphic;
 
