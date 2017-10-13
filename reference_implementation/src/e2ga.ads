@@ -9,6 +9,12 @@ package E2GA is
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
 
+   --  Joinable grade definitions
+   type Grade is (Grade_0, Grade_1, Grade_2);
+
+   --  Outermorphism types
+   type OM_Type is (OMT_None, OMT_OM, OMT_Last);
+
    type Bit_Map is new integer range 0 .. 2 ** 30;
    type Bit_Map_Array is array (integer range <>) of Bit_Map;
    type Grade is (Grade_0, Grade_1, Grade_2);
@@ -16,8 +22,8 @@ package E2GA is
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
 
    type Bivector is record
-      Grade_Usage : GA_Maths.Grade_Usage := 4; --  Set bit 3.
-      e1e2_Coord  : Bivector_Coords;           -- Coordinate on e1^e2.
+      Grade_Usage : GA_Maths.Grade_Usage := 4; --  m_gu Bit 3 set.
+      e1e2_Coord  : Bivector_Coords;           -- Coordinate of e1^e2.
    end record;
 
    type Coords_4 is record

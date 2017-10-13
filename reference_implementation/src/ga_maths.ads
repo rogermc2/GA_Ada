@@ -9,6 +9,7 @@ with Ada.Numerics;
 package GA_Maths is
     package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
     package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
+    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
 
     type Fixed_4 is delta 0.01 range -1.0 .. 1.0;
     for Fixed_4'Small use 0.01;
@@ -18,9 +19,9 @@ package GA_Maths is
 
     subtype Basis_Index is Integer range 1 .. 2;
     subtype Grade_Index is Integer range 0 .. 2;
-    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
     subtype Grade_Usage is GA_Maths.Unsigned_Integer;
 
+    type Basis_Array is array (Basis_Index) of integer;
     type Grade_Array is array (Grade_Index) of integer;
     type Array_I2 is array (1 .. 2) of integer;
     type Array_I3 is array (1 .. 3) of integer;
