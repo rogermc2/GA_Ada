@@ -15,10 +15,14 @@ package body E2GA is
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Grade_Size is a lookup table for the number of coordinates
-   --  in the grade part of a general multivector
-   MV_Grade_Size                     : constant Array_I3 := (1, 2, 1);
-   --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
+   --  in the grade part of a general multivector.
+   --  The grade is the number of vectors that form a multivector
+   MV_Grade_Size                     : constant Grade_Array := (1, 2, 1);
+   --  The MV_Size lookup table provides the number of coordinates
+   --  based on a grade usage bitmap.
    MV_Size                           : constant Array_I8 := (0, 1, 2, 3, 1, 2, 3, 4);
+   --  MV_Basis_Elements contains the order of basis elements
+   --  in the general multivector
    MV_Basis_Elements                 : array (1 .. 4, 1 .. 3) of integer :=
                                          ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
@@ -26,7 +30,7 @@ package body E2GA is
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
    --  Use it to answer: 'at what index do I find basis element [x] (x = basis vector bitmap)?'
    MV_Basis_Element_Index_By_Bit_Map : constant Array_BM4 := (0, 1, 2, 3);
-   --  TMV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
+   --  MV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
    --  Use it to answer: 'what basis element do I find at index [x]'?
    MV_Basis_Element_Bit_Map_By_Index : constant Array_I4 := (0, 1, 2, 3);
    MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
@@ -39,13 +43,13 @@ package body E2GA is
 
    function Bivector_String (BV : Bivector; Text : String := "") return String is
    --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
-      BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
+      BV_Coords : constant Bivector_Coords := BV.e1e2_Coord;   --  m_c[4]
       BV_Size   : Integer := MV_Size (Integer (BV.Grade_Usage));
       MV        : Multivector (BV_Size);
    begin
       Put_Line ("BV_Size: " & Integer'Image (BV_Size));
       MV.Grade_Use := BV.Grade_Usage;
-      MV.Coordinates := BV_Coords;
+      MV.Coordinates (1) := BV_Coords (1);
       return Multivector_String (MV, Text);
    exception
       when anError :  others =>
@@ -165,61 +169,66 @@ package body E2GA is
       --        Loop on basis symbols
       --          Print symbol
       --          If not last symbol print ^
-      for Vector_Index in Integer range 1 .. 3 loop  --  i
+      for Grade in Integer range Grade_Index'Range loop  --  i
          New_Line;
-         Put_Line ("Vector_Index: " & Integer'Image (Vector_Index));
+         Put_Line ("Grade: " & Integer'Image (Grade));
          Put_Line ("Grade_Use: " & Unsigned_Integer'Image (MV.Grade_Use));
-         Put_Line ("Grade_Use Check: " & Unsigned_32'Image (Shift_Left (Unsigned_32 (Vector_Index - 1), 1)));
+         Put_Line ("Grade_Use Check: " & Unsigned_32'Image (Shift_Left (Unsigned_32 (Grade), 1)));
          if  Unsigned_32 (MV.Grade_Use) /=
-             Shift_Left (Unsigned_32 (Vector_Index - 1), 1) then
-            if Basis_Index - MV_Grade_Size (Vector_Index) > 0 then
-               Put_Line ("Grade check failed, Vector_Index, Basis_Index: " &
-                             Integer'Image (Vector_Index) &
+             Shift_Left (Unsigned_32 (Grade), 1) then
+            if Basis_Index - MV_Grade_Size (Grade) > 0 then
+               Put_Line ("Grade check failed, Grade, Basis_Index: " &
+                             Integer'Image (Grade) &
                              Integer'Image (Basis_Index) );
-               Basis_Index := Basis_Index + MV_Grade_Size (Vector_Index);
+               Basis_Index := Basis_Index + MV_Grade_Size (Grade);
             end if;
          else
             --  int mv_gradeSize[3] = {1, 2, 1 };
             --  Bivector grade size is 2.
             --  Loop on grade
-            Put_Line ("Grade size: " & Integer'Image (MV_Grade_Size (Vector_Index)));
-            for Grade_Index in Integer range 1 .. MV_Grade_Size (Vector_Index) loop  --  j
+            Put_Line ("Grade size: " & Integer'Image (MV_Grade_Size (Grade)));
+            for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
                --  Print sign and coordinate value
                Put_Line ("MV size: " & Integer'Image (MV.MV_Size));
                Put_Line ("Basis_Index, Coord_Index: " &
                         Integer'Image (Basis_Index) & Integer'Image (Coord_Index));
                Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-                             Abs (MV.Coordinates (Coord_Index));
-               theString := theString & float'Image (Coordinate);
-               if Vector_Index /= 1 then  --  Not grade 0
-                  --  print [* basisVector1 ^ ... ^ basisVectorN]
-                  theString := theString & " * ";
-                  --  Loop on the basis vector symbols
-                  --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
-                  --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+               Abs (MV.Coordinates (Coord_Index));
+               Put_Line ("Coordinate: " & float'Image (Coordinate));
+               if Coordinate /=  0.0 then
+                  theString := theString & float'Image (Coordinate);
+                  Put_Line ("Grade: " & Integer'Image (Grade));
+                  if Grade /= 0 then  --  Not grade 0
+                                      --  print [* basisVector1 ^ ... ^ basisVectorN]
+                     theString := theString & " * ";
+                     --  Loop on the basis vector symbols
+                     --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
+                     --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
 
-                  Basis_Elem_Index := 1;  --  bei
-                  while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
-                     Put_Line ("Basis_Index, Basis_Elem_Index: " &
-                                   Integer'Image (Basis_Index) & Integer'Image (Basis_Elem_Index));
-                     Put_Line ("MV_Basis_Elements: " &
-                                   Integer'Image (MV_Basis_Elements (Basis_Index, Basis_Elem_Index)));
-                     if Basis_Elem_Index /= 1 then
-                        theString := theString & "^";
-                     end if;
-                     Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
-                     theString := theString & MV_Basis_Vector_Names (Name_Index);
-                     Basis_Elem_Index := Basis_Elem_Index + 1;
-                  end loop;  --  MV_Basis_Elements
-                  Basis_Index := Basis_Index + 1;
-               end if;  --  Vector_Index
+                     Basis_Elem_Index := 1;  --  bei
+                     Put_Line ("MV_Basis_Elements value: " &
+                                    Integer'Image (MV_Basis_Elements (Basis_Index, Basis_Elem_Index)));
+                     while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
+                        Put_Line ("Basis_Index, Basis_Elem_Index: " &
+                                    Integer'Image (Basis_Index) & Integer'Image (Basis_Elem_Index));
+                        Put_Line ("MV_Basis_Elements: " &
+                                    Integer'Image (MV_Basis_Elements (Basis_Index, Basis_Elem_Index)));
+                        if Basis_Elem_Index /= 1 then
+                           theString := theString & "^";
+                        end if;
+                        Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
+                        theString := theString & MV_Basis_Vector_Names (Name_Index);
+                        Basis_Elem_Index := Basis_Elem_Index + 1;
+                     end loop;  --  MV_Basis_Elements
+                  end if;  --  Grade  /= 0
+               end if;  --  Coordinate /=  0.0
             end loop;  --  Grade_Index
+            if Grade < 2 then
+               Coord_Index := Coord_Index + 1;
+               Basis_Index := Basis_Index + 1;
+            end if;
          end if;  --  MV.Grade_Use
-         if Vector_Index < 3 then
-            Coord_Index := Coord_Index + 1;
-            Basis_Index := Basis_Index + 1;
-         end if;
-      end loop;   --  Vector_Index
+      end loop;   --  Grade
 
       return To_String (theString & String_End);
    exception
