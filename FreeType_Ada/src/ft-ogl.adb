@@ -1,18 +1,3 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
 
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -38,6 +23,7 @@ package body FT.OGL is
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : Character_Data_Vector (0 .. 255);
+   OGL_Exception        : exception;
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Reference);
    procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String);
@@ -110,8 +96,7 @@ package body FT.OGL is
       Char_Data.Texture := aTexture;
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.OGL.Load_Texture.");
-         raise;
+         raise OGL_Exception with "An exception occurred in FT.OGL.Load_Texture.";
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
@@ -188,7 +173,7 @@ package body FT.OGL is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("FT.OGL.Render_Text, aTexture is invalid.");
+            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid.";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -213,8 +198,7 @@ package body FT.OGL is
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in FT.OGL.Render_Text.");
-         raise;
+         raise OGL_Exception with "An exception occurred in FT.OGL.Render_Text.";
    end Render_Text;
 
    --  ------------------------------------------------------------------------
@@ -278,8 +262,7 @@ package body FT.OGL is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.OGL.Setup_Character_Textures.");
-         raise;
+         raise OGL_Exception with "An exception occurred in FT.OGL.Setup_Character_Textures.";
    end Setup_Character_Textures;
 
    --  ------------------------------------------------------------------------
@@ -294,8 +277,7 @@ package body FT.OGL is
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.OGL.Setup_Font.");
-         raise;
+         raise OGL_Exception with "An exception occurred in FT.OGL.Setup_Font.";
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
