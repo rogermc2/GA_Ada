@@ -156,16 +156,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
          GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String (E2GA.Bivector_String (BV)), Label_Position));
-         Draw_Text (Window_Width, Window_Height, E2GA.Bivector_String (BV), Render_Text_Program,
-                    Text_X, Text_Y);
+         Put_Line (" Main BV_Size: " & Unsigned_Integer'Image (BV.Grade_Usage));
+         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
+                    (E2GA.Bivector_String (BV)), Label_Position));
+
          A := A + Step;
       end loop;
 
       for i in 1 .. Silo.Size loop
          Label := Silo.Pull;
       end loop;
-
+       Draw_Text (Window_Width, Window_Height, E2GA.Bivector_String (BV), Render_Text_Program,
+                    Text_X, Text_Y);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Display.");

@@ -20,7 +20,7 @@ package body E2GA is
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
    MV_Size                           : constant Array_I8 := (0, 1, 2, 3, 1, 2, 3, 4);
    MV_Basis_Elements                 : array (1 .. 4, 1 .. 3) of integer :=
-                                         ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+                                         ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
    MV_Basis_Element_Sign_By_Bit_Map  : constant Array_BM4 := (1, 1, 1, 1);
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
@@ -40,13 +40,13 @@ package body E2GA is
    function Bivector_String (BV : Bivector; Text : String := "") return String is
    --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
       BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
-      MV        : Multivector (MV_Size (Integer (BV.Grade_Usage)));
+      BV_Size   : Integer := MV_Size (Integer (BV.Grade_Usage));
+      MV        : Multivector (BV_Size);
    begin
+      Put_Line ("BV_Size: " & Integer'Image (BV_Size));
       MV.Grade_Use := BV.Grade_Usage;
       MV.Coordinates := BV_Coords;
       return Multivector_String (MV, Text);
-      --          return Ada.Strings.Unbounded.To_Unbounded_String (Text & Fixed_4'Image (num)
-      --                 & " e1^e2");
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -132,48 +132,94 @@ package body E2GA is
    --  ----------------------------------------------------------------------------
 
    function  Get_MV_Type (X : Multivector; Epsilon : float)
-                           return Multivector_Type_Base.M_Type_Type is
+                          return Multivector_Type_Base.M_Type_Type is
    begin
       return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
    end Get_MV_Type;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+   --  Implements e2ga.cpp (line 1524)  char *string(const mv & obj, char *str,
+   --  int maxLength, const char *fp /* = NULL */)
    --  goal: print [+|-] MV.Coord (k) (* Basis_Vector_1 ^ ... ^ Basis_Vector_N)
    --  theString := theString & float'Image (Abs (Coordinate));
    function Multivector_String (MV : Multivector; Text : String := "") return String is
       use Interfaces;
       use Ada.Strings.Unbounded;
-      String_Start     : Unbounded_String := To_Unbounded_String ("TEST   ");
+      String_Start     : Unbounded_String := To_Unbounded_String ("");
       String_End       : Unbounded_String := To_Unbounded_String ("");
       theString        : Unbounded_String := String_Start;
-      Basis_Index      : Integer := 1;
-      Coord_Index      : Integer := 1;
-      Basis_Elem_Index : Integer;
+      Basis_Index      : Integer range 1 .. 4 := 1;  --  ia
+      Coord_Index      : Integer := 1;  --  k
+      Basis_Elem_Index : Integer;       --  bei
+      Name_Index       : Integer range 1 .. 2;
       Coordinate       : float;
    begin
+      Put_Line ("MV size 1: " & Integer'Image (MV.MV_Size));
       theString := theString & Text;
-      for Vector_Index in Unsigned_32 range 1 .. 3 loop
-         if  Unsigned_32 (MV.Grade_Use) = Shift_Left (Vector_Index, 1) then
-            for Grade_Index in Integer range 1 .. MV.MV_Size loop
-               Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-                   MV.Coordinates (Coord_Index);
-               theString := theString & float'Image (Coordinate);
-               if Vector_Index /= 1 then      --  Not grade 0
-                  theString := theString & "*";
-               end if;
-               Basis_Elem_Index := 1;
-               while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
-                  theString := theString & "^" &
-                      MV_Basis_Vector_Names
-                      (MV_Basis_Elements (Basis_Index, Basis_Elem_Index));
-                  Basis_Elem_Index := Basis_Elem_Index + 1;
-               end loop;
-               Basis_Index := Basis_Index + 1;
-            end loop;
+      --  Print all coordinates (x, y, z)
+      New_Line;
+      --  Loop on coordinate
+      --    Loop on grade
+      --      Loop on  number of coordinates in the grade part
+      --        Print sign and coordinate value
+      --        Loop on basis symbols
+      --          Print symbol
+      --          If not last symbol print ^
+      for Vector_Index in Integer range 1 .. 3 loop  --  i
+         New_Line;
+         Put_Line ("Vector_Index: " & Integer'Image (Vector_Index));
+         Put_Line ("Grade_Use: " & Unsigned_Integer'Image (MV.Grade_Use));
+         Put_Line ("Grade_Use Check: " & Unsigned_32'Image (Shift_Left (Unsigned_32 (Vector_Index - 1), 1)));
+         if  Unsigned_32 (MV.Grade_Use) /=
+             Shift_Left (Unsigned_32 (Vector_Index - 1), 1) then
+            if Basis_Index - MV_Grade_Size (Vector_Index) > 0 then
+               Put_Line ("Grade check failed, Vector_Index, Basis_Index: " &
+                             Integer'Image (Vector_Index) &
+                             Integer'Image (Basis_Index) );
+               Basis_Index := Basis_Index + MV_Grade_Size (Vector_Index);
+            end if;
          else
-            Basis_Index := Basis_Index + MV_Grade_Size (Integer (Vector_Index));
+            --  int mv_gradeSize[3] = {1, 2, 1 };
+            --  Bivector grade size is 2.
+            --  Loop on grade
+            Put_Line ("Grade size: " & Integer'Image (MV_Grade_Size (Vector_Index)));
+            for Grade_Index in Integer range 1 .. MV_Grade_Size (Vector_Index) loop  --  j
+               --  Print sign and coordinate value
+               Put_Line ("MV size: " & Integer'Image (MV.MV_Size));
+               Put_Line ("Basis_Index, Coord_Index: " &
+                        Integer'Image (Basis_Index) & Integer'Image (Coord_Index));
+               Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
+                             Abs (MV.Coordinates (Coord_Index));
+               theString := theString & float'Image (Coordinate);
+               if Vector_Index /= 1 then  --  Not grade 0
+                  --  print [* basisVector1 ^ ... ^ basisVectorN]
+                  theString := theString & " * ";
+                  --  Loop on the basis vector symbols
+                  --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
+                  --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+
+                  Basis_Elem_Index := 1;  --  bei
+                  while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
+                     Put_Line ("Basis_Index, Basis_Elem_Index: " &
+                                   Integer'Image (Basis_Index) & Integer'Image (Basis_Elem_Index));
+                     Put_Line ("MV_Basis_Elements: " &
+                                   Integer'Image (MV_Basis_Elements (Basis_Index, Basis_Elem_Index)));
+                     if Basis_Elem_Index /= 1 then
+                        theString := theString & "^";
+                     end if;
+                     Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
+                     theString := theString & MV_Basis_Vector_Names (Name_Index);
+                     Basis_Elem_Index := Basis_Elem_Index + 1;
+                  end loop;  --  MV_Basis_Elements
+                  Basis_Index := Basis_Index + 1;
+               end if;  --  Vector_Index
+            end loop;  --  Grade_Index
+         end if;  --  MV.Grade_Use
+         if Vector_Index < 3 then
+            Coord_Index := Coord_Index + 1;
+            Basis_Index := Basis_Index + 1;
          end if;
-      end loop;
+      end loop;   --  Vector_Index
 
       return To_String (theString & String_End);
    exception
@@ -260,7 +306,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
    --  Expand is not for external use. It decompresses the coordinates stored in this
    function  Expand (MV : Multivector; Nulls : boolean := True)
-                      return Array_3D is
+                     return Array_3D is
    --          C_M_C : float;
    --          Null_Float : float;
    begin
