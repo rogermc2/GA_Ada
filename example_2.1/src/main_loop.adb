@@ -130,7 +130,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
-         Put_Line ("Display Parallelogram.");
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
