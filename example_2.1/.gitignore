@@ -2,12 +2,9 @@ lib
 obj
 bin
 .DS_Store
+*/.DS_Store
 .#*#
 *~
 *.html
-*.o
-*.cswi
-*.ali
-*.xml
-*.db
+*.*.orig
 bivectors

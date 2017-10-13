@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
       Colour_Location := GL.Objects.Programs.Uniform_Location
-          (Render_Graphic_Program, "vector_colour");
+          (Render_Graphic_Program, "vectorb,.m_colour");
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
@@ -156,9 +156,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
          GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
-         Put_Line (" Main BV_Size: " & Unsigned_Integer'Image (BV.Grade_Usage));
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
-                    (E2GA.Bivector_String (BV)), Label_Position));
+         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String (E2GA.Bivector_String (BV)), Label_Position));
 
          A := A + Step;
       end loop;
@@ -288,7 +286,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Setup_Graphic.Draw_Text.");
+         Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
          raise;
    end Setup_Graphic;
 

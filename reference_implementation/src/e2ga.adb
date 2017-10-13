@@ -26,7 +26,7 @@ package body E2GA is
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
    --  Use it to answer: 'at what index do I find basis element [x] (x = basis vector bitmap)?'
    MV_Basis_Element_Index_By_Bit_Map : constant Array_BM4 := (0, 1, 2, 3);
-   --  TMV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
+   --  MV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
    --  Use it to answer: 'what basis element do I find at index [x]'?
    MV_Basis_Element_Bit_Map_By_Index : constant Array_I4 := (0, 1, 2, 3);
    MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
