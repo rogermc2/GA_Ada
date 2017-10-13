@@ -157,9 +157,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
          GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
-         Put_Line (" Main BV_Size: " & Unsigned_Integer'Image (BV.Grade_Usage));
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
-                    (E2GA.Bivector_String (BV)), Label_Position));
+         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String (E2GA.Bivector_String (BV)), Label_Position));
 
          A := A + Step;
       end loop;
