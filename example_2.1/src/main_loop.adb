@@ -133,8 +133,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
-            E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
-                            BV, Blue, Scale);
+            E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                            Projection_Matrix, BV, Blue, Scale);
          end if;
          --  Move the following to top of loop?
          --  Set X position of next diagram
@@ -150,22 +150,33 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                           Entry_Height * Scale, 0.0)) * Model_View_Matrix;
          end if;
 
+         --  e2_basis : Array_3D := (0.0, 1.0, 0.0);
          World_Coords := GA_Maths.Get_Coords (E3GA.e2);
-         World_Coords (1) := 0.35 * float (Entry_Height) * World_Coords (1);
-         World_Coords (2) := 0.35 * float (Entry_Height) * World_Coords (2);
-         World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
+--           World_Coords (1) := 0.35 * float (Entry_Height) * World_Coords (1);
+--           World_Coords (2) := 0.35 * float (Entry_Height) * World_Coords (2);
+--           World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
+         World_Coords (1) := float (Entry_Width) / float (Scale);
+         World_Coords (2) := float (Entry_Height) / float (Scale);
+         World_Coords (3) := 0.0;
+         Put_Line ("Main_Loop.Display World_Coords: " & float'Image (World_Coords (1))
+                   & float'Image (World_Coords (2)) & float'Image (World_Coords (3)));
+
          GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String (E2GA.Bivector_String (BV)), Label_Position));
-
+         --  store bivector label:
+         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
+                    (E2GA.Bivector_String (BV)), Label_Position));
          A := A + Step;
       end loop;
 
       for i in 1 .. Silo.Size loop
          Label := Silo.Pull;
+         Draw_Text (Window_Width, Window_Height,
+                    Ada.Strings.Unbounded.To_String (Label.Label_String),
+                    Render_Text_Program,
+                    Label.Label_Position (GL.X), Label.Label_Position (GL.Y));
       end loop;
-       Draw_Text (Window_Width, Window_Height, E2GA.Bivector_String (BV), Render_Text_Program,
-                    Text_X, Text_Y);
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Display.");

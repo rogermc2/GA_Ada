@@ -11,6 +11,7 @@ package body E2GA is
 
    type Array_BM4 is array (Bit_Map range 1 .. 4) of integer;
    type Array_F4 is array (1 .. 4) of float;
+   type float_3 is digits 3;
 
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
@@ -43,7 +44,6 @@ package body E2GA is
       BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
       MV        : Multivector (BV_Size);
    begin
-      Put_Line ("BV_Size: " & Integer'Image (BV_Size));
       MV.Grade_Use := BV.Grade_Usage;
       MV.Coordinates (1) := BV_Coords (1);
       return Multivector_String (MV, Text);
@@ -147,6 +147,7 @@ package body E2GA is
       use Ada.Strings.Unbounded;
       String_Start     : Unbounded_String := To_Unbounded_String ("");
       String_End       : Unbounded_String := To_Unbounded_String ("");
+      Value            : float_3;
       theString        : Unbounded_String := String_Start;
       Basis_Index      : Integer range 1 .. 4 := 1;  --  ia
       Coord_Index      : Integer := 1;  --  k
@@ -178,7 +179,8 @@ package body E2GA is
                --  Print sign and coordinate value
                Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
                              Abs (MV.Coordinates (Coord_Index));
-               theString := theString & float'Image (Coordinate);
+               Value := float_3 (Coordinate);
+               theString := theString & float_3'Image (Value);
                if Grade /= 1 then  --  Not grade 0
                   --  print [* basisVector1 ^ ... ^ basisVectorN]
                   theString := theString & " * ";
