@@ -96,7 +96,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       V2                : GA_Maths.Vector_2D;
 
       Colour_Location   : GL.Uniforms.Uniform;
-      World_Coords      : GA_Maths.Array_3D;
+      Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
       Model_View_Matrix : GL.Types.Singles.Matrix4;
@@ -139,13 +139,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                             Projection_Matrix, BV, Blue, Scale);
          end if;
 
-         --  e2_basis : Array_3D := (0.0, 1.0, 0.0);
-         World_Coords := GA_Maths.Get_Coords (E3GA.e2);
-         World_Coords (1) := 0.35 * float (Entry_Height) * World_Coords (1);
-         World_Coords (2) := 0.25 * float (Entry_Height) * World_Coords (2);
-         World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
+         if A < Pi - 0.1 then
+            Text_Coords (2) := 0.2 * float (Entry_Height);
+         else
+            Text_Coords (1) := - 0.25 * float (Entry_Height);
+            Text_Coords (2) := 0.4 * float (Entry_Height);
+         end if;
 
-         GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
+         GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
          Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String

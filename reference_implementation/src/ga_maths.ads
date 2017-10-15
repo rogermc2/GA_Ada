@@ -58,6 +58,7 @@ package GA_Maths is
     type Array_4D is array (1 .. 4) of float;
     type Coord4_Array is  Array (1 .. 4) of float;
 
+    Pi      : constant float := Ada.Numerics.Pi;
     Two_Pi  : constant float := 2.0 * Ada.Numerics.Pi;
 
     function "+" (V1, V2 : Vector_2D) return Vector_2D;
