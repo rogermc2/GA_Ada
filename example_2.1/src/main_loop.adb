@@ -56,7 +56,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
                         Render_Program  : GL.Objects.Programs.Program;
-                        Text_X, Text_Y  : GL.Types.Single);
+                        Text_X, Text_Y  : GL.Types.Single;
+                        Text_Scale      : GL.Types.Single);
 
    Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
    Text_Texture_ID         : GL.Uniforms.Uniform;
@@ -79,11 +80,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2;
       --  How many bivectors? what spacing between them?:
-      Entry_Width       : constant single := 2.5;
+      Entry_Width       : constant single := 2.3;
       Entry_Height      : constant single := 3.5;
       Num_Bivector_X    : constant integer := 6;
       Num_Bivector_Y    : constant integer := 4;
       Scale             : constant single := 40.0;
+      Text_Scale        : constant GL.Types.Single := 0.26;
       Position_X        : integer := 0;
 
       A                 : float := 0.0;
@@ -116,7 +118,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  Set scale and position of first diagram
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale, Scale, Scale));
       Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale / 2.0,
-                   Scale + (Single (Num_Bivector_Y) - 0.5) * Entry_Height, 0.0))
+                   (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0, 0.0))
                    * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
@@ -136,7 +138,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                             Projection_Matrix, BV, Blue, Scale);
          end if;
-         --  Move the following to top of loop?
+
+         --  e2_basis : Array_3D := (0.0, 1.0, 0.0);
+         World_Coords := GA_Maths.Get_Coords (E3GA.e2);
+         World_Coords (1) := 0.35 * float (Entry_Height) * World_Coords (1);
+         World_Coords (2) := 0.25 * float (Entry_Height) * World_Coords (2);
+         World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
+
+         GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
+                                       Projection_Matrix, Label_Position);
+         --  store bivector label:
+         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
+                    (E2GA.Bivector_String (BV)), Label_Position));
+
          --  Set X position of next diagram
          Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale,
                                                         0.0, 0.0)) * Model_View_Matrix;
@@ -150,22 +164,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                           Entry_Height * Scale, 0.0)) * Model_View_Matrix;
          end if;
 
-         --  e2_basis : Array_3D := (0.0, 1.0, 0.0);
-         World_Coords := GA_Maths.Get_Coords (E3GA.e2);
---           World_Coords (1) := 0.35 * float (Entry_Height) * World_Coords (1);
---           World_Coords (2) := 0.35 * float (Entry_Height) * World_Coords (2);
---           World_Coords (3) := 0.35 * float (Entry_Height) * World_Coords (3);
-         World_Coords (1) := float (Entry_Width) / float (Scale);
-         World_Coords (2) := float (Entry_Height) / float (Scale);
-         World_Coords (3) := 0.0;
-         Put_Line ("Main_Loop.Display World_Coords: " & float'Image (World_Coords (1))
-                   & float'Image (World_Coords (2)) & float'Image (World_Coords (3)));
-
-         GL_Util.Viewport_Coordinates (World_Coords, Model_View_Matrix,
-                                       Projection_Matrix, Label_Position);
-         --  store bivector label:
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
-                    (E2GA.Bivector_String (BV)), Label_Position));
          A := A + Step;
       end loop;
 
@@ -173,8 +171,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Label := Silo.Pull;
          Draw_Text (Window_Width, Window_Height,
                     Ada.Strings.Unbounded.To_String (Label.Label_String),
-                    Render_Text_Program,
-                    Label.Label_Position (GL.X), Label.Label_Position (GL.Y));
+                    Render_Text_Program, Label.Label_Position (GL.X),
+                    Label.Label_Position (GL.Y), Text_Scale);
       end loop;
 
    exception
@@ -246,9 +244,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText : String;
                         Render_Program   : GL.Objects.Programs.Program;
-                        Text_X, Text_Y   : GL.Types.Single) is
-      Text_Scale           : constant GL.Types.Single := 0.28;
-      Text_Colour          : constant Colors.Basic_Color := Black;
+                        Text_X, Text_Y   : GL.Types.Single;
+                        Text_Scale       : GL.Types.Single) is
+      Text_Colour : constant Colors.Basic_Color := Black;
    begin
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
@@ -286,13 +284,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Text_Colour_ID := GL.Objects.Programs.Uniform_Location
           (Render_Text_Program, "text_colour");
 
-      Glfw.Windows.Hints.Set_Depth_Bits (8);
-      GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      GL.Culling.Set_Front_Face (GL.Types.Clockwise);
-      GL.Culling.Set_Cull_Face (GL.Culling.Back);
-      GL.Buffers.Set_Depth_Function (GL.Types.Less);
-      GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+--        Glfw.Windows.Hints.Set_Depth_Bits (8);
+--        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+--        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+--        GL.Culling.Set_Front_Face (GL.Types.Clockwise);
+--        GL.Culling.Set_Cull_Face (GL.Culling.Back);
+--        GL.Buffers.Set_Depth_Function (GL.Types.Less);
+--        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       GA_Draw.Set_Point_Size (0.005);
 
    exception

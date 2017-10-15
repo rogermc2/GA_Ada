@@ -93,12 +93,12 @@ package body GL_Util is
       Window_Height : Size;
       PT1 : Vector4 := (Single (Pt_World (1)), Single (Pt_World (2)),
                         Single (Pt_World (3)), 1.0);
-      PT2 : Vector4 := Model_View_Matrix * PT1;
+      PT2 : Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
    begin
-      PT1 := Projection_Matrix * PT2;
+   --   PT1 := Projection_Matrix * PT2;
       GL.Window.Get_Viewport (VP_X, VP_Y, Window_Width, Window_Height);
-      Coords (X) := Single (VP_X) + (1.0 + PT1 (X) / PT1 (W)) * Single (Window_Width) / 2.0;
-      Coords (Y) := Single (VP_Y) + (1.0 + PT1 (Y) / PT1 (W)) * Single (Window_Height) / 2.0;
+      Coords (X) := Single (VP_X) + (1.0 + PT2 (X) / PT2 (W)) * Single (Window_Width) / 2.0;
+      Coords (Y) := Single (VP_Y) + (1.0 + PT2 (Y) / PT2 (W)) * Single (Window_Height) / 2.0;
    end Viewport_Coordinates;
 
    --  -------------------------------------------------------------------------
