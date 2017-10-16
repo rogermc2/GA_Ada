@@ -201,7 +201,7 @@ package body E2GA is
                end if;  --  Grade
             end loop;  --  Grade_Index
            end if;  --  MV.Grade_Use
-         if Grade < 2 then
+         if Grade >= 2 then
             Coord_Index := Coord_Index + 1;
             Basis_Index := Basis_Index + 1;
          end if;
