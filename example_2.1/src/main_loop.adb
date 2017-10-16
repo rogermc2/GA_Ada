@@ -21,6 +21,7 @@ with GL.Uniforms;
 with Glfw;
 with Glfw.Input;
 with Glfw.Input.Keys;
+with Glfw.Input.Mouse;
 with GL.Window;
 with Glfw.Windows.Context;
 with Glfw.Windows.Hints;
@@ -43,11 +44,13 @@ with Silo;
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    subtype tVec4f is Singles.Vector4;
 
-   Black       : constant Colors.Basic_Color := (0.0, 0.0, 0.0);
-   Red         : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
-   Green       : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
-   Blue        : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
-   Back_Colour : constant Colors.Color := (0.7, 0.7, 0.7, 1.0);
+   Black          : constant Colors.Basic_Color := (0.0, 0.0, 0.0);
+   Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
+   Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
+   Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
+   Back_Colour    : constant Colors.Color := (0.7, 0.7, 0.7, 1.0);
+   Key_Pressed    : boolean := False;
+   Parallelogram  : boolean := True;
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
@@ -68,8 +71,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Display (Window                 : in out Glfw.Windows.Window;
                       Render_Graphic_Program : GL.Objects.Programs.Program;
-                      Render_Text_Program    : GL.Objects.Programs.Program;
-                      Parallelogram          : boolean := True) is
+                      Render_Text_Program    : GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
       use GL.Types.Singles;     --  for matrix multiplication
 
@@ -92,7 +94,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       A                 : float := 0.0;
       BV                : E2GA.Bivector;
       Step              : constant float :=
-                            GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
+        GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
       V1                : GA_Maths.Vector_2D := E2GA.e1; --  2D vector (0, 0), (1, 0)
       V2                : GA_Maths.Vector_2D;
 
@@ -111,16 +113,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Window.Set_Viewport (0, 0, Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
+
       Colour_Location := GL.Objects.Programs.Uniform_Location
-          (Render_Graphic_Program, "vectorb,.m_colour");
+        (Render_Graphic_Program, "vectorb,.m_colour");
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
       --  Set scale and position of first diagram
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale, Scale, Scale));
       Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale / 2.0,
-             (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0 - Position_Y, 0.0))
-              * Model_View_Matrix;
+                                                     (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0 - Position_Y, 0.0))
+        * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
       while A < Two_Pi - 0.1 loop
@@ -162,8 +165,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             --  Set X and Y positions of next diagram
             Position_X := 0;
             Model_View_Matrix :=
-                Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale,
-                                          Entry_Height * Scale, 0.0)) * Model_View_Matrix;
+              Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale,
+                                        Entry_Height * Scale, 0.0)) * Model_View_Matrix;
          end if;
 
          A := A + Step;
@@ -198,20 +201,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer        : Buffer;
       Element_Buffer       : Buffer;
       Vertices             : Singles.Vector3_Array (1 .. 4) :=
-                               ((0.0, 0.0, 0.0),                       --  Bottom-left
-                                GL_Util.To_GL (GA_Maths.To_3D (V2)),   --  Bottom-right,
-                                GL_Util.To_GL (GA_Maths.To_3D (V3)),   --  Top-right,
-                                GL_Util.To_GL (GA_Maths.To_3D (V4)));  --  Top-left
+        ((0.0, 0.0, 0.0),                       --  Bottom-left
+         GL_Util.To_GL (GA_Maths.To_3D (V2)),   --  Bottom-right,
+         GL_Util.To_GL (GA_Maths.To_3D (V3)),   --  Top-right,
+         GL_Util.To_GL (GA_Maths.To_3D (V4)));  --  Top-left
       Elements             : GL.Types.Int_Array (1 .. 6) := (0, 1, 2,
                                                              2, 3, 0);
    begin
       MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MV_Matrix");
+        (Render_Program, "MV_Matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "Proj_Matrix");
+        (Render_Program, "Proj_Matrix");
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
       Colour_Location := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "vector_colour");
+        (Render_Program, "vector_colour");
 
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
@@ -265,34 +268,36 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Graphic (Render_Graphic_Program : out GL.Objects.Programs.Program;
+   procedure Setup_Graphic (Window : in out Glfw.Windows.Window;
+                            Render_Graphic_Program : out GL.Objects.Programs.Program;
                             Render_Text_Program    : out GL.Objects.Programs.Program) is
+      use Glfw.Input;
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
    begin
       FT.OGL.Initialize_Font_Data ("../fonts/Helvetica.ttc");
       Render_Graphic_Program := Program_Loader.Program_From
-          ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
       Render_Text_Program := Program_Loader.Program_From
-          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
 
       Text_Proj_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "projection_matrix");
+        (Render_Text_Program, "projection_matrix");
       Text_Texture_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "text_sampler");
+        (Render_Text_Program, "text_sampler");
       Text_Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "text_colour");
+        (Render_Text_Program, "text_colour");
 
---        Glfw.Windows.Hints.Set_Depth_Bits (8);
---        GL.Toggles.Enable (GL.Toggles.Depth_Test);
---        GL.Toggles.Enable (GL.Toggles.Cull_Face);
---        GL.Culling.Set_Front_Face (GL.Types.Clockwise);
---        GL.Culling.Set_Cull_Face (GL.Culling.Back);
---        GL.Buffers.Set_Depth_Function (GL.Types.Less);
---        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+      --        Glfw.Windows.Hints.Set_Depth_Bits (8);
+      --        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      --        GL.Culling.Set_Front_Face (GL.Types.Clockwise);
+      --        GL.Culling.Set_Cull_Face (GL.Culling.Back);
+      --        GL.Buffers.Set_Depth_Function (GL.Types.Less);
+      --        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       GA_Draw.Set_Point_Size (0.005);
 
    exception
@@ -307,14 +312,24 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Graphic_Program : GL.Objects.Programs.Program;
    Render_Text_Program : GL.Objects.Programs.Program;
    Running : Boolean := True;
+   Key_Now : Button_State;
 begin
-   Setup_Graphic (Render_Graphic_Program, Render_Text_Program);
+   Main_Window.Set_Input_Toggle (Sticky_Keys, True);
+   Glfw.Input.Poll_Events;
+   Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
    while Running loop
       Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
+      Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
+      if not Key_Pressed and Key_Now = Glfw.Input.Pressed then
+         Parallelogram := not Parallelogram;
+         Key_Pressed := True;
+      else
+         Key_Pressed := Key_Now = Glfw.Input.Pressed;
+      end if;
       Running := Running and then
-          not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+        not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 end Main_Loop;
