@@ -85,8 +85,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Num_Bivector_X    : constant integer := 6;
       Num_Bivector_Y    : constant integer := 4;
       Scale             : constant single := 40.0;
-      Text_Scale        : constant GL.Types.Single := 0.26;
+      Text_Scale        : constant single := 0.26;
       Position_X        : integer := 0;
+      Position_Y        : constant single := 160.0;
 
       A                 : float := 0.0;
       BV                : E2GA.Bivector;
@@ -118,8 +119,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  Set scale and position of first diagram
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale, Scale, Scale));
       Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale / 2.0,
-                   (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0, 0.0))
-                   * Model_View_Matrix;
+             (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0 - Position_Y, 0.0))
+              * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
       while A < Two_Pi - 0.1 loop
