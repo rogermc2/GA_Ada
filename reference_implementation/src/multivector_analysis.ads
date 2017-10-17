@@ -1,33 +1,64 @@
 with E2GA;
+with GA_Maths;
 with Multivector_Type_Base;
 
 package Multivector_Analysis is
-    Flag_Invalid : constant boolean := false;
-    type Flags_Type is record
+    Default_Epsilon_Value : float := 10.0 ** (-5);
+    Flag_Invalid          : constant boolean := false;
+    Flag_Valid            : constant boolean := true;
+    Number_Of_Points      : integer := 3;
+    Number_Of_Scalars     : integer := 3;
+    Number_Of_Vectors     : integer := 3;
+
+    type Flag_Type is record
         Valid : boolean := Flag_Invalid;
         Dual  : boolean := false;
     end record;
-    type Model is (Vector_Space, Homogenous, Conformal);
-    type Flats is (Point, Line, Plane);
-    type Rounds is (Point_Pair, Circle, Sphere);
-    type Multivector_Type is (Vector, Bivector, Trivector);
-    type Versor_Type is (Even, Odd, Rotor);
+    type Blade_Type is (Invalid_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
+                        Tangent_Blade, Free_Blade, Zero_Blade);
+    type Conformal_Type is (Invalid_Model, Multivector_Model, Versor_Model,
+                             Blade_Model);
+    type Flat_Type is (Flat_Invalid, Flat_Point, Flat_Line, Flat_Plane);
+    type Model_Type is (Vector_Space, Homogenous_Model, Conformal_Model);
+
+    subtype Multivector_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
+    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
+    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
+
+   --   Intended use of M_Type:
+   --   m_type[0] = model
+   --   m_type[1] = multivector type (c3ga_type : BLADE, c3ga_type : VERSOR,
+   --               c3ga_type :  : MULTIVECTOR, )
+   --   m_type[2] = class (round, flat, free, etc)
+   --   m_type[3] = grade / class dependent
+    type M_Type is record
+      Model_Kind       : Model_Type := Vector_Space;
+      Multivector_Kind : Multivector_Type := Multivector_Type_Base.Invalid_Base_Type;
+      Round_Kind       : Round_Type := Round_Invalid;
+    end record;
+
+    type Point_Array is array (1 .. Number_Of_Points) of GA_Maths.Vector;
+    type Scalar_Array is array (1 .. Number_Of_Scalars) of integer;
+    type Vector_Array is array (1 .. Number_Of_Vectors) of GA_Maths.Vector;
+
+    type MV_Analysis is record
+      Flag             : Flag_Type := (Flag_Valid, False);
+      Blade_Kind       : Blade_Type;
+      Conformal_Kind   : Conformal_Type := Invalid_Model;
+      Epsilon          : Float := Default_Epsilon_Value;
+      Analysis_Types   : M_Type;
+      Pseudo_Scalar    : Boolean := False;
+      Versor_Kind      : Versor_Type := Invalid_Versor;
+      M_Points         : Point_Array;
+      M_Scalors        : Scalar_Array;
+      M_Vectors        : Vector_Array;
+    end record;
 
     function Default_Epsilon return float;
-    procedure Analyze (MV : E2GA.Multivector; Flags : Flags_Type := (Flag_Invalid, false);
-                       Epsilon : float := Default_Epsilon);
-    function Get_M_Flags return Flags_Type;
-    function Get_Multivector_Type (MV : E2GA.Multivector; Epsilon : float)
-                                   return Multivector_Type_Base.M_Type_Type;
-    function Get_M_Points (Index : Integer) return integer;
-    function Get_M_Scalors (Index : Integer) return integer;
-    function Get_M_Vectors (Index : Integer) return integer;
+    function Analyze (MV : in out E2GA.Multivector; Flags : Flag_Type;
+                      Epsilon : float := Default_Epsilon) return MV_Analysis;
     function Num_Points return integer;
     function Num_Vectors return integer;
     function Num_Scalars return integer;
-    function Num_Type_Levels return integer;
-    procedure Set_M_Flags (Valid, Dual : boolean);
-    procedure Set_M_Type (Index : Integer; Value : Multivector_Type_Base.M_Type_Type);
-    procedure Set_M_Multivector_Type (Current_MV_Type : Multivector_Type_Base.M_Type_Type);
 
 end Multivector_Analysis;
