@@ -131,11 +131,11 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function  Get_MV_Type (X : Multivector; Epsilon : float)
-                          return Multivector_Type_Base.M_Type_Type is
-   begin
-      return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
-   end Get_MV_Type;
+--     function  Get_MV_Type (X : Multivector; Epsilon : float)
+--                            return Multivector_Type_Base.M_Type_Type is
+--     begin
+--        return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
+--     end Get_MV_Type;
 
    --  -------------------------------------------------------------------------
    --  Implements e2ga.cpp (line 1524)  char *string(const mv & obj, char *str,
