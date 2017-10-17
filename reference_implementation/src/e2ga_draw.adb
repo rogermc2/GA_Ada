@@ -18,7 +18,7 @@ package body E2GA_Draw is
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                     aVector : GA_Maths.Vector_2D; Colour : GL.Types.Colors.Color;
-                    Scale : GL.Types.Single := 0.0) is
+                    Scale : float := 1.0) is
       Vec_3D  : GA_Maths.Vector := GA_Maths.To_3D (aVector);
       Tail    : GA_Maths.Vector;
     begin
@@ -31,14 +31,23 @@ package body E2GA_Draw is
 
 --  ----------------------------------------------------------------------------
 
-    procedure Draw (Render_Program                       : GL.Objects.Programs.Program;
+    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                    BV                                   : E2GA.Bivector;
-                    Colour                               : GL.Types.Colors.Color;
-                    Scale                                : GL.Types.Single := 0.0) is
+                    BV     : E2GA.Bivector;
+                   Method_Type : GA_Draw.Bivector_Method_Type
+                               := GA_Draw.Draw_Bivector_Circle;
+                   Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
+      use GA_Draw;
+      use GA_Maths;
+      Scale : float;
     begin
-        GA_Draw.Draw_Bivector (Render_Program, Model_View_Matrix,
-                               Projection_Matrix, BV, Colour, Scale);
+      if Get_Draw_Mode = OD_Magnitude then
+         Scale := Float_Functions.Sqrt (Abs (float (BV.e1e2_Coord (1)))) / Pi;
+      else
+         Scale := 1.0;
+      end if;
+      Draw_Bivector (Render_Program, Model_View_Matrix, Projection_Matrix,
+                     BV, Colour, Scale);
     end Draw;
 
 --  --------------------------------------------------------------------------------

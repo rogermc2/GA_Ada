@@ -86,7 +86,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Entry_Height      : constant single := 3.5;
       Num_Bivector_X    : constant integer := 6;
       Num_Bivector_Y    : constant integer := 4;
-      Scale             : constant single := 40.0;
+      Scale             : constant float := 40.0;
+      Scale_S           : constant single := single (Scale);
       Text_Scale        : constant single := 0.26;
       Position_X        : integer := 0;
       Position_Y        : constant single := 160.0;
@@ -120,10 +121,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
       --  Set scale and position of first diagram
-      Model_View_Matrix := Maths.Scaling_Matrix ((Scale, Scale, Scale));
-      Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale / 2.0,
-                                                     (Single (Num_Bivector_Y)) * Entry_Height * Scale / 2.0 - Position_Y, 0.0))
-        * Model_View_Matrix;
+      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+      Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
+                                                     (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
+                                                      - Position_Y, 0.0))
+                           * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
       while A < Two_Pi - 0.1 loop
@@ -140,7 +142,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                            Projection_Matrix, BV, Blue, Scale);
+                            Projection_Matrix, BV, GA_Draw.Draw_Bivector_Circle,
+                            Blue);
          end if;
 
          if A < Pi - 0.1 then
@@ -157,7 +160,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     (E2GA.Bivector_String (BV)), Label_Position));
 
          --  Set X position of next diagram
-         Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale,
+         Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S,
                                                         0.0, 0.0)) * Model_View_Matrix;
          if Position_X < Num_Bivector_X - 1 then
             Position_X := Position_X + 1;
@@ -165,8 +168,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             --  Set X and Y positions of next diagram
             Position_X := 0;
             Model_View_Matrix :=
-              Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale,
-                                        Entry_Height * Scale, 0.0)) * Model_View_Matrix;
+              Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale_S,
+                                        Entry_Height * Scale_S, 0.0)) * Model_View_Matrix;
          end if;
 
          A := A + Step;
