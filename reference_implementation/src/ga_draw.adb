@@ -35,7 +35,7 @@ package body GA_Draw is
 
    Palet                : Colour_Palet;
    G_Draw_State         : Draw_State;
-   M_Draw_Mode          : Draw_State_Vector;
+   M_Draw_Mode          : Draw_State_Vector;  -- Initialized to OD_Magnitude at end.
    --  M_Sphere         : Geosphere.Geosphere_S;
    --  M_Sphere_GL_List : GL.Types.UInt;
    Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -553,5 +553,6 @@ package body GA_Draw is
    end Set_Point_Size;
 
    --  ------------------------------------------------------------------------
-
+begin
+   M_Draw_Mode.Append (OD_Magnitude);
 end GA_Draw;
