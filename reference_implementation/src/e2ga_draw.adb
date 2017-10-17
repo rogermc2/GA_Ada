@@ -42,7 +42,7 @@ package body E2GA_Draw is
       Scale : float;
     begin
       if Get_Draw_Mode = OD_Magnitude then
-         Scale := Float_Functions.Sqrt (Abs (float (BV.e1e2_Coord (1)))) / Pi;
+         Scale := Float_Functions.Sqrt (Abs (float (BV.Coordinates (1)))) / Pi;
       else
          Scale := 1.0;
       end if;

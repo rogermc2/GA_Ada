@@ -40,13 +40,13 @@ package body E2GA is
 
    function Bivector_String (BV : Bivector; Text : String := "") return String is
    --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
-      BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
-      BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
-      MV        : Multivector (BV_Size);
+--        BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
+--        BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
+--        MV        : Multivector (BV_Size);
    begin
-      MV.Grade_Use := BV.Grade_Usage;
-      MV.Coordinates (1) := BV_Coords (1);
-      return Multivector_String (MV, Text);
+--        MV.Grade_Use := BV.Grade_Usage;
+--        MV.Coordinates (1) := BV_Coords (1);
+      return Multivector_String (BV, Text);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -216,10 +216,10 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_E2 (BV : Bivector) return Scalar is
-   begin
-      return Scalar (BV.e1e2_Coord (1) * BV.e1e2_Coord (1));
-   end Norm_E2;
+--     function Norm_E2 (BV : Bivector) return Scalar is
+--     begin
+--        return Scalar (BV.e1e2_Coord (1) * BV.e1e2_Coord (1));
+--     end Norm_E2;
 
    --  ----------------------------------------------------------------------------
 
@@ -315,11 +315,11 @@ package body E2GA is
       VC2         : float := Get_Coord_2 (V);
       Vout        : Vector_2D;
    begin
-      if (BV.Grade_Usage and 1) /= 0 then
-         Coord_Array (1) := VC1 * BV.e1e2_Coord (1);
+      if (BV.Grade_Use and 1) /= 0 then
+         Coord_Array (1) := VC1 * BV.Coordinates (1);
       end if;
-      if (BV.Grade_Usage and 2) /= 0 then
-         Coord_Array (2) :=  VC2 * BV.e1e2_Coord (1);
+      if (BV.Grade_Use and 2) /= 0 then
+         Coord_Array (2) :=  VC2 * BV.Coordinates (1);
       end if;
       Set_Coords (Vout, Coord_Array (1), Coord_Array (2));
       return Vout;
@@ -383,7 +383,7 @@ package body E2GA is
       V21       : constant float := Get_Coord_1 (V2);
       V22       : constant float := Get_Coord_2 (V2);
    begin
-      BV.e1e2_Coord (1) :=
+      BV.Coordinates (1) :=
           Float_Array_Package.Determinant (((V11, V21), (V12, V22)));
       return BV;
    end Outer_Product;

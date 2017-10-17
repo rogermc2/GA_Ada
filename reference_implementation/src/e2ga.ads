@@ -18,10 +18,10 @@ package E2GA is
    type Bit_Map is new integer range 0 .. 2 ** 30;
    type Bit_Map_Array is array (integer range <>) of Bit_Map;
 
-   type Bivector is record
-      Grade_Usage : GA_Maths.Grade_Usage := 4; --  m_gu Bit 3 set.
-      e1e2_Coord  : Bivector_Coords;           -- Coordinate of e1^e2.
-   end record;
+--     type Bivector is record
+--        Grade_Usage : GA_Maths.Grade_Usage := 4; --  m_gu Bit 3 set.
+--        e1e2_Coord  : Bivector_Coords;           -- Coordinate of e1^e2.
+--     end record;
 
    type Coords_4 is record
       Coord_1 : float;
@@ -47,12 +47,12 @@ package E2GA is
       M_C2 : float := 0.0;
    end record;
 
-   type Trivector is record
-      Grade_Usage     : GA_Maths.Grade_Usage; --  m_gu
-      e1e2_Coord_1    : float; -- Coordinate of e1^e2.
-      e2e3_Coord_2    : float; -- Coordinate of e2^e3.
-      e1e2e3_Coord_3  : float; -- Coordinate of e1^e2^e3.
-   end record;
+--     type Trivector is record
+--        Grade_Usage     : GA_Maths.Grade_Usage; --  m_gu
+--        e1e2_Coord_1    : float; -- Coordinate of e1^e2.
+--        e2e3_Coord_2    : float; -- Coordinate of e2^e3.
+--        e1e2e3_Coord_3  : float; -- Coordinate of e1^e2^e3.
+--     end record;
 
    --  The outer product of P vectors is called a grade P multivector or a P-vector
    --  In E2, MV = u^v = det(u,v)e1^e2. This "bivector" is the only MV in E2.
@@ -60,6 +60,9 @@ package E2GA is
       Grade_Use   : GA_Maths.Grade_Usage; --  m_gu
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
+
+   subtype Bivector is Multivector (1);
+   subtype Trivector is Multivector (3);
 
    function Bivector_String (BV : E2GA.Bivector; Text : String := "") return String;
    function Construct_Vector (Coord : float) return GA_Maths.Vector_2D;
@@ -72,7 +75,7 @@ package E2GA is
    function Largest_Coordinate return float;
    function Multivector_String (MV : Multivector; Text : String := "") return String;
    function Norm_E (MV : Multivector) return Scalar;
-   function Norm_E2 (BV : Bivector) return Scalar;
+--     function Norm_E2 (BV : Bivector) return Scalar;
    function Norm_E2 (V2 : GA_Maths.Vector_2D) return Scalar;
    function Norm_E2 (MV : Multivector) return Scalar;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
