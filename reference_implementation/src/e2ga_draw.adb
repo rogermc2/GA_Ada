@@ -47,7 +47,7 @@ package body E2GA_Draw is
          Scale := 1.0;
       end if;
       Draw_Bivector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                     Dual(BV), Ortho_1, Ortho_2 , Scale);
+                     E2GA.Dual(BV), Ortho_1, Ortho_2, Scale);
 
     end Draw;
 
