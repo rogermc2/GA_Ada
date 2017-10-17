@@ -34,7 +34,7 @@ package body E2GA_Draw is
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                     BV     : E2GA.Bivector;
-                   Method_Type : GA_Draw.Bivector_Method_Type
+                    Method_Type : GA_Draw.Bivector_Method_Type
                                := GA_Draw.Draw_Bivector_Circle;
                    Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
       use GA_Draw;
@@ -47,7 +47,8 @@ package body E2GA_Draw is
          Scale := 1.0;
       end if;
       Draw_Bivector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                     BV, Colour, Scale);
+                     Dual(BV), Ortho_1, Ortho_2 , Scale);
+
     end Draw;
 
 --  --------------------------------------------------------------------------------

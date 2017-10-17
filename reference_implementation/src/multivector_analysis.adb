@@ -39,7 +39,8 @@ package body Multivector_Analysis is
     end Default_Epsilon;
 
  --  ---------------------------------------------------------------------------
-    function Get_M_Flags return Flags_Type is
+
+   function Get_M_Flags return Flags_Type is
     begin
         return M_Flags;
     end Get_M_Flags;

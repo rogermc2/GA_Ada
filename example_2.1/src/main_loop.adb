@@ -142,8 +142,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                            Projection_Matrix, BV, GA_Draw.Draw_Bivector_Circle,
-                            Blue);
+                            Projection_Matrix, BV);
          end if;
 
          if A < Pi - 0.1 then

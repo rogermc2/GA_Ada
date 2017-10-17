@@ -56,7 +56,6 @@ package body GA_Draw is
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            Use_Base : Boolean; Base : GA_Maths.Vector;
                             Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
                             Scale  : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
@@ -81,13 +80,64 @@ package body GA_Draw is
 
       MVP_Matrix := GL.Types.Singles.Identity4 * GL.Types.Singles.Identity4;
 
-      if Use_Base then
-         Cords := GA_Maths.Get_Coords (Base);
-         Translate := (Single (Get_Coord_1 (Base)),
-                       Single (Get_Coord_2 (Base)), Single (Get_Coord_3 (Base)));
-         if E3GA.Norm_E2 (Base) /= 0.0  then
-            MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
-         end if;
+      if  Method /= Draw_Bivector_Parallelogram and then
+        Method /= Draw_Bivector_Parallelogram_No_Vectors then
+         MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
+      else
+         Scaled := Scale * Scale * Pi /
+           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
+         Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
+         MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
+           * MVP_Matrix;
+      end if;
+
+      Case Method is
+         when Draw_Bivector_Circle|
+              Draw_Bivector_Circle_Outline =>
+            Draw_Circle (Render_Program,
+                         Model_View_Matrix, Colour, Scale);
+         when others => null;
+      end case;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
+         raise;
+   end Draw_Bivector;
+
+   --  ----------------------------------------------------------------------
+
+   procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
+                            Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                            Base, Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
+                            Scale  : float;
+                            Method : Bivector_Method_Type := Draw_Bivector_Circle;
+                            Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
+      use GA_Maths;
+      use GL.Types.Singles;
+      --  L          : boolean;
+      Rotor_Step : float := 2.0 * Ada.Numerics.Pi / 64.0;
+      Scale_S    : GL.Types.Single := GL.Types.Single (Scale);
+      --  Y          : GL.Types.Single;
+      Cords      : Array_3D := (0.0, 0.0, 0.0);
+      Translate  : Vector3 :=  (0.0, 0.0, 0.0);
+      O2         : Vector := Ortho_2;
+      MVP_Matrix : Matrix4 := Singles.Identity4;
+      Rotor      : E2GA.Rotor;
+      Scaled     : float;
+      Scaled_S   : GL.Types.Single;
+   begin
+      GL.Objects.Programs.Use_Program (Render_Program);
+      Vertex_Array_Object.Initialize_Id;
+      Vertex_Array_Object.Bind;
+
+      MVP_Matrix := GL.Types.Singles.Identity4 * GL.Types.Singles.Identity4;
+
+      Cords := GA_Maths.Get_Coords (Base);
+      Translate := (Single (Get_Coord_1 (Base)),
+                    Single (Get_Coord_2 (Base)), Single (Get_Coord_3 (Base)));
+      if E3GA.Norm_E2 (Base) /= 0.0  then
+         MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
       end if;
 
       if  Method /= Draw_Bivector_Parallelogram and then
@@ -243,7 +293,6 @@ package body GA_Draw is
 
       type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
-      Normal          : Vector;
       GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
       GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
       GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
@@ -254,6 +303,7 @@ package body GA_Draw is
       Fan             : Singles.Vector3_Array (1 .. Num_Steps);
 
       procedure Draw_Part (Part : Circle_Part) is
+         Normal : Vector;
          Norm_Z : float;
       begin
          Case Part is
@@ -288,7 +338,9 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      --   Draw the filled-in circle (back)
+      Draw_Part (Back_Part);
+      Draw_Part (Front_Part);
+      Draw_Part (Outline_Part);
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
    exception

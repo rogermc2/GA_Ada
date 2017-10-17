@@ -29,8 +29,13 @@ package GA_Draw is
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   Use_Base : Boolean; Base : GA_Maths.Vector;
                    Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
+                   Scale  : float;
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
+                   Colour : Color := (1.0, 1.0, 1.0, 1.0));
+   procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
+                   Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                   Base, Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
                    Scale  : float;
                    Method : Bivector_Method_Type := Draw_Bivector_Circle;
                    Colour : Color := (1.0, 1.0, 1.0, 1.0));
