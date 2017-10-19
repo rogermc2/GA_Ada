@@ -143,6 +143,6 @@ private
       C4_e1e2e3   : float := 0.0;
    end record;
 
-   type Multivector is new E2GA.Multivector (8);
+   type Multivector is new E2GA.Multivector (8, 0);
 
 end E3GA;

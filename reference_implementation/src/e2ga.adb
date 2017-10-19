@@ -67,7 +67,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function "+" (MV1, MV2 : Multivector) return Multivector is
-      Sum : Multivector (MV1.MV_Size) := MV1;
+      Sum : Multivector (MV1.MV_Size, MV1.Grade_Use) := MV1;
    begin
       Sum.Coordinates (1) := Sum.Coordinates (1) + MV2.Coordinates (1);
       Sum.Coordinates (2) := Sum.Coordinates (2) + MV2.Coordinates (2);
@@ -97,7 +97,6 @@ package body E2GA is
    function Construct_Vector (Coord : float) return Vector is
       theVector : Vector;
    begin
-      theVector.Grade_Use := 0;
       theVector.Coordinates := (0.0, Coord);
       return theVector;
    end Construct_Vector;
@@ -107,7 +106,6 @@ package body E2GA is
    function Construct_Vector (Coord_1, Coord_2 : float) return Vector is
       theVector : Vector;
    begin
-      theVector.Grade_Use := 0;
       theVector.Coordinates := (Coord_1, Coord_2);
       return theVector;
    end Construct_Vector;
@@ -126,15 +124,8 @@ package body E2GA is
 
    function Dot_Product (R1, R2 : Rotor) return float is
    begin
-      return R1.M_C1 * R2.M_C1 + R1.M_C2 * R2.M_C2;
-   end Dot_Product;
-
-   --  ------------------------------------------------------------------------
-
-   function Dot_Product (V1, V2 : Vector) return float is
-   begin
-      return V1.Coordinates (1) * V2.Coordinates (1) +
-        V1.Coordinates (2) * V2.Coordinates (2);
+      return R1.Coordinates (1) * R2.Coordinates (1) +
+        R1.Coordinates (2) * R2.Coordinates (2);
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -293,7 +284,7 @@ package body E2GA is
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
       end if;
 
-      return Scalar (Value);
+      return GA_Maths.Scalar (Value);
    end Norm_E;
 
    --  ----------------------------------------------------------------------------
@@ -313,7 +304,7 @@ package body E2GA is
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
       end if;
 
-      return Scalar (Value);
+      return GA_Maths.Scalar (Value);
    end Norm_E2;
 
    --  ----------------------------------------------------------------------------
@@ -342,7 +333,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Left_Contraction (V1, V2 : Vector) return GA_Maths.Scalar is
+   function Left_Contraction (V1, V2 : Vector_2D) return GA_Maths.Scalar is
    begin
       return GA_Maths.Scalar (Dot_Product (V1, V2));
    end Left_Contraction;
@@ -421,7 +412,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Scalar_Product (V1, V2 : Vector) return GA_Maths.Scalar is
+   function Scalar_Product (V1, V2 : Vector_2D) return GA_Maths.Scalar is
    begin
       return  GA_Maths.Scalar (Dot_Product (V1, V2));
    end Scalar_Product;
@@ -436,8 +427,10 @@ package body E2GA is
    --  ----------------------------------------------------------------------------
 
    function Set_Rotor (E1_E2 : float) return Rotor is
+      theRotor : Rotor;
    begin
-      return  (E1_E2, 0.0);
+      theRotor.Coordinates := (E1_E2, 0.0);
+      return theRotor;
    end Set_Rotor;
 
    --  ----------------------------------------------------------------------------
@@ -445,7 +438,6 @@ package body E2GA is
    function Set_Vector (V1 : Vector_2D) return Vector is
       theVector : Vector;
    begin
-      theVector.Grade_Use := 1;
       theVector.Coordinates (1) := V1 (1);
       theVector.Coordinates (2) := V1 (2);
       return theVector;

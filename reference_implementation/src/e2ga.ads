@@ -40,7 +40,7 @@ package E2GA is
                     MVT_Bivector, MVT_Rotor, MVT_E1_CT, MVT_E2_CT,
                     MVT_I2_CT, MVT_I2I_CT, MVT_MV, MVT_Last);
 
-   type Rotor is record
+   type Rotor_Class is record
       M_C1 : float := 0.0;
       M_C2 : float := 0.0;
    end record;
@@ -54,14 +54,14 @@ package E2GA is
 
    --  The outer product of P vectors is called a grade P multivector or a P-vector
    --  In E2, MV = u^v = det(u,v)e1^e2. This "bivector" is the only MV in E2.
-   type Multivector (MV_Size : integer) is record
-      Grade_Use   : GA_Maths.Grade_Usage; --  m_gu
+   type Multivector (MV_Size : integer; Grade_Use : GA_Maths.Grade_Usage) is record
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
 
-   subtype Vector is Multivector (2);
-   subtype Bivector is Multivector (1);
-   subtype Trivector is Multivector (3);
+   subtype Scalar is Multivector (1, 1);
+   subtype Vector is Multivector (2, 2);
+   subtype Bivector is Multivector (1, 4);
+   subtype Rotor is Multivector (2, 5);
 
    function "+" (V1, V2 : Vector_2D) return Vector_2D;
    function "-" (V1, V2 : Vector_2D) return Vector_2D;
@@ -74,7 +74,6 @@ package E2GA is
    function Construct_Vector (Coord_1,  Coord_2 : float) return Vector;
    function Dot_Product (V1, V2 : Vector_2D) return float;
    function Dot_Product (R1, R2 : Rotor) return float;
-   function Dot_Product (V1, V2 : Vector) return float;
    function Dual (MV : Multivector) return Multivector;
    function e1 return Vector_2D;
    function e2 return Vector_2d;
@@ -90,10 +89,10 @@ package E2GA is
    function Norm_E2 (MV : Multivector) return GA_Maths.Scalar;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   function Left_Contraction (V1, V2 : Vector) return GA_Maths.Scalar;
+   function Left_Contraction (V1, V2 : Vector_2D) return GA_Maths.Scalar;
    function Left_Contraction (V : Vector; BV : Bivector) return Vector;
    function Outer_Product (V1, V2 : Vector) return Bivector;
-   function Scalar_Product (V1, V2 : Vector) return GA_Maths.Scalar;
+   function Scalar_Product (V1, V2 : Vector_2D) return GA_Maths.Scalar;
    function Set_Bivector (V1, V2 : Vector) return Bivector;
    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
    function Set_Rotor (E1_E2 : float) return Rotor;
