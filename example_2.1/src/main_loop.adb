@@ -54,7 +54,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : GA_Maths.Vector_2D;
+                                 V2, V3, V4              : E2GA.Vector;
                                  Colour                  : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
@@ -76,6 +76,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
 
       use Maths.Single_Math_Functions;
+
+      use E2GA;
       use GA_Maths;
       use GA_Maths.Float_Functions;
 
@@ -94,10 +96,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       A                 : float := 0.0;
       BV                : E2GA.Bivector;
+      E11               : constant float := GA_Maths.Get_Coord_1 (E3GA.e1);
+      E12               : constant float := GA_Maths.Get_Coord_2 (E3GA.e1);
+      E21               : constant float := GA_Maths.Get_Coord_1 (E3GA.e2);
+      E22               : constant float := GA_Maths.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                : GA_Maths.Vector_2D := E2GA.e1; --  2D vector (0, 0), (1, 0)
-      V2                : GA_Maths.Vector_2D;
+      V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
+      V2                : E2GA.Vector;
 
       Colour_Location   : GL.Uniforms.Uniform;
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -128,9 +134,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                            * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
+      V1.Coordinates (1) := E11;
+      V1.Coordinates (2) := E12;
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
-         V2 := Cos (A) * E2GA.e1 - Sin (A) * E2GA.e2;
+         V2.Coordinates (1) := Cos (A) * E11 - Sin (A) * E21;
+         V2.Coordinates (2) := Cos (A) * E21 - Sin (A) * E22;
          E2GA_Draw.Draw (Render_Graphic_Program,
                          Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
@@ -192,7 +201,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : GA_Maths.Vector_2D;
+                                 V2, V3, V4              : E2GA.Vector;
                                  Colour                  : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
@@ -204,9 +213,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Element_Buffer       : Buffer;
       Vertices             : Singles.Vector3_Array (1 .. 4) :=
         ((0.0, 0.0, 0.0),                       --  Bottom-left
-         GL_Util.To_GL (GA_Maths.To_3D (V2)),   --  Bottom-right,
-         GL_Util.To_GL (GA_Maths.To_3D (V3)),   --  Top-right,
-         GL_Util.To_GL (GA_Maths.To_3D (V4)));  --  Top-left
+         GL_Util.To_GL (V2),   --  Bottom-right,
+         GL_Util.To_GL (V3),   --  Top-right,
+         GL_Util.To_GL (V4));   --  Top-left
       Elements             : GL.Types.Int_Array (1 .. 6) := (0, 1, 2,
                                                              2, 3, 0);
    begin

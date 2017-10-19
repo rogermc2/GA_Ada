@@ -42,9 +42,9 @@ package Multivector_Analysis is
       Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of GA_Maths.Vector;
-   type Scalar_Array is array (1 .. Number_Of_Scalars) of integer;
-   type Vector_Array is array (1 .. Number_Of_Vectors) of GA_Maths.Vector;
+   type Point_Array is array (1 .. Number_Of_Points) of GA_Maths.Vector_3D;
+   type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
+   type Vector_Array is array (1 .. Number_Of_Vectors) of GA_Maths.Vector_3D;
 
    type MV_Analysis is record
       Flag             : Flag_Type := (Flag_Valid, False);

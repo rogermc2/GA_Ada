@@ -17,11 +17,11 @@ package body E2GA is
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
-   MV_Grade_Size                     : constant Grade_Array := (1, 2, 1);
+   MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
-   MV_Size                           : constant Array_I8 := (0, 1, 2, 3, 1, 2, 3, 4);
+   MV_Size                           : constant GA_Maths.Array_I8 := (0, 1, 2, 3, 1, 2, 3, 4);
    MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
-                                         ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
+     ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
    MV_Basis_Element_Sign_By_Bit_Map  : constant Array_BM4 := (1, 1, 1, 1);
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
@@ -29,7 +29,7 @@ package body E2GA is
    MV_Basis_Element_Index_By_Bit_Map : constant Array_BM4 := (0, 1, 2, 3);
    --  MV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
    --  Use it to answer: 'what basis element do I find at index [x]'?
-   MV_Basis_Element_Bit_Map_By_Index : constant Array_I4 := (0, 1, 2, 3);
+   MV_Basis_Element_Bit_Map_By_Index : constant GA_Maths.Array_I4 := (0, 1, 2, 3);
    MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
    MV_Basis_Vector_Names             : constant array (1 .. 2) of string (1 .. 2) := ("e1", "e2");
 
@@ -38,14 +38,24 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Bivector_String (BV : Bivector; Text : String := "") return String is
-   --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
---        BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
---        BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
---        MV        : Multivector (BV_Size);
+   function "+" (MV1, MV2 : Multivector) return Multivector is
+      Sum : Multivector (MV1.MV_Size) := MV1;
    begin
---        MV.Grade_Use := BV.Grade_Usage;
---        MV.Coordinates (1) := BV_Coords (1);
+      Sum.Coordinates (1) := Sum.Coordinates (1) + MV2.Coordinates (1);
+      Sum.Coordinates (2) := Sum.Coordinates (2) + MV2.Coordinates (2);
+      return Sum;
+   end "+";
+
+   --  -------------------------------------------------------------------------
+
+   function Bivector_String (BV : Bivector; Text : String := "") return String is
+      --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
+      --        BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
+      --        BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
+      --        MV        : Multivector (BV_Size);
+   begin
+      --        MV.Grade_Use := BV.Grade_Usage;
+      --        MV.Coordinates (1) := BV_Coords (1);
       return Multivector_String (BV, Text);
    exception
       when anError :  others =>
@@ -56,27 +66,27 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
    --  Construct_Vector corresponds to e2ga._vector
-   function Construct_Vector (Coord : float) return GA_Maths.Vector_2D is
-      use GA_Maths;
-      theVector : Vector_2D;
+   function Construct_Vector (Coord : float) return Vector is
+      theVector : Vector;
    begin
-      Set_Coords (theVector, Coord, 0.0);
+      theVector.Grade_Use := 0;
+      theVector.Coordinates := (0.0, Coord);
       return theVector;
    end Construct_Vector;
 
    --  ----------------------------------------------------------------------------
 
-   function Construct_Vector (Coord_1, Coord_2 : float) return GA_Maths.Vector_2D is
-      use GA_Maths;
-      theVector : Vector_2D;
+   function Construct_Vector (Coord_1, Coord_2 : float) return Vector is
+      theVector : Vector;
    begin
-      Set_Coords (theVector, Coord_1, Coord_2);
+      theVector.Grade_Use := 0;
+      theVector.Coordinates := (Coord_1, Coord_2);
       return theVector;
    end Construct_Vector;
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector_Name (Index : Basis_Index) return String is
+   function Basis_Vector_Name (Index : GA_Maths.Basis_Index) return String is
    begin
       case Index is
          when 1 => return "e1";
@@ -93,8 +103,17 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+   function Dot_Product (V1, V2 : Vector) return float is
+   begin
+      return V1.Coordinates (1) * V2.Coordinates (1) +
+        V1.Coordinates (2) * V2.Coordinates (2);
+   end Dot_Product;
+
+   --  ------------------------------------------------------------------------
+
    function Dual (MV : Multivector) return Multivector is
       Coords : Coords_Continuous_Array (1 .. 4) := (0.0, 0.0, 0.0, 0.0);
+      use GA_Maths;
    begin
       if (MV.Grade_Use and 1) /= 0 then
          Coords (4) := -MV.Coordinates (1);
@@ -112,30 +131,28 @@ package body E2GA is
    --  ----------------------------------------------------------------------------
 
    function e1 return GA_Maths.Vector_2D is
-      use GA_Maths;
-      theVector : Vector_2D;
+      theVector : GA_Maths.Vector_2D;
    begin
-      Set_Coords (theVector, e1_basis (1), e1_basis (2));
+      GA_Maths.Set_Coords (theVector, e1_basis (1), e1_basis (2));
       return theVector;
    end e1;
 
    --  ----------------------------------------------------------------------------
 
    function e2 return GA_Maths.Vector_2D is
-      use GA_Maths;
-      theVector : Vector_2D;
+      theVector : GA_Maths.Vector_2D;
    begin
-      Set_Coords (theVector, e2_basis (1), e2_basis (2));
+      GA_Maths.Set_Coords (theVector, e2_basis (1), e2_basis (2));
       return theVector;
    end e2;
 
    --  ----------------------------------------------------------------------------
 
---     function  Get_MV_Type (X : Multivector; Epsilon : float)
---                            return Multivector_Type_Base.M_Type_Type is
---     begin
---        return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
---     end Get_MV_Type;
+   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
+   --                            return Multivector_Type_Base.M_Type_Type is
+   --     begin
+   --        return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
+   --     end Get_MV_Type;
 
    --  -------------------------------------------------------------------------
    --  Implements e2ga.cpp (line 1524)  char *string(const mv & obj, char *str,
@@ -165,20 +182,20 @@ package body E2GA is
       --        Loop on basis symbols
       --          Print symbol
       --          If not last symbol print ^
-      for Grade in Grade_Index'Range loop  --  i
-           if  Unsigned_32 (MV.Grade_Use) /=
-             Shift_Left (Unsigned_32 (Grade), 1) then
+      for Grade in GA_Maths.Grade_Index'Range loop  --  i
+         if  Unsigned_32 (MV.Grade_Use) /=
+           Shift_Left (Unsigned_32 (Grade), 1) then
             if Basis_Index - MV_Grade_Size (Grade) > 0 then
                Basis_Index := Basis_Index + MV_Grade_Size (Grade);
             end if;
-           else
+         else
             --  int mv_gradeSize[3] = {1, 2, 1 };
             --  Bivector grade size is 2?
             --  Loop on grade
             for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
                --  Print sign and coordinate value
                Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-                             Abs (MV.Coordinates (Coord_Index));
+               Abs (MV.Coordinates (Coord_Index));
                Value := float_3 (Coordinate);
                theString := theString & float_3'Image (Value);
                if Grade /= 1 then  --  Not grade 0
@@ -200,7 +217,7 @@ package body E2GA is
                   Basis_Index := Basis_Index + 1;
                end if;  --  Grade
             end loop;  --  Grade_Index
-           end if;  --  MV.Grade_Use
+         end if;  --  MV.Grade_Use
          if Grade >= 2 then
             Coord_Index := Coord_Index + 1;
             Basis_Index := Basis_Index + 1;
@@ -216,18 +233,18 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
---     function Norm_E2 (BV : Bivector) return Scalar is
---     begin
---        return Scalar (BV.e1e2_Coord (1) * BV.e1e2_Coord (1));
---     end Norm_E2;
+   --     function Norm_E2 (BV : Bivector) return Scalar is
+   --     begin
+   --        return Scalar (BV.e1e2_Coord (1) * BV.e1e2_Coord (1));
+   --     end Norm_E2;
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E2 (V2 : GA_Maths.Vector_2D) return Scalar is
+   function Norm_E2 (V2 : GA_Maths.Vector_2D) return GA_Maths.Scalar is
       V21 : float := GA_Maths.Get_Coord_1 (V2);
       V22 : float := GA_Maths.Get_Coord_2 (V2);
    begin
-      return Scalar (V21 * V21 + V22 * V22);
+      return GA_Maths.Scalar (V21 * V21 + V22 * V22);
    end Norm_E2;
 
    --  ----------------------------------------------------------------------------
@@ -239,7 +256,8 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E (MV : Multivector) return Scalar is
+   function Norm_E (MV : Multivector) return GA_Maths.Scalar is
+      use GA_Maths;
       Value : float := 0.0;
    begin
       if (MV.Grade_Use and 1) /= 0 then
@@ -247,7 +265,7 @@ package body E2GA is
       end if;
       if (MV.Grade_Use and 2) /= 0 then
          Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
-             MV.Coordinates (3) * MV.Coordinates (3);
+           MV.Coordinates (3) * MV.Coordinates (3);
       end if;
       if (MV.Grade_Use and 4) /= 0 then
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
@@ -258,7 +276,8 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E2 (MV : Multivector) return Scalar is
+   function Norm_E2 (MV : Multivector) return GA_Maths.Scalar is
+      use GA_Maths;
       Value : float := 0.0;
    begin
       if (MV.Grade_Use and 1) /= 0 then
@@ -266,7 +285,7 @@ package body E2GA is
       end if;
       if (MV.Grade_Use and 2) /= 0 then
          Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
-             MV.Coordinates (3) * MV.Coordinates (3);
+           MV.Coordinates (3) * MV.Coordinates (3);
       end if;
       if (MV.Grade_Use and 4) /= 0 then
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
@@ -292,50 +311,40 @@ package body E2GA is
    --  ------------------------------------------------------------------------
    --  Expand is not for external use. It decompresses the coordinates stored in this
    function  Expand (MV : Multivector; Nulls : boolean := True)
-                     return Array_3D is
-   --          C_M_C : float;
-   --          Null_Float : float;
+                     return GA_Maths.Array_3D is
+      --          C_M_C : float;
+      --          Null_Float : float;
    begin
       return (MV.Coordinates (1), MV.Coordinates (2), MV.Coordinates (3));
    end Expand;
 
    --  ------------------------------------------------------------------------
 
-   function Left_Contraction (V1, V2 : Vector_2D) return Scalar is
+   function Left_Contraction (V1, V2 : Vector) return GA_Maths.Scalar is
    begin
-      return Scalar (Dot_Product (V1, V2));
+      return GA_Maths.Scalar (Dot_Product (V1, V2));
    end Left_Contraction;
 
    --  ------------------------------------------------------------------------
 
-   function Left_Contraction (V : Vector_2D; BV : Bivector) return Vector_2D is
+   function Left_Contraction (V : Vector; BV : Bivector) return Vector is
       use GA_Maths;
-      Coord_Array : array (1 .. 2) of float := (0.0, 0.0);
-      VC1         : float := Get_Coord_1 (V);
-      VC2         : float := Get_Coord_2 (V);
-      Vout        : Vector_2D;
+      Vout        : Vector;
    begin
       if (BV.Grade_Use and 1) /= 0 then
-         Coord_Array (1) := VC1 * BV.Coordinates (1);
+         Vout.Coordinates (1) := V.Coordinates (1) * BV.Coordinates (1);
       end if;
       if (BV.Grade_Use and 2) /= 0 then
-         Coord_Array (2) :=  VC2 * BV.Coordinates (1);
+         Vout.Coordinates (2) :=  V.Coordinates (2) * BV.Coordinates (1);
       end if;
-      Set_Coords (Vout, Coord_Array (1), Coord_Array (2));
       return Vout;
-   end Left_Contraction;
-
-   --  ------------------------------------------------------------------------
-
-   function Left_Contraction (V1, V2 : Vector) return Scalar is
-   begin
-      return Scalar (Dot_Product (V1, V2));
    end Left_Contraction;
 
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
       use Interfaces;
+      use GA_Maths;
       Coords     : Coord4_Array := (0.0, 0.0, 0.0, 0.0);
       MV1_Expand : Array_3D := Expand (MV1, True);
       MV2_Expand : Array_3D := Expand (MV2, True);
@@ -374,30 +383,30 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Outer_Product (V1, V2 : Vector_2D) return Bivector is
-   --  The outer product basis in 2D is the coordinate of e1^e2.
+   function Outer_Product (V1, V2 : Vector) return Bivector is
+      --  The outer product basis in 2D is the coordinate of e1^e2.
       use GA_Maths;
       BV        : Bivector;
-      V11       : constant float := Get_Coord_1 (V1);
-      V12       : constant float := Get_Coord_2 (V1);
-      V21       : constant float := Get_Coord_1 (V2);
-      V22       : constant float := Get_Coord_2 (V2);
+      V11       : constant float := V1.Coordinates (1);
+      V12       : constant float := V1.Coordinates (2);
+      V21       : constant float := V2.Coordinates (1);
+      V22       : constant float := V2.Coordinates (2);
    begin
       BV.Coordinates (1) :=
-          Float_Array_Package.Determinant (((V11, V21), (V12, V22)));
+        Float_Array_Package.Determinant (((V11, V21), (V12, V22)));
       return BV;
    end Outer_Product;
 
    --  ------------------------------------------------------------------------
 
-   function Scalar_Product (V1, V2 : GA_Maths.Vector_2D) return Scalar is
+   function Scalar_Product (V1, V2 : Vector) return GA_Maths.Scalar is
    begin
-      return  Scalar (Dot_Product (V1, V2));
+      return  GA_Maths.Scalar (Dot_Product (V1, V2));
    end Scalar_Product;
 
    --  ----------------------------------------------------------------------------
 
-   function Set_Bivector (V1, V2 : Vector_2D) return Bivector is
+   function Set_Bivector (V1, V2 : Vector) return Bivector is
    begin
       return  Outer_Product (V1, V2);
    end Set_Bivector;
@@ -411,18 +420,29 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Unit_E (V : Vector_2D) return Vector_2D is
+   function Set_Vector (V1 : GA_Maths.Vector_2D) return Vector is
+      theVector : Vector;
+   begin
+      theVector.Grade_Use := 1;
+      theVector.Coordinates (1) := GA_Maths.Get_Coord_1 (V1);
+      theVector.Coordinates (2) := GA_Maths.Get_Coord_2 (V1);
+      return theVector;
+   end Set_Vector;
+
+   --  ----------------------------------------------------------------------------
+   function Unit_E (V : Vector) return Vector is
       E2_Value   : float;
       IE_Value   : float;
-      use GA_Maths;
-      V1         : float := Get_Coord_1 (V);
-      V2         : float := Get_Coord_2 (V);
-      e21        : float := Get_Coord_1 (e2);
-      Result     : Vector_2D;
+      V1         : float := V.Coordinates (1);
+      V2         : float := V.Coordinates (2);
+      e21        : float;
+      Result     : Vector := V;
    begin
-      E2_Value := V1 *  V1 + V2 *  V2;
-      IE_Value := 1.0 / Float_Functions.Sqrt (e21);
-      Set_Coords (Result, V1 * IE_Value, V2 * IE_Value);
+      e21 := GA_Maths.Get_Coord_1 (e2);
+      E2_Value := V1 * V1 + V2 * V2;
+      IE_Value := 1.0 / GA_Maths.Float_Functions.Sqrt (e21);
+      Result.Coordinates (1) := V1 * IE_Value;
+      Result.Coordinates (2) := V2 * IE_Value;
       return  Result;
    end Unit_E;
 
