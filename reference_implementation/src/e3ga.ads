@@ -22,8 +22,9 @@ package E3GA is
    type Syn_SMultivector is private;
    type Rotor is private;
    type Trivector is private;
-   --    type Vector is implemented in GA_Maths
-   --    type Vector_2D is in GA_Maths;
+
+   --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
+   type Vector_3D is private;
 
    --  Joinable grade definitions
    Grade_0 : constant integer := 1;
@@ -32,6 +33,10 @@ package E3GA is
    Grade_3 : constant integer := 8;
 
    --  ------------------------------------------------------------------------
+
+   function "+" (V1, V2 : Vector_3D) return Vector_3D;
+   function "-" (V1, V2 : Vector_3D) return Vector_3D;
+   function "*" (Weight : float; V : Vector_3D) return Vector_3D;
 
    function "*" (Weight : float; BV : Bivector) return Bivector;
    function "*" (R1, R2 : Rotor) return Rotor;
@@ -57,8 +62,13 @@ package E3GA is
    function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
    function Apply_Outermorphism (OM : Outermorphism; V : Vector_3D) return Vector_3D;
    function Dot_Product (R1, R2 : Rotor) return float;
+   function Dot_Product (V1, V2 : Vector_3D) return float;
    function Get_Coords (BV : Bivector) return Array_3D;
    function Get_Coords (R : Rotor) return Array_4D;
+    function Get_Coord_1 (V : Vector_3D) return float;
+    function Get_Coord_2 (V : Vector_3D) return float;
+    function Get_Coord_3 (V : Vector_3D) return float;
+    function Get_Coords (V : Vector_3D) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
    function Geometric_Product (BV : Bivector; R : Rotor) return Rotor;
@@ -77,6 +87,7 @@ package E3GA is
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Left_Contraction (V : Vector_3D; BV : Bivector) return Vector_3D;
    function Left_Contraction (V1 : Vector_3D; V2 : Vector_3D) return Scalar;
+   function Magnitude (V : Vector_3D) return float;
    function MV_String (MV : Multivector; Text : String := "")
                        return Ada.Strings.Unbounded.Unbounded_String;
    function Outer_Product (V1, V2 : Vector_3D) return Bivector;
@@ -95,12 +106,18 @@ package E3GA is
    procedure Set_Rotor (X : out Rotor; MV : Multivector);
    procedure Set_Rotor (X : out Rotor; BV : Bivector);
    procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
+    procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float);
+    function To_Unsigned (V : Vector_3D) return Vector_Unsigned;
+    function To_3D (V : Vector_2D) return Vector_3D;
    function To_Vector (MV : Syn_SMultivector) return Vector_3D;
    --  Unit_e normalizes rotor R
    function Unit_e (R : Rotor) return Rotor;
    --  Unit_e normalizes Vector_3D X
    function Unit_e (X : Vector_3D) return Vector_3D;
 private
+
+   --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
+   type Vector_3D is array (1 .. 3) of float;
 
    type Bivector is record
       Grade_Use   : Grade_Usage := 7;  -- 2^2 + 2^1 +2^0

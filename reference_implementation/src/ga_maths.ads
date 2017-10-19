@@ -47,9 +47,6 @@ package GA_Maths is
         C3_e3   : Interfaces.Unsigned_64;
     end record;
 
-    --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
-    type Vector_3D is private;
-
     --  Vector_2D corresponds to e2ga.Vector_3D coordinate storage float m_c[2]
     type Vector_2D is private;
 
@@ -66,28 +63,15 @@ package GA_Maths is
     function "*" (Weight : float; V : Vector_2D) return Vector_2D;
     function "*" (V1, V2 : Vector_2D) return Vector_2D;
 
-    function "+" (V1, V2 : Vector_3D) return Vector_3D;
-    function "-" (V1, V2 : Vector_3D) return Vector_3D;
-    function "*" (Weight : float; V : Vector_3D) return Vector_3D;
-
     function Canonical_Reordering_Sign (Map_A, Map_B : integer) return float;
     function Dot_Product (V1, V2 : Vector_2D) return float;
-    function Dot_Product (V1, V2 : Vector_3D) return float;
-    function Get_Coord_1 (V : Vector_3D) return float;
-    function Get_Coord_2 (V : Vector_3D) return float;
-    function Get_Coord_3 (V : Vector_3D) return float;
     function Get_Coords (V : Vector_2D) return Array_2D;
-    function Get_Coords (V : Vector_3D) return Array_3D;
     function Get_Coord_1 (V : Vector_2D) return float;
     function Get_Coord_2 (V : Vector_2D) return float;
-    function Get_Unsigned_Coords (V : Vector_3D) return Vector_Unsigned;
+--      function Get_Unsigned_Coords (V : Vector_3D) return Vector_Unsigned;
     function Magnitude (V : Vector_2D) return float;
-    function Magnitude (V : Vector_3D) return float;
 
     procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
-    procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float);
-    function To_Unsigned (V : Vector_3D) return Vector_Unsigned;
-    function To_3D (V : Vector_2D) return Vector_3D;
 
 private
     --  Vector_2D corresponds to e2ga.vector coordinate storage float m_c[2]
@@ -95,14 +79,6 @@ private
     --    Vec_type : Vector_Type := Vector_e1_e2;
         C1_e1    : float;
         C2_e2    : float;
-    end record;
-
-    --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
-    type Vector_3D is record
-   --     Vec_Type : Vector_Type := Vector_e1_e2_e3;
-        C1_e1    : float;
-        C2_e2    : float;
-        C3_e3    : float;
     end record;
 
 end GA_Maths;
