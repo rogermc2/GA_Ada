@@ -15,7 +15,7 @@ package body GL_Util is
         use GL;
         use GL.Types.Singles;
         IR        : Rotor := Inverse (R);
-        VGP       : GA_Maths.Vector;
+        VGP       : E3GA.Vector_3D;
         Image     : Vector3_Array (1 .. 4);
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
@@ -61,9 +61,9 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : GA_Maths.Vector) return GL.Types.Doubles.Vector3 is
+   function To_GL (V3 : E3GA.Vector_3D) return GL.Types.Doubles.Vector3 is
         use GL.Types;
-        use GA_Maths;
+        use E3GA;
    begin
         return (Double (Get_Coord_1 (V3)), Double (Get_Coord_2 (V3)),
                                       Double (Get_Coord_3 (V3)));
@@ -71,8 +71,8 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : GA_Maths.Vector) return GL.Types.Singles.Vector3 is
-        use GA_Maths;
+   function To_GL (V3 : E3GA.Vector_3D) return GL.Types.Singles.Vector3 is
+        use E3GA;
    begin
         return (Single (Get_Coord_1 (V3)), Single (Get_Coord_2 (V3)),
                                       Single (Get_Coord_3 (V3)));

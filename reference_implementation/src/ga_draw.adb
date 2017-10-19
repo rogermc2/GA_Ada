@@ -56,7 +56,7 @@ package body GA_Draw is
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
+                            Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
                             Scale  : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
@@ -68,7 +68,7 @@ package body GA_Draw is
       --  Y          : GL.Types.Single;
       Cords      : Array_3D := (0.0, 0.0, 0.0);
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
-      O2         : Vector := Ortho_2;
+      O2         : E3GA.Vector_3D := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
       Rotor      : E2GA.Rotor;
       Scaled     : float;
@@ -109,7 +109,7 @@ package body GA_Draw is
 
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            Base, Normal, Ortho_1, Ortho_2 : GA_Maths.Vector;
+                            Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
                             Scale  : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
@@ -121,7 +121,7 @@ package body GA_Draw is
       --  Y          : GL.Types.Single;
       Cords      : Array_3D := (0.0, 0.0, 0.0);
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
-      O2         : Vector := Ortho_2;
+      O2         : E3GA.Vector_3D := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
       Rotor      : E2GA.Rotor;
       Scaled     : float;
@@ -133,9 +133,10 @@ package body GA_Draw is
 
       MVP_Matrix := GL.Types.Singles.Identity4 * GL.Types.Singles.Identity4;
 
-      Cords := GA_Maths.Get_Coords (Base);
-      Translate := (Single (Get_Coord_1 (Base)),
-                    Single (Get_Coord_2 (Base)), Single (Get_Coord_3 (Base)));
+      Cords := E3GA.Get_Coords (Base);
+      Translate := (Single (E3GA.Get_Coord_1 (Base)),
+                    Single (E3GA.Get_Coord_2 (Base)),
+                    Single (E3GA.Get_Coord_3 (Base)));
       if E3GA.Norm_E2 (Base) /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
       end if;
@@ -304,14 +305,14 @@ package body GA_Draw is
       Fan             : Singles.Vector3_Array (1 .. Num_Steps);
 
       procedure Draw_Part (Part : Circle_Part) is
-         Normal : Vector;
+         Normal : E3GA.Vector_3D;
          Norm_Z : float;
       begin
          Case Part is
             when Back_Part | Outline_Part => Norm_Z := 1.0;
             when Front_Part => Norm_Z := -1.0;
          end case;
-         Set_Coords (Normal, 0.0, 0.0, Norm_Z);
+         E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
          Fan (1) := (0.0, 0.0, 0.0);
          for Count in 2 .. Num_Steps loop
@@ -398,7 +399,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-                        Tail, Direction   : GA_Maths.Vector;
+                        Tail, Direction   : E3GA.Vector_3D;
                         Colour            : GL.Types.Colors.Color;
                         Scale             : float) is
 
@@ -446,7 +447,7 @@ package body GA_Draw is
 
    procedure Draw_Vector (Render_Program          : GL.Objects.Programs.Program;
                           MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                          Tail, Direction         : GA_Maths.Vector;
+                          Tail, Direction         : E3GA.Vector_3D;
                           Colour                  : GL.Types.Colors.Color;
                           Scale                   : float) is
       use GL.Culling;
@@ -461,12 +462,12 @@ package body GA_Draw is
       GL_Dir          : Vector3 := GL_Util.To_GL (Direction);
 
       Z               : Single := 0.0;
-      Dir_e1          : Single := Single (Dot_Product (Direction, E3GA.e1));
-      Dir_e2          : Single := Single (Dot_Product (Direction, E3GA.e2));
-      Dir_e3          : Single := Single (Dot_Product (Direction, E3GA.e3));
-      Tail_e1         : Single := Single (Dot_Product (Tail, E3GA.e1));
-      Tail_e2         : Single := Single (Dot_Product (Tail, E3GA.e2));
-      Tail_e3         : Single := Single (Dot_Product (Tail, E3GA.e3));
+      Dir_e1          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
+      Dir_e2          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e2));
+      Dir_e3          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e3));
+      Tail_e1         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
+      Tail_e2         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e2));
+      Tail_e3         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e3));
       Scale_Factor1   : Single := Single (1.2 / Scale);
       Scale_Factor2   : Single := 1.1 * Single (Sqrt (float (Scale)));
       Scale_Factor1_V : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);

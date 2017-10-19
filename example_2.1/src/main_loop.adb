@@ -96,10 +96,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       A                 : float := 0.0;
       BV                : E2GA.Bivector;
-      E11               : constant float := GA_Maths.Get_Coord_1 (E3GA.e1);
-      E12               : constant float := GA_Maths.Get_Coord_2 (E3GA.e1);
-      E21               : constant float := GA_Maths.Get_Coord_1 (E3GA.e2);
-      E22               : constant float := GA_Maths.Get_Coord_2 (E3GA.e2);
+      E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
+      E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
+      E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
+      E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
       V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)

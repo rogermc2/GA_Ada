@@ -1,6 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with E3GA;
 with GA_Draw;
 with Multivector_Analysis;
 
@@ -20,14 +21,14 @@ package body E2GA_Draw is
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
-      Vec_3D  : GA_Maths.Vector_3D;
-      Tail    : GA_Maths.Vector_3D;
+      Vec_3D  : E3GA.Vector_3D;
+      Tail    : E3GA.Vector_3D;
    begin
       --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
       --  constructed from v1
-      GA_Maths.Set_Coords (Vec_3D, aVector.Coordinates (1),
+      E3GA.Set_Coords (Vec_3D, aVector.Coordinates (1),
                                    aVector.Coordinates (2), 0.0);
-      GA_Maths.Set_Coords (Tail, 0.0, 0.0, 0.0);
+      E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                            Tail, Vec_3D, Colour, Scale);
    end Draw;
@@ -44,25 +45,25 @@ package body E2GA_Draw is
       use GA_Maths;
       use Multivector_Analysis;
       A         : constant MV_Analysis := Analyze (MV);
-      Normal    : E2GA.Vector;
-      Direction : E2GA.Vector;
+      Normal    : E3GA.Vector_3D;
+      Direction : E3GA.Vector_3D;
       Scale     : float := 1.0;
    begin
       if isBlade (A) then
          case Blade_Subclass (A) is
             when Vector_Subclass =>
-               Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
+               E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                      A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
                if Get_Draw_Mode = OD_Magnitude then
                   Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
                end if;
-               Normal := E2GA.Dual (E2GA.Outer_Product (A.M_Vectors (1),
-                                    A.M_Vectors (1)));
-               GA_Draw.Draw_Bivector (Render_Program,
-                    Model_View_Matrix, Projection_Matrix, Normal,
-                    A.M_Vectors (1), A.M_Vectors (2), Scale, Method, Colour);
+--                 Normal := E2GA.Dual (E2GA.Outer_Product (A.M_Vectors (1),
+--                                      A.M_Vectors (1)));
+--                 GA_Draw.Draw_Bivector (Render_Program,
+--                      Model_View_Matrix, Projection_Matrix, Normal,
+--                      A.M_Vectors (1), A.M_Vectors (2), Scale, Method, Colour);
             When Even_Versor_Subclass => null;
          end case;
       elsif isVersor (A) then
