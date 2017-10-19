@@ -5,34 +5,6 @@ with Interfaces;
 
 package body GA_Maths is
 
-    function "+" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1.C1_e1 + V2.C1_e1, V1.C2_e2 + V2.C2_e2);
-    end "+";
-
-    --  ------------------------------------------------------------------------
-
-    function "-" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1.C1_e1 - V2.C1_e1, V1.C2_e2 - V2.C2_e2);
-    end "-";
-
-    --  ------------------------------------------------------------------------
-
-    function "*" (Weight : float; V : Vector_2D) return Vector_2D is
-    begin
-        return (Weight * V.C1_e1, Weight * V.C2_e2);
-    end "*";
-
-    --  ------------------------------------------------------------------------
-
-    function "*" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1.C1_e1 * V2.C1_e1, V1.C2_e2 * V2.C2_e2);
-    end "*";
-
-    --  ------------------------------------------------------------------------
-
     function Bit_Count (Value : Interfaces.Unsigned_32) return Natural is
     begin
         return 0;
@@ -57,48 +29,6 @@ package body GA_Maths is
             return -1.0;
         end if;
     end Canonical_Reordering_Sign;
-
-    --  ------------------------------------------------------------------------
-
-    function Dot_Product (V1, V2 : Vector_2D) return float is
-    begin
-        return V1.C1_e1 * V2.C1_e1 + V1.C2_e2 * V2.C2_e2;
-    end Dot_Product;
-
-    --  ------------------------------------------------------------------------
-
-    function Get_Coords (V : Vector_2D) return Array_2D is
-    begin
-        return (V.C1_e1, V.C2_e2);
-    end Get_Coords;
-
-    --  ------------------------------------------------------------------------
-
-    function Get_Coord_1 (V : Vector_2D) return float is
-    begin
-        return V.C1_e1;
-    end Get_Coord_1;
-
-    --  ------------------------------------------------------------------------
-
-    function Get_Coord_2 (V : Vector_2D) return float is
-    begin
-        return V.C2_e2;
-    end Get_Coord_2;
-
-    --  ------------------------------------------------------------------------
-
-    function Magnitude (V : Vector_2D) return float is
-    begin
-        return Float_Functions.Sqrt (V.C1_e1 * V.C1_e1 + V.C2_e2 * V.C2_e2);
-    end Magnitude;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Set_Coords (V : out Vector_2D; C1, C2 : float) is
-    begin
-        V := (C1, C2);
-    end Set_Coords;
 
     --  ------------------------------------------------------------------------
 

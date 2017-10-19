@@ -21,7 +21,7 @@ package E3GA is
    type Multivector is private;
    type Syn_SMultivector is private;
    type Rotor is private;
-   type Trivector is private;
+--     type Trivector is private;
 
    --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
    type Vector_3D is private;
@@ -47,8 +47,8 @@ package E3GA is
    function "+" (W : float; R : Rotor) return Rotor;
    function "-" (W : float; R : Rotor) return Rotor;
 
-   function e1 (V : Vector_2D) return float;
-   function e2 (V : Vector_2D) return float;
+   function e1 (V : E2GA.Vector_2D) return float;
+   function e2 (V : E2GA.Vector_2D) return float;
 
    function e1 return Vector_3D;
    function e2 return Vector_3D;
@@ -96,7 +96,7 @@ package E3GA is
    function Norm_E2 (V : Vector_3D) return Scalar;
    function Norm_E2 (MV : E2GA.Multivector) return Scalar;
    function Norm_E2 (R : Rotor) return Scalar;
-   function Norm_E2 (TV : Trivector) return Scalar;
+--     function Norm_E2 (TV : Trivector) return Scalar;
    function Norm_R (BV : Bivector) return Scalar;
    function Norm_R2 (BV : Bivector) return Scalar;
    function Scalar_Product (V1, V2 : Vector_3D) return Scalar;
@@ -108,7 +108,7 @@ package E3GA is
    procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
     procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float);
     function To_Unsigned (V : Vector_3D) return Vector_Unsigned;
-    function To_3D (V : Vector_2D) return Vector_3D;
+    function To_3D (V : E2GA.Vector_2D) return Vector_3D;
    function To_Vector (MV : Syn_SMultivector) return Vector_3D;
    --  Unit_e normalizes rotor R
    function Unit_e (R : Rotor) return Rotor;
@@ -144,7 +144,5 @@ private
    end record;
 
    type Multivector is new E2GA.Multivector (8);
-
-   type Trivector is new float;  -- e1e2e3
 
 end E3GA;

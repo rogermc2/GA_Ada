@@ -208,16 +208,16 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function e1 (V : GA_Maths.Vector_2D) return float is
+    function e1 (V : E2GA.Vector_2D) return float is
     begin
-        return Get_Coord_1 (V);
+        return E2GA.Get_Coord_1 (V);
     end e1;
 
     --  ------------------------------------------------------------------------
 
-    function e2 (V : GA_Maths.Vector_2D) return float is
+    function e2 (V : E2GA.Vector_2D) return float is
     begin
-        return Get_Coord_2 (V);
+        return E2GA.Get_Coord_2 (V);
     end e2;
 
     --  ------------------------------------------------------------------------
@@ -650,10 +650,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Norm_E2 (TV : Trivector) return Scalar is
-    begin
-        return Scalar (TV * TV);
-    end Norm_E2;
+--      function Norm_E2 (TV : Trivector) return Scalar is
+--      begin
+--          return Scalar (TV * TV);
+--      end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
@@ -762,10 +762,9 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function To_3D (V : Vector_2D) return Vector_3D is
-      V2D : GA_Maths.Array_2D := GA_Maths.Get_Coords (V);
+   function To_3D (V : E2GA.Vector_2D) return Vector_3D is
    begin
-      return (V2D (1), V2D (2), 0.0);
+      return (E2GA.Get_Coord_1 (V), E2GA.Get_Coord_2 (V), 0.0);
    end To_3D;
 
                 --  ------------------------------------------------------------------------
