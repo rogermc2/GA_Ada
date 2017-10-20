@@ -70,7 +70,6 @@ package body GA_Draw is
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
       O2         : E3GA.Vector_3D := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
-      Rotor      : E2GA.Rotor;
       Scaled     : float;
       Scaled_S   : GL.Types.Single;
    begin
@@ -85,7 +84,7 @@ package body GA_Draw is
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
          Scaled := Scale * Scale * Pi /
-           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
+           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2)) (1);
          Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
@@ -123,7 +122,6 @@ package body GA_Draw is
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
       O2         : E3GA.Vector_3D := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
-      Rotor      : E2GA.Rotor;
       Scaled     : float;
       Scaled_S   : GL.Types.Single;
    begin
@@ -137,7 +135,7 @@ package body GA_Draw is
       Translate := (Single (E3GA.Get_Coord_1 (Base)),
                     Single (E3GA.Get_Coord_2 (Base)),
                     Single (E3GA.Get_Coord_3 (Base)));
-      if E3GA.Norm_E2 (Base) /= 0.0  then
+      if E3GA.Norm_E2 (Base) (1) /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
       end if;
 
@@ -146,7 +144,7 @@ package body GA_Draw is
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
          Scaled := Scale * Scale * Pi /
-           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
+           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2)) (1);
          Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
@@ -490,7 +488,7 @@ package body GA_Draw is
          Model_View_Matrix := MV_Matrix;
          Projection_Matrix := Proj_Matrix;
 
-         if E3GA.Norm_e2 (Tail) /= 0.0 then
+         if E3GA.Norm_e2 (Tail) (1) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
@@ -504,7 +502,7 @@ package body GA_Draw is
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector
-         if E3GA.Norm_e2 (Tail) /= 0.0 then
+         if E3GA.Norm_e2 (Tail) (1) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
@@ -564,9 +562,8 @@ package body GA_Draw is
 
       MVP_Matrix_ID     : GL.Uniforms.Uniform;
       MVP_Matrix        : GL.Types.Singles.Matrix4 := Singles.Identity4;
-      Rotor             : E2GA.Rotor;
       Shift             : Singles.Vector3 :=
-        (Single (Direction.M_C1), Single (Direction.M_C2), 0.0);
+        (Single (Direction.Coordinates (1)), Single (Direction.Coordinates (2)), 0.0);
       Scale_Factor1     : Single := Single (1.2 / Scale);
       Scale_Factor2     : Single := 1.1 * Single (Sqrt (float (Scale)));
       Scale_Factor      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);

@@ -46,26 +46,31 @@ package body E2GA_Draw is
       use Multivector_Analysis;
       A         : constant MV_Analysis := Analyze (MV);
       AM_V1     : constant E3GA.Vector_3D := A.M_Vectors (1);
+      AM_V2     : constant E3GA.Vector_3D := A.M_Vectors (2);
+      V1        : E2GA.Vector_2D;
       OP        : E2GA.Bivector;
       Normal    : E3GA.Vector_3D;
+      Normal_BV : E2GA.Bivector;
       Direction : E3GA.Vector_3D;
       Scale     : float := 1.0;
    begin
+      E2GA.Set_Coords (V1, E3GA.Get_Coord_1 (AM_V1), E3GA.Get_Coord_2 (AM_V1));
       if isBlade (A) then
          case Blade_Subclass (A) is
             when Vector_Subclass =>
                E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                     A.M_Vectors (1), Direction, Colour, Scale);
+                     AM_V1, Direction, Colour, Scale);
             when Bivector_Subclass =>
                if Get_Draw_Mode = OD_Magnitude then
                   Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
                end if;
-               OP := E2GA.Outer_Product (AM_V1, AM_V1);
-               Normal := E2GA.Dual (OP);
---                 GA_Draw.Draw_Bivector (Render_Program,
---                      Model_View_Matrix, Projection_Matrix, Normal,
---                      A.M_Vectors (1), A.M_Vectors (2), Scale, Method, Colour);
+               OP := E2GA.Outer_Product (V1, V1);
+               Normal_BV := E2GA.Dual (OP);
+               E3GA.Set_Coords (Normal, 0.0, 0.0, Normal_BV.Coordinates (1));
+               GA_Draw.Draw_Bivector (Render_Program,
+                    Model_View_Matrix, Projection_Matrix, Normal,
+                    AM_V1, AM_V2, Scale, Method, Colour);
             When Even_Versor_Subclass => null;
          end case;
       elsif isVersor (A) then

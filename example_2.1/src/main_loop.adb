@@ -102,8 +102,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
-      V2                : E2GA.Vector;
+      V1                : E2GA.Vector_2D; --  2D vector (0, 0), (1, 0)
+      V2                : E2GA.Vector_2D;
 
       Colour_Location   : GL.Uniforms.Uniform;
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -134,21 +134,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                            * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
-      V1.Coordinates (1) := E11;
-      V1.Coordinates (2) := E12;
+      Set_Coords (V1, E11, E12);
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
-         V2.Coordinates (1) := Cos (A) * E11 - Sin (A) * E21;
-         V2.Coordinates (2) := Cos (A) * E21 - Sin (A) * E22;
+         Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
+                         Cos (A) * E21 - Sin (A) * E22);
          E2GA_Draw.Draw (Render_Graphic_Program,
-                         Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
+                         Model_View_Matrix, Projection_Matrix, Set_Vector (V1), Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
-                         V2, Green, Scale);
+                         Set_Vector (V2), Green, Scale);
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
-                                Projection_Matrix, V1, V1 + V2, V2, Blue);
+                                Projection_Matrix, Set_Vector (V1),
+                                Set_Vector (V1 + V2), Set_Vector (V2), Blue);
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                             Projection_Matrix, BV);
