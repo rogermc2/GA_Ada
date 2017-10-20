@@ -19,7 +19,7 @@ package body E2GA_Draw is
    --  as argument (and also integrate 'Palet')
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
+                   aVector : E2GA.Vector_MV; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
       Vec_3D  : E3GA.Vector_3D;
       Tail    : E3GA.Vector_3D;
@@ -48,9 +48,9 @@ package body E2GA_Draw is
       AM_V1     : constant E3GA.Vector_3D := A.M_Vectors (1);
       AM_V2     : constant E3GA.Vector_3D := A.M_Vectors (2);
       V1        : E2GA.Vector_2D;
-      OP        : E2GA.Bivector;
+      OP        : E2GA.Bivector_MV;
       Normal    : E3GA.Vector_3D;
-      Normal_BV : E2GA.Bivector;
+      Normal_BV : E2GA.Bivector_MV;
       Direction : E3GA.Vector_3D;
       Scale     : float := 1.0;
    begin

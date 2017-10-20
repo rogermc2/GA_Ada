@@ -43,7 +43,7 @@ package GA_Draw is
 
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV     : E2GA.Bivector;
+                   BV     : E2GA.Bivector_MV;
                    Scale  : float;
                    Method : Bivector_Method_Type := Draw_Bivector_Circle;
                    Colour : Color := (1.0, 1.0, 1.0, 1.0));

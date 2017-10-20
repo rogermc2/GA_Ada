@@ -54,7 +54,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector;
+                                 V2, V3, V4              : E2GA.Vector_MV;
                                  Colour                  : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
@@ -95,7 +95,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_Y        : constant single := 160.0;
 
       A                 : float := 0.0;
-      BV                : E2GA.Bivector;
+      BV                : E2GA.Bivector_MV;
       E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
       E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
       E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
@@ -201,7 +201,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector;
+                                 V2, V3, V4              : E2GA.Vector_MV;
                                  Colour                  : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
