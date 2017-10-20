@@ -90,11 +90,10 @@ package body GA_Draw is
            * MVP_Matrix;
       end if;
 
-      Case Method is
+      case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program,
-                         Model_View_Matrix, Colour, Scale);
+            Draw_Circle (Render_Program, Model_View_Matrix, Colour, Scale);
          when others => null;
       end case;
 
