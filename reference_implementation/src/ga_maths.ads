@@ -35,7 +35,6 @@ package GA_Maths is
 
     type GA_Matrix3 is new Float_Matrix (1 .. 3, 1 .. 3);
 
-    subtype Scalar is float;
 --      type Scalar_Coords is (Scalar_Scalar);
 --      type Scalar is record
 --      --    Coord_Type : Scalar_Coords := Scalar_Scalar;

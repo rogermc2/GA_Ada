@@ -16,6 +16,7 @@ package E3GA is
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
    --    type Rotor_Coordinates_Type is (Rotor_Scalar_e1e2_e2e3_e3e1);
 
+   type Scalar is array (1 .. 1) of float;
    type Bivector is private;
    type Outermorphism is private;
    type Multivector is private;

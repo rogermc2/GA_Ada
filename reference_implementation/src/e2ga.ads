@@ -40,6 +40,8 @@ package E2GA is
                     MVT_Bivector, MVT_Rotor, MVT_E1_CT, MVT_E2_CT,
                     MVT_I2_CT, MVT_I2I_CT, MVT_MV, MVT_Last);
 
+   type Scalar is array (1 .. 1) of float;
+
    type Rotor_Class is record
       M_C1 : float := 0.0;
       M_C2 : float := 0.0;
@@ -58,7 +60,7 @@ package E2GA is
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
 
-   subtype Scalar is Multivector (1, 1);
+   subtype Scalar_GA is Multivector (1, 1);
    subtype Vector is Multivector (2, 2);
    subtype Bivector is Multivector (1, 4);
    subtype Rotor is Multivector (2, 5);
@@ -83,17 +85,17 @@ package E2GA is
    function Largest_Coordinate return float;
    function Magnitude (V : Vector_2D) return float;
    function Multivector_String (MV : Multivector; Text : String := "") return String;
-   function Norm_E (MV : Multivector) return GA_Maths.Scalar;
+   function Norm_E (MV : Multivector) return Scalar;
    --     function Norm_E2 (BV : Bivector) return Scalar;
-   --     function Norm_E2 (V2 : Vector) return GA_Maths.Scalar;
-   function Norm_E2 (MV : Multivector) return GA_Maths.Scalar;
+   --     function Norm_E2 (V2 : Vector) return Scalar;
+   function Norm_E2 (MV : Multivector) return Scalar;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   function Left_Contraction (V1, V2 : Vector_2D) return GA_Maths.Scalar;
+   function Left_Contraction (V1, V2 : Vector_2D) return Scalar;
    function Left_Contraction (V : Vector; BV : Bivector) return Vector;
-   function Outer_Product (V1, V2 : Vector) return Bivector;
-   function Scalar_Product (V1, V2 : Vector_2D) return GA_Maths.Scalar;
-   function Set_Bivector (V1, V2 : Vector) return Bivector;
+   function Outer_Product (V1, V2 : Vector_2D) return Bivector;
+   function Scalar_Product (V1, V2 : Vector_2D) return Scalar;
+   function Set_Bivector (V1, V2 : Vector_2D) return Bivector;
    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
    function Set_Rotor (E1_E2 : float) return Rotor;
    function Unit_E (V : Vector) return Vector;

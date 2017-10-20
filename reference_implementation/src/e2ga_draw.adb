@@ -45,6 +45,8 @@ package body E2GA_Draw is
       use GA_Maths;
       use Multivector_Analysis;
       A         : constant MV_Analysis := Analyze (MV);
+      AM_V1     : constant E3GA.Vector_3D := A.M_Vectors (1);
+      OP        : E2GA.Bivector;
       Normal    : E3GA.Vector_3D;
       Direction : E3GA.Vector_3D;
       Scale     : float := 1.0;
@@ -59,8 +61,8 @@ package body E2GA_Draw is
                if Get_Draw_Mode = OD_Magnitude then
                   Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
                end if;
---                 Normal := E2GA.Dual (E2GA.Outer_Product (A.M_Vectors (1),
---                                      A.M_Vectors (1)));
+               OP := E2GA.Outer_Product (AM_V1, AM_V1);
+               Normal := E2GA.Dual (OP);
 --                 GA_Draw.Draw_Bivector (Render_Program,
 --                      Model_View_Matrix, Projection_Matrix, Normal,
 --                      A.M_Vectors (1), A.M_Vectors (2), Scale, Method, Colour);

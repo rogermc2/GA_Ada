@@ -434,7 +434,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Inverse (aRotor : Rotor) return Rotor is
-        Norm_Inv  : Scalar;
+        Norm_Inv  : float;
     begin
         Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
         return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
@@ -444,7 +444,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Inverse (V : Vector_3D) return Vector_3D is
-        Norm_Inv  : Scalar := 1.0 / Dot_Product (V, V);
+        Norm_Inv  : float := 1.0 / Dot_Product (V, V);
         Result : Vector_3D;
     begin
         Set_Coords (Result, Norm_Inv * V (1), Norm_Inv * V (2), Norm_Inv * V (3));
@@ -453,10 +453,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Left_Contraction (BV1, BV2 : Bivector) return Scalar is
-    begin
-        return -Dot_Product (BV1, BV2);
-    end Left_Contraction;
+   function Left_Contraction (BV1, BV2 : Bivector) return Scalar is
+      LC : Scalar;
+   begin
+      LC (1) := -Dot_Product (BV1, BV2);
+        return LC;
+   end Left_Contraction;
 
     --  ------------------------------------------------------------------------
 
@@ -533,10 +535,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Left_Contraction (V1 : Vector_3D; V2 : Vector_3D) return Scalar is
-    begin
-        Return Scalar (Dot_Product (V1, V2));
-    end Left_Contraction;
+   function Left_Contraction (V1 : Vector_3D; V2 : Vector_3D) return Scalar is
+      LC : Scalar;
+   begin
+      LC (1) := Dot_Product (V1, V2);
+      return LC;
+   end Left_Contraction;
 
     --  ------------------------------------------------------------------------
 
@@ -604,23 +608,28 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-    function Norm_E2 (V : Vector_3D) return Scalar is
-    begin
-        return Scalar (V (1) * V (1) + V (2) * V (2) + V (3) * V (3));
-    end Norm_E2;
+   function Norm_E2 (V : Vector_3D) return Scalar is
+      Norm : Scalar;
+   begin
+      Norm (1) := V (1) * V (1) + V (2) * V (2) + V (3) * V (3);
+      return Norm;
+   end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (BV : Bivector) return Scalar is
+      Norm : Scalar;
     begin
-        return Scalar (BV.C1_e1e2 * BV.C1_e1e2 + BV.C2_e2e3 * BV.C2_e2e3 +
-                       BV.C3_e3e1 * BV.C3_e3e1);
+      Norm (1) := BV.C1_e1e2 * BV.C1_e1e2 + BV.C2_e2e3 * BV.C2_e2e3 +
+                  BV.C3_e3e1 * BV.C3_e3e1;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (MV : E2GA.Multivector) return Scalar is
-        Value  : float := 0.0;
+      Value  : float := 0.0;
+      Norm : Scalar;
     begin
         if (MV.Grade_Use and 1) /= 0 then
             Value := MV.Coordinates (1) * MV.Coordinates (1);
@@ -637,15 +646,18 @@ package body E3GA is
         if (MV.Grade_Use and 8) /= 0 then
             Value := Value + MV.Coordinates (9) * MV.Coordinates (9);
         end if;
-        return Scalar (Value);
+      Norm (1) := Value;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (R : Rotor) return Scalar is
+      Norm : Scalar;
     begin
-        return Scalar (R.C2_e1e2 * R.C2_e1e2 + R.C3_e2e3 * R.C3_e2e3 +
-                    R.C4_e3e1 * R.C4_e3e1);
+      Norm (1) := R.C2_e1e2 * R.C2_e1e2 + R.C3_e2e3 * R.C3_e2e3 +
+                  R.C4_e3e1 * R.C4_e3e1;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
@@ -659,14 +671,15 @@ package body E3GA is
 
     function Norm_R (BV : Bivector) return Scalar is
         use GA_Maths.Float_Functions;
-        DP     : Scalar := Dot_Product (BV, BV);
-        Result : Scalar := 0.0;
+        DP     : constant float := Dot_Product (BV, BV);
+        Result : Scalar;
     begin
+        Result (1) := 0.0;
         if DP /= 0.0 then
             if DP < 0.0 then
-                Result := -Sqrt (-DP);
+                Result (1) := -Sqrt (-DP);
             else
-                Result := Sqrt (DP);
+                Result (1) := Sqrt (DP);
             end if;
         end if;
         return Result;
@@ -674,10 +687,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Norm_R2 (BV : Bivector) return Scalar is
-    begin
-        return Dot_Product (BV, BV);
-    end Norm_R2;
+   function Norm_R2 (BV : Bivector) return Scalar is
+      Norm : Scalar;
+   begin
+      Norm (1) := Dot_Product (BV, BV);
+      return Norm;
+   end Norm_R2;
 
     --  ------------------------------------------------------------------------
 
@@ -694,10 +709,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Scalar_Product (V1, V2 : Vector_3D) return Scalar is
-    begin
-        return  Scalar (Dot_Product (V1, V2));
-    end Scalar_Product;
+   function Scalar_Product (V1, V2 : Vector_3D) return Scalar is
+      Product : Scalar;
+   begin
+      Product (1) := Dot_Product (V1, V2);
+      return  Product;
+   end Scalar_Product;
 
     --  ------------------------------------------------------------------------
 

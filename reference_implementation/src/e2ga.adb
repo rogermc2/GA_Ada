@@ -255,9 +255,11 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E2 (V2 : Vector_2D) return GA_Maths.Scalar is
+   function Norm_E2 (V2 : Vector_2D) return Scalar is
+      Norm : Scalar;
    begin
-      return GA_Maths.Scalar (V2 (1) * V2 (1) + V2 (2) * V2 (2));
+      Norm (1) := (V2 (1) * V2 (1) + V2 (2) * V2 (2));
+      return Norm ;
    end Norm_E2;
 
    --  ----------------------------------------------------------------------------
@@ -269,9 +271,10 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E (MV : Multivector) return GA_Maths.Scalar is
+   function Norm_E (MV : Multivector) return Scalar is
       use GA_Maths;
       Value : float := 0.0;
+      Norm  : Scalar;
    begin
       if (MV.Grade_Use and 1) /= 0 then
          Value := MV.Coordinates (1) * MV.Coordinates (1);
@@ -283,15 +286,16 @@ package body E2GA is
       if (MV.Grade_Use and 4) /= 0 then
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
       end if;
-
-      return GA_Maths.Scalar (Value);
+      Norm (1) := Value;
+      return Norm;
    end Norm_E;
 
    --  ----------------------------------------------------------------------------
 
-   function Norm_E2 (MV : Multivector) return GA_Maths.Scalar is
+   function Norm_E2 (MV : Multivector) return Scalar is
       use GA_Maths;
       Value : float := 0.0;
+      Norm  : Scalar;
    begin
       if (MV.Grade_Use and 1) /= 0 then
          Value := MV.Coordinates (1) * MV.Coordinates (1);
@@ -304,7 +308,8 @@ package body E2GA is
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
       end if;
 
-      return GA_Maths.Scalar (Value);
+      Norm (1) := Value;
+      return Norm;
    end Norm_E2;
 
    --  ----------------------------------------------------------------------------
@@ -333,9 +338,11 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Left_Contraction (V1, V2 : Vector_2D) return GA_Maths.Scalar is
+   function Left_Contraction (V1, V2 : Vector_2D) return Scalar is
+      LC  : Scalar;
    begin
-      return GA_Maths.Scalar (Dot_Product (V1, V2));
+      LC (1) := Dot_Product (V1, V2);
+      return LC;
    end Left_Contraction;
 
    --  ------------------------------------------------------------------------
@@ -396,30 +403,28 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Outer_Product (V1, V2 : Vector) return Bivector is
+   function Outer_Product (V1, V2 : Vector_2D) return Bivector is
       --  The outer product basis in 2D is the coordinate of e1^e2.
-      use GA_Maths;
+      use E2GA;
       BV        : Bivector;
-      V11       : constant float := V1.Coordinates (1);
-      V12       : constant float := V1.Coordinates (2);
-      V21       : constant float := V2.Coordinates (1);
-      V22       : constant float := V2.Coordinates (2);
    begin
       BV.Coordinates (1) :=
-        Float_Array_Package.Determinant (((V11, V21), (V12, V22)));
+        GA_Maths.Float_Array_Package.Determinant (((V1 (1), V2 (1)), (V1 (2), V2 (2))));
       return BV;
    end Outer_Product;
 
    --  ------------------------------------------------------------------------
 
-   function Scalar_Product (V1, V2 : Vector_2D) return GA_Maths.Scalar is
+   function Scalar_Product (V1, V2 : Vector_2D) return Scalar is
+      Product : Scalar;
    begin
-      return  GA_Maths.Scalar (Dot_Product (V1, V2));
+      Product (1) := Dot_Product (V1, V2);
+      return  Product;
    end Scalar_Product;
 
    --  ----------------------------------------------------------------------------
 
-   function Set_Bivector (V1, V2 : Vector) return Bivector is
+   function Set_Bivector (V1, V2 : Vector_2D) return Bivector is
    begin
       return  Outer_Product (V1, V2);
    end Set_Bivector;
