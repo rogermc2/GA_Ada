@@ -6,6 +6,7 @@ with GL.Objects.Programs;
 
 with GA_Maths;
 with E2GA;
+with E3GA;
 
 package GA_Draw is
     type Colour_Palet is private;
@@ -18,9 +19,8 @@ package GA_Draw is
 
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                    MV_Matrix, Proj_Matrix : GL.Types.Singles.Matrix4;
-                   Tail, Direction : GA_Maths.Vector;
-                   Colour : Color;
-                   Scale : Gl.Types.Single);
+                   Tail, Direction : E3GA.Vector_3D;
+                   Colour : Color; Scale : float);
 
     --  procedure Draw_Bivector (Base : E3GA.Vector, Normal : E3GA.Vector,
     --                           Factor1 : E3GA.Vector, Factor2 : Vector,
@@ -30,16 +30,23 @@ package GA_Draw is
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   Base, Factor_1, Factor_2 : GA_Maths.Vector;
-                   Scale  : GL.Types.Single;
-                   Method : Bivector_Method_Type;
+                   Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
+                   Scale  : float;
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
+                   Colour : Color := (1.0, 1.0, 1.0, 1.0));
+   procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
+                   Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                   Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
+                   Scale  : float;
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
                    Colour : Color := (1.0, 1.0, 1.0, 1.0));
 
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV             : E2GA.Bivector;
-                   Colour         : Color := (1.0, 1.0, 1.0, 1.0);
-                   Scale          : GL.Types.Single);
+                   BV     : E2GA.Bivector;
+                   Scale  : float;
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
+                   Colour : Color := (1.0, 1.0, 1.0, 1.0));
 --      procedure Draw_Multivector (Render_Program : GL.Objects.Programs.Program;
 --                               MV             : E2GA.Multivector;
 --                               Colour         : Color := (1.0, 1.0, 1.0, 1.0);

@@ -52,6 +52,30 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+    function "+" (V1, V2 : Vector_3D) return Vector_3D is
+    begin
+        return (V1 (1) + V2 (1),
+                V1 (2) + V2 (2),
+                V1 (3) + V2 (3));
+    end "+";
+
+    --  ------------------------------------------------------------------------
+
+    function "-" (V1, V2 : Vector_3D) return Vector_3D is
+    begin
+        return (V1 (1) - V2 (1),
+                V1 (2) - V2 (2),
+                V1 (3) - V2 (3));
+    end "-";
+
+    --  ------------------------------------------------------------------------
+
+    function "*" (Weight : float; V : Vector_3D) return Vector_3D is
+    begin
+        return (Weight * V (1), Weight * V (2), Weight * V (3));
+    end "*";
+
+    --  ------------------------------------------------------------------------
     function "*" (Weight : float; BV : Bivector) return Bivector is
     begin
         return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
@@ -67,18 +91,18 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function "*" (R : Rotor; V : Vector) return Rotor is
+    function "*" (R : Rotor; V : Vector_3D) return Rotor is
     begin
-        return (R.C1_Scalar, R.C2_e1e2 * Get_Coord_1 (V),
-                R.C3_e2e3 * Get_Coord_2 (V), R.C4_e3e1 * Get_Coord_3 (V));
+      return (R.C1_Scalar, R.C2_e1e2 * V (1), R.C3_e2e3 * V (2),
+              R.C4_e3e1 * V (3));
     end "*";
 
     --  ------------------------------------------------------------------------
 
-    function "*" (V : Vector; R : Rotor) return Rotor is
+    function "*" (V : Vector_3D; R : Rotor) return Rotor is
     begin
-        return (R.C1_Scalar, Get_Coord_1 (V) * R.C2_e1e2,
-                Get_Coord_2 (V) * R.C3_e2e3, Get_Coord_3 (V) * R.C4_e3e1);
+        return (R.C1_Scalar, V (1) * R.C2_e1e2,
+                V (2) * R.C3_e2e3, V (3) * R.C4_e3e1);
     end "*";
 
     --  ------------------------------------------------------------------------
@@ -122,15 +146,14 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector is
-      VV        : Array_3D := GA_Maths.Get_Coords (V);
+   function Apply_Outermorphism (OM : Outermorphism; V : Vector_3D) return Vector_3D is
       OM_Coords : Array_19F := Get_Outermorphism (OM);
-      Result    : Vector;
+      Result    : Vector_3D;
    begin
       Set_Coords (Result,
-              OM_Coords (3) * VV (3) + OM_Coords (2) * VV (2)  + OM_Coords (1) * VV (1),
-              OM_Coords (5) * VV (2) + OM_Coords (4) * VV (1) + OM_Coords (6) * VV (3),
-              OM_Coords (8) * VV (2) + OM_Coords (7) * VV (1) + OM_Coords (9) * VV (3));
+              OM_Coords (3) * V (3) + OM_Coords (2) * V (2)  + OM_Coords (1) * V (1),
+              OM_Coords (5) * V (2) + OM_Coords (4) * V (1) + OM_Coords (6) * V (3),
+              OM_Coords (8) * V (2) + OM_Coords (7) * V (1) + OM_Coords (9) * V (3));
       return Result;
    end Apply_Outermorphism;
 
@@ -170,6 +193,13 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+    function Dot_Product (V1, V2 : Vector_3D) return float is
+    begin
+        return V1 (1) * V2 (1) + V1 (2) * V2 (2) + V1 (3) * V2 (3);
+    end Dot_Product;
+
+   --  ------------------------------------------------------------------------
+
     function Dot_Product (R1, R2 : Rotor) return float is
     begin
         return R1.C1_Scalar * R2.C1_Scalar + R1.C2_e1e2 * R2.C2_e1e2 +
@@ -178,22 +208,22 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function e1 (V : GA_Maths.Vector_2D) return float is
+    function e1 (V : E2GA.Vector_2D) return float is
     begin
-        return Get_Coord_1 (V);
+        return E2GA.Get_Coord_1 (V);
     end e1;
 
     --  ------------------------------------------------------------------------
 
-    function e2 (V : GA_Maths.Vector_2D) return float is
+    function e2 (V : E2GA.Vector_2D) return float is
     begin
-        return Get_Coord_2 (V);
+        return E2GA.Get_Coord_2 (V);
     end e2;
 
     --  ------------------------------------------------------------------------
 
-    function e1 return Vector is
-        V : Vector;
+    function e1 return Vector_3D is
+        V : Vector_3D;
     begin
         Set_Coords (V, e1_basis (1), e1_basis (2), e1_basis (3));
         return V;
@@ -201,8 +231,8 @@ package body E3GA is
 
     --  ----------------------------------------------------------------------------
 
-    function e2 return Vector is
-        V : Vector;
+    function e2 return Vector_3D is
+        V : Vector_3D;
     begin
         Set_Coords (V, e2_basis (1), e2_basis (2), e2_basis (3));
         return V;
@@ -210,8 +240,8 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function e3 return Vector is
-        V : Vector;
+    function e3 return Vector_3D is
+        V : Vector_3D;
     begin
         Set_Coords (V, e3_basis (1), e3_basis (2), e3_basis (3));
         return V;
@@ -240,6 +270,40 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+    function Get_Coord_1 (V : Vector_3D) return float is
+    begin
+        return V (1);
+    end Get_Coord_1;
+
+    --  ------------------------------------------------------------------------
+
+    function Get_Coord_2 (V : Vector_3D) return float is
+    begin
+        return V (2);
+    end Get_Coord_2;
+
+    --  ------------------------------------------------------------------------
+
+    function Get_Coord_3 (V : Vector_3D) return float is
+    begin
+        return V (3);
+    end Get_Coord_3;
+
+    --  ------------------------------------------------------------------------
+
+    function Get_Unsigned_Coords (V : Vector_3D) return Vector_Unsigned is
+    begin
+        return To_Unsigned (V);
+    end Get_Unsigned_Coords;
+
+    --  ------------------------------------------------------------------------
+    function Get_Coords (V : Vector_3D) return Array_3D is
+    begin
+        return (V (1), V (2), V (3));
+    end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
     function R_Scalar (R : Rotor) return float is
     begin
           return R.C1_Scalar;
@@ -247,14 +311,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (V1, V2 : Vector) return Rotor is
-        V1C : Array_3D := Get_Coords (V1);
-        V2C : Array_3D := Get_Coords (V2);
+    function Geometric_Product (V1, V2 : Vector_3D) return Rotor is
     begin
-        return (V1C (1) * V2C (1) + V1C (2) * V2C (2) + V1C (3) * V2C (3),
-                -V1C (2) * V2C (1) + V1C (1) * V2C (2),
-                V1C (2) * V2C (3) - V1C (2) * V2C (2),
-                -V1C (1) * V2C (3) + V1C (3) * V2C (1));
+        return (V1 (1) * V2 (1) + V1 (2) * V2 (2) + V1 (3) * V2 (3),
+                -V1 (2) * V2 (1) + V1 (1) * V2 (2),
+                V1 (2) * V2 (3) - V1 (2) * V2 (2),
+                -V1 (1) * V2 (3) + V1 (3) * V2 (1));
     end Geometric_Product;
 
     --  ------------------------------------------------------------------------
@@ -279,13 +341,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (R : Rotor; V : Vector) return Syn_SMultivector is
-        VC : Array_3D := Get_Coords (V);
+    function Geometric_Product (R : Rotor; V : Vector_3D) return Syn_SMultivector is
     begin
-        return (R.C2_e1e2 * VC (2) - R.C4_e3e1 * VC (3) + R.C1_Scalar * VC (1),
-                -R.C2_e1e2 * VC (1) + R.C3_e2e3 * VC (3) + R.C1_Scalar * VC (2),
-                R.C1_Scalar * VC (3) + R.C4_e3e1 * VC (1) - R.C3_e2e3 * VC (2),
-                R.C2_e1e2 * VC (3) + R.C4_e3e1 * VC (2) + R.C3_e2e3 * VC (1));
+        return (R.C2_e1e2 * V (2) - R.C4_e3e1 * V (3) + R.C1_Scalar * V (1),
+                -R.C2_e1e2 * V (1) + R.C3_e2e3 * V (3) + R.C1_Scalar * V (2),
+                R.C1_Scalar * V (3) + R.C4_e3e1 * V (1) - R.C3_e2e3 * V (2),
+                R.C2_e1e2 * V (3) + R.C4_e3e1 * V (2) + R.C3_e2e3 * V (1));
     end Geometric_Product;
 
     --  ------------------------------------------------------------------------
@@ -310,24 +371,22 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (V : Vector; MV : Syn_SMultivector) return Rotor is
-        VC : Array_3D := Get_Coords (V);
+    function Geometric_Product (V : Vector_3D; MV : Syn_SMultivector) return Rotor is
     begin
-        return (VC (1) * MV.C1_e1 + VC (2) * MV.C2_e2 + VC (3) * MV.C3_e3,
-                VC (1) * MV.C2_e2 + VC (3) * MV.C4_e1e2e3 - VC (2) * MV.C1_e1,
-                -VC (3) * MV.C2_e2 + VC (1) * MV.C4_e1e2e3 + VC (2) * MV.C3_e3,
-                VC (2) * MV.C4_e1e2e3 + VC (3) * MV.C1_e1 - VC (1) * MV.C3_e3);
+        return (V (1) * MV.C1_e1 + V (2) * MV.C2_e2 + V (3) * MV.C3_e3,
+                V (1) * MV.C2_e2 + V (3) * MV.C4_e1e2e3 - V (2) * MV.C1_e1,
+                -V (3) * MV.C2_e2 + V (1) * MV.C4_e1e2e3 + V (2) * MV.C3_e3,
+                V (2) * MV.C4_e1e2e3 + V (3) * MV.C1_e1 - V (1) * MV.C3_e3);
     end Geometric_Product;
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (V : Vector; R : Rotor) return Syn_SMultivector is
-        VC : Array_3D := Get_Coords (V);
+    function Geometric_Product (V : Vector_3D; R : Rotor) return Syn_SMultivector is
     begin
-        return (VC (3) * R.C4_e3e1 + VC (1) * R.C1_Scalar - VC (2) * R.C2_e1e2,
-                -VC (3) * R.C3_e2e3 + VC (2) * R.C1_Scalar + VC (1) * R.C2_e1e2,
-                VC (2) * R.C3_e2e3 - VC (1) * R.C4_e3e1 + VC (3) * R.C1_Scalar,
-                VC (1) * R.C3_e2e3 + VC (3) * R.C2_e1e2 + VC (2) * R.C4_e3e1);
+        return (V (3) * R.C4_e3e1 + V (1) * R.C1_Scalar - V (2) * R.C2_e1e2,
+                -V (3) * R.C3_e2e3 + V (2) * R.C1_Scalar + V (1) * R.C2_e1e2,
+                V (2) * R.C3_e2e3 - V (1) * R.C4_e3e1 + V (3) * R.C1_Scalar,
+                V (1) * R.C3_e2e3 + V (3) * R.C2_e1e2 + V (2) * R.C4_e3e1);
     end Geometric_Product;
 
     --  ------------------------------------------------------------------------
@@ -375,7 +434,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Inverse (aRotor : Rotor) return Rotor is
-        Norm_Inv  : Scalar;
+        Norm_Inv  : float;
     begin
         Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
         return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
@@ -384,21 +443,22 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Inverse (V : Vector) return Vector is
-        Norm_Inv  : Scalar := 1.0 / Dot_Product (V, V);
-        VC  : GA_Maths.Array_3D := Get_Coords (V);
-        Result : Vector;
+    function Inverse (V : Vector_3D) return Vector_3D is
+        Norm_Inv  : float := 1.0 / Dot_Product (V, V);
+        Result : Vector_3D;
     begin
-        Set_Coords (Result, Norm_Inv * VC (1), Norm_Inv * VC (2), Norm_Inv * VC (3));
+        Set_Coords (Result, Norm_Inv * V (1), Norm_Inv * V (2), Norm_Inv * V (3));
         return Result;
     end Inverse;
 
     --  ------------------------------------------------------------------------
 
-    function Left_Contraction (BV1, BV2 : Bivector) return Scalar is
-    begin
-        return -Dot_Product (BV1, BV2);
-    end Left_Contraction;
+   function Left_Contraction (BV1, BV2 : Bivector) return Scalar is
+      LC : Scalar;
+   begin
+      LC (1) := -Dot_Product (BV1, BV2);
+        return LC;
+   end Left_Contraction;
 
     --  ------------------------------------------------------------------------
 
@@ -463,23 +523,32 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Left_Contraction (V : Vector; BV : Bivector) return Vector is
+    function Left_Contraction (V : Vector_3D; BV : Bivector) return Vector_3D is
         BC  : GA_Maths.Array_3D := Get_Coords (BV);
-        VC  : GA_Maths.Array_3D := Get_Coords (V);
-        LC  : Vector;
+        LC  : Vector_3D;
     begin
-        Set_Coords (LC, -VC (2) * BC (1) + VC (3) * BC (3),
-                    VC (1) * BC (1) - VC (3) * BC (2),
-                    -VC (1) * BC (3) + VC (2) * BC (2));
+        Set_Coords (LC, -V (2) * BC (1) + V (3) * BC (3),
+                    V (1) * BC (1) - V (3) * BC (2),
+                    -V (1) * BC (3) + V (2) * BC (2));
         Return LC;
     end Left_Contraction;
 
     --  ------------------------------------------------------------------------
 
-    function Left_Contraction (V1 : Vector; V2 : Vector) return Scalar is
+   function Left_Contraction (V1 : Vector_3D; V2 : Vector_3D) return Scalar is
+      LC : Scalar;
+   begin
+      LC (1) := Dot_Product (V1, V2);
+      return LC;
+   end Left_Contraction;
+
+    --  ------------------------------------------------------------------------
+
+    function Magnitude (V : Vector_3D) return float is
     begin
-        Return Scalar (Dot_Product (V1, V2));
-    end Left_Contraction;
+        return Float_Functions.Sqrt (V (1) * V (1) + V (2) * V (2) +
+                                     V (3) * V (3));
+    end Magnitude;
 
     --  ------------------------------------------------------------------------
 
@@ -539,25 +608,28 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-    function Norm_E2 (V : Vector) return Scalar is
-        Coords : Array_3D := Get_Coords (V);
-    begin
-        return Scalar (Coords (1) * Coords (1) + Coords (2) * Coords (2) +
-                  Coords (3) * Coords (3));
-    end Norm_E2;
+   function Norm_E2 (V : Vector_3D) return Scalar is
+      Norm : Scalar;
+   begin
+      Norm (1) := V (1) * V (1) + V (2) * V (2) + V (3) * V (3);
+      return Norm;
+   end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (BV : Bivector) return Scalar is
+      Norm : Scalar;
     begin
-        return Scalar (BV.C1_e1e2 * BV.C1_e1e2 + BV.C2_e2e3 * BV.C2_e2e3 +
-                       BV.C3_e3e1 * BV.C3_e3e1);
+      Norm (1) := BV.C1_e1e2 * BV.C1_e1e2 + BV.C2_e2e3 * BV.C2_e2e3 +
+                  BV.C3_e3e1 * BV.C3_e3e1;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (MV : E2GA.Multivector) return Scalar is
-        Value  : float := 0.0;
+      Value  : float := 0.0;
+      Norm : Scalar;
     begin
         if (MV.Grade_Use and 1) /= 0 then
             Value := MV.Coordinates (1) * MV.Coordinates (1);
@@ -574,36 +646,40 @@ package body E3GA is
         if (MV.Grade_Use and 8) /= 0 then
             Value := Value + MV.Coordinates (9) * MV.Coordinates (9);
         end if;
-        return Scalar (Value);
+      Norm (1) := Value;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_E2 (R : Rotor) return Scalar is
+      Norm : Scalar;
     begin
-        return Scalar (R.C2_e1e2 * R.C2_e1e2 + R.C3_e2e3 * R.C3_e2e3 +
-                    R.C4_e3e1 * R.C4_e3e1);
+      Norm (1) := R.C2_e1e2 * R.C2_e1e2 + R.C3_e2e3 * R.C3_e2e3 +
+                  R.C4_e3e1 * R.C4_e3e1;
+      return Norm;
     end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
-    function Norm_E2 (TV : Trivector) return Scalar is
-    begin
-        return Scalar (TV * TV);
-    end Norm_E2;
+--      function Norm_E2 (TV : Trivector) return Scalar is
+--      begin
+--          return Scalar (TV * TV);
+--      end Norm_E2;
 
     --  ------------------------------------------------------------------------
 
     function Norm_R (BV : Bivector) return Scalar is
         use GA_Maths.Float_Functions;
-        DP     : Scalar := Dot_Product (BV, BV);
-        Result : Scalar := 0.0;
+        DP     : constant float := Dot_Product (BV, BV);
+        Result : Scalar;
     begin
+        Result (1) := 0.0;
         if DP /= 0.0 then
             if DP < 0.0 then
-                Result := -Sqrt (-DP);
+                Result (1) := -Sqrt (-DP);
             else
-                Result := Sqrt (DP);
+                Result (1) := Sqrt (DP);
             end if;
         end if;
         return Result;
@@ -611,32 +687,34 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Norm_R2 (BV : Bivector) return Scalar is
-    begin
-        return Dot_Product (BV, BV);
-    end Norm_R2;
+   function Norm_R2 (BV : Bivector) return Scalar is
+      Norm : Scalar;
+   begin
+      Norm (1) := Dot_Product (BV, BV);
+      return Norm;
+   end Norm_R2;
 
     --  ------------------------------------------------------------------------
 
-    function Outer_Product (V1, V2 : Vector) return Bivector is
+    function Outer_Product (V1, V2 : Vector_3D) return Bivector is
         use Float_Array_Package;
         use GA_Maths;
-        VC1  : array_3D := Get_Coords (V1);
-        VC2  : array_3D := Get_Coords (V2);
         Result : Bivector;
     begin
-        Set_Bivector (Result, VC1 (1) * VC2 (2) - VC1 (2) * VC2 (1),
-                              VC1 (2) * VC2 (3) - VC1 (3) * VC2 (2),
-                              VC1 (3) * VC2 (1) - VC1 (1) * VC2 (3));
+        Set_Bivector (Result, V1 (1) * V2 (2) - V1 (2) * V2 (1),
+                              V1 (2) * V2 (3) - V1 (3) * V2 (2),
+                              V1 (3) * V2 (1) - V1 (1) * V2 (3));
         return Result;
     end Outer_Product;
 
     --  ------------------------------------------------------------------------
 
-    function Scalar_Product (V1, V2 : Vector) return Scalar is
-    begin
-        return  Scalar (Dot_Product (V1, V2));
-    end Scalar_Product;
+   function Scalar_Product (V1, V2 : Vector_3D) return Scalar is
+      Product : Scalar;
+   begin
+      Product (1) := Dot_Product (V1, V2);
+      return  Product;
+   end Scalar_Product;
 
     --  ------------------------------------------------------------------------
 
@@ -648,6 +726,13 @@ package body E3GA is
     end Set_Bivector;
 
     --  ------------------------------------------------------------------------
+
+    procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float) is
+    begin
+        V := (C1, C2, C3);
+    end Set_Coords;
+
+                --  ------------------------------------------------------------------------
 
     procedure Set_Rotor (X : out Rotor; BV : Bivector) is
     begin
@@ -685,8 +770,24 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function To_Vector (MV : Syn_SMultivector) return Vector is
-        V : Vector;
+    function To_Unsigned (V : Vector_3D) return Vector_Unsigned is
+        use Interfaces;
+    begin
+        return (Unsigned_64 (Abs (V (1))), Unsigned_64 (Abs (V (2))),
+                Unsigned_64 (Abs (V (3))));
+    end To_Unsigned;
+
+    --  ------------------------------------------------------------------------
+
+   function To_3D (V : E2GA.Vector_2D) return Vector_3D is
+   begin
+      return (E2GA.Get_Coord_1 (V), E2GA.Get_Coord_2 (V), 0.0);
+   end To_3D;
+
+                --  ------------------------------------------------------------------------
+
+   function To_Vector (MV : Syn_SMultivector) return Vector_3D is
+        V : Vector_3D;
    begin
         Set_Coords (V, MV.C1_e1, MV.C2_e2, MV.C3_e3);
         return V;
@@ -710,9 +811,9 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
     --  Unit_e normalizes vector X
-    function Unit_e (X : Vector) return Vector is
+    function Unit_e (X : Vector_3D) return Vector_3D is
         Scale      : float;
-        New_Vector : Vector;
+        New_Vector : Vector_3D;
     begin
         Scale := Float_Functions.Sqrt (Dot_Product (X, X));
         Set_Coords (New_Vector, Get_Coord_1 (X) / Scale,

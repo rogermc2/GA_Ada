@@ -10,7 +10,7 @@ package body E3GA_Utilities is
 
    function exp (BV : E3GA.Bivector) return E3GA.Rotor is
       use E3GA;
-      X2         : float := Left_Contraction (BV, BV);
+      X2         : float := Left_Contraction (BV, BV) (1);
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
@@ -43,7 +43,7 @@ package body E3GA_Utilities is
       --  get the bivector 2-blade part of R
       Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := Norm_R (BV);
+      R2 := Norm_R (BV) (1);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, R_Scalar (R)) / R2;
@@ -84,8 +84,8 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Vector (Name : String; aVector : GA_Maths.Vector) is
-        Coords : GA_Maths.Array_3D := GA_Maths.Get_Coords (aVector);
+    procedure Print_Vector (Name : String; aVector : E3GA.Vector_3D) is
+        Coords : GA_Maths.Array_3D := E3GA.Get_Coords (aVector);
     begin
         Put (Name & ":  ");
         for Index in Coords'Range loop
@@ -117,7 +117,7 @@ package body E3GA_Utilities is
     --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
     --                                = bx        + i by  (with respect to a)
     --  for theta = angle from a to b.
-    function Rotor_Vector_To_Vector (V_From, V_To : GA_Maths.Vector) return E3GA.Rotor is
+    function Rotor_Vector_To_Vector (V_From, V_To : E3GA.Vector_3D) return E3GA.Rotor is
         use Interfaces;
         use GA_Maths;
         use GA_Maths.Float_Functions;
@@ -126,9 +126,9 @@ package body E3GA_Utilities is
         V2     : Vector_Unsigned := To_Unsigned (V_To);
         C1     : float;
         S      : float;
-        w0     : Vector;
-        w1     : Vector;
-        w2     : Vector;
+        w0     : E3GA.Vector_3D;
+        w1     : E3GA.Vector_3D;
+        w2     : E3GA.Vector_3D;
         N2     : Scalar;
         R      : Rotor;
         Result : Rotor;
@@ -136,17 +136,17 @@ package body E3GA_Utilities is
         Set_Coords (w0, 0.0, 0.0, 0.0);
         Set_Coords (w1, 0.0, 0.0, 0.0);
         Set_Coords (w2, 0.0, 0.0, 0.0);
-        if float (Scalar_Product (V_From, V_To)) < -0.9 then
-            C1 := GA_Maths.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
+        if float (Scalar_Product (V_From, V_To) (1)) < -0.9 then
+            C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
             Set_Coords (w0, C1, 0.0, 0.0);
             N2 := Norm_E2 (w0);
 
-            if N2 = 0.0 then
-                C1 := GA_Maths.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
+            if N2 (1) = 0.0 then
+                C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
                 Set_Coords (w1, C1, 0.0, 0.0);
-                C1 := GA_Maths.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e2)));
+                C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e2)));
                 Set_Coords (w2, C1, 0.0, 0.0);
-                if Norm_E2 (w1) > Norm_E2 (w2) then
+                if Norm_E2 (w1) (1) > Norm_E2 (w2) (1) then
                     Set_Rotor (Result, Outer_Product (V_From, Unit_e (w1)));
                 else
                     Set_Rotor (Result, Outer_Product (V_From, Unit_e (w2)));

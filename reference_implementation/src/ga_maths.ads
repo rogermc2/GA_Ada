@@ -35,7 +35,6 @@ package GA_Maths is
 
     type GA_Matrix3 is new Float_Matrix (1 .. 3, 1 .. 3);
 
-    subtype Scalar is float;
 --      type Scalar_Coords is (Scalar_Scalar);
 --      type Scalar is record
 --      --    Coord_Type : Scalar_Coords := Scalar_Scalar;
@@ -47,61 +46,14 @@ package GA_Maths is
         C3_e3   : Interfaces.Unsigned_64;
     end record;
 
-    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
-    type Vector is private;
-
-    --  Vector_2D corresponds to e2ga.vector coordinate storage float m_c[2]
-    type Vector_2D is private;
-
     type Array_2D is array (1 .. 2) of float;
     type Array_3D is array (1 .. 3) of float;
     type Array_4D is array (1 .. 4) of float;
     type Coord4_Array is  Array (1 .. 4) of float;
 
+    Pi      : constant float := Ada.Numerics.Pi;
     Two_Pi  : constant float := 2.0 * Ada.Numerics.Pi;
 
-    function "+" (V1, V2 : Vector_2D) return Vector_2D;
-    function "-" (V1, V2 : Vector_2D) return Vector_2D;
-    function "*" (Weight : float; V : Vector_2D) return Vector_2D;
-    function "*" (V1, V2 : Vector_2D) return Vector_2D;
-
-    function "+" (V1, V2 : Vector) return Vector;
-    function "-" (V1, V2 : Vector) return Vector;
-    function "*" (Weight : float; V : Vector) return Vector;
-
-    function Canonical_Reordering_Sign (Map_A, Map_B : integer) return float;
-    function Dot_Product (V1, V2 : Vector_2D) return float;
-    function Dot_Product (V1, V2 : Vector) return float;
-    function Get_Coord_1 (V : Vector) return float;
-    function Get_Coord_2 (V : Vector) return float;
-    function Get_Coord_3 (V : Vector) return float;
-    function Get_Coords (V : Vector_2D) return Array_2D;
-    function Get_Coords (V : Vector) return Array_3D;
-    function Get_Coord_1 (V : Vector_2D) return float;
-    function Get_Coord_2 (V : Vector_2D) return float;
-    function Get_Unsigned_Coords (V : Vector) return Vector_Unsigned;
-    function Magnitude (V : Vector_2D) return float;
-    function Magnitude (V : Vector) return float;
-
-    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
-    procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
-    function To_Unsigned (V : Vector) return Vector_Unsigned;
-    function To_3D (V : Vector_2D) return Vector;
-
-private
-    --  Vector_2D corresponds to e2ga.vector coordinate storage float m_c[2]
-    type Vector_2D is record
-    --    Vec_type : Vector_Type := Vector_e1_e2;
-        C1_e1    : float;
-        C2_e2    : float;
-    end record;
-
-    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
-    type Vector is record
-   --     Vec_Type : Vector_Type := Vector_e1_e2_e3;
-        C1_e1    : float;
-        C2_e2    : float;
-        C3_e3    : float;
-    end record;
+   function Canonical_Reordering_Sign (Map_A, Map_B : integer) return float;
 
 end GA_Maths;

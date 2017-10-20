@@ -15,7 +15,7 @@ package body GL_Util is
         use GL;
         use GL.Types.Singles;
         IR        : Rotor := Inverse (R);
-        VGP       : GA_Maths.Vector;
+        VGP       : E3GA.Vector_3D;
         Image     : Vector3_Array (1 .. 4);
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
@@ -61,9 +61,9 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : GA_Maths.Vector) return GL.Types.Doubles.Vector3 is
+   function To_GL (V3 : E3GA.Vector_3D) return GL.Types.Doubles.Vector3 is
         use GL.Types;
-        use GA_Maths;
+        use E3GA;
    begin
         return (Double (Get_Coord_1 (V3)), Double (Get_Coord_2 (V3)),
                                       Double (Get_Coord_3 (V3)));
@@ -71,11 +71,19 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : GA_Maths.Vector) return GL.Types.Singles.Vector3 is
-        use GA_Maths;
+   function To_GL (V3 : E3GA.Vector_3D) return GL.Types.Singles.Vector3 is
+        use E3GA;
    begin
         return (Single (Get_Coord_1 (V3)), Single (Get_Coord_2 (V3)),
                                       Single (Get_Coord_3 (V3)));
+   end To_GL;
+
+   --  -------------------------------------------------------------------------
+
+   function To_GL (V2 : E2GA.Vector) return GL.Types.Singles.Vector3 is
+        use E2GA;
+   begin
+        return (Single (V2.Coordinates (1)), Single (V2.Coordinates (2)), 0.0);
    end To_GL;
 
    --  -------------------------------------------------------------------------
@@ -93,12 +101,12 @@ package body GL_Util is
       Window_Height : Size;
       PT1 : Vector4 := (Single (Pt_World (1)), Single (Pt_World (2)),
                         Single (Pt_World (3)), 1.0);
-      PT2 : Vector4 := Model_View_Matrix * PT1;
+      PT2 : Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
    begin
-      PT1 := Projection_Matrix * PT2;
+   --   PT1 := Projection_Matrix * PT2;
       GL.Window.Get_Viewport (VP_X, VP_Y, Window_Width, Window_Height);
-      Coords (X) := Single (VP_X) + (1.0 + PT1 (X) / PT1 (W)) * Single (Window_Width) / 2.0;
-      Coords (Y) := Single (VP_Y) + (1.0 + PT1 (Y) / PT1 (W)) * Single (Window_Height) / 2.0;
+      Coords (X) := Single (VP_X) + (1.0 + PT2 (X) / PT2 (W)) * Single (Window_Width) / 2.0;
+      Coords (Y) := Single (VP_Y) + (1.0 + PT2 (Y) / PT2 (W)) * Single (Window_Height) / 2.0;
    end Viewport_Coordinates;
 
    --  -------------------------------------------------------------------------

@@ -16,14 +16,16 @@ package E3GA is
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
    --    type Rotor_Coordinates_Type is (Rotor_Scalar_e1e2_e2e3_e3e1);
 
+   type Scalar is array (1 .. 1) of float;
    type Bivector is private;
    type Outermorphism is private;
    type Multivector is private;
    type Syn_SMultivector is private;
    type Rotor is private;
-   type Trivector is private;
-   --    type Vector is implemented in GA_Maths
-   --    type Vector_2D is in GA_Maths;
+--     type Trivector is private;
+
+   --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
+   type Vector_3D is private;
 
    --  Joinable grade definitions
    Grade_0 : constant integer := 1;
@@ -33,21 +35,25 @@ package E3GA is
 
    --  ------------------------------------------------------------------------
 
+   function "+" (V1, V2 : Vector_3D) return Vector_3D;
+   function "-" (V1, V2 : Vector_3D) return Vector_3D;
+   function "*" (Weight : float; V : Vector_3D) return Vector_3D;
+
    function "*" (Weight : float; BV : Bivector) return Bivector;
    function "*" (R1, R2 : Rotor) return Rotor;
-   function "*" (R : Rotor; V : Vector) return Rotor;
-   function "*" (V : Vector; R : Rotor) return Rotor;
+   function "*" (R : Rotor; V : Vector_3D) return Rotor;
+   function "*" (V : Vector_3D; R : Rotor) return Rotor;
    function "/" (R : Rotor; S : float) return Rotor;
-   function "+" (W : float; BV : Bivector) return Rotor;
+   function "+" (W : float; BV : BiVector) return Rotor;
    function "+" (W : float; R : Rotor) return Rotor;
    function "-" (W : float; R : Rotor) return Rotor;
 
-   function e1 (V : Vector_2D) return float;
-   function e2 (V : Vector_2D) return float;
+   function e1 (V : E2GA.Vector_2D) return float;
+   function e2 (V : E2GA.Vector_2D) return float;
 
-   function e1 return Vector;
-   function e2 return Vector;
-   function e3 return Vector;
+   function e1 return Vector_3D;
+   function e2 return Vector_3D;
+   function e3 return Vector_3D;
 
    function e1e2 (R : Rotor) return float;
    function e2e3 (R : Rotor) return float;
@@ -55,52 +61,64 @@ package E3GA is
    function R_Scalar (R : Rotor) return float;
 
    function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
-   function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
+   function Apply_Outermorphism (OM : Outermorphism; V : Vector_3D) return Vector_3D;
    function Dot_Product (R1, R2 : Rotor) return float;
+   function Dot_Product (V1, V2 : Vector_3D) return float;
    function Get_Coords (BV : Bivector) return Array_3D;
    function Get_Coords (R : Rotor) return Array_4D;
+    function Get_Coord_1 (V : Vector_3D) return float;
+    function Get_Coord_2 (V : Vector_3D) return float;
+    function Get_Coord_3 (V : Vector_3D) return float;
+    function Get_Coords (V : Vector_3D) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
    function Geometric_Product (BV : Bivector; R : Rotor) return Rotor;
    function Geometric_Product (R : Rotor; BV : Bivector) return Rotor;
-   function Geometric_Product (V : Vector; R : Rotor) return Syn_SMultivector;
+   function Geometric_Product (V : Vector_3D; R : Rotor) return Syn_SMultivector;
    function Geometric_Product (R : Rotor; MV : Syn_SMultivector) return Syn_SMultivector;
-   function Geometric_Product (V : Vector; MV : Syn_SMultivector) return Rotor;
-   function Geometric_Product (R : Rotor; V : Vector) return Syn_SMultivector;
+   function Geometric_Product (V : Vector_3D; MV : Syn_SMultivector) return Rotor;
+   function Geometric_Product (R : Rotor; V : Vector_3D) return Syn_SMultivector;
    function Geometric_Product (R1, R2 : Rotor) return Rotor;
-   function Geometric_Product (V1, V2 : Vector) return Rotor;
+   function Geometric_Product (V1, V2 : Vector_3D) return Rotor;
    function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_Integer;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Inverse (aRotor : Rotor) return Rotor;
-   function Inverse (V : Vector) return Vector;
+   function Inverse (V : Vector_3D) return Vector_3D;
    function Left_Contraction (BV1, BV2 : Bivector) return Scalar;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
-   function Left_Contraction (V : Vector; BV : Bivector) return Vector;
-   function Left_Contraction (V1 : Vector; V2 : Vector) return Scalar;
+   function Left_Contraction (V : Vector_3D; BV : Bivector) return Vector_3D;
+   function Left_Contraction (V1 : Vector_3D; V2 : Vector_3D) return Scalar;
+   function Magnitude (V : Vector_3D) return float;
    function MV_String (MV : Multivector; Text : String := "")
                        return Ada.Strings.Unbounded.Unbounded_String;
-   function Outer_Product (V1, V2 : Vector) return Bivector;
+   function Outer_Product (V1, V2 : Vector_3D) return Bivector;
 
    function Norm_E2 (BV : Bivector) return Scalar;
-   function Norm_E2 (V : Vector) return Scalar;
+   function Norm_E2 (V : Vector_3D) return Scalar;
    function Norm_E2 (MV : E2GA.Multivector) return Scalar;
    function Norm_E2 (R : Rotor) return Scalar;
-   function Norm_E2 (TV : Trivector) return Scalar;
+--     function Norm_E2 (TV : Trivector) return Scalar;
    function Norm_R (BV : Bivector) return Scalar;
    function Norm_R2 (BV : Bivector) return Scalar;
-   function Scalar_Product (V1, V2 : Vector) return Scalar;
+   function Scalar_Product (V1, V2 : Vector_3D) return Scalar;
    procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
    procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);
    procedure Set_Rotor (X : out Rotor; C_Scalar : float);
    procedure Set_Rotor (X : out Rotor; MV : Multivector);
    procedure Set_Rotor (X : out Rotor; BV : Bivector);
    procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
-   function To_Vector (MV : Syn_SMultivector) return Vector;
+    procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float);
+    function To_Unsigned (V : Vector_3D) return Vector_Unsigned;
+    function To_3D (V : E2GA.Vector_2D) return Vector_3D;
+   function To_Vector (MV : Syn_SMultivector) return Vector_3D;
    --  Unit_e normalizes rotor R
    function Unit_e (R : Rotor) return Rotor;
-   --  Unit_e normalizes vector X
-   function Unit_e (X : Vector) return Vector;
+   --  Unit_e normalizes Vector_3D X
+   function Unit_e (X : Vector_3D) return Vector_3D;
 private
+
+   --  Vector_3D corresponds to e3ga.vector coordinate storage float m_c[3]
+   type Vector_3D is array (1 .. 3) of float;
 
    type Bivector is record
       Grade_Use   : Grade_Usage := 7;  -- 2^2 + 2^1 +2^0
@@ -126,8 +144,6 @@ private
       C4_e1e2e3   : float := 0.0;
    end record;
 
-   type Multivector is new E2GA.Multivector (8);
-
-   type Trivector is new float;  -- e1e2e3
+   type Multivector is new E2GA.Multivector (8, 0);
 
 end E3GA;

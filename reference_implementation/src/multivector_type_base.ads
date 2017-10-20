@@ -3,8 +3,9 @@ with GA_Maths;
 
 package Multivector_Type_Base is
 
-    type M_Type_Type is (Invalid_Type, Unused_Type, Zero, Vector_Space_Model, Blade,
-                         Bivector, Trivector, Even_Versor);
+   type M_Type_Type is (Invalid_Base_Type, Unused_Type, Zero,
+                        Vector_Space_Model, Blade, Bivector, Trivector,
+                        Even_Versor);
     type Object_Type is (Multivector, Versor, Blade);
     type Parity is (None, Even, Odd);
     type Type_Base is private;

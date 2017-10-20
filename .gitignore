@@ -4,6 +4,7 @@ bin
 .DS_Store
 .#*#
 *~
+*.a
 *.html
 *.o
 *.cswi
