@@ -47,13 +47,6 @@ package E2GA is
       M_C2 : float := 0.0;
    end record;
 
-   --     type Trivector is record
-   --        Grade_Usage     : GA_Maths.Grade_Usage; --  m_gu
-   --        e1e2_Coord_1    : float; -- Coordinate of e1^e2.
-   --        e2e3_Coord_2    : float; -- Coordinate of e2^e3.
-   --        e1e2e3_Coord_3  : float; -- Coordinate of e1^e2^e3.
-   --     end record;
-
    --  The outer product of P vectors is called a grade P multivector or a P-vector
    --  In E2, MV = u^v = det(u,v)e1^e2. This "bivector" is the only MV in E2.
    type Multivector (MV_Size : integer; Grade_Use : GA_Maths.Grade_Usage) is record
