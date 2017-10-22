@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
+with Interfaces.C;
 
 with GL.Attributes;
 with GL.Blending;
@@ -9,24 +10,37 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Toggles;
 
+with FT;
 with FT.Faces;
 with FT.Glyphs;
 
-package body FT.OGL is
+package body Texture_Management is
    use Interfaces.C;
+
+   type Character_Record is record
+      Texture   : GL.Objects.Textures.Texture;
+      Width     : GL.Types.Int := 0;
+      Rows      : GL.Types.Int := 0;
+      Left      : GL.Types.Int := 0;
+      Top       : GL.Types.Int := 0;
+      Advance_X : GL.Types.Int := 0;
+   end record;
+
+   OGL_Exception : Exception;
+
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
-   Face_Ptr             : FT.Faces.Face_Reference;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : Character_Data_Vector (0 .. 255);
-   OGL_Exception        : exception;
 
-   procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Reference);
-   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String);
+   procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference);
+   procedure Setup_Font (theLibrary : FT.Library_Reference;
+                         Face_Ptr   : out FT.Faces.Face_Reference;
+                         Font_File  : String);
 
    --  ------------------------------------------------------------------------
 
@@ -37,26 +51,13 @@ package body FT.OGL is
 
    --  ------------------------------------------------------------------------
 
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
-
-   --  ------------------------------------------------------------------------
-
    procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
       theLibrary : FT.Library_Reference;
+      Face_Ptr   : FT.Faces.Face_Reference;
    begin
       theLibrary.Init;
-      Setup_Font (theLibrary, Font_File);
+      Setup_Font (theLibrary, Face_Ptr, Font_File);
       Setup_Character_Textures (Face_Ptr);
    end Initialize_Font_Data;
 
@@ -89,31 +90,16 @@ package body FT.OGL is
          Texture_2D.Storage (Num_Levels, RGBA8, 1, 1);
       end if;
 
-      Bitmap_Image_Ptr :=  Bitmap.Buffer;
-      Texture_2D.Load_Sub_Image_From_Data
-        (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-         Bitmap_Image_Ptr);
+      Bitmap_Image_Ptr := GL.Objects.Textures.Image_Source (Bitmap.Buffer);
+      if Width > 0 and Height > 0 then
+         Texture_2D.Load_Sub_Image_From_Data
+           (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+            Bitmap_Image_Ptr);
+      end if;
       Char_Data.Texture := aTexture;
-   exception
-      when others =>
-         raise OGL_Exception with "An exception occurred in FT.OGL.Load_Texture.";
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
-
-   procedure Print_Character_Metadata (Data : Character_Record) is
-      use GL.Types;
-      use FT.Faces;
-   begin
-      Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
-      Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
-      Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
-      Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
-      Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
-      New_Line;
-   end Print_Character_Metadata;
-
-   --  ------------------------------------------------------------------------
 
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
@@ -130,7 +116,12 @@ package body FT.OGL is
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
       Stride         : constant GL.Types.Int := 0;
-
+      Blend_State    : constant GL.Toggles.Toggle_State :=
+        GL.Toggles.State (GL.Toggles.Blend);
+      Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+                                  GL.Blending.Blend_Func_Src_Alpha;
+      One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+                                  GL.Blending.One_Minus_Src_Alpha;
       Char           : Character;
       Char_Data      : Character_Record;
       Char_Texture   : GL.Objects.Textures.Texture;
@@ -173,7 +164,7 @@ package body FT.OGL is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid.";
+            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -194,11 +185,8 @@ package body FT.OGL is
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
       end loop;
-      GL.Toggles.Disable (GL.Toggles.Blend);
-
-   exception
-      when  others =>
-         raise OGL_Exception with "An exception occurred in FT.OGL.Render_Text.";
+      GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
+      GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
    end Render_Text;
 
    --  ------------------------------------------------------------------------
@@ -217,11 +205,10 @@ package body FT.OGL is
 
    --  -------------------------------------------------------------------------
 
-   procedure Setup_Character_Textures
-     (Face_Ptr  : FT.Faces.Face_Reference) is
+   procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference) is
       use GL.Objects.Buffers;
       use GL.Types;
-      Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
+      Glyph_Slot     : constant FT.Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
@@ -240,7 +227,6 @@ package body FT.OGL is
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
@@ -249,8 +235,9 @@ package body FT.OGL is
          --  Ensure that the glyph image is an anti-aliased bitmap
          FT.Glyphs.Render_Glyph (Glyph_Slot, FT.Faces.Render_Mode_Mono);
 
-         Width := GL.Types.Int (Glyph_Slot.Data.Bitmap.Width);
-         Height := GL.Types.Int (Glyph_Slot.Data.Bitmap.Rows);
+         Width := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Width);
+         Height := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Rows);
+
          Set_Char_Data (Char_Data, Width, Height,
                         GL.Types.Int (FT.Glyphs.Bitmap_Left (Glyph_Slot)),
                         GL.Types.Int (FT.Glyphs.Bitmap_Top (Glyph_Slot)),
@@ -259,15 +246,12 @@ package body FT.OGL is
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
       end loop;
-
-   exception
-      when others =>
-         raise OGL_Exception with "An exception occurred in FT.OGL.Setup_Character_Textures.";
    end Setup_Character_Textures;
 
-   --  ------------------------------------------------------------------------
+      --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String) is
+   procedure Setup_Font (theLibrary : FT.Library_Reference;
+                         Face_Ptr   : out FT.Faces.Face_Reference; Font_File : String) is
       use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
@@ -275,11 +259,8 @@ package body FT.OGL is
       FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       --  Disable byte-alignment restriction
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
-   exception
-      when others =>
-         raise OGL_Exception with "An exception occurred in FT.OGL.Setup_Font.";
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
 
-end FT.OGL;
+end Texture_Management;
