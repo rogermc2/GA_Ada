@@ -189,7 +189,7 @@ package body E2GA is
    begin
       theString := theString & Text;
       --  Print all coordinates (x, y, z)
-      New_Line;
+
       --  Loop on coordinate
       --    Loop on grade
       --      Loop on  number of coordinates in the grade part

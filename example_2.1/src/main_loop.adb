@@ -30,8 +30,6 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with FT.OGL;
-
 with GA_Draw;
 with GL_Util;
 with E2GA;
@@ -40,6 +38,7 @@ with E3GA;
 with GA_Maths;
 
 with Silo;
+with Texture_Management;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    subtype tVec4f is Singles.Vector4;
@@ -112,6 +111,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Model_View_Matrix : GL.Types.Singles.Matrix4;
       Projection_Matrix : GL.Types.Singles.Matrix4;
       Vertex_Buffer     : GL.Objects.Buffers.Buffer;
+      Text              : Ada.Strings.Unbounded.Unbounded_String;
       Text_X            : GL.Types.Single := 50.0;
       Text_Y            : GL.Types.Single := 50.0;
 
@@ -129,8 +129,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  Set scale and position of first diagram
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
-                                                     (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
-                                                      - Position_Y, 0.0))
+                          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
+                           - Position_Y, 0.0))
                            * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
@@ -152,6 +152,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                             Projection_Matrix, BV);
+            null;
          end if;
 
          if A < Pi - 0.1 then
@@ -164,8 +165,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
-         Silo.Push ((Ada.Strings.Unbounded.To_Unbounded_String
-                    (E2GA.Bivector_String (BV)), Label_Position));
+         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
+                    (E2GA.Bivector_String (BV)), Label_Position);
+--         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String ("Hello"), Label_Position);
+         Silo.Push (Label);
 
          --  Set X position of next diagram
          Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S,
@@ -184,11 +187,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       end loop;
 
       for i in 1 .. Silo.Size loop
-         Label := Silo.Pull;
+         Silo.Get_Data (Text, Label_Position);
          Draw_Text (Window_Width, Window_Height,
-                    Ada.Strings.Unbounded.To_String (Label.Label_String),
-                    Render_Text_Program, Label.Label_Position (GL.X),
-                    Label.Label_Position (GL.Y), Text_Scale);
+                    Ada.Strings.Unbounded.To_String (Text), Render_Text_Program,
+                    Label_Position (GL.X), Label_Position (GL.Y), Text_Scale);
       end loop;
 
    exception
@@ -267,7 +269,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Text_Projection_Matrix);
-      FT.OGL.Render_Text (Render_Program, theText, Text_X, Text_Y,
+      Texture_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
                           Text_Scale, Text_Colour, Text_Texture_ID,
                           Text_Proj_Matrix_ID, Text_Colour_ID,
                           Text_Projection_Matrix);
@@ -287,10 +289,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
    begin
-      FT.OGL.Initialize_Font_Data ("../fonts/Helvetica.ttc");
+      Texture_Management.Initialize_Font_Data ("../fonts/Helvetica.ttc");
       Render_Graphic_Program := Program_Loader.Program_From
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+
       Render_Text_Program := Program_Loader.Program_From
         ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
