@@ -305,6 +305,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Text_Colour_ID := GL.Objects.Programs.Uniform_Location
         (Render_Text_Program, "text_colour");
 
+      GL.Toggles.Disable (GL.Toggles.Blend);
       --        Glfw.Windows.Hints.Set_Depth_Bits (8);
       --        GL.Toggles.Enable (GL.Toggles.Depth_Test);
       --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
