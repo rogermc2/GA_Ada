@@ -9,7 +9,15 @@ package body Multivector_Analysis_E2GA is
                       Epsilon : float := Default_Epsilon) is
       Current_Flags : Flags_Type := Get_M_Flags;
    begin
-      --  Initialize M_Type
+      --  Initialize Multivector_Type_Base.Current_Type_Base
+--        type Type_Base is record
+--          M_Zero        : boolean := False; -- True if multivector is zero
+--          M_Type        : Object_Type := Multivector;
+--          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+--          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+--          M_Parity      : Parity := None;
+--        end record;
+
       for Index in 1 .. Num_Type_Levels loop
          Set_M_Type (Index, Invalid_Type);
       end loop;

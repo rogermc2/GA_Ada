@@ -3,6 +3,8 @@ package body Multivector_Type_Base is
 
     Current_Type_Base : Type_Base;
 
+--  ----------------------------------------------------------------------------
+
     function Get_Type_Base return Type_Base is
     begin
         return Current_Type_Base;
