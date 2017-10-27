@@ -31,6 +31,11 @@ package body E2GA_Draw is
       E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                            Tail, Vec_3D, Colour, Scale);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA_Draw.Draw 1.");
+         raise;
    end Draw;
 
    --  ----------------------------------------------------------------------------
@@ -55,13 +60,17 @@ package body E2GA_Draw is
       Scale     : float := 1.0;
    begin
       E2GA.Set_Coords (V1, E3GA.Get_Coord_1 (AM_V1), E3GA.Get_Coord_2 (AM_V1));
+      Put_Line ("E2GA_Draw Draw 2.");
       if isBlade (A) then
+         Put_Line ("E2GA_Draw isBlade.");
          case Blade_Subclass (A) is
             when Vector_Subclass =>
                E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                      AM_V1, Direction, Colour, Scale);
             when Bivector_Subclass =>
+
+               Put_Line (" E2GA_Draw Bivector_Subclass.");
                if Get_Draw_Mode = OD_Magnitude then
                   Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
                end if;
@@ -76,29 +85,13 @@ package body E2GA_Draw is
       elsif isVersor (A) then
          null;
       end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA_Draw.Draw 2.");
+         raise;
    end Draw;
 
    --  ----------------------------------------------------------------------------
-
-   --      procedure Draw (Render_Program : GL.Objects.Programs.Program;
-   --                      Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-   --                      BV     : E2GA.Bivector;
-   --                      Method_Type : GA_Draw.Bivector_Method_Type
-   --                                 := GA_Draw.Draw_Bivector_Circle;
-   --                     Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
-   --        use GA_Draw;
-   --        use GA_Maths;
-   --        Scale : float;
-   --      begin
-   --        if Get_Draw_Mode = OD_Magnitude then
-   --           Scale := Float_Functions.Sqrt (Abs (float (BV.Coordinates (1)))) / Pi;
-   --        else
-   --           Scale := 1.0;
-   --        end if;
-   --        Draw_Bivector (Render_Program, Model_View_Matrix, Projection_Matrix,
-   --                       BV, Scale);
-   --      end Draw;
-
-   --  --------------------------------------------------------------------------------
 
 end E2GA_Draw;
