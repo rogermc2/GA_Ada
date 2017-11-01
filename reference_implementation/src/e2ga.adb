@@ -38,6 +38,12 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Scalar_Product (MV1, MV2 : Multivector) return Scalar_MV;
+   function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
+   function Reverse_Multivector (MV : Multivector) return Multivector;
+
+   --  -------------------------------------------------------------------------
+
     function "+" (V1, V2 : Vector_2D) return Vector_2D is
     begin
         return (V1 (1) + V2 (1), V1 (2) + V2 (2));
@@ -147,21 +153,102 @@ package body E2GA is
       return (MV.MV_Size, MV.Grade_Use, Coords);
    end Dual;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function e1 return Vector_2D is
    begin
       return e1_basis;
    end e1;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function e2 return Vector_2D is
    begin
       return e2_basis;
    end e2;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+ record;
+   function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
+                 GU_Count : Integer) return MV_Type is
+             Type_Record        : MV_Type;  -- initialized to default values
+             Zero               : booleane; -- True if multivector is zero
+             M_Type             : Object_Type;
+             Top_Grade          : integerTop
+             GU               : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
+             Parity           : Parity;
+             MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
+             MV_Inverse         : constant Multivector := Inverse_Multivector (MV);
+             MV_Involute - _Grade : constant Multivector := Involution_Multivector (MV);
+             Sq              : Scalar_MV ;
+   begin
+      Sq := Scalar_Product (MV, MV_Reverse);
+      if Sq /= 0.0 then
+         Type_Record. :=
+
+      end if;
+
+      return Type_Record;
+   end Init;
+
+   --  -------------------------------------------------------------------------
+--     type Type_Base is record
+--          M_Zero        : boolean := False; -- True if multivector is zero
+--          M_Type        : Object_Type := Multivector_Object;
+--          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+--          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+--          M_Parity      : Parity := No_Parity;
+--      end record;
+
+   function Init_MV_Type (MV : Multivector; Epsilon : float) return MV_Type is
+      use Interfaces;
+      use GA_Maths;
+      use  Multivector_Type_Base;
+      Base               : Type_Base;
+      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
+      Count              : array (1 .. 2) of Integer := (0, 0);
+      Count_Index        : Integer := 0;
+      Index              : Integer;
+      Type_Record        : MV_Type;
+      US_1               : constant Unsigned_32 := Unsigned_32 (1);
+      Done               : Boolean := False;
+
+   begin
+      Set_Grade_Usage (Base, GU);
+      --  count grade part usage
+      while GU /= 0 loop
+         if Shift_Left (US_1, Natural (GU)) /= 0 then
+            Index := Integer (Shift_Left (US_1, Count_Index));
+            Count (Index) := Count (Index) + 1;
+         end if;
+         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
+         Set_Top_Grade (Base, Count_Index);
+         Count_Index := Count_Index + 1;
+      end loop;
+      --  if no grade part in use: zero blade
+      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
+         Set_Type_Base (Base, True, Blade_Object, 0, GU, Even_Parity);
+         Done := True;
+      else
+         --  Base.M_Zero = False by default
+         if Count (1) /= 0 and then Count (2) /= 0  then
+            --  Base.M_Parity = No_Parity by default
+            Done := True;
+         else
+            if Count (1) = 0 then
+               Set_Parity (Base, Even_Parity);
+            else
+               Set_Parity (Base, Odd_Parity);
+            end if;
+            --  test for versor
+            Type_Record := Init (MV, Epsilon, True, Count (1) + Count (2)) ;
+         end if;
+      end if;
+
+      return Type_Record;
+   end Init_MV_Type;
+
+   --  -------------------------------------------------------------------------
 
    --     function  Get_MV_Type (X : Multivector; Epsilon : float)
    --                            return Multivector_Type_Base.M_Type_Type is
@@ -415,6 +502,27 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+   function Reverse_Multivector (MV : Multivector) return Multivector is
+      use GA_Maths;
+      MV_R : Multivector := MV;
+      Coords_8 : Coords_Continuous_Array (1 .. 4) := (others => 0.0);
+   begin
+      if (MV.Grade_Use and 1) /= 0 then
+         Coords_8 (1) := MV.Coordinates (1);
+      end if;
+      if (MV.Grade_Use and 2) /= 0 then
+         Coords_8 (2) := MV.Coordinates (2);
+         Coords_8 (3) := MV.Coordinates (3);
+      end if;
+      if (MV.Grade_Use and 4) /= 0 then
+         Coords_8 (4) := - MV.Coordinates (4);
+      end if;
+      MV_R.Coordinates := Coords_8;
+      return MV_R;
+   end Reverse_Multivector;
+
+   --  ------------------------------------------------------------------------
+
    function Scalar_Product (V1, V2 : Vector_2D) return Scalar_MV is
       Product : Scalar_MV;
    begin
@@ -422,14 +530,56 @@ package body E2GA is
       return  Product;
    end Scalar_Product;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+
+   function Scalar_Product (MV1, MV2 : Multivector) return Scalar is
+      use GA_Maths;
+      Product : float := 0.0;
+   begin
+      if (MV2.Grade_Use and 1) /= 0 and (MV1.Grade_Use and 1) /= 0 then
+         Product :=  MV1.Coordinates (1) * MV2.Coordinates (1);
+      end if;
+
+      if (MV2.Grade_Use and 2) /= 0 and (MV1.Grade_Use and 2) /= 0 then
+         Product :=  Product + MV1.Coordinates (2) * MV2.Coordinates (2);
+      end if;
+
+      if (MV2.Grade_Use and 4) /= 0 and (MV1.Grade_Use and 4) /= 0 then
+         Product :=  Product - MV1.Coordinates (3) * MV2.Coordinates (3);
+      end if;
+      return  Scalar (Product);
+   end Scalar_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Scalar_Product (MV1, MV2 : Multivector) return Scalar_MV is
+      use GA_Maths;
+      Product : float := 0.0;
+      SMV     : Scalar_MV;
+   begin
+      if (MV2.Grade_Use and 1) /= 0 and (MV1.Grade_Use and 1) /= 0 then
+         Product :=  MV1.Coordinates (1) * MV2.Coordinates (1);
+      end if;
+
+      if (MV2.Grade_Use and 2) /= 0 and (MV1.Grade_Use and 2) /= 0 then
+         Product :=  Product + MV1.Coordinates (2) * MV2.Coordinates (2);
+      end if;
+
+      if (MV2.Grade_Use and 4) /= 0 and (MV1.Grade_Use and 4) /= 0 then
+         Product :=  Product - MV1.Coordinates (3) * MV2.Coordinates (3);
+      end if;
+      SMV.Coordinates (1) := Product;
+      return  SMV;
+   end Scalar_Product;
+
+   --  -------------------------------------------------------------------------
 
    function Set_Bivector (V1, V2 : Vector_2D) return Bivector_MV is
    begin
       return  Outer_Product (V1, V2);
    end Set_Bivector;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Set_Rotor (E1_E2 : float) return Rotor is
       theRotor : Rotor;
@@ -438,7 +588,7 @@ package body E2GA is
       return theRotor;
    end Set_Rotor;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Set_Vector (V1 : Vector_2D) return Vector_MV is
       theVector : Vector_MV;

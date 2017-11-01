@@ -12,6 +12,9 @@ package Multivector_Analysis is
    Number_Of_Scalars     : integer := 3;
    Number_Of_Vectors     : integer := 3;
 
+   --  subtype MV_Type is declared in E2GA to prevent circular dependency
+   --  subtype MV_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
+
    type Flag_Type is record
       Valid : boolean := Flag_Invalid;
       Dual  : boolean := false;
@@ -25,8 +28,6 @@ package Multivector_Analysis is
    type Flat_Type is (Flat_Invalid, Flat_Point, Flat_Line, Flat_Plane);
    type Model_Type is (Vector_Space, Homogenous_Model, Conformal_Model);
 
-   subtype Multivector_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
-
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
@@ -38,7 +39,7 @@ package Multivector_Analysis is
    --   m_type[3] = grade / class dependent
    type M_Type is record
       Model_Kind       : Model_Type := Vector_Space;
-      Multivector_Kind : Multivector_Type := Multivector_Type_Base.Invalid_Base_Type;
+      Multivector_Kind : E2GA.MV_Type := Multivector_Type_Base.Invalid_Base_Type;
       Blade_Class      : Blade_Type;
       Blade_Subclass   : Blade_Subclass_Type;
       Round_Kind       : Round_Type := Round_Invalid;

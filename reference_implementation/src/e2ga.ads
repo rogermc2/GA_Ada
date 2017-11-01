@@ -2,6 +2,7 @@
 with Ada.Strings.Unbounded;
 
 with GA_Maths;
+with Multivector_Type_Base;
 
 package E2GA is
 
@@ -20,6 +21,8 @@ package E2GA is
 
    type Bit_Map is new integer range 0 .. 2 ** 30;
    type Bit_Map_Array is array (integer range <>) of Bit_Map;
+
+   subtype MV_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
 
    type Coords_4 is record
       Coord_1 : float;
@@ -84,6 +87,7 @@ package E2GA is
    function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
+   function Init_MV_Type (MV : Multivector; Epsilon : float) return MV_Type;
    function Left_Contraction (V1, V2 : Vector_2D) return Scalar_MV;
    function Left_Contraction (V : Vector_MV; BV : Bivector_MV) return Vector_MV;
    function Outer_Product (V1, V2 : Vector_2D) return Bivector_MV;
