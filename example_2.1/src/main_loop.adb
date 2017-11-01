@@ -13,6 +13,7 @@ with GL.Objects.Vertex_Arrays;
 with GL.Objects.Shaders.Lists;
 with GL.Raster;
 with GL.Rasterization;
+with GL.Text;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
@@ -38,12 +39,13 @@ with E3GA;
 with GA_Maths;
 
 with Silo;
-with Texture_Management;
+--  with Texture_Management;
+with Text_Management;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    subtype tVec4f is Singles.Vector4;
 
-   Black          : constant Colors.Basic_Color := (0.0, 0.0, 0.0);
+   Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
    Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
    Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
@@ -61,6 +63,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                         Text_X, Text_Y  : GL.Types.Single;
                         Text_Scale      : GL.Types.Single);
 
+   Text_Dimesions_ID       : GL.Uniforms.Uniform;
    Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
    Text_Texture_ID         : GL.Uniforms.Uniform;
    Text_Colour_ID          : GL.Uniforms.Uniform;
@@ -89,7 +92,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Num_Bivector_Y    : constant integer := 4;
       Scale             : constant float := 40.0;
       Scale_S           : constant single := single (Scale);
-      Text_Scale        : constant single := 0.26;
+      Text_Scale        : constant single := 0.12;
       Position_X        : integer := 0;
       Position_Y        : constant single := 160.0;
 
@@ -264,14 +267,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                         Render_Program   : GL.Objects.Programs.Program;
                         Text_X, Text_Y   : GL.Types.Single;
                         Text_Scale       : GL.Types.Single) is
-      Text_Colour : constant Colors.Basic_Color := Black;
+      Text_Colour : constant Colors.Color := Black;
    begin
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Text_Projection_Matrix);
-      Texture_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
+      Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
                           Text_Scale, Text_Colour, Text_Texture_ID,
-                          Text_Proj_Matrix_ID, Text_Colour_ID,
+                          Text_Proj_Matrix_ID, Text_Dimesions_ID, Text_Colour_ID,
                           Text_Projection_Matrix);
    exception
       when anError :  others =>
@@ -288,8 +291,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
+      Font_File : string := "../fonts/Helvetica.ttc";
    begin
-      Texture_Management.Initialize_Font_Data ("../fonts/Helvetica.ttc");
+
       Render_Graphic_Program := Program_Loader.Program_From
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
@@ -299,22 +303,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
 
       Text_Proj_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "projection_matrix");
+        (Render_Text_Program, "mvp_matrix");
       Text_Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Text_Program, "text_sampler");
       Text_Colour_ID := GL.Objects.Programs.Uniform_Location
         (Render_Text_Program, "text_colour");
+      Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Text_Program, "dimensions");
 
-      GL.Toggles.Disable (GL.Toggles.Blend);
-      --        Glfw.Windows.Hints.Set_Depth_Bits (8);
-      --        GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      --        GL.Culling.Set_Front_Face (GL.Types.Clockwise);
-      --        GL.Culling.Set_Cull_Face (GL.Culling.Back);
-      --        GL.Buffers.Set_Depth_Function (GL.Types.Less);
-      --        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+      Text_Management.Setup (Font_File);
       GA_Draw.Set_Point_Size (0.005);
-
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
