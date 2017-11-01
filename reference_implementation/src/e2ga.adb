@@ -168,25 +168,25 @@ package body E2GA is
    end e2;
 
    --  -------------------------------------------------------------------------
- record;
+
    function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
                  GU_Count : Integer) return MV_Type is
              Type_Record        : MV_Type;  -- initialized to default values
-             Zero               : booleane; -- True if multivector is zero
-             M_Type             : Object_Type;
-             Top_Grade          : integerTop
-             GU               : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
-             Parity           : Parity;
+             Zero               : boolean; -- True if multivector is zero
+             M_Type             : Multivector_Type_Base.Object_Type;
+             Top_Grade          : integer;
+             GU                 : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
+             M_Parity           : Multivector_Type_Base.Parity;
              MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
-             MV_Inverse         : constant Multivector := Inverse_Multivector (MV);
-             MV_Involute - _Grade : constant Multivector := Involution_Multivector (MV);
-             Sq              : Scalar_MV ;
+--               MV_Inverse         : constant Multivector := Inverse_Multivector (MV);
+--               MV_Involute_Grade  : constant Multivector := Involution_Multivector (MV);
+             Sq                 : Scalar_MV;
    begin
       Sq := Scalar_Product (MV, MV_Reverse);
-      if Sq /= 0.0 then
-         Type_Record. :=
-
-      end if;
+     --  if Sq. /= 0.0 then
+       --  Type_Record. :=
+         null;
+     --  end if;
 
       return Type_Record;
    end Init;
