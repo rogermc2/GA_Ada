@@ -13,9 +13,6 @@ package E2GA is
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
 
-   --  Joinable grade definitions
-   type Grade is (Grade_0, Grade_1, Grade_2);
-
    --  Outermorphism types
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
 
@@ -60,6 +57,11 @@ package E2GA is
    subtype Vector_MV is Multivector (2, 2);
    subtype Bivector_MV is Multivector (1, 4);
    subtype Rotor is Multivector (2, 5);
+
+   --  Joinable grade definitions
+   Grade_0 : constant integer := 1;
+   Grade_1 : constant integer := 2;
+   Grade_2 : constant integer := 4;
 
    function "+" (V1, V2 : Vector_2D) return Vector_2D;
    function "-" (V1, V2 : Vector_2D) return Vector_2D;
