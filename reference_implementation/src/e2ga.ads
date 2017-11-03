@@ -12,6 +12,7 @@ package E2GA is
    --     type Coords3_Array is array (integer range <>) of Vector;
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
+   subtype Vector_Coords is Coords_Continuous_Array (1 .. 2);
 
    --  Outermorphism types
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
@@ -53,6 +54,14 @@ package E2GA is
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
 
+   type Bivector is record
+      Coordinates : Bivector_Coords;   --  m_c[1]
+   end record;
+
+   type Vector is record
+      Coordinates : Vector_Coords;   --  m_c[2]
+   end record;
+
    subtype Scalar_MV is Multivector (1, 1);
    subtype Vector_MV is Multivector (2, 2);
    subtype Bivector_MV is Multivector (1, 4);
@@ -70,7 +79,7 @@ package E2GA is
    function "+" (MV1, MV2 : Multivector) return Multivector;
    function "-" (MV1, MV2 : Multivector) return Multivector;
 
-   function Bivector_String (BV : E2GA.Bivector_MV; Text : String := "") return String;
+   function Bivector_String (BV : E2GA.Bivector; Text : String := "") return String;
    function Construct_Vector (Coord : float) return Vector_MV;
    function Construct_Vector (Coord_1,  Coord_2 : float) return Vector_MV;
    function Dot_Product (V1, V2 : Vector_2D) return float;
@@ -96,9 +105,9 @@ package E2GA is
                           return Multivector_Type_Base.Type_Base;
    function Left_Contraction (V1, V2 : Vector_2D) return Scalar_MV;
    function Left_Contraction (V : Vector_MV; BV : Bivector_MV) return Vector_MV;
-   function Outer_Product (V1, V2 : Vector_2D) return Bivector_MV;
+   function Outer_Product (V1, V2 : Vector_2D) return Bivector;
    function Scalar_Product (V1, V2 : Vector_2D) return Scalar_MV;
-   function Set_Bivector (V1, V2 : Vector_2D) return Bivector_MV;
+   function Set_Bivector (V1, V2 : Vector_2D) return Bivector;
    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
    function Set_Rotor (E1_E2 : float) return Rotor;
    function Unit_E (V : Vector_MV) return Vector_MV;

@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_Y        : constant single := 160.0;
 
       A                 : float := 0.0;
-      BV                : E2GA.Bivector_MV;
+      BV                : E2GA.Bivector;
       E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
       E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
       E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);

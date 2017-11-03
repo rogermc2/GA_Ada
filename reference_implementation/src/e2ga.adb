@@ -93,15 +93,17 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Bivector_String (BV : Bivector_MV; Text : String := "") return String is
+   function Bivector_String (BV : Bivector; Text : String := "") return String is
       --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
       --        BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
       --        BV_Size   : constant Integer := MV_Size (Integer (BV.Grade_Usage));
       --        MV        : Multivector (BV_Size);
+      MV : Bivector_MV;
    begin
       --        MV.Grade_Use := BV.Grade_Usage;
       --        MV.Coordinates (1) := BV_Coords (1);
-      return Multivector_String (BV, Text);
+      MV.Coordinates := BV.Coordinates;
+      return Multivector_String (MV, Text);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -315,13 +317,6 @@ package body E2GA is
    end Init;
 
    --  -------------------------------------------------------------------------
-   --     type Type_Base is record
-   --          M_Zero        : boolean := False; -- True if multivector is zero
-   --          M_Type        : Object_Type := Multivector_Object;
-   --          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
-   --          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
-   --          M_Parity      : Parity := No_Parity;
-   --      end record;
 
    function Init_MV_Type (MV : Multivector; Epsilon : float) return Multivector_Type_Base.Type_Base is
       use Interfaces;
@@ -363,7 +358,6 @@ package body E2GA is
             else
                Set_Parity (Base, Odd_Parity);
             end if;
-            --  test for versor
             Type_Record := Init (MV, Epsilon, True, Count (1) + Count (2)) ;
          end if;
       end if;
@@ -567,10 +561,10 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Outer_Product (V1, V2 : Vector_2D) return Bivector_MV is
+   function Outer_Product (V1, V2 : Vector_2D) return Bivector is
       --  The outer product basis in 2D is the coordinate of e1^e2.
       use E2GA;
-      BV        : Bivector_MV;
+      BV        : Bivector;
    begin
       BV.Coordinates (1) :=
         GA_Maths.Float_Array_Package.Determinant (((V1 (1), V2 (1)), (V1 (2), V2 (2))));
@@ -651,7 +645,7 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Bivector (V1, V2 : Vector_2D) return Bivector_MV is
+   function Set_Bivector (V1, V2 : Vector_2D) return Bivector is
    begin
       return  Outer_Product (V1, V2);
    end Set_Bivector;
