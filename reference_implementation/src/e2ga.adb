@@ -38,37 +38,38 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Inverse (MV : Multivector) return Multivector;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar_MV;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
    function Reverse_Multivector (MV : Multivector) return Multivector;
 
    --  -------------------------------------------------------------------------
 
-    function "+" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1 (1) + V2 (1), V1 (2) + V2 (2));
-    end "+";
+   function "+" (V1, V2 : Vector_2D) return Vector_2D is
+   begin
+      return (V1 (1) + V2 (1), V1 (2) + V2 (2));
+   end "+";
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function "-" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1 (1) - V2 (1), V1 (2) - V2 (2));
-    end "-";
+   function "-" (V1, V2 : Vector_2D) return Vector_2D is
+   begin
+      return (V1 (1) - V2 (1), V1 (2) - V2 (2));
+   end "-";
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function "*" (Weight : float; V : Vector_2D) return Vector_2D is
-    begin
-        return (Weight * V (1), Weight * V (1));
-    end "*";
+   function "*" (Weight : float; V : Vector_2D) return Vector_2D is
+   begin
+      return (Weight * V (1), Weight * V (1));
+   end "*";
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function "*" (V1, V2 : Vector_2D) return Vector_2D is
-    begin
-        return (V1 (1) * V2 (1), V1 (2) * V2 (2));
-    end "*";
+   function "*" (V1, V2 : Vector_2D) return Vector_2D is
+   begin
+      return (V1 (1) * V2 (1), V1 (2) * V2 (2));
+   end "*";
 
    --  ------------------------------------------------------------------------
 
@@ -169,36 +170,60 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Grade_Involution (MV : Multivector) return Multivector is
+      use GA_Maths;
+      Coords : Coord4_Array;
+      MV1    : Multivector := MV;
+   begin
+      if (MV.Grade_Use and 2) /= 0 then
+         MV1.Coordinates (2) := -MV.Coordinates (2);
+         MV1.Coordinates (3) := -MV.Coordinates (3);
+      end if;
+      return MV1;
+   end Grade_Involution;
+
+   --  -------------------------------------------------------------------------
+
    function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
-                 GU_Count : Integer) return MV_Type is
-             Type_Record        : MV_Type;  -- initialized to default values
-             Zero               : boolean; -- True if multivector is zero
-             M_Type             : Multivector_Type_Base.Object_Type;
-             Top_Grade          : integer;
-             GU                 : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
-             M_Parity           : Multivector_Type_Base.Parity;
-             MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
---               MV_Inverse         : constant Multivector := Inverse_Multivector (MV);
---               MV_Involute_Grade  : constant Multivector := Involution_Multivector (MV);
-             Sq                 : Scalar_MV;
+                  GU_Count : Integer) return MV_Type is
+      Type_Record        : MV_Type;  -- initialized to default values
+      Zero               : boolean; -- True if multivector is zero
+      M_Type             : Multivector_Type_Base.Object_Type;
+      Top_Grade          : integer;
+      GU                 : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
+      M_Parity           : Multivector_Type_Base.Parity;
+      MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
+      VI                 : constant Multivector := Inverse (MV);
+      GI                 : constant Multivector := Grade_Involution (MV);
+      Sq                 : Scalar_MV;
+      GI_VI              : constant Multivector := Geometric_Product (GI, VI);
+      VI_GI              : constant Multivector := Geometric_Product (VI, GI);
+      GI_VI_E1           : constant Multivector := Geometric_Product (GI_VI, E1);
+      VI_GI_E1           : constant Multivector := Geometric_Product (VI_GI, E1);
+      VI_GI_GI_VI        : constant Multivector := VI_GI - GI_VI;
+
    begin
       Sq := Scalar_Product (MV, MV_Reverse);
-     --  if Sq. /= 0.0 then
-       --  Type_Record. :=
-         null;
-     --  end if;
+      if Sq /= 0.0 then
+         if GI.Grade_Use = Grade_0 then
+            if VI_GI_GI_VI.Grade_Use = Grade_0 then
+
+            end if
+
+         end if ;
+      end if;
 
       return Type_Record;
    end Init;
 
    --  -------------------------------------------------------------------------
---     type Type_Base is record
---          M_Zero        : boolean := False; -- True if multivector is zero
---          M_Type        : Object_Type := Multivector_Object;
---          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
---          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
---          M_Parity      : Parity := No_Parity;
---      end record;
+   --     type Type_Base is record
+   --          M_Zero        : boolean := False; -- True if multivector is zero
+   --          M_Type        : Object_Type := Multivector_Object;
+   --          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+   --          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+   --          M_Parity      : Parity := No_Parity;
+   --      end record;
 
    function Init_MV_Type (MV : Multivector; Epsilon : float) return MV_Type is
       use Interfaces;
@@ -247,6 +272,25 @@ package body E2GA is
 
       return Type_Record;
    end Init_MV_Type;
+
+   --  -------------------------------------------------------------------------
+
+   function Inverse (MV : Multivector) return Multivector is
+      use GA_Maths;
+      N : Scalar_MV;
+   begin
+      if (MV.Grade_Use and 1) /= 0 then
+         N.Coordinates (1) := MV.Coordinates (1) * MV.Coordinates (1);
+      end if;
+      if (MV.Grade_Use and 2) /= 0 then
+         N.Coordinates (1) := N.Coordinates (1) + MV.Coordinates (2) * MV.Coordinates (2) +
+           MV.Coordinates (3) * MV.Coordinates (3);
+      end if;
+      if (MV.Grade_Use and 4) /= 0 then
+         N.Coordinates (1) := N.Coordinates (1) + MV.Coordinates (4) * MV.Coordinates (4);
+      end if;
+      return N;
+   end Inverse;
 
    --  -------------------------------------------------------------------------
 
@@ -618,46 +662,46 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-    function Dot_Product (V1, V2 : Vector_2D) return float is
-    begin
-        return V1 (1) * V2 (1) + V1 (2) * V2 (2);
-    end Dot_Product;
+   function Dot_Product (V1, V2 : Vector_2D) return float is
+   begin
+      return V1 (1) * V2 (1) + V1 (2) * V2 (2);
+   end Dot_Product;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function Get_Coords (V : Vector_2D) return GA_Maths.Array_2D is
-    begin
-        return (V (1), V (2));
-    end Get_Coords;
+   function Get_Coords (V : Vector_2D) return GA_Maths.Array_2D is
+   begin
+      return (V (1), V (2));
+   end Get_Coords;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function Get_Coord_1 (V : Vector_2D) return float is
-    begin
-        return V (1);
-    end Get_Coord_1;
+   function Get_Coord_1 (V : Vector_2D) return float is
+   begin
+      return V (1);
+   end Get_Coord_1;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function Get_Coord_2 (V : Vector_2D) return float is
-    begin
-        return V (2);
-    end Get_Coord_2;
+   function Get_Coord_2 (V : Vector_2D) return float is
+   begin
+      return V (2);
+   end Get_Coord_2;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    function Magnitude (V : Vector_2D) return float is
-    begin
-        return GA_Maths.Float_Functions.Sqrt (V (1) * V (1) + V (2) * V (2));
-    end Magnitude;
+   function Magnitude (V : Vector_2D) return float is
+   begin
+      return GA_Maths.Float_Functions.Sqrt (V (1) * V (1) + V (2) * V (2));
+   end Magnitude;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-    procedure Set_Coords (V : out Vector_2D; C1, C2 : float) is
-    begin
-        V := (C1, C2);
-    end Set_Coords;
+   procedure Set_Coords (V : out Vector_2D; C1, C2 : float) is
+   begin
+      V := (C1, C2);
+   end Set_Coords;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
 end E2GA;
