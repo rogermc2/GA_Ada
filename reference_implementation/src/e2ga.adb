@@ -318,6 +318,11 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+--          M_Zero        : boolean := False; -- True if multivector is zero
+--          M_Type        : Object_Type := Multivector_Object;
+--          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+--          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+--          M_Parity      : Parity
    function Init_MV_Type (MV : Multivector; Epsilon : float) return Multivector_Type_Base.Type_Base is
       use Interfaces;
       use GA_Maths;

@@ -54,6 +54,9 @@ package E2GA is
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
 
+   --  A bivector as defined here the outerproduct of two vectors.
+   --  2-blade is the more correct terminology; that is, a 2-vector
+   --  is not necessarilly a 2-blade.
    type Bivector is record
       Coordinates : Bivector_Coords;   --  m_c[1]
    end record;

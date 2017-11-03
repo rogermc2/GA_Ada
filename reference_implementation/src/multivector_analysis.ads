@@ -11,6 +11,7 @@ package Multivector_Analysis is
    Number_Of_Points      : integer := 3;
    Number_Of_Scalars     : integer := 3;
    Number_Of_Vectors     : integer := 3;
+--   Number_Of_Type_Levels : integer := 4;   Not required as M_Type is a record
 
    --  subtype MV_Type is declared in E2GA to prevent circular dependency
    --  subtype MV_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
