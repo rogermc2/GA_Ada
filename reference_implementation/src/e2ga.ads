@@ -21,19 +21,19 @@ package E2GA is
 
    subtype MV_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
 
-   type Coords_4 is record
-      Coord_1 : float;
-      Coord_2 : float;
-      Coord_3 : float;
-      Coord_4 : float;
-   end record;
+--     type Coords_4 is record
+--        Coord_1 : float;
+--        Coord_2 : float;
+--        Coord_3 : float;
+--        Coord_4 : float;
+--     end record;
 
    type E2_Bit_Map is new integer range 0 .. 4;
 
-   type E2_Type is record
-      Coord_1 : float;
-      Coord_2 : float;
-   end record;
+--     type E2_Type is record
+--        Coord_1 : float;
+--        Coord_2 : float;
+--     end record;
 
    --  Multivector types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_Scalar, MVT_Vector,
@@ -68,6 +68,7 @@ package E2GA is
    function "*" (Weight : float; V : Vector_2D) return Vector_2D;
    function "*" (V1, V2 : Vector_2D) return Vector_2D;
    function "+" (MV1, MV2 : Multivector) return Multivector;
+   function "-" (MV1, MV2 : Multivector) return Multivector;
 
    function Bivector_String (BV : E2GA.Bivector_MV; Text : String := "") return String;
    function Construct_Vector (Coord : float) return Vector_MV;
@@ -77,6 +78,8 @@ package E2GA is
    function Dual (MV : Multivector) return Multivector;
    function e1 return Vector_2D;
    function e2 return Vector_2d;
+   function E1_E2 (BV : Bivector_MV) return float;
+   function Get_Coords (BV : Bivector_MV) return Bivector_Coords;
    function Get_Coord_1 (V : Vector_2D) return float;
    function Get_Coord_2 (V : Vector_2D) return float;
    function Largest_Basis_Blade (Map : Bit_Map) return float;
@@ -89,7 +92,8 @@ package E2GA is
    function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   function Init_MV_Type (MV : Multivector; Epsilon : float) return MV_Type;
+   function Init_MV_Type (MV : Multivector; Epsilon : float)
+                          return Multivector_Type_Base.Type_Base;
    function Left_Contraction (V1, V2 : Vector_2D) return Scalar_MV;
    function Left_Contraction (V : Vector_MV; BV : Bivector_MV) return Vector_MV;
    function Outer_Product (V1, V2 : Vector_2D) return Bivector_MV;

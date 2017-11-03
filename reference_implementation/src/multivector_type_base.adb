@@ -40,6 +40,13 @@ package body Multivector_Type_Base is
 
 --  ----------------------------------------------------------------------------
 
+    procedure Set_M_Type (Base : in out Type_Base; theType : Object_Type) is
+    begin
+       Base.M_Type := theType;
+    end Set_M_Type;
+
+--  ----------------------------------------------------------------------------
+
     procedure Set_Parity (Base : in out Type_Base; Par : Parity) is
     begin
        Base.M_Parity := Par;

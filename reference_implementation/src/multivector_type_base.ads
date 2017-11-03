@@ -16,6 +16,7 @@ package Multivector_Type_Base is
                                      Par : Parity := No_Parity);
     procedure Set_Grade_Usage (Base : in out Type_Base; GU : GA_Maths.Grade_Usage);
     procedure Set_M_Type (M_Type : Object_Type);
+    procedure Set_M_Type (Base : in out Type_Base; theType : Object_Type);
     procedure Set_Parity (Base : in out Type_Base; Par : Parity);
     procedure Set_Top_Grade (Base : in out Type_Base; Grade : Integer);
     procedure Set_Type_Base (Base : in out Type_Base; Zero : boolean;
