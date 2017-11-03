@@ -258,7 +258,6 @@ package body E2GA is
 
    function Grade_Involution (MV : Multivector) return Multivector is
       use GA_Maths;
-      Coords : Coord4_Array;
       MV1    : Multivector := MV;
    begin
       if (MV.Grade_Use and 2) /= 0 then
@@ -279,47 +278,37 @@ package body E2GA is
 
    function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
                   GU_Count : Integer) return Multivector_Type_Base.Type_Base is
-      use Ga_Maths;
+      use GA_Maths;
       Type_Record        : Multivector_Type_Base.Type_Base;  -- initialized to default values
-      Zero               : boolean; -- True if multivector is zero
       M_Type             : Multivector_Type_Base.Object_Type;
-      Top_Grade          : integer;
-      GU                 : GA_Maths.Grade_Usage; --  Bit map indicating which grades are present
-      M_Parity           : Multivector_Type_Base.Parity;
+      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
       VI                 : constant Multivector := Inverse (MV);
       GI                 : constant Multivector := Grade_Involution (MV);
-      MV_E1              : Multivector (1, 1);
       Sq                 : Scalar_MV;
       --  V: versor; VI: versor inverse
       --  GI: Grade involution
       GI_VI              : constant Multivector := Geometric_Product (GI, VI);
       VI_GI              : constant Multivector := Geometric_Product (VI, GI);
-      VI_E1              : constant Multivector := Geometric_Product (VI, E1);
-      VI_E2              : constant Multivector := Geometric_Product (VI, E2);
-      GI_VI_E1           : constant Multivector := Geometric_Product (GI_VI, E1);
-      VI_GI_E1           : constant Multivector := Geometric_Product (VI_GI, E1);
+      VI_E1              : constant Multivector := Geometric_Product (VI, e1);
+      VI_E2              : constant Multivector := Geometric_Product (VI, e2);
+      GI_VI_E1           : constant Multivector := Geometric_Product (GI_VI, e1);
+      VI_GI_E1           : constant Multivector := Geometric_Product (VI_GI, e1);
       VI_GI_GI_VI        : constant Multivector := VI_GI - GI_VI;
-      VI_E1_GI           : constant Multivector := Geometric_Product (VI_E1, E1);
-      VI_E2_GI           : constant Multivector := Geometric_Product (VI_E2, E2);
+      VI_E1_GI           : constant Multivector := Geometric_Product (VI_E1, GI);
+      VI_E2_GI           : constant Multivector := Geometric_Product (VI_E2, GI);
 
    begin
       Sq := Scalar_Product (MV, MV_Reverse);
-      if Sq.Coordinates (1) /= 0.0 then
-         if GI.Grade_Use = Grade_0 then
-            if VI_GI_GI_VI.Grade_Use = Grade_0 then
-               if VI_E1_GI.Grade_Use = Grade_1 then
-                  if VI_E2_GI.Grade_Use = Grade_1 then
-                     if GU_Count = 1 then
-                        M_Type := Multivector_Type_Base.Blade_Object;
-                     else
-                        M_Type := Multivector_Type_Base.Versor_Object;
-                     end if;
-                  end if;
-               end if;
-            end if;
-
-         end if ;
+      if Sq.Coordinates (1) /= 0.0 and then
+         GI.Grade_Use = Grade_0 and then
+         VI_GI_GI_VI.Grade_Use = Grade_0 and then
+         VI_E1_GI.Grade_Use = Grade_1 and then
+         VI_E2_GI.Grade_Use = Grade_1 and then
+         GU_Count = 1 then
+         M_Type := Multivector_Type_Base.Blade_Object;
+      else
+         M_Type := Multivector_Type_Base.Versor_Object;
       end if;
       Multivector_Type_Base.Set_M_Type (Type_Record, M_Type);
       return Type_Record;
