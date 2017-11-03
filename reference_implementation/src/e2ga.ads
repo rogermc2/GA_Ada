@@ -59,9 +59,9 @@ package E2GA is
    subtype Rotor is Multivector (2, 5);
 
    --  Joinable grade definitions
-   Grade_0 : constant integer := 1;
-   Grade_1 : constant integer := 2;
-   Grade_2 : constant integer := 4;
+   Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
+   Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
+   Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
 
    function "+" (V1, V2 : Vector_2D) return Vector_2D;
    function "-" (V1, V2 : Vector_2D) return Vector_2D;
