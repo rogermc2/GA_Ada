@@ -52,7 +52,7 @@ package Multivector_Analyze is
    type Vector_Array is array (1 .. Number_Of_Vectors) of E3GA.Vector_3D;
 
    type MV_Analysis is record
-      Flag             : Flag_Type := (Flag_Valid, False);
+      M_Flags          : Flag_Type := (Flag_Valid, False);
       MV_Kind          : Multivector_Type_Base.M_Type_Type;
       Conformal_Kind   : Conformal_Type := Invalid_Model;
       Epsilon          : Float := Default_Epsilon_Value;

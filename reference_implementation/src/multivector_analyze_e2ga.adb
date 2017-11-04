@@ -8,10 +8,12 @@ package body Multivector_Analyze_E2GA is
                       Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
       use Multivector_Type_Base;
+
       Base      : Type_Base;
       Model     : M_Type;  --  m_type
       --  Init_MV_Type corresponds to e2ga::mvType constructor.
       M_MV_Type : E2GA.MV_Type := E2GA.Init (MV, Epsilon);
+      Analysis  : MV_Analysis;
    begin
       --  Initialize Multivector_Type_Base.Current_Type_Base
 --        type Type_Base is record
@@ -22,14 +24,18 @@ package body Multivector_Analyze_E2GA is
 --          M_Parity      : Parity := None;
 --        end record;
 
-      Model.Model_Kind := Vector_Space_Model;
-      Set_M_Type (Base, M_MV_Type.);
+      Analysis.M_Flags.Valid := True;
+      Model.Model_Kind := Multivector_Analyze.Vector_Space;
+
       if Flags.Dual then
-         Set_M_Flags (Flags.Valid, Current_Flags.Dual xor Flags.Dual);
+--           Set_M_Flags (Flags.Valid, Current_Flags.Dual xor Flags.Dual);
+         Analysis.M_Flags.Dual := True;
          MV := E2GA.Dual (MV);
       end if;
-      Model.Model_Kind := Vector+Space_Model
-      Set_M_Multivector_Type (Get_Multivector_Type (MV, Epsilon));
+      Model.Model_Kind := M_MV_Type.M_Type;
+      if M_MV_Type.M_Zero then
+         Model.Model_Kind := M_Zero;
+      end if;
    end Analyze;
 
 end Multivector_Analyze_E2GA;
