@@ -40,7 +40,8 @@ package Multivector_Analyze is
    --   m_type[3] = grade / class dependent
    type M_Type is record
       Model_Kind       : Model_Type := Vector_Space;
-      Multivector_Kind : E2GA.MV_Type := Multivector_Type_Base.Invalid_Base_Type;
+      Multivector_Kind : Multivector_Type_Base.M_Type_Type :=
+                           Multivector_Type_Base.Invalid_Base_Type;
       Blade_Class      : Blade_Type;
       Blade_Subclass   : Blade_Subclass_Type;
       Round_Kind       : Round_Type := Round_Invalid;

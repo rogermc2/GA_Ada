@@ -4,7 +4,7 @@ with Interfaces;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Multivector_Analysis;
+with Multivector_Analyze;
 with Multivector_Type_Base;
 
 package body E2GA is
@@ -279,9 +279,9 @@ package body E2GA is
    --  ----------------------------------------------------------------------------
 
    function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
-                  GU_Count : Integer) return Multivector_Type_Base.Type_Base is
+                  GU_Count : Integer) return MV_Type is
       use GA_Maths;
-      Type_Record        : Multivector_Type_Base.Type_Base;  -- initialized to default values
+      M_Type_Record      : MV_Type;  -- initialized to default values
       M_Type             : Multivector_Type_Base.Object_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
@@ -312,18 +312,20 @@ package body E2GA is
       else
          M_Type := Multivector_Type_Base.Versor_Object;
       end if;
-      Multivector_Type_Base.Set_M_Type (Type_Record, M_Type);
-      return Type_Record;
+      --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
+      M_Type_Record.M_Type := M_Type;
+      return M_Type_Record;
    end Init;
 
    --  -------------------------------------------------------------------------
-
---          M_Zero        : boolean := False; -- True if multivector is zero
---          M_Type        : Object_Type := Multivector_Object;
---          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
---          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
---          M_Parity      : Parity
-   function Init_MV_Type (MV : Multivector; Epsilon : float) return Multivector_Type_Base.Type_Base is
+   --  Initialize MV_Type corresponds to e2ga void mvtype::init
+   --  which is called by e2ga::mvType constructor
+   --  M_Zero        : boolean := False; -- True if multivector is zero
+   --  M_Type        : Object_Type := Multivector_Object;
+   --  M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+   --  M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+   --  M_Parity      : Parity
+   function Init (MV : Multivector; Epsilon : float) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
@@ -332,12 +334,13 @@ package body E2GA is
       Count              : array (1 .. 2) of Integer := (0, 0);
       Count_Index        : Integer := 0;
       Index              : Integer;
-      Type_Record        : Multivector_Type_Base.Type_Base;
+      Type_Record        : MV_Type;
       US_1               : constant Unsigned_32 := Unsigned_32 (1);
       Done               : Boolean := False;
 
    begin
-      Set_Grade_Usage (Base, GU);
+--        Set_Grade_Usage (Base, GU);
+      Base.M_GU := GU;
       --  count grade part usage
       while GU /= 0 loop
          if Shift_Left (US_1, Natural (GU)) /= 0 then
@@ -345,7 +348,8 @@ package body E2GA is
             Count (Index) := Count (Index) + 1;
          end if;
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
-         Set_Top_Grade (Base, Count_Index);
+--           Set_Top_Grade (Base, Count_Index);
+         Base.M_Top_Grade := Count_Index;
          Count_Index := Count_Index + 1;
       end loop;
       --  if no grade part in use: zero blade
@@ -359,16 +363,18 @@ package body E2GA is
             Done := True;
          else
             if Count (1) = 0 then
-               Set_Parity (Base, Even_Parity);
+--                 Set_Parity (Base, Even_Parity);
+              Base.M_Parity := Even_Parity;
             else
-               Set_Parity (Base, Odd_Parity);
+--                 Set_Parity (Base, Odd_Parity);
+               Base.M_Parity := Odd_Parity;
             end if;
             Type_Record := Init (MV, Epsilon, True, Count (1) + Count (2)) ;
          end if;
       end if;
 
       return Type_Record;
-   end Init_MV_Type;
+   end Init;
 
    --  -------------------------------------------------------------------------
 
@@ -394,7 +400,7 @@ package body E2GA is
    --     function  Get_MV_Type (X : Multivector; Epsilon : float)
    --                            return Multivector_Type_Base.M_Type_Type is
    --     begin
-   --        return Multivector_Analysis.Get_Multivector_Type (X, Epsilon);
+   --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
    --     end Get_MV_Type;
 
    --  -------------------------------------------------------------------------

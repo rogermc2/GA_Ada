@@ -3,7 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA;
 with GA_Draw;
-with Multivector_Analysis;
+with Multivector_Analyze;
 
 package body E2GA_Draw is
 --  Method & flags are dependent on what 'X' represents.
@@ -51,7 +51,7 @@ package body E2GA_Draw is
                    Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
       use GA_Draw;
       use GA_Maths;
-      use Multivector_Analysis;
+      use Multivector_Analyze;
       A         : constant MV_Analysis := Analyze (MV);
       AM_V1     : constant E3GA.Vector_3D := A.M_Vectors (1);
       AM_V2     : constant E3GA.Vector_3D := A.M_Vectors (2);

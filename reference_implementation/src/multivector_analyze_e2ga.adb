@@ -23,7 +23,7 @@ package body Multivector_Analyze_E2GA is
 --        end record;
 
       Model.Model_Kind := Vector_Space_Model;
-      Set_M_Type (Base, Unused_Type);
+      Set_M_Type (Base, M_MV_Type.);
       if Flags.Dual then
          Set_M_Flags (Flags.Valid, Current_Flags.Dual xor Flags.Dual);
          MV := E2GA.Dual (MV);
