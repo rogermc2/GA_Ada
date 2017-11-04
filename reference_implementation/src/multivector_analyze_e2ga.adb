@@ -10,7 +10,8 @@ package body Multivector_Analyze_E2GA is
       use Multivector_Type_Base;
       Base      : Type_Base;
       Model     : M_Type;  --  m_type
-      M_MV_Type : E2GA.MV_Type;
+      --  Init_MV_Type corresponds to e2ga::mvType constructor.
+      M_MV_Type : E2GA.MV_Type := E2GA.Init (MV, Epsilon);
    begin
       --  Initialize Multivector_Type_Base.Current_Type_Base
 --        type Type_Base is record
@@ -21,7 +22,7 @@ package body Multivector_Analyze_E2GA is
 --          M_Parity      : Parity := None;
 --        end record;
 
-      Set_M_Type (Base, Vector_Space_Model);
+      Model.Model_Kind := Vector_Space_Model;
       Set_M_Type (Base, Unused_Type);
       if Flags.Dual then
          Set_M_Flags (Flags.Valid, Current_Flags.Dual xor Flags.Dual);
