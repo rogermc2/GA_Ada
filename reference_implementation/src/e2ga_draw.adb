@@ -19,10 +19,10 @@ package body E2GA_Draw is
 --  as argument (and also integrate 'Palet')
 
    --  Draw Vector
-   procedure Draw (Render_Program                       : GL.Objects.Programs.Program;
+   procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   aVector                              : E2GA.Vector_MV; Colour     : GL.Types.Colors.Color;
-                   Scale                                : float := 1.0) is
+                   aVector : E2GA.Vector_MV; Colour : GL.Types.Colors.Color;
+                   Scale : float := 1.0) is
       Vec_3D  : E3GA.Vector_3D;
       Tail    : E3GA.Vector_3D;
    begin
@@ -42,12 +42,13 @@ package body E2GA_Draw is
 
    --  -------------------------------------------------------------------------
 
-   procedure Draw (Render_Program                       : GL.Objects.Programs.Program;
-                   Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   MV                                   : in out E2GA.Multivector;
-                   Method                               : GA_Draw.Bivector_Method_Type
-                   := GA_Draw.Draw_Bivector_Circle;
-                   Colour                               : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
+   procedure Draw (Render_Program : GL.Objects.Programs.Program;
+                   Model_View_Matrix,
+                   Projection_Matrix : GL.Types.Singles.Matrix4;
+                   MV : in out E2GA.Multivector;
+                   Method : GA_Draw.Bivector_Method_Type
+                            := GA_Draw.Draw_Bivector_Circle;
+                   Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
       use GA_Draw;
       use GA_Maths;
       use Multivector_Analysis;

@@ -94,27 +94,26 @@ package E2GA is
    function Get_Coords (BV : Bivector_MV) return Bivector_Coords;
    function Get_Coord_1 (V : Vector_2D) return float;
    function Get_Coord_2 (V : Vector_2D) return float;
-   function Largest_Basis_Blade (Map : Bit_Map) return float;
-   function Largest_Coordinate return float;
-   function Magnitude (V : Vector_2D) return float;
-   function Multivector_String (MV : Multivector; Text : String := "") return String;
-   function Norm_E (MV : Multivector) return Scalar_MV;
-   --     function Norm_E2 (BV : Bivector) return Scalar;
-   --     function Norm_E2 (V2 : Vector) return Scalar;
-   function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Init_MV_Type (MV : Multivector; Epsilon : float)
                           return Multivector_Type_Base.Type_Base;
+   function Largest_Basis_Blade (Map : Bit_Map) return float;
+   function Largest_Coordinate return float;
    function Left_Contraction (V1, V2 : Vector_2D) return Scalar_MV;
    function Left_Contraction (V : Vector_MV; BV : Bivector_MV) return Vector_MV;
+   function Magnitude (V : Vector_2D) return float;
+   function Multivector_String (MV : Multivector; Text : String := "") return String;
+   function Norm_E (MV : Multivector) return Scalar_MV;
+   --     function Norm_E2 (BV : Bivector) return Scalar;
+   --     function Norm_E2 (V2 : Vector) return Scalar;     function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Outer_Product (V1, V2 : Vector_2D) return Bivector;
    function Scalar_Product (V1, V2 : Vector_2D) return Scalar_MV;
    function Set_Bivector (V1, V2 : Vector_2D) return Bivector;
    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
    function Set_Rotor (E1_E2 : float) return Rotor;
-   function Unit_E (V : Vector_MV) return Vector_MV;
    function Set_Vector (V1 : Vector_2D) return Vector_MV;
+   function Unit_E (V : Vector_MV) return Vector_MV;
 
 private
 
