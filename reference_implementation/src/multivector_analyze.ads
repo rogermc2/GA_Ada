@@ -5,7 +5,6 @@ with GA_Maths;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
-   Default_Epsilon_Value : float := 10.0 ** (-5);
    Flag_Invalid          : constant boolean := false;
    Flag_Valid            : constant boolean := true;
    Number_Of_Points      : integer := 3;
@@ -32,18 +31,13 @@ package Multivector_Analyze is
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
-   --   Intended use of M_Type:
-   --   m_type[0] = model
-   --   m_type[1] = multivector type (c3ga_type : BLADE, c3ga_type : VERSOR,
-   --               c3ga_type :  : MULTIVECTOR, )
-   --   m_type[2] = class (round, flat, free, etc)
-   --   m_type[3] = grade / class dependent
    type M_Type is record
       Model_Kind       : Model_Type := Vector_Space;
       Multivector_Kind : Multivector_Type_Base.M_Type_Type :=
                            Multivector_Type_Base.Invalid_Base_Type;
       Blade_Class      : Blade_Type;
       Blade_Subclass   : Blade_Subclass_Type;
+      Versor_Subclass  : Versor_Type;
       Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
@@ -53,23 +47,24 @@ package Multivector_Analyze is
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
-      MV_Kind          : Multivector_Type_Base.M_Type_Type;
+      M_MV_Type          : Multivector_Type_Base.M_Type_Type;
       Conformal_Kind   : Conformal_Type := Invalid_Model;
-      Epsilon          : Float := Default_Epsilon_Value;
+      Epsilon          : Float;
       Analysis_Type    : M_Type;
       Pseudo_Scalar    : Boolean := False;
       Versor_Kind      : Versor_Type := Invalid_Versor;
+      --  Each analyzed multivector is decomposed into
+      --  (analysis dependent) points, vectors and scalars.
       M_Points         : Point_Array;
       M_Scalors        : Scalar_Array;
       M_Vectors        : Vector_Array;
    end record;
 
-   function Default_Epsilon return float;
-   function Analyze (MV : in out E2GA.Multivector;
+   function Default_Epsilon return float;  --  Must precede Analyze
+   procedure Analyze (MV : in out E2GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon) return MV_Analysis;
+                     Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
-
    function isValid (A : MV_Analysis) return Boolean;
    function isDual (A : MV_Analysis) return Boolean;
 
