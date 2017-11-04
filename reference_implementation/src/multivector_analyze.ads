@@ -4,7 +4,7 @@ with E3GA;
 with GA_Maths;
 with Multivector_Type_Base;
 
-package Multivector_Analysis is
+package Multivector_Analyze is
    Default_Epsilon_Value : float := 10.0 ** (-5);
    Flag_Invalid          : constant boolean := false;
    Flag_Valid            : constant boolean := true;
@@ -81,4 +81,4 @@ package Multivector_Analysis is
    function Num_Scalars return integer;
    function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
 
-end Multivector_Analysis;
+end Multivector_Analyze;

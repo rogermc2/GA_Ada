@@ -1,11 +1,11 @@
 
 with E2GA;
-with Multivector_Analysis; use Multivector_Analysis;
+with Multivector_Analyze; use Multivector_Analyze;
 
-package Multivector_Analysis_E2GA is
+package Multivector_Analyze_E2GA is
 
     procedure Analyze (MV : in out E2GA.Multivector;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon);
 
-end Multivector_Analysis_E2GA;
+end Multivector_Analyze_E2GA;

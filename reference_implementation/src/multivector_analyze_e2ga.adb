@@ -1,15 +1,16 @@
 
-with Multivector_Analysis;
 with Multivector_Type_Base;
 
-package body Multivector_Analysis_E2GA is
+package body Multivector_Analyze_E2GA is
 
    procedure Analyze (MV : in out E2GA.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
-      use Multivector_Analysis;
+      use Multivector_Analyze;
       use Multivector_Type_Base;
-      Base : Type_Base;
+      Base      : Type_Base;
+      Model     : M_Type;  --  m_type
+      M_MV_Type : E2GA.MV_Type;
    begin
       --  Initialize Multivector_Type_Base.Current_Type_Base
 --        type Type_Base is record
@@ -26,7 +27,8 @@ package body Multivector_Analysis_E2GA is
          Set_M_Flags (Flags.Valid, Current_Flags.Dual xor Flags.Dual);
          MV := E2GA.Dual (MV);
       end if;
+      Model.Model_Kind := Vector+Space_Model
       Set_M_Multivector_Type (Get_Multivector_Type (MV, Epsilon));
    end Analyze;
 
-end Multivector_Analysis_E2GA;
+end Multivector_Analyze_E2GA;

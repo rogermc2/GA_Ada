@@ -1,7 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-package body Multivector_Analysis is
+package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
@@ -108,4 +108,4 @@ package body Multivector_Analysis is
 
    --  --------------------------------------------------------------------------
 
-end Multivector_Analysis;
+end Multivector_Analyze;
