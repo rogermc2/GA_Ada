@@ -38,6 +38,9 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   procedure Init (M_Type_Record : in out Multivector_Type_Base.MV_Typebase;
+                   MV  : Multivector; Epsilon : float;
+                   Use_Algebra_Metric : Boolean; GU_Count : Integer);
    function Inverse (MV : Multivector) return Multivector;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar_MV;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
@@ -278,10 +281,10 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
-                  GU_Count : Integer) return MV_Type is
+   procedure Init (M_Type_Record : in out Multivector_Type_Base.MV_Typebase;
+                   MV            : Multivector; Epsilon : float;
+                   Use_Algebra_Metric : Boolean; GU_Count : Integer) is
       use GA_Maths;
-      M_Type_Record      : MV_Type;  -- initialized to default values
       M_Type             : Multivector_Type_Base.Object_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
@@ -301,6 +304,7 @@ package body E2GA is
       VI_E2_GI           : constant Multivector := Geometric_Product (VI_E2, GI);
 
    begin
+      --  M_Type_Record is initialized to default values
       Sq := Scalar_Product (MV, MV_Reverse);
       if Sq.Coordinates (1) /= 0.0 and then
          GI.Grade_Use = Grade_0 and then
@@ -314,32 +318,34 @@ package body E2GA is
       end if;
       --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
       M_Type_Record.M_Type := M_Type;
-      return M_Type_Record;
+--        return M_Type_Record;
    end Init;
 
    --  -------------------------------------------------------------------------
+
+--     type MV_Typebase is record
+--          M_Zero        : boolean := False; -- True if multivector is zero
+--          M_Type        : Object_Type := Multivector_Object;
+--          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+--          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+--          M_Parity      : Parity := No_Parity;
+--      end record;
    --  Initialize MV_Type corresponds to e2ga void mvtype::init
-   --  which is called by e2ga::mvType constructor
-   --  M_Zero        : boolean := False; -- True if multivector is zero
-   --  M_Type        : Object_Type := Multivector_Object;
-   --  M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
-   --  M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
-   --  M_Parity      : Parity
-   function Init (MV : Multivector; Epsilon : float) return MV_Type is
+--     function Init (MV : Multivector; Epsilon : float) return MV_Type is
+   procedure Init (MV : Multivector; Epsilon : float) is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
-      Base               : Type_Base;
+      Base               : MV_Typebase;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
       Count              : array (1 .. 2) of Integer := (0, 0);
       Count_Index        : Integer := 0;
       Index              : Integer;
-      Type_Record        : MV_Type;
+      Type_Record        : MV_Typebase;
       US_1               : constant Unsigned_32 := Unsigned_32 (1);
       Done               : Boolean := False;
 
    begin
---        Set_Grade_Usage (Base, GU);
       Base.M_GU := GU;
       --  count grade part usage
       while GU /= 0 loop
@@ -369,13 +375,11 @@ package body E2GA is
 --                 Set_Parity (Base, Odd_Parity);
                Base.M_Parity := Odd_Parity;
             end if;
-            Type_Record := Init (MV, Epsilon, True, Count (1) + Count (2)) ;
+            Init (Type_Record, MV, Epsilon, True, Count (1) + Count (2));
          end if;
       end if;
-
-      return Type_Record;
+--        return Type_Record;
    end Init;
-
    --  -------------------------------------------------------------------------
 
    function Inverse (MV : Multivector) return Multivector is

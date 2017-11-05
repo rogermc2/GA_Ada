@@ -20,8 +20,6 @@ package E2GA is
    type Bit_Map is new integer range 0 .. 2 ** 30;
    type Bit_Map_Array is array (integer range <>) of Bit_Map;
 
-   subtype MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
-
 --     type Coords_4 is record
 --        Coord_1 : float;
 --        Coord_2 : float;
@@ -96,9 +94,7 @@ package E2GA is
    function Get_Coord_2 (V : Vector_2D) return float;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   function Init (MV : Multivector; Epsilon : float; Use_Algebra_Metric : Boolean;
-                  GU_Count : Integer) return MV_Type;
-   function Init (MV : Multivector; Epsilon : float) return MV_Type;
+   procedure Init (MV : Multivector; Epsilon : float);
    function Largest_Basis_Blade (Map : Bit_Map) return float;
    function Largest_Coordinate return float;
    function Left_Contraction (V1, V2 : Vector_2D) return Scalar_MV;

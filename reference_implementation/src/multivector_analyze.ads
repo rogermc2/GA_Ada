@@ -5,6 +5,7 @@ with GA_Maths;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
+
    Flag_Invalid          : constant boolean := false;
    Flag_Valid            : constant boolean := true;
    Number_Of_Points      : integer := 3;
@@ -19,6 +20,7 @@ package Multivector_Analyze is
       Valid : boolean := Flag_Invalid;
       Dual  : boolean := false;
    end record;
+
    type Blade_Type is (Invalid_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
                        Tangent_Blade, Free_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Vector_Subclass, Bivector_Subclass,
@@ -28,13 +30,15 @@ package Multivector_Analyze is
    type Flat_Type is (Flat_Invalid, Flat_Point, Flat_Line, Flat_Plane);
    type Model_Type is (Vector_Space, Homogenous_Model, Conformal_Model);
 
+   type N_Vector_Type is (N_Vector, N_Bivector, N_Trivector);
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
+--  mv_analy
    type M_Type is record
       Model_Kind       : Model_Type := Vector_Space;
-      Multivector_Kind : Multivector_Type_Base.M_Type_Type :=
-                           Multivector_Type_Base.Invalid_Base_Type;
+      Multivector_Kind : Multivector_Type_Base.Object_Type :=
+                           Multivector_Type_Base.Multivector_Object;
       Blade_Class      : Blade_Type;
       Blade_Subclass   : Blade_Subclass_Type;
       Versor_Subclass  : Versor_Type;
@@ -47,7 +51,8 @@ package Multivector_Analyze is
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
-      M_MV_Type          : Multivector_Type_Base.M_Type_Type;
+      --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
+      M_MV_Type        : Multivector_Type_Base.MV_Typebase;
       Conformal_Kind   : Conformal_Type := Invalid_Model;
       Epsilon          : Float;
       Analysis_Type    : M_Type;
