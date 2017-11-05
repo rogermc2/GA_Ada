@@ -26,15 +26,16 @@ package body Multivector_Analyze_E2GA is
 
       Analysis.M_Flags.Valid := True;
       Analysis.Epsilon := Epsilon;
-      Model.Multivector_Kind := Multivector_Analyze.Vector_Space;
+      Model.Model_Kind := Multivector_Analyze.Vector_Space;
 
       if Flags.Dual then
          Analysis.M_Flags.Dual := True;
          MV := E2GA.Dual (MV);
       end if;
-      Model.Model_Kind := M_MV_Type.M_Type;
+      Model.Multivector_Kind := M_MV_Type.M_Type;
       if M_MV_Type.M_Zero then
          Model.Model_Kind := M_Zero;
+         Analysis.M_Scalors (1) := 0;
       end if;
    end Analyze;
 
