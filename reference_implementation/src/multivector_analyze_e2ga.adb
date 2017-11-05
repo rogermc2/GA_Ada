@@ -3,7 +3,7 @@ with Multivector_Type_Base;
 
 package body Multivector_Analyze_E2GA is
 
-   procedure Analyze (MV : in out E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : in out E2GA.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
@@ -20,7 +20,6 @@ package body Multivector_Analyze_E2GA is
 --        Versor_Subclass  : Versor_Type;
 --        Round_Kind       : Round_Type := Round_Invalid;
 --     end record;
-      Model     : M_Type;  --  m_type
 
       --  Init_MV_Type corresponds to e2ga::mvType constructor.
 --        type Type_Base is record
@@ -30,13 +29,12 @@ package body Multivector_Analyze_E2GA is
 --          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
 --          M_Parity      : Parity := None;
 --        end record;
-      M_MV_Type  : MV_Typebase;
       Analysis   : MV_Analysis;
    begin
       E2GA.Init (MV, Epsilon);
       Analysis.M_Flags.Valid := True;
       Analysis.Epsilon := Epsilon;
-      Model.Model_Kind := Multivector_Analyze.Vector_Space;
+      Analysis.M_Type.Model_Kind := Multivector_Analyze.Vector_Space;
 
       if Flags.Dual then
          Analysis.M_Flags.Dual := True;
@@ -44,8 +42,8 @@ package body Multivector_Analyze_E2GA is
       end if;
       --  Multivector_Kind : Multivector_Type_Base.Multivector_Type_Base.Object_Type
 
-      Model.Multivector_Kind := M_MV_Type.M_Type;
-      if M_MV_Type.M_Zero then
+      Analysis.M_Type.Multivector_Kind := Analysis.M_MV_Type.M_Type;
+      if Analysis.M_MV_Type.M_Zero then
 --           Model.Model_Kind := M_Zero;
          Analysis.M_Scalors (1) := 0.0;
       end if;

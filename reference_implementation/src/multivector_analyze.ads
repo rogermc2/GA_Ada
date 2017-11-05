@@ -35,7 +35,7 @@ package Multivector_Analyze is
    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
 --  mv_analy
-   type M_Type is record
+   type M_Type_Record is record
       Model_Kind       : Model_Type := Vector_Space;
       Multivector_Kind : Multivector_Type_Base.Object_Type :=
                            Multivector_Type_Base.Multivector_Object;
@@ -55,7 +55,7 @@ package Multivector_Analyze is
       M_MV_Type        : Multivector_Type_Base.MV_Typebase;
       Conformal_Kind   : Conformal_Type := Invalid_Model;
       Epsilon          : Float;
-      Analysis_Type    : M_Type;
+      M_Type           : M_Type_Record;
       Pseudo_Scalar    : Boolean := False;
       Versor_Kind      : Versor_Type := Invalid_Versor;
       --  Each analyzed multivector is decomposed into
@@ -66,7 +66,7 @@ package Multivector_Analyze is
    end record;
 
    function Default_Epsilon return float;  --  Must precede Analyze
-   procedure Analyze (MV : in out E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : in out E2GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

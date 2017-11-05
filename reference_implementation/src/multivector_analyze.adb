@@ -9,11 +9,11 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (MV      : in out E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : in out E2GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon) is
    begin
-      Multivector_Analyze_E2GA.Analyze (MV, Flags, Epsilon);
+      Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
    end Analyze;
 
    --  --------------------------------------------------------------------------
@@ -21,7 +21,7 @@ package body Multivector_Analyze is
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
 
    begin
-      return  A.Analysis_Type.Blade_Subclass;
+      return  A.M_Type.Blade_Subclass;
    end Blade_Subclass;
 
    --  --------------------------------------------------------------------------
@@ -51,7 +51,7 @@ package body Multivector_Analyze is
       use Multivector_Type_Base;
    begin
       Put_Line ("MV Analysis checking for blade");
-      return A.M_MV_Type = Multivector_Type_Base.Blade;
+      return A.M_MV_Type.M_Type = Multivector_Type_Base.Blade_Object;
    end isBlade;
 
    --  --------------------------------------------------------------------------
@@ -66,7 +66,7 @@ package body Multivector_Analyze is
    function isNull (A : MV_Analysis) return Boolean is
       --  {return ((type() == BLADE) && (bladeClass() == ZERO));}
    begin
-      return isBlade (A) and A.Analysis_Type.Blade_Class = Zero_Blade;
+      return isBlade (A) and A.M_Type.Blade_Class = Zero_Blade;
    end isNull;
 
    --  --------------------------------------------------------------------------
@@ -74,7 +74,7 @@ package body Multivector_Analyze is
    function isZero (A : MV_Analysis)  return Boolean is
       --  {return ((type() == BLADE) && (bladeClass() == ZERO));}
    begin
-      return isBlade (A) and A.Analysis_Type.Blade_Class = Zero_Blade;
+      return isBlade (A) and A.M_Type.Blade_Class = Zero_Blade;
    end isZero;
 
    --  --------------------------------------------------------------------------

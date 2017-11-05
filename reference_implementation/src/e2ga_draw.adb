@@ -52,7 +52,7 @@ package body E2GA_Draw is
       use GA_Draw;
       use GA_Maths;
       use Multivector_Analyze;
---        A         : constant MV_Analysis := Analyze (MV);
+      A         : MV_Analysis;
       AM_V1     : E3GA.Vector_3D;
       AM_V2     : E3GA.Vector_3D;
       V1        : E2GA.Vector_2D;
@@ -63,16 +63,16 @@ package body E2GA_Draw is
       Direction : E3GA.Vector_3D;
       Scale     : float := 1.0;
    begin
-      Analyze (MV);
-      AM_V1     := MV.M_Vectors (1);
-      AM_V2     := MV.M_Vectors (2);
+      Analyze (A, MV);
+      AM_V1     := A.M_Vectors (1);
+      AM_V2     := A.M_Vectors (2);
       E2GA.Set_Coords (V1, E3GA.Get_Coord_1 (AM_V1), E3GA.Get_Coord_2 (AM_V1));
       Put_Line ("E2GA_Draw Draw 2.");
-      if isBlade (MV) then
+      if isBlade (A) then
          Put_Line ("E2GA_Draw isBlade.");
-         case Blade_Subclass (MV) is
+         case Blade_Subclass (A) is
             when Vector_Subclass =>
-               E3GA.Set_Coords (Direction, 0.0, 0.0, MV.M_Scalors (1));
+               E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                             AM_V1, Direction, Colour, Scale);
             when Bivector_Subclass =>
@@ -90,7 +90,7 @@ package body E2GA_Draw is
                                       AM_V1, AM_V2, Scale, Method, Colour);
             When Even_Versor_Subclass => null;
          end case;
-      elsif isVersor (MV) then
+      elsif isVersor (A) then
          Put_Line ("E2GA_Draw isVersor.");
       end if;
       Put_Line ("E2GA_Draw No true case.");
