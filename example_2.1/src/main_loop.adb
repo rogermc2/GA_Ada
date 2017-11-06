@@ -55,7 +55,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector_MV;
+                                 V2, V3, V4              : E2GA.Vector;
                                  Colour                  : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
@@ -104,8 +104,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                : E2GA.Vector_2D; --  2D vector (0, 0), (1, 0)
-      V2                : E2GA.Vector_2D;
+      V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
+      V2                : E2GA.Vector;
 
       Colour_Location   : GL.Uniforms.Uniform;
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -143,15 +143,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
                          Cos (A) * E21 - Sin (A) * E22);
          E2GA_Draw.Draw (Render_Graphic_Program,
-                         Model_View_Matrix, Projection_Matrix, Set_Vector (V1), Red, Scale);
+                         Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
-                         Set_Vector (V2), Green, Scale);
+                         V2, Green, Scale);
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
-                                Projection_Matrix, Set_Vector (V1),
-                                Set_Vector (V1 + V2), Set_Vector (V2), Blue);
+                                Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                             Projection_Matrix, BV);
@@ -205,7 +204,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
                                  MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector_MV;
+                                 V2, V3, V4              : E2GA.Vector;
                                  Colour                  : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;

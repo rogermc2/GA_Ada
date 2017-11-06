@@ -165,7 +165,7 @@ package body GA_Draw is
 
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            BV                                   : E2GA.Bivector_MV;
+                            BV                                   : E2GA.Bivector;
                             Scale                                : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour                               : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0)) is
@@ -562,7 +562,8 @@ package body GA_Draw is
       MVP_Matrix_ID     : GL.Uniforms.Uniform;
       MVP_Matrix        : GL.Types.Singles.Matrix4 := Singles.Identity4;
       Shift             : Singles.Vector3 :=
-        (Single (Direction.Coordinates (1)), Single (Direction.Coordinates (2)), 0.0);
+        (Single (E2GA.Get_Coord_1 (Direction)),
+         Single (E2GA.Get_Coord_2 (Direction)), 0.0);
       Scale_Factor1     : Single := Single (1.2 / Scale);
       Scale_Factor2     : Single := 1.1 * Single (Sqrt (float (Scale)));
       Scale_Factor      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);

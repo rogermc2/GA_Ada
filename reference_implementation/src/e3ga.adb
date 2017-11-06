@@ -208,14 +208,14 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function e1 (V : E2GA.Vector_2D) return float is
+    function e1 (V : E2GA.Vector) return float is
     begin
         return E2GA.Get_Coord_1 (V);
     end e1;
 
     --  ------------------------------------------------------------------------
 
-    function e2 (V : E2GA.Vector_2D) return float is
+    function e2 (V : E2GA.Vector) return float is
     begin
         return E2GA.Get_Coord_2 (V);
     end e2;
@@ -779,8 +779,8 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function To_2D (V : Vector_3D) return E2GA.Vector_2D is
-      V2 : E2GA.Vector_2D;
+   function To_2D (V : Vector_3D) return E2GA.Vector is
+      V2 : E2GA.Vector;
    begin
       E2GA.Set_Coords (V2, V (1), V (2));
       return V2;
@@ -788,7 +788,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function To_3D (V : E2GA.Vector_2D) return Vector_3D is
+   function To_3D (V : E2GA.Vector) return Vector_3D is
    begin
       return (E2GA.Get_Coord_1 (V), E2GA.Get_Coord_2 (V), 0.0);
    end To_3D;

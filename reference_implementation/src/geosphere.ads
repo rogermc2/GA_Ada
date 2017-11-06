@@ -29,7 +29,7 @@ private
     type Geosphere_Face_S is record
         V                 : V_Array;
         Child             : Child_Array;
-        Plane             : E2GA.Bivector_MV;
+        Plane             : E2GA.Bivector;
         D                 : float;
         Depth             : integer;
         Neighbour         : Neighbour_Array;
