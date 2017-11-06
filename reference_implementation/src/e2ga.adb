@@ -13,13 +13,15 @@ package body E2GA is
    type Array_F4 is array (1 .. 4) of float;
    type float_3 is digits 3;
 
+   US_1                              : constant GA_Maths.Unsigned_Integer
+                                                := GA_Maths.Unsigned_Integer (1);
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
+   --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
+   MV_Size  : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
    MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
-   --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
-   MV_Size                           : constant GA_Maths.Array_I8 := (0, 1, 2, 3, 1, 2, 3, 4);
    MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
      ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
@@ -96,6 +98,14 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+--     function Bivector_MV (BV : E2GA.Bivector) return Multivector is
+--        BV_Grade : constant Grade_Use : GA_Maths.Grade_Usage := 4;
+--     begin
+--        return Multivector (MV_Size (BV_Grade), BV_Grade)
+--     end Bivector_MV;
+
+   --  -------------------------------------------------------------------------
+
    function Bivector_String (BV : Bivector; Text : String := "") return String is
       --          num : GA_Maths.Fixed_4 := GA_Maths.Fixed_4 (BV.e1e2_Coord);
       --        BV_Coords : constant Coords_Continuous_Array (1 .. 1) := BV.e1e2_Coord;   --  m_c[4]
@@ -147,7 +157,7 @@ package body E2GA is
    function Dot_Product (R1, R2 : Rotor) return float is
    begin
       return R1.Coordinates (1) * R2.Coordinates (1) +
-        R1.Coordinates (2) * R2.Coordinates (2);
+             R1.Coordinates (2) * R2.Coordinates (2);
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -338,26 +348,28 @@ package body E2GA is
       use  Multivector_Type_Base;
       Base               : MV_Typebase;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
-      Count              : array (1 .. 2) of Integer := (0, 0);
-      Count_Index        : Integer := 0;
-      Index              : Integer;
+      GU_1               : constant GA_Maths.Grade_Usage := 1;
+      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
+      Count_Index        : Unsigned_Integer := 0;
       Type_Record        : MV_Typebase;
-      US_1               : constant Unsigned_32 := Unsigned_32 (1);
       Done               : Boolean := False;
-
    begin
-      Base.M_GU := GU;
+      Base.M_GU := GU;  --  e2ga.cpp line 1670
       --  count grade part usage
       while GU /= 0 loop
-         if Shift_Left (US_1, Natural (GU)) /= 0 then
-            Index := Integer (Shift_Left (US_1, Count_Index));
-            Count (Index) := Count (Index) + 1;
+         Put_Line ("E2GA.Init 2 GU:" & Unsigned_Integer'Image (GU));
+         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
+--              Put_Line ("E2GA.Init 2 GU & 1:" & Unsigned_Integer'Image (GU));
+--              Put_Line ("E2GA.Init 2 Count_Index + 1 and 1:" & Unsigned_Integer'Image (Count_Index + 1 and 1));
+            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
          end if;
+
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
 --           Set_Top_Grade (Base, Count_Index);
-         Base.M_Top_Grade := Count_Index;
+         Base.M_Top_Grade := Integer (Count_Index);
          Count_Index := Count_Index + 1;
       end loop;
+
       --  if no grade part in use: zero blade
       if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
          Set_Type_Base (Base, True, Blade_Object, 0, GU, Even_Parity);
@@ -379,7 +391,12 @@ package body E2GA is
          end if;
       end if;
 --        return Type_Record;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Init 2.");
+         raise;
    end Init;
+
    --  -------------------------------------------------------------------------
 
    function Inverse (MV : Multivector) return Multivector is
@@ -605,6 +622,10 @@ package body E2GA is
       end if;
       MV_R.Coordinates := Coords_8;
       return MV_R;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Reverse_Multivector");
+         raise;
    end Reverse_Multivector;
 
    --  ------------------------------------------------------------------------
@@ -620,7 +641,8 @@ package body E2GA is
 
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar is
       use GA_Maths;
-      Product : float := 0.0;
+      Product   : float := 0.0;
+      theScalar : Scalar;
    begin
       if (MV2.Grade_Use and 1) /= 0 and (MV1.Grade_Use and 1) /= 0 then
          Product :=  MV1.Coordinates (1) * MV2.Coordinates (1);
@@ -633,7 +655,8 @@ package body E2GA is
       if (MV2.Grade_Use and 4) /= 0 and (MV1.Grade_Use and 4) /= 0 then
          Product :=  Product - MV1.Coordinates (3) * MV2.Coordinates (3);
       end if;
-      return  Scalar (Product);
+      theScalar (1) := Product;
+      return  theScalar;
    end Scalar_Product;
 
    --  -------------------------------------------------------------------------
@@ -660,12 +683,63 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Multivector (S1 : Scalar) return Multivector is
+      MV : Multivector (MV_Size (1), 1);
+   begin
+      MV.Coordinates (1) := S1 (1);
+      return  MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Multivector (V : Vector) return Multivector is
+      MV : Multivector (MV_Size (2), 2);
+   begin
+      MV.Coordinates := V.Coordinates;
+      return  MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Multivector (BV : Bivector) return Multivector is
+      MV : Multivector (MV_Size (4), 4);
+   begin
+      MV.Coordinates (1) := BV.Coordinates (1);
+      return  MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Multivector (R : Rotor) return Multivector is
+      MV : Multivector (MV_Size (5), 5);
+   begin
+      MV.Coordinates (1) := R.Coordinates (1);
+      MV.Coordinates (2) := R.Coordinates (2);
+      return  MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
    function Set_Bivector (V1, V2 : Vector_2D) return Bivector is
    begin
       return  Outer_Product (V1, V2);
    end Set_Bivector;
 
    --  -------------------------------------------------------------------------
+
+   function Set_Scalar (MV : Multivector) return Scalar is
+      use GA_Maths;
+      theScalar : Scalar;
+   begin
+      if (Unsigned_Integer (MV.Grade_Use) and US_1) /= 0 then
+         theScalar (1) := MV.Coordinates (1);
+      else
+         theScalar (1) := 0.0;
+      end if;
+      return theScalar;
+   end Set_Scalar;
+
+   --  ---------------------------------------------------------------------
 
    function Set_Rotor (E1_E2 : float) return Rotor is
       theRotor : Rotor;
@@ -674,7 +748,7 @@ package body E2GA is
       return theRotor;
    end Set_Rotor;
 
-   --  -------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
    function Set_Vector (V1 : Vector_2D) return Vector_MV is
       theVector : Vector_MV;

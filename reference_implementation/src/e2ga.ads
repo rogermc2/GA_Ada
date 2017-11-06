@@ -20,26 +20,14 @@ package E2GA is
    type Bit_Map is new integer range 0 .. 2 ** 30;
    type Bit_Map_Array is array (integer range <>) of Bit_Map;
 
---     type Coords_4 is record
---        Coord_1 : float;
---        Coord_2 : float;
---        Coord_3 : float;
---        Coord_4 : float;
---     end record;
-
    type E2_Bit_Map is new integer range 0 .. 4;
-
---     type E2_Type is record
---        Coord_1 : float;
---        Coord_2 : float;
---     end record;
 
    --  Multivector types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_Scalar, MVT_Vector,
                     MVT_Bivector, MVT_Rotor, MVT_E1_CT, MVT_E2_CT,
                     MVT_I2_CT, MVT_I2I_CT, MVT_MV, MVT_Last);
 
-   type Scalar is new float;
+   type Scalar is array (1 .. 1) of float;
 
    type Rotor_Class is record
       M_C1 : float := 0.0;
@@ -48,6 +36,11 @@ package E2GA is
 
    --  The outer product of P vectors is called a grade P multivector or a P-vector
    --  In E2, MV = u^v = det(u,v)e1^e2. This "bivector" is the only MV in E2.
+
+   type MV_Type is record
+      Type_Base : Multivector_Type_Base.MV_Typebase;  --  MV_Type extends MV_Typebase
+   end record;
+
    type Multivector (MV_Size : integer; Grade_Use : GA_Maths.Grade_Usage) is record
       Coordinates : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
@@ -63,15 +56,15 @@ package E2GA is
       Coordinates : Vector_Coords;   --  m_c[2]
    end record;
 
-   subtype Scalar_MV is Multivector (1, 1);
-   subtype Vector_MV is Multivector (2, 2);
-   subtype Bivector_MV is Multivector (1, 4);
-   subtype Rotor is Multivector (2, 5);
-
    --  Joinable grade definitions
    Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
    Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
+
+   subtype Scalar_MV is Multivector (Integer (Grade_0), 1);
+   subtype Vector_MV is Multivector (Integer (Grade_1), 2);
+   subtype Bivector_MV is Multivector (Integer (Grade_2), 4);
+   subtype Rotor is Multivector (Integer (Grade_1), 5);
 
    function "+" (V1, V2 : Vector_2D) return Vector_2D;
    function "-" (V1, V2 : Vector_2D) return Vector_2D;
@@ -80,6 +73,7 @@ package E2GA is
    function "+" (MV1, MV2 : Multivector) return Multivector;
    function "-" (MV1, MV2 : Multivector) return Multivector;
 
+--     function Bivector_MV (BV : E2GA.Bivector) return Multivector;
    function Bivector_String (BV : E2GA.Bivector; Text : String := "") return String;
    function Construct_Vector (Coord : float) return Vector_MV;
    function Construct_Vector (Coord_1,  Coord_2 : float) return Vector_MV;
@@ -108,6 +102,11 @@ package E2GA is
    function Scalar_Product (V1, V2 : Vector_2D) return Scalar_MV;
    function Set_Bivector (V1, V2 : Vector_2D) return Bivector;
    procedure Set_Coords (V : out Vector_2D; C1, C2 : float);
+   --  The Set_Multivector functions correspond to equivalent e2ga mv::set functions
+   function Set_Multivector (S1 : Scalar) return Multivector;
+   function Set_Multivector (V : Vector) return Multivector;
+   function Set_Multivector (BV : Bivector) return Multivector;
+   function Set_Multivector (R : Rotor) return Multivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
    function Set_Vector (V1 : Vector_2D) return Vector_MV;
    function Unit_E (V : Vector_MV) return Vector_MV;

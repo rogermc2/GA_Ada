@@ -19,7 +19,7 @@ package GA_Maths is
 
     subtype Basis_Index is Integer range 1 .. 2;
     subtype Grade_Index is Integer range 0 .. 2;
-    subtype Grade_Usage is GA_Maths.Unsigned_Integer;
+    subtype Grade_Usage is Unsigned_Integer;
 
     type Basis_Array is array (Basis_Index) of integer;
     type Grade_Array is array (Grade_Index) of integer;

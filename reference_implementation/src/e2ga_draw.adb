@@ -53,9 +53,8 @@ package body E2GA_Draw is
       use GA_Maths;
       use Multivector_Analyze;
       A         : MV_Analysis;
-      AM_V1     : E3GA.Vector_3D;
-      AM_V2     : E3GA.Vector_3D;
       V1        : E2GA.Vector_2D;
+      V2        : E2GA.Vector_2D;
       OP        : E2GA.Bivector;
       OP_MV     : E2GA.Bivector_MV;
       Normal    : E3GA.Vector_3D;
@@ -64,9 +63,6 @@ package body E2GA_Draw is
       Scale     : float := 1.0;
    begin
       Analyze (A, MV);
-      AM_V1     := A.M_Vectors (1);
-      AM_V2     := A.M_Vectors (2);
-      E2GA.Set_Coords (V1, E3GA.Get_Coord_1 (AM_V1), E3GA.Get_Coord_2 (AM_V1));
       Put_Line ("E2GA_Draw Draw 2.");
       if isBlade (A) then
          Put_Line ("E2GA_Draw isBlade.");
@@ -74,23 +70,26 @@ package body E2GA_Draw is
             when Vector_Subclass =>
                E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                            AM_V1, Direction, Colour, Scale);
+                            A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
-
                Put_Line (" E2GA_Draw Bivector_Subclass.");
                if Get_Draw_Mode = OD_Magnitude then
                   Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
                end if;
-               OP := E2GA.Outer_Product (V1, V1);
+
+               V1 := E3GA.To_2D (A.M_Vectors (1));
+               V2 := E3GA.To_2D (A.M_Vectors (2));
+               OP := E2GA.Outer_Product (V1, V2);
                OP_MV.Coordinates := OP.Coordinates;
                Normal_BV := E2GA.Dual (OP_MV);
                E3GA.Set_Coords (Normal, 0.0, 0.0, Normal_BV.Coordinates (1));
                GA_Draw.Draw_Bivector (Render_Program,
-                                      Model_View_Matrix, Projection_Matrix, Normal,
-                                      AM_V1, AM_V2, Scale, Method, Colour);
-            When Even_Versor_Subclass => null;
+                                      Model_View_Matrix, Projection_Matrix,
+                                       Normal, A.M_Vectors (1), A.M_Vectors (2),
+                                      Scale, Method, Colour);
+            when Even_Versor_Subclass => null;
          end case;
-      elsif isVersor (A) then
+      elsif isVersor (A) and then A.M_Scalors (1) > 0.0001 then
          Put_Line ("E2GA_Draw isVersor.");
       end if;
       Put_Line ("E2GA_Draw No true case.");

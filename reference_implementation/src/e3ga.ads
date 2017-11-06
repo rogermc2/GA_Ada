@@ -109,6 +109,7 @@ package E3GA is
    procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
     procedure Set_Coords (V : out Vector_3D; C1, C2, C3 : float);
     function To_Unsigned (V : Vector_3D) return Vector_Unsigned;
+    function To_2D (V : Vector_3D) return E2GA.Vector_2D;
     function To_3D (V : E2GA.Vector_2D) return Vector_3D;
    function To_Vector (MV : Syn_SMultivector) return Vector_3D;
    --  Unit_e normalizes rotor R
