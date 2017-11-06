@@ -155,7 +155,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          else
             E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                             Projection_Matrix, BV);
-            null;
          end if;
 
          if A < Pi - 0.1 then
