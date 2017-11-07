@@ -6,6 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Multivector_Analyze;
 with Multivector_Type_Base;
+with E3GA_Utilities;
 
 package body E2GA is
 
@@ -688,7 +689,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (S1 : Scalar) return Multivector is
-      MV : Multivector (MV_Size (1), 1);
+      MV : Multivector (1, 1);
    begin
       MV.Coordinates (1) := S1.Coordinates (1);
       return  MV;
@@ -697,7 +698,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (V : Vector) return Multivector is
-      MV : Multivector (MV_Size (2), 2);
+      MV : Multivector (2, 2);
    begin
       MV.Coordinates := V.Coordinates;
       return  MV;
@@ -706,7 +707,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (BV : Bivector) return Multivector is
-      MV : Multivector (MV_Size (4), 4);
+      MV : Multivector (4, 4);
    begin
       MV.Coordinates (1) := BV.Coordinates (1);
       return  MV;
@@ -715,7 +716,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (R : Rotor) return Multivector is
-      MV : Multivector (MV_Size (5), 5);
+      MV : Multivector (5, 5);
    begin
       MV.Coordinates (1) := R.Coordinates (1);
       MV.Coordinates (2) := R.Coordinates (2);
