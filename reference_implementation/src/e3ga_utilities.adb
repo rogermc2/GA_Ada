@@ -4,8 +4,6 @@ with Interfaces;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E2GA;
-
 package body E3GA_Utilities is
 
    function exp (BV : E3GA.Bivector) return E3GA.Rotor is
@@ -72,6 +70,23 @@ package body E3GA_Utilities is
         end loop;
         New_Line;
     end Print_Matrix;
+
+    --  ------------------------------------------------------------------------
+
+   procedure Print_Multivector (Name : String; MV : E2GA.Multivector) is
+      use E2GA;
+      MV_Size : constant Integer := Get_Size (MV);
+      Coords : Coords_Continuous_Array (1 .. MV_Size) := Get_Coords (MV);
+   begin
+      New_Line;
+      Put_Line (Name);
+      Put_Line ("MV Size: " & Integer'Image (MV_Size));
+      Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
+      for index in 1 .. MV_Size loop
+         Put_Line ("Coordinate " & Integer'Image (index) & ": " &
+                    float'Image (Coords (index)));
+      end loop;
+   end Print_Multivector;
 
     --  ------------------------------------------------------------------------
 

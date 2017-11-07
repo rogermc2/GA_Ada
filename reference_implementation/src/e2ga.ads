@@ -77,6 +77,8 @@ package E2GA is
    function Get_Coord_2 (R : Rotor) return float;
    function Get_Coord_1 (V : Vector) return float;
    function Get_Coord_2 (V : Vector) return float;
+   function Get_Coords (MV : Multivector) return Coords_Continuous_Array;
+   function Get_Size (MV : Multivector) return Integer;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
    procedure Init (MV : Multivector; Epsilon : float);

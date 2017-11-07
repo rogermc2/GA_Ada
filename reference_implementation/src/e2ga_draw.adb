@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA;
+with E3GA_Utilities;
 with GA_Draw;
 with Multivector_Analyze;
 
@@ -112,6 +113,7 @@ package body E2GA_Draw is
                    Colour  : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
       MV : E2GA.Multivector := E2GA.Set_Multivector (BV);
    begin
+      E3GA_Utilities.Print_Multivector ("Draw MV", MV);
       Draw (Render_Program , Model_View_Matrix, Projection_Matrix,
              MV, Method_Type, Colour);
    end Draw;

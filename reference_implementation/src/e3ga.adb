@@ -307,12 +307,6 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Unsigned_Coords (V : Vector) return Vector_Unsigned is
-    begin
-        return To_Unsigned (V);
-    end Get_Unsigned_Coords;
-
-    --  ------------------------------------------------------------------------
     function Get_Coords (V : Vector) return Array_3D is
     begin
         return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
@@ -320,12 +314,12 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-    function R_Scalar (R : Rotor) return float is
+    function Get_Unsigned_Coords (V : Vector) return Vector_Unsigned is
     begin
-          return R.C1_Scalar;
-    end R_Scalar;
+        return To_Unsigned (V);
+    end Get_Unsigned_Coords;
 
-    --  ------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
     function Geometric_Product (V1, V2 : Vector) return Rotor is
     begin
@@ -339,6 +333,13 @@ package body E3GA is
                 -V1.Coordinates (1) * V2.Coordinates (3) +
                     V1.Coordinates (3) * V2.Coordinates (1));
     end Geometric_Product;
+
+    --  ------------------------------------------------------------------------
+
+    function Get_Size (MV : Multivector) return Integer is
+    begin
+          return MV.MV_Size;
+    end Get_Size;
 
     --  ------------------------------------------------------------------------
 
@@ -435,6 +436,14 @@ package body E3GA is
     begin
         return (BV.C1_e1e2, BV.C2_e2e3, BV.C3_e3e1);
     end Get_Coords;
+
+    --  ------------------------------------------------------------------------
+
+   function Get_Coords (MV : Multivector) return E2GA.Coords_Continuous_Array is
+      Coords : E2GA.Coords_Continuous_Array (1 .. MV.MV_Size) := MV.Coordinates;
+   begin
+      return Coords;
+   end Get_Coords;
 
     --  ------------------------------------------------------------------------
 
@@ -755,6 +764,13 @@ package body E3GA is
     end Outer_Product;
 
     --  ------------------------------------------------------------------------
+
+    function R_Scalar (R : Rotor) return float is
+    begin
+          return R.C1_Scalar;
+    end R_Scalar;
+
+    --  -----------------------------------------------------------------------
 
    function Scalar_Product (V1, V2 : Vector) return Scalar is
       Product : Scalar;

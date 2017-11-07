@@ -14,16 +14,16 @@ package body E2GA is
    type float_3 is digits 3;
 
    US_1                              : constant GA_Maths.Unsigned_Integer
-                                                := GA_Maths.Unsigned_Integer (1);
+       := GA_Maths.Unsigned_Integer (1);
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
-   MV_Size  : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
+   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
    MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
    MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
-     ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
+                                         ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
    MV_Basis_Element_Sign_By_Bit_Map  : constant Array_BM4 := (1, 1, 1, 1);
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
@@ -40,8 +40,23 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Init (M_Type_Record : in out Multivector_Type_Base.MV_Typebase;
-                   MV  : Multivector; Epsilon : float;
+   function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
+      Coords : Coords_Continuous_Array (1 .. MV.MV_Size) := MV.Coordinates;
+   begin
+      return Coords;
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Size (MV : Multivector) return Integer is
+   begin
+      return MV.MV_Size;
+   end Get_Size;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Init (M_Type_Record      : in out Multivector_Type_Base.MV_Typebase;
+                   MV                 : Multivector; Epsilon : float;
                    Use_Algebra_Metric : Boolean; GU_Count : Integer);
    function Inverse (MV : Multivector) return Multivector;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
@@ -109,11 +124,11 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
---     function Bivector_MV (BV : E2GA.Bivector) return Multivector is
---        BV_Grade : constant Grade_Use : GA_Maths.Grade_Usage := 4;
---     begin
---        return Multivector (MV_Size (BV_Grade), BV_Grade)
---     end Bivector_MV;
+   --     function Bivector_MV (BV : E2GA.Bivector) return Multivector is
+   --        BV_Grade : constant Grade_Use : GA_Maths.Grade_Usage := 4;
+   --     begin
+   --        return Multivector (MV_Size (BV_Grade), BV_Grade)
+   --     end Bivector_MV;
 
    --  -------------------------------------------------------------------------
 
@@ -154,7 +169,7 @@ package body E2GA is
    function Dot_Product (R1, R2 : Rotor) return float is
    begin
       return R1.Coordinates (1) * R2.Coordinates (1) +
-             R1.Coordinates (2) * R2.Coordinates (2);
+          R1.Coordinates (2) * R2.Coordinates (2);
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -294,8 +309,8 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   procedure Init (M_Type_Record : in out Multivector_Type_Base.MV_Typebase;
-                   MV            : Multivector; Epsilon : float;
+   procedure Init (M_Type_Record      : in out Multivector_Type_Base.MV_Typebase;
+                   MV                 : Multivector; Epsilon : float;
                    Use_Algebra_Metric : Boolean; GU_Count : Integer) is
       use GA_Maths;
       M_Type             : Multivector_Type_Base.Object_Type;
@@ -320,31 +335,35 @@ package body E2GA is
       --  M_Type_Record is initialized to default values
       Sq := Scalar_Product (MV, MV_Reverse);
       if Sq.Coordinates (1) /= 0.0 and then
-         GI.Grade_Use = Grade_0 and then
-         VI_GI_GI_VI.Grade_Use = Grade_0 and then
-         VI_E1_GI.Grade_Use = Grade_1 and then
-         VI_E2_GI.Grade_Use = Grade_1 and then
-         GU_Count = 1 then
+          GI.Grade_Use = Grade_0 and then
+          VI_GI_GI_VI.Grade_Use = Grade_0 and then
+          VI_E1_GI.Grade_Use = Grade_1 and then
+          VI_E2_GI.Grade_Use = Grade_1 and then
+          GU_Count = 1 then
          M_Type := Multivector_Type_Base.Blade_Object;
       else
          M_Type := Multivector_Type_Base.Versor_Object;
       end if;
       --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
       M_Type_Record.M_Type := M_Type;
---        return M_Type_Record;
+      --        return M_Type_Record;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Init.");
+         raise;
    end Init;
 
    --  -------------------------------------------------------------------------
 
---     type MV_Typebase is record
---          M_Zero        : boolean := False; -- True if multivector is zero
---          M_Type        : Object_Type := Multivector_Object;
---          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
---          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
---          M_Parity      : Parity := No_Parity;
---      end record;
+   --     type MV_Typebase is record
+   --          M_Zero        : boolean := False; -- True if multivector is zero
+   --          M_Type        : Object_Type := Multivector_Object;
+   --          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
+   --          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+   --          M_Parity      : Parity := No_Parity;
+   --      end record;
    --  Initialize MV_Type corresponds to e2ga void mvtype::init
---     function Init (MV : Multivector; Epsilon : float) return MV_Type is
+   --     function Init (MV : Multivector; Epsilon : float) return MV_Type is
    procedure Init (MV : Multivector; Epsilon : float) is
       use Interfaces;
       use GA_Maths;
@@ -362,13 +381,13 @@ package body E2GA is
       while GU /= 0 loop
          Put_Line ("E2GA.Init 2 GU:" & Unsigned_Integer'Image (GU));
          if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
---              Put_Line ("E2GA.Init 2 GU & 1:" & Unsigned_Integer'Image (GU));
---              Put_Line ("E2GA.Init 2 Count_Index + 1 and 1:" & Unsigned_Integer'Image (Count_Index + 1 and 1));
+            --              Put_Line ("E2GA.Init 2 GU & 1:" & Unsigned_Integer'Image (GU));
+            --              Put_Line ("E2GA.Init 2 Count_Index + 1 and 1:" & Unsigned_Integer'Image (Count_Index + 1 and 1));
             Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
          end if;
 
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
---           Set_Top_Grade (Base, Count_Index);
+         --           Set_Top_Grade (Base, Count_Index);
          Base.M_Top_Grade := Integer (Count_Index);
          Count_Index := Count_Index + 1;
       end loop;
@@ -384,16 +403,16 @@ package body E2GA is
             Done := True;
          else
             if Count (1) = 0 then
---                 Set_Parity (Base, Even_Parity);
-              Base.M_Parity := Even_Parity;
+               --                 Set_Parity (Base, Even_Parity);
+               Base.M_Parity := Even_Parity;
             else
---                 Set_Parity (Base, Odd_Parity);
+               --                 Set_Parity (Base, Odd_Parity);
                Base.M_Parity := Odd_Parity;
             end if;
             Init (Type_Record, MV, Epsilon, True, Count (1) + Count (2));
          end if;
       end if;
---        return Type_Record;
+      --        return Type_Record;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Init 2.");
@@ -411,7 +430,7 @@ package body E2GA is
       end if;
       if (MV.Grade_Use and 2) /= 0 then
          N.Coordinates (1) := N.Coordinates (1) + MV.Coordinates (2) * MV.Coordinates (2) +
-           MV.Coordinates (3) * MV.Coordinates (3);
+             MV.Coordinates (3) * MV.Coordinates (3);
       end if;
       if (MV.Grade_Use and 4) /= 0 then
          N.Coordinates (1) := N.Coordinates (1) + MV.Coordinates (4) * MV.Coordinates (4);
@@ -457,7 +476,7 @@ package body E2GA is
       --          If not last symbol print ^
       for Grade in GA_Maths.Grade_Index'Range loop  --  i
          if  Unsigned_32 (MV.Grade_Use) /=
-           Shift_Left (Unsigned_32 (Grade), 1) then
+             Shift_Left (Unsigned_32 (Grade), 1) then
             if Basis_Index - MV_Grade_Size (Grade) > 0 then
                Basis_Index := Basis_Index + MV_Grade_Size (Grade);
             end if;
@@ -510,7 +529,7 @@ package body E2GA is
       Norm : Scalar;
    begin
       Norm.Coordinates (1) := (V2.Coordinates (1) * V2.Coordinates (1) +
-                               V2.Coordinates (2) * V2.Coordinates (2));
+                                   V2.Coordinates (2) * V2.Coordinates (2));
       return Norm ;
    end Norm_E2;
 
@@ -526,7 +545,7 @@ package body E2GA is
       end if;
       if (MV.Grade_Use and 2) /= 0 then
          Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
-           MV.Coordinates (3) * MV.Coordinates (3);
+             MV.Coordinates (3) * MV.Coordinates (3);
       end if;
       if (MV.Grade_Use and 4) /= 0 then
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
@@ -547,7 +566,7 @@ package body E2GA is
       end if;
       if (MV.Grade_Use and 2) /= 0 then
          Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
-           MV.Coordinates (3) * MV.Coordinates (3);
+             MV.Coordinates (3) * MV.Coordinates (3);
       end if;
       if (MV.Grade_Use and 4) /= 0 then
          Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
@@ -599,14 +618,14 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Outer_Product (V1, V2 : Vector) return Bivector is
-      --  The outer product basis in 2D is the coordinate of e1^e2.
+   --  The outer product basis in 2D is the coordinate of e1^e2.
       use E2GA;
       BV        : Bivector;
    begin
       BV.Coordinates (1) :=
-        GA_Maths.Float_Array_Package.Determinant
-          (((V1.Coordinates (1), V2.Coordinates (1)),
-            (V1.Coordinates (2), V2.Coordinates (2))));
+          GA_Maths.Float_Array_Package.Determinant
+              (((V1.Coordinates (1), V2.Coordinates (1)),
+               (V1.Coordinates (2), V2.Coordinates (2))));
       return BV;
    end Outer_Product;
 
@@ -614,7 +633,7 @@ package body E2GA is
 
    function Reverse_Multivector (MV : Multivector) return Multivector is
       use GA_Maths;
-      MV_R : Multivector := MV;
+      MV_R     : Multivector := MV;
       Coords_8 : Coords_Continuous_Array (1 .. 4) := (others => 0.0);
    begin
       if (MV.Grade_Use and 1) /= 0 then
@@ -756,7 +775,7 @@ package body E2GA is
    function Dot_Product (V1, V2 : Vector) return float is
    begin
       return V1.Coordinates (1) * V2.Coordinates (1) +
-        V1.Coordinates (2) * V2.Coordinates (2);
+          V1.Coordinates (2) * V2.Coordinates (2);
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -799,7 +818,7 @@ package body E2GA is
    function Magnitude (V : Vector) return float is
    begin
       return GA_Maths.Float_Functions.Sqrt (V.Coordinates (1) * V.Coordinates (1) +
-                                            V.Coordinates (2) * V.Coordinates (2));
+                                                V.Coordinates (2) * V.Coordinates (2));
    end Magnitude;
 
    --  ------------------------------------------------------------------------

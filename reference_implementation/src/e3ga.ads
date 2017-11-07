@@ -68,6 +68,7 @@ package E3GA is
    function Dot_Product (V1, V2 : Vector) return float;
     function Get_Coord (S : Scalar) return float;
    function Get_Coords (BV : Bivector) return Array_3D;
+   function Get_Coords (MV : Multivector) return E2GA.Coords_Continuous_Array;
    function Get_Coords (R : Rotor) return Array_4D;
     function Get_Coord_1 (V : Vector) return float;
     function Get_Coord_2 (V : Vector) return float;
@@ -75,6 +76,7 @@ package E3GA is
     function Get_Coords (V : Vector) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
+    function Get_Size (MV : Multivector) return Integer;
    function Geometric_Product (BV : Bivector; R : Rotor) return Rotor;
    function Geometric_Product (R : Rotor; BV : Bivector) return Rotor;
    function Geometric_Product (V : Vector; R : Rotor) return Syn_SMultivector;
