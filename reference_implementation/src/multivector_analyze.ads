@@ -27,6 +27,8 @@ package Multivector_Analyze is
                                 Even_Versor_Subclass);
    type Conformal_Type is (Invalid_Model, Multivector_Model, Versor_Model,
                            Blade_Model);
+   type Conformal_Blade_Class is (Blade_Scalar, Blade_Flat, Blade_Round,
+                                  Blade_Tangent, Blade_Free, Blade_Zero);
    type Flat_Type is (Flat_Invalid, Flat_Point, Flat_Line, Flat_Plane);
    type Model_Type is (Vector_Space, Homogenous_Model, Conformal_Model);
 
