@@ -23,8 +23,8 @@ package body E2GA_Draw is
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
-      Vec_3D  : E3GA.Vector_3D;
-      Tail    : E3GA.Vector_3D;
+      Vec_3D  : E3GA.Vector;
+      Tail    : E3GA.Vector;
    begin
       --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
       --  constructed from v1
@@ -56,8 +56,8 @@ package body E2GA_Draw is
       V1        : E2GA.Vector;
       V2        : E2GA.Vector;
       OP        : E2GA.Bivector;
-      Normal    : E3GA.Vector_3D;
-      Direction : E3GA.Vector_3D;
+      Normal    : E3GA.Vector;
+      Direction : E3GA.Vector;
       Scale     : float := 1.0;
    begin
       Analyze (A, MV);

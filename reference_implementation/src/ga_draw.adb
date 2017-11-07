@@ -56,7 +56,7 @@ package body GA_Draw is
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
+                            Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Scale  : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
@@ -68,10 +68,11 @@ package body GA_Draw is
       --  Y          : GL.Types.Single;
       Cords      : Array_3D := (0.0, 0.0, 0.0);
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
-      O2         : E3GA.Vector_3D := Ortho_2;
+      O2         : E3GA.Vector := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
       Scaled     : float;
       Scaled_S   : GL.Types.Single;
+      Normed_E2  : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -83,8 +84,8 @@ package body GA_Draw is
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
-         Scaled := Scale * Scale * Pi /
-           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2)) (1);
+         Normed_E2 := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
+         Scaled := Scale * Scale * Pi / E3GA.Get_Coord (Normed_E2);
          Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
@@ -107,7 +108,7 @@ package body GA_Draw is
 
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector_3D;
+                            Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Scale  : float;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
@@ -119,10 +120,11 @@ package body GA_Draw is
       --  Y          : GL.Types.Single;
       Cords      : Array_3D := (0.0, 0.0, 0.0);
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
-      O2         : E3GA.Vector_3D := Ortho_2;
+      O2         : E3GA.Vector := Ortho_2;
       MVP_Matrix : Matrix4 := Singles.Identity4;
       Scaled     : float;
       Scaled_S   : GL.Types.Single;
+      E2_Norm    : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -134,7 +136,8 @@ package body GA_Draw is
       Translate := (Single (E3GA.Get_Coord_1 (Base)),
                     Single (E3GA.Get_Coord_2 (Base)),
                     Single (E3GA.Get_Coord_3 (Base)));
-      if E3GA.Norm_E2 (Base) (1) /= 0.0  then
+      E2_Norm := E3GA.Norm_E2 (Base);
+      if  E3GA.Get_Coord (E2_Norm) /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
       end if;
 
@@ -142,8 +145,8 @@ package body GA_Draw is
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
-         Scaled := Scale * Scale * Pi /
-           E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2)) (1);
+         E2_Norm := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
+         Scaled := Scale * Scale * Pi / E3GA.Get_Coord (E2_Norm);
          Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
@@ -302,7 +305,7 @@ package body GA_Draw is
       Fan             : Singles.Vector3_Array (1 .. Num_Steps);
 
       procedure Draw_Part (Part : Circle_Part) is
-         Normal : E3GA.Vector_3D;
+         Normal : E3GA.Vector;
          Norm_Z : float;
       begin
          Case Part is
@@ -396,7 +399,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-                        Tail, Direction   : E3GA.Vector_3D;
+                        Tail, Direction   : E3GA.Vector;
                         Colour            : GL.Types.Colors.Color;
                         Scale             : float) is
 
@@ -444,7 +447,7 @@ package body GA_Draw is
 
    procedure Draw_Vector (Render_Program          : GL.Objects.Programs.Program;
                           MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                          Tail, Direction         : E3GA.Vector_3D;
+                          Tail, Direction         : E3GA.Vector;
                           Colour                  : GL.Types.Colors.Color;
                           Scale                   : float) is
       use GL.Culling;
@@ -487,7 +490,7 @@ package body GA_Draw is
          Model_View_Matrix := MV_Matrix;
          Projection_Matrix := Proj_Matrix;
 
-         if E3GA.Norm_e2 (Tail) (1) /= 0.0 then
+         if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
@@ -501,7 +504,7 @@ package body GA_Draw is
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector
-         if E3GA.Norm_e2 (Tail) (1) /= 0.0 then
+         if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
