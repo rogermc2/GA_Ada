@@ -56,8 +56,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   procedure Init (M_Type_Record      : in out Multivector_Type_Base.MV_Typebase;
-                   MV                 : Multivector; Epsilon : float;
+   procedure Init (MV                 : in out Multivector; Epsilon : float;
                    Use_Algebra_Metric : Boolean; GU_Count : Integer);
    function Inverse (MV : Multivector) return Multivector;
    function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
@@ -189,7 +188,7 @@ package body E2GA is
       if (MV.Grade_Use and 4) /= 0 then
          Coords (1) := MV.Coordinates (4);
       end if;
-      return (MV.MV_Size, MV.Grade_Use, Coords);
+      return (MV.MV_Size, MV.Grade_Use, MV.M_Type_Record, Coords);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -310,10 +309,10 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   procedure Init (M_Type_Record      : in out Multivector_Type_Base.MV_Typebase;
-                   MV                 : Multivector; Epsilon : float;
+   procedure Init (MV                 : in out Multivector; Epsilon : float;
                    Use_Algebra_Metric : Boolean; GU_Count : Integer) is
       use GA_Maths;
+      Type_Record        : Multivector_Type_Base.MV_Typebase;
       M_Type             : Multivector_Type_Base.Object_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
@@ -346,8 +345,8 @@ package body E2GA is
          M_Type := Multivector_Type_Base.Versor_Object;
       end if;
       --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
-      M_Type_Record.M_Type := M_Type;
-      --        return M_Type_Record;
+      Type_Record.M_Type := M_Type;
+      MV.M_Type_Record := Type_Record;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Init.");
@@ -365,7 +364,7 @@ package body E2GA is
    --      end record;
    --  Initialize MV_Type corresponds to e2ga void mvtype::init
    --     function Init (MV : Multivector; Epsilon : float) return MV_Type is
-   procedure Init (MV : Multivector; Epsilon : float) is
+   procedure Init (MV : in out Multivector; Epsilon : float) is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
@@ -410,7 +409,7 @@ package body E2GA is
                --                 Set_Parity (Base, Odd_Parity);
                Base.M_Parity := Odd_Parity;
             end if;
-            Init (Type_Record, MV, Epsilon, True, Count (1) + Count (2));
+            Init (MV, Epsilon, True, Count (1) + Count (2));
          end if;
       end if;
       --        return Type_Record;

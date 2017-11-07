@@ -568,7 +568,7 @@ package body E3GA is
         if (MV1.Grade_Use and 8) /= 0 then
             Value (1) := Value (1) - MV1.Coordinates (8) * MV2.Coordinates (8);
         end if;
-        return (8, MV1.Grade_Use, Value);
+        return (8, MV1.Grade_Use, MV1.M_Type_Record, Value);
     end Left_Contraction;
 
     --  ------------------------------------------------------------------------
