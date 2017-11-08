@@ -40,11 +40,11 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Flags.Dual := True;
          MV := E2GA.Dual (MV);
       end if;
-      --  Multivector_Kind : Multivector_Type_Base.Multivector_Type_Base.Object_Type
 
       Analysis.M_Type.Multivector_Kind := Analysis.M_MV_Type.M_Type;
       if Analysis.M_MV_Type.M_Zero then
---           Model.Model_Kind := M_Zero;
+         --           Model.Model_Kind := M_Zero;
+         Analysis.M_Type := E2GA.b
          Analysis.M_Scalors (1) := 0.0;
       end if;
    end Analyze;
