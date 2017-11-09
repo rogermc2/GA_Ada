@@ -14,8 +14,6 @@ package body E2GA is
    type Array_F4 is array (1 .. 4) of float;
    type float_3 is digits 3;
 
-   US_1                              : constant GA_Maths.Unsigned_Integer
-       := GA_Maths.Unsigned_Integer (1);
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap

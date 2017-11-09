@@ -1,4 +1,6 @@
 
+with E3GA;
+with GA_Maths;
 with Multivector_Type_Base;
 
 package body Multivector_Analyze_E2GA is
@@ -49,7 +51,24 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Scalors (1) := 0.0;
       elsif Analysis.M_Type.Multivector_Kind = Versor_Object then
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
+         Analysis.M_Vectors (1) := E3GA.e1;
+
+         if MV.Coordinates (1) < 0.0 then
+            Analysis.M_Vectors (2) := E3GA.e2;
+         else
+            declare
+               use E3GA;
+            begin
+               Analysis.M_Vectors (2) := -E3GA.e2;
+            end;
+         end if;
+
+         Analysis.M_Vectors (2) := E3GA.e1;
          Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E2 (MV));
+         Analysis.M_Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
+             (E2GA.Get_Coord (E2GA.Norm_E2 (MV)), MV.Coordinates (1));
+      elsif Analysis.M_Type.Multivector_Kind = Blade_Object then
+         Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV));
       end if;
    end Analyze;
 

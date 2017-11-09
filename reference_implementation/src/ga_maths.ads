@@ -15,6 +15,7 @@ package GA_Maths is
     for Fixed_4'Small use 0.01;
 
     type Unsigned_Integer is mod 2 ** 32;
+    US_1 : constant Unsigned_Integer := Unsigned_Integer (1);
     type Vector_Unsigned_3D is array (1 .. 3) of Interfaces.Unsigned_32;
 
     subtype Basis_Index is Integer range 1 .. 2;
