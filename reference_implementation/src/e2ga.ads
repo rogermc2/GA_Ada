@@ -76,6 +76,7 @@ package E2GA is
    function e1 return Vector;
    function e2 return Vector;
    function E1_E2 (BV : Bivector) return float;
+   function Get_Coord (S : Scalar) return float;
    function Get_Coord_1 (R : Rotor) return float;
    function Get_Coord_2 (R : Rotor) return float;
    function Get_Coord_1 (V : Vector) return float;
@@ -90,6 +91,7 @@ package E2GA is
    function Magnitude (V : Vector) return float;
    function Multivector_String (MV : Multivector; Text : String := "") return String;
    function Norm_E (MV : Multivector) return Scalar;
+   function Norm_E2 (MV : E2GA.Multivector) return Scalar;
    --     function Norm_E2 (BV : Bivector) return Scalar;
    --     function Norm_E2 (V2 : Vector) return Scalar;     function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Outer_Product (V1, V2 : Vector) return Bivector;

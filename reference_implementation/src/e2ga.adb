@@ -780,6 +780,13 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+   function Get_Coord (S : Scalar) return float is
+   begin
+      return S.Coordinates (1);
+   end Get_Coord;
+
+   --  ------------------------------------------------------------------------
+
    function Get_Coords (V : Vector) return GA_Maths.Array_2D is
    begin
       return (V.Coordinates (1), V.Coordinates (2));

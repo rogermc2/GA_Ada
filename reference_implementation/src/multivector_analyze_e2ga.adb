@@ -42,10 +42,14 @@ package body Multivector_Analyze_E2GA is
       end if;
 
       Analysis.M_Type.Multivector_Kind := Analysis.M_MV_Type.M_Type;
+      --  Check for zero blade
       if Analysis.M_MV_Type.M_Zero then
          --           Model.Model_Kind := M_Zero;
-         Analysis.M_Type := E2GA.b
+         Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
+      elsif Analysis.M_Type.Multivector_Kind = Versor_Object then
+         Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
+         Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E2 (MV));
       end if;
    end Analyze;
 
