@@ -68,6 +68,10 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
              (E2GA.Get_Coord (E2GA.Norm_E2 (MV)), MV.Coordinates (1));
       elsif Analysis.M_Type.Multivector_Kind = Blade_Object then
+         case Analysis.M_MV_Type.M_GU of
+            when 0 =>
+            Analysis.M_Type.Blade_Subclass := Analysis.M_MV_Type.M_GU;
+         end case;
          Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV));
       end if;
    end Analyze;

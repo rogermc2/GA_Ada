@@ -38,10 +38,12 @@ package Multivector_Analyze is
 
 --  mv_analy
    type M_Type_Record is record
-      Model_Kind       : Model_Type := Vector_Space;
+      Model_Kind       : Model_Type := Vector_Space;  --  m_type[0] = model
+       --  m_type[1] = multivector type (c3ga_type::BLADE, c3ga_type::VERSOR, c3ga_type::MULTIVECTOR,)
       Multivector_Kind : Multivector_Type_Base.Object_Type :=
                            Multivector_Type_Base.Multivector_Object;
-      Blade_Class      : Blade_Type;
+      Blade_Class      : Blade_Type;  --  m_type[2] = class (round, flat, free, etc)
+      --  m_type[3] = grade / class dependent
       Blade_Subclass   : Blade_Subclass_Type;
       Versor_Subclass  : Versor_Type;
       Round_Kind       : Round_Type := Round_Invalid;
