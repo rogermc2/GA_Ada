@@ -91,6 +91,7 @@ package body E2GA_Draw is
                                          Scale, Method, Colour);
                end;
             when Even_Versor_Subclass => null;
+            when Unspecified_Subclass => null;
          end case;
       elsif isVersor (A) and then A.M_Scalors (1) > 0.0001 then
          Put_Line ("E2GA_Draw isVersor.");

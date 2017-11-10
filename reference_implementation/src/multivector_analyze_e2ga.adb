@@ -13,7 +13,6 @@ package body Multivector_Analyze_E2GA is
 
       Base      : MV_Typebase;
       Analysis  : MV_Analysis;
-      Xn        : E2GA.Vector;
    begin
       E2GA.Init (MV, Epsilon);
       Analysis.M_Flags.Valid := True;
@@ -28,7 +27,6 @@ package body Multivector_Analyze_E2GA is
       Analysis.M_Type.Multivector_Kind := Analysis.M_MV_Type.M_Type;
       --  Check for zero blade
       if Analysis.M_MV_Type.M_Zero then
-         --           Model.Model_Kind := M_Zero;
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
       elsif Analysis.M_Type.Multivector_Kind = Versor_Object then
@@ -54,9 +52,25 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade;
          Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV));
          if Analysis.M_Type.MV_Subtype = Vector_Type then
-             Xn := E2GA.Unit_E (MV);
+            declare
+               use E3GA;
+               Xn  : E2GA.Vector;
+            begin
+               Xn := E2GA.Unit_E (MV);
+               Analysis.M_Vectors (1) := E2GA.Get_Coord_1 (Xn) * E3GA.e1 +
+                                         E2GA.Get_Coord_2 (Xn) * E3GA.e2 ;
+            end;
          elsif Analysis.M_Type.MV_Subtype = Bivector_Type then
             Analysis.M_Vectors (1) := E3GA.e1;
+            declare
+               use E3GA;
+            begin
+               if E2GA.Set_Bivector (MV).Coordinates (1) < 0.0 then
+                  Analysis.M_Vectors (2) := -E3GA.e2;
+               else
+                  Analysis.M_Vectors (2) := E3GA.e2;
+               end if;
+            end;
          end if;
       end if;
    end Analyze;

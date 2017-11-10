@@ -750,6 +750,14 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Bivector (MV : Multivector) return Bivector is
+      BV : Bivector;
+   begin
+      BV.Coordinates (1) := MV.Coordinates (1);
+      return  BV;
+   end Set_Bivector;
+
+   --  -------------------------------------------------------------------------
    procedure Set_Coords (V : out Vector; C1, C2 : float) is
    begin
       V.Coordinates := (C1, C2);

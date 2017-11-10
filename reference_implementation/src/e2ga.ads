@@ -97,6 +97,7 @@ package E2GA is
    function Outer_Product (V1, V2 : Vector) return Bivector;
    function Scalar_Product (V1, V2 : Vector) return Scalar;
    function Set_Bivector (V1, V2 : Vector) return Bivector;
+   function Set_Bivector (MV : Multivector) return Bivector;
    procedure Set_Coords (V : out Vector; C1, C2 : float);
    --  The Set_Multivector functions correspond to equivalent e2ga mv::set functions
    function Set_Multivector (S1 : Scalar) return Multivector;
