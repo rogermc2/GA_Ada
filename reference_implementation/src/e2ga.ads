@@ -106,6 +106,7 @@ package E2GA is
    function Set_Rotor (E1_E2 : float) return Rotor;
 --     function Unit_E (MV : Multivector) return Multivector;
    function Unit_E (V : Vector) return Vector;
+   function Unit_E (MV : Multivector) return Vector;
 
 private
    type Scalar is record

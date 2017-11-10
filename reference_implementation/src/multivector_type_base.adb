@@ -39,7 +39,7 @@ package body Multivector_Type_Base is
        Base.M_Zero := Zero;
        Base.M_Type := Object;
        Base.M_Top_Grade := Grade;
-       Base.M_GU := GU;
+       Base.M_Grade := GU;
        Base.M_Parity := Par;
     end Set_Type_Base;
 

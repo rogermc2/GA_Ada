@@ -374,7 +374,7 @@ package body E2GA is
       Type_Record        : MV_Typebase;
       Done               : Boolean := False;
    begin
-      Base.M_GU := GU;  --  e2ga.cpp line 1670
+      Base.M_Grade := GU;  --  e2ga.cpp line 1670
       --  count grade part usage
       while GU /= 0 loop
          Put_Line ("E2GA.Init 2 GU:" & Unsigned_Integer'Image (GU));
@@ -615,6 +615,64 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+   function Dot_Product (V1, V2 : Vector) return float is
+   begin
+      return V1.Coordinates (1) * V2.Coordinates (1) +
+          V1.Coordinates (2) * V2.Coordinates (2);
+   end Dot_Product;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord (S : Scalar) return float is
+   begin
+      return S.Coordinates (1);
+   end Get_Coord;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (V : Vector) return GA_Maths.Array_2D is
+   begin
+      return (V.Coordinates (1), V.Coordinates (2));
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_1 (R : Rotor) return float is
+   begin
+      return R.Coordinates (1);
+   end Get_Coord_1;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_2 (R : Rotor) return float is
+   begin
+      return R.Coordinates (2);
+   end Get_Coord_2;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_1 (V : Vector) return float is
+   begin
+      return V.Coordinates (1);
+   end Get_Coord_1;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_2 (V : Vector) return float is
+   begin
+      return V.Coordinates (2);
+   end Get_Coord_2;
+
+   --  ------------------------------------------------------------------------
+
+   function Magnitude (V : Vector) return float is
+   begin
+      return GA_Maths.Float_Functions.Sqrt (V.Coordinates (1) * V.Coordinates (1) +
+                                                V.Coordinates (2) * V.Coordinates (2));
+   end Magnitude;
+
+   --  ------------------------------------------------------------------------
+
    function Outer_Product (V1, V2 : Vector) return Bivector is
    --  The outer product basis in 2D is the coordinate of e1^e2.
       use E2GA;
@@ -685,6 +743,20 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Bivector (V1, V2 : Vector) return Bivector is
+   begin
+      return  Outer_Product (V1, V2);
+   end Set_Bivector;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Coords (V : out Vector; C1, C2 : float) is
+   begin
+      V.Coordinates := (C1, C2);
+   end Set_Coords;
+
+   --  ------------------------------------------------------------------------
+
    function Set_Multivector (S1 : Scalar) return Multivector is
       MV : Multivector (1, 1);
    begin
@@ -722,13 +794,6 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Bivector (V1, V2 : Vector) return Bivector is
-   begin
-      return  Outer_Product (V1, V2);
-   end Set_Bivector;
-
-   --  -------------------------------------------------------------------------
-
    function Set_Scalar (MV : Multivector) return Scalar is
       use GA_Maths;
       theScalar : Scalar;
@@ -752,87 +817,33 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+   function Unit_E (MV : Multivector) return Vector is
+      use GA_Maths;
+      E2         : constant Scalar := Scalar_Product (MV, MV);
+      E2_Value   : constant float := E2.Coordinates (1);
+      IE_Value   : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (E2_Value);
+      theVector  : Vector;
+   begin
+      theVector.Coordinates (1) :=  MV.Coordinates (1) * MV.Coordinates (1);
+      theVector.Coordinates (2) :=  MV.Coordinates (2) * IE_Value;
+      return  theVector;
+   end Unit_E;
+
+   --  -------------------------------------------------------------------------
+
    function Unit_E (V : Vector) return Vector is
-      E2_Value   : float;
-      IE_Value   : float;
-      V1         : float := V.Coordinates (1);
-      V2         : float := V.Coordinates (2);
-      e21        : float;
+      V1         : constant float := V.Coordinates (1);
+      V2         : constant float := V.Coordinates (2);
+      E2_Value   : constant float:= V1 * V1 + V2 * V2;
+      e21        : constant float := e2.Coordinates (1);
+      IE_Value   : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (e21);
       Result     : Vector := V;
    begin
-      e21 := e2.Coordinates (1);
-      E2_Value := V1 * V1 + V2 * V2;
-      IE_Value := 1.0 / GA_Maths.Float_Functions.Sqrt (e21);
       Result.Coordinates (1) := V1 * IE_Value;
       Result.Coordinates (2) := V2 * IE_Value;
       return  Result;
    end Unit_E;
 
-   --  ----------------------------------------------------------------------------
-
-   function Dot_Product (V1, V2 : Vector) return float is
-   begin
-      return V1.Coordinates (1) * V2.Coordinates (1) +
-          V1.Coordinates (2) * V2.Coordinates (2);
-   end Dot_Product;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord (S : Scalar) return float is
-   begin
-      return S.Coordinates (1);
-   end Get_Coord;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coords (V : Vector) return GA_Maths.Array_2D is
-   begin
-      return (V.Coordinates (1), V.Coordinates (2));
-   end Get_Coords;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_1 (R : Rotor) return float is
-   begin
-      return R.Coordinates (1);
-   end Get_Coord_1;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_2 (R : Rotor) return float is
-   begin
-      return R.Coordinates (2);
-   end Get_Coord_2;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_1 (V : Vector) return float is
-   begin
-      return V.Coordinates (1);
-   end Get_Coord_1;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_2 (V : Vector) return float is
-   begin
-      return V.Coordinates (2);
-   end Get_Coord_2;
-
-   --  ------------------------------------------------------------------------
-
-   function Magnitude (V : Vector) return float is
-   begin
-      return GA_Maths.Float_Functions.Sqrt (V.Coordinates (1) * V.Coordinates (1) +
-                                                V.Coordinates (2) * V.Coordinates (2));
-   end Magnitude;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Coords (V : out Vector; C1, C2 : float) is
-   begin
-      V.Coordinates := (C1, C2);
-   end Set_Coords;
-
-   --  ------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
 end E2GA;
