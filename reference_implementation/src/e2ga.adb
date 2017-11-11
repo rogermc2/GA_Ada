@@ -309,27 +309,27 @@ package body E2GA is
    --  ----------------------------------------------------------------------------
 
    function Init (MV : Multivector; Epsilon : float;
-                  Use_Algebra_Metric : Boolean; GU_Count : Integer) return MV_Type is
+                  Use_Algebra_Metric : Boolean;
+                  GU_Count : Integer) return MV_Type is
       use GA_Maths;
       MV_Info        : MV_Type;
-      M_Type             : Multivector_Type_Base.Object_Type;
-      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
-      MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
-      VI                 : constant Multivector := Inverse (MV);
-      GI                 : constant Multivector := Grade_Involution (MV);
-      Sq                 : Scalar;
+      M_Type         : Multivector_Type_Base.Object_Type;
+      GU             : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
+      MV_Reverse     : constant Multivector := Reverse_Multivector (MV);
+      VI             : constant Multivector := Inverse (MV);
+      GI             : constant Multivector := Grade_Involution (MV);
+      Sq             : Scalar;
       --  V: versor; VI: versor inverse
       --  GI: Grade involution
-      GI_VI              : constant Multivector := Geometric_Product (GI, VI);
-      VI_GI              : constant Multivector := Geometric_Product (VI, GI);
-      VI_E1              : constant Multivector := Geometric_Product (VI, e1);
-      VI_E2              : constant Multivector := Geometric_Product (VI, e2);
-      GI_VI_E1           : constant Multivector := Geometric_Product (GI_VI, e1);
-      VI_GI_E1           : constant Multivector := Geometric_Product (VI_GI, e1);
-      VI_GI_GI_VI        : constant Multivector := VI_GI - GI_VI;
-      VI_E1_GI           : constant Multivector := Geometric_Product (VI_E1, GI);
-      VI_E2_GI           : constant Multivector := Geometric_Product (VI_E2, GI);
-
+      GI_VI          : constant Multivector := Geometric_Product (GI, VI);
+      VI_GI            : constant Multivector := Geometric_Product (VI, GI);
+      VI_E1          : constant Multivector := Geometric_Product (VI, e1);
+      VI_E2          : constant Multivector := Geometric_Product (VI, e2);
+      GI_VI_E1       : constant Multivector := Geometric_Product (GI_VI, e1);
+      VI_GI_E1       : constant Multivector := Geometric_Product (VI_GI, e1);
+      VI_GI_GI_VI    : constant Multivector := VI_GI - GI_VI;
+      VI_E1_GI       : constant Multivector := Geometric_Product (VI_E1, GI);
+      VI_E2_GI       : constant Multivector := Geometric_Product (VI_E2, GI);
    begin
       --  M_Type_Record is initialized to default values
       Sq := Scalar_Product (MV, MV_Reverse);
@@ -355,45 +355,34 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   --     type MV_Typebase is record
-   --          M_Zero        : boolean := False; -- True if multivector is zero
-   --          M_Type        : Object_Type := Multivector_Object;
-   --          M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
-   --          M_GU          : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
-   --          M_Parity      : Parity := No_Parity;
-   --      end record;
-   --  Initialize MV_Type corresponds to e2ga void mvtype::init
-   --     function Init (MV : Multivector; Epsilon : float) return MV_Type is
-   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
+    function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
-      MV_Info               : MV_Type;
+      MV_Info            : MV_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
       GU_1               : constant GA_Maths.Grade_Usage := 1;
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
       Count_Index        : Unsigned_Integer := 0;
-      Type_Record        : MV_Typebase;
       Done               : Boolean := False;
-   begin
-      MV_Info.M_Grade := GU;  --  e2ga.cpp line 1670
+    begin
+      --  e2ga.cpp line 1631
+      MV_Info.M_Type := Multivector_Object;
+      MV_Info.M_Grade := GU;
       --  count grade part usage
       while GU /= 0 loop
          Put_Line ("E2GA.Init 2 GU:" & Unsigned_Integer'Image (GU));
          if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
-            --              Put_Line ("E2GA.Init 2 GU & 1:" & Unsigned_Integer'Image (GU));
-            --              Put_Line ("E2GA.Init 2 Count_Index + 1 and 1:" & Unsigned_Integer'Image (Count_Index + 1 and 1));
             Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
          end if;
-
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
-         --           Set_Top_Grade (Base, Count_Index);
          MV_Info.M_Top_Grade := Integer (Count_Index);
          Count_Index := Count_Index + 1;
       end loop;
 
       --  if no grade part in use: zero blade
       if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
+         Put_Line ("E2GA.Init 2 Setting zero blade.");
          Set_Type_Base (MV_Info, True, Blade_Object, 0, GU, Even_Parity);
          Done := True;
       else
@@ -403,21 +392,24 @@ package body E2GA is
             Done := True;
          else
             if Count (1) = 0 then
-               --                 Set_Parity (Base, Even_Parity);
+               Put_Line ("E2GA.Init 2 Setting even parity.");
                MV_Info.M_Parity := Even_Parity;
             else
-               --                 Set_Parity (Base, Odd_Parity);
+               Put_Line ("E2GA.Init 2 Setting odd parity.");
                MV_Info.M_Parity := Odd_Parity;
             end if;
-            MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
          end if;
       end if;
-         return MV_Info;
-   exception
+      if not Done then
+         Put_Line ("E2GA.Init 2 not done.");
+         MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
+      end if;
+      return MV_Info;
+    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Init 2.");
          raise;
-   end Init;
+    end Init;
 
    --  -------------------------------------------------------------------------
 
