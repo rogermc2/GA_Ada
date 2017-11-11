@@ -67,6 +67,7 @@ package body E2GA_Draw is
          Put_Line ("E2GA_Draw isBlade.");
          case Blade_Subclass (A) is
             when Vector_Subclass =>
+               Put_Line (" E2GA_Draw Vector_Subclass.");
                E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
                Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);

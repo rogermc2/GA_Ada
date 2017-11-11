@@ -76,7 +76,7 @@ package Multivector_Analyze is
    end record;
 
    function Default_Epsilon return float;  --  Must precede Analyze
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : in out E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

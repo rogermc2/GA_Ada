@@ -9,9 +9,9 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : in out E2GA.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon) is
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
+                      Flags : Flag_Type := (Flag_Invalid, False);
+                      Epsilon : float := Default_Epsilon) is
    begin
       Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
    end Analyze;
