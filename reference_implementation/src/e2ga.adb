@@ -786,6 +786,8 @@ package body E2GA is
    function Set_Multivector (BV : Bivector) return Multivector is
       MV : Multivector (4, 4);
    begin
+      MV.M_Type_Record.M_Grade := MV.Grade_Use;
+      MV.M_Type_Record.M_Top_Grade := 4;
       MV.Coordinates (1) := BV.Coordinates (1);
       return  MV;
    end Set_Multivector;

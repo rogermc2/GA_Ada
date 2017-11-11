@@ -1,4 +1,6 @@
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 with E3GA;
 with GA_Maths;
 with Multivector_Type_Base;
@@ -20,16 +22,19 @@ package body Multivector_Analyze_E2GA is
       Analysis.M_Type.Model_Kind := Multivector_Analyze.Vector_Space;
 
       if Flags.Dual then
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Is Dual.");
          Analysis.M_Flags.Dual := True;
          MV := E2GA.Dual (MV);
       end if;
 
-      Analysis.M_Type.Multivector_Kind := Analysis.M_MV_Type.M_Type;
+      Analysis.M_Type.Multivector_Kind := MV.M_Type_Record.M_Type;
       --  Check for zero blade
       if Analysis.M_MV_Type.M_Zero then
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
       elsif Analysis.M_Type.Multivector_Kind = Versor_Object then
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Versor_Object.");
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
          Analysis.M_Vectors (1) := E3GA.e1;
 
@@ -49,6 +54,7 @@ package body Multivector_Analyze_E2GA is
              (E2GA.Get_Coord (E2GA.Norm_E2 (MV)), MV.Coordinates (1));
 
       elsif Analysis.M_Type.Multivector_Kind = Blade_Object then
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Blade_Object.");
          Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade;
          Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV));
          if Analysis.M_Type.MV_Subtype = Vector_Type then
@@ -61,6 +67,7 @@ package body Multivector_Analyze_E2GA is
                                          E2GA.Get_Coord_2 (Xn) * E3GA.e2 ;
             end;
          elsif Analysis.M_Type.MV_Subtype = Bivector_Type then
+            Put_Line ("Multivector_Analyze_E2GA.Analyze Bivector_Type.");
             Analysis.M_Vectors (1) := E3GA.e1;
             declare
                use E3GA;
@@ -72,6 +79,8 @@ package body Multivector_Analyze_E2GA is
                end if;
             end;
          end if;
+      else
+         Put_Line ("Multivector_Analyze_E2GA.Analyze unspecified object.");
       end if;
    end Analyze;
 
