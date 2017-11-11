@@ -313,7 +313,6 @@ package body E2GA is
                   GU_Count : Integer) return MV_Type is
       use GA_Maths;
       MV_Info        : MV_Type;
-      M_Type         : Multivector_Type_Base.Object_Type;
       GU             : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse     : constant Multivector := Reverse_Multivector (MV);
       VI             : constant Multivector := Inverse (MV);
@@ -322,7 +321,7 @@ package body E2GA is
       --  V: versor; VI: versor inverse
       --  GI: Grade involution
       GI_VI          : constant Multivector := Geometric_Product (GI, VI);
-      VI_GI            : constant Multivector := Geometric_Product (VI, GI);
+      VI_GI          : constant Multivector := Geometric_Product (VI, GI);
       VI_E1          : constant Multivector := Geometric_Product (VI, e1);
       VI_E2          : constant Multivector := Geometric_Product (VI, e2);
       GI_VI_E1       : constant Multivector := Geometric_Product (GI_VI, e1);
@@ -331,21 +330,19 @@ package body E2GA is
       VI_E1_GI       : constant Multivector := Geometric_Product (VI_E1, GI);
       VI_E2_GI       : constant Multivector := Geometric_Product (VI_E2, GI);
    begin
-      --  M_Type_Record is initialized to default values
+      --  MV_Info is initialized to default values
       Sq := Scalar_Product (MV, MV_Reverse);
-      if Sq.Coordinates (1) /= 0.0 and then
-          GI.Grade_Use = Grade_0 and then
-          VI_GI_GI_VI.Grade_Use = Grade_0 and then
-          VI_E1_GI.Grade_Use = Grade_1 and then
-          VI_E2_GI.Grade_Use = Grade_1 and then
-          GU_Count = 1 then
-         M_Type := Multivector_Type_Base.Blade_Object;
+      if Sq.Coordinates (1) = 0.0 or GI_VI.Grade_Use /= Grade_0 or
+         VI_GI_GI_VI.Grade_Use /= Grade_0 or VI_E1_GI.Grade_Use /= Grade_1 or
+         VI_E2_GI.Grade_Use /= Grade_1 then
+         MV_Info.M_Type := Multivector_Type_Base.Multivector_Object;
       else
-         M_Type := Multivector_Type_Base.Versor_Object;
+         if GU_Count = 1 then
+            MV_Info.M_Type := Multivector_Type_Base.Blade_Object;
+         else
+            MV_Info.M_Type := Multivector_Type_Base.Versor_Object;
+         end if;
       end if;
-
-      --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
-      MV_Info.M_Type := M_Type;
       return MV_Info;
    exception
       when anError :  others =>
