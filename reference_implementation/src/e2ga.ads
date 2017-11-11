@@ -34,14 +34,9 @@ package E2GA is
    --  The outer product of P vectors is called a grade P multivector or a P-vector
    --  In E2, MV = u^v = det(u,v)e1^e2. This "bivector" is the only MV in E2.
 
---     type MV_Type is record
---         --  MV_Type extends MV_Typebase
---        Type_Base : Multivector_Type_Base.MV_Typebase;
---     end record;
+   subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
    type Multivector (MV_Size : integer; Grade_Use : GA_Maths.Grade_Usage) is record
-      --  Multivector extends MV_Typebase
-      M_Type_Record : Multivector_Type_Base.MV_Typebase;
       Coordinates   : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
    end record;
 
@@ -85,7 +80,7 @@ package E2GA is
    function Get_Size (MV : Multivector) return Integer;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   procedure Init (MV : in out Multivector; Epsilon : float);
+   function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
    function Largest_Basis_Blade (Map : Bit_Map) return float;
    function Largest_Coordinate return float;
    function Magnitude (V : Vector) return float;

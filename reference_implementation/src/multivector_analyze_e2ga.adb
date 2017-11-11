@@ -13,10 +13,9 @@ package body Multivector_Analyze_E2GA is
       use Multivector_Analyze;
       use Multivector_Type_Base;
 
-      Base      : MV_Typebase;
+      MV_Info   : E2GA.MV_Type := E2GA.Init (MV, Epsilon);
       Analysis  : MV_Analysis;
    begin
-      E2GA.Init (MV, Epsilon);
       Analysis.M_Flags.Valid := True;
       Analysis.Epsilon := Epsilon;
       Analysis.M_Type.Model_Kind := Multivector_Analyze.Vector_Space;
@@ -27,7 +26,7 @@ package body Multivector_Analyze_E2GA is
          MV := E2GA.Dual (MV);
       end if;
 
-      Analysis.M_Type.Multivector_Kind := MV.M_Type_Record.M_Type;
+      Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
       --  Check for zero blade
       if Analysis.M_MV_Type.M_Zero then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");

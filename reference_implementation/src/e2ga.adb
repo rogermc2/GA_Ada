@@ -39,6 +39,14 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function Init (MV : Multivector; Epsilon : float;
+                  Use_Algebra_Metric : Boolean; GU_Count : Integer) return MV_Type;
+   function Inverse (MV : Multivector) return Multivector;
+   function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
+   function Reverse_Multivector (MV : Multivector) return Multivector;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
       Coords : Coords_Continuous_Array (1 .. MV.MV_Size) := MV.Coordinates;
    begin
@@ -53,14 +61,6 @@ package body E2GA is
    end Get_Size;
 
    --  ------------------------------------------------------------------------
-
-   procedure Init (MV                 : in out Multivector; Epsilon : float;
-                   Use_Algebra_Metric : Boolean; GU_Count : Integer);
-   function Inverse (MV : Multivector) return Multivector;
-   function Scalar_Product (MV1, MV2 : Multivector) return Scalar;
-   function Reverse_Multivector (MV : Multivector) return Multivector;
-
-   --  -------------------------------------------------------------------------
 
    function "+" (V1, V2 : Vector) return Vector is
       Sum : Vector;
@@ -173,8 +173,9 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Dual (MV : Multivector) return Multivector is
-      Coords : Coords_Continuous_Array (1 .. 4) := (0.0, 0.0, 0.0, 0.0);
       use GA_Maths;
+      Coords : Coords_Continuous_Array (1 .. 4) := (0.0, 0.0, 0.0, 0.0);
+      Info   : MV_Type;
    begin
       if (MV.Grade_Use and 1) /= 0 then
          Coords (4) := -MV.Coordinates (1);
@@ -186,7 +187,7 @@ package body E2GA is
       if (MV.Grade_Use and 4) /= 0 then
          Coords (1) := MV.Coordinates (4);
       end if;
-      return (MV.MV_Size, MV.Grade_Use, MV.M_Type_Record, Coords);
+      return (MV.MV_Size, MV.Grade_Use, Coords);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -307,10 +308,10 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
-   procedure Init (MV                 : in out Multivector; Epsilon : float;
-                   Use_Algebra_Metric : Boolean; GU_Count : Integer) is
+   function Init (MV : Multivector; Epsilon : float;
+                  Use_Algebra_Metric : Boolean; GU_Count : Integer) return MV_Type is
       use GA_Maths;
-      Type_Record        : Multivector_Type_Base.MV_Typebase;
+      MV_Info        : MV_Type;
       M_Type             : Multivector_Type_Base.Object_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use; --  Bit map indicating which grades are present
       MV_Reverse         : constant Multivector := Reverse_Multivector (MV);
@@ -342,9 +343,10 @@ package body E2GA is
       else
          M_Type := Multivector_Type_Base.Versor_Object;
       end if;
+
       --  Set_M_Type (Base : in out Type_Base; theType : Object_Type);
-      Type_Record.M_Type := M_Type;
-      MV.M_Type_Record := Type_Record;
+      MV_Info.M_Type := M_Type;
+      return MV_Info;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Init.");
@@ -362,11 +364,11 @@ package body E2GA is
    --      end record;
    --  Initialize MV_Type corresponds to e2ga void mvtype::init
    --     function Init (MV : Multivector; Epsilon : float) return MV_Type is
-   procedure Init (MV : in out Multivector; Epsilon : float) is
+   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
-      Base               : MV_Typebase;
+      MV_Info               : MV_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
       GU_1               : constant GA_Maths.Grade_Usage := 1;
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
@@ -374,7 +376,7 @@ package body E2GA is
       Type_Record        : MV_Typebase;
       Done               : Boolean := False;
    begin
-      Base.M_Grade := GU;  --  e2ga.cpp line 1670
+      MV_Info.M_Grade := GU;  --  e2ga.cpp line 1670
       --  count grade part usage
       while GU /= 0 loop
          Put_Line ("E2GA.Init 2 GU:" & Unsigned_Integer'Image (GU));
@@ -386,13 +388,13 @@ package body E2GA is
 
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
          --           Set_Top_Grade (Base, Count_Index);
-         Base.M_Top_Grade := Integer (Count_Index);
+         MV_Info.M_Top_Grade := Integer (Count_Index);
          Count_Index := Count_Index + 1;
       end loop;
 
       --  if no grade part in use: zero blade
       if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
-         Set_Type_Base (Base, True, Blade_Object, 0, GU, Even_Parity);
+         Set_Type_Base (MV_Info, True, Blade_Object, 0, GU, Even_Parity);
          Done := True;
       else
          --  Base.M_Zero = False by default
@@ -402,15 +404,15 @@ package body E2GA is
          else
             if Count (1) = 0 then
                --                 Set_Parity (Base, Even_Parity);
-               Base.M_Parity := Even_Parity;
+               MV_Info.M_Parity := Even_Parity;
             else
                --                 Set_Parity (Base, Odd_Parity);
-               Base.M_Parity := Odd_Parity;
+               MV_Info.M_Parity := Odd_Parity;
             end if;
-            Init (MV, Epsilon, True, Count (1) + Count (2));
+            MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
          end if;
       end if;
-      --        return Type_Record;
+         return MV_Info;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Init 2.");
@@ -786,8 +788,6 @@ package body E2GA is
    function Set_Multivector (BV : Bivector) return Multivector is
       MV : Multivector (4, 4);
    begin
-      MV.M_Type_Record.M_Grade := MV.Grade_Use;
-      MV.M_Type_Record.M_Top_Grade := 4;
       MV.Coordinates (1) := BV.Coordinates (1);
       return  MV;
    end Set_Multivector;
