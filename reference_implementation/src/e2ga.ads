@@ -11,7 +11,6 @@ package E2GA is
    --  Vector corresponds to e2ga.Vector coordinate storage float m_c[2]
    type Vector is private;
 
-   --     type Coords3_Array is array (integer range <>) of Vector;
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
    subtype Rotor_Coords is Coords_Continuous_Array (1 .. 2);
@@ -36,8 +35,8 @@ package E2GA is
 
    subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
-   type Multivector (MV_Size : integer; Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates   : Coords_Continuous_Array (1 .. MV_Size);   --  m_c[4]
+   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+      Coordinates : Coords_Continuous_Array (1 .. 4) := (others => 0.0);   --  m_c[4]
    end record;
 
    --  A bivector as defined here the outerproduct of two vectors.

@@ -36,7 +36,7 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
       elsif Analysis.M_MV_Type.M_Type = Versor_Object then
-         Put_Line ("Multivector_Analyze_E2GA.Analyze Versor_Object 2.");
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Versor_Object.");
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
          Analysis.M_Vectors (1) := E3GA.e1;
 

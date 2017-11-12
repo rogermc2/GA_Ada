@@ -4,6 +4,8 @@ with Interfaces;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Multivector_Type_Base;
+
 package body E3GA_Utilities is
 
    function exp (BV : E3GA.Bivector) return E3GA.Rotor is
@@ -87,6 +89,19 @@ package body E3GA_Utilities is
                     float'Image (Coords (index)));
       end loop;
    end Print_Multivector;
+
+    --  ------------------------------------------------------------------------
+
+   procedure Print_Multivector_Info (Name : String; Info : E2GA.MV_Type) is
+      use Multivector_Type_Base;
+   begin
+      Put_Line (Name);
+      Put_Line ("M_Zero      " & boolean'Image (Info.M_Zero));
+      Put_Line ("M_Type      " & Object_Type'Image (Info.M_Type));
+      Put_Line ("M_Top_Grade " & Integer'Image (Info.M_Top_Grade));
+      Put_Line ("M_Grade     " & GA_Maths.Unsigned_Integer'Image (Info.M_Grade));
+      Put_Line ("M_Parity    " & Parity'Image (Info.M_Parity));
+   end Print_Multivector_Info;
 
     --  ------------------------------------------------------------------------
 

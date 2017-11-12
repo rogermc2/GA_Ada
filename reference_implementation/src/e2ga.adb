@@ -48,7 +48,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
-      Coords : Coords_Continuous_Array (1 .. MV.MV_Size) := MV.Coordinates;
+      Coords : Coords_Continuous_Array (1 .. MV_Size (integer (MV.Grade_Use))) := MV.Coordinates;
    begin
       return Coords;
    end Get_Coords;
@@ -57,7 +57,7 @@ package body E2GA is
 
    function Get_Size (MV : Multivector) return Integer is
    begin
-      return MV.MV_Size;
+      return  MV_Size (integer (MV.Grade_Use));
    end Get_Size;
 
    --  ------------------------------------------------------------------------
@@ -103,7 +103,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function "+" (MV1, MV2 : Multivector) return Multivector is
-      Sum : Multivector (MV1.MV_Size, MV1.Grade_Use) := MV1;
+      Sum : Multivector (MV1.Grade_Use) := MV1;
    begin
       Sum.Coordinates (1) := Sum.Coordinates (1) + MV2.Coordinates (1);
       Sum.Coordinates (2) := Sum.Coordinates (2) + MV2.Coordinates (2);
@@ -187,7 +187,7 @@ package body E2GA is
       if (MV.Grade_Use and 4) /= 0 then
          Coords (1) := MV.Coordinates (4);
       end if;
-      return (MV.MV_Size, MV.Grade_Use, Coords);
+      return (MV.Grade_Use, Coords);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -757,7 +757,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Set_Multivector (S1 : Scalar) return Multivector is
-      MV : Multivector (1, 1);
+      MV : Multivector (1);
    begin
       MV.Coordinates (1) := S1.Coordinates (1);
       return  MV;
@@ -766,16 +766,17 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (V : Vector) return Multivector is
-      MV : Multivector (2, 2);
+      MV : Multivector (2);
    begin
-      MV.Coordinates := V.Coordinates;
+      MV.Coordinates (1) := V.Coordinates (1);
+      MV.Coordinates (2) := V.Coordinates (2);
       return  MV;
    end Set_Multivector;
 
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (BV : Bivector) return Multivector is
-      MV : Multivector (4, 4);
+      MV : Multivector (4);
    begin
       MV.Coordinates (1) := BV.Coordinates (1);
       return  MV;
@@ -784,7 +785,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (R : Rotor) return Multivector is
-      MV : Multivector (5, 5);
+      MV : Multivector (5);
    begin
       MV.Coordinates (1) := R.Coordinates (1);
       MV.Coordinates (2) := R.Coordinates (2);

@@ -21,13 +21,16 @@ package E3GA is
    type Scalar is private;
    type Bivector is private;
    type Outermorphism is private;
-   type Multivector is private;
    type Syn_SMultivector is private;
    type Rotor is private;
 --     type Trivector is private;
 
    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
    type Vector is private;
+
+   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+      Coordinates : E2GA.Coords_Continuous_Array (1 .. 8) := (others => 0.0);  --  m_c[8]
+   end record;
 
    --  Joinable grade definitions
    Grade_0 : constant integer := 1;
@@ -157,7 +160,5 @@ private
       C3_e3       : float := 0.0;
       C4_e1e2e3   : float := 0.0;
    end record;
-
-   type Multivector is new E2GA.Multivector (8, 0);
 
 end E3GA;

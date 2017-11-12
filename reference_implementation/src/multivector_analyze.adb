@@ -1,6 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with E3GA_Utilities;
 with Multivector_Analyze_E2GA;
 
 package body Multivector_Analyze is
@@ -51,6 +52,7 @@ package body Multivector_Analyze is
       use Multivector_Type_Base;
    begin
       Put_Line ("MV Analysis checking for blade");
+      E3GA_Utilities.Print_Multivector_Info ("isBlade A.M_MV_Type",  A.M_MV_Type);
       return A.M_MV_Type.M_Type = Multivector_Type_Base.Blade_Object;
    end isBlade;
 

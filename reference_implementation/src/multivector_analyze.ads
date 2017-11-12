@@ -39,7 +39,7 @@ package Multivector_Analyze is
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
    type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
---  mv_analy
+--  mv_analysis
    type M_Type_Record is record
       Model_Kind       : Model_Type := Vector_Space;  --  m_type[0] = model
        --  m_type[1] = multivector type (c3ga_type::BLADE, c3ga_type::VERSOR,

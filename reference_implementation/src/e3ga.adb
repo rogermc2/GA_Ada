@@ -349,7 +349,7 @@ package body E3GA is
 
     function Get_Size (MV : Multivector) return Integer is
     begin
-          return MV.MV_Size;
+          return MV_Size (Integer (MV.Grade_Use));
     end Get_Size;
 
     --  ------------------------------------------------------------------------
@@ -451,7 +451,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
    function Get_Coords (MV : Multivector) return E2GA.Coords_Continuous_Array is
-      Coords : E2GA.Coords_Continuous_Array (1 .. MV.MV_Size) := MV.Coordinates;
+      Coords : E2GA.Coords_Continuous_Array (1 .. MV_Size (Integer (MV.Grade_Use)))
+                              := MV.Coordinates;
    begin
       return Coords;
    end Get_Coords;
@@ -579,7 +580,7 @@ package body E3GA is
         if (MV1.Grade_Use and 8) /= 0 then
             Value (1) := Value (1) - MV1.Coordinates (8) * MV2.Coordinates (8);
         end if;
-        return (8, MV1.Grade_Use, Value);
+        return (MV1.Grade_Use, Value);
     end Left_Contraction;
 
     --  ------------------------------------------------------------------------
@@ -703,13 +704,11 @@ package body E3GA is
               MV.Coordinates (3) * MV.Coordinates (3);
         end if;
         if (MV.Grade_Use and 4) /= 0 then
-            Value := Value + MV.Coordinates (4) * MV.Coordinates (4) +
-              MV.Coordinates (5) * MV.Coordinates (5) +
-              MV.Coordinates (6) * MV.Coordinates (6);
+            Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
+--                MV.Coordinates (5) * MV.Coordinates (5) +
+--                MV.Coordinates (6) * MV.Coordinates (6);
         end if;
-        if (MV.Grade_Use and 8) /= 0 then
-            Value := Value + MV.Coordinates (9) * MV.Coordinates (9);
-        end if;
+
       Norm.Coordinates (1) := Value;
       return Norm;
     end Norm_E2;
