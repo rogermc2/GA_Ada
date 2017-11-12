@@ -3,16 +3,18 @@ with GA_Maths;
 
 package Multivector_Type_Base is
 
-    --  Object_Type mvtypebase.h lines 8 - 13 and 36
-    type Object_Type is (Multivector_Object, Versor_Object, Blade_Object);
+   --  Object_Type mvtypebase.h lines 8 - 13 and 36
+   --  A versor is also a multivetor
+   --  A blade is also a versor and, therfore, also a multivector
+    type Object_Type is (Unspecified_Object_Type, Multivector_Object, Versor_MV, Blade_V_MV);
     type Parity is (No_Parity, Even_Parity, Odd_Parity);  --  line 43
 
    --  mvtypebase.h lines 33 - 43
     type MV_Typebase is record
         M_Zero        : boolean := False; -- True if multivector is zero
-        M_Type        : Object_Type := Multivector_Object;
-        M_Top_Grade   : integer := -1;    --  Top grade occupied by the multivector
-        M_Grade       : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+        M_Type        : Object_Type := Unspecified_Object_Type;
+        M_Grade       : integer := -1;    --  Top grade occupied by the multivector
+        M_Grade_Use    : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
         M_Parity      : Parity := No_Parity;
     end record;
 
