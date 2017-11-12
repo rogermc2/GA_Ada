@@ -50,8 +50,8 @@ package body Multivector_Analyze is
    function isBlade (A : MV_Analysis) return Boolean is
       use Multivector_Type_Base;
    begin
-      Put_Line ("MV Analysis checking for blade");
-      return A.M_MV_Type.M_Type = Multivector_Type_Base.Blade_Object;
+      return A.M_Type.Multivector_Kind
+        = Multivector_Type_Base.Blade_V_MV;
    end isBlade;
 
    --  --------------------------------------------------------------------------

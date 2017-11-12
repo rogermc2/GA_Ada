@@ -3,8 +3,10 @@ with GA_Maths;
 
 package Multivector_Type_Base is
 
-    --  Object_Type mvtypebase.h lines 8 - 13 and 36
-    type Object_Type is (Multivector_Object, Versor_Object, Blade_Object);
+   --  Object_Type mvtypebase.h lines 8 - 13 and 36
+   --  A versor is also a multivetor
+   --  A blade is also a versor and, therfore, also a multivector
+    type Object_Type is (Multivector_Object, Versor_MV, Blade_V_MV);
     type Parity is (No_Parity, Even_Parity, Odd_Parity);  --  line 43
 
    --  mvtypebase.h lines 33 - 43

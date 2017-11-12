@@ -338,10 +338,10 @@ package body E2GA is
          MV_Info.M_Type := Multivector_Type_Base.Multivector_Object;
          Put_Line ("E2GA.Init MV_Info.M_Type Multivector_Object set");
       elsif GU_Count = 1 then
-         MV_Info.M_Type := Multivector_Type_Base.Blade_Object;
+         MV_Info.M_Type := Multivector_Type_Base.Blade_V_MV;
          Put_Line ("E2GA.Init MV_Info.M_Type Blade_Object set");
       else
-         MV_Info.M_Type := Multivector_Type_Base.Versor_Object;
+         MV_Info.M_Type := Multivector_Type_Base.Versor_MV;
          Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
       end if;
       return MV_Info;
@@ -380,7 +380,7 @@ package body E2GA is
       --  if no grade part in use: zero blade
       if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
          Put_Line ("E2GA.Init 2 Setting zero blade.");
-         Set_Type_Base (MV_Info, True, Blade_Object, 0, GU, Even_Parity);
+         Set_Type_Base (MV_Info, True, Blade_V_MV, 0, GU, Even_Parity);
          Done := True;
       else
          --  Base.M_Zero = False by default
