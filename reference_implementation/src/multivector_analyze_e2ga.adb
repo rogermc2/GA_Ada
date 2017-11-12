@@ -35,6 +35,7 @@ package body Multivector_Analyze_E2GA is
          Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
+
       elsif Analysis.M_MV_Type.M_Type = Versor_MV then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Versor_Object 2.");
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
@@ -57,7 +58,7 @@ package body Multivector_Analyze_E2GA is
 
       elsif Analysis.M_MV_Type.M_Type = Blade_V_MV then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Blade_Object.");
-         Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade;
+         Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade_Use;
          Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV_X));
          if Analysis.M_Type.MV_Subtype = Vector_Type then
             declare

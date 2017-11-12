@@ -331,18 +331,30 @@ package body E2GA is
       VI_E2_GI       : constant Multivector := Geometric_Product (VI_E2, GI);
    begin
       --  MV_Info is initialized to default values
+      E3GA_Utilities.Print_Multivector ("E2GA.Init MV", MV);
+      E3GA_Utilities.Print_Multivector ("E2GA.Init MV_Reverse", MV_Reverse);
+      Put_Line ("E2GA.Init MV.GU: " & Unsigned_Integer'Image (MV.Grade_Use));
       Sq := Scalar_Product (MV, MV_Reverse);
-      if Sq.Coordinates (1) = 0.0 or GI_VI.Grade_Use /= Grade_0 or
-        VI_GI_GI_VI.Grade_Use /= Grade_0 or VI_E1_GI.Grade_Use /= Grade_1 or
-        VI_E2_GI.Grade_Use /= Grade_1 then
+      Put_Line ("E2GA.Init Sq: " & Float'Image (Sq.Coordinates (1)));
+      Put_Line ("E2GA.Init GI_VI: " & Unsigned_Integer'Image (GI_VI.Grade_Use));
+      Put_Line ("E2GA.Init VI_GI_GI_VI: " & Unsigned_Integer'Image (VI_GI_GI_VI.Grade_Use));
+      Put_Line ("E2GA.Init VI_E1_GI: " & Unsigned_Integer'Image (VI_E1_GI.Grade_Use));
+      Put_Line ("E2GA.Init VI_E2_GI: " & Unsigned_Integer'Image (VI_E2_GI.Grade_Use));
+      if Sq.Coordinates (1) = 0.0 or
+         GI_VI.Grade_Use /= Grade_0 or
+         VI_GI_GI_VI.Grade_Use /= Grade_0 or
+         VI_E1_GI.Grade_Use /= Grade_1 or
+         VI_E2_GI.Grade_Use /= Grade_1 then
          MV_Info.M_Type := Multivector_Type_Base.Multivector_Object;
          Put_Line ("E2GA.Init MV_Info.M_Type Multivector_Object set");
-      elsif GU_Count = 1 then
-         MV_Info.M_Type := Multivector_Type_Base.Blade_V_MV;
-         Put_Line ("E2GA.Init MV_Info.M_Type Blade_Object set");
       else
-         MV_Info.M_Type := Multivector_Type_Base.Versor_MV;
-         Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
+         if GU_Count = 1 then
+            MV_Info.M_Type := Multivector_Type_Base.Blade_V_MV;
+            Put_Line ("E2GA.Init MV_Info.M_Type Blade_Object set");
+         else
+            MV_Info.M_Type := Multivector_Type_Base.Versor_MV;
+            Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
+         end if;
       end if;
       return MV_Info;
    exception
@@ -366,14 +378,14 @@ package body E2GA is
    begin
       --  e2ga.cpp line 1631
       MV_Info.M_Type := Multivector_Object;
-      MV_Info.M_Grade := GU;
+      MV_Info.M_Grade_Use := GU;
       --  count grade part usage
       while GU /= 0 loop
          if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
             Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
          end if;
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
-         MV_Info.M_Top_Grade := Integer (Count_Index);
+         MV_Info.M_Grade := Integer (Count_Index);
          Count_Index := Count_Index + 1;
       end loop;
 
@@ -749,6 +761,7 @@ package body E2GA is
    end Set_Bivector;
 
    --  -------------------------------------------------------------------------
+
    procedure Set_Coords (V : out Vector; C1, C2 : float) is
    begin
       V.Coordinates := (C1, C2);
