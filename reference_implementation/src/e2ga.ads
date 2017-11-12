@@ -52,11 +52,6 @@ package E2GA is
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
    Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
 
---     subtype Scalar_MV is Multivector (Integer (Grade_0), 1);
---     subtype Vector_MV is Multivector (Integer (Grade_1), 2);
---     subtype Bivector_MV is Multivector (Integer (Grade_2), 4);
---     subtype Rotor is Multivector (Integer (Grade_1), 5);
-
    function "+" (V1, V2 : Vector) return Vector;
    function "-" (V1, V2 : Vector) return Vector;
    function "*" (Weight : float; V : Vector) return Vector;
