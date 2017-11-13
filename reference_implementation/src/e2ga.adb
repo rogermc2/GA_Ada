@@ -588,7 +588,7 @@ package body E2GA is
       --        Loop on basis symbols
       --          Print symbol
       --          If not last symbol print ^
-      for Grade in GA_Maths.Grade_Index'Range loop  --  i
+      for Grade in GA_Maths.Grade_Index'Range loop
          if  Unsigned_32 (MV.Grade_Use) /=
            Shift_Left (Unsigned_32 (Grade), 1) then
             if Basis_Index - MV_Grade_Size (Grade) > 0 then
@@ -596,7 +596,7 @@ package body E2GA is
             end if;
          else
             --  int mv_gradeSize[3] = {1, 2, 1 };
-            --  Bivector grade size is 2?
+            --  Vector grade size is 2?
             --  Loop on grade
             for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
                --  Print sign and coordinate value
@@ -814,18 +814,19 @@ package body E2GA is
 
    function Set_Multivector (BV : Bivector) return Multivector is
       use GA_Maths.Float_Functions;
-      MV   : Multivector (7);
+      MV   : Multivector (4);
       Vect : constant float := Sqrt (Abs (BV.Coordinates (1)));
    begin
-      MV.Coordinates (1) := 0.0;
-      MV.Coordinates (2) := Vect;
-      if  BV.Coordinates (1) >= 0.0 then
-         MV.Coordinates (3) := Vect;
-      else
-         MV.Coordinates (3) := -Vect;
-      end if;
-
-      MV.Coordinates (4) := BV.Coordinates (1);
+      MV.Coordinates (1) := BV.Coordinates (1);
+--        MV.Coordinates (1) := 0.0;
+--        MV.Coordinates (2) := Vect;
+--        if  BV.Coordinates (1) >= 0.0 then
+--           MV.Coordinates (3) := Vect;
+--        else
+--           MV.Coordinates (3) := -Vect;
+--        end if;
+--
+--        MV.Coordinates (4) := BV.Coordinates (1);
       return  MV;
    exception
       when anError :  others =>
