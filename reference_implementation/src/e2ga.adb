@@ -17,7 +17,8 @@ package body E2GA is
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
-   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
+--   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
+   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 4, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
    MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
@@ -48,9 +49,16 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
-      Coords : Coords_Continuous_Array (1 .. MV_Size (integer (MV.Grade_Use))) := MV.Coordinates;
+      Coords : Coords_Continuous_Array (1 .. MV_Size (integer (MV.Grade_Use)));
    begin
+      Put_Line ("E2GA.Get_Coords MV.Grade_Use " & Integer'Image (integer (MV.Grade_Use)));
+      Put_Line ("E2GA.Get_Coords MV_Size " & Integer'Image (MV_Size (integer (MV.Grade_Use))));
+      Coords := MV.Coordinates;
       return Coords;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Get_Coords MV.");
+         raise;
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
@@ -58,6 +66,10 @@ package body E2GA is
    function Get_Size (MV : Multivector) return Integer is
    begin
       return  MV_Size (integer (MV.Grade_Use));
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Get_Size.");
+         raise;
    end Get_Size;
 
    --  ------------------------------------------------------------------------
@@ -163,6 +175,18 @@ package body E2GA is
    end Basis_Vector_Name;
 
    --  -------------------------------------------------------------------------
+
+   function Dot_Product (V1, V2 : Vector) return float is
+   begin
+      return V1.Coordinates (1) * V2.Coordinates (1) +
+        V1.Coordinates (2) * V2.Coordinates (2);
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Dot_Product.");
+         raise;
+   end Dot_Product;
+
+   --  ------------------------------------------------------------------------
 
    function Dot_Product (R1, R2 : Rotor) return float is
    begin
@@ -286,7 +310,57 @@ package body E2GA is
       return BV.Coordinates;
    end Get_Coords;
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+
+   function Get_Coord (S : Scalar) return float is
+   begin
+      return S.Coordinates (1);
+   end Get_Coord;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (V : Vector) return GA_Maths.Array_2D is
+   begin
+      return (V.Coordinates (1), V.Coordinates (2));
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_1 (R : Rotor) return float is
+   begin
+      return R.Coordinates (1);
+   end Get_Coord_1;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_2 (R : Rotor) return float is
+   begin
+      return R.Coordinates (2);
+   end Get_Coord_2;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_1 (V : Vector) return float is
+   begin
+      return V.Coordinates (1);
+   end Get_Coord_1;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coord_2 (V : Vector) return float is
+   begin
+      return V.Coordinates (2);
+   end Get_Coord_2;
+
+   --  ------------------------------------------------------------------------
+
+   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
+   --                            return Multivector_Type_Base.M_Type_Type is
+   --     begin
+   --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
+   --     end Get_MV_Type;
+
+   --  -------------------------------------------------------------------------
 
    function Grade_Involution (MV : Multivector) return Multivector is
       use GA_Maths;
@@ -359,7 +433,7 @@ package body E2GA is
       return MV_Info;
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Init.");
+         Put_Line ("An exception occurred in E2GA.Init 1.");
          raise;
    end Init;
 
@@ -441,13 +515,53 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
-   --                            return Multivector_Type_Base.M_Type_Type is
-   --     begin
-   --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
-   --     end Get_MV_Type;
+   function Largest_Basis_Blade (Map : Bit_Map) return float is
+   begin
+      return 0.0;
+   end Largest_Basis_Blade;
 
    --  -------------------------------------------------------------------------
+
+   function Largest_Coordinate return float is
+   begin
+      return 0.0;
+   end Largest_Coordinate;
+
+   --  ------------------------------------------------------------------------
+
+   function Left_Contraction (V1, V2 : Vector) return Scalar is
+      LC  : Scalar;
+   begin
+      LC.Coordinates (1) := Dot_Product (V1, V2);
+      return LC;
+   end Left_Contraction;
+
+   --  ------------------------------------------------------------------------
+
+   function Left_Contraction (V : Vector; BV : Bivector) return Vector is
+      use GA_Maths;
+      BMV   : Multivector := Set_Multivector (BV);
+      Vout  : Vector;
+   begin
+      if (BMV.Grade_Use and 1) /= 0 then
+         Vout.Coordinates (1) := V.Coordinates (1) * BV.Coordinates (1);
+      end if;
+      if (BMV.Grade_Use and 2) /= 0 then
+         Vout.Coordinates (2) :=  V.Coordinates (2) * BV.Coordinates (1);
+      end if;
+      return Vout;
+   end Left_Contraction;
+
+   --  ------------------------------------------------------------------------
+
+   function Magnitude (V : Vector) return float is
+   begin
+      return GA_Maths.Float_Functions.Sqrt (V.Coordinates (1) * V.Coordinates (1) +
+                                              V.Coordinates (2) * V.Coordinates (2));
+   end Magnitude;
+
+   --  ------------------------------------------------------------------------
+
    --  Implements e2ga.cpp (line 1524)  char *string(const mv & obj, char *str,
    --  int maxLength, const char *fp /* = NULL */)
    --  goal: print [+|-] MV.Coord (k) (* Basis_Vector_1 ^ ... ^ Basis_Vector_N)
@@ -577,104 +691,7 @@ package body E2GA is
       return Norm;
    end Norm_E2;
 
-   --  ----------------------------------------------------------------------------
-
-   function Largest_Basis_Blade (Map : Bit_Map) return float is
-   begin
-      return 0.0;
-   end Largest_Basis_Blade;
-
-   --  ----------------------------------------------------------------------------
-
-   function Largest_Coordinate return float is
-   begin
-      return 0.0;
-   end Largest_Coordinate;
-
-   --  ------------------------------------------------------------------------
-
-   function Left_Contraction (V1, V2 : Vector) return Scalar is
-      LC  : Scalar;
-   begin
-      LC.Coordinates (1) := Dot_Product (V1, V2);
-      return LC;
-   end Left_Contraction;
-
-   --  ------------------------------------------------------------------------
-
-   function Left_Contraction (V : Vector; BV : Bivector) return Vector is
-      use GA_Maths;
-      BMV   : Multivector := Set_Multivector (BV);
-      Vout  : Vector;
-   begin
-      if (BMV.Grade_Use and 1) /= 0 then
-         Vout.Coordinates (1) := V.Coordinates (1) * BV.Coordinates (1);
-      end if;
-      if (BMV.Grade_Use and 2) /= 0 then
-         Vout.Coordinates (2) :=  V.Coordinates (2) * BV.Coordinates (1);
-      end if;
-      return Vout;
-   end Left_Contraction;
-
-   --  ------------------------------------------------------------------------
-
-   function Dot_Product (V1, V2 : Vector) return float is
-   begin
-      return V1.Coordinates (1) * V2.Coordinates (1) +
-        V1.Coordinates (2) * V2.Coordinates (2);
-   end Dot_Product;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord (S : Scalar) return float is
-   begin
-      return S.Coordinates (1);
-   end Get_Coord;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coords (V : Vector) return GA_Maths.Array_2D is
-   begin
-      return (V.Coordinates (1), V.Coordinates (2));
-   end Get_Coords;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_1 (R : Rotor) return float is
-   begin
-      return R.Coordinates (1);
-   end Get_Coord_1;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_2 (R : Rotor) return float is
-   begin
-      return R.Coordinates (2);
-   end Get_Coord_2;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_1 (V : Vector) return float is
-   begin
-      return V.Coordinates (1);
-   end Get_Coord_1;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coord_2 (V : Vector) return float is
-   begin
-      return V.Coordinates (2);
-   end Get_Coord_2;
-
-   --  ------------------------------------------------------------------------
-
-   function Magnitude (V : Vector) return float is
-   begin
-      return GA_Maths.Float_Functions.Sqrt (V.Coordinates (1) * V.Coordinates (1) +
-                                              V.Coordinates (2) * V.Coordinates (2));
-   end Magnitude;
-
-   --  ------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Outer_Product (V1, V2 : Vector) return Bivector is
       --  The outer product basis in 2D is the coordinate of e1^e2.
@@ -720,6 +737,10 @@ package body E2GA is
    begin
       Product.Coordinates (1) := Dot_Product (V1, V2);
       return  Product;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Scalar_Product V.");
+         raise;
    end Scalar_Product;
 
    --  -------------------------------------------------------------------------
@@ -742,6 +763,10 @@ package body E2GA is
       end if;
       theScalar.Coordinates (1) := Product;
       return  theScalar;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Scalar_Product MV.");
+         raise;
    end Scalar_Product;
 
    --  -------------------------------------------------------------------------
@@ -756,7 +781,7 @@ package body E2GA is
    function Set_Bivector (MV : Multivector) return Bivector is
       BV : Bivector;
    begin
-      BV.Coordinates (1) := MV.Coordinates (1);
+      BV.Coordinates (1) := MV.Coordinates (4);
       return  BV;
    end Set_Bivector;
 
@@ -789,10 +814,24 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Set_Multivector (BV : Bivector) return Multivector is
-      MV : Multivector (4);
+      use GA_Maths.Float_Functions;
+      MV   : Multivector (4);
+      Vect : constant float := Sqrt (Abs (BV.Coordinates (1)));
    begin
-      MV.Coordinates (1) := BV.Coordinates (1);
+      MV.Coordinates (1) := 0.0;
+      MV.Coordinates (2) := Vect;
+      if  BV.Coordinates (1) >= 0.0 then
+         MV.Coordinates (3) := Vect;
+      else
+         MV.Coordinates (3) := -Vect;
+      end if;
+
+      MV.Coordinates (4) := BV.Coordinates (1);
       return  MV;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Set_Multivector BV.");
+         raise;
    end Set_Multivector;
 
    --  -------------------------------------------------------------------------

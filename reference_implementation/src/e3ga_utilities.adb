@@ -77,17 +77,23 @@ package body E3GA_Utilities is
 
    procedure Print_Multivector (Name : String; MV : E2GA.Multivector) is
       use E2GA;
-      MV_Size : constant Integer := Get_Size (MV);
-      Coords : Coords_Continuous_Array (1 .. MV_Size) := Get_Coords (MV);
+      MV_Size : Integer := Get_Size (MV);
+      Coords  : Coords_Continuous_Array (1 .. MV_Size);
    begin
       New_Line;
       Put_Line (Name);
       Put_Line ("MV Size: " & Integer'Image (MV_Size));
       Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
+      Coords := Get_Coords (MV);
+      Put_Line ("Multivector Coordinates:");
       for index in 1 .. MV_Size loop
          Put_Line ("Coordinate " & Integer'Image (index) & ": " &
                     float'Image (Coords (index)));
       end loop;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Print_Multivector.");
+         raise;
    end Print_Multivector;
 
     --  ------------------------------------------------------------------------
@@ -98,9 +104,13 @@ package body E3GA_Utilities is
       Put_Line (Name);
       Put_Line ("M_Zero      " & boolean'Image (Info.M_Zero));
       Put_Line ("M_Type      " & Object_Type'Image (Info.M_Type));
-      Put_Line ("M_Top_Grade " & Integer'Image (Info.M_Top_Grade));
-      Put_Line ("M_Grade     " & GA_Maths.Unsigned_Integer'Image (Info.M_Grade));
+      Put_Line ("M_Top_Grade " & Integer'Image (Info.M_Grade));
+      Put_Line ("M_Grade     " & GA_Maths.Unsigned_Integer'Image (Info.M_Grade_Use));
       Put_Line ("M_Parity    " & Parity'Image (Info.M_Parity));
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Print_Multivector_Info.");
+         raise;
    end Print_Multivector_Info;
 
     --  ------------------------------------------------------------------------
@@ -192,6 +202,10 @@ package body E3GA_Utilities is
             Result := (1.0 + Geometric_Product (V_To, V_From)) / S;
         end if;
         return Result;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
+         raise;
     end Rotor_Vector_To_Vector;
 
 end E3GA_Utilities;
