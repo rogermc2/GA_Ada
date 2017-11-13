@@ -17,8 +17,7 @@ package body E2GA is
    MV_Space_Dimension                : constant integer := 2;
    MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
---   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
-   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 4, 2, 3, 4);
+   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
    MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
@@ -815,7 +814,7 @@ package body E2GA is
 
    function Set_Multivector (BV : Bivector) return Multivector is
       use GA_Maths.Float_Functions;
-      MV   : Multivector (4);
+      MV   : Multivector (7);
       Vect : constant float := Sqrt (Abs (BV.Coordinates (1)));
    begin
       MV.Coordinates (1) := 0.0;
