@@ -754,11 +754,12 @@ package body E2GA is
       end if;
 
       if (MV2.Grade_Use and 2) /= 0 and (MV1.Grade_Use and 2) /= 0 then
-         Product :=  Product + MV1.Coordinates (2) * MV2.Coordinates (2);
+         Product :=  Product + MV1.Coordinates (2) * MV2.Coordinates (2)
+                             + MV1.Coordinates (3) * MV2.Coordinates (3);
       end if;
 
       if (MV2.Grade_Use and 4) /= 0 and (MV1.Grade_Use and 4) /= 0 then
-         Product :=  Product - MV1.Coordinates (3) * MV2.Coordinates (3);
+         Product :=  Product - MV1.Coordinates (4) * MV2.Coordinates (4);
       end if;
       theScalar.Coordinates (1) := Product;
       return  theScalar;
