@@ -47,32 +47,6 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
-      Coords : Coords_Continuous_Array (1 .. MV_Size (integer (MV.Grade_Use)));
-   begin
-      Put_Line ("E2GA.Get_Coords MV.Grade_Use " & Integer'Image (integer (MV.Grade_Use)));
-      Put_Line ("E2GA.Get_Coords MV_Size " & Integer'Image (MV_Size (integer (MV.Grade_Use))));
-      Coords := MV.Coordinates;
-      return Coords;
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Get_Coords MV.");
-         raise;
-   end Get_Coords;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Size (MV : Multivector) return Integer is
-   begin
-      return  MV_Size (integer (MV.Grade_Use));
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Get_Size.");
-         raise;
-   end Get_Size;
-
-   --  ------------------------------------------------------------------------
-
    function "+" (V1, V2 : Vector) return Vector is
       Sum : Vector;
    begin
@@ -353,13 +327,35 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
+   function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
+   begin
+      return MV.Coordinates;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Get_Coords MV.");
+         raise;
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+    --     function  Get_MV_Type (X : Multivector; Epsilon : float)
    --                            return Multivector_Type_Base.M_Type_Type is
    --     begin
    --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
    --     end Get_MV_Type;
 
    --  -------------------------------------------------------------------------
+
+  function Get_Size (MV : Multivector) return Integer is
+  begin
+      return  MV_Size (integer (MV.Grade_Use));
+  exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Get_Size.");
+         raise;
+  end Get_Size;
+
+   --  ------------------------------------------------------------------------
 
    function Grade_Involution (MV : Multivector) return Multivector is
       use GA_Maths;

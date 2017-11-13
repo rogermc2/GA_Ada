@@ -78,7 +78,7 @@ package body E3GA_Utilities is
    procedure Print_Multivector (Name : String; MV : E2GA.Multivector) is
       use E2GA;
       MV_Size : Integer := Get_Size (MV);
-      Coords  : Coords_Continuous_Array (1 .. MV_Size);
+      Coords  : Coords_Continuous_Array (1 .. MV.Coordinates'Length);
    begin
       New_Line;
       Put_Line (Name);
@@ -86,9 +86,8 @@ package body E3GA_Utilities is
       Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
       Coords := Get_Coords (MV);
       Put_Line ("Multivector Coordinates:");
-      for index in 1 .. MV_Size loop
-         Put_Line ("Coordinate " & Integer'Image (index) & ": " &
-                    float'Image (Coords (index)));
+      for index in MV.Coordinates'Range loop
+         Put_Line (float'Image (Coords (index)));
       end loop;
    exception
       when anError :  others =>
