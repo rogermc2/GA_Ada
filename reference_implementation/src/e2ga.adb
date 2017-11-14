@@ -381,6 +381,63 @@ package body E2GA is
 
    --  ----------------------------------------------------------------------------
 
+   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
+      use Interfaces;
+      use GA_Maths;
+      use  Multivector_Type_Base;
+      MV_Info            : MV_Type;
+      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
+      GU_1               : constant GA_Maths.Grade_Usage := 1;
+      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
+      Count_Index        : Unsigned_Integer := 0;
+      Done               : Boolean := False;
+   begin
+      --  e2ga.cpp line 1631
+      MV_Info.M_Type := Multivector_Object;
+      MV_Info.M_Grade_Use := GU;
+      --  count grade part usage
+      while GU /= 0 loop
+         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
+            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
+         end if;
+         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
+         MV_Info.M_Grade := Integer (Count_Index);
+         Count_Index := Count_Index + 1;
+      end loop;
+
+      --  if no grade part in use: zero blade
+      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
+         Put_Line ("E2GA.Init 2 Setting zero blade.");
+         Set_Type_Base (MV_Info, True, Blade_V_MV, 0, GU, Even_Parity);
+         Done := True;
+      else
+         --  Base.M_Zero = False by default
+         if Count (1) /= 0 and then Count (2) /= 0  then
+            --  Base.M_Parity = No_Parity by default
+            Done := True;
+         else
+            if Count (1) = 0 then
+               Put_Line ("E2GA.Init 1 Setting even parity.");
+               MV_Info.M_Parity := Even_Parity;
+            else
+               Put_Line ("E2GA.Init 1 Setting odd parity.");
+               MV_Info.M_Parity := Odd_Parity;
+            end if;
+         end if;
+      end if;
+      if not Done then
+         Put_Line ("E2GA.Init 1 not done.");
+         MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
+      end if;
+      return MV_Info;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Init 1.");
+         raise;
+   end Init;
+
+   --  -------------------------------------------------------------------------
+
    function Init (MV : Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
                   GU_Count : Integer) return MV_Type is
@@ -428,63 +485,6 @@ package body E2GA is
             MV_Info.M_Type := Multivector_Type_Base.Versor_MV;
             Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
          end if;
-      end if;
-      return MV_Info;
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Init 1.");
-         raise;
-   end Init;
-
-   --  -------------------------------------------------------------------------
-
-   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
-      use Interfaces;
-      use GA_Maths;
-      use  Multivector_Type_Base;
-      MV_Info            : MV_Type;
-      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
-      GU_1               : constant GA_Maths.Grade_Usage := 1;
-      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
-      Count_Index        : Unsigned_Integer := 0;
-      Done               : Boolean := False;
-   begin
-      --  e2ga.cpp line 1631
-      MV_Info.M_Type := Multivector_Object;
-      MV_Info.M_Grade_Use := GU;
-      --  count grade part usage
-      while GU /= 0 loop
-         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
-            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
-         end if;
-         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
-         MV_Info.M_Grade := Integer (Count_Index);
-         Count_Index := Count_Index + 1;
-      end loop;
-
-      --  if no grade part in use: zero blade
-      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
-         Put_Line ("E2GA.Init 2 Setting zero blade.");
-         Set_Type_Base (MV_Info, True, Blade_V_MV, 0, GU, Even_Parity);
-         Done := True;
-      else
-         --  Base.M_Zero = False by default
-         if Count (1) /= 0 and then Count (2) /= 0  then
-            --  Base.M_Parity = No_Parity by default
-            Done := True;
-         else
-            if Count (1) = 0 then
-               Put_Line ("E2GA.Init 2 Setting even parity.");
-               MV_Info.M_Parity := Even_Parity;
-            else
-               Put_Line ("E2GA.Init 2 Setting odd parity.");
-               MV_Info.M_Parity := Odd_Parity;
-            end if;
-         end if;
-      end if;
-      if not Done then
-         Put_Line ("E2GA.Init 2 not done.");
-         MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
       end if;
       return MV_Info;
    exception
