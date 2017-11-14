@@ -812,18 +812,8 @@ package body E2GA is
    function Set_Multivector (BV : Bivector) return Multivector is
       use GA_Maths.Float_Functions;
       MV   : Multivector (4);
-      Vect : constant float := Sqrt (Abs (BV.Coordinates (1)));
    begin
-      MV.Coordinates (1) := BV.Coordinates (1);
---        MV.Coordinates (1) := 0.0;
---        MV.Coordinates (2) := Vect;
---        if  BV.Coordinates (1) >= 0.0 then
---           MV.Coordinates (3) := Vect;
---        else
---           MV.Coordinates (3) := -Vect;
---        end if;
---
---        MV.Coordinates (4) := BV.Coordinates (1);
+      MV.Coordinates (4) := BV.Coordinates (1);
       return  MV;
    exception
       when anError :  others =>
