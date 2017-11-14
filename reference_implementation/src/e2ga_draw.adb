@@ -114,11 +114,28 @@ package body E2GA_Draw is
                    BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
                                                       := GA_Draw.Draw_Bivector_Circle;
                    Colour  : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
-      MV : E2GA.Multivector := E2GA.Set_Multivector (BV);
+      Scale    : Float := E2GA.Get_Coord (BV);
+      Ortho_1  : E3GA.Vector := E3GA.e1;
+      Ortho_2  : E3GA.Vector := E3GA.e2;
+      Normal   : E3GA.Vector := E3GA.e3;  --  Default: (0.0, 0.0, 0.0)
    begin
-      Draw (Render_Program , Model_View_Matrix, Projection_Matrix,
-             MV, Method_Type, Colour);
+      GA_Draw.Draw_Bivector (Render_Program, Model_View_Matrix,
+                             Projection_Matrix, Normal, Ortho_1, Ortho_2,
+                             Scale, Method_Type, Colour);
    end Draw;
+
+   --  -------------------------------------------------------------------------
+ --  Draw Bivector
+--     procedure Draw (Render_Program  : GL.Objects.Programs.Program;
+--                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+--                     BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
+--                                                        := GA_Draw.Draw_Bivector_Circle;
+--                     Colour  : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
+--        MV : E2GA.Multivector := E2GA.Set_Multivector (BV);
+--     begin
+--        Draw (Render_Program , Model_View_Matrix, Projection_Matrix,
+--               MV, Method_Type, Colour);
+--     end Draw;
 
    --  -------------------------------------------------------------------------
 

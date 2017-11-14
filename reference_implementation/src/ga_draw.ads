@@ -26,7 +26,7 @@ package GA_Draw is
     --                           Factor1 : E3GA.Vector, Factor2 : Vector,
     --                           Scale _ float, Method : Draw_Mode := Draw_By_Circle;
     --                           Palet : Integer'access := null);
-    --  Draw_Bivector draws a bivetor at Base (:= null for origin).
+    --  Draw_Bivector draws a bivector at Base (:= null for origin).
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;

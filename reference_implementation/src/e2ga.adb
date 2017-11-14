@@ -278,12 +278,12 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (BV : Bivector) return Bivector_Coords is
+   function Get_Coord (BV : Bivector) return float is
    begin
-      return BV.Coordinates;
-   end Get_Coords;
+      return BV.Coordinates (1);
+   end Get_Coord;
 
-   --  -------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
    function Get_Coord (S : Scalar) return float is
    begin
@@ -291,6 +291,13 @@ package body E2GA is
    end Get_Coord;
 
    --  ------------------------------------------------------------------------
+
+   function Get_Coords (BV : Bivector) return Bivector_Coords is
+   begin
+      return BV.Coordinates;
+   end Get_Coords;
+
+   --  -------------------------------------------------------------------------
 
    function Get_Coords (V : Vector) return GA_Maths.Array_2D is
    begin

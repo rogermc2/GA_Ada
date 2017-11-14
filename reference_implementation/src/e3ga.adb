@@ -235,6 +235,26 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+   function Dual (MV : Multivector) return Multivector is
+      use GA_Maths;
+      Coords : MV_Coordinate_Array  := (others => 0.0);
+      Info   : E2GA.MV_Type;
+   begin
+      if (MV.Grade_Use and 1) /= 0 then
+         Coords (4) := -MV.Coordinates (1);
+      end if;
+      if (MV.Grade_Use and 2) /= 0 then
+         Coords (2) := MV.Coordinates (2);
+         Coords (3) := -MV.Coordinates (1);
+      end if;
+      if (MV.Grade_Use and 4) /= 0 then
+         Coords (1) := MV.Coordinates (4);
+      end if;
+      return (MV.Grade_Use, Coords);
+   end Dual;
+
+   --  -------------------------------------------------------------------------
+
     function e1 (V : E2GA.Vector) return float is
     begin
         return E2GA.Get_Coord_1 (V);
@@ -450,9 +470,8 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function Get_Coords (MV : Multivector) return E2GA.Coords_Continuous_Array is
-      Coords : E2GA.Coords_Continuous_Array (1 .. MV_Size (Integer (MV.Grade_Use)))
-                              := MV.Coordinates;
+   function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
+      Coords : MV_Coordinate_Array := MV.Coordinates;
    begin
       return Coords;
    end Get_Coords;
@@ -525,7 +544,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
-        Value  : E2GA.Coords_Continuous_Array (1 .. 8) := (others => 0.0);
+        Value  : MV_Coordinate_Array := (others => 0.0);
     begin
         if (MV2.Grade_Use and 1) /= 0 and then
           (MV1.Grade_Use and 1) /= 0 then

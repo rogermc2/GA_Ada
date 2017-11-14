@@ -65,6 +65,7 @@ package E2GA is
    function e1 return Vector;
    function e2 return Vector;
    function E1_E2 (BV : Bivector) return float;
+   function Get_Coord (BV : Bivector) return float;
    function Get_Coord (S : Scalar) return float;
    function Get_Coord_1 (R : Rotor) return float;
    function Get_Coord_2 (R : Rotor) return float;
