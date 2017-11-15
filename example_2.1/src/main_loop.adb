@@ -131,11 +131,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
       --  Set scale and position of first diagram
-      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       Translation_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
                                                      (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
                                                      - Position_Y, 0.0));
-      Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+      Model_View_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
 
       --  The final MVP matrix is set up in the draw routines
       Set_Coords (V1, E11, E12);
@@ -148,12 +147,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
                          V2, Green, Scale);
          BV := E2GA.Outer_Product (V1, V2);
+         Utilities.Print_Matrix ("Main Translation_Matrix", Translation_Matrix);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
-            E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+            E2GA_Draw.Draw (Render_Graphic_Program, Translation_Matrix,
                             Projection_Matrix, BV);
          end if;
 
@@ -173,16 +173,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Silo.Push (Label);
 
          --  Set X position of next diagram
-         Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S,
-                                                        0.0, 0.0)) * Model_View_Matrix;
+            Translation_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S,
+                                                        0.0, 0.0));
+         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          if Position_X < Num_Bivector_X - 1 then
             Position_X := Position_X + 1;
          else
             --  Set X and Y positions of next diagram
             Position_X := 0;
-            Model_View_Matrix :=
-              Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale_S,
-                                        Entry_Height * Scale_S, 0.0)) * Model_View_Matrix;
+            Translation_Matrix := Maths.Translation_Matrix ((-Single (Num_Bivector_X) * Entry_Width * Scale_S,
+                                        Entry_Height * Scale_S, 0.0));
+            Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          end if;
 
          A := A + Step;

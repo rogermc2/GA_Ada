@@ -55,11 +55,11 @@ package body GA_Draw is
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
-                            Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                            Scale  : float;
+                            Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                            Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
+                            Colour : Color := (0.0, 0.5, 0.5, 1.0)) is
       use GA_Maths;
       use GL.Types.Singles;
       --  L          : boolean;
@@ -78,23 +78,22 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      MVP_Matrix := GL.Types.Singles.Identity4 * GL.Types.Singles.Identity4;
-
       if  Method /= Draw_Bivector_Parallelogram and then
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
-         MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
+         Utilities.Print_Matrix ("Translation_Matrix", Translation_Matrix);
+         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
          Normed_E2 := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
          Scaled := Scale * Scale * Pi / E3GA.Get_Coord (Normed_E2);
          Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
-         MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
+         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
       end if;
 
       case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, Model_View_Matrix, Colour, Scale);
+            Draw_Circle (Render_Program, MVP_Matrix, Colour, Scale);
          when others => null;
       end case;
 
@@ -107,9 +106,9 @@ package body GA_Draw is
    --  ----------------------------------------------------------------------
 
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
-                            Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                            Scale  : float;
+                            Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle;
                             Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
       use GA_Maths;
