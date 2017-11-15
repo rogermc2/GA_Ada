@@ -111,6 +111,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
+      Translation_Matrix : GL.Types.Singles.Matrix4;
       Model_View_Matrix : GL.Types.Singles.Matrix4;
       Projection_Matrix : GL.Types.Singles.Matrix4;
       Vertex_Buffer     : GL.Objects.Buffers.Buffer;
@@ -131,17 +132,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          -100.0, 100.0, Projection_Matrix);
       --  Set scale and position of first diagram
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-      Model_View_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
-                          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
-                           - Position_Y, 0.0))
-                           * Model_View_Matrix;
+      Translation_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
+                                                     (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
+                                                     - Position_Y, 0.0));
+      Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
       Set_Coords (V1, E11, E12);
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
          Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
-                         Cos (A) * E21 - Sin (A) * E22);
+                     Cos (A) * E21 - Sin (A) * E22);
          E2GA_Draw.Draw (Render_Graphic_Program,
                          Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
@@ -167,8 +168,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
-                    (E2GA.Bivector_String (BV)), Label_Position);
---         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String ("Hello"), Label_Position);
+                                 (E2GA.Bivector_String (BV)), Label_Position);
+         --         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String ("Hello"), Label_Position);
          Silo.Push (Label);
 
          --  Set X position of next diagram
@@ -271,9 +272,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          Single (Window_Width), 0.1, -100.0,
                                          Text_Projection_Matrix);
       Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
-                          Text_Scale, Text_Colour, Text_Texture_ID,
-                          Text_Proj_Matrix_ID, Text_Dimesions_ID, Text_Colour_ID,
-                          Text_Projection_Matrix);
+                                   Text_Scale, Text_Colour, Text_Texture_ID,
+                                   Text_Proj_Matrix_ID, Text_Dimesions_ID, Text_Colour_ID,
+                                   Text_Projection_Matrix);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Draw_Text.");
