@@ -54,7 +54,7 @@ package body GA_Draw is
 
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
-   procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
+   procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Scale  : float := 1.0;
@@ -80,8 +80,7 @@ package body GA_Draw is
 
       if  Method /= Draw_Bivector_Parallelogram and then
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
-         Utilities.Print_Matrix ("Translation_Matrix", Translation_Matrix);
-         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
+         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       else
          Normed_E2 := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
          Scaled := Scale * Scale * Pi / E3GA.Get_Coord (Normed_E2);
@@ -157,50 +156,6 @@ package body GA_Draw is
                          Model_View_Matrix, Colour, Scale);
          when others => null;
       end case;
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
-         raise;
-   end Draw_Bivector;
-
-   --  ----------------------------------------------------------------------
-
-   procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
-                            Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                            BV                                   : E2GA.Bivector;
-                            Scale                                : float;
-                            Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                            Colour                               : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0)) is
-      use GL.Objects.Buffers;
-      use GL.Types.Colors;
-      --          Vertices : GL.Types.Singles.Vector2_Array (1 .. 4) :=
-      --                            ((0.0, 0.0),
-      --                            (Single (V2.Coord_1), Single (V2.Coord_2)),
-      --                            (Single (V3.Coord_1), Single (V3.Coord_2)),
-      --                            (Single (V4.Coord_1), Single (V4.Coord_2)));
-      --          Z               : Single;
-      --          Rotor           : E2GA.Rotor;
-      --          Roti            : E2GA.Rotor;
-      Vertex_Buffer : Buffer;
-   begin
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Vertex_Array_Object.Initialize_Id;
-      Vertex_Array_Object.Bind;
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      --              Utilities.Load_To_Buffer (Array_Buffer, Vertices, Static_Draw);
-      --              GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      --              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
-      --
-      --              Colour_Location := GL.Objects.Programs.Uniform_Location
-      --                (Render_Program, "vector_colour");
-      --              GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-      --
-      --              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
-      --                                                    First => 0,
-      --                                                    Count => 4 * 2);
-      --              GL.Attributes.Disable_Vertex_Attrib_Array (0);
-
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");

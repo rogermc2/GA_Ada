@@ -112,6 +112,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
       Translation_Matrix : GL.Types.Singles.Matrix4;
+      BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Model_View_Matrix : GL.Types.Singles.Matrix4;
       Projection_Matrix : GL.Types.Singles.Matrix4;
       Vertex_Buffer     : GL.Objects.Buffers.Buffer;
@@ -143,8 +144,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         Utilities.Print_Matrix ("Main Translation_Matrix", Translation_Matrix);
---           Utilities.Print_Matrix ("Main Model_View_Matrix", Model_View_Matrix);
          E2GA_Draw.Draw (Render_Graphic_Program,
                          Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
@@ -155,9 +154,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
-            Translation_Matrix := Maths.Translation_Matrix ((0.0
-                                                            , 000.0, 0.0)) * Translation_Matrix;
-            E2GA_Draw.Draw (Render_Graphic_Program, Translation_Matrix,
+            BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
+            E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
                             Projection_Matrix, BV);
          end if;
 

@@ -114,15 +114,22 @@ package body E2GA_Draw is
                    BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
                                                       := GA_Draw.Draw_Bivector_Circle;
                    Colour  : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
---        Scale    : Float := E2GA.Get_Coord (BV);
-      Scale    : Float := 5.0;
-      Ortho_1  : E3GA.Vector := E3GA.e1;
-      Ortho_2  : E3GA.Vector := E3GA.e2;
+      use GA_Maths.Float_Functions;
+      Radius   : Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
+      Scale    : Float := 20.0;
+      Ortho_1  : E3GA.Vector;
+      Ortho_2  : E3GA.Vector;
       Normal   : E3GA.Vector := E3GA.e3;  --  Default: (0.0, 0.0, 0.0)
    begin
+      E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
+      E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Projection_Matrix, Normal, Ortho_1, Ortho_2,
                              Scale, Method_Type, Colour);
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA_Draw.Draw 3.");
+         raise;
    end Draw;
 
    --  -------------------------------------------------------------------------
