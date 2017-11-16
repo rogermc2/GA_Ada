@@ -94,7 +94,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Scale_S           : constant single := single (Scale);
       Text_Scale        : constant single := 0.12;
       Position_X        : integer := 0;
-      Position_Y        : constant single := 160.0;
+      Position_Y        : single := 160.0;
 
       A                 : float := 0.0;
       BV                : E2GA.Bivector;
@@ -144,7 +144,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          Utilities.Print_Matrix ("Main Translation_Matrix", Translation_Matrix);
-         Utilities.Print_Matrix ("Main Model_View_Matrix", Model_View_Matrix);
+--           Utilities.Print_Matrix ("Main Model_View_Matrix", Model_View_Matrix);
          E2GA_Draw.Draw (Render_Graphic_Program,
                          Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
@@ -155,6 +155,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
+            Translation_Matrix := Maths.Translation_Matrix ((0.0
+                                                            , 000.0, 0.0)) * Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, Translation_Matrix,
                             Projection_Matrix, BV);
          end if;
@@ -182,9 +184,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          else
             --  Set X and Y positions of next diagram
             Position_X := 0;
+            Position_Y := Position_Y + Entry_Height;
             Translation_Matrix := Maths.Translation_Matrix
               ((-Single (Num_Bivector_X) * Entry_Width * Scale_S,
-                Entry_Height * Scale_S, 0.0)) * Translation_Matrix;
+                Position_Y, 0.0)) * Translation_Matrix;
          end if;
          A := A + Step;
       end loop;
