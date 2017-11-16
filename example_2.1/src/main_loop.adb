@@ -156,10 +156,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
-            GL.Uniforms.Set_Single (Colour_Location, Yellow (R), Yellow (G), Yellow (B));
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
-                            Projection_Matrix, BV);
+                            Projection_Matrix, BV, Yellow);
          end if;
 
          if A < Pi - 0.1 then

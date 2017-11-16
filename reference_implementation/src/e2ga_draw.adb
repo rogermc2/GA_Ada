@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Uniforms;
+
 with E3GA;
 with E3GA_Utilities;
 with GA_Draw;
@@ -111,15 +113,21 @@ package body E2GA_Draw is
    --  Draw Bivector
    procedure Draw (Render_Program  : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
-                                                      := GA_Draw.Draw_Bivector_Circle) is
+                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
+                   Method_Type : GA_Draw.Bivector_Method_Type
+                                 := GA_Draw.Draw_Bivector_Circle) is
       use GA_Maths.Float_Functions;
+      use GL.Types.Colors;
+      Colour_Location   : GL.Uniforms.Uniform;
       Radius   : Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
       Scale    : Float := 20.0;
       Ortho_1  : E3GA.Vector;
       Ortho_2  : E3GA.Vector;
       Normal   : E3GA.Vector := E3GA.e3;  --  Default: (0.0, 0.0, 0.0)
    begin
+      Colour_Location := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "vector_colour");
+      GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
       E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
       E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,

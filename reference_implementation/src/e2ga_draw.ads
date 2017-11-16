@@ -31,7 +31,7 @@ package E2GA_Draw is
    --  Case Bivector
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV : E2GA.Bivector;
+                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
                                := GA_Draw.Draw_Bivector_Circle);
 end E2GA_Draw;
