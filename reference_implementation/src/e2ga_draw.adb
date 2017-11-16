@@ -90,7 +90,7 @@ package body E2GA_Draw is
                   GA_Draw.Draw_Bivector (Render_Program,
                                          Model_View_Matrix, Projection_Matrix,
                                          Normal, A.M_Vectors (1), A.M_Vectors (2),
-                                         Scale, Method, Colour);
+                                         Scale, Method);
                end;
             when Even_Versor_Subclass => null;
             when Unspecified_Subclass => null;
@@ -112,8 +112,7 @@ package body E2GA_Draw is
    procedure Draw (Render_Program  : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
-                                                      := GA_Draw.Draw_Bivector_Circle;
-                   Colour  : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
+                                                      := GA_Draw.Draw_Bivector_Circle) is
       use GA_Maths.Float_Functions;
       Radius   : Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
       Scale    : Float := 20.0;
@@ -125,7 +124,7 @@ package body E2GA_Draw is
       E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Projection_Matrix, Normal, Ortho_1, Ortho_2,
-                             Scale, Method_Type, Colour);
+                             Scale, Method_Type);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA_Draw.Draw 3.");

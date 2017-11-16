@@ -47,7 +47,6 @@ package body GA_Draw is
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Colour            : GL.Types.Colors.Color;
                           Scale             : float);
 
    --  ------------------------------------------------------------------------
@@ -58,8 +57,7 @@ package body GA_Draw is
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Scale  : float := 1.0;
-                            Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                            Colour : Color := (0.0, 0.5, 0.5, 1.0)) is
+                            Method : Bivector_Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
       --  L          : boolean;
@@ -92,7 +90,7 @@ package body GA_Draw is
       case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Colour, Scale);
+            Draw_Circle (Render_Program, MVP_Matrix, Scale);
          when others => null;
       end case;
 
@@ -108,8 +106,7 @@ package body GA_Draw is
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Scale  : float := 1.0;
-                            Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                            Colour : Color := (1.0, 1.0, 1.0, 1.0)) is
+                            Method : Bivector_Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
       --  L          : boolean;
@@ -152,8 +149,7 @@ package body GA_Draw is
       Case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program,
-                         Model_View_Matrix, Colour, Scale);
+            Draw_Circle (Render_Program, Model_View_Matrix, Scale);
          when others => null;
       end case;
    exception
@@ -240,7 +236,6 @@ package body GA_Draw is
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Colour            : GL.Types.Colors.Color;
                           Scale             : float) is
       use GA_Maths;
       use GL.Objects.Buffers;

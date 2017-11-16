@@ -32,14 +32,12 @@ package GA_Draw is
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                    Scale  : float := 1.0;
-                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                   Colour : Color := (0.0, 0.5, 0.5, 1.0));
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                    Scale  : float := 1.0;
-                   Method : Bivector_Method_Type := Draw_Bivector_Circle;
-                   Colour : Color := (1.0, 1.0, 1.0, 1.0));
+                   Method : Bivector_Method_Type := Draw_Bivector_Circle);
 
 --      procedure Draw_Multivector (Render_Program : GL.Objects.Programs.Program;
 --                               MV             : E2GA.Multivector;

@@ -49,6 +49,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
    Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
+   Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
    Back_Colour    : constant Colors.Color := (0.7, 0.7, 0.7, 1.0);
    Key_Pressed    : boolean := False;
    Parallelogram  : boolean := True;
@@ -75,6 +76,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                       Render_Graphic_Program : GL.Objects.Programs.Program;
                       Render_Text_Program    : GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
+      use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
 
       use Maths.Single_Math_Functions;
@@ -127,7 +129,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
       Colour_Location := GL.Objects.Programs.Uniform_Location
-        (Render_Graphic_Program, "vectorb,.m_colour");
+        (Render_Graphic_Program, "vector_colour");
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
@@ -154,6 +156,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
+            GL.Uniforms.Set_Single (Colour_Location, Yellow (R), Yellow (G), Yellow (B));
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
                             Projection_Matrix, BV);

@@ -33,6 +33,5 @@ package E2GA_Draw is
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    BV : E2GA.Bivector;
                    Method_Type : GA_Draw.Bivector_Method_Type
-                               := GA_Draw.Draw_Bivector_Circle;
-                   Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0));
+                               := GA_Draw.Draw_Bivector_Circle);
 end E2GA_Draw;
