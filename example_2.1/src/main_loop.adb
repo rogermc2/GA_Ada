@@ -109,7 +109,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
       V2                : E2GA.Vector;
 
-      Colour_Location   : GL.Uniforms.Uniform;
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
@@ -128,8 +127,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
-      Colour_Location := GL.Objects.Programs.Uniform_Location
-        (Render_Graphic_Program, "vector_colour");
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0, Projection_Matrix);
