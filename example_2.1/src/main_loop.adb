@@ -112,11 +112,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
-      Translation_Matrix : GL.Types.Singles.Matrix4;
+      Translation_Matrix    : GL.Types.Singles.Matrix4;
       BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Model_View_Matrix : GL.Types.Singles.Matrix4;
-      Projection_Matrix : GL.Types.Singles.Matrix4;
-      Vertex_Buffer     : GL.Objects.Buffers.Buffer;
+      Model_View_Matrix     : GL.Types.Singles.Matrix4;
+      Projection_Matrix     : GL.Types.Singles.Matrix4;
+      Vertex_Buffer         : GL.Objects.Buffers.Buffer;
       Text              : Ada.Strings.Unbounded.Unbounded_String;
       Text_X            : GL.Types.Single := 50.0;
       Text_Y            : GL.Types.Single := 50.0;

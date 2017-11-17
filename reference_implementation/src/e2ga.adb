@@ -20,7 +20,8 @@ package body E2GA is
    MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
-   MV_Grade_Size                     : constant GA_Maths.Grade_Array := (1, 2, 1);
+   MV_Grade_Size                     : constant GA_Maths.Grade_Array :=
+     (1, 2, 1);
    MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
      ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
    MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
@@ -345,7 +346,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-    --     function  Get_MV_Type (X : Multivector; Epsilon : float)
+   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
    --                            return Multivector_Type_Base.M_Type_Type is
    --     begin
    --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
@@ -353,14 +354,14 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-  function Get_Size (MV : Multivector) return Integer is
-  begin
+   function Get_Size (MV : Multivector) return Integer is
+   begin
       return  MV_Size (integer (MV.Grade_Use));
-  exception
+   exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Get_Size.");
          raise;
-  end Get_Size;
+   end Get_Size;
 
    --  ------------------------------------------------------------------------
 
@@ -423,7 +424,7 @@ package body E2GA is
                Put_Line ("E2GA.Init 1 Setting even parity.");
                MV_Info.M_Parity := Even_Parity;
             else
---                 Put_Line ("E2GA.Init 1 Setting odd parity.");
+               --                 Put_Line ("E2GA.Init 1 Setting odd parity.");
                MV_Info.M_Parity := Odd_Parity;
             end if;
          end if;
@@ -463,29 +464,29 @@ package body E2GA is
       VI_E2_GI       : constant Multivector := Geometric_Product (VI_E2, GI);
    begin
       --  MV_Info is initialized to default values
---        E3GA_Utilities.Print_Multivector ("E2GA.Init MV", MV);
---        E3GA_Utilities.Print_Multivector ("E2GA.Init MV_Reverse", MV_Reverse);
---        Put_Line ("E2GA.Init MV.GU: " & Unsigned_Integer'Image (MV.Grade_Use));
+      --        E3GA_Utilities.Print_Multivector ("E2GA.Init MV", MV);
+      --        E3GA_Utilities.Print_Multivector ("E2GA.Init MV_Reverse", MV_Reverse);
+      --        Put_Line ("E2GA.Init MV.GU: " & Unsigned_Integer'Image (MV.Grade_Use));
       Sq := Scalar_Product (MV, MV_Reverse);
---        Put_Line ("E2GA.Init Sq: " & Float'Image (Sq.Coordinates (1)));
---        Put_Line ("E2GA.Init GI_VI: " & Unsigned_Integer'Image (GI_VI.Grade_Use));
---        Put_Line ("E2GA.Init VI_GI_GI_VI: " & Unsigned_Integer'Image (VI_GI_GI_VI.Grade_Use));
---        Put_Line ("E2GA.Init VI_E1_GI: " & Unsigned_Integer'Image (VI_E1_GI.Grade_Use));
---        Put_Line ("E2GA.Init VI_E2_GI: " & Unsigned_Integer'Image (VI_E2_GI.Grade_Use));
+      --        Put_Line ("E2GA.Init Sq: " & Float'Image (Sq.Coordinates (1)));
+      --        Put_Line ("E2GA.Init GI_VI: " & Unsigned_Integer'Image (GI_VI.Grade_Use));
+      --        Put_Line ("E2GA.Init VI_GI_GI_VI: " & Unsigned_Integer'Image (VI_GI_GI_VI.Grade_Use));
+      --        Put_Line ("E2GA.Init VI_E1_GI: " & Unsigned_Integer'Image (VI_E1_GI.Grade_Use));
+      --        Put_Line ("E2GA.Init VI_E2_GI: " & Unsigned_Integer'Image (VI_E2_GI.Grade_Use));
       if Sq.Coordinates (1) = 0.0 then  --  or
---           GI_VI.Grade_Use /= Grade_0 or
---           VI_GI_GI_VI.Grade_Use /= Grade_0 or
---           VI_E1_GI.Grade_Use /= Grade_1 or
---           VI_E2_GI.Grade_Use /= Grade_1 then
+         --           GI_VI.Grade_Use /= Grade_0 or
+         --           VI_GI_GI_VI.Grade_Use /= Grade_0 or
+         --           VI_E1_GI.Grade_Use /= Grade_1 or
+         --           VI_E2_GI.Grade_Use /= Grade_1 then
          MV_Info.M_Type := Multivector_Type_Base.Multivector_Object;
---           Put_Line ("E2GA.Init MV_Info.M_Type Multivector_Object set");
+         --           Put_Line ("E2GA.Init MV_Info.M_Type Multivector_Object set");
       else
          if GU_Count = 1 then
             MV_Info.M_Type := Multivector_Type_Base.Blade_MV;
---              Put_Line ("E2GA.Init MV_Info.M_Type Blade_Object set");
+            --              Put_Line ("E2GA.Init MV_Info.M_Type Blade_Object set");
          else
             MV_Info.M_Type := Multivector_Type_Base.Versor_MV;
---              Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
+            --              Put_Line ("E2GA.Init MV_Info.M_Type Versor_Object set");
          end if;
       end if;
       return MV_Info;
@@ -583,54 +584,68 @@ package body E2GA is
       theString := theString & Text;
       --  Print all coordinates (x, y, z)
 
-      --  Loop on coordinate
-      --    Loop on grade
+      --  Loop on coordinate  i
+      --    Loop on grade     j
       --      Loop on  number of coordinates in the grade part
       --        Print sign and coordinate value
       --        Loop on basis symbols
       --          Print symbol
       --          If not last symbol print ^
-      for Grade in GA_Maths.Grade_Index'Range loop
-         if  Unsigned_32 (MV.Grade_Use) /=
-           Shift_Left (Unsigned_32 (Grade), 1) then
-            if Basis_Index - MV_Grade_Size (Grade) > 0 then
-               Basis_Index := Basis_Index + MV_Grade_Size (Grade);
-            end if;
-         else
-            --  int mv_gradeSize[3] = {1, 2, 1 };
-            --  Vector grade size is 2?
-            --  Loop on grade
-            for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
-               --  Print sign and coordinate value
-               Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-               Abs (MV.Coordinates (Coord_Index));
-               Value := float_3 (Coordinate);
-               theString := theString & float_3'Image (Value);
-               if Grade /= 1 then  --  Not grade 0
-                  --  print [* basisVector1 ^ ... ^ basisVectorN]
-                  theString := theString & " * ";
-                  --  Loop on the basis vector symbols
-                  --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
-                  --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+--        for Coord_Index in 1 .. 3 loop
+         for Grade in GA_Maths.Grade_Index'Range loop
+            if  Unsigned_32 (MV.Grade_Use) /=
+              Shift_Left (Unsigned_32 (Grade), 1) then
+               if Basis_Index - MV_Grade_Size (Grade) > 0 then
+                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
+                              integer'Image (Basis_Index));
+                  Basis_Index := Basis_Index + MV_Grade_Size (Grade);
+                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
+                              integer'Image (Basis_Index));
+               end if;
+            else
+               Put_Line ("E2GA.Multivector_String Grade detected: " &
+                           integer'Image (Grade));
+               Put_Line ("E2GA.Multivector_String Grade size: " &
+                           integer'Image (MV_Grade_Size (Grade)));
+               --  int mv_gradeSize[3] = {1, 2, 1 };
+               --  Vector grade size is 2?
+               --  Loop on grade
+               for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
+                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
+                              integer'Image (Basis_Index));
+                  --  Print sign and coordinate value
+                  Put_Line ("E2GA.Multivector_String Coord_Index: " &
+                              integer'Image (Coord_Index));
+                  Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
+                  Abs (MV.Coordinates (Coord_Index));
+                  Value := float_3 (Coordinate);
+                  theString := theString & float_3'Image (Value);
+                  if Grade /= 1 then  --  Not grade 0
+                     --  print [* basisVector1 ^ ... ^ basisVectorN]
+                     theString := theString & " * ";
+                     --  Loop on the basis vector symbols
+                     --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
+                     --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
 
-                  Basis_Elem_Index := 1;  --  bei
-                  while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
-                     if Basis_Elem_Index /= 1 then
-                        theString := theString & "^";
-                     end if;
-                     Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
-                     theString := theString & MV_Basis_Vector_Names (Name_Index);
-                     Basis_Elem_Index := Basis_Elem_Index + 1;
-                  end loop;  --  MV_Basis_Elements
-                  Basis_Index := Basis_Index + 1;
-               end if;  --  Grade
-            end loop;  --  Grade_Index
-         end if;  --  MV.Grade_Use
-         if Grade >= 2 then
-            Coord_Index := Coord_Index + 1;
-            Basis_Index := Basis_Index + 1;
-         end if;
-      end loop;   --  Grade
+                     Basis_Elem_Index := 1;  --  bei
+                     while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
+                        if Basis_Elem_Index /= 1 then
+                           theString := theString & "^";
+                        end if;
+                        Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
+                        theString := theString & MV_Basis_Vector_Names (Name_Index);
+                        Basis_Elem_Index := Basis_Elem_Index + 1;
+                     end loop;  --  MV_Basis_Elements
+                     Basis_Index := Basis_Index + 1;
+                  end if;  --  Grade
+               end loop;  --  Grade_Index
+            end if;  --  MV.Grade_Use
+            if Grade >= 2 then
+               Coord_Index := Coord_Index + 1;
+               Basis_Index := Basis_Index + 1;
+            end if;
+         end loop;   --  Grade
+--        end loop;  --  Coord_Index
 
       return To_String (theString & String_End);
    exception
@@ -757,7 +772,7 @@ package body E2GA is
 
       if (MV2.Grade_Use and 2) /= 0 and (MV1.Grade_Use and 2) /= 0 then
          Product :=  Product + MV1.Coordinates (2) * MV2.Coordinates (2)
-                             + MV1.Coordinates (3) * MV2.Coordinates (3);
+           + MV1.Coordinates (3) * MV2.Coordinates (3);
       end if;
 
       if (MV2.Grade_Use and 4) /= 0 and (MV1.Grade_Use and 4) /= 0 then

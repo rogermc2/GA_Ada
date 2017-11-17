@@ -18,9 +18,9 @@ package GA_Maths is
     US_1 : constant Unsigned_Integer := Unsigned_Integer (1);
     type Vector_Unsigned_3D is array (1 .. 3) of Interfaces.Unsigned_32;
 
-    subtype Basis_Index is Integer range 1 .. 2;
-    subtype Grade_Index is Integer range 0 .. 2;
-    subtype Grade_Usage is Unsigned_Integer;
+    subtype Basis_Index is Integer range 1 .. 2;  --  e1, e2
+    subtype Grade_Index is Integer range 0 .. 2;  --  Scalar, Vector, Bivector
+    subtype Grade_Usage is Unsigned_Integer;      --  1, 2, 4 for grades 0, 1, 2
 
     type Basis_Array is array (Basis_Index) of integer;
     type Grade_Array is array (Grade_Index) of integer;
