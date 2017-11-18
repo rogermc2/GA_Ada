@@ -82,8 +82,6 @@ package E2GA is
    function Multivector_String (MV : Multivector; Text : String := "") return String;
    function Norm_E (MV : Multivector) return Scalar;
    function Norm_E2 (MV : E2GA.Multivector) return Scalar;
-   --     function Norm_E2 (BV : Bivector) return Scalar;
-   --     function Norm_E2 (V2 : Vector) return Scalar;     function Norm_E2 (MV : Multivector) return Scalar_MV;
    function Outer_Product (V1, V2 : Vector) return Bivector;
    function Scalar_Product (V1, V2 : Vector) return Scalar;
    function Set_Bivector (V1, V2 : Vector) return Bivector;
@@ -95,7 +93,6 @@ package E2GA is
    function Set_Multivector (BV : Bivector) return Multivector;
    function Set_Multivector (R : Rotor) return Multivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
---     function Unit_E (MV : Multivector) return Multivector;
    function Unit_E (V : Vector) return Vector;
    function Unit_E (MV : Multivector) return Vector;
 

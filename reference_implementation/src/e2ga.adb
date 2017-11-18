@@ -346,14 +346,6 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function  Get_MV_Type (X : Multivector; Epsilon : float)
-   --                            return Multivector_Type_Base.M_Type_Type is
-   --     begin
-   --        return Multivector_Analyze.Get_Multivector_Type (X, Epsilon);
-   --     end Get_MV_Type;
-
-   --  -------------------------------------------------------------------------
-
    function Get_Size (MV : Multivector) return Integer is
    begin
       return  MV_Size (integer (MV.Grade_Use));
@@ -583,7 +575,6 @@ package body E2GA is
    begin
       theString := theString & Text;
       --  Print all coordinates (x, y, z)
-
       --  Loop on coordinate  i
       --    Loop on grade     j
       --      Loop on  number of coordinates in the grade part
@@ -591,61 +582,46 @@ package body E2GA is
       --        Loop on basis symbols
       --          Print symbol
       --          If not last symbol print ^
---        for Coord_Index in 1 .. 3 loop
-         for Grade in GA_Maths.Grade_Index'Range loop
-            if  Unsigned_32 (MV.Grade_Use) /=
-              Shift_Left (Unsigned_32 (Grade), 1) then
-               if Basis_Index - MV_Grade_Size (Grade) > 0 then
-                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
-                              integer'Image (Basis_Index));
-                  Basis_Index := Basis_Index + MV_Grade_Size (Grade);
-                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
-                              integer'Image (Basis_Index));
-               end if;
-            else
-               Put_Line ("E2GA.Multivector_String Grade detected: " &
-                           integer'Image (Grade));
-               Put_Line ("E2GA.Multivector_String Grade size: " &
-                           integer'Image (MV_Grade_Size (Grade)));
-               --  int mv_gradeSize[3] = {1, 2, 1 };
-               --  Vector grade size is 2?
-               --  Loop on grade
-               for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
-                  Put_Line ("E2GA.Multivector_String Basis_Index: " &
-                              integer'Image (Basis_Index));
-                  --  Print sign and coordinate value
-                  Put_Line ("E2GA.Multivector_String Coord_Index: " &
-                              integer'Image (Coord_Index));
-                  Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-                  Abs (MV.Coordinates (Coord_Index));
-                  Value := float_3 (Coordinate);
-                  theString := theString & float_3'Image (Value);
-                  if Grade /= 1 then  --  Not grade 0
-                     --  print [* basisVector1 ^ ... ^ basisVectorN]
-                     theString := theString & " * ";
-                     --  Loop on the basis vector symbols
-                     --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
-                     --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
-
-                     Basis_Elem_Index := 1;  --  bei
-                     while MV_Basis_Elements (Basis_Index, Basis_Elem_Index) >= 0 loop
-                        if Basis_Elem_Index /= 1 then
-                           theString := theString & "^";
-                        end if;
-                        Name_Index := MV_Basis_Elements (Basis_Index, Basis_Elem_Index) + 1;
-                        theString := theString & MV_Basis_Vector_Names (Name_Index);
-                        Basis_Elem_Index := Basis_Elem_Index + 1;
-                     end loop;  --  MV_Basis_Elements
-                     Basis_Index := Basis_Index + 1;
-                  end if;  --  Grade
-               end loop;  --  Grade_Index
-            end if;  --  MV.Grade_Use
-            if Grade >= 2 then
-               Coord_Index := Coord_Index + 1;
-               Basis_Index := Basis_Index + 1;
+      --        for Coord_Index in 1 .. 3 loop
+      for Grade in GA_Maths.Grade_Index'Range loop
+         if  Unsigned_32 (MV.Grade_Use) /=
+           Shift_Left (Unsigned_32 (Grade), 1) then
+            if Basis_Index - MV_Grade_Size (Grade) + 1 > 0 then
+               Basis_Index := Basis_Index + MV_Grade_Size (Grade);
             end if;
-         end loop;   --  Grade
---        end loop;  --  Coord_Index
+         else
+            --  int mv_gradeSize[3] = {1, 2, 1 };
+            --  Vector grade size is 2?
+            --  Loop on grade
+            for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
+               Coord_Index := Basis_Index;
+               Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
+               Abs (MV.Coordinates (Coord_Index));
+               Value := float_3 (Coordinate);
+               theString := theString & float_3'Image (Value);
+               if Grade /= 1 then  --  Not grade 0
+                  --  print [* basisVector1 ^ ... ^ basisVectorN]
+                  theString := theString & " ";
+                  --  Loop on the basis vector symbols
+                  --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
+                  --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+
+                  Basis_Elem_Index := 1;  --  bei
+                  while MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) >= 0 loop
+                     if Basis_Elem_Index /= 1 then
+                        theString := theString & "^";
+                     end if;
+                     Name_Index := MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) + 1;
+                     theString := theString & MV_Basis_Vector_Names (Name_Index);
+                     Basis_Elem_Index := Basis_Elem_Index + 1;
+                  end loop;  --  MV_Basis_Elements
+               end if;  --  Grade
+            end loop;  --  Grade_Index
+         end if;  --  MV.Grade_Use
+         if Grade >= 2 then
+            Coord_Index := Coord_Index + 1;
+         end if;
+      end loop;   --  Grade
 
       return To_String (theString & String_End);
    exception
