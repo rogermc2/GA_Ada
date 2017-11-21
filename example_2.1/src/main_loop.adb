@@ -232,13 +232,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MV_Matrix");
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Proj_Matrix");
+      GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
+                                Colour_Location);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
-      Colour_Location := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "vector_colour");
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);

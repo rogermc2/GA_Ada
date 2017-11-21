@@ -3,6 +3,7 @@
 
 with GL.Types.Colors; use GL.Types.Colors;
 with GL.Objects.Programs;
+with GL.Uniforms;
 
 with GA_Maths;
 with E2GA;
@@ -44,12 +45,14 @@ package GA_Draw is
 --                               Colour         : Color := (1.0, 1.0, 1.0, 1.0);
 --                               Scale          : GL.Types.Single := 1.0;
     function Get_Draw_Mode return Draw_Mode;
+    procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
+                                        MV_Matrix_ID, Projection_Matrix_ID,
+                                        Colour_Location : out GL.Uniforms.Uniform);
     procedure Set_Foreground_Colour (Fore_Colour : Color);
     procedure Set_Background_Colour (Back_Colour : Color);
     procedure Set_Draw_Mode (Mode : Draw_Mode);
     procedure Set_Ol_Colour (Ol_Colour : Color);
     procedure Set_Point_Size (Point_Size : GL.Types.Single);
-
 private
     type Colour_Palet is record
         Foreground_Colour : Color := (1.0, 0.0, 1.0, 1.0);

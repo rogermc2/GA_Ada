@@ -15,7 +15,6 @@ with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
-with GL.Uniforms;
 
 with Glfw.Windows;
 
@@ -76,7 +75,8 @@ package body GA_Draw is
       end loop;
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
@@ -121,13 +121,9 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MV_Matrix");
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Proj_Matrix");
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Colour_Location := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "vector_colour");
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
       if  Method /= Draw_Bivector_Parallelogram and then
@@ -180,16 +176,12 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MV_Matrix");
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Proj_Matrix");
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Colour_Location := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "vector_colour");
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-      MVP_Matrix := Model_View_Matrix * GL.Types.Singles.Identity4;
 
+      MVP_Matrix := Model_View_Matrix * GL.Types.Singles.Identity4;
       Cords := E3GA.Get_Coords (Base);
       Translate := (Single (E3GA.Get_Coord_1 (Base)),
                     Single (E3GA.Get_Coord_2 (Base)),
@@ -309,6 +301,8 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       Draw_Part (Back_Part);
       Draw_Part (Front_Part);
       Draw_Part (Outline_Part);
@@ -350,6 +344,8 @@ package body GA_Draw is
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
@@ -455,13 +451,9 @@ package body GA_Draw is
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
 
-         MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-           (Render_Program, "MV_Matrix");
-         Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-           (Render_Program, "Proj_Matrix");
+         Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                   Projection_Matrix_ID, Colour_Location);
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
-         Colour_Location := GL.Objects.Programs.Uniform_Location
-           (Render_Program, "vector_colour");
          Model_View_Matrix := MV_Matrix;
 
          if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
@@ -506,6 +498,20 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
+   procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
+                                       MV_Matrix_ID, Projection_Matrix_ID,
+                                       Colour_Location : out GL.Uniforms.Uniform) is
+   begin
+       MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "MV_Matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "Proj_Matrix");
+      Colour_Location := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "vector_colour");
+   end Graphic_Shader_Locations;
+
+   --  -------------------------------------------------------------------------
+
    procedure Set_Background_Colour (Back_Colour : Color) is
    begin
       Palet.Background_Colour := Back_Colour;
@@ -527,47 +533,6 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_MVP_Matrix (Window         : in out Glfw.Windows.Window;
-                             Render_Program : GL.Objects.Programs.Program;
-                             Direction      : E2GA.Rotor;
-                             Scale          : GL.Types.Single := 1.0) is
-      use GL.Types;
-      use GL.Types.Singles;
-      use Maths;
-      use GA_Maths.Float_Functions;
-
-      MVP_Matrix_ID     : GL.Uniforms.Uniform;
-      MVP_Matrix        : GL.Types.Singles.Matrix4 := Singles.Identity4;
-      Shift             : Singles.Vector3 :=
-        (Single (E2GA.Get_Coord_1 (Direction)),
-         Single (E2GA.Get_Coord_2 (Direction)), 0.0);
-      Scale_Factor1     : Single := Single (1.2 / Scale);
-      Scale_Factor2     : Single := 1.1 * Single (Sqrt (float (Scale)));
-      Scale_Factor      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
-
-      Window_Width      : Glfw.Size;
-      Window_Height     : Glfw.Size;
-   begin
-      Window.Get_Framebuffer_Size (Window_Width, Window_Height);
-      MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MVP_Matrix");
-      --  Translate to head of vector
-      MVP_Matrix := Translation_Matrix (Shift) * MVP_Matrix;
-      if Scale > 1.2 then
-         --              Rotor := E3GA_Utilities.Rotor_Vector_To_Vector (E3GA.e3, E3GA.Unit_E (Direction));
-         MVP_Matrix := Scaling_Matrix (Scale_Factor) * MVP_Matrix;
-         Scale_Factor := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
-         MVP_Matrix := Scaling_Matrix (Scale_Factor) * MVP_Matrix;
-         --      MVP_Matrix := Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3) * MVP_Matrix;
-      end if;
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Set_MVP_Matrix.");
-         raise;
-   end Set_MVP_Matrix;
-
-   --  ------------------------------------------------------------------------
-
    procedure Set_Ol_Colour (Ol_Colour : Color) is
    begin
       Palet.Ol_Colour := Ol_Colour;
@@ -581,6 +546,7 @@ package body GA_Draw is
    end Set_Point_Size;
 
    --  ------------------------------------------------------------------------
+
 begin
    M_Draw_Mode.Append (OD_Magnitude);
 end GA_Draw;
