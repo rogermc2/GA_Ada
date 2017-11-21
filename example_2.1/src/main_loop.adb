@@ -36,6 +36,7 @@ with GL_Util;
 with E2GA;
 with E2GA_Draw;
 with E3GA;
+with E3GA_Utilities;
 with GA_Maths;
 
 with Silo;
@@ -147,12 +148,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
                          V2, Green, Scale);
+
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
+            null;
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
                             Projection_Matrix, BV, Yellow);
@@ -169,7 +172,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
-                                 (E2GA.Bivector_String (BV)), Label_Position);
+                                 (E2GA.Bivector_String
+                                    (BV)), Label_Position);
          --         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String ("Hello"), Label_Position);
          Silo.Push (Label);
 
@@ -224,6 +228,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Elements             : GL.Types.Int_Array (1 .. 6) := (0, 1, 2,
                                                              2, 3, 0);
    begin
+      GL.Objects.Programs.Use_Program (Render_Program);
+      Vertex_Array_Object.Initialize_Id;
+      Vertex_Array_Object.Bind;
+
       MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MV_Matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -231,9 +239,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
       Colour_Location := GL.Objects.Programs.Uniform_Location
         (Render_Program, "vector_colour");
-
-      Vertex_Array_Object.Initialize_Id;
-      Vertex_Array_Object.Bind;
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);

@@ -42,12 +42,58 @@ package body GA_Draw is
    MV_Matrix_ID         : GL.Uniforms.Uniform;
    Model_View_Matrix    : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID : GL.Uniforms.Uniform;
-   Projection_Matrix    : GL.Types.Singles.Matrix4;
    Colour_Location      : GL.Uniforms.Uniform;
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+                          Projection_Matrix : GL.Types.Singles.Matrix4;
                           Scale             : float);
+
+   --  ------------------------------------------------------------------------
+
+   procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
+                        Projection_Matrix : GL.Types.Singles.Matrix4;
+                        Scale             : Gl.Types.Single) is
+
+      use GL.Objects.Buffers;
+      use GL.Types.Singles;
+      use GA_Maths.Float_Functions;
+
+      GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
+      GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
+      GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
+      Z               : float := 0.0;
+      Num_Steps       : constant int := 32;
+      Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
+      Vertex_Buffer   : GL.Objects.Buffers.Buffer;
+      Fan             : Singles.Vector3_Array (1 .. Num_Steps + 1);
+   begin
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
+      Fan (1) := (0.0, 0.0, -0.25);
+      for Count in 2 .. Num_Steps + 1 loop
+         Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
+         Z := Z + Rotor_Step;
+      end loop;
+
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
+
+      GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
+                                            First => 0,
+                                            Count => Num_Steps);
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Draw_Base.");
+         raise;
+   end Draw_Base;
 
    --  ------------------------------------------------------------------------
 
@@ -56,11 +102,11 @@ package body GA_Draw is
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                            Scale  : float := 1.0;
+                            Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
-      --  L          : boolean;
+      Colour_Location  : GL.Uniforms.Uniform;
       Rotor_Step : float := 2.0 * Ada.Numerics.Pi / 64.0;
       Scale_S    : GL.Types.Single := GL.Types.Single (Scale);
       --  Y          : GL.Types.Single;
@@ -76,6 +122,15 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
+      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "MV_Matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "Proj_Matrix");
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      Colour_Location := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "vector_colour");
+      GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
+
       if  Method /= Draw_Bivector_Parallelogram and then
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
@@ -90,7 +145,7 @@ package body GA_Draw is
       case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Scale);
+            Draw_Circle (Render_Program, MVP_Matrix, Projection_Matrix, Scale);
          when others => null;
       end case;
 
@@ -149,7 +204,7 @@ package body GA_Draw is
       Case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, Model_View_Matrix, Scale);
+            Draw_Circle (Render_Program, Model_View_Matrix, Projection_Matrix, Scale);
          when others => null;
       end case;
    exception
@@ -189,53 +244,9 @@ package body GA_Draw is
 
    --  ----------------------------------------------------------------------
 
-   procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
-                        Scale             : Gl.Types.Single) is
-
-      use GL.Objects.Buffers;
-      use GL.Types.Singles;
-      use GA_Maths.Float_Functions;
-
-      GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
-      GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
-      GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
-      Z               : float := 0.0;
-      Num_Steps       : constant int := 32;
-      Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
-      Vertex_Buffer   : GL.Objects.Buffers.Buffer;
-      Fan             : Singles.Vector3_Array (1 .. Num_Steps + 1);
-   begin
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.0, 0.0, -0.25);
-      for Count in 2 .. Num_Steps + 1 loop
-         Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
-         Z := Z + Rotor_Step;
-      end loop;
-
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-
-      GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
-                                            First => 0,
-                                            Count => Num_Steps);
-      GL.Attributes.Disable_Vertex_Attrib_Array (0);
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in GA_Draw.Draw_Base.");
-         raise;
-   end Draw_Base;
-
-   --  ------------------------------------------------------------------------
-
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+                          Projection_Matrix : GL.Types.Singles.Matrix4;
                           Scale             : float) is
       use GA_Maths;
       use GL.Objects.Buffers;
@@ -303,6 +314,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
+                        Projection_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Gl.Types.Single) is
 
       use GL.Objects.Buffers;
@@ -348,6 +360,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
+                        Projection_Matrix : GL.Types.Singles.Matrix4;
                         Tail, Direction   : E3GA.Vector;
                         Colour            : GL.Types.Colors.Color;
                         Scale             : float) is
@@ -433,17 +446,16 @@ package body GA_Draw is
            (Render_Program, "MV_Matrix");
          Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
            (Render_Program, "Proj_Matrix");
-         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
          Colour_Location := GL.Objects.Programs.Uniform_Location
            (Render_Program, "vector_colour");
          Model_View_Matrix := MV_Matrix;
-         Projection_Matrix := Proj_Matrix;
 
          if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-         Draw_Line (Render_Program, Tail, Direction, Colour, Scale);
+         Draw_Line (Render_Program, Proj_Matrix, Tail, Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
@@ -462,8 +474,8 @@ package body GA_Draw is
          Set_Front_Face (GL.Types.Clockwise);
          Set_Cull_Face (Front);
 
-         Draw_Cone (Render_Program, Single (Scale));
-         Draw_Base (Render_Program, Single (Scale));
+         Draw_Cone (Render_Program, Proj_Matrix, Single (Scale));
+         Draw_Base (Render_Program, Proj_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
       end if;
    exception
