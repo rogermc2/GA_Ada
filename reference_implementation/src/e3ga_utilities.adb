@@ -154,6 +154,16 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Vector (Name : String; aVector : E2GA.Vector) is
+    begin
+        Put (Name & ":  ");
+        Put (float'Image (E2GA.Get_Coord_1 (aVector)) & "   ");
+        Put (float'Image (E2GA.Get_Coord_2 (aVector)) & "   ");
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
     procedure Print_Vector (Name : String; aVector : E3GA.Vector) is
         Coords : GA_Maths.Array_3D := E3GA.Get_Coords (aVector);
     begin
