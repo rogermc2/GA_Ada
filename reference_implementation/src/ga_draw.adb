@@ -38,9 +38,7 @@ package body GA_Draw is
    M_Draw_Mode          : Draw_State_Vector;  -- Initialized to OD_Magnitude at end.
    --  M_Sphere         : Geosphere.Geosphere_S;
    --  M_Sphere_GL_List : GL.Types.UInt;
-   Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    MV_Matrix_ID         : GL.Uniforms.Uniform;
-   Model_View_Matrix    : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID : GL.Uniforms.Uniform;
    Colour_Location      : GL.Uniforms.Uniform;
 
@@ -52,6 +50,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
+                        Model_View_Matrix : GL.Types.Singles.Matrix4;
                         Projection_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Gl.Types.Single) is
 
@@ -106,17 +105,17 @@ package body GA_Draw is
                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
-      Colour_Location  : GL.Uniforms.Uniform;
-      Rotor_Step : float := 2.0 * Ada.Numerics.Pi / 64.0;
-      Scale_S    : GL.Types.Single := GL.Types.Single (Scale);
-      --  Y          : GL.Types.Single;
-      Cords      : Array_3D := (0.0, 0.0, 0.0);
-      Translate  : Vector3 :=  (0.0, 0.0, 0.0);
-      O2         : E3GA.Vector := Ortho_2;
-      MVP_Matrix : Matrix4 := Singles.Identity4;
-      Scaled     : float;
-      Scaled_S   : GL.Types.Single;
-      Normed_E2  : E3GA.Scalar;
+      Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Colour_Location      : GL.Uniforms.Uniform;
+      Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+      Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
+      Cords                : Array_3D := (0.0, 0.0, 0.0);
+      Translate            : Vector3 :=  (0.0, 0.0, 0.0);
+      O2                   : E3GA.Vector := Ortho_2;
+      MVP_Matrix           : Matrix4 := Singles.Identity4;
+      Scaled               : float;
+      Scaled_S             : GL.Types.Single;
+      Normed_E2            : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -160,17 +159,18 @@ package body GA_Draw is
    procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                            Scale  : float := 1.0;
+                            Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
-      --  L          : boolean;
+      Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Rotor_Step : float := 2.0 * Ada.Numerics.Pi / 64.0;
       Scale_S    : GL.Types.Single := GL.Types.Single (Scale);
       --  Y          : GL.Types.Single;
       Cords      : Array_3D := (0.0, 0.0, 0.0);
       Translate  : Vector3 :=  (0.0, 0.0, 0.0);
       O2         : E3GA.Vector := Ortho_2;
+      Model_View_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       MVP_Matrix : Matrix4 := Singles.Identity4;
       Scaled     : float;
       Scaled_S   : GL.Types.Single;
@@ -180,7 +180,15 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      MVP_Matrix := GL.Types.Singles.Identity4 * GL.Types.Singles.Identity4;
+      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "MV_Matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "Proj_Matrix");
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      Colour_Location := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "vector_colour");
+      GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
+      MVP_Matrix := Model_View_Matrix * GL.Types.Singles.Identity4;
 
       Cords := E3GA.Get_Coords (Base);
       Translate := (Single (E3GA.Get_Coord_1 (Base)),
@@ -201,6 +209,7 @@ package body GA_Draw is
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
            * MVP_Matrix;
       end if;
+
       Case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
@@ -314,6 +323,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
+                        Model_View_Matrix : GL.Types.Singles.Matrix4;
                         Projection_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Gl.Types.Single) is
 
@@ -360,6 +370,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
+                        Model_View_Matrix : GL.Types.Singles.Matrix4;
                         Projection_Matrix : GL.Types.Singles.Matrix4;
                         Tail, Direction   : E3GA.Vector;
                         Colour            : GL.Types.Colors.Color;
@@ -420,22 +431,24 @@ package body GA_Draw is
       use GA_Maths;
       use GA_Maths.Float_Functions;
 
-      GL_Tail         : Vector3 := GL_Util.To_GL (Tail);
-      GL_Dir          : Vector3 := GL_Util.To_GL (Direction);
+      Vertex_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Model_View_Matrix   : GL.Types.Singles.Matrix4;
+      GL_Tail             : Vector3 := GL_Util.To_GL (Tail);
+      GL_Dir              : Vector3 := GL_Util.To_GL (Direction);
 
-      Z               : Single := 0.0;
-      Dir_e1          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
-      Dir_e2          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e2));
-      Dir_e3          : Single := Single (E3GA.Dot_Product (Direction, E3GA.e3));
-      Tail_e1         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
-      Tail_e2         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e2));
-      Tail_e3         : Single := Single (E3GA.Dot_Product (Tail, E3GA.e3));
-      Scale_Factor1   : Single := Single (1.2 / Scale);
-      Scale_Factor2   : Single := 1.1 * Single (Sqrt (float (Scale)));
-      Scale_Factor1_V : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
-      Scale_Factor2_V : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
-      aRotor          : E3GA.Rotor;
-      Saved_Cull_Face : Face_Selector := Cull_Face;
+      Z                   : Single := 0.0;
+      Dir_e1              : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
+      Dir_e2              : Single := Single (E3GA.Dot_Product (Direction, E3GA.e2));
+      Dir_e3              : Single := Single (E3GA.Dot_Product (Direction, E3GA.e3));
+      Tail_e1             : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
+      Tail_e2             : Single := Single (E3GA.Dot_Product (Tail, E3GA.e2));
+      Tail_e3             : Single := Single (E3GA.Dot_Product (Tail, E3GA.e3));
+      Scale_Factor1       : Single := Single (1.2 / Scale);
+      Scale_Factor2       : Single := 1.1 * Single (Sqrt (float (Scale)));
+      Scale_Factor1_V     : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
+      Scale_Factor2_V     : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
+      aRotor              : E3GA.Rotor;
+      Saved_Cull_Face     : Face_Selector := Cull_Face;
    begin
       if Scale /= 0.0 then
          GL.Objects.Programs.Use_Program (Render_Program);
@@ -455,7 +468,7 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-         Draw_Line (Render_Program, Proj_Matrix, Tail, Direction, Colour, Scale);
+         Draw_Line (Render_Program, Model_View_Matrix, Proj_Matrix, Tail, Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
@@ -474,8 +487,8 @@ package body GA_Draw is
          Set_Front_Face (GL.Types.Clockwise);
          Set_Cull_Face (Front);
 
-         Draw_Cone (Render_Program, Proj_Matrix, Single (Scale));
-         Draw_Base (Render_Program, Proj_Matrix, Single (Scale));
+         Draw_Cone (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
+         Draw_Base (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
       end if;
    exception
