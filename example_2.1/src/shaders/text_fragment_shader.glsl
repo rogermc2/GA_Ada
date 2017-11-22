@@ -9,7 +9,6 @@ out vec4 colour;
 
 void main()
 {
-    //  vec2 flipped_coords = vec2(texture_coords.x, 1.0 - texture_coords.y);
 	vec4 sampled = vec4 (1.0, 1.0, 1.0, texture(text_sampler, texture_coords).r);
     colour = vec4(text_colour, 1.0) * sampled;
 }

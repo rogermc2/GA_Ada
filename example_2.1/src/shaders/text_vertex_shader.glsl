@@ -8,8 +8,6 @@ out vec2 texture_coords;
 
 void main()
 {
- //   gl_Position = projection_matrix * vec4(vertex.xy, 0.0, 1.0);
- //   texture_coords = vec2(vertex.zw);
     gl_Position = mvp_matrix * vec4(vertex.x * dimensions.x, vertex.y * dimensions.y, 0.0, 1.0);
     texture_coords = vertex;
 }
