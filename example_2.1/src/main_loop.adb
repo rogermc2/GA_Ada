@@ -64,12 +64,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                         Render_Program  : GL.Objects.Programs.Program;
                         Text_X, Text_Y  : GL.Types.Single;
                         Text_Scale      : GL.Types.Single);
-
-   Text_Dimesions_ID       : GL.Uniforms.Uniform;
-   Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
-   Text_Texture_ID         : GL.Uniforms.Uniform;
-   Text_Colour_ID          : GL.Uniforms.Uniform;
-   Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
+   procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
+                                    Projection_Matrix_ID, Texture_ID, Text_Dimesions_ID,
+                                    Colour_ID : out GL.Uniforms.Uniform);
 
    --  -------------------------------------------------------------------------
 
@@ -268,8 +265,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                         Render_Program   : GL.Objects.Programs.Program;
                         Text_X, Text_Y   : GL.Types.Single;
                         Text_Scale       : GL.Types.Single) is
-      Text_Colour : constant Colors.Color := Black;
+      Text_Dimesions_ID    : GL.Uniforms.Uniform;
+      Text_Proj_Matrix_ID  : GL.Uniforms.Uniform;
+      Text_Texture_ID      : GL.Uniforms.Uniform;
+      Text_Colour_ID       : GL.Uniforms.Uniform;
+      Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
+      Text_Colour          : constant Colors.Color := Black;
    begin
+      Text_Shader_Locations (Render_Program, Text_Proj_Matrix_ID,
+                             Text_Texture_ID, Text_Dimesions_ID, Text_Colour_ID);
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Text_Projection_Matrix);
@@ -294,7 +298,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Program_Loader;
       Font_File : string := "../fonts/Helvetica.ttc";
    begin
-
       Render_Graphic_Program := Program_Loader.Program_From
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
@@ -302,15 +305,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Render_Text_Program := Program_Loader.Program_From
         ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
-
-      Text_Proj_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "mvp_matrix");
-      Text_Texture_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "text_sampler");
-      Text_Colour_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "text_colour");
-      Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "dimensions");
 
       Text_Management.Setup (Font_File);
       GA_Draw.Set_Point_Size (0.005);
@@ -321,6 +315,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    end Setup_Graphic;
 
    --  ----------------------------------------------------------------------------
+
+   procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
+                                    Projection_Matrix_ID, Texture_ID,
+                                    Text_Dimesions_ID, Colour_ID : out GL.Uniforms.Uniform) is
+   begin
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Text_Program, "mvp_matrix");
+      Texture_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Text_Program, "text_sampler");
+      Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Text_Program, "dimensions");
+      Colour_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Text_Program, "text_colour");
+   end Text_Shader_Locations;
+
+   --  -------------------------------------------------------------------------
 
    use Glfw.Input;
    Render_Graphic_Program : GL.Objects.Programs.Program;

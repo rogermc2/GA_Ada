@@ -23,10 +23,6 @@ package GA_Draw is
                    Tail, Direction : E3GA.Vector;
                    Colour : Color; Scale : float);
 
-    --  procedure Draw_Bivector (Base : E3GA.Vector, Normal : E3GA.Vector,
-    --                           Factor1 : E3GA.Vector, Factor2 : Vector,
-    --                           Scale _ float, Method : Draw_Mode := Draw_By_Circle;
-    --                           Palet : Integer'access := null);
     --  Draw_Bivector draws a bivector at Base (:= null for origin).
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
@@ -40,10 +36,6 @@ package GA_Draw is
                    Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                    Method : Bivector_Method_Type := Draw_Bivector_Circle);
 
---      procedure Draw_Multivector (Render_Program : GL.Objects.Programs.Program;
---                               MV             : E2GA.Multivector;
---                               Colour         : Color := (1.0, 1.0, 1.0, 1.0);
---                               Scale          : GL.Types.Single := 1.0;
     function Get_Draw_Mode return Draw_Mode;
     procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
                                         MV_Matrix_ID, Projection_Matrix_ID,
