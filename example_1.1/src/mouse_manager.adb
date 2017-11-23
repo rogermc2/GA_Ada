@@ -10,7 +10,7 @@ package body Mouse_Manager is
    Rotate_Model              : Boolean := False;
    Rotate_Model_Out_OfPPlane : Boolean := False;
    --  rotation of the model
-   M_Model_Rotor             : E2GA.Rotor; --  (_rotor(1.0f));
+   M_Model_Rotor             : E2GA.Rotor;
 
    --  -------------------------------------------------------------------------
 
