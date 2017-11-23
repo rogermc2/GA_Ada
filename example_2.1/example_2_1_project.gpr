@@ -1,4 +1,4 @@
-with "../FreeType_Ada/FreeType_Ada.gpr";
+with "../../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
 limited with "/Ada_Source/OpenGLAda/opengl-glfw.gpr";
 
 project Example_2_1_Project is

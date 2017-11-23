@@ -1,18 +1,20 @@
 
-package body Multivector_Analysis is
+with Ada.Text_IO; use Ada.Text_IO;
+
+with E3GA_Utilities;
+with Multivector_Analyze_E2GA;
+
+package body Multivector_Analyze is
+
+   Default_Epsilon_Value : float := 10.0 ** (-5);
 
    --  --------------------------------------------------------------------------
 
-   function Analyze (MV      : in out E2GA.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon) return MV_Analysis is
-      theAnalysis : MV_Analysis;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
+                      Flags : Flag_Type := (Flag_Invalid, False);
+                      Epsilon : float := Default_Epsilon) is
    begin
-      theAnalysis.Flag.Dual := Flags.Dual;
-      if Flags.Dual then
-         MV := E2GA.Dual(MV);
-      end if;
-      return theAnalysis;
+      Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
    end Analyze;
 
    --  --------------------------------------------------------------------------
@@ -20,7 +22,7 @@ package body Multivector_Analysis is
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
 
    begin
-      return  A.Analysis_Type.Blade_Subclass;
+      return  A.M_Type.Blade_Subclass;
    end Blade_Subclass;
 
    --  --------------------------------------------------------------------------
@@ -32,23 +34,16 @@ package body Multivector_Analysis is
 
    --  --------------------------------------------------------------------------
 
-   function Num_Points return integer is
-   begin
-      return Number_Of_Points;
-   end Num_Points;
-
-   --  --------------------------------------------------------------------------
-
    function isValid (A : MV_Analysis) return Boolean is
    begin
-      return A.Flag.Valid = Flag_Valid;
+      return A.M_Flags.Valid = Flag_Valid;
    end isValid;
 
    --  --------------------------------------------------------------------------
 
    function isDual (A : MV_Analysis) return Boolean is
    begin
-      return A.Flag.Dual;
+      return A.M_Flags.Dual;
    end isDual;
 
    --  --------------------------------------------------------------------------
@@ -56,7 +51,8 @@ package body Multivector_Analysis is
    function isBlade (A : MV_Analysis) return Boolean is
       use Multivector_Type_Base;
    begin
-      return A.MV_Kind = Multivector_Type_Base.Blade;
+--        return A.M_Type.Multivector_Kind
+      return A.M_MV_Type.M_Type = Multivector_Type_Base.Blade_MV;
    end isBlade;
 
    --  --------------------------------------------------------------------------
@@ -71,7 +67,7 @@ package body Multivector_Analysis is
    function isNull (A : MV_Analysis) return Boolean is
       --  {return ((type() == BLADE) && (bladeClass() == ZERO));}
    begin
-      return isBlade (A) and A.Analysis_Type.Blade_Class = Zero_Blade;
+      return isBlade (A) and A.M_Type.Blade_Class = Zero_Blade;
    end isNull;
 
    --  --------------------------------------------------------------------------
@@ -79,8 +75,15 @@ package body Multivector_Analysis is
    function isZero (A : MV_Analysis)  return Boolean is
       --  {return ((type() == BLADE) && (bladeClass() == ZERO));}
    begin
-      return isBlade (A) and A.Analysis_Type.Blade_Class = Zero_Blade;
+      return isBlade (A) and A.M_Type.Blade_Class = Zero_Blade;
    end isZero;
+
+   --  --------------------------------------------------------------------------
+
+   function Num_Points return integer is
+   begin
+      return Number_Of_Points;
+   end Num_Points;
 
    --  --------------------------------------------------------------------------
 
@@ -105,4 +108,4 @@ package body Multivector_Analysis is
 
    --  --------------------------------------------------------------------------
 
-end Multivector_Analysis;
+end Multivector_Analyze;

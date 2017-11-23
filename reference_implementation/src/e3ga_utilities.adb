@@ -4,13 +4,13 @@ with Interfaces;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E2GA;
+with Multivector_Type_Base;
 
 package body E3GA_Utilities is
 
    function exp (BV : E3GA.Bivector) return E3GA.Rotor is
       use E3GA;
-      X2         : float := Left_Contraction (BV, BV) (1);
+      X2         : float := E3GA.Get_Coord (Left_Contraction (BV, BV));
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
@@ -43,7 +43,7 @@ package body E3GA_Utilities is
       --  get the bivector 2-blade part of R
       Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := Norm_R (BV) (1);
+      R2 := E3GA.Get_Coord (Norm_R (BV));
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, R_Scalar (R)) / R2;
@@ -61,6 +61,37 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
+   procedure Print_Analysis (Name : String;
+                             Info : Multivector_Analyze.MV_Analysis) is
+      use Multivector_Analyze;
+      use Multivector_Type_Base;
+   begin
+--        M_Type           : M_Type_Record;
+--        M_Points         : Point_Array;
+--        M_Scalors        : Scalar_Array;
+--        M_Vectors        : Vector_Array;
+
+      Put_Line (Name);
+      Put_Line ("Valid Flag    " & boolean'Image (Info.M_Flags.Valid));
+      Put_Line ("Dual Flag     " & boolean'Image (Info.M_Flags.Dual));
+      Print_Multivector_Info (Name & " M_MV_Type data", Info.M_MV_Type);
+      Put_Line ("Conformal Type     " & Conformal_Type'Image (Info.Conformal_Kind));
+      Put_Line ("Epsilon    " & Float'Image (Info.Epsilon));
+      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
+      Put_Line ("Versor_Kind    " & Versor_Type'Image (Info.Versor_Kind));
+      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
+      Put_Line ("Points array length    " & integer'Image (Info.M_Points'Length));
+      Put_Line ("Scalars array length    " & integer'Image (Info.M_Scalors'Length));
+      Put_Line ("Vectors array length    " & integer'Image (Info.M_Vectors'Length));
+      New_Line;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Print_Analysis.");
+         raise;
+   end Print_Analysis;
+
+    --  ------------------------------------------------------------------------
+
     procedure Print_Matrix (Name    : String; aMatrix : GA_Maths.GA_Matrix3) is
     begin
         Put_Line (Name & ":");
@@ -75,6 +106,45 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
+   procedure Print_Multivector (Name : String; MV : E2GA.Multivector) is
+      use E2GA;
+      MV_Size : Integer := Get_Size (MV);
+      Coords  : Coords_Continuous_Array (1 .. MV.Coordinates'Length);
+   begin
+      New_Line;
+      Put_Line (Name);
+      Put_Line ("MV Size: " & Integer'Image (MV_Size));
+      Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
+      Coords := Get_Coords (MV);
+      Put_Line ("Multivector Coordinates:");
+      for index in MV.Coordinates'Range loop
+         Put_Line (float'Image (Coords (index)));
+      end loop;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Print_Multivector.");
+         raise;
+   end Print_Multivector;
+
+    --  ------------------------------------------------------------------------
+
+   procedure Print_Multivector_Info (Name : String; Info : E2GA.MV_Type) is
+      use Multivector_Type_Base;
+   begin
+      Put_Line (Name);
+      Put_Line ("M_Zero      " & boolean'Image (Info.M_Zero));
+      Put_Line ("M_Type      " & Object_Type'Image (Info.M_Type));
+      Put_Line ("M_Top_Grade " & Integer'Image (Info.M_Grade));
+      Put_Line ("M_Grade     " & GA_Maths.Unsigned_Integer'Image (Info.M_Grade_Use));
+      Put_Line ("M_Parity    " & Parity'Image (Info.M_Parity));
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Print_Multivector_Info.");
+         raise;
+   end Print_Multivector_Info;
+
+    --  ------------------------------------------------------------------------
+
    procedure Print_Rotor (Name : String; R : E3GA.Rotor) is
          Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
@@ -84,7 +154,17 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Vector (Name : String; aVector : E3GA.Vector_3D) is
+    procedure Print_Vector (Name : String; aVector : E2GA.Vector) is
+    begin
+        Put (Name & ":  ");
+        Put (float'Image (E2GA.Get_Coord_1 (aVector)) & "   ");
+        Put (float'Image (E2GA.Get_Coord_2 (aVector)) & "   ");
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Vector (Name : String; aVector : E3GA.Vector) is
         Coords : GA_Maths.Array_3D := E3GA.Get_Coords (aVector);
     begin
         Put (Name & ":  ");
@@ -117,7 +197,7 @@ package body E3GA_Utilities is
     --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
     --                                = bx        + i by  (with respect to a)
     --  for theta = angle from a to b.
-    function Rotor_Vector_To_Vector (V_From, V_To : E3GA.Vector_3D) return E3GA.Rotor is
+    function Rotor_Vector_To_Vector (V_From, V_To : E3GA.Vector) return E3GA.Rotor is
         use Interfaces;
         use GA_Maths;
         use GA_Maths.Float_Functions;
@@ -126,9 +206,9 @@ package body E3GA_Utilities is
         V2     : Vector_Unsigned := To_Unsigned (V_To);
         C1     : float;
         S      : float;
-        w0     : E3GA.Vector_3D;
-        w1     : E3GA.Vector_3D;
-        w2     : E3GA.Vector_3D;
+        w0     : E3GA.Vector;
+        w1     : E3GA.Vector;
+        w2     : E3GA.Vector;
         N2     : Scalar;
         R      : Rotor;
         Result : Rotor;
@@ -136,17 +216,17 @@ package body E3GA_Utilities is
         Set_Coords (w0, 0.0, 0.0, 0.0);
         Set_Coords (w1, 0.0, 0.0, 0.0);
         Set_Coords (w2, 0.0, 0.0, 0.0);
-        if float (Scalar_Product (V_From, V_To) (1)) < -0.9 then
+        if float (E3GA.Get_Coord (Scalar_Product (V_From, V_To))) < -0.9 then
             C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
             Set_Coords (w0, C1, 0.0, 0.0);
             N2 := Norm_E2 (w0);
 
-            if N2 (1) = 0.0 then
+            if E3GA.Get_Coord (N2) = 0.0 then
                 C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
                 Set_Coords (w1, C1, 0.0, 0.0);
                 C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, e2)));
                 Set_Coords (w2, C1, 0.0, 0.0);
-                if Norm_E2 (w1) (1) > Norm_E2 (w2) (1) then
+                if E3GA.Get_Coord (Norm_E2 (w1)) > E3GA.Get_Coord (Norm_E2 (w2)) then
                     Set_Rotor (Result, Outer_Product (V_From, Unit_e (w1)));
                 else
                     Set_Rotor (Result, Outer_Product (V_From, Unit_e (w2)));
@@ -162,6 +242,10 @@ package body E3GA_Utilities is
             Result := (1.0 + Geometric_Product (V_To, V_From)) / S;
         end if;
         return Result;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
+         raise;
     end Rotor_Vector_To_Vector;
 
 end E3GA_Utilities;

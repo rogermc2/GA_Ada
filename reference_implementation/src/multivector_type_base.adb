@@ -1,31 +1,46 @@
 
 package body Multivector_Type_Base is
 
-    Current_Type_Base : Type_Base;
+--  ----------------------------------------------------------------------------
 
-    function Get_Type_Base return Type_Base is
-    begin
-        return Current_Type_Base;
-    end Get_Type_Base;
+--      procedure Set_Grade_Usage (Base : in out Type_Base; GU : GA_Maths.Grade_Usage) is
+--        theBase : Type_Base;
+--      begin
+--        theBase.M_GU := GU;
+--      end Set_Grade_Usage;
 
 --  ----------------------------------------------------------------------------
 
-    procedure Set_M_Type (M_Type : Object_Type) is
-    begin
-       Current_Type_Base.M_Type := M_Type;
-    end Set_M_Type;
+--      procedure Set_M_Type (Base : in out Type_Base; theType : Object_Type) is
+--      begin
+--         Base.M_Type := theType;
+--      end Set_M_Type;
 
 --  ----------------------------------------------------------------------------
 
-    procedure Set_Type_Base (Zero : boolean; Object : Object_Type;
-                             Grade : integer; GU : GA_Maths.Grade_Usage;
-                             Par : Parity := None) is
+--      procedure Set_Parity (Base : in out Type_Base; Par : Parity) is
+--      begin
+--         Base.M_Parity := Par;
+--      end Set_Parity;
+
+--  ----------------------------------------------------------------------------
+
+--      procedure Set_Top_Grade (Base : in out Type_Base; Grade :Integer) is
+--      begin
+--         Base.M_Top_Grade := Grade;
+--      end Set_Top_Grade;
+
+--  ----------------------------------------------------------------------------
+
+    procedure Set_Type_Base (Base : in out MV_Typebase; Zero : boolean;
+                             Object : Object_Type; Grade : integer;
+                             GU : GA_Maths.Grade_Usage; Par : Parity := No_Parity) is
     begin
-       Current_Type_Base.M_Zero := Zero;
-       Current_Type_Base.M_Type := Object;
-       Current_Type_Base.M_Top_Grade := Grade;
-       Current_Type_Base.M_GU := GU;
-       Current_Type_Base.M_Parity := Par;
+       Base.M_Zero := Zero;
+       Base.M_Type := Object;
+       Base.M_Grade := Grade;
+       Base.M_Grade_Use := GU;
+       Base.M_Parity := Par;
     end Set_Type_Base;
 
 --  ----------------------------------------------------------------------------

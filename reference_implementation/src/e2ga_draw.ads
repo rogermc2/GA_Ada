@@ -7,7 +7,7 @@ with GA_Draw;
 with GA_Maths;
 
 package E2GA_Draw is
-    --  procedure Draw (MV : E2GA.Multivector, Method : Integer := 0;
+    --  procedure Draw (X : E2GA.Multivector, Method : Integer := 0;
     --                  Palet : Integer'access := null);
     --  Method is dependent on what 'X' represents.
     --  It is forwarded to drawVector, drawBivector, drawTrivector.
@@ -22,18 +22,16 @@ package E2GA_Draw is
                     MV : in out E2GA.Multivector;
                     Method : GA_Draw.Bivector_Method_Type
                                := GA_Draw.Draw_Bivector_Circle;
-                    Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0));
+                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0));
    --  Case Vector
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                     aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
                     Scale : float := 1.0);
    --  Case Bivector
---     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
---                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
---                     BV : E2GA.Bivector;
---                     Method_Type : GA_Draw.Bivector_Method_Type
---                                 := GA_Draw.Draw_Bivector_Circle;
---                     Colour : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0));
-
+   procedure Draw (Render_Program : GL.Objects.Programs.Program;
+                   Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
+                   Method_Type : GA_Draw.Bivector_Method_Type
+                               := GA_Draw.Draw_Bivector_Circle);
 end E2GA_Draw;
