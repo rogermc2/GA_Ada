@@ -98,15 +98,15 @@ package E2GA is
 
 private
    type Scalar is record
-      Coordinates : Scalar_Coords;   --  m_c[1]
+      Coordinates : Scalar_Coords := (others => 0.0);   --  m_c[1]
    end record;
 
    type Rotor is record
-      Coordinates : Rotor_Coords;   --  m_c[2]
+      Coordinates : Rotor_Coords := (1.0, 0.0);   --  m_c[2]
    end record;
 
    type Vector is record
-      Coordinates : Vector_Coords;   --  m_c[2]
+      Coordinates : Vector_Coords := (0.0, 0.0);   --  m_c[2]
    end record;
 
 end E2GA;
