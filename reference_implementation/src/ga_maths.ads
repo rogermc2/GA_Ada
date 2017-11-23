@@ -32,6 +32,7 @@ package GA_Maths is
     type Array_UI3 is array (1 .. 3) of Unsigned_Integer;
     type Array_UI4 is array (1 .. 4) of Unsigned_Integer;
     type Array_UI8 is array (1 .. 8) of Unsigned_Integer;
+    type Array_F4 is array (1 .. 4) of float;
     type Array_F8 is array (1 .. 8) of float;
 
     type GA_Matrix3 is new Float_Matrix (1 .. 3, 1 .. 3);
