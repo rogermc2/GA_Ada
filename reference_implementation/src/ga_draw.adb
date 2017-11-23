@@ -479,7 +479,8 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-         Draw_Line (Render_Program, Model_View_Matrix, Proj_Matrix, Tail, Direction, Colour, Scale);
+         Draw_Line (Render_Program, Model_View_Matrix, Proj_Matrix, Tail,
+                    Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
@@ -501,6 +502,7 @@ package body GA_Draw is
          Draw_Cone (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
          Draw_Base (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
+         Disable (Cull_Face);
       end if;
    exception
       when anError :  others =>

@@ -104,20 +104,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
-      V2                : E2GA.Vector;
+      V1                    : E2GA.Vector; --  2D vector (0, 0), (1, 0)
+      V2                    : E2GA.Vector;
 
-      Text_Coords       : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
-      Window_Width      : Glfw.Size;
-      Window_Height     : Glfw.Size;
+      Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
+      Window_Width          : Glfw.Size;
+      Window_Height         : Glfw.Size;
       Translation_Matrix    : GL.Types.Singles.Matrix4;
       BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Model_View_Matrix     : GL.Types.Singles.Matrix4;
       Projection_Matrix     : GL.Types.Singles.Matrix4;
       Vertex_Buffer         : GL.Objects.Buffers.Buffer;
-      Text              : Ada.Strings.Unbounded.Unbounded_String;
-      Text_X            : GL.Types.Single := 50.0;
-      Text_Y            : GL.Types.Single := 50.0;
+      Text                  : Ada.Strings.Unbounded.Unbounded_String;
+      Text_X                : GL.Types.Single := 50.0;
+      Text_Y                : GL.Types.Single := 50.0;
 
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -141,10 +141,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         E2GA_Draw.Draw (Render_Graphic_Program,
-                         Model_View_Matrix, Projection_Matrix, V1, Red, Scale);
-         E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Projection_Matrix,
-                         V2, Green, Scale);
+         E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Projection_Matrix, V1, Red, Scale);
+         E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Projection_Matrix, V2, Green, Scale);
 
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
@@ -159,7 +159,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          end if;
 
          if A < Pi - 0.1 then
-            Text_Coords (2) := 0.2 * float (Entry_Height);
+            Text_Coords (2) := 0.35 * float (Entry_Height);
          else
             Text_Coords (1) := - 0.25 * float (Entry_Height);
             Text_Coords (2) := 0.4 * float (Entry_Height);
@@ -261,16 +261,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
-                        theText : String;
+                        theText          : String;
                         Render_Program   : GL.Objects.Programs.Program;
                         Text_X, Text_Y   : GL.Types.Single;
                         Text_Scale       : GL.Types.Single) is
-      Text_Dimesions_ID    : GL.Uniforms.Uniform;
-      Text_Proj_Matrix_ID  : GL.Uniforms.Uniform;
-      Text_Texture_ID      : GL.Uniforms.Uniform;
-      Text_Colour_ID       : GL.Uniforms.Uniform;
+      Text_Dimesions_ID       : GL.Uniforms.Uniform;
+      Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
+      Text_Texture_ID         : GL.Uniforms.Uniform;
+      Text_Colour_ID          : GL.Uniforms.Uniform;
       Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
-      Text_Colour          : constant Colors.Color := Black;
+      Text_Colour             : constant Colors.Color := Black;
    begin
       Text_Shader_Locations (Render_Program, Text_Proj_Matrix_ID,
                              Text_Texture_ID, Text_Dimesions_ID, Text_Colour_ID);
@@ -279,8 +279,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          Text_Projection_Matrix);
       Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
                                    Text_Scale, Text_Colour, Text_Texture_ID,
-                                   Text_Proj_Matrix_ID, Text_Dimesions_ID, Text_Colour_ID,
-                                   Text_Projection_Matrix);
+                                   Text_Proj_Matrix_ID, Text_Dimesions_ID,
+                                   Text_Colour_ID, Text_Projection_Matrix);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Draw_Text.");
@@ -340,6 +340,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 begin
    Main_Window.Set_Input_Toggle (Sticky_Keys, True);
    Glfw.Input.Poll_Events;
+   GL.Toggles.Disable (GL.Toggles.Cull_Face);
    Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
    while Running loop
       Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
