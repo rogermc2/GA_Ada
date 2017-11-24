@@ -141,6 +141,41 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function E1 (NP : Normalized_Point) return float is
+   begin
+      return NP.E1;
+   end E1;
+
+   --  -------------------------------------------------------------------------
+
+   function E2 (NP : Normalized_Point) return float is
+   begin
+      return NP.E2;
+   end E2;
+
+   --  -------------------------------------------------------------------------
+
+   function E3 (NP : Normalized_Point) return float is
+   begin
+      return NP.E3;
+   end E3;
+
+   --  -------------------------------------------------------------------------
+
+   function NI (NP : Normalized_Point) return float is
+   begin
+      return NP.NI;
+   end NI;
+
+   --  -------------------------------------------------------------------------
+
+   function NO (NP : Normalized_Point) return float is
+   begin
+      return 1.0;
+   end NO;
+
+   --  -------------------------------------------------------------------------
+
    function E1_E2_E3_NI (S : Sphere) return float is
    begin
       return S.E1_E2_E3_NI;
