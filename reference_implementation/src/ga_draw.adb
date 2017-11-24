@@ -115,8 +115,7 @@ package body GA_Draw is
       Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       O2                   : E3GA.Vector := Ortho_2;
       MVP_Matrix           : Matrix4 := Singles.Identity4;
-      Scaled               : float;
-      Scaled_S             : GL.Types.Single;
+      Scaled             : GL.Types.Single;
       Normed_E2            : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -128,14 +127,13 @@ package body GA_Draw is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
-      if  Method /= Draw_Bivector_Parallelogram and then
-        Method /= Draw_Bivector_Parallelogram_No_Vectors then
+      if  Method = Draw_Bivector_Parallelogram and then
+        Method = Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       else
          Normed_E2 := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := Scale * Scale * Pi / E3GA.Get_Coord (Normed_E2);
-         Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
-         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
+         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (E3GA.Get_Coord (Normed_E2)));
+         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
            * MVP_Matrix;
       end if;
 
@@ -154,7 +152,7 @@ package body GA_Draw is
 
    --  ----------------------------------------------------------------------
 
-   procedure Draw_Bivector (Render_Program                       : GL.Objects.Programs.Program;
+   procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
@@ -173,8 +171,7 @@ package body GA_Draw is
       O2                   : E3GA.Vector := Ortho_2;
       Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       MVP_Matrix           : Matrix4 := Singles.Identity4;
-      Scaled               : float;
-      Scaled_S             : GL.Types.Single;
+      Scaled             : GL.Types.Single;
       E2_Norm              : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -196,14 +193,13 @@ package body GA_Draw is
          MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
       end if;
 
-      if  Method /= Draw_Bivector_Parallelogram and then
-        Method /= Draw_Bivector_Parallelogram_No_Vectors then
+      if  Method = Draw_Bivector_Parallelogram and then
+        Method = Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
          E2_Norm := E3GA.Norm_E2 (E3GA.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := Scale * Scale * Pi / E3GA.Get_Coord (E2_Norm);
-         Scaled_S := GL.Types.Single (Float_Functions.Sqrt (Scaled));
-         MVP_Matrix := Maths.Scaling_Matrix ((Scaled_S, Scaled_S, Scaled_S))
+         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (E3GA.Get_Coord (E2_Norm)));
+         MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
            * MVP_Matrix;
       end if;
 
