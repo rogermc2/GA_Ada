@@ -46,18 +46,34 @@ package C3GA is
    function E3 (DP : Dual_Plane) return float;
    function NI (DP : Dual_Plane) return float;
 
+   function E1_E2_NI (L : Line) return float;
+   function E1_E3_NI (L : Line) return float;
+   function E2_E3_NI (L : Line) return float;
+   function E1_NO_NI (L : Line) return float;
+   function E2_NO_NI (L : Line) return float;
+   function E3_NO_NI (L : Line) return float;
+
+   function E1_E2_E3_NI (S : Sphere) return float;
+   function E1_E2_NO_NI (S : Sphere) return float;
+   function E1_E3_NO_NI (S : Sphere) return float;
+   function E2_E3_NO_NI (S : Sphere) return float;
+   function E1_E2_E3_NO (S : Sphere) return float;
+
 private
-   type Circle is record
-      Coordinates : Circle_Coords := (others => 0.0);   --  m_c[10]
+   type Circle is record   --  m_c[10]
+      E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;
+      NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
    end record;
    type Dual_Plane is record
-      Coordinates : Dual_Plane_Coords := (others => 0.0);   --  m_c[4]
+      E1, E2, E3, NI : float := 0.0;   --  m_c[4]
    end record;
-   type Line is record
-      Coordinates : Line_Coords := (others => 0.0);   --  m_c[6]
+   type Line is record   --  m_c[6]
+      E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;
+      E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
    end record;
-   type Sphere is record
-      Coordinates : Sphere_Coords := (others => 0.0);   --  m_c[5]
+   type Sphere is record   --  m_c[5]
+      E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;
+      E2_E3_NO_NI, E1_E2_E3_NO              : float := 0.0;
    end record;
 
 end C3GA;
