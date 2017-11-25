@@ -842,7 +842,7 @@ package body E2GA is
       return theScalar;
    end Set_Scalar;
 
-   --  ---------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Set_Rotor (E1_E2 : float) return Rotor is
       theRotor : Rotor;
@@ -850,6 +850,13 @@ package body E2GA is
       theRotor.Coordinates := (E1_E2, 0.0);
       return theRotor;
    end Set_Rotor;
+
+   --  ------------------------------------------------------------------------
+
+    procedure Set_Scalar (S : out Scalar; Value : float) is
+    begin
+        S.Coordinates (1) := Value;
+    end Set_Scalar;
 
    --  ------------------------------------------------------------------------
 

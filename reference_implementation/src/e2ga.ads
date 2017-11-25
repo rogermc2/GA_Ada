@@ -93,6 +93,7 @@ package E2GA is
    function Set_Multivector (BV : Bivector) return Multivector;
    function Set_Multivector (R : Rotor) return Multivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
+    procedure Set_Scalar (S : out Scalar; Value : float);
    function Unit_E (V : Vector) return Vector;
    function Unit_E (MV : Multivector) return Vector;
 
