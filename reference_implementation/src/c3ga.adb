@@ -1,6 +1,21 @@
 
 package body C3GA is
 
+   function "*" (L : Line; S : Float) return Line is
+   begin
+       return (L.E1_E2_NI * S, L.E1_E3_NI * S, L.E2_E3_NI * S,
+               L.E1_NO_NI * S, L.E2_NO_NI * S, L.E3_NO_NI * S);
+   end  "*";
+
+   --  -------------------------------------------------------------------------
+
+   function "*" (S : Float; L : Line) return Line is
+   begin
+       return L * S;
+   end  "*";
+
+   --  -------------------------------------------------------------------------
+
    function E1_E2_NI (C : Circle) return float is
    begin
       return C.E1_E2_NI;
@@ -221,10 +236,21 @@ package body C3GA is
 
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
                                   NI : float := GA_Maths.NI)
-    return Normalized_Point is
+                                  return Normalized_Point is
    begin
       return (Point (1), Point (1), Point (1), NI);
    end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function Unit_R (L : Line) return Line is
+      use GA_Maths.Float_Functions;
+      R_Sq : constant float := -(L.E1_NO_NI * L.E1_NO_NI +
+                        L.E2_NO_NI * L.E2_NO_NI + L.E3_NO_NI * L.E3_NO_NI);
+      Inv  : constant float := 1.0 / Sqrt (Abs (R_Sq));
+   begin
+      return L * Inv;
+   end Unit_R;
 
    --  -------------------------------------------------------------------------
 

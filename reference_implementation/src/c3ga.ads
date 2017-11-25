@@ -64,7 +64,8 @@ package C3GA is
 
    function Set_Normalized_Point (E1, E2, E3, NI : float := GA_Maths.NI) return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D; NI : float := GA_Maths.NI)
-    return Normalized_Point;
+                                  return Normalized_Point;
+   function Unit_R (L : Line) return Line;
 
 private
    type Circle is record   --  m_c[10]
