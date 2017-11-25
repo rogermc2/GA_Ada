@@ -62,6 +62,10 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
+   function Set_Normalized_Point (E1, E2, E3, NI : float) return Normalized_Point;
+   function Set_Normalized_Point (Point : GA_Maths.Array_3D; NI : float := 0.0)
+    return Normalized_Point;
+
 private
    type Circle is record   --  m_c[10]
       E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;

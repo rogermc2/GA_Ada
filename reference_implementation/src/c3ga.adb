@@ -211,4 +211,19 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Normalized_Point (E1, E2, E3, NI : float) return Normalized_Point is
+   begin
+      return (E1, E2, E3, NI);
+   end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Normalized_Point (Point : GA_Maths.Array_3D; NI : float := 0.0)
+    return Normalized_Point is
+   begin
+      return (Point (1), Point (1), Point (1), NI);
+   end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
 end C3GA;

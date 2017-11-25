@@ -37,11 +37,6 @@ package GA_Maths is
 
     type GA_Matrix3 is new Float_Matrix (1 .. 3, 1 .. 3);
 
---      type Scalar_Coords is (Scalar_Scalar);
---      type Scalar is record
---      --    Coord_Type : Scalar_Coords := Scalar_Scalar;
---          M_C1       : float;
---      end record;
     type Vector_Unsigned is record
         C1_e1   : Interfaces.Unsigned_64;
         C2_e2   : Interfaces.Unsigned_64;
