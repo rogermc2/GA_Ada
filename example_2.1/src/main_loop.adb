@@ -40,7 +40,7 @@ with E3GA_Utilities;
 with GA_Maths;
 
 with Silo;
---  with Texture_Management;
+
 with Text_Management;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
