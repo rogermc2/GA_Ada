@@ -826,7 +826,7 @@ package body E3GA is
       V.Coordinates (3) := C3;
     end Set_Coords;
 
-                --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------
 
     procedure Set_Rotor (X : out Rotor; BV : Bivector) is
     begin
