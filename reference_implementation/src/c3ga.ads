@@ -2,8 +2,11 @@
 with GA_Maths;
 
 with E2GA;
+with E3GA;
 
 package C3GA is
+
+   type Vector_E3GA is private;
 
 --     subtype Circle_Coords is E2GA.Coords_Continuous_Array (1 .. 10);
 --     subtype Dual_Plane_Coords is E2GA.Coords_Continuous_Array (1 .. 4);
@@ -31,6 +34,9 @@ package C3GA is
    function E1_E2_E3 (C : Circle) return float;
    function E2_E3_NI (C : Circle) return float;
    function E3_E1_NI (C : Circle) return float;
+   function Get_Coord_1 (V : Vector_E3GA) return float;
+   function Get_Coord_2 (V : Vector_E3GA) return float;
+   function Get_Coord_3 (V : Vector_E3GA) return float;
    function NO_E1_E2 (C : Circle) return float;
    function NO_E1_E3 (C : Circle) return float;
    function NO_E1_NI (C : Circle) return float;
@@ -62,12 +68,18 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
+   procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Normalized_Point (E1, E2, E3, NI : float := GA_Maths.NI) return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D; NI : float := GA_Maths.NI)
                                   return Normalized_Point;
    function Unit_R (L : Line) return Line;
 
 private
+   --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
+   type Vector_E3GA is record
+      Coordinates : E3GA.Vector_Coords_3D := (0.0, 0.0, 0.0);   --  m_c[3]
+   end record;
+
    type Circle is record   --  m_c[10]
       E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;
       NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;

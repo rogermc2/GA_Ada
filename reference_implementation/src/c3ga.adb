@@ -44,6 +44,27 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+    function Get_Coord_1 (V : Vector_E3GA) return float is
+    begin
+        return V.Coordinates (1);
+    end Get_Coord_1;
+
+   --  ------------------------------------------------------------------------
+
+    function Get_Coord_2 (V : Vector_E3GA) return float is
+    begin
+        return V.Coordinates (2);
+    end Get_Coord_2;
+
+   --  ------------------------------------------------------------------------
+
+    function Get_Coord_3 (V : Vector_E3GA) return float is
+    begin
+        return V.Coordinates (3);
+    end Get_Coord_3;
+
+   --  ------------------------------------------------------------------------
+
    function NO_E1_E2 (C : Circle) return float is
    begin
       return C.NO_E1_E2;
@@ -223,6 +244,15 @@ package body C3GA is
    begin
       return S.E1_E2_E3_NO;
    end E1_E2_E3_NO;
+
+   --  -------------------------------------------------------------------------
+
+    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
+    begin
+      V.Coordinates (1) := C1;
+      V.Coordinates (2) := C2;
+      V.Coordinates (3) := C3;
+    end Set_Coords;
 
    --  -------------------------------------------------------------------------
 
