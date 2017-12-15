@@ -66,11 +66,6 @@ package body E3GA_Utilities is
       use Multivector_Analyze;
       use Multivector_Type_Base;
    begin
---        M_Type           : M_Type_Record;
---        M_Points         : Point_Array;
---        M_Scalors        : Scalar_Array;
---        M_Vectors        : Vector_Array;
-
       Put_Line (Name);
       Put_Line ("Valid Flag    " & boolean'Image (Info.M_Flags.Valid));
       Put_Line ("Dual Flag     " & boolean'Image (Info.M_Flags.Dual));
@@ -154,6 +149,17 @@ package body E3GA_Utilities is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Vector (Name : String; aVector : C3GA.Vector_E3GA) is
+        Coords : GA_Maths.Array_3D := C3GA.Get_Coords (aVector);
+    begin
+        Put (Name & ":  ");
+        for Index in Coords'Range loop
+            Put (float'Image (Coords (Index)) & "   ");
+        end loop;
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
     procedure Print_Vector (Name : String; aVector : E2GA.Vector) is
     begin
         Put (Name & ":  ");
