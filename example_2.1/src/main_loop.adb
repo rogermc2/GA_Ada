@@ -152,7 +152,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
                                 Projection_Matrix, V1, V1 + V2, V2, Blue);
          else
-            null;
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
                             Projection_Matrix, BV, Yellow);
@@ -171,7 +170,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
                                  (E2GA.Bivector_String
                                     (BV)), Label_Position);
-         --         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String ("Hello"), Label_Position);
          Silo.Push (Label);
 
          --  Set X position of next diagram
