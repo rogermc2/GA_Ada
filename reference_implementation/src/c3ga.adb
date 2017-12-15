@@ -65,6 +65,13 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
+    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
+    begin
+        return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
+    end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
    function NO_E1_E2 (C : Circle) return float is
    begin
       return C.NO_E1_E2;
