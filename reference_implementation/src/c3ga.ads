@@ -37,6 +37,7 @@ package C3GA is
    function Get_Coord_1 (V : Vector_E3GA) return float;
    function Get_Coord_2 (V : Vector_E3GA) return float;
    function Get_Coord_3 (V : Vector_E3GA) return float;
+   function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D;
    function NO_E1_E2 (C : Circle) return float;
    function NO_E1_E3 (C : Circle) return float;
    function NO_E1_NI (C : Circle) return float;
