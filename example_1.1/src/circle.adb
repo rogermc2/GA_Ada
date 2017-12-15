@@ -1,6 +1,6 @@
 --  Program Circle
 --  Author Roger Mc Murtrie
---  Created 16 May 2017
+--  Created 16 November 2017
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
