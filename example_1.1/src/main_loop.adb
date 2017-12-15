@@ -31,6 +31,8 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with C3GA;
+with C3GA_Draw;
 with GA_Draw;
 with GL_Util;
 with E2GA;
@@ -90,7 +92,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_X        : integer := 0;
       Position_Y        : single := 160.0;
       Label             : Silo.Label_Data;
-      Label_Position    : GL.Types.Singles.Vector2;
+      Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
       E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
       E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
@@ -99,6 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       V1                    : E2GA.Vector; --  2D vector (0, 0), (1, 0)
       V2                    : E2GA.Vector;
 
+      aPoint                : C3GA.Vector_E3GA;
       Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width          : Glfw.Size;
       Window_Height         : Glfw.Size;
@@ -117,10 +120,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
-                                         Pick.Frustum_Near, Pick.Frustum_Far,
+                                         -100.0, 100.0,
                                          Projection_Matrix);
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 0.0));
+--        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
 --        Set_Coords (V1, E11, E12);
@@ -130,8 +135,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
                                  Label_Position);
          Silo.Push (Label);
+         C3GA.Set_Coords (aPoint, Points.Point_Data (count) (1),
+                         Points.Point_Data (count) (2), Points.Point_Data (count) (3));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Projection_Matrix, Points.Point_Data (count), Red, Scale);
+                         Projection_Matrix, aPoint, Red, Scale);
+--           E3GA_Utilities.Print_Vector ("aPoint", aPoint);
       end loop;
    exception
       when anError :  others =>
@@ -180,10 +188,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Font_File : string := "../fonts/Helvetica.ttc";
    begin
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      GL.Toggles.Enable (GL.Toggles.Lighting);
-      GL.Toggles.Enable (GL.Toggles.Light0);
-      GL.Toggles.Enable (GL.Toggles.Normalize);
-      GL.Rasterization.Set_Line_Width (2.0);
+--        GL.Toggles.Enable (GL.Toggles.Lighting);
+--        GL.Toggles.Enable (GL.Toggles.Light0);
+      --        GL.Toggles.Enable (GL.Toggles.Normalize);
+      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
+      GL.Rasterization.Set_Line_Width (1.0);
       GA_Draw.Set_Point_Size (0.005);
 
       E3GA.Set_Rotor (Model_Rotor, 1.0);
