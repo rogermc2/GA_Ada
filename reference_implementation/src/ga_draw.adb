@@ -426,6 +426,66 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
+   procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                             Base : E3GA.Vector; Scale : float := 1.0;
+                             Colour : GL.Types.Colors.Color) is
+      Scale_Sign : Single := 1.0;
+      Scale_S    : Single := Single (Scale);
+      F          : Single;
+      Z          : Single;
+      Z_Max      : constant Single := 4.0 * Single (GA_Maths.Pi);
+      Tri_Translation_Matrix : GL.Types.Singles.Matrix4;
+      Scaling_Matrix         : GL.Types.Singles.Matrix4;
+   begin
+      if Scale_S < 0.0 then
+         Scale_Sign := -1.0;
+      end if;
+      Scale_S := Scale_Sign *
+        Maths.Cube_Root (Scale_Sign * Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi)));
+      if Scale_S >= 0.0 then
+         Scale_Sign := 1.0;
+      else
+         Scale_Sign := -1.0;
+      end if;
+
+      if E3GA.Get_Coord (E3GA.Norm_E2 (Base)) > 0.0 then
+         Tri_Translation_Matrix :=
+           Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Base)),
+                                      Single (E3GA.Get_Coord_2 (Base)),
+                                      Single (E3GA.Get_Coord_3 (Base))));
+      end if;
+      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
+         raise;
+   end Draw_Trivector;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                             Base : E3GA.Vector; Scale : float := 1.0;
+                             Colour : GL.Types.Colors.Color; V : E3GA.Vector;
+                             Method : Trivector_Method_Type := Draw_TV_Sphere) is
+   begin
+      if Method = Draw_TV_Parellelepiped or
+        Method = Draw_TV_Parellelepiped_No_Vectors then
+         null;
+      else
+         null;
+      end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
+         raise;
+   end Draw_Trivector;
+
+   --  ------------------------------------------------------------------------
+
    procedure Draw_Vector (Render_Program          : GL.Objects.Programs.Program;
                           MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
                           Tail, Direction         : E3GA.Vector;
@@ -528,6 +588,13 @@ package body GA_Draw is
    end Graphic_Shader_Locations;
 
    --  -------------------------------------------------------------------------
+
+   function Point_Size return GL.Types.Single is
+   begin
+      return G_Draw_State.Point_Size;
+   end Point_Size;
+
+   --  ------------------------------------------------------------------------
 
    procedure Set_Background_Colour (Back_Colour : Color) is
    begin

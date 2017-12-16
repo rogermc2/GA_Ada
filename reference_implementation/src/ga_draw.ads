@@ -16,6 +16,9 @@ package GA_Draw is
                                   Draw_Bivector_Parallelogram_No_Vectors,
                                   Draw_Bivector_Cross, Draw_Bivector_Curly_Tail,
                                   Draw_Bivector_Swirl, Draw_Bivector_Circle_Outline);
+    type Trivector_Method_Type is (Draw_TV_Sphere, Draw_TV_Cross, Draw_TV_Curly_Tail,
+                                   Draw_TV_Parellelepiped,
+                                   Draw_TV_Parellelepiped_No_Vectors);
     type Draw_Mode is (OD_Shade, OD_Wireframe, OD_Magnitude, OD_Orientation);
 
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
@@ -28,23 +31,34 @@ package GA_Draw is
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                   Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
+                   Colour : GL.Types.Colors.Color; Scale : float := 1.0;
                    Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
-                   Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
+                   Colour : GL.Types.Colors.Color; Scale : float := 1.0;
                    Method : Bivector_Method_Type := Draw_Bivector_Circle);
+   procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                   Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                   Base : E3GA.Vector; Scale : float := 1.0;
+                   Colour : GL.Types.Colors.Color; V : E3GA.Vector;
+                   Method : Trivector_Method_Type := Draw_TV_Sphere);
+   procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                   Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                   Base : E3GA.Vector; Scale : float := 1.0;
+                   Colour : GL.Types.Colors.Color);
 
     function Get_Draw_Mode return Draw_Mode;
     procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
                                         MV_Matrix_ID, Projection_Matrix_ID,
                                         Colour_Location : out GL.Uniforms.Uniform);
+    function Point_Size return GL.Types.Single;
     procedure Set_Foreground_Colour (Fore_Colour : Color);
     procedure Set_Background_Colour (Back_Colour : Color);
     procedure Set_Draw_Mode (Mode : Draw_Mode);
     procedure Set_Ol_Colour (Ol_Colour : Color);
     procedure Set_Point_Size (Point_Size : GL.Types.Single);
+
 private
     type Colour_Palet is record
         Foreground_Colour : Color := (1.0, 0.0, 1.0, 1.0);
