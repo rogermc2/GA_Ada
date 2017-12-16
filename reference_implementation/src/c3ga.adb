@@ -1,5 +1,15 @@
 
+with Interfaces;
+
+with Ada.Text_IO; use Ada.Text_IO;
+
+with Multivector_Type_Base;
+
 package body C3GA is
+
+   e1_basis : GA_Maths.Array_3D := (1.0, 0.0, 0.0);
+   e2_basis : GA_Maths.Array_3D := (0.0, 1.0, 0.0);
+   e3_basis : GA_Maths.Array_3D := (0.0, 0.0, 1.0);
 
    function "*" (L : Line; S : Float) return Line is
    begin
@@ -16,6 +26,33 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function e1 return E3GA.Vector is
+      use E3GA;
+      V : Vector;
+   begin
+        E3GA.Set_Coords (V, e1_basis (1), e1_basis (2), e1_basis (3));
+        return V;
+   end e1;
+
+    --  ----------------------------------------------------------------------------
+
+    function e2 return E3GA.Vector is
+        V : E3GA.Vector;
+    begin
+        E3GA.Set_Coords (V, e2_basis (1), e2_basis (2), e2_basis (3));
+        return V;
+    end e2;
+
+    --  ------------------------------------------------------------------------
+
+    function e3 return E3GA.Vector is
+        V : E3GA.Vector;
+    begin
+        E3GA.Set_Coords (V, e3_basis (1), e3_basis (2), e3_basis (3));
+        return V;
+    end e3;
+
+    --  ------------------------------------------------------------------------
    function E1_E2_NI (C : Circle) return float is
    begin
       return C.E1_E2_NI;
@@ -254,6 +291,63 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Init (MV : Multivector; Epsilon : float := 0.0) return E2GA.MV_Type is
+      use Interfaces;
+      use GA_Maths;
+      use  Multivector_Type_Base;
+      MV_Info            : E2GA.MV_Type;
+      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
+      GU_1               : constant GA_Maths.Grade_Usage := 1;
+      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
+      Count_Index        : Unsigned_Integer := 0;
+      Done               : Boolean := False;
+   begin
+      --  e2ga.cpp line 1631
+      MV_Info.M_Type := Multivector_Object;
+      MV_Info.M_Grade_Use := GU;
+      --  count grade part usage
+      while GU /= 0 loop
+         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
+            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
+         end if;
+         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
+         MV_Info.M_Grade := Integer (Count_Index);
+         Count_Index := Count_Index + 1;
+      end loop;
+
+      --  if no grade part in use: zero blade
+      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
+         Put_Line ("E2GA.Init 2 Setting zero blade.");
+         Set_Type_Base (MV_Info, True, Blade_MV, 0, GU, Even_Parity);
+         Done := True;
+      else
+         --  Base.M_Zero = False by default
+         if Count (1) /= 0 and then Count (2) /= 0  then
+            --  Base.M_Parity = No_Parity by default
+            Done := True;
+         else
+            if Count (1) = 0 then
+               Put_Line ("E2GA.Init 1 Setting even parity.");
+               MV_Info.M_Parity := Even_Parity;
+            else
+               --                 Put_Line ("E2GA.Init 1 Setting odd parity.");
+               MV_Info.M_Parity := Odd_Parity;
+            end if;
+         end if;
+      end if;
+      if not Done then
+         null;
+--           MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
+      end if;
+      return MV_Info;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Init 1.");
+         raise;
+   end Init;
+
+   --  -------------------------------------------------------------------------
+
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
    begin
       V.Coordinates (1) := C1;
@@ -263,6 +357,15 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point) is
+   begin
+      MV.Coordinates (1) := Point.E1;
+      MV.Coordinates (2) := Point.E2;
+      MV.Coordinates (3) := Point.E3;
+      MV.Coordinates (4) := Point.NI;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
    function Set_Normalized_Point (E1, E2, E3 : float; NI : float := GA_Maths.NI)
                                return Normalized_Point is
    begin

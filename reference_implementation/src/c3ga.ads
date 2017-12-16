@@ -30,6 +30,14 @@ package C3GA is
       Coordinates : E2GA.Scalar_Coords := (others => 1.0);
    end record;
 
+   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+      Coordinates : E3GA.MV_Coordinate_Array  := (others => 0.0);  --  m_c[32]
+   end record;
+
+   function e1 return E3GA.Vector;
+   function e2 return E3GA.Vector;
+   function e3 return E3GA.Vector;
+
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
    function E2_E3_NI (C : Circle) return float;
@@ -69,9 +77,14 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
+   function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
+
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
-   function Set_Normalized_Point (E1, E2, E3 : Float; NI : float := GA_Maths.NI) return Normalized_Point;
-   function Set_Normalized_Point (Point : GA_Maths.Array_3D; NI : float := GA_Maths.NI)
+   procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point);
+   function Set_Normalized_Point (E1, E2, E3 : Float; NI : float := GA_Maths.NI)
+                                  return Normalized_Point;
+   function Set_Normalized_Point (Point : GA_Maths.Array_3D;
+                                  NI : float := GA_Maths.NI)
                                   return Normalized_Point;
    function Unit_R (L : Line) return Line;
 
