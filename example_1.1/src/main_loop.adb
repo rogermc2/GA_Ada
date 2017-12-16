@@ -101,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       V1                    : E2GA.Vector; --  2D vector (0, 0), (1, 0)
       V2                    : E2GA.Vector;
 
-      aPoint                : C3GA.Vector_E3GA;
+      aPoint                : C3GA.Normalized_Point;
       Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width          : Glfw.Size;
       Window_Height         : Glfw.Size;
@@ -135,8 +135,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
                                  Label_Position);
          Silo.Push (Label);
-         C3GA.Set_Coords (aPoint, Points.Point_Data (count) (1),
-                         Points.Point_Data (count) (2), Points.Point_Data (count) (3));
+         aPoint := C3GA.Normalized_Point_N0 (Points.Normalized_Points (count));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Projection_Matrix, aPoint, Red, Scale);
 --           E3GA_Utilities.Print_Vector ("aPoint", aPoint);
