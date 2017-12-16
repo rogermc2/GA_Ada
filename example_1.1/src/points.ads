@@ -8,6 +8,7 @@ with GA_Maths;
 package Points is
 
    type Points_Array is array (integer range <>) of GA_Maths.Array_3D;
+   type Normalized_Points_Array is array (integer range <>) of C3GA.Normalized_Point;
    Num_Points : constant Integer := 6;
 
    Point_Data : Points_Array (1 .. Num_Points) :=
@@ -24,13 +25,15 @@ package Points is
 
    --  n is a direction vector
    n : constant E3GA.Vector := E3GA.e2;
-   L1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (1));
-   L2 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (2));
+   L1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (1));
+   L2 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (2));
 
-   C1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (3));
-   C2 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (4));
-   C3 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (5));
+   C1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (3));
+   C2 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (4));
+   C3 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (5));
 
-   P1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (6));
+   P1 : constant C3GA.Normalized_Point := C3GA.Set_Normalized_Point_N0 (Point_Data (6));
 
+   Normalized_Points : constant Normalized_Points_Array (1 .. Num_Points) :=
+                    (L1, L2, C1, C2, C3, P1);
 end Points;
