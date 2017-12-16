@@ -3,15 +3,15 @@ package body C3GA is
 
    function "*" (L : Line; S : Float) return Line is
    begin
-       return (L.E1_E2_NI * S, L.E1_E3_NI * S, L.E2_E3_NI * S,
-               L.E1_NO_NI * S, L.E2_NO_NI * S, L.E3_NO_NI * S);
+      return (L.E1_E2_NI * S, L.E1_E3_NI * S, L.E2_E3_NI * S,
+              L.E1_NO_NI * S, L.E2_NO_NI * S, L.E3_NO_NI * S);
    end  "*";
 
    --  -------------------------------------------------------------------------
 
    function "*" (S : Float; L : Line) return Line is
    begin
-       return L * S;
+      return L * S;
    end  "*";
 
    --  -------------------------------------------------------------------------
@@ -44,31 +44,31 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-    function Get_Coord_1 (V : Vector_E3GA) return float is
-    begin
-        return V.Coordinates (1);
-    end Get_Coord_1;
+   function Get_Coord_1 (V : Vector_E3GA) return float is
+   begin
+      return V.Coordinates (1);
+   end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
-    function Get_Coord_2 (V : Vector_E3GA) return float is
-    begin
-        return V.Coordinates (2);
-    end Get_Coord_2;
+   function Get_Coord_2 (V : Vector_E3GA) return float is
+   begin
+      return V.Coordinates (2);
+   end Get_Coord_2;
 
    --  ------------------------------------------------------------------------
 
-    function Get_Coord_3 (V : Vector_E3GA) return float is
-    begin
-        return V.Coordinates (3);
-    end Get_Coord_3;
+   function Get_Coord_3 (V : Vector_E3GA) return float is
+   begin
+      return V.Coordinates (3);
+   end Get_Coord_3;
 
    --  ------------------------------------------------------------------------
 
-    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
-    begin
-        return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
-    end Get_Coords;
+   function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
+   begin
+      return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
+   end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
@@ -254,17 +254,26 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
-    begin
-      V.Coordinates (1) := C1;
-      V.Coordinates (2) := C2;
-      V.Coordinates (3) := C3;
-    end Set_Coords;
+   function Normalized_Point_N0 (N : Normalized_Point) return Normalized_Point is
+      thePoint : Normalized_Point := N;
+   begin
+      thePoint.NI := 0.0;
+      return thePoint;
+   end Normalized_Point_N0;
 
    --  -------------------------------------------------------------------------
 
-   function Set_Normalized_Point (E1, E2, E3, NI : float := GA_Maths.NI)
-                                  return Normalized_Point is
+   procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
+   begin
+      V.Coordinates (1) := C1;
+      V.Coordinates (2) := C2;
+      V.Coordinates (3) := C3;
+   end Set_Coords;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Normalized_Point (E1, E2, E3 : float; NI : float := GA_Maths.NI)
+                               return Normalized_Point is
    begin
       return (E1, E2, E3, NI);
    end Set_Normalized_Point;
@@ -273,17 +282,31 @@ package body C3GA is
 
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
                                   NI : float := GA_Maths.NI)
-                                  return Normalized_Point is
+                               return Normalized_Point is
    begin
-      return (Point (1), Point (1), Point (1), NI);
+      return (Point (1), Point (2), Point (3), NI);
    end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Normalized_Point_N0 (E1, E2, E3 : Float) return Normalized_Point is
+   begin
+      return (E1, E2, E3, 0.0);
+   end Set_Normalized_Point_N0;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Normalized_Point_N0 (Point : GA_Maths.Array_3D) return Normalized_Point is
+   begin
+      return (Point (1), Point (2), Point (3), 0.0);
+   end Set_Normalized_Point_N0;
 
    --  -------------------------------------------------------------------------
 
    function Unit_R (L : Line) return Line is
       use GA_Maths.Float_Functions;
       R_Sq : constant float := -(L.E1_NO_NI * L.E1_NO_NI +
-                        L.E2_NO_NI * L.E2_NO_NI + L.E3_NO_NI * L.E3_NO_NI);
+                                   L.E2_NO_NI * L.E2_NO_NI + L.E3_NO_NI * L.E3_NO_NI);
       Inv  : constant float := 1.0 / Sqrt (Abs (R_Sq));
    begin
       return L * Inv;
