@@ -1,4 +1,5 @@
 
+with C3GA;
 with E2GA;
 with E3GA;
 with GA_Maths;
@@ -77,6 +78,9 @@ package Multivector_Analyze is
 
    function Default_Epsilon return float;  --  Must precede Analyze
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
+                     Flags : Flag_Type := (Flag_Invalid, False);
+                     Epsilon : float := Default_Epsilon);
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
