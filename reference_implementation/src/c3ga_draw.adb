@@ -30,12 +30,11 @@ package body C3GA_Draw is
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    aPoint : C3GA.Normalized_Point; Colour : GL.Types.Colors.Color;
                    Scale: float := 1.0) is
+      MV : C3GA.Multivector (2);
    begin
-      E3GA.Set_Coords (Vec_3D, C3GA.Get_Coord_1 (aVector),
-                       C3GA.Get_Coord_2 (aVector), 0.0);
-      E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
-      GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                           Tail, Vec_3D, Colour, Scale);
+      C3GA.Set_Multivector (MV, aPoint);
+      Draw_Point (Render_Program, Model_View_Matrix, Projection_Matrix,
+                           MV, Colour, Scale);
 
    exception
       when anError :  others =>
