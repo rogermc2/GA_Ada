@@ -254,15 +254,6 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Normalized_Point_N0 (N : Normalized_Point) return Normalized_Point is
-      thePoint : Normalized_Point := N;
-   begin
-      thePoint.NI := 0.0;
-      return thePoint;
-   end Normalized_Point_N0;
-
-   --  -------------------------------------------------------------------------
-
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
    begin
       V.Coordinates (1) := C1;
@@ -289,20 +280,6 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Normalized_Point_N0 (E1, E2, E3 : Float) return Normalized_Point is
-   begin
-      return (E1, E2, E3, 0.0);
-   end Set_Normalized_Point_N0;
-
-   --  -------------------------------------------------------------------------
-
-   function Set_Normalized_Point_N0 (Point : GA_Maths.Array_3D) return Normalized_Point is
-   begin
-      return (Point (1), Point (2), Point (3), 0.0);
-   end Set_Normalized_Point_N0;
-
-   --  -------------------------------------------------------------------------
-
    function Unit_R (L : Line) return Line is
       use GA_Maths.Float_Functions;
       R_Sq : constant float := -(L.E1_NO_NI * L.E1_NO_NI +
@@ -311,6 +288,29 @@ package body C3GA is
    begin
       return L * Inv;
    end Unit_R;
+
+   --  -------------------------------------------------------------------------
+
+   function US_Normalized_Point (N : Normalized_Point) return Normalized_Point is
+      thePoint : Normalized_Point := N;
+   begin
+      thePoint.NI := 0.0;
+      return thePoint;
+   end US_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point is
+   begin
+      return (E1, E2, E3, 0.0);
+   end US_Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function US_Set_Normalized_Point (Point : GA_Maths.Array_3D) return Normalized_Point is
+   begin
+      return (Point (1), Point (2), Point (3), 0.0);
+   end US_Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
 
