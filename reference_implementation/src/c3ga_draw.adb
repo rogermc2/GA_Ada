@@ -1,8 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Maths.Single_Math_Functions;
-
 with E3GA;
 with GA_Draw;
 with GA_Maths;
