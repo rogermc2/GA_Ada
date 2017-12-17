@@ -1,23 +1,15 @@
 
-with Ada.Containers.Vectors;
+with GL.Types;
 
-with E2GA;
+with E3GA;
 
 package Geosphere is
+   --  some very ancient code to compute a triangulated sphere
 
-    type Geosphere_Vertex is record
-        X   : float;
-        Y   : float;
-        Z   : float;
-    end record;
+    type Geosphere (Max_Vertices : GL.Types.Int; Max_Faces : GL.Types.Int) is private;
+    type Geosphere_Face is private;
 
-    package Vertices_Package is new Ada.Containers.Vectors (positive, Geosphere_Vertex);
-    type Vertices_Vector is new Vertices_Package.Vector with null record;
-
-    type Geosphere_S is private;
-    type Geosphere_Face_S is private;
-
-    procedure GS_Compute (Sphere : Geosphere_S; Depth : integer);
+    procedure GS_Compute (Sphere : Geosphere; Depth : GL.Types.Int);
 
 private
     type V_Array is array (1 .. 3) of integer;
@@ -26,10 +18,10 @@ private
     type Contour_Intersect_Array is array (1 .. 3) of integer;
     type Contour_Visited_Array is array (1 .. 3) of integer;
 
-    type Geosphere_Face_S is record
+    type Geosphere_Face is record
         V                 : V_Array;
         Child             : Child_Array;
-        Plane             : E2GA.Bivector;
+        Plane             : E3GA.Bivector;
         D                 : float;
         Depth             : integer;
         Neighbour         : Neighbour_Array;
@@ -37,13 +29,13 @@ private
         Contour_Visited   : Contour_Visited_Array;
     end record;
 
-    type Geosphere_S is record
-        Num_Vertices      : Natural;
-        Max_Vertices      : Natural;
-        Num_Faces         : Natural;
-        Max_Faces         : Natural;
-        Num_Primitives         : Natural;
-        Depth             : integer;
-    end record;
+   type Geosphere (Max_Vertices : GL.Types.Int; Max_Faces : GL.Types.Int) is record
+      Num_Vertices    : GL.Types.Int;
+      Num_Faces       : GL.Types.Int;
+      Num_Primitives  : GL.Types.Int;
+      Depth           : GL.Types.Int;
+      Vertices        : GL.Types.Singles.Vector3_Array (1 .. Max_Vertices);
+      Faces           : GL.Types.Singles.Vector3_Array (1 .. Max_Faces);
+   end record;
 
 end Geosphere;
