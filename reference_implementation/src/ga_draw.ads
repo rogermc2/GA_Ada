@@ -10,6 +10,7 @@ with E2GA;
 with E3GA;
 
 package GA_Draw is
+
     type Colour_Palet is private;
 
     type Bivector_Method_Type is (Draw_Bivector_Circle, Draw_Bivector_Parallelogram,
@@ -46,7 +47,8 @@ package GA_Draw is
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    Base : E3GA.Vector; Scale : float := 1.0;
-                   Colour : GL.Types.Colors.Color);
+                   Colour : GL.Types.Colors.Color;
+                   Method : Trivector_Method_Type := Draw_TV_Sphere);
 
     function Get_Draw_Mode return Draw_Mode;
     procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
@@ -66,11 +68,15 @@ private
         Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);
     end record;
 
-    type Draw_State is record
-        Diffuse     : GL.Types.Single := 1.0;
-        Sphere      : GL.Types.Single := 0.0;
-        Point_Size  : GL.Types.Single := 0.2;
-        Line_Length : GL.Types.Single := 6.0;
-        Plane_Size  : GL.Types.Single := 6.0;
-    end record;
+   type Draw_State is record
+      Diffuse      : GL.Types.Single := 1.0;
+      Sphere       : GL.Types.Single := 0.0;
+      Point_Size   : GL.Types.Single := 0.2;
+      Line_Length  : GL.Types.Single := 6.0;
+      Plane_Size   : GL.Types.Single := 6.0;
+      M_Draw_Mode  : Draw_Mode := OD_Magnitude;
+      --  M_Sphere         : Geosphere.Geosphere_S;
+      --  M_Sphere_GL_List : GL.Types.UInt;
+   end record;
+
 end GA_Draw;

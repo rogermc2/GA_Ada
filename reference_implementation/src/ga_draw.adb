@@ -29,14 +29,8 @@ with GL_Util;
 
 package body GA_Draw is
 
-   package Draw_State_Package is new Ada.Containers.Vectors (positive, Draw_Mode);
-   type Draw_State_Vector is new Draw_State_Package.Vector with null record;
-
    Palet                : Colour_Palet;
    G_Draw_State         : Draw_State;
-   M_Draw_Mode          : Draw_State_Vector;  -- Initialized to OD_Magnitude at end.
-   --  M_Sphere         : Geosphere.Geosphere_S;
-   --  M_Sphere_GL_List : GL.Types.UInt;
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
@@ -426,14 +420,28 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
+   procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
+                          Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                          Normal : E3GA.Vector; Scale : float := 1.0;
+                          Colour : GL.Types.Colors.Color) is
+   begin
+      null;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
+         raise;
+   end Draw_Sphere;
+
+   --  ------------------------------------------------------------------------
+
+   --  Implements if (vc == NULL) drawTriVector(base, scale, NULL, DRAW_TV_SPHERE, o);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Scale : float := 1.0;
-                             Colour : GL.Types.Colors.Color) is
+                             Colour : GL.Types.Colors.Color;
+                             Method : Trivector_Method_Type := Draw_TV_Sphere) is
       Scale_Sign : Single := 1.0;
       Scale_S    : Single := Single (Scale);
-      F          : Single;
-      Z          : Single;
       Z_Max      : constant Single := 4.0 * Single (GA_Maths.Pi);
       Tri_Translation_Matrix : GL.Types.Singles.Matrix4;
       Scaling_Matrix         : GL.Types.Singles.Matrix4;
@@ -441,6 +449,7 @@ package body GA_Draw is
       if Scale_S < 0.0 then
          Scale_Sign := -1.0;
       end if;
+      --  adjust scale for sphere
       Scale_S := Scale_Sign *
         Maths.Cube_Root (Scale_Sign * Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi)));
       if Scale_S >= 0.0 then
@@ -456,7 +465,8 @@ package body GA_Draw is
                                       Single (E3GA.Get_Coord_3 (Base))));
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-
+      --  case DRAW_TV_SPHERE:
+      --  g_drawState.drawSphere(((g_drawState.getDrawMode() & OD_ORIENTATION) ? s * 0.1f : 0.0f));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
@@ -570,7 +580,7 @@ package body GA_Draw is
 
    function Get_Draw_Mode return Draw_Mode is
    begin
-      return M_Draw_Mode.Last_Element;
+      return G_Draw_State.M_Draw_Mode;
    end Get_Draw_Mode;
 
    --  ------------------------------------------------------------------------
@@ -605,7 +615,7 @@ package body GA_Draw is
 
    procedure Set_Draw_Mode (Mode : Draw_Mode) is
    begin
-      M_Draw_Mode.Append (Mode);
+      G_Draw_State.M_Draw_Mode := Mode;
    end Set_Draw_Mode;
 
    --  ------------------------------------------------------------------------
@@ -631,6 +641,4 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-begin
-   M_Draw_Mode.Append (OD_Magnitude);
 end GA_Draw;
