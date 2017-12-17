@@ -52,6 +52,15 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+    function "=" (V1, V2 : Vector) return Boolean is
+      theVector : Vector;
+    begin
+       return V1.Coordinates (1) = V2.Coordinates (1) and then
+          V1.Coordinates (2) = V2.Coordinates (2) and then
+          V1.Coordinates (3) = V2.Coordinates (3);
+    end "=";
+
+    --  ------------------------------------------------------------------------
     function "+" (V1, V2 : Vector) return Vector is
       theVector : Vector;
     begin

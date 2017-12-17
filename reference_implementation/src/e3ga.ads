@@ -41,6 +41,7 @@ package E3GA is
 
    --  ------------------------------------------------------------------------
 
+   function "=" (V1, V2 : Vector) return Boolean;
    function "+" (V1, V2 : Vector) return Vector;
    function "-" (V : Vector) return Vector;
    function "-" (V1, V2 : Vector) return Vector;
