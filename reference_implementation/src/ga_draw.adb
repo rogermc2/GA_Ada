@@ -425,7 +425,9 @@ package body GA_Draw is
                           Normal : E3GA.Vector; Scale : float := 1.0;
                           Colour : GL.Types.Colors.Color) is
    begin
-      null;
+      if G_Draw_State.Max_Vertices = 0 then
+         Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
+      end if;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
