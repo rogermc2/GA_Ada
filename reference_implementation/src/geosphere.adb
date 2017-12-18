@@ -41,6 +41,20 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
+   procedure Create_Face (Sphere : in out Geosphere; V1, V2, V3 : Integer) is
+      New_Face : Geosphere_Face;
+   begin
+      New_Face := Sphere.Faces.Last_Element;
+      New_Face.Vertices (1) := V1;
+      New_Face.Vertices (2) := V2;
+      New_Face.Vertices (3) := V3;
+      New_Face.Depth := New_Face.Depth + 1;
+      --  New_Face.Child is set to (0, 0, 0) by default
+      Sphere.Faces.Append (New_Face);
+   end Create_Face;
+
+   --  -------------------------------------------------------------------------
+
     procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
       Num_Faces     : constant Integer := 8;
       Num_Vertices  : constant Integer := 6;
@@ -90,23 +104,11 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   function Create_Face (Sphere : Geosphere) return Geosphere_Face is
-      New_Face     : Geosphere_Face;
-   begin
-      New_Face := Sphere.Faces.Last_Element;
-      New_Face.Depth := New_Face.Depth + 1;
-      --  New_Face.Child set to (0, 0, 0) by default
-      return New_Face;
-   end Create_Face;
-
-   --  -------------------------------------------------------------------------
-
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean is
       use E3GA;
       this_Face       : Geosphere_Face:= Sphere.Faces.Element (Face_index);
       Faces           : F_Vector := Sphere.Faces;
-      New_Face        : Geosphere_Face;
       Vertex_Indicies : V_Array := this_Face.Vertices;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
@@ -117,6 +119,7 @@ package body Geosphere is
       Num_Faces       : Integer := Sphere.Num_Faces;
       Index           : Integer := 0;
       Refined         : Boolean := False;
+      Dump            : Boolean;
    begin
       if Depth > 0 then  --   create 3 vertices
          while index < 3 and not Refined loop
@@ -133,30 +136,24 @@ package body Geosphere is
       end if;
 
       if not Refined then
-         New_Face := Create_Face (Sphere);
-         New_Face.Vertices (1) :=  this_Face.Vertices (1);
-         New_Face.Vertices (2) := New_Indices (1);
-         New_Face.Vertices (3) := New_Indices (3);
-         Sphere.Faces.Append (New_Face);
+         Create_Face (Sphere, this_Face.Vertices (1),
+                                  New_Indices (1), New_Indices (3));
+         Create_Face (Sphere, New_Indices (1),
+                                  this_Face.Vertices (2), New_Indices (2));
+         Create_Face (Sphere, New_Indices (1),
+                                  New_Indices (2), New_Indices (3));
+         Create_Face (Sphere, New_Indices (2),
+                                  this_Face.Vertices (3), New_Indices (3));
 
-         New_Face := Create_Face (Sphere);
-         New_Face.Vertices (1) := New_Indices (1);
-         New_Face.Vertices (2) := this_Face.Vertices (2);
-         New_Face.Vertices (3) := New_Indices (2);
-         Sphere.Faces.Append (New_Face);
+         for index in Int4_range loop
+            this_Face.Child (Index) := Sphere.Num_Faces + Index;
+         end loop;
+         Sphere.Faces.Replace_Element (Face_index, this_Face);
 
-         New_Face := Create_Face (Sphere);
-         New_Face.Vertices (1) := New_Indices (1);
-         New_Face.Vertices (2) := New_Indices (2);
-         New_Face.Vertices (3) := New_Indices (3);
-         Sphere.Faces.Append (New_Face);
-
-         New_Face := Create_Face (Sphere);
-         New_Face.Vertices (1) := New_Indices (2);
-         New_Face.Vertices (2) := this_Face.Vertices (3);
-         New_Face.Vertices (3) := New_Indices (3);
-         Sphere.Faces.Append (New_Face);
-
+         for index in Int4_range loop
+            Dump := Refine_Face (Sphere, Sphere.Num_Faces + Index, Depth - 1);
+         end loop;
+         Sphere.Num_Faces := Sphere.Num_Faces + 4;
       end if;
       return Refined;
    end Refine_Face;
