@@ -80,7 +80,7 @@ private
       Line_Length  : GL.Types.Single := 6.0;
       Plane_Size   : GL.Types.Single := 6.0;
       M_Draw_Mode  : Draw_Mode := OD_Magnitude;
-      M_Sphere     : Geosphere.Geosphere (Max_Vertices, Max_Faces);
+      M_Sphere     : Geosphere.Geosphere;
       --  M_Sphere_GL_List : GL.Types.UInt;
    end record;
 
