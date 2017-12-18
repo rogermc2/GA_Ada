@@ -90,13 +90,25 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
+   function Create_Face (Sphere : Geosphere) return Geosphere_Face is
+      New_Face     : Geosphere_Face;
+   begin
+      New_Face := Sphere.Faces.Last_Element;
+      New_Face.Depth := New_Face.Depth + 1;
+      --  New_Face.Child set to (0, 0, 0) by default
+      return New_Face;
+   end Create_Face;
+
+   --  -------------------------------------------------------------------------
+
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean is
       use E3GA;
       this_Face       : Geosphere_Face:= Sphere.Faces.Element (Face_index);
+      Faces           : F_Vector := Sphere.Faces;
       New_Face        : Geosphere_Face;
       Vertex_Indicies : V_Array := this_Face.Vertices;
-      New_Indices     : array (Int3_Range) of integer := (-1, -1, -1);
+      New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
       Vertex_1        : Vector;
       Vertex_2        : Vector;
@@ -121,11 +133,30 @@ package body Geosphere is
       end if;
 
       if not Refined then
-         New_Face := Sphere.Faces.Last_Element;
+         New_Face := Create_Face (Sphere);
+         New_Face.Vertices (1) :=  this_Face.Vertices (1);
          New_Face.Vertices (2) := New_Indices (1);
          New_Face.Vertices (3) := New_Indices (3);
-         New_Face.Depth := New_Face.Depth + 1;
-         --  New_Face.Child set to (0, 0, 0) by default
+         Sphere.Faces.Append (New_Face);
+
+         New_Face := Create_Face (Sphere);
+         New_Face.Vertices (1) := New_Indices (1);
+         New_Face.Vertices (2) := this_Face.Vertices (2);
+         New_Face.Vertices (3) := New_Indices (2);
+         Sphere.Faces.Append (New_Face);
+
+         New_Face := Create_Face (Sphere);
+         New_Face.Vertices (1) := New_Indices (1);
+         New_Face.Vertices (2) := New_Indices (2);
+         New_Face.Vertices (3) := New_Indices (3);
+         Sphere.Faces.Append (New_Face);
+
+         New_Face := Create_Face (Sphere);
+         New_Face.Vertices (1) := New_Indices (2);
+         New_Face.Vertices (2) := this_Face.Vertices (3);
+         New_Face.Vertices (3) := New_Indices (3);
+         Sphere.Faces.Append (New_Face);
+
       end if;
       return Refined;
    end Refine_Face;
