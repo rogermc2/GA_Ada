@@ -41,6 +41,57 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
+    procedure Compute_Neighbours (Sphere : in out Geosphere) is
+      procedure Find_Relation (C1 : Face_Vectors.Cursor) is
+         Face1_Index : Integer := Face_Vectors.To_Index (C1);
+         Face_1 : Geosphere_Face := Sphere.Faces.Element (Face1_Index);
+         Num    : Integer := 0;
+         Index_1 : Integer := 0;
+
+         procedure Find_Neighbours (C2 : Face_Vectors.Cursor) is
+            Face2_Index : Integer := Face_Vectors.To_Index (C2);
+            Face_2      : Geosphere_Face := Sphere.Faces.Element (Face2_Index);
+            Index_2     : Integer := 0;
+         begin
+            while Index_2 < 3 loop
+               Index_2 := Index_2 + 1;
+               if Face_2.Neighbour (Index_2) = Face_1.Neighbour (Index_1) then
+                  null;
+               else
+                  null;
+               end if;
+            end loop;
+         end Find_Neighbours;
+
+      begin
+         while Index_1 < 3 loop
+            Index_1 := Index_1 + 1;
+            if Face_1.Neighbour (Index_1) > 0 then
+               Num := Num + 1;
+            else
+               Iterate (Sphere.Faces, Find_Neighbours'Access);
+            end if;
+         end loop;
+         Sphere.Faces.Replace_Element (Face1_Index, Face_1);
+      end Find_Relation;
+
+      procedure Reset_Relation (C : Face_Vectors.Cursor) is
+         Face_Index : Integer := Face_Vectors.To_Index (C);
+         aFace : Geosphere_Face := Sphere.Faces.Element (Face_Index);
+      begin
+         for index in Int3_Range loop
+            aFace.Neighbour (index) := 0;
+         end loop;
+         Sphere.Faces.Replace_Element (Face_Index, aFace);
+      end Reset_Relation;
+
+    begin
+      Iterate (Sphere.Faces, Reset_Relation'Access);
+      Iterate (Sphere.Faces, Find_Relation'Access);
+    end Compute_Neighbours;
+
+   --  -------------------------------------------------------------------------
+
    procedure Create_Face (Sphere : in out Geosphere; V1, V2, V3 : Integer) is
       New_Face : Geosphere_Face;
    begin
@@ -99,6 +150,9 @@ package body Geosphere is
       for face_index in 1 .. Num_Faces loop
         Refinded := Refine_Face (Sphere, face_index, Depth);
       end loop;
+      Sphere.Depth := Depth;
+
+      Compute_Neighbours (Sphere);
 
     end GS_Compute;
 
