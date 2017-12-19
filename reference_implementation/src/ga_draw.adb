@@ -439,8 +439,8 @@ package body GA_Draw is
    --  Implements if (vc == NULL) drawTriVector(base, scale, NULL, DRAW_TV_SPHERE, o);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Scale : float := 1.0;
-                             Colour : GL.Types.Colors.Color;
+                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Scale : float := 1.0;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
       Scale_Sign : Single := 1.0;
       Scale_S    : Single := Single (Scale);
@@ -479,8 +479,8 @@ package body GA_Draw is
 
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Scale : float := 1.0;
-                             Colour : GL.Types.Colors.Color; V : E3GA.Vector;
+                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Scale : float := 1.0; V : E3GA.Vector;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
    begin
       if Method = Draw_TV_Parellelepiped or
@@ -601,7 +601,7 @@ package body GA_Draw is
 
    --  -------------------------------------------------------------------------
 
-   function Point_Size return GL.Types.Single is
+   function Point_Size return Float is
    begin
       return G_Draw_State.Point_Size;
    end Point_Size;
@@ -636,7 +636,7 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Point_Size (Point_Size : GL.Types.Single) is
+   procedure Set_Point_Size (Point_Size : Float) is
    begin
       G_Draw_State.Point_Size := Point_Size;
    end Set_Point_Size;

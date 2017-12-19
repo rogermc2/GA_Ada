@@ -56,7 +56,7 @@ package body C3GA_Draw is
                          Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                          MV : C3GA.Multivector; Colour : GL.Types.Colors.Color) is
       use GL.Types;
-      Scale : Single := 4.0 / 3.0 * Single (GA_Maths.PI) * GA_Draw.Point_Size ** 3;
+      Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
       Base  : E3GA.Vector;
    begin
       E3GA.Set_Coords (Base, MV.Coordinates (1), MV.Coordinates (2),

@@ -23,8 +23,8 @@ package GA_Draw is
                                   Draw_TV_Parellelepiped_No_Vectors);
    type Draw_Mode is (OD_Shade, OD_Wireframe, OD_Magnitude, OD_Orientation);
 
-   type Draw_State (Max_Vertices : GL.Types.Int := 0;
-                    Max_Faces : GL.Types.Int := 0) is private;
+   type Draw_State (Max_Vertices : Integer := 0;
+                    Max_Faces : Integer := 0) is private;
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                           MV_Matrix, Proj_Matrix : GL.Types.Singles.Matrix4;
@@ -45,25 +45,25 @@ package GA_Draw is
                             Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Scale : float := 1.0;
-                             Colour : GL.Types.Colors.Color; V : E3GA.Vector;
+                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Scale : float := 1.0; V : E3GA.Vector;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Scale : float := 1.0;
-                             Colour : GL.Types.Colors.Color;
+                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Scale : float := 1.0;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
 
    function Get_Draw_Mode return Draw_Mode;
    procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
                                        MV_Matrix_ID, Projection_Matrix_ID,
                                        Colour_Location : out GL.Uniforms.Uniform);
-   function Point_Size return GL.Types.Single;
+   function Point_Size return Float;
    procedure Set_Foreground_Colour (Fore_Colour : Color);
    procedure Set_Background_Colour (Back_Colour : Color);
    procedure Set_Draw_Mode (Mode : Draw_Mode);
    procedure Set_Ol_Colour (Ol_Colour : Color);
-   procedure Set_Point_Size (Point_Size : GL.Types.Single);
+   procedure Set_Point_Size (Point_Size : Float);
 
 private
    type Colour_Palet is record
@@ -73,12 +73,12 @@ private
    end record;
 
    type Draw_State
-     (Max_Vertices : GL.Types.Int := 0; Max_Faces : GL.Types.Int := 0) is record
-      Ambient      : GL.Types.Single := 1.0;
-      Diffuse      : GL.Types.Single := 1.0;
-      Point_Size   : GL.Types.Single := 0.2;
-      Line_Length  : GL.Types.Single := 6.0;
-      Plane_Size   : GL.Types.Single := 6.0;
+     (Max_Vertices : Integer := 0; Max_Faces : Integer := 0) is record
+      Ambient      : Float := 1.0;
+      Diffuse      : Float := 1.0;
+      Point_Size   : Float := 0.2;
+      Line_Length  : Float := 6.0;
+      Plane_Size   : Float := 6.0;
       M_Draw_Mode  : Draw_Mode := OD_Magnitude;
       M_Sphere     : Geosphere.Geosphere;
       --  M_Sphere_GL_List : GL.Types.UInt;
