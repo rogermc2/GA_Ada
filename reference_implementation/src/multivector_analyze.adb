@@ -3,6 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA_Utilities;
 with Multivector_Analyze_E2GA;
+with Multivector_Analyze_C3GA;
 
 package body Multivector_Analyze is
 
@@ -21,14 +22,15 @@ package body Multivector_Analyze is
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon) is
+                      Epsilon : float := Default_Epsilon;
+                      Probe : C3GA.Normalized_Point) is
    begin
-      Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
+      Multivector_Analyze_C3GA.Analyze (theAnalysis, MV, Flags, Epsilon, Probe);
    end Analyze;
 
    --  -------------------------------------------------------------------------
-   function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
 
+   function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
    begin
       return  A.M_Type.Blade_Subclass;
    end Blade_Subclass;

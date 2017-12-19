@@ -82,7 +82,8 @@ package Multivector_Analyze is
                      Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon);
+                      Epsilon : float := Default_Epsilon;
+                      Probe : C3GA.Normalized_Point := 1.0);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
    function isValid (A : MV_Analysis) return Boolean;
    function isDual (A : MV_Analysis) return Boolean;
