@@ -249,6 +249,13 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function NO return Normalized_Point is
+   begin
+      return (0.0, 0.0, 0.0, 1.0);
+   end NO;
+
+   --  -------------------------------------------------------------------------
+
    function NO (NP : Normalized_Point) return float is
    begin
       return 1.0;
@@ -366,6 +373,7 @@ package body C3GA is
    end Set_Multivector;
 
    --  -------------------------------------------------------------------------
+
    function Set_Normalized_Point (E1, E2, E3 : float; NI : float := GA_Maths.NI)
                                return Normalized_Point is
    begin

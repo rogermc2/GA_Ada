@@ -22,16 +22,14 @@ package C3GA is
    --  user constants
    --	__ni_ct__ ni; declared in c3ga.cpp
    --	__no_ct__ no; declared in c3ga.cpp
-   type No_T is record
-      Coordinates : E2GA.Scalar_Coords := (others => 1.0);
-   end record;
+   type No_T is private;
 
    type Ni_T is record
       Coordinates : E2GA.Scalar_Coords := (others => 1.0);
    end record;
 
    type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : E3GA.MV_Coordinate_Array  := (others => 0.0);  --  m_c[32]
+      Coordinates : E3GA.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
 
    function e1 return E3GA.Vector;
@@ -70,6 +68,7 @@ package C3GA is
    function E3 (NP : Normalized_Point) return float;
    function NI (NP : Normalized_Point) return float;
    function NO (NP : Normalized_Point) return float;
+   function NO return Normalized_Point;
 
    function E1_E2_E3_NI (S : Sphere) return float;
    function E1_E2_NO_NI (S : Sphere) return float;
@@ -103,6 +102,7 @@ private
       E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;
       NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
    end record;
+
    type Dual_Plane is record
       E1, E2, E3, NI : float := 0.0;   --  m_c[4]
    end record;
@@ -110,9 +110,15 @@ private
       E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;
       E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
    end record;
+
    type Normalized_Point is record
       E1, E2, E3, NI : float := 0.0;   --  m_c[4]
    end record;
+
+   type No_T is record
+      No : float := 0.0;   --  m_c[1]
+   end record;
+
    type Sphere is record   --  m_c[5]
       E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;
       E2_E3_NO_NI, E1_E2_E3_NO              : float := 0.0;
