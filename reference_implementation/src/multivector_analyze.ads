@@ -83,7 +83,7 @@ package Multivector_Analyze is
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon;
-                      Probe : C3GA.Normalized_Point := 1.0);
+                      Probe : C3GA.Normalized_Point := C3GA.US_Normalized_Point (C3GA.NO));
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
    function isValid (A : MV_Analysis) return Boolean;
    function isDual (A : MV_Analysis) return Boolean;
