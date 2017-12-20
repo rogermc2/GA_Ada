@@ -53,37 +53,7 @@ package body Multivector_Analyze_C3GA is
             end;
          end if;
 
-         Analysis.M_Vectors (2) := E3GA.e1;
-         Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E2 (MV_X));
-         Analysis.M_Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
-             (E2GA.Get_Coord (E2GA.Norm_E2 (MV_X)), MV_X.Coordinates (1));
-
-      elsif Analysis.M_MV_Type.M_Type = Blade_MV then
-         Put_Line ("Multivector_Analyze_C3GA.Analyze Blade_Object.");
-         Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade_Use;
-         Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV_X));
-         if Analysis.M_Type.MV_Subtype = Vector_Type then
-            declare
-               use E3GA;
-               Xn  : E2GA.Vector;
-            begin
-               Xn := E2GA.Unit_E (MV_X);
-               Analysis.M_Vectors (1) := E2GA.Get_Coord_1 (Xn) * E3GA.e1 +
-                                         E2GA.Get_Coord_2 (Xn) * E3GA.e2 ;
-            end;
-         elsif Analysis.M_Type.MV_Subtype = Bivector_Type then
-            Put_Line ("Multivector_Analyze_C3GA.Analyze Bivector_Type.");
-            Analysis.M_Vectors (1) := E3GA.e1;
-            declare
-               use E3GA;
-            begin
-               if E2GA.Set_Bivector (MV_X).Coordinates (1) < 0.0 then
-                  Analysis.M_Vectors (2) := -E3GA.e2;
-               else
-                  Analysis.M_Vectors (2) := E3GA.e2;
-               end if;
-            end;
-         end if;
+         --  TO BE COMPLETED
       else
          Put_Line ("Multivector_Analyze_C3GA.Analyze Multivector Type.");
       end if;
