@@ -109,7 +109,7 @@ package body GA_Draw is
       Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       O2                   : E3GA.Vector := Ortho_2;
       MVP_Matrix           : Matrix4 := Singles.Identity4;
-      Scaled             : GL.Types.Single;
+      Scaled               : GL.Types.Single;
       Normed_E2            : E3GA.Scalar;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -422,21 +422,34 @@ package body GA_Draw is
 
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                           Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                          Normal : E3GA.Vector; Scale : float := 1.0;
-                          Colour : GL.Types.Colors.Color) is
+                          Normal : E3GA.Vector) is
+      Sphere : Geosphere.Geosphere;
    begin
-      if G_Draw_State.Max_Vertices = 0 then
-         Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
-      end if;
+      Geosphere.GS_Compute (Sphere, 4);
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
+         Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
          raise;
    end Draw_Sphere;
 
    --  ------------------------------------------------------------------------
 
-   --  Implements if (vc == NULL) drawTriVector(base, scale, NULL, DRAW_TV_SPHERE, o);
+--     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
+--                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+--                            Normal : E3GA.Vector; Scale : float := 1.0;
+--                            Colour : GL.Types.Colors.Color) is
+--     begin
+--        if G_Draw_State.Max_Vertices = 0 then
+--           Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
+--        end if;
+--     exception
+--        when anError :  others =>
+--           Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
+--           raise;
+--     end Draw_Sphere;
+
+   --  ------------------------------------------------------------------------
+   --  Based on draw.cpp drawTriVector
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
@@ -445,6 +458,7 @@ package body GA_Draw is
       Scale_Sign : Single := 1.0;
       Scale_S    : Single := Single (Scale);
       Z_Max      : constant Single := 4.0 * Single (GA_Maths.Pi);
+      s          : Single;
       Tri_Translation_Matrix : GL.Types.Singles.Matrix4;
       Scaling_Matrix         : GL.Types.Singles.Matrix4;
    begin
@@ -467,8 +481,20 @@ package body GA_Draw is
                                       Single (E3GA.Get_Coord_3 (Base))));
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+
+      case Method is
+         when DRAW_TV_SPHERE =>
+            if Get_Draw_Mode = OD_Orientation then
+               s := 0.1;
+            else
+               s := 0.0;
+            end if;
+
       --  case DRAW_TV_SPHERE:
       --  g_drawState.drawSphere(((g_drawState.getDrawMode() & OD_ORIENTATION) ? s * 0.1f : 0.0f));
+         when others => null;
+      end case;
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");

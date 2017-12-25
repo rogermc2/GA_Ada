@@ -36,12 +36,12 @@ package body Geosphere is
       if not Found then
          Sphere.Vertices.Append (Pos);
       end if;
-     return Found;
+      return Found;
    end Add_Vertex;
 
    --  -------------------------------------------------------------------------
 
-    procedure Compute_Neighbours (Sphere : in out Geosphere) is
+   procedure Compute_Neighbours (Sphere : in out Geosphere) is
 
       procedure Find_Relation (C1 : Face_Vectors.Cursor) is
          Face1_Index : Integer := Face_Vectors.To_Index (C1);  --  f
@@ -117,10 +117,10 @@ package body Geosphere is
 
       --  ---------------------------------------------------------------------
 
-    begin
+   begin
       Iterate (Sphere.Faces, Reset_Relation'Access);
       Iterate (Sphere.Faces, Find_Relation'Access);
-    end Compute_Neighbours;
+   end Compute_Neighbours;
 
    --  -------------------------------------------------------------------------
 
@@ -138,23 +138,23 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-    procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
+   procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
       Num_Faces     : constant Integer := 8;
       Num_Vertices  : constant Integer := 6;
---        S_Faces       : constant F_Vector := Sphere.Faces;
+      --        S_Faces       : constant F_Vector := Sphere.Faces;
       New_Face      : Geosphere_Face;
       Refinded      : Boolean := False;
       Faces         : constant Indices_Array (1 .. Num_Faces)
         := ((5, 0, 2),
-	    (3, 2, 0),
-	    (5, 4, 0),
-	    (4, 3, 0),
-	    (1, 5, 2),
-	    (1, 2, 3),
-	    (1, 3 ,4),
+            (3, 2, 0),
+            (5, 4, 0),
+            (4, 3, 0),
+            (1, 5, 2),
+            (1, 2, 3),
+            (1, 3 ,4),
             (1, 4, 5));
       Vertices       : Vertices_Array (1 .. Num_Vertices);
-    begin
+   begin
       Set_Coords (Vertices (1), 0.0, -1.0, 0.0);
       Set_Coords (Vertices (2), 0.0, 1.0, 0.0);
       Set_Coords (Vertices (3), 0.707, 0.0, 0.707);
@@ -168,25 +168,48 @@ package body Geosphere is
       Sphere.Num_Vertices := Num_Vertices;
 
       for face in 1 .. Num_Faces loop
-	for Vec in Int3_range loop
+         for Vec in Int3_range loop
             New_Face.Child (Vec) := -1;
-        end loop;
-        New_Face.Depth := 0;
-        Sphere.Faces.Append (New_Face);
+         end loop;
+         New_Face.Depth := 0;
+         Sphere.Faces.Append (New_Face);
       end loop;
 
       for vertex in 1 .. Num_Vertices loop
-        Sphere.Vertices.Append (Vertices (vertex));
+         Sphere.Vertices.Append (Vertices (vertex));
       end loop;
 
       for face_index in 1 .. Num_Faces loop
-        Refinded := Refine_Face (Sphere, face_index, Depth);
+         Refinded := Refine_Face (Sphere, face_index, Depth);
       end loop;
       Sphere.Depth := Depth;
 
       Compute_Neighbours (Sphere);
 
-    end GS_Compute;
+   end GS_Compute;
+
+   --  -------------------------------------------------------------------------
+
+   procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
+                      Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                      Sphere : Geosphere; Index : Integer; Normal : float) is
+   begin
+      null;
+
+   end GS_Draw;
+
+   --  -------------------------------------------------------------------------
+
+   procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
+                      Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                      Sphere : Geosphere; Normal : float) is
+   begin
+      for index in 1 .. Sphere.Num_Primitives loop
+         GS_Draw (Render_Program, Translation_Matrix, Projection_Matrix,
+                  Sphere, index, Normal);
+      end loop;
+
+   end GS_Draw;
 
    --  -------------------------------------------------------------------------
 
@@ -223,13 +246,13 @@ package body Geosphere is
 
       if not Refined then
          Create_Face (Sphere, this_Face.Vertices (1),
-                                  New_Indices (1), New_Indices (3));
+                      New_Indices (1), New_Indices (3));
          Create_Face (Sphere, New_Indices (1),
-                                  this_Face.Vertices (2), New_Indices (2));
+                      this_Face.Vertices (2), New_Indices (2));
          Create_Face (Sphere, New_Indices (1),
-                                  New_Indices (2), New_Indices (3));
+                      New_Indices (2), New_Indices (3));
          Create_Face (Sphere, New_Indices (2),
-                                  this_Face.Vertices (3), New_Indices (3));
+                      this_Face.Vertices (3), New_Indices (3));
 
          for index in Int4_range loop
             this_Face.Child (Index) := Sphere.Num_Faces + Index;

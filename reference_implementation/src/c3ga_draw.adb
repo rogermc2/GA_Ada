@@ -33,7 +33,7 @@ package body C3GA_Draw is
    end Draw;
 
    --  -------------------------------------------------------------------------                Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-
+  --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                    aPoint : C3GA.Normalized_Point; Colour : GL.Types.Colors.Color;
@@ -51,7 +51,7 @@ package body C3GA_Draw is
    end Draw;
 
    --  -------------------------------------------------------------------------                Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-
+   --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
    procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                          MV : C3GA.Multivector; Colour : GL.Types.Colors.Color) is

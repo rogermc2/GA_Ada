@@ -1,6 +1,9 @@
 
 with Ada.Containers.Vectors;
 
+with GL.Objects.Programs;
+with GL.Types;
+
 with E3GA;
 
 package Geosphere is
@@ -16,6 +19,9 @@ package Geosphere is
    type V_Vector is new Vertex_Vectors.Vector with null record;
 
     procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
+    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
+                       Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                       Sphere : Geosphere; Normal : float);
 
 private
    subtype Int3_Range is Integer range 1 .. 3;

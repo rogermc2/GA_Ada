@@ -23,8 +23,7 @@ package GA_Draw is
                                   Draw_TV_Parellelepiped_No_Vectors);
    type Draw_Mode is (OD_Shade, OD_Wireframe, OD_Magnitude, OD_Orientation);
 
-   type Draw_State (Max_Vertices : Integer := 0;
-                    Max_Faces : Integer := 0) is private;
+   type Draw_State is private;
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                           MV_Matrix, Proj_Matrix : GL.Types.Singles.Matrix4;
@@ -72,9 +71,8 @@ private
       Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);
    end record;
 
-   type Draw_State
-     (Max_Vertices : Integer := 0; Max_Faces : Integer := 0) is record
-      Ambient      : Float := 1.0;
+   type Draw_State is record
+      Ambient      : Float := 0.2;
       Diffuse      : Float := 1.0;
       Point_Size   : Float := 0.2;
       Line_Length  : Float := 6.0;
