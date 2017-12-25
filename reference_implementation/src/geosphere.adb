@@ -192,7 +192,7 @@ package body Geosphere is
 
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                       Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                      Sphere : Geosphere; Index : Integer; Normal : float) is
+                      Sphere : Geosphere; Index : Integer; Normal : GL.Types.Single) is
    begin
       null;
 
@@ -202,7 +202,7 @@ package body Geosphere is
 
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                       Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                      Sphere : Geosphere; Normal : float) is
+                      Sphere : Geosphere; Normal : GL.Types.Single) is
    begin
       for index in 1 .. Sphere.Num_Primitives loop
          GS_Draw (Render_Program, Translation_Matrix, Projection_Matrix,

@@ -422,10 +422,12 @@ package body GA_Draw is
 
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                           Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                          Normal : E3GA.Vector) is
+                          Normal : GL.Types.Single) is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
+      Geosphere.GS_Draw (Render_Program , Translation_Matrix, Projection_Matrix,
+                         Sphere, Normal);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -489,9 +491,8 @@ package body GA_Draw is
             else
                s := 0.0;
             end if;
-
-      --  case DRAW_TV_SPHERE:
-      --  g_drawState.drawSphere(((g_drawState.getDrawMode() & OD_ORIENTATION) ? s * 0.1f : 0.0f));
+            Draw_Sphere (Render_Program, Translation_Matrix, Projection_Matrix,
+                         s);
          when others => null;
       end case;
 

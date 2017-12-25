@@ -21,7 +21,7 @@ package Geosphere is
     procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
     procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                        Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                       Sphere : Geosphere; Normal : float);
+                       Sphere : Geosphere; Normal : GL.Types.Single);
 
 private
    subtype Int3_Range is Integer range 1 .. 3;
