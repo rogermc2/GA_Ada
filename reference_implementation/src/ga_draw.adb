@@ -599,6 +599,7 @@ package body GA_Draw is
          Set_Cull_Face (Saved_Cull_Face);
          Disable (Cull_Face);
       end if;
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Vector.");

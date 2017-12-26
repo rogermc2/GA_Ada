@@ -35,7 +35,7 @@ private
     type V_Array is array  (Int3_Range) of integer;
 
     type Geosphere_Face is record
-        Vertices          : V_Array;
+        Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
         Child             : Child_Array := (0, 0, 0, 0);
         Plane             : E3GA.Bivector;
         D                 : float;

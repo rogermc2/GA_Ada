@@ -43,6 +43,11 @@ package body Geosphere is
          Sphere.Vertices.Append (Pos);
       end if;
       return Found;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Add_Vertex.");
+         raise;
    end Add_Vertex;
 
    --  -------------------------------------------------------------------------
@@ -67,17 +72,17 @@ package body Geosphere is
          begin
             while Index_2 < 3 loop
                Index_2 := Index_2 + 1;   --  j
-               if Face_1.Vertices (Index_1) = Face_2.Vertices (Index_2) then
+               if Face_1.Vertex_Indices (Index_1) = Face_2.Vertex_Indices (Index_2) then
                   Index_11 :=  (Index_1 + 1) mod 3 + 1;  --  e + 1 mod 3
                   Index_21 :=  (Index_2 + 1) mod 3 + 1;  --  i + 1 mod 3
                   Index_22 :=  (Index_2 + 2) mod 3 + 1;  --  i + 2 mod 3
-                  if Face_1.Vertices (Index_11) = Face_2.Vertices (Index_21) then
+                  if Face_1.Vertex_Indices (Index_11) = Face_2.Vertex_Indices (Index_21) then
                      --  face[f].neighbour[e] = i;
                      --  face[i].neighbour[j] = f;
                      Face_1.Neighbour (Index_1) := Face2_Index;
                      Face_2.Neighbour (Index_2) := Face1_Index;
                      Num := Num + 1;
-                  elsif Face_1.Vertices (Index_11) = Face_2.Vertices (Index_22) then
+                  elsif Face_1.Vertex_Indices (Index_11) = Face_2.Vertex_Indices (Index_22) then
                      --  face[f].neighbour[e] = i
                      --  face[i].neighbour[(j-1+3)%3] = f;
                      Face_1.Neighbour (Index_1) := Face2_Index;
@@ -88,6 +93,10 @@ package body Geosphere is
             end loop;
 
             Sphere.Faces.Replace_Element (Face2_Index, Face_2);
+         exception
+            when anError :  others =>
+               Put_Line ("An exception occurred in Geosphere.Find_Neighbours.");
+               raise;
 
          end Find_Neighbours;
 
@@ -127,6 +136,11 @@ package body Geosphere is
    begin
       Iterate (Sphere.Faces, Reset_Relation'Access);
       Iterate (Sphere.Faces, Find_Relation'Access);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Compute_Neighbours.");
+         raise;
    end Compute_Neighbours;
 
    --  -------------------------------------------------------------------------
@@ -135,13 +149,41 @@ package body Geosphere is
       New_Face : Geosphere_Face;
    begin
       New_Face := Sphere.Faces.Last_Element;
-      New_Face.Vertices (1) := V1;
-      New_Face.Vertices (2) := V2;
-      New_Face.Vertices (3) := V3;
+      New_Face.Vertex_Indices (1) := V1;
+      New_Face.Vertex_Indices (2) := V2;
+      New_Face.Vertex_Indices (3) := V3;
       New_Face.Depth := New_Face.Depth + 1;
       --  New_Face.Child is set to (0, 0, 0) by default
       Sphere.Faces.Append (New_Face);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Create_Face.");
+         raise;
    end Create_Face;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Get_Vertices (Sphere : Geosphere; aFace : Geosphere_Face;
+                           Vertices : out GL.Types.Singles.Vector3_Array) is
+      use GL.Types;
+      Indices    : V_Array := aFace.Vertex_Indices;
+      Vertex_Index : Positive;
+      GA_Vector  : E3GA.Vector;
+   begin
+      for index in Positive range 1 .. 3 loop
+         Vertex_Index := Indices (index);
+         GA_Vector := Sphere.Vertices.Element (Vertex_Index);
+         Vertices (Int (index)) (GL.X) := Single (E3GA.Get_Coord_1 (GA_Vector));
+         Vertices (Int (index)) (GL.Y) := Single (E3GA.Get_Coord_2 (GA_Vector));
+         Vertices (Int (index)) (GL.Z) := Single (E3GA.Get_Coord_3 (GA_Vector));
+      end loop;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Get_Vertices.");
+         raise;
+   end Get_Vertices;
 
    --  -------------------------------------------------------------------------
 
@@ -193,6 +235,11 @@ package body Geosphere is
 
       Compute_Neighbours (Sphere);
 
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.GS_Compute.");
+         raise;
+
    end GS_Compute;
 
    --  -------------------------------------------------------------------------
@@ -219,6 +266,7 @@ package body Geosphere is
          Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
          Projection_Matrix_ID : GL.Uniforms.Uniform;
          Colour_Location      : GL.Uniforms.Uniform;
+         Vertices             : GL.Types.Singles.Vector3_Array (1 .. 3);
       begin
          if thisFace.Child (1) > 0 then
             for index in 1 .. 4 loop
@@ -228,8 +276,9 @@ package body Geosphere is
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
             GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
-                                      Projection_Matrix_ID, Colour_Location);
-            --  Need to convert Sphere.Face.Vertices to array.
+                                              Projection_Matrix_ID, Colour_Location);
+            Get_Vertices (Sphere, thisFace, Vertices);
+
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
             GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
@@ -250,6 +299,10 @@ package body Geosphere is
    begin
       Iterate (Sphere.Faces, Draw'Access);
 
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.GS_Draw.");
+         raise;
    end GS_Draw;
 
    --  -------------------------------------------------------------------------
@@ -259,7 +312,7 @@ package body Geosphere is
       use E3GA;
       this_Face       : Geosphere_Face:= Sphere.Faces.Element (Face_index);
       Faces           : F_Vector := Sphere.Faces;
-      Vertex_Indicies : V_Array := this_Face.Vertices;
+      Vertex_Indicies : V_Array := this_Face.Vertex_Indices;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
       Vertex_1        : Vector;
@@ -286,14 +339,14 @@ package body Geosphere is
       end if;
 
       if not Refined then
-         Create_Face (Sphere, this_Face.Vertices (1),
+         Create_Face (Sphere, this_Face.Vertex_Indices (1),
                       New_Indices (1), New_Indices (3));
          Create_Face (Sphere, New_Indices (1),
-                      this_Face.Vertices (2), New_Indices (2));
+                      this_Face.Vertex_Indices (2), New_Indices (2));
          Create_Face (Sphere, New_Indices (1),
                       New_Indices (2), New_Indices (3));
          Create_Face (Sphere, New_Indices (2),
-                      this_Face.Vertices (3), New_Indices (3));
+                      this_Face.Vertex_Indices (3), New_Indices (3));
 
          for index in Int4_range loop
             this_Face.Child (Index) := Sphere.Faces.Last_Index + Index;
@@ -306,6 +359,11 @@ package body Geosphere is
 --           Sphere.Num_Faces := Sphere.Num_Faces + 4;
       end if;
       return Refined;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Refine_Face.");
+         raise;
    end Refine_Face;
 
    --  -------------------------------------------------------------------------
