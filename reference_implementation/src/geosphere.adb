@@ -194,14 +194,14 @@ package body Geosphere is
       New_Face      : Geosphere_Face;
       Refinded      : Boolean := False;
       Faces         : constant Indices_Array (1 .. Num_Faces)
-        := ((5, 0, 2),
-            (3, 2, 0),
-            (5, 4, 0),
-            (4, 3, 0),
-            (1, 5, 2),
-            (1, 2, 3),
-            (1, 3 ,4),
-            (1, 4, 5));
+        := ((6, 1, 3),
+            (4, 3, 1),
+            (6, 5, 1),
+            (5, 4, 1),
+            (2, 6, 3),
+            (2, 3, 4),
+            (2, 4 ,5),
+            (2, 5, 6));
       Vertices       : Vertices_Array (1 .. Num_Vertices);
    begin
       Set_Coords (Vertices (1), 0.0, -1.0, 0.0);
@@ -217,8 +217,9 @@ package body Geosphere is
 --        Sphere.Num_Vertices := Num_Vertices;
 
       for face in 1 .. Num_Faces loop
-         for Vec in Int3_range loop
-            New_Face.Child (Vec) := -1;
+         New_Face.Vertex_Indices := V_Array (Faces (face));
+         for index in Int4_range loop
+            New_Face.Child (index) := 0;
          end loop;
          New_Face.Depth := 0;
          Sphere.Faces.Append (New_Face);
@@ -292,7 +293,6 @@ package body Geosphere is
                                                   First => 0,
                                                   Count => 1 * 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
-
          end if;
       end Draw;
 
@@ -310,8 +310,8 @@ package body Geosphere is
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean is
       use E3GA;
-      this_Face       : Geosphere_Face:= Sphere.Faces.Element (Face_index);
       Faces           : F_Vector := Sphere.Faces;
+      this_Face       : Geosphere_Face:= Faces.Element (Face_index);
       Vertex_Indicies : V_Array := this_Face.Vertex_Indices;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
@@ -326,11 +326,16 @@ package body Geosphere is
    begin
       if Depth > 0 then  --   create 3 vertices
          while index < 3 and not Refined loop
+            index := index + 1;
+
             if index < 3 then
                index_2 := Index + 1;
             else
                index_2 := 1;
             end if;
+            Put_Line ("Face_index: "&  Integer'Image (Face_index));
+            Put ("Geosphere.Refine_Face index: " &  Integer'Image (index));
+            Put_Line (" vertice: "&  Integer'Image (Vertex_Indicies (index)));
             Vertex_1 := Sphere.Vertices.Element (Vertex_Indicies (index));
             Vertex_2 := Sphere.Vertices.Element (Vertex_Indicies (index_2));
             V1 := Unit_e (Vertex_1 + Vertex_2);
