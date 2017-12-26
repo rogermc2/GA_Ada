@@ -422,12 +422,12 @@ package body GA_Draw is
 
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                           Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                          Normal : GL.Types.Single) is
+                          Normal : GL.Types.Single; Colour : GL.Types.Colors.Color) is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
       Geosphere.GS_Draw (Render_Program , Translation_Matrix, Projection_Matrix,
-                         Sphere, Normal);
+                         Sphere, Normal, Colour);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -492,7 +492,7 @@ package body GA_Draw is
                s := 0.0;
             end if;
             Draw_Sphere (Render_Program, Translation_Matrix, Projection_Matrix,
-                         s);
+                         s, Colour);
          when others => null;
       end case;
 
