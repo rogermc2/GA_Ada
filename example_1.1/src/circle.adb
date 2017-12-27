@@ -9,6 +9,7 @@ with Glfw;
 with Glfw.Windows;
 
 with Initialize;
+
 with Main_Loop;
 
 procedure Circle is
