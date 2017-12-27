@@ -421,12 +421,12 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
-                          Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                          MV_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                           Normal : GL.Types.Single; Colour : GL.Types.Colors.Color) is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
-      Geosphere.GS_Draw (Render_Program, Translation_Matrix, Projection_Matrix,
+      Geosphere.GS_Draw (Render_Program, MV_Matrix, Projection_Matrix,
                          Sphere, Normal, Colour);
    exception
       when anError :  others =>
@@ -453,18 +453,19 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
    --  Based on draw.cpp drawTriVector
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float := 1.0;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
-      Scale_Sign : Single := 1.0;
-      Scale_S    : Single := Single (Scale);
-      Z_Max      : constant Single := 4.0 * Single (GA_Maths.Pi);
-      s          : Single;
-      Tri_Translation_Matrix : GL.Types.Singles.Matrix4 := Translation_Matrix;
-      Scaling_Matrix         : GL.Types.Singles.Matrix4;
+      use GL.Types.Singles;
+      Scale_Sign          : Single := 1.0;
+      Scale_S             : Single := Single (Scale);
+      Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
+      s                   : Single;
+      Translation_Matrix  : Matrix4 := Identity4;
+      Scaling_Matrix      : Matrix4;
+      MV_Matrix           : Matrix4;
    begin
-      Utilities.Clear_All ((0.0, 1.0, 0.0, 1.0));
       if Scale_S < 0.0 then
          Scale_Sign := -1.0;
       end if;
@@ -478,13 +479,13 @@ package body GA_Draw is
       end if;
 
       if E3GA.Get_Coord (E3GA.Norm_E2 (Base)) > 0.0 then
-         Tri_Translation_Matrix :=
+         Translation_Matrix :=
            Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Base)),
                                       Single (E3GA.Get_Coord_2 (Base)),
                                       Single (E3GA.Get_Coord_3 (Base))));
       end if;
-      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-
+      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, -Scale_S, Scale_S));
+      MV_Matrix := Scaling_Matrix * Translation_Matrix;
       case Method is
          when DRAW_TV_SPHERE =>
             if Get_Draw_Mode = OD_Orientation then
@@ -494,7 +495,7 @@ package body GA_Draw is
             end if;
 --              s := 1.0;  --  TEST
 
-            Draw_Sphere (Render_Program, Tri_Translation_Matrix, Projection_Matrix,
+            Draw_Sphere (Render_Program, MV_Matrix, Projection_Matrix,
                          s, (0.0, 0.0, 1.0, 1.0));
          when others => null;
       end case;

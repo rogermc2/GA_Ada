@@ -252,7 +252,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
-                      Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                      MV_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
                       Sphere : Geosphere; Normal : GL.Types.Single;
                       Colour : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
@@ -260,20 +260,16 @@ package body Geosphere is
       use GL.Types.Colors;
       use GL.Types.Singles;
 
---        VP_X                 : GL.Types.Int;
---        VP_Y                 : GL.Types.Int;
---        VP_Width             : GL.Types.Int;
---        VP_Height            : GL.Types.Int;
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
 
---        procedure Draw (C : Face_Vectors.Cursor) is
-      procedure Draw (thisFace : Geosphere_Face ) is
---           Face_Index   : Integer := Face_Vectors.To_Index (C);
---           thisFace     : Geosphere_Face := Sphere.Faces.Element (Face_Index);
+      procedure Draw (C : Face_Vectors.Cursor) is
+--        procedure Draw (thisFace : Geosphere_Face ) is
+         Face_Index   : Integer := Face_Vectors.To_Index (C);
+         thisFace     : Geosphere_Face := Sphere.Faces.Element (Face_Index);
          Vertex_Buffer   : GL.Objects.Buffers.Buffer;
          Num_Vertices    : GL.Types.Int :=
            GL.Types.Int (thisFace.Vertex_Indices'Last);
@@ -292,13 +288,13 @@ package body Geosphere is
                Draw (thisFace.Child (index));
             end loop;
          else  --  no children
-            GL.Objects.Programs.Use_Program (Render_Program);
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
 
             Get_Vertices (Sphere, thisFace, Vertices);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
+            Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
             Utilities.Print_GL_Array3 ("Number of vertices: " &
                         GL.Types.Int'Image (Num_Vertices), Vertices);
 
@@ -320,16 +316,16 @@ package body Geosphere is
       GL.Objects.Programs.Use_Program (Render_Program);
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
-      Model_View_Matrix := Maths.Scaling_Matrix ((100.0, -100.0, 1.0)) * Model_View_Matrix;
+      Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * MV_Matrix;
 
       Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
-      GL.Toggles.Disable (GL.Toggles.Cull_Face);
-      Draw (Sphere.Faces.First_Element);
-      --        Iterate (Sphere.Faces, Draw'Access);
+--        GL.Toggles.Disable (GL.Toggles.Cull_Face);
+--        Draw (Sphere.Faces.First_Element);
+      Iterate (Sphere.Faces, Draw'Access);
 
    exception
       when anError :  others =>

@@ -122,9 +122,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          0.0, Single (Window_Width),
                                          -100.0, 100.0,
                                          Projection_Matrix);
---        GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 0.0));
---        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
@@ -138,7 +137,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          aPoint := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Projection_Matrix, aPoint, Red, Scale);
---           E3GA_Utilities.Print_Vector ("aPoint", aPoint);
       end loop;
    exception
       when anError :  others =>
@@ -186,13 +184,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Program_Loader;
 --        Font_File : string := "../fonts/Helvetica.ttc";
    begin
---        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 --        GL.Toggles.Enable (GL.Toggles.Lighting);
 --        GL.Toggles.Enable (GL.Toggles.Light0);
       --        GL.Toggles.Enable (GL.Toggles.Normalize);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
---        GL.Rasterization.Set_Line_Width (1.0);
-      GA_Draw.Set_Point_Size (0.5);
+      GL.Rasterization.Set_Line_Width (1.0);
+      GA_Draw.Set_Point_Size (0.2);
 --        GA_Draw.Set_Point_Size (0.005);
 
       E3GA.Set_Rotor (Model_Rotor, 1.0);
