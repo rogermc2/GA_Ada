@@ -252,6 +252,8 @@ package body Geosphere is
       procedure Draw (C : Face_Vectors.Cursor) is
          Face_Index : Integer := Face_Vectors.To_Index (C);
          thisFace   : Geosphere_Face := Sphere.Faces.Element (Face_Index);
+         Num_Vertices : GL.Types.Int :=
+           GL.Types.Int (thisFace.Vertex_Indices'Last);
 
          procedure Draw (Face_Index : Integer) is
             thisFace : Geosphere_Face := Sphere.Faces.Element (Face_Index);
@@ -264,7 +266,7 @@ package body Geosphere is
          use GL.Types.Colors;
          Vertex_Buffer        : GL.Objects.Buffers.Buffer;
          MV_Matrix_ID         : GL.Uniforms.Uniform;
-         Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
+--           Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
          Projection_Matrix_ID : GL.Uniforms.Uniform;
          Colour_Location      : GL.Uniforms.Uniform;
          Vertices             : GL.Types.Singles.Vector3_Array (1 .. 3);
@@ -274,24 +276,26 @@ package body Geosphere is
                Draw (thisFace.Child (index));
             end loop;
          else  --  no children
+            GL.Objects.Programs.Use_Program (Render_Program);
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
+
+            Get_Vertices (Sphere, thisFace, Vertices);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+            Utilities.Print_GL_Array3 ("Vertices", Vertices);
+
             GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                               Projection_Matrix_ID, Colour_Location);
-            Get_Vertices (Sphere, thisFace, Vertices);
-
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-
-            GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-            GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+            GL.Uniforms.Set_Single (MV_Matrix_ID, Translation_Matrix);
             GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+            GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
             GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
                                                   First => 0,
-                                                  Count => 1 * 3);
+                                                  Count => 3 * Num_Vertices);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
          end if;
       end Draw;

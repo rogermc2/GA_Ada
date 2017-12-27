@@ -426,7 +426,7 @@ package body GA_Draw is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
-      Geosphere.GS_Draw (Render_Program , Translation_Matrix, Projection_Matrix,
+      Geosphere.GS_Draw (Render_Program, Translation_Matrix, Projection_Matrix,
                          Sphere, Normal, Colour);
    exception
       when anError :  others =>
