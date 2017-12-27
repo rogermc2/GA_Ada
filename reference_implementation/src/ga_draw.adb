@@ -177,14 +177,14 @@ package body GA_Draw is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
-      MVP_Matrix := Model_View_Matrix * GL.Types.Singles.Identity4;
+      MVP_Matrix := Model_View_Matrix;
       Cords := E3GA.Get_Coords (Base);
       Translate := (Single (E3GA.Get_Coord_1 (Base)),
                     Single (E3GA.Get_Coord_2 (Base)),
                     Single (E3GA.Get_Coord_3 (Base)));
       E2_Norm := E3GA.Norm_E2 (Base);
       if  E3GA.Get_Coord (E2_Norm) /= 0.0  then
-         MVP_Matrix := Maths.Translation_Matrix (Translate) * GL.Types.Singles.Identity4;
+         MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
       end if;
 
       if  Method = Draw_Bivector_Parallelogram and then
