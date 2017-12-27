@@ -54,7 +54,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
    Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
-   Back_Colour    : constant Colors.Color := (1.0, 1.0, 1.0, 1.0);
+   White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
 
    --  rotor g_modelRotor(_rotor(1.0f))
@@ -63,20 +63,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Rotate_Model_Out_Of_Plane  : boolean := False;
    Pick           : GL_Util.GL_Pick;
 
-    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
-                        theText         : String;
-                        Render_Program  : GL.Objects.Programs.Program;
-                        Text_X, Text_Y  : GL.Types.Single;
-                        Text_Scale      : GL.Types.Single);
-   procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
-                                    Projection_Matrix_ID, Texture_ID, Text_Dimesions_ID,
-                                    Colour_ID : out GL.Uniforms.Uniform);
+--      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
+--                          theText         : String;
+--                          Render_Program  : GL.Objects.Programs.Program;
+--                          Text_X, Text_Y  : GL.Types.Single;
+--                          Text_Scale      : GL.Types.Single);
+--     procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
+--                                      Projection_Matrix_ID, Texture_ID, Text_Dimesions_ID,
+--                                      Colour_ID : out GL.Uniforms.Uniform);
 
    --  -------------------------------------------------------------------------
 
    procedure Display (Window                 : in out Glfw.Windows.Window;
-                      Render_Graphic_Program : GL.Objects.Programs.Program;
-                      Render_Text_Program    : GL.Objects.Programs.Program) is
+                      Render_Graphic_Program : GL.Objects.Programs.Program) is
+--                        Render_Text_Program    : GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
@@ -91,7 +91,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Scale_S           : constant single := single (Scale);
       Position_X        : integer := 0;
       Position_Y        : single := 160.0;
-      Label             : Silo.Label_Data;
+--        Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
       E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
@@ -102,13 +102,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       V2                    : E2GA.Vector;
 
       aPoint                : C3GA.Normalized_Point;
-      Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
+--        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width          : Glfw.Size;
       Window_Height         : Glfw.Size;
       Pick                  : GL_Util.GL_Pick;
       Translation_Matrix    : GL.Types.Singles.Matrix4;
       BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Model_View_Matrix     : GL.Types.Singles.Matrix4;
+      Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Projection_Matrix     : GL.Types.Singles.Matrix4;
       Vertex_Buffer         : GL.Objects.Buffers.Buffer;
 
@@ -116,13 +116,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
+      Utilities.Clear_Background_Colour_And_Depth (White);
 
       Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
                                          0.0, Single (Window_Height),
                                          -100.0, 100.0,
                                          Projection_Matrix);
-      GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+--        GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 0.0));
 --        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
@@ -132,9 +132,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
 --                       Cos (A) * E21 - Sin (A) * E22);
       for count in 1 .. Points.Num_Points loop
-         Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
-                                 Label_Position);
-         Silo.Push (Label);
+--           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
+--                                   Label_Position);
+--           Silo.Push (Label);
          aPoint := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Projection_Matrix, aPoint, Red, Scale);
@@ -148,51 +148,52 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
-                        theText          : String;
-                        Render_Program   : GL.Objects.Programs.Program;
-                        Text_X, Text_Y   : GL.Types.Single;
-                        Text_Scale       : GL.Types.Single) is
-      Text_Dimesions_ID       : GL.Uniforms.Uniform;
-      Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
-      Text_Texture_ID         : GL.Uniforms.Uniform;
-      Text_Colour_ID          : GL.Uniforms.Uniform;
-      Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
-      Text_Colour             : constant Colors.Color := Black;
-   begin
-      Text_Shader_Locations (Render_Program, Text_Proj_Matrix_ID,
-                             Text_Texture_ID, Text_Dimesions_ID, Text_Colour_ID);
-      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                                         Single (Window_Width), 0.1, -100.0,
-                                         Text_Projection_Matrix);
-      Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
-                                   Text_Scale, Text_Colour, Text_Texture_ID,
-                                   Text_Proj_Matrix_ID, Text_Dimesions_ID,
-                                   Text_Colour_ID, Text_Projection_Matrix);
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Main_Loop.Draw_Text.");
-         raise;
-   end Draw_Text;
+--     procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
+--                          theText          : String;
+--                          Render_Program   : GL.Objects.Programs.Program;
+--                          Text_X, Text_Y   : GL.Types.Single;
+--                          Text_Scale       : GL.Types.Single) is
+--        Text_Dimesions_ID       : GL.Uniforms.Uniform;
+--        Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
+--        Text_Texture_ID         : GL.Uniforms.Uniform;
+--        Text_Colour_ID          : GL.Uniforms.Uniform;
+--        Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
+--        Text_Colour             : constant Colors.Color := Black;
+--     begin
+--        Text_Shader_Locations (Render_Program, Text_Proj_Matrix_ID,
+--                               Text_Texture_ID, Text_Dimesions_ID, Text_Colour_ID);
+--        Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+--                                           Single (Window_Width), 0.1, -100.0,
+--                                           Text_Projection_Matrix);
+--        Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
+--                                     Text_Scale, Text_Colour, Text_Texture_ID,
+--                                     Text_Proj_Matrix_ID, Text_Dimesions_ID,
+--                                     Text_Colour_ID, Text_Projection_Matrix);
+--     exception
+--        when anError :  others =>
+--           Put_Line ("An exception occurred in Main_Loop.Draw_Text.");
+--           raise;
+--     end Draw_Text;
 
    --  ------------------------------------------------------------------------
 
    procedure Setup_Graphic (Window : in out Glfw.Windows.Window;
-                            Render_Graphic_Program : out GL.Objects.Programs.Program;
-                            Render_Text_Program    : out GL.Objects.Programs.Program) is
+                            Render_Graphic_Program : out GL.Objects.Programs.Program) is
+--                              Render_Text_Program    : out GL.Objects.Programs.Program) is
       use Glfw.Input;
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
-      Font_File : string := "../fonts/Helvetica.ttc";
+--        Font_File : string := "../fonts/Helvetica.ttc";
    begin
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+--        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 --        GL.Toggles.Enable (GL.Toggles.Lighting);
 --        GL.Toggles.Enable (GL.Toggles.Light0);
       --        GL.Toggles.Enable (GL.Toggles.Normalize);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
-      GL.Rasterization.Set_Line_Width (1.0);
-      GA_Draw.Set_Point_Size (0.005);
+--        GL.Rasterization.Set_Line_Width (1.0);
+      GA_Draw.Set_Point_Size (0.5);
+--        GA_Draw.Set_Point_Size (0.005);
 
       E3GA.Set_Rotor (Model_Rotor, 1.0);
 
@@ -200,11 +201,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
 
-      Render_Text_Program := Program_Loader.Program_From
-        ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
-
-      Text_Management.Setup (Font_File);
+--        Render_Text_Program := Program_Loader.Program_From
+--          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
+--           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
+--
+--        Text_Management.Setup (Font_File);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
@@ -231,16 +232,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    use Glfw.Input;
    Render_Graphic_Program : GL.Objects.Programs.Program;
-   Render_Text_Program : GL.Objects.Programs.Program;
+--     Render_Text_Program : GL.Objects.Programs.Program;
    Running : Boolean := True;
    Key_Now : Button_State;
 begin
+   Utilities.Clear_Background_Colour_And_Depth (White);
    Main_Window.Set_Input_Toggle (Sticky_Keys, True);
    Glfw.Input.Poll_Events;
-   Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
+   Setup_Graphic (Main_Window, Render_Graphic_Program);
+--     Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
    while Running loop
-      Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
+      --  Swap_Buffers first to display background colour on start up.
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+      Display (Main_Window, Render_Graphic_Program);
+--        Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
       Glfw.Input.Poll_Events;
       Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
       if not Key_Pressed and Key_Now = Glfw.Input.Pressed then
