@@ -265,6 +265,7 @@ package body Geosphere is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
+      Proj_Matrix          : GL.Types.Singles.Matrix4;
 
       procedure Draw (C : Face_Vectors.Cursor) is
 --        procedure Draw (thisFace : Geosphere_Face ) is
@@ -317,10 +318,10 @@ package body Geosphere is
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
       Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * MV_Matrix;
-
+      GA_Draw.Set_Projection_Matrix (Proj_Matrix);
       Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
 --        GL.Toggles.Disable (GL.Toggles.Cull_Face);

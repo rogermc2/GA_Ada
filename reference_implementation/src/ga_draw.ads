@@ -11,7 +11,7 @@ with E2GA;
 with E3GA;
 
 package GA_Draw is
-
+   use  GL.Types;
    type Colour_Palet is private;
 
    type Bivector_Method_Type is (Draw_Bivector_Circle, Draw_Bivector_Parallelogram,
@@ -63,7 +63,9 @@ package GA_Draw is
    procedure Set_Draw_Mode (Mode : Draw_Mode);
    procedure Set_Ol_Colour (Ol_Colour : Color);
    procedure Set_Point_Size (Point_Size : Float);
-
+   procedure Set_Projection_Matrix (theMatrix : out GL.Types.Singles.Matrix4;
+                                    Near : GL.Types.Single := -100.0;
+                                    Far  : GL.Types.Single := 100.0);
 private
    type Colour_Palet is record
       Foreground_Colour : Color := (1.0, 0.0, 1.0, 1.0);

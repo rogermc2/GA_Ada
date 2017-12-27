@@ -15,8 +15,7 @@ with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
-
-with Glfw.Windows;
+with GL.Window;
 
 with Maths;
 with GA_Maths;
@@ -672,6 +671,23 @@ package body GA_Draw is
    begin
       G_Draw_State.Point_Size := Point_Size;
    end Set_Point_Size;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Projection_Matrix (theMatrix : out GL.Types.Singles.Matrix4;
+                                    Near : GL.Types.Single := -100.0;
+                                    Far  : GL.Types.Single := 100.0) is
+      use GL.Types;
+      VP_X      : Int;
+      VP_Y      : Int;
+      VP_Height : Int;
+      VP_Width  : Int;
+   begin
+      GL.Window.Get_Viewport (VP_X, VP_Y, VP_Width, VP_Height);
+      Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Height - VP_Y),
+                                         Single (VP_X), Single (VP_Width - VP_X),
+                                         Near, Far, theMatrix);
+   end Set_Projection_Matrix;
 
    --  ------------------------------------------------------------------------
 
