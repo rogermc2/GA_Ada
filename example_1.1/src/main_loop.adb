@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Translation_Matrix    : GL.Types.Singles.Matrix4;
       BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Projection_Matrix     : GL.Types.Singles.Matrix4;
+--        Projection_Matrix     : GL.Types.Singles.Matrix4;
       Vertex_Buffer         : GL.Objects.Buffers.Buffer;
 
    begin
@@ -118,10 +118,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (White);
 
-      Maths.Init_Orthographic_Transform (0.0, Single (Window_Height),
-                                         0.0, Single (Window_Width),
-                                         -100.0, 100.0,
-                                         Projection_Matrix);
+--        Maths.Init_Orthographic_Transform (0.0, Single (Window_Height),
+--                                           0.0, Single (Window_Width),
+--                                           -100.0, 100.0,
+--                                           Projection_Matrix);
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
@@ -136,7 +136,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Silo.Push (Label);
          aPoint := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Projection_Matrix, aPoint, Red, Scale);
+                         aPoint, Red, Scale);
       end loop;
    exception
       when anError :  others =>

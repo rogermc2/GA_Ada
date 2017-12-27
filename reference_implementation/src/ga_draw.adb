@@ -420,13 +420,12 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
-                          MV_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                          MV_Matrix : GL.Types.Singles.Matrix4;
                           Normal : GL.Types.Single; Colour : GL.Types.Colors.Color) is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
-      Geosphere.GS_Draw (Render_Program, MV_Matrix, Projection_Matrix,
-                         Sphere, Normal, Colour);
+      Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, Normal, Colour);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -452,7 +451,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
    --  Based on draw.cpp drawTriVector
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                             Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                             Model_View_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float := 1.0;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
@@ -494,8 +493,7 @@ package body GA_Draw is
             end if;
 --              s := 1.0;  --  TEST
 
-            Draw_Sphere (Render_Program, MV_Matrix, Projection_Matrix,
-                         s, (0.0, 0.0, 1.0, 1.0));
+            Draw_Sphere (Render_Program, MV_Matrix, s, (0.0, 0.0, 1.0, 1.0));
          when others => null;
       end case;
 

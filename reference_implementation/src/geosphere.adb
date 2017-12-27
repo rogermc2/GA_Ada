@@ -252,7 +252,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
-                      MV_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                      MV_Matrix : GL.Types.Singles.Matrix4;
                       Sphere : Geosphere; Normal : GL.Types.Single;
                       Colour : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
@@ -319,7 +319,6 @@ package body Geosphere is
                                         Projection_Matrix_ID, Colour_Location);
       Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * MV_Matrix;
       GA_Draw.Set_Projection_Matrix (Proj_Matrix);
-      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
