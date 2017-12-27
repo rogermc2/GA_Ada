@@ -114,12 +114,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
-      GL.Window.Set_Viewport (0, 0, Int (Window_Width),
+      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (White);
 
-      Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
-                                         0.0, Single (Window_Height),
+      Maths.Init_Orthographic_Transform (0.0, Single (Window_Height),
+                                         0.0, Single (Window_Width),
                                          -100.0, 100.0,
                                          Projection_Matrix);
 --        GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);

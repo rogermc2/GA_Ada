@@ -461,9 +461,10 @@ package body GA_Draw is
       Scale_S    : Single := Single (Scale);
       Z_Max      : constant Single := 4.0 * Single (GA_Maths.Pi);
       s          : Single;
-      Tri_Translation_Matrix : GL.Types.Singles.Matrix4;
+      Tri_Translation_Matrix : GL.Types.Singles.Matrix4 := Translation_Matrix;
       Scaling_Matrix         : GL.Types.Singles.Matrix4;
    begin
+      Utilities.Clear_All ((0.0, 1.0, 0.0, 1.0));
       if Scale_S < 0.0 then
          Scale_Sign := -1.0;
       end if;
@@ -491,8 +492,10 @@ package body GA_Draw is
             else
                s := 0.0;
             end if;
-            Draw_Sphere (Render_Program, Translation_Matrix, Projection_Matrix,
-                         s, Colour);
+--              s := 1.0;  --  TEST
+
+            Draw_Sphere (Render_Program, Tri_Translation_Matrix, Projection_Matrix,
+                         s, (0.0, 0.0, 1.0, 1.0));
          when others => null;
       end case;
 
