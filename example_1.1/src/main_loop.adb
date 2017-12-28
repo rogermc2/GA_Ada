@@ -118,12 +118,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (White);
 
---        Maths.Init_Orthographic_Transform (0.0, Single (Window_Height),
---                                           0.0, Single (Window_Width),
---                                           -100.0, 100.0,
---                                           Projection_Matrix);
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * Model_View_Matrix;
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines

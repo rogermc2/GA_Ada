@@ -310,14 +310,13 @@ package body Geosphere is
       end Draw;
 
    begin
-      Utilities.Clear_Background_Colour_And_Depth ((0.0, 1.0, 0.0, 1.0));
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
       GL.Objects.Programs.Use_Program (Render_Program);
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
-      Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * MV_Matrix;
+      Model_View_Matrix := MV_Matrix;
       GA_Draw.Set_Projection_Matrix (Proj_Matrix);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
@@ -347,7 +346,6 @@ package body Geosphere is
       Vertex_2        : Vector;
       V1              : Vector;
       V2              : Vector;
---        Num_Faces       : Integer := Sphere.Num_Faces;
       Index           : Integer := 0;
       Refined         : Boolean := False;
       Dump            : Boolean;
@@ -389,7 +387,6 @@ package body Geosphere is
          for index in Int4_range loop
             Dump := Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
          end loop;
---           Sphere.Num_Faces := Sphere.Num_Faces + 4;
       end if;
       return Refined;
 

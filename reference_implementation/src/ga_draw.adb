@@ -33,14 +33,12 @@ package body GA_Draw is
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Projection_Matrix : GL.Types.Singles.Matrix4;
                           Scale             : float);
 
    --  ------------------------------------------------------------------------
 
    procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Projection_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Gl.Types.Single) is
 
       use GL.Objects.Buffers;
@@ -50,6 +48,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
       GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
       GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
@@ -68,6 +67,8 @@ package body GA_Draw is
       end loop;
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
+
+      Set_Projection_Matrix (Projection_Matrix);
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
@@ -92,7 +93,7 @@ package body GA_Draw is
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                            Translation_Matrix : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
@@ -102,6 +103,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
       Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
       Cords                : Array_3D := (0.0, 0.0, 0.0);
@@ -117,6 +119,7 @@ package body GA_Draw is
 
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
+      Set_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
@@ -133,7 +136,7 @@ package body GA_Draw is
       case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Projection_Matrix, Scale);
+            Draw_Circle (Render_Program, MVP_Matrix, Scale);
          when others => null;
       end case;
 
@@ -146,7 +149,7 @@ package body GA_Draw is
    --  ----------------------------------------------------------------------
 
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                            Translation_Matrix : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : E3GA.Vector;
                             Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
@@ -157,6 +160,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
       Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
       Cords                : Array_3D := (0.0, 0.0, 0.0);
@@ -173,6 +177,7 @@ package body GA_Draw is
 
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
+      Set_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
@@ -199,7 +204,7 @@ package body GA_Draw is
       Case Method is
          when Draw_Bivector_Circle|
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, Model_View_Matrix, Projection_Matrix, Scale);
+            Draw_Circle (Render_Program, Model_View_Matrix, Scale);
          when others => null;
       end case;
    exception
@@ -211,7 +216,7 @@ package body GA_Draw is
    --  ----------------------------------------------------------------------
 
    --      procedure Draw_Multivector (Render_Program : GL.Objects.Programs.Program;
-   --               Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+   --               Model_View_Matrix : GL.Types.Singles.Matrix4;
    --               MV             : E2GA.Multivector;
    --               Colour         : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
    --               Scale          : GL.Types.Single) is
@@ -241,7 +246,6 @@ package body GA_Draw is
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Projection_Matrix : GL.Types.Singles.Matrix4;
                           Scale             : float) is
       use GA_Maths;
       use GL.Objects.Buffers;
@@ -253,6 +257,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
       GL_e2                : Vector3 := GL_Util.To_GL (E3GA.e2);
       GL_e3                : Vector3 := GL_Util.To_GL (E3GA.e3);
@@ -280,6 +285,7 @@ package body GA_Draw is
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
+         Set_Projection_Matrix (Projection_Matrix);
          GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
@@ -315,7 +321,6 @@ package body GA_Draw is
 
    procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Projection_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Gl.Types.Single) is
 
       use GL.Objects.Buffers;
@@ -325,6 +330,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
       GL_e2                : Vector3 := GL_Util.To_GL (E3GA.e2);
       GL_e3                : Vector3 := GL_Util.To_GL (E3GA.e3);
@@ -344,6 +350,7 @@ package body GA_Draw is
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
+      Set_Projection_Matrix (Projection_Matrix);
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
@@ -367,7 +374,6 @@ package body GA_Draw is
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Projection_Matrix : GL.Types.Singles.Matrix4;
                         Tail, Direction   : E3GA.Vector;
                         Colour            : GL.Types.Colors.Color;
                         Scale             : float) is
@@ -380,6 +386,7 @@ package body GA_Draw is
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Dir               : Vector3 := GL_Util.To_GL (Direction);
       GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
       GL_e2                : Vector3 := GL_Util.To_GL (E3GA.e2);
@@ -399,6 +406,7 @@ package body GA_Draw is
                                 Projection_Matrix_ID, Colour_Location);
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
+      Set_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
@@ -453,7 +461,7 @@ package body GA_Draw is
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
-                             Scale : float := 1.0;
+                             Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
       Scale_Sign          : Single := 1.0;
@@ -483,7 +491,7 @@ package body GA_Draw is
                                       Single (E3GA.Get_Coord_3 (Base))));
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, -Scale_S, Scale_S));
-      MV_Matrix := Scaling_Matrix * Translation_Matrix;
+      MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
       case Method is
          when DRAW_TV_SPHERE =>
             if Get_Draw_Mode = OD_Orientation then
@@ -493,7 +501,7 @@ package body GA_Draw is
             end if;
 --              s := 1.0;  --  TEST
 
-            Draw_Sphere (Render_Program, MV_Matrix, s, (0.0, 0.0, 1.0, 1.0));
+            Draw_Sphere (Render_Program, MV_Matrix, s, Colour);
          when others => null;
       end case;
 
@@ -506,7 +514,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                             Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+                             Translation_Matrix : GL.Types.Singles.Matrix4;
                              Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float := 1.0; V : E3GA.Vector;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
@@ -526,11 +534,11 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Draw_Vector (Render_Program          : GL.Objects.Programs.Program;
-                          MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                          Tail, Direction         : E3GA.Vector;
-                          Colour                  : GL.Types.Colors.Color;
-                          Scale                   : float) is
+   procedure Draw_Vector (Render_Program  : GL.Objects.Programs.Program;
+                          MV_Matrix       : GL.Types.Singles.Matrix4;
+                          Tail, Direction : E3GA.Vector;
+                          Colour          : GL.Types.Colors.Color;
+                          Scale           : float) is
       use GL.Culling;
       use GL.Objects.Buffers;
       use GL.Toggles;
@@ -544,6 +552,7 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Model_View_Matrix    : GL.Types.Singles.Matrix4;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : Vector3 := GL_Util.To_GL (Direction);
 
@@ -566,16 +575,17 @@ package body GA_Draw is
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
 
+         Set_Projection_Matrix (Projection_Matrix);
          Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                    Projection_Matrix_ID, Colour_Location);
-         GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
          Model_View_Matrix := MV_Matrix;
 
          if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-         Draw_Line (Render_Program, Model_View_Matrix, Proj_Matrix, Tail,
+         Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
@@ -595,8 +605,8 @@ package body GA_Draw is
          Set_Front_Face (GL.Types.Clockwise);
          Set_Cull_Face (Front);
 
-         Draw_Cone (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
-         Draw_Base (Render_Program, Model_View_Matrix, Proj_Matrix, Single (Scale));
+         Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
+         Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
          Disable (Cull_Face);
       end if;
