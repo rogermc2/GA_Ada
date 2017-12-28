@@ -250,10 +250,11 @@ package body Geosphere is
    end GS_Compute;
 
    --  -------------------------------------------------------------------------
-
+   --  Based on geosphere.cpp
+   --  gsDraw(geosphere * sphere, mv::Float normal /*= 0.0*/)
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                       MV_Matrix : GL.Types.Singles.Matrix4;
-                      Sphere : Geosphere; Normal : GL.Types.Single;
+                      Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
                       Colour : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types;
@@ -267,8 +268,9 @@ package body Geosphere is
       Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
       Proj_Matrix          : GL.Types.Singles.Matrix4;
 
+      --  gsDraw(geosphere * sphere, int f, mv::Float normal = 0.0)
+      --  geosphere * sphere, int f is Face_Vectors.Cursor
       procedure Draw (C : Face_Vectors.Cursor) is
---        procedure Draw (thisFace : Geosphere_Face ) is
          Face_Index   : Integer := Face_Vectors.To_Index (C);
          thisFace     : Geosphere_Face := Sphere.Faces.Element (Face_Index);
          Vertex_Buffer   : GL.Objects.Buffers.Buffer;
@@ -289,6 +291,7 @@ package body Geosphere is
                Draw (thisFace.Child (index));
             end loop;
          else  --  no children
+            --  Draw this face's triangle
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
 
@@ -324,6 +327,9 @@ package body Geosphere is
 
 --        GL.Toggles.Disable (GL.Toggles.Cull_Face);
 --        Draw (Sphere.Faces.First_Element);
+
+      --  Implement for (i = 0; i < sphere->nbPrimitives; i++)
+      --                 gsDraw(sphere, i, normal);
       Iterate (Sphere.Faces, Draw'Access);
 
    exception

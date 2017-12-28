@@ -426,14 +426,15 @@ package body GA_Draw is
    end Draw_Line;
 
    --  ------------------------------------------------------------------------
-
+   --  Based on draw.cpp DrawState::drawSphere(e3ga::mv::Float normal)
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                           MV_Matrix : GL.Types.Singles.Matrix4;
                           Normal : GL.Types.Single; Colour : GL.Types.Colors.Color) is
       Sphere : Geosphere.Geosphere;
    begin
       Geosphere.GS_Compute (Sphere, 4);
-      Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, Normal, Colour);
+      --  gsDraw(m_sphere, 0.0f);
+      Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, 0.0, Colour);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -472,12 +473,15 @@ package body GA_Draw is
       Scaling_Matrix      : Matrix4 := Identity4;
       MV_Matrix           : Matrix4;
    begin
-      if Scale_S < 0.0 then
+      --  scaleSign = (scale < 0.0f) ? -1.0f : 1.0f;
+      if Scale < 0.0 then
          Scale_Sign := -1.0;
       end if;
       --  adjust scale for sphere
       Scale_S := Scale_Sign *
         Maths.Cube_Root (Scale_Sign * Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi)));
+      --  main part of draw.cpp drawTriVector
+      --  s = (scale < 0.0f) ? -1.0f : 1.0f, f;
       if Scale_S >= 0.0 then
          Scale_Sign := 1.0;
       else
@@ -492,6 +496,7 @@ package body GA_Draw is
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
+
       case Method is
          when DRAW_TV_SPHERE =>
             if Get_Draw_Mode = OD_Orientation then
@@ -500,7 +505,6 @@ package body GA_Draw is
                s := 0.0;
             end if;
 --              s := 1.0;  --  TEST
-
             Draw_Sphere (Render_Program, MV_Matrix, s, Colour);
          when others => null;
       end case;

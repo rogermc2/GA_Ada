@@ -22,7 +22,7 @@ package Geosphere is
     procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
     procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                        MV_Matrix : GL.Types.Singles.Matrix4;
-                       Sphere : Geosphere; Normal : GL.Types.Single;
+                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
                        Colour : GL.Types.Colors.Color);
 
 private
