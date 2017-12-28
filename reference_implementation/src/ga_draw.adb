@@ -692,8 +692,8 @@ package body GA_Draw is
       VP_Width  : Int;
    begin
       GL.Window.Get_Viewport (VP_X, VP_Y, VP_Width, VP_Height);
-      Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Height - VP_Y),
-                                         Single (VP_X), Single (VP_Width - VP_X),
+      Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Y + VP_Height),
+                                         Single (VP_X), Single (VP_X + VP_Width),
                                          Near, Far, theMatrix);
    end Set_Projection_Matrix;
 
