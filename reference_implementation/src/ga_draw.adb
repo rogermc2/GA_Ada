@@ -460,7 +460,7 @@ package body GA_Draw is
    --  Based on draw.cpp drawTriVector
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Position : E3GA.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
@@ -469,7 +469,7 @@ package body GA_Draw is
       Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
       s                   : Single;
       Translation_Matrix  : Matrix4 := Identity4;
-      Scaling_Matrix      : Matrix4;
+      Scaling_Matrix      : Matrix4 := Identity4;
       MV_Matrix           : Matrix4;
    begin
       if Scale_S < 0.0 then
@@ -484,13 +484,13 @@ package body GA_Draw is
          Scale_Sign := -1.0;
       end if;
 
-      if E3GA.Get_Coord (E3GA.Norm_E2 (Base)) > 0.0 then
+      if E3GA.Get_Coord (E3GA.Norm_E2 (Position)) >= 0.0 then
          Translation_Matrix :=
-           Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Base)),
-                                      Single (E3GA.Get_Coord_2 (Base)),
-                                      Single (E3GA.Get_Coord_3 (Base))));
+          Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Position)),
+                                      Single (E3GA.Get_Coord_2 (Position)),
+                                      Single (E3GA.Get_Coord_3 (Position))));
       end if;
-      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, -Scale_S, Scale_S));
+      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
       case Method is
          when DRAW_TV_SPHERE =>

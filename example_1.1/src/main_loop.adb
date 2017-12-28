@@ -61,7 +61,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Model_Rotor     : E3GA.Rotor;
    Rotate_Model    : boolean := False;
    Rotate_Model_Out_Of_Plane  : boolean := False;
-   Pick           : GL_Util.GL_Pick;
+   Pick            : GL_Util.GL_Pick;
 
 --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
 --                          theText         : String;
@@ -107,9 +107,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Height         : Glfw.Size;
       Pick                  : GL_Util.GL_Pick;
       Translation_Matrix    : GL.Types.Singles.Matrix4;
-      BV_Translation_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
---        Projection_Matrix     : GL.Types.Singles.Matrix4;
       Vertex_Buffer         : GL.Objects.Buffers.Buffer;
 
    begin
@@ -120,7 +118,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-      Model_View_Matrix := Maths.Scaling_Matrix ((40.0, 40.0, 1.0)) * Model_View_Matrix;
+      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       --  The final MVP matrix is set up in the draw routines
@@ -132,8 +130,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                                   Label_Position);
 --           Silo.Push (Label);
          aPoint := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         aPoint, Red, Scale);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aPoint, Red);
       end loop;
    exception
       when anError :  others =>

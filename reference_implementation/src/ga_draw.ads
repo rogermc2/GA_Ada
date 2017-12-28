@@ -49,7 +49,7 @@ package GA_Draw is
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Base : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Position : E3GA.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
 
