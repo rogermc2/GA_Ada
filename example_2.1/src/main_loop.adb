@@ -55,10 +55,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Key_Pressed    : boolean := False;
    Parallelogram  : boolean := True;
 
-   procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
-                                 MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector;
-                                 Colour                  : GL.Types.Colors.Color);
+   procedure Draw_Parallelogram (Render_Program : GL.Objects.Programs.Program;
+                                 MV_Matrix      : GL.Types.Singles.Matrix4;
+                                 V2, V3, V4     : E2GA.Vector;
+                                 Colour         : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
                         Render_Program  : GL.Objects.Programs.Program;
@@ -125,15 +125,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
-      Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
-                                         0.0, Single (Window_Height),
-                                         -100.0, 100.0, Projection_Matrix);
       --  Set scale and position of first diagram
       Translation_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S / 2.0,
                                                      (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0
                                                      - Position_Y, 0.0));
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-
+      GA_Draw.Set_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
       Set_Coords (V1, E11, E12);
       while A < Two_Pi - 0.1 loop
@@ -142,19 +139,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Projection_Matrix, V1, Red, Scale);
+                         V1, Red, Scale);
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Projection_Matrix, V2, Green, Scale);
+                         V2, Green, Scale);
 
          BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
-                                Projection_Matrix, V1, V1 + V2, V2, Blue);
+                                V1, V1 + V2, V2, Blue);
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
-                            Projection_Matrix, BV, Yellow);
+                            BV, Yellow);
          end if;
 
          if A < Pi - 0.1 then
@@ -203,15 +200,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Draw_Parallelogram (Render_Program          : GL.Objects.Programs.Program;
-                                 MV_Matrix, Proj_Matrix  : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4              : E2GA.Vector;
-                                 Colour                  : GL.Types.Colors.Color) is
+   procedure Draw_Parallelogram (Render_Program  : GL.Objects.Programs.Program;
+                                 MV_Matrix       : GL.Types.Singles.Matrix4;
+                                 V2, V3, V4      : E2GA.Vector;
+                                 Colour          : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
       Colour_Location      : GL.Uniforms.Uniform;
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Vertex_Buffer        : Buffer;
       Element_Buffer       : Buffer;
@@ -227,9 +225,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
+      GA_Draw.Set_Projection_Matrix (Projection_Matrix );
+
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
                                 Colour_Location);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -241,7 +241,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
       GL.Uniforms.Set_Single (MV_Matrix_ID, MV_Matrix);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
