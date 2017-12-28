@@ -86,7 +86,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2;
       --  How many bivectors? what spacing between them?:
-      Entry_Width       : constant single := 2.3;
+      Entry_Width       : constant single := 2.8;
       Entry_Height      : constant single := 3.5;
       Num_Bivector_X    : constant integer := 6;
       Num_Bivector_Y    : constant integer := 4;
