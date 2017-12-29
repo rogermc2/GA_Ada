@@ -33,6 +33,7 @@ with Utilities;
 
 with C3GA;
 with C3GA_Draw;
+with C3GA_Utilities;
 with GA_Draw;
 with GL_Util;
 with E2GA;
@@ -130,6 +131,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                                   Label_Position);
 --           Silo.Push (Label);
          Point_Position := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
+         C3GA_Utilities.Print_Vector ("Point_Position", Point_Position);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Point_Position, Red);
       end loop;
    exception

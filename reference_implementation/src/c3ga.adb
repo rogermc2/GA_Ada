@@ -13,7 +13,7 @@ package body C3GA is
    --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
    MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
 
-   no_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, -1.0);
+   no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, -1.0);
    e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
    e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
    e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
@@ -24,7 +24,22 @@ package body C3GA is
 
    function Init (MV : Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
-               GU_Count : Integer) return E2GA.MV_Type;
+               GU_Count : Integer) return MV_Type;
+
+   --  -------------------------------------------------------------------------
+
+   function "+" (V1 : Vector; V2 : Vector) return Vector is
+   begin
+      return (V1 (1) + V2 (1), V1 (2) + V2 (2), V1 (3) + V2 (3),
+              V1 (4) + V2 (4), V1 (5) + V2 (5));
+   end  "+";
+
+   --  -------------------------------------------------------------------------
+
+   function "*" (F : Float; V : Vector) return Vector is
+   begin
+      return (F * V (1), F * V (2), F * V (3), F * V (4), F * V (5));
+   end  "*";
 
    --  -------------------------------------------------------------------------
 
@@ -44,14 +59,13 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
-      NO       : constant float := 1.0;
       thePoint : Normalized_Point;
-      Const    : constant float :=
-        NO + 0.5 * Norm_E2(V).Coordinates (1) * NI_Value;
+      Const    : constant Vector :=
+        no_basis + 0.5 * Norm_E2(V).Coordinates (1) * ni_basis;
    begin
-      thePoint.E1 := V.Coordinates (1) + Const;
-      thePoint.E2 := V.Coordinates (2) + Const;
-      thePoint.E3 := V.Coordinates (3) + Const;
+      thePoint.E1 := V.Coordinates (1) + Const (1);
+      thePoint.E2 := V.Coordinates (2) + Const (2);
+      thePoint.E3 := V.Coordinates (3) + Const (3);
       thePoint.NI := NI_Value;
       return thePoint;
    end C3GA_Point;
@@ -65,11 +79,11 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Init (MV : Multivector; Epsilon : float := 0.0) return E2GA.MV_Type is
+   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
-      MV_Info            : E2GA.MV_Type;
+      MV_Info            : MV_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
       GU_1               : constant GA_Maths.Grade_Usage := 1;
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
@@ -123,8 +137,8 @@ package body C3GA is
 
    function Init (MV : Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
-                  GU_Count : Integer) return E2GA.MV_Type is
-      MV_Info : E2GA.MV_Type;
+                  GU_Count : Integer) return MV_Type is
+      MV_Info : MV_Type;
    begin
       --  To be completed.
       return MV_Info;
@@ -184,6 +198,23 @@ package body C3GA is
    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
    begin
       return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (NP : Normalized_Point) return Vector is
+   begin
+      return (NP.E1, NP.E2, NP.E3, NP.NI, 1.0);
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (NP : Normalized_Point)
+                        return GA_Maths.Coords_Continuous_Array is
+      Coords : GA_Maths.Coords_Continuous_Array (1 .. 4)
+        :=  (NP.E1, NP.E2, NP.E3, NP.NI);
+   begin
+      return Coords;
    end Get_Coords;
 
    --  ------------------------------------------------------------------------

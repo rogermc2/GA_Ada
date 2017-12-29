@@ -298,9 +298,9 @@ package body Geosphere is
             Get_Vertices (Sphere, thisFace, Vertices);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-            Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
-            Utilities.Print_GL_Array3 ("Number of vertices: " &
-                        GL.Types.Int'Image (Num_Vertices), Vertices);
+--              Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
+--              Utilities.Print_GL_Array3 ("Number of vertices: " &
+--                          GL.Types.Int'Image (Num_Vertices), Vertices);
 
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);

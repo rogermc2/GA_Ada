@@ -1,12 +1,14 @@
 
 with GA_Maths;
 
-with E2GA;
 with E3GA;
+with Multivector_Type_Base;
 
 package C3GA is
 
    type Vector_E3GA is private;
+
+   subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
 --     subtype Circle_Coords is E2GA.Coords_Continuous_Array (1 .. 10);
 --     subtype Dual_Plane_Coords is E2GA.Coords_Continuous_Array (1 .. 4);
@@ -37,7 +39,7 @@ package C3GA is
    function NO return NO_T;
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
-   function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
+   function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
@@ -47,6 +49,9 @@ package C3GA is
    function Get_Coord_2 (V : Vector_E3GA) return float;
    function Get_Coord_3 (V : Vector_E3GA) return float;
    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D;
+   function Get_Coords (NP : Normalized_Point) return Vector;
+   function Get_Coords (NP : Normalized_Point)
+                        return GA_Maths.Coords_Continuous_Array;
    function NO_E1_E2 (C : Circle) return float;
    function NO_E1_E3 (C : Circle) return float;
    function NO_E1_NI (C : Circle) return float;
