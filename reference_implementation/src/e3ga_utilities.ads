@@ -7,6 +7,7 @@ with Multivector_Analyze;
 
 package E3GA_Utilities is
 
+   function C3GA_Point (Vec : E3GA.Vector) return C3GA.Normalized_Point;
    --  special exp() for 3D bivectors
    function exp (BV : E3GA.Bivector) return E3GA.Rotor;
    --  special log() for 3D rotors

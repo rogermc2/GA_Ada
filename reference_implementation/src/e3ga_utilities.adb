@@ -8,6 +8,14 @@ with Multivector_Type_Base;
 
 package body E3GA_Utilities is
 
+   function C3GA_Point (Vec : E3GA.Vector) return C3GA.Normalized_Point is
+   begin
+      return C3GA.US_Normalized_Point
+          (Vec + GA_Maths.NO + 0.5 * C3GA.Norm_E2 (Vec) * GA_Maths.NI);
+   end C3GA_Point;
+
+   --  -------------------------------------------------------------------------
+
    function exp (BV : E3GA.Bivector) return E3GA.Rotor is
       use E3GA;
       X2         : float := E3GA.Get_Coord (Left_Contraction (BV, BV));
