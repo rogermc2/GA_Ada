@@ -25,6 +25,7 @@ package C3GA is
    type Point is private;  -- 5D conformal null vector
    type Scalar is private;
    type Sphere is private;
+   type Vector is private;
 
    type Normalized_Point is private;
 
@@ -32,11 +33,11 @@ package C3GA is
       Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
 
+   function NI return NI_T;
+   function NO return NO_T;
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
-
-   function e1 return E3GA.Vector;
-   function e2 return E3GA.Vector;
-   function e3 return E3GA.Vector;
+   function Coord (S : Scalar) return float;
+   function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
@@ -77,18 +78,16 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
-   function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
-
    function Norm_E2 (V : Vector_E3GA) return Scalar;
 
-   procedure Set_Coords (P : out Point; NO, C1, C2, C3, NI : float);
+   procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
    procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point);
-   function Set_Normalized_Point (E1, E2, E3 : Float; NI : float := GA_Maths.NI)
+   function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := NI)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
-                                  NI : float := GA_Maths.NI)
+                                  Inf : float := NI)
                                   return Normalized_Point;
    function Unit_R (L : Line) return Line;
 
@@ -122,7 +121,8 @@ private
    end record;
 
    type Normalized_Point is record
-      E1, E2, E3, NI : float := 0.0;   --  m_c[4]
+      E1, E2, E3, NI : float := 0.0;      --  m_c[4]
+      --  NO             : float := 1.0;      constant
    end record;
 
    type Point is record
@@ -133,5 +133,7 @@ private
       E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;
       E2_E3_NO_NI, E1_E2_E3_NO              : float := 0.0;
    end record;
+
+   type Vector is new GA_Maths.Coords_Continuous_Array (1 .. 5);
 
 end C3GA;

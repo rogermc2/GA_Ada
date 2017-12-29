@@ -20,13 +20,13 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                      Epsilon : float := Default_Epsilon;
-                      Probe : C3GA.Normalized_Point := C3GA.US_Normalized_Point (C3GA.NO)) is
-   begin
-      Multivector_Analyze_C3GA.Analyze (theAnalysis, MV, Flags, Epsilon, Probe);
-   end Analyze;
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+--                       Flags : Flag_Type := (Flag_Invalid, False);
+--                        Epsilon : float := Default_Epsilon;
+--                        Probe : C3GA.Normalized_Point := C3GA.US_Normalized_Point (C3GA.NO)) is
+--     begin
+--        Multivector_Analyze_C3GA.Analyze (theAnalysis, MV, Flags, Epsilon, Probe);
+--     end Analyze;
 
    --  -------------------------------------------------------------------------
 

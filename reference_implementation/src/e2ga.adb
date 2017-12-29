@@ -293,7 +293,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (BV : Bivector) return Bivector_Coords is
+   function Get_Coords (BV : Bivector) return GA_Maths.Bivector_Coords is
    begin
       return BV.Coordinates;
    end Get_Coords;
@@ -335,7 +335,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
+   function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array is
    begin
       return MV.Coordinates;
    exception

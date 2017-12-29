@@ -6,18 +6,27 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Multivector_Type_Base;
 
 package body C3GA is
+
    MV_Space_Dimension  : constant Integer := 5;
    MV_Metric_Euclidean : constant Boolean := False;
 
    --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
    MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
 
-   e1_basis : GA_Maths.Array_3D := (1.0, 0.0, 0.0);
-   e2_basis : GA_Maths.Array_3D := (0.0, 1.0, 0.0);
-   e3_basis : GA_Maths.Array_3D := (0.0, 0.0, 1.0);
+   no_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, -1.0);
+   e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
+   e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
+   e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
+   ni_basis : constant Vector := (-1.0, 0.0, 0.0, 0.0, 0.0);
 
    NI_Value : NI_T := GA_Maths.NI;
-   NO_Value : NO_T := GA_Maths.NO;
+   NO_Value : NI_T := 1.0;
+
+   function Init (MV : Multivector; Epsilon : float;
+                  Use_Algebra_Metric : Boolean;
+               GU_Count : Integer) return E2GA.MV_Type;
+
+   --  -------------------------------------------------------------------------
 
    function "*" (L : Line; S : Float) return Line is
    begin
@@ -35,46 +44,93 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
+      NO       : constant float := 1.0;
       thePoint : Normalized_Point;
       Const    : constant float :=
-        NO_Value + 0.5 * Norm_E2(V).Coordinates (1) * NI_Value;
+        NO + 0.5 * Norm_E2(V).Coordinates (1) * NI_Value;
    begin
       thePoint.E1 := V.Coordinates (1) + Const;
       thePoint.E2 := V.Coordinates (2) + Const;
       thePoint.E3 := V.Coordinates (3) + Const;
       thePoint.NI := NI_Value;
-        return thePoint;
+      return thePoint;
    end C3GA_Point;
 
     --  ------------------------------------------------------------------------
 
-   function e1 return E3GA.Vector is
-      use E3GA;
-      V : Vector;
+   function Coord (S : Scalar) return float is
    begin
-        E3GA.Set_Coords (V, e1_basis (1), e1_basis (2), e1_basis (3));
-        return V;
-   end e1;
+      return S.Coordinates (1);
+   end Coord;
 
-    --  ------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
-    function e2 return E3GA.Vector is
-        V : E3GA.Vector;
-    begin
-        E3GA.Set_Coords (V, e2_basis (1), e2_basis (2), e2_basis (3));
-        return V;
-    end e2;
+   function Init (MV : Multivector; Epsilon : float := 0.0) return E2GA.MV_Type is
+      use Interfaces;
+      use GA_Maths;
+      use  Multivector_Type_Base;
+      MV_Info            : E2GA.MV_Type;
+      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
+      GU_1               : constant GA_Maths.Grade_Usage := 1;
+      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
+      Count_Index        : Unsigned_Integer := 0;
+      Done               : Boolean := False;
+   begin
+      --  e2ga.cpp line 1631
+      MV_Info.M_Type := Multivector_Object;
+      MV_Info.M_Grade_Use := GU;
+      --  count grade part usage
+      while GU /= 0 loop
+         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
+            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
+         end if;
+         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
+         MV_Info.M_Grade := Integer (Count_Index);
+         Count_Index := Count_Index + 1;
+      end loop;
 
-    --  ------------------------------------------------------------------------
+      --  if no grade part in use: zero blade
+      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
+         Put_Line ("E2GA.Init 2 Setting zero blade.");
+         Set_Type_Base (MV_Info, True, Blade_MV, 0, GU, Even_Parity);
+         Done := True;
+      else
+         --  Base.M_Zero = False by default
+         if Count (1) /= 0 and then Count (2) /= 0  then
+            --  Base.M_Parity = No_Parity by default
+            Done := True;
+         else
+            if Count (1) = 0 then
+               Put_Line ("E2GA.Init 1 Setting even parity.");
+               MV_Info.M_Parity := Even_Parity;
+            else
+               --                 Put_Line ("E2GA.Init 1 Setting odd parity.");
+               MV_Info.M_Parity := Odd_Parity;
+            end if;
+         end if;
+      end if;
+      if not Done then
+         MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
+      end if;
+      return MV_Info;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.Init 1.");
+         raise;
+   end Init;
 
-    function e3 return E3GA.Vector is
-        V : E3GA.Vector;
-    begin
-        E3GA.Set_Coords (V, e3_basis (1), e3_basis (2), e3_basis (3));
-        return V;
-    end e3;
+   --  -------------------------------------------------------------------------
 
-   --  ------------------------------------------------------------------------
+   function Init (MV : Multivector; Epsilon : float;
+                  Use_Algebra_Metric : Boolean;
+                  GU_Count : Integer) return E2GA.MV_Type is
+      MV_Info : E2GA.MV_Type;
+   begin
+      --  To be completed.
+      return MV_Info;
+   end Init;
+
+   --  -------------------------------------------------------------------------
 
    function E1_E2_NI (C : Circle) return float is
    begin
@@ -131,6 +187,20 @@ package body C3GA is
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
+
+   function NI return NI_T is
+   begin
+      return NI_Value;
+   end NI;
+
+   --  -------------------------------------------------------------------------
+
+   function NO return NO_T is
+   begin
+      return NO_Value;
+   end NO;
+
+   --  -------------------------------------------------------------------------
 
    function NO_E1_E2 (C : Circle) return float is
    begin
@@ -314,63 +384,6 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Init (MV : Multivector; Epsilon : float := 0.0) return E2GA.MV_Type is
-      use Interfaces;
-      use GA_Maths;
-      use  Multivector_Type_Base;
-      MV_Info            : E2GA.MV_Type;
-      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
-      GU_1               : constant GA_Maths.Grade_Usage := 1;
-      Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
-      Count_Index        : Unsigned_Integer := 0;
-      Done               : Boolean := False;
-   begin
-      --  e2ga.cpp line 1631
-      MV_Info.M_Type := Multivector_Object;
-      MV_Info.M_Grade_Use := GU;
-      --  count grade part usage
-      while GU /= 0 loop
-         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
-            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
-         end if;
-         GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
-         MV_Info.M_Grade := Integer (Count_Index);
-         Count_Index := Count_Index + 1;
-      end loop;
-
-      --  if no grade part in use: zero blade
-      if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
-         Put_Line ("E2GA.Init 2 Setting zero blade.");
-         Set_Type_Base (MV_Info, True, Blade_MV, 0, GU, Even_Parity);
-         Done := True;
-      else
-         --  Base.M_Zero = False by default
-         if Count (1) /= 0 and then Count (2) /= 0  then
-            --  Base.M_Parity = No_Parity by default
-            Done := True;
-         else
-            if Count (1) = 0 then
-               Put_Line ("E2GA.Init 1 Setting even parity.");
-               MV_Info.M_Parity := Even_Parity;
-            else
-               --                 Put_Line ("E2GA.Init 1 Setting odd parity.");
-               MV_Info.M_Parity := Odd_Parity;
-            end if;
-         end if;
-      end if;
-      if not Done then
-         null;
---           MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
-      end if;
-      return MV_Info;
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Init 1.");
-         raise;
-   end Init;
-
-   --  -------------------------------------------------------------------------
-
    function Norm_E2 (V : Vector_E3GA) return Scalar is
       theNorm : Scalar;
    begin
@@ -399,13 +412,13 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Coords (P : out Point; NO, C1, C2, C3, NI : float) is
+   procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float) is
    begin
-      P.NO := NO;
+      P.NO := Origin;
       P.E1 := C1;
       P.E2 := C2;
       P.E3 := C3;
-      P.NI := NI;
+      P.NI := Inf;
    end Set_Coords;
 
    --  -------------------------------------------------------------------------
@@ -420,19 +433,19 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Normalized_Point (E1, E2, E3 : float; NI : float := GA_Maths.NI)
+   function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := NI)
                                return Normalized_Point is
    begin
-      return (E1, E2, E3, NI);
+      return (E1, E2, E3, Inf);
    end Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
 
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
-                                  NI : float := GA_Maths.NI)
+                                  Inf : float := NI)
                                return Normalized_Point is
    begin
-      return (Point (1), Point (2), Point (3), NI);
+      return (Point (1), Point (2), Point (3), Inf);
    end Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
