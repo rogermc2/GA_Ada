@@ -1,6 +1,7 @@
 
 with Interfaces;
 
+with Ada.Numerics.Generic_Complex_Types;
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics.Generic_Real_Arrays;
 

@@ -13,11 +13,11 @@ package body C3GA is
    --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
    MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
 
-   no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, -1.0);
+   no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
    e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
    e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
    e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
-   ni_basis : constant Vector := (-1.0, 0.0, 0.0, 0.0, 0.0);
+   ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
    NI_Value : NI_T := GA_Maths.NI;
    NO_Value : NI_T := 1.0;
