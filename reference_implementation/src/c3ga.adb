@@ -6,10 +6,18 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Multivector_Type_Base;
 
 package body C3GA is
+   MV_Space_Dimension  : constant Integer := 5;
+   MV_Metric_Euclidean : constant Boolean := False;
+
+   --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
+   MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
 
    e1_basis : GA_Maths.Array_3D := (1.0, 0.0, 0.0);
    e2_basis : GA_Maths.Array_3D := (0.0, 1.0, 0.0);
    e3_basis : GA_Maths.Array_3D := (0.0, 0.0, 1.0);
+
+   NI_Value : NI_T := GA_Maths.NI;
+   NO_Value : NO_T := GA_Maths.NO;
 
    function "*" (L : Line; S : Float) return Line is
    begin
@@ -26,6 +34,20 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
+      thePoint : Normalized_Point;
+      Const    : constant float :=
+        NO_Value + 0.5 * Norm_E2(V).Coordinates (1) * NI_Value;
+   begin
+      thePoint.E1 := V.Coordinates (1) + Const;
+      thePoint.E2 := V.Coordinates (2) + Const;
+      thePoint.E3 := V.Coordinates (3) + Const;
+      thePoint.NI := NI_Value;
+        return thePoint;
+   end C3GA_Point;
+
+    --  ------------------------------------------------------------------------
+
    function e1 return E3GA.Vector is
       use E3GA;
       V : Vector;
@@ -34,7 +56,7 @@ package body C3GA is
         return V;
    end e1;
 
-    --  ----------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function e2 return E3GA.Vector is
         V : E3GA.Vector;
@@ -52,7 +74,8 @@ package body C3GA is
         return V;
     end e3;
 
-    --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
+
    function E1_E2_NI (C : Circle) return float is
    begin
       return C.E1_E2_NI;
@@ -172,7 +195,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function NI (DP : Dual_Plane) return float is
+   function NI (DP : Dual_Plane) return NI_T is
    begin
       return DP.NI;
    end NI;
@@ -242,21 +265,14 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function NI (NP : Normalized_Point) return float is
+   function NI (NP : Normalized_Point) return NI_T is
    begin
       return NP.NI;
    end NI;
 
    --  -------------------------------------------------------------------------
 
-   function NO return Normalized_Point is
-   begin
-      return (0.0, 0.0, 0.0, 1.0);
-   end NO;
-
-   --  -------------------------------------------------------------------------
-
-   function NO (NP : Normalized_Point) return float is
+   function NO (NP : Normalized_Point) return NO_T is
    begin
       return 1.0;
    end NO;
@@ -355,11 +371,30 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Norm_E2 (V : Vector_E3GA) return Scalar is
+      theNorm : Scalar;
+   begin
+      theNorm.Coordinates (1) := V.Coordinates (1) * V.Coordinates (1) +
+        V.Coordinates (2) * V.Coordinates (2) +
+        V.Coordinates (3) * V.Coordinates (3);
+      return theNorm;
+   end Norm_E2;
+
+   --  -------------------------------------------------------------------------
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
    begin
       V.Coordinates (1) := C1;
       V.Coordinates (2) := C2;
       V.Coordinates (3) := C3;
+   end Set_Coords;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Coords (C1, C2, C3 : float) return Vector_E3GA is
+      Vec : Vector_E3GA;
+   begin
+      Vec.Coordinates :=  (C1, C2, C3);
+     return Vec;
    end Set_Coords;
 
    --  -------------------------------------------------------------------------
@@ -429,9 +464,9 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function US_Set_Normalized_Point (Point : GA_Maths.Array_3D) return Normalized_Point is
+   function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point is
    begin
-      return (Point (1), Point (2), Point (3), 0.0);
+      return (Point.Coordinates (1), Point.Coordinates (2), Point.Coordinates (3), 0.0);
    end US_Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------

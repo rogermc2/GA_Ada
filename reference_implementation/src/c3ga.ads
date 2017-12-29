@@ -13,25 +13,26 @@ package C3GA is
 --     subtype Line_Coords is E2GA.Coords_Continuous_Array (1 .. 6);
 --     subtype Sphere_Coords is E2GA.Coords_Continuous_Array (1 .. 5);
 
-   type Circle is private;
-   type Dual_Plane is private;
-   type Line is private;
-   type Point is private;
-   type Sphere is private;
-
-   type Normalized_Point is private;
    --  user constants
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
-   type No_T is private;
+   subtype NI_T is float;
+   subtype NO_T is float;
 
-   type Ni_T is record
-      Coordinates : E2GA.Scalar_Coords := (others => 1.0);
-   end record;
+   type Circle is private;
+   type Dual_Plane is private;
+   type Line is private;
+   type Point is private;  -- 5D conformal null vector
+   type Scalar is private;
+   type Sphere is private;
+
+   type Normalized_Point is private;
 
    type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : E3GA.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
+      Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
+
+   function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
 
    function e1 return E3GA.Vector;
    function e2 return E3GA.Vector;
@@ -55,7 +56,7 @@ package C3GA is
    function E1 (DP : Dual_Plane) return float;
    function E2 (DP : Dual_Plane) return float;
    function E3 (DP : Dual_Plane) return float;
-   function NI (DP : Dual_Plane) return float;
+   function NI (DP : Dual_Plane) return NI_T;
 
    function E1_E2_NI (L : Line) return float;
    function E1_E3_NI (L : Line) return float;
@@ -67,9 +68,8 @@ package C3GA is
    function E1 (NP : Normalized_Point) return float;
    function E2 (NP : Normalized_Point) return float;
    function E3 (NP : Normalized_Point) return float;
-   function NI (NP : Normalized_Point) return float;
-   function NO (NP : Normalized_Point) return float;
-   function NO return Normalized_Point;
+   function NI (NP : Normalized_Point) return NI_T;
+   function NO (NP : Normalized_Point) return NO_T;
 
    function E1_E2_E3_NI (S : Sphere) return float;
    function E1_E2_NO_NI (S : Sphere) return float;
@@ -79,8 +79,11 @@ package C3GA is
 
    function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
 
+   function Norm_E2 (V : Vector_E3GA) return Scalar;
+
    procedure Set_Coords (P : out Point; NO, C1, C2, C3, NI : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
+   function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
    procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point);
    function Set_Normalized_Point (E1, E2, E3 : Float; NI : float := GA_Maths.NI)
                                   return Normalized_Point;
@@ -91,10 +94,14 @@ package C3GA is
 
    --  Underscore functions
    function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
-   function US_Set_Normalized_Point (Point : GA_Maths.Array_3D) return Normalized_Point;
+   function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
    function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
 
 private
+   type Scalar is record
+      Coordinates : GA_Maths.Scalar_Coords;  --  m_c[1]
+   end record;
+
    --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
    type Vector_E3GA is record
       Coordinates : E3GA.Vector_Coords_3D := (0.0, 0.0, 0.0);   --  m_c[3]
@@ -108,6 +115,7 @@ private
    type Dual_Plane is record
       E1, E2, E3, NI : float := 0.0;   --  m_c[4]
    end record;
+
    type Line is record   --  m_c[6]
       E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;
       E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
@@ -115,10 +123,6 @@ private
 
    type Normalized_Point is record
       E1, E2, E3, NI : float := 0.0;   --  m_c[4]
-   end record;
-
-   type No_T is record
-      No : float := 0.0;   --  m_c[1]
    end record;
 
    type Point is record

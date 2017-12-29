@@ -91,24 +91,24 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Scale_S           : constant single := single (Scale);
       Position_X        : integer := 0;
       Position_Y        : single := 160.0;
---        Label             : Silo.Label_Data;
+      --        Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
       E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
       E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
       E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
       E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
-      V1                    : E2GA.Vector; --  2D vector (0, 0), (1, 0)
-      V2                    : E2GA.Vector;
+      V1                : E2GA.Vector; --  2D vector (0, 0), (1, 0)
+      V2                : E2GA.Vector;
 
-      aPoint                : C3GA.Normalized_Point;
---        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
-      Window_Width          : Glfw.Size;
-      Window_Height         : Glfw.Size;
-      Pick                  : GL_Util.GL_Pick;
-      Translation_Matrix    : GL.Types.Singles.Matrix4;
-      Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Vertex_Buffer         : GL.Objects.Buffers.Buffer;
+      Point_Position      : C3GA.Normalized_Point;
+      --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
+      Window_Width        : Glfw.Size;
+      Window_Height       : Glfw.Size;
+      Pick                : GL_Util.GL_Pick;
+      Translation_Matrix  : GL.Types.Singles.Matrix4;
+      Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -129,8 +129,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
 --                                   Label_Position);
 --           Silo.Push (Label);
-         aPoint := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aPoint, Red);
+         Point_Position := C3GA.US_Normalized_Point (Points.Normalized_Points (count));
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Point_Position, Red);
       end loop;
    exception
       when anError :  others =>
@@ -184,7 +184,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --        GL.Toggles.Enable (GL.Toggles.Normalize);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
       GL.Rasterization.Set_Line_Width (1.0);
-      GA_Draw.Set_Point_Size (0.2);
+      GA_Draw.Set_Point_Size (1.0);
 --        GA_Draw.Set_Point_Size (0.005);
 
       E3GA.Set_Rotor (Model_Rotor, 1.0);

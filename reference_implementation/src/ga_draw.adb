@@ -491,8 +491,8 @@ package body GA_Draw is
       if E3GA.Get_Coord (E3GA.Norm_E2 (Position)) >= 0.0 then
          Translation_Matrix :=
           Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Position)),
-                                      Single (E3GA.Get_Coord_2 (Position)),
-                                      Single (E3GA.Get_Coord_3 (Position))));
+                                     Single (E3GA.Get_Coord_2 (Position)),
+                                     Single (E3GA.Get_Coord_3 (Position))));
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
