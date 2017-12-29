@@ -20,7 +20,6 @@ package GA_Maths is
 
    Infinity : constant Safe_Float := Safe_Float'Last;
    NI : constant float := Infinity;
-   NO : constant float := 1.0;
 
    type Fixed_4 is delta 0.01 range -1.0 .. 1.0;
    for Fixed_4'Small use 0.01;
