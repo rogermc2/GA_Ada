@@ -364,6 +364,17 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   procedure Set_Coords (P : out Point; NO, C1, C2, C3, NI : float) is
+   begin
+      P.NO := NO;
+      P.E1 := C1;
+      P.E2 := C2;
+      P.E3 := C3;
+      P.NI := NI;
+   end Set_Coords;
+
+   --  -------------------------------------------------------------------------
+
    procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point) is
    begin
       MV.Coordinates (1) := Point.E1;

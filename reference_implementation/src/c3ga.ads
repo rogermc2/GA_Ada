@@ -16,12 +16,13 @@ package C3GA is
    type Circle is private;
    type Dual_Plane is private;
    type Line is private;
+   type Point is private;
    type Sphere is private;
 
    type Normalized_Point is private;
    --  user constants
-   --	__ni_ct__ ni; declared in c3ga.cpp
-   --	__no_ct__ no; declared in c3ga.cpp
+   --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
+   --	__no_ct__ no; declared in c3ga.cpp origin
    type No_T is private;
 
    type Ni_T is record
@@ -78,6 +79,7 @@ package C3GA is
 
    function Init (MV : Multivector; Epsilon : float:= 0.0) return E2GA.MV_Type;
 
+   procedure Set_Coords (P : out Point; NO, C1, C2, C3, NI : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point);
    function Set_Normalized_Point (E1, E2, E3 : Float; NI : float := GA_Maths.NI)
@@ -117,6 +119,10 @@ private
 
    type No_T is record
       No : float := 0.0;   --  m_c[1]
+   end record;
+
+   type Point is record
+      NO, E1, E2, E3, NI : float := 0.0;   --  m_c[5]
    end record;
 
    type Sphere is record   --  m_c[5]
