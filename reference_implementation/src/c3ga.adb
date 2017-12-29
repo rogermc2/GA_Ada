@@ -454,12 +454,15 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Multivector (MV : out Multivector; Point : Normalized_Point) is
+   procedure Set_Multivector (MV : out Multivector; NP : Normalized_Point) is
+      New_MV : Multivector (2);
    begin
-      MV.Coordinates (1) := Point.E1;
-      MV.Coordinates (2) := Point.E2;
-      MV.Coordinates (3) := Point.E3;
-      MV.Coordinates (4) := Point.NI;
+      New_MV.Coordinates (1) := 1.0;
+      New_MV.Coordinates (2) := NP.E1;
+      New_MV.Coordinates (3) := NP.E2;
+      New_MV.Coordinates (4) := NP.E3;
+      New_MV.Coordinates (5) := NP.NI;
+      MV := New_MV;
    end Set_Multivector;
 
    --  -------------------------------------------------------------------------
