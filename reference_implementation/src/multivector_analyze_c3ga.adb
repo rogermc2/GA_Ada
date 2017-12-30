@@ -9,9 +9,9 @@ with Multivector_Type_Base;
 package body Multivector_Analyze_C3GA is
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
-                      Flags : Flag_Type := (Flag_Invalid, false);
-                      Epsilon : float := Default_Epsilon;
-                      Probe : C3GA.Normalized_Point) is
+                       Probe : C3GA.Normalized_Point;
+                       Flags : Flag_Type := (Flag_Invalid, false);
+                       Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
       use Multivector_Type_Base;
 

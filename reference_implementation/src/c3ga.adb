@@ -58,6 +58,7 @@ package body C3GA is
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
       thePoint : Normalized_Point;
    begin
+      --  thePoint.Origin of a Normalized_Point is a constant 1.0
       thePoint.E1 := V.Coordinates (1);
       thePoint.E2 := V.Coordinates (2);
       thePoint.E3 := V.Coordinates (3);
@@ -83,15 +84,16 @@ package body C3GA is
       GU_1               : constant GA_Maths.Grade_Usage := 1;
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
       Count_Index        : Unsigned_Integer := 0;
+      Index              : Unsigned_Integer := 0;
       Done               : Boolean := False;
    begin
-      --  e2ga.cpp line 1631
       MV_Info.M_Type := Multivector_Object;
       MV_Info.M_Grade_Use := GU;
       --  count grade part usage
       while GU /= 0 loop
-         if (GU and GU_1) /= 0 then  --  e2ga.cpp line 1678
-            Count (Count_Index + 1 and US_1) := Count (Count_Index + 1 and US_1) + 1;
+         if (GU and GU_1) /= 0 then  --  c3ga.cpp line 21731
+            Index := Count_Index and US_1;
+            Count (Index) := Count (Index) + 1;
          end if;
          GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
          MV_Info.M_Grade := Integer (Count_Index);
@@ -100,7 +102,7 @@ package body C3GA is
 
       --  if no grade part in use: zero blade
       if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
-         Put_Line ("E2GA.Init 2 Setting zero blade.");
+         Put_Line ("C3GA.Init 1 Setting zero blade.");
          Set_Type_Base (MV_Info, True, Blade_MV, 0, GU, Even_Parity);
          Done := True;
       else
@@ -110,10 +112,10 @@ package body C3GA is
             Done := True;
          else
             if Count (1) = 0 then
-               Put_Line ("E2GA.Init 1 Setting even parity.");
+               Put_Line ("C3GA.Init 1 Setting even parity.");
                MV_Info.M_Parity := Even_Parity;
             else
-               --                 Put_Line ("E2GA.Init 1 Setting odd parity.");
+               --                 Put_Line ("C3GA.Init 1 Setting odd parity.");
                MV_Info.M_Parity := Odd_Parity;
             end if;
          end if;
@@ -124,7 +126,7 @@ package body C3GA is
       return MV_Info;
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Init 1.");
+         Put_Line ("An exception occurred in C3GA.Init 1.");
          raise;
    end Init;
 

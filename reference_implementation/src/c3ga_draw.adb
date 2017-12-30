@@ -7,6 +7,7 @@ with E3GA_Utilities;
 with E3GA;
 with GA_Draw;
 with GA_Maths;
+with Multivector_Analyze;
 
 package body C3GA_Draw is
 
@@ -40,9 +41,11 @@ package body C3GA_Draw is
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    Point_Position : C3GA.Normalized_Point; Colour : GL.Types.Colors.Color) is
-      MV : C3GA.Multivector (2);
+      MV   : C3GA.Multivector (2);
+      Anal : Multivector_Analyze.MV_Analysis;
    begin
       C3GA.Set_Multivector (MV, Point_Position);
+      Multivector_Analyze.Analyze (Anal, MV, Point_Position);
       Draw_Point (Render_Program, Model_View_Matrix, MV, Colour);
 
    exception
@@ -63,7 +66,7 @@ package body C3GA_Draw is
    begin
       E3GA.Set_Coords (Pos, Position.Coordinates (2), Position.Coordinates (3),
                        Position.Coordinates (4));
-      E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
+--        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
 
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                               Pos, Colour, Scale);
