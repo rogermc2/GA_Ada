@@ -3,6 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
+with E3GA_Utilities;
 with E3GA;
 with GA_Draw;
 with GA_Maths;
@@ -60,8 +61,10 @@ package body C3GA_Draw is
       Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
       Pos   : E3GA.Vector;
    begin
-      E3GA.Set_Coords (Pos, Position.Coordinates (1), Position.Coordinates (2),
-                       Position.Coordinates (3));
+      E3GA.Set_Coords (Pos, Position.Coordinates (2), Position.Coordinates (3),
+                       Position.Coordinates (4));
+      E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
+
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                               Pos, Colour, Scale);
 
