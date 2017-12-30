@@ -1,4 +1,5 @@
 
+with GA_Base_Types;
 with GA_Maths;
 
 with E3GA;
@@ -18,8 +19,6 @@ package C3GA is
    --  user constants
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
-   subtype NI_T is float;
-   type NO_T is private;
 
    type Circle is private;
    type Dual_Plane is private;
@@ -60,7 +59,7 @@ package C3GA is
    function E1 (DP : Dual_Plane) return float;
    function E2 (DP : Dual_Plane) return float;
    function E3 (DP : Dual_Plane) return float;
-   function NI (DP : Dual_Plane) return NI_T;
+   function NI (DP : Dual_Plane) return GA_Base_Types.NI_T;
 
    function E1_E2_NI (L : Line) return float;
    function E1_E3_NI (L : Line) return float;
@@ -72,8 +71,8 @@ package C3GA is
    function E1 (NP : Normalized_Point) return float;
    function E2 (NP : Normalized_Point) return float;
    function E3 (NP : Normalized_Point) return float;
-   function NI (NP : Normalized_Point) return NI_T;
-   function NO (NP : Normalized_Point) return NO_T;
+   function NI (NP : Normalized_Point) return Float;
+   function NO (NP : Normalized_Point) return Float;
 
    function E1_E2_E3_NI (S : Sphere) return float;
    function E1_E2_NO_NI (S : Sphere) return float;
@@ -100,7 +99,6 @@ package C3GA is
    function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
 
 private
-   type NO_T is new float;
 
    type Scalar is record
       Coordinates : GA_Maths.Scalar_Coords;  --  m_c[1]
@@ -116,8 +114,9 @@ private
       NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
    end record;
 
-   type Dual_Plane is record
-      E1, E2, E3, NI : float := 0.0;   --  m_c[4]
+   type Dual_Plane is record   --  m_c[4]
+      E1, E2, E3 : float := 0.0;
+      Inf        : GA_Base_Types.NI_T;
    end record;
 
    type Line is record   --  m_c[6]
@@ -125,13 +124,16 @@ private
       E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
    end record;
 
-   type Normalized_Point is record
-      E1, E2, E3, NI : float := 0.0;      --  m_c[4]
+   type Normalized_Point is record     --  m_c[4
       --  NO             : float := 1.0;      constant
+      E1, E2, E3 : float := 0.0;
+      Inf        : GA_Base_Types.NI_T;
    end record;
 
-   type Point is record
-      NO, E1, E2, E3, NI : float := 0.0;   --  m_c[5]
+   type Point is record   --  m_c[5]
+      Origin     : GA_Base_Types.NO_T;
+      E1, E2, E3 : float := 0.0;
+      Inf        : GA_Base_Types.NI_T;
    end record;
 
    type Sphere is record   --  m_c[5]

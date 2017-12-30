@@ -19,4 +19,32 @@ package body GA_Base_Types is
 
    --  -------------------------------------------------------------------------
 
+   function NI (N : NI_T)  return float is
+   begin
+      return N.Inf;
+   end NI;
+
+   --  ------------------------------------------------------------------------
+
+   function NO (N : NO_T)  return float is
+   begin
+      return N.Origin;
+   end NO;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_NI  (N : out NI_T; Inf : float) is
+   begin
+      N.Inf := Inf;
+   end Set_NI;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_NO  (N : out NO_T; Origin : float) is
+   begin
+      N.Origin := Origin;
+   end Set_NO;
+
+   --  -------------------------------------------------------------------------
+
 end GA_Base_Types;
