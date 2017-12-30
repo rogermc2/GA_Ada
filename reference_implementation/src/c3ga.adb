@@ -19,8 +19,8 @@ package body C3GA is
    e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
    ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
---     NI_Value : NI_T := GA_Maths.NI;
---     NO_Value : NI_T := 1.0;
+   NI_Const : GA_Base_Types.NI_T;
+   NO_Const : GA_Base_Types.NO_T;
 
    function Init (MV : Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
@@ -61,12 +61,12 @@ package body C3GA is
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
       thePoint : Normalized_Point;
       Inf      : GA_Base_Types.NI_T;
-      Const    : constant Vector :=
-        no_basis + 0.5 * Norm_E2(V).Coordinates (1) * ni_basis;
+      Const    : constant float :=
+        GA_Base_Types.NO + 0.5 * Norm_E2(V).Coordinates (1) * GA_Base_Types.NI;
    begin
-      thePoint.E1 := V.Coordinates (1) + Const (1);
-      thePoint.E2 := V.Coordinates (2) + Const (2);
-      thePoint.E3 := V.Coordinates (3) + Const (3);
+      thePoint.E1 := V.Coordinates (1) + Const;
+      thePoint.E2 := V.Coordinates (2) + Const;
+      thePoint.E3 := V.Coordinates (3) + Const;
       thePoint.Inf := Inf;
       return thePoint;
    end C3GA_Point;

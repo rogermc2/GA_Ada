@@ -4,8 +4,22 @@ package body GA_Base_Types is
    function "*" (I1, I2 : NI_T) return NI_T is
       I : NI_T;
    begin
-      I.Inf := -I1.Inf * I2.Inf;
+      I.Inf := 0.0;
       return I;
+   end "*";
+
+   --  -------------------------------------------------------------------------
+
+   function "*" (I : NI_T; O : NO_T) return float is
+   begin
+      return -I.Inf * O.Origin;
+   end "*";
+
+   --  -------------------------------------------------------------------------
+
+   function "*" (O : NO_T; I : NI_T) return float is
+   begin
+      return -I.Inf * O.Origin;
    end "*";
 
    --  -------------------------------------------------------------------------
@@ -13,20 +27,34 @@ package body GA_Base_Types is
    function "*" (O1, O2 : NO_T) return NO_T is
       O : NO_T;
    begin
-      O.Origin := -O1.Origin * O2.Origin;
+      O.Origin := 0.0;
       return O;
    end "*";
 
    --  -------------------------------------------------------------------------
 
-   function NI (N : NI_T)  return float is
+   function NI return float is
+   begin
+      return 1.0;
+   end NI;
+
+   --  ------------------------------------------------------------------------
+
+   function NI (N : NI_T) return float is
    begin
       return N.Inf;
    end NI;
 
    --  ------------------------------------------------------------------------
 
-   function NO (N : NO_T)  return float is
+   function NO return float is
+   begin
+      return 1.0;
+   end NO;
+
+   --  ------------------------------------------------------------------------
+
+   function NO (N : NO_T) return float is
    begin
       return N.Origin;
    end NO;
