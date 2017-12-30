@@ -9,10 +9,10 @@ package GA_Base_Types is
    type NO_T is private;
    type NO_Const is private;
 
-   function "*" (I1, I2 : NI_T) return NI_T;
+   function "*" (I1, I2 : NI_T) return float;
    function "*" (I : NI_T; O : NO_T) return float;
    function "*" (O : NO_T; I : NI_T) return float;
-   function "*" (O1, O2 : NO_T) return NO_T;
+   function "*" (O1, O2 : NO_T) return float;
 
    function NI return float;
    function NI (N : NI_T) return float;

@@ -1,11 +1,9 @@
 
 package body GA_Base_Types is
 
-   function "*" (I1, I2 : NI_T) return NI_T is
-      I : NI_T;
+   function "*" (I1, I2 : NI_T) return float is
    begin
-      I.Inf := 0.0;
-      return I;
+      return 0.0;
    end "*";
 
    --  -------------------------------------------------------------------------
@@ -24,11 +22,9 @@ package body GA_Base_Types is
 
    --  -------------------------------------------------------------------------
 
-   function "*" (O1, O2 : NO_T) return NO_T is
-      O : NO_T;
+   function "*" (O1, O2 : NO_T) return float is
    begin
-      O.Origin := 0.0;
-      return O;
+      return 0.0;
    end "*";
 
    --  -------------------------------------------------------------------------
