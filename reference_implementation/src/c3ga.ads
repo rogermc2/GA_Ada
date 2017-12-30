@@ -19,7 +19,7 @@ package C3GA is
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
    subtype NI_T is float;
-   subtype NO_T is float;
+   type NO_T is private;
 
    type Circle is private;
    type Dual_Plane is private;
@@ -35,8 +35,6 @@ package C3GA is
       Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
 
-   function NI return NI_T;
-   function NO return NO_T;
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
    function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
@@ -89,10 +87,10 @@ package C3GA is
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
    procedure Set_Multivector (MV : out Multivector; NP : Normalized_Point);
-   function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := NI)
+   function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
-                                  Inf : float := NI)
+                                  Inf : float := 1.0)
                                   return Normalized_Point;
    function Unit_R (L : Line) return Line;
 
@@ -102,6 +100,8 @@ package C3GA is
    function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
 
 private
+   type NO_T is new float;
+
    type Scalar is record
       Coordinates : GA_Maths.Scalar_Coords;  --  m_c[1]
    end record;

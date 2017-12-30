@@ -4,18 +4,16 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GA_Maths;
 
 package body C3GA_Utilities is
-
-   Ni : float := 1.0;
-   No : float := 1.0;
+   NI : constant float := 1.0;
 
    function C3GA_Point (V : C3GA.Vector_E3GA) return C3GA.Normalized_Point is
       Norm   : constant C3GA.Scalar := C3GA.Norm_E2 (V);
-      Offset : constant float := 0.5 * C3GA.Coord (Norm) * C3GA.NI;
+      Offset : constant float := 0.5 * C3GA.Coord (Norm) * NI;
       thePoint : C3GA.Normalized_Point;
    begin
       thePoint := C3GA.Set_Normalized_Point (C3GA.Get_Coord_1 (V) + Offset,
                        C3GA.Get_Coord_2 (V) + Offset,
-                       C3GA.Get_Coord_3 (V) + Offset, C3GA.NI);
+                       C3GA.Get_Coord_3 (V) + Offset, NI);
       return thePoint;
    end C3GA_Point;
 

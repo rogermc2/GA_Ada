@@ -219,20 +219,6 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function NI return NI_T is
-   begin
-      return NI_Value;
-   end NI;
-
-   --  -------------------------------------------------------------------------
-
-   function NO return NO_T is
-   begin
-      return NO_Value;
-   end NO;
-
-   --  -------------------------------------------------------------------------
-
    function NO_E1_E2 (C : Circle) return float is
    begin
       return C.NO_E1_E2;
@@ -467,7 +453,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := NI)
+   function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                return Normalized_Point is
    begin
       return (E1, E2, E3, Inf);
@@ -476,7 +462,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
-                                  Inf : float := NI)
+                                  Inf : float := 1.0)
                                return Normalized_Point is
    begin
       return (Point (1), Point (2), Point (3), Inf);
