@@ -23,7 +23,7 @@ package Multivector_Analyze is
    end record;
 
    type Blade_Type is (Non_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
-                       Tangent_Blade, Free_Blade, Zero_Blade);
+                       Tangent_Blade, Free_Blade, Pseudo_Scalar_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Unspecified_Subclass, Vector_Subclass, Bivector_Subclass,
                                 Even_Versor_Subclass);
    type Conformal_Type is (Not_Conformal, Conformal_Multivector, Conformal_Versor,

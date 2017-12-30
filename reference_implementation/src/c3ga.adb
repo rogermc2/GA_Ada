@@ -81,7 +81,6 @@ package body C3GA is
       use  Multivector_Type_Base;
       MV_Info            : MV_Type;
       GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
-      GU_1               : constant GA_Maths.Grade_Usage := 1;
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
       Count_Index        : Unsigned_Integer := 0;
       Index              : Unsigned_Integer := 0;
@@ -331,12 +330,12 @@ package body C3GA is
    function NO_E1_E2_E3_NI (MV : Multivector) return float is
       use GA_Maths;
       GU    : Grade_Usage := MV.Grade_Use;
-      GU_31 : constant Grade_Usage := 31;
+      GU_32 : constant Grade_Usage := 32;
    begin
-      if (GU and GU_31) = 0 then
+      if (GU and GU_32) = 0 then
          return 0.0;
       else
-         return MV.Coordinates (MV_Grade_Size (Integer (GU and GU_31)));
+         return MV.Coordinates (MV_Grade_Size (Integer (GU and GU_32)));
       end if;
    end NO_E1_E2_E3_NI;
 
@@ -409,6 +408,44 @@ package body C3GA is
    begin
       return S.E1_E2_E3_NO;
    end E1_E2_E3_NO;
+
+   --  -------------------------------------------------------------------------
+
+   function Norm_E (MV : Multivector) return Scalar is
+      use GA_Maths;
+      GU  : Grade_Usage := MV.Grade_Use;
+      Sum : Float := 0.0;
+      E2  : Scalar;
+   begin
+      if (GU and GU_1) /= 0 then
+         Sum := MV.Coordinates (1) * MV.Coordinates (1);
+      end if;
+      if (GU and GU_2) /= 0 then
+         For index in 2 .. 6 loop
+            Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
+         end loop;
+      end if;
+      if (GU and GU_4) /= 0 then
+         For index in 7 .. 16 loop
+            Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
+         end loop;
+      end if;
+      if (GU and GU_8) /= 0 then
+         For index in 17 .. 26 loop
+            Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
+         end loop;
+      end if;
+      if (GU and GU_16) /= 0 then
+         For index in 27 .. 31 loop
+            Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
+         end loop;
+      end if;
+      if (GU and GU_32) /= 0 then
+         Sum := Sum + MV.Coordinates (32) * MV.Coordinates (32);
+      end if;
+      E2.Coordinates (1) := Sum;
+      return E2;
+   end Norm_E;
 
    --  -------------------------------------------------------------------------
 
@@ -516,6 +553,47 @@ package body C3GA is
       NP.Inf := Inf;
       return NP;
    end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function Outer_Product (MV1, MV2 : Multivector) return Multivector is
+      use GA_Maths;
+      Coords  : GA_Maths.Coords_Continuous_Array (1 .. 32);
+      GU1     : Grade_Usage := MV1.Grade_Use;
+      GU2     : Grade_Usage := MV2.Grade_Use;
+      Sum     : Float := 0.0;
+      Product : Multivector (MV1.Grade_Use);
+   begin
+      if (GU2 and GU_1) /= 0 then
+         if (GU1 and GU_1) /= 0 then
+            Coords (1) := MV1.Coordinates (1) * MV2.Coordinates (1);
+         end if;
+         if (GU1 and GU_2) /= 0 then
+            For index in 2 .. 6 loop
+               Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
+            end loop;
+         end if;
+         if (GU1 and GU_4) /= 0 then
+            For index in 7 .. 16 loop
+               Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
+            end loop;
+         end if;
+         if (GU1 and GU_8) /= 0 then
+            For index in 17 .. 26 loop
+               Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
+            end loop;
+         end if;
+         if (GU1 and GU_16) /= 0 then
+            For index in 27 .. 31 loop
+               Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
+            end loop;
+         end if;
+         if (GU1 and GU_32) /= 0 then
+               Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
+         end if;
+      end if;
+      return Product;
+   end Outer_Product;
 
    --  -------------------------------------------------------------------------
 

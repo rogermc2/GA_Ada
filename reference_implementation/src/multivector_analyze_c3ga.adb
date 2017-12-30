@@ -14,10 +14,18 @@ package body Multivector_Analyze_C3GA is
                        Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
       use Multivector_Type_Base;
+      use GA_Maths;
 
       MV_X      : C3GA.Multivector := MV;
       MV_Info   : E2GA.MV_Type;
       Analysis  : MV_Analysis;
+
+      procedure Classify is
+         OP_Nix : Boolean;
+      begin
+         null;
+      end Classify;
+
    begin
       Analysis.M_Flags.Valid := True;
       Analysis.Epsilon := Epsilon;
@@ -43,18 +51,20 @@ package body Multivector_Analyze_C3GA is
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
          Analysis.M_Vectors (1) := E3GA.e1;
 
-         if MV_X.Coordinates (1) < 0.0 then
-            Analysis.M_Vectors (2) := E3GA.e2;
-         else
-            declare
-               use E3GA;
-            begin
-               Analysis.M_Vectors (2) := -E3GA.e2;
-            end;
-         end if;
+      elsif Analysis.M_MV_Type.M_Grade_Use = 1 then  --  Grade 0
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 1.");
+         Analysis.M_Type.Blade_Class := Scalar_Blade;
+         Analysis.M_Type.M_Grade := 1;
+         Analysis.M_Scalors (1) := MV_X.Coordinates (1);
 
-         --  TO BE COMPLETED
+      elsif Analysis.M_MV_Type.M_Grade_Use = 6 then  --  Grade 5
+         Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 6.");
+         Analysis.M_Type.Blade_Class := Scalar_Blade;
+         Analysis.M_Type.M_Grade := 6;
+         Analysis.M_Scalors (1) := C3GA.NO_E1_E2_E3_NI (MV);
       else
+         Classify;
+         --  TO BE COMPLETED
          Put_Line ("Multivector_Analyze_C3GA.Analyze Multivector Type.");
       end if;
    end Analyze;

@@ -82,6 +82,7 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
+   function Norm_E (MV : Multivector) return Scalar;
    function Norm_E2 (V : Vector_E3GA) return Scalar;
 
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
@@ -95,6 +96,7 @@ package C3GA is
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
                                   Inf : float := 1.0)
                                   return Normalized_Point;
+   function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Unit_R (L : Line) return Line;
 
    --  Underscore functions
