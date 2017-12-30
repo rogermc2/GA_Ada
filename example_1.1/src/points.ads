@@ -30,7 +30,7 @@ package Points is
    C2 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (4));
    C3 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (5));
 
-   P1 : constant Normalized_Point := US_Set_Normalized_Point (Point_Data (6));
+   P1 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (6));
 
    Normalized_Points : constant Normalized_Points_Array (1 .. Num_Points) :=
                     (L1, L2, C1, C2, C3, P1);

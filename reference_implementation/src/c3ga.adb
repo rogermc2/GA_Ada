@@ -57,14 +57,11 @@ package body C3GA is
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
       thePoint : Normalized_Point;
-      Inf      : GA_Base_Types.NI_T;
-      Const    : constant float :=
-        GA_Base_Types.NO + 0.5 * Norm_E2(V).Coordinates (1) * GA_Base_Types.NI;
    begin
-      thePoint.E1 := V.Coordinates (1) + Const;
-      thePoint.E2 := V.Coordinates (2) + Const;
-      thePoint.E3 := V.Coordinates (3) + Const;
-      thePoint.Inf := Inf;
+      thePoint.E1 := V.Coordinates (1);
+      thePoint.E2 := V.Coordinates (2);
+      thePoint.E3 := V.Coordinates (3);
+      thePoint.Inf := 0.5 * Norm_E2(V).Coordinates (1) * GA_Base_Types.NI;
       return thePoint;
    end C3GA_Point;
 
@@ -202,7 +199,7 @@ package body C3GA is
 
    function Get_Coords (NP : Normalized_Point) return Vector is
    begin
-      return (1.0, NP.E1, NP.E2, NP.E3, GA_Base_Types.NI (NP.Inf));
+      return (1.0, NP.E1, NP.E2, NP.E3, NP.Inf);
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
@@ -210,7 +207,7 @@ package body C3GA is
    function Get_Coords (NP : Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
       Coords : GA_Maths.Coords_Continuous_Array (1 .. 4)
-        :=  (NP.E1, NP.E2, NP.E3, GA_Base_Types.NI (NP.Inf));
+        :=  (NP.E1, NP.E2, NP.E3, NP.Inf);
    begin
       return Coords;
    end Get_Coords;
@@ -352,7 +349,7 @@ package body C3GA is
 
    function NI (NP : Normalized_Point) return Float is
    begin
-      return GA_Base_Types.NI (NP.Inf);
+      return NP.Inf;
    end NI;
 
    --  -------------------------------------------------------------------------
@@ -409,6 +406,7 @@ package body C3GA is
    end Norm_E2;
 
    --  -------------------------------------------------------------------------
+
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
    begin
       V.Coordinates (1) := C1;
@@ -434,7 +432,7 @@ package body C3GA is
       P.E1 := C1;
       P.E2 := C2;
       P.E3 := C3;
-      Set_NI (P.Inf, Inf);
+      P.Inf := Inf;
    end Set_Coords;
 
    --  -------------------------------------------------------------------------
@@ -446,7 +444,7 @@ package body C3GA is
       New_MV.Coordinates (2) := NP.E1;
       New_MV.Coordinates (3) := NP.E2;
       New_MV.Coordinates (4) := NP.E3;
-      New_MV.Coordinates (5) := GA_Base_Types.NI (NP.Inf);
+      New_MV.Coordinates (5) := NP.Inf;
       MV := New_MV;
    end Set_Multivector;
 
@@ -485,7 +483,7 @@ package body C3GA is
       Point.E1 := E1;
       Point.E2 := E2;
       Point.E3 := E3;
-      GA_Base_Types.Set_NI (Point.Inf, Inf);
+      Point.Inf := Inf;
       return Point;
    end Set_Normalized_Point;
 
@@ -499,7 +497,7 @@ package body C3GA is
       NP.E1 := Point (1);
       NP.E2 := Point (2);
       NP.E3 := Point (3);
-      GA_Base_Types.Set_NI (NP.Inf, Inf);
+      NP.Inf := Inf;
       return NP;
    end Set_Normalized_Point;
 
@@ -516,36 +514,36 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function US_Normalized_Point (N : Normalized_Point) return Normalized_Point is
-      thePoint : Normalized_Point := N;
-   begin
-      GA_Base_Types.Set_NI (thePoint.Inf, 0.0);
-      return thePoint;
-   end US_Normalized_Point;
-
-   --  -------------------------------------------------------------------------
-
-   function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point is
-      NP : Normalized_Point;
-   begin
-      NP.E1 := E1;
-      NP.E2 := E2;
-      NP.E3 := E3;
-      GA_Base_Types.Set_NI (NP.Inf, 0.0);
-      return NP;
-   end US_Set_Normalized_Point;
-
-   --  -------------------------------------------------------------------------
-
-   function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point is
-      NP : Normalized_Point;
-   begin
-      NP.E1 := Point.Coordinates (1);
-      NP.E2 := Point.Coordinates (2);
-      NP.E3 := Point.Coordinates (3);
-      GA_Base_Types.Set_NI (NP.Inf, 0.0);
-      return NP;
-   end US_Set_Normalized_Point;
+--     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point is
+--        thePoint : Normalized_Point := N;
+--     begin
+--        thePoint.Inf := 0.0;
+--        return thePoint;
+--     end US_Normalized_Point;
+--
+--     --  -------------------------------------------------------------------------
+--
+--     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point is
+--        NP : Normalized_Point;
+--     begin
+--        NP.E1 := E1;
+--        NP.E2 := E2;
+--        NP.E3 := E3;
+--        NP.Inf := 0.0;
+--        return NP;
+--     end US_Set_Normalized_Point;
+--
+--     --  -------------------------------------------------------------------------
+--
+--     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point is
+--        NP : Normalized_Point;
+--     begin
+--        NP.E1 := Point.Coordinates (1);
+--        NP.E2 := Point.Coordinates (2);
+--        NP.E3 := Point.Coordinates (3);
+--        NP.Inf := 0.0;
+--        return NP;
+--     end US_Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
 

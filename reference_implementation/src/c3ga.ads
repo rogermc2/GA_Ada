@@ -96,9 +96,9 @@ package C3GA is
    function Unit_R (L : Line) return Line;
 
    --  Underscore functions
-   function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
-   function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
-   function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
+--     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
+--     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
+--     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
 
 private
 
@@ -127,15 +127,15 @@ private
    end record;
 
    type Normalized_Point is record     --  m_c[4
-      --  NO             : float := 1.0;      constant
+      --  Origin             : float := 1.0;      constant
       E1, E2, E3 : float := 0.0;
-      Inf        : GA_Base_Types.NI_T;
+      Inf        : float := 0.0;
    end record;
 
    type Point is record   --  m_c[5]
       Origin     : GA_Base_Types.NO_T;
       E1, E2, E3 : float := 0.0;
-      Inf        : GA_Base_Types.NI_T;
+      Inf        : float := 0.0;
    end record;
 
    type Sphere is record   --  m_c[5]
