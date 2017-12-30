@@ -19,9 +19,6 @@ package body C3GA is
    e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
    ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
-   NI_Const : GA_Base_Types.NI_T;
-   NO_Const : GA_Base_Types.NO_T;
-
    function Init (MV : Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
                GU_Count : Integer) return MV_Type;
@@ -450,6 +447,32 @@ package body C3GA is
       New_MV.Coordinates (3) := NP.E2;
       New_MV.Coordinates (4) := NP.E3;
       New_MV.Coordinates (5) := GA_Base_Types.NI (NP.Inf);
+      MV := New_MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NI_T) is
+      New_MV : Multivector (2);
+   begin
+      New_MV.Coordinates (1) := 0.0;
+      New_MV.Coordinates (2) := 0.0;
+      New_MV.Coordinates (3) := 0.0;
+      New_MV.Coordinates (4) := 0.0;
+      New_MV.Coordinates (5) := GA_Base_Types.NI (N);
+      MV := New_MV;
+   end Set_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NO_T) is
+      New_MV : Multivector (2);
+   begin
+      New_MV.Coordinates (1) := GA_Base_Types.NO (N);
+      New_MV.Coordinates (2) := 0.0;
+      New_MV.Coordinates (3) := 0.0;
+      New_MV.Coordinates (4) := 0.0;
+      New_MV.Coordinates (5) := 0.0;
       MV := New_MV;
    end Set_Multivector;
 

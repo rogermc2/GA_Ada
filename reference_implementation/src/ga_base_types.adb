@@ -10,14 +10,16 @@ package body GA_Base_Types is
 
    function "*" (I : NI_T; O : NO_T) return float is
    begin
-      return -I.Inf * O.Origin;
+--        return -I.Inf * O.Origin;
+      return -1.0;
    end "*";
 
    --  -------------------------------------------------------------------------
 
    function "*" (O : NO_T; I : NI_T) return float is
    begin
-      return -I.Inf * O.Origin;
+--        return -I.Inf * O.Origin;
+      return -1.0;
    end "*";
 
    --  -------------------------------------------------------------------------
