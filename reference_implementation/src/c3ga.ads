@@ -68,6 +68,8 @@ package C3GA is
    function E2_NO_NI (L : Line) return float;
    function E3_NO_NI (L : Line) return float;
 
+   function NO_E1_E2_E3_NI (MV : Multivector) return float;
+
    function E1 (NP : Normalized_Point) return float;
    function E2 (NP : Normalized_Point) return float;
    function E3 (NP : Normalized_Point) return float;

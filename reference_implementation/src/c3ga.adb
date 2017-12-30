@@ -328,6 +328,20 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function NO_E1_E2_E3_NI (MV : Multivector) return float is
+      use GA_Maths;
+      GU    : Grade_Usage := MV.Grade_Use;
+      GU_31 : constant Grade_Usage := 31;
+   begin
+      if (GU and GU_31) = 0 then
+         return 0.0;
+      else
+         return MV.Coordinates (MV_Grade_Size (Integer (GU and GU_31)));
+      end if;
+   end NO_E1_E2_E3_NI;
+
+   --  ---------------------------------------------------------
+
    function E1 (NP : Normalized_Point) return float is
    begin
       return NP.E1;
