@@ -13,11 +13,9 @@ package body C3GA is
    type Basis_Name is (NOb, E1b, E2b, E3b, NIb);
    type Grade_Name is (G0, G1, G2, G3, G4, G5);
 
-   --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
+   --  This array can be used to lookup the number of coordinates for
+   --  a grade part of a general multivector
    MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
-   --  This array can be used to lookup the number of coordinates
-   --  for a grade part of a general multivector
-   MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
    --  This array can be used to lookup the number of coordinates
    --  based on a grade usage bitmap
    MV_Size       : constant array (1 .. 64) of Integer :=
@@ -436,30 +434,30 @@ package body C3GA is
       Sum : Float := 0.0;
       E2  : Scalar;
    begin
-      if (GU and GU_1) /= 0 then
+      if (GU and GU_0) /= 0 then
          Sum := MV.Coordinates (1) * MV.Coordinates (1);
       end if;
-      if (GU and GU_2) /= 0 then
+      if (GU and GU_1) /= 0 then
          For index in 2 .. 6 loop
             Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
          end loop;
       end if;
-      if (GU and GU_4) /= 0 then
+      if (GU and GU_2) /= 0 then
          For index in 7 .. 16 loop
             Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
          end loop;
       end if;
-      if (GU and GU_8) /= 0 then
+      if (GU and GU_4) /= 0 then
          For index in 17 .. 26 loop
             Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
          end loop;
       end if;
-      if (GU and GU_16) /= 0 then
+      if (GU and GU_8) /= 0 then
          For index in 27 .. 31 loop
             Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
          end loop;
       end if;
-      if (GU and GU_32) /= 0 then
+      if (GU and GU_16) /= 0 then
          Sum := Sum + MV.Coordinates (32) * MV.Coordinates (32);
       end if;
       E2.Coordinates (1) := Sum;
@@ -591,12 +589,12 @@ package body C3GA is
          Result : Boolean := False;
       begin
          case Index is
+               when 0 => Result := (GU and GU_0) /= 0;
                when 1 => Result := (GU and GU_1) /= 0;
                when 2 => Result := (GU and GU_2) /= 0;
                when 3 => Result := (GU and GU_4) /= 0;
                when 4 => Result := (GU and GU_8) /= 0;
                when 5 => Result := (GU and GU_16) /= 0;
-               when 6 => Result := (GU and GU_32) /= 0;
                when others =>
                    Put_Line ("C3GA.Outer_Product Invalid Index");
          end case;
@@ -605,38 +603,38 @@ package body C3GA is
 
    begin
       for Index2 in 1 ..32 loop
-         if Grade_Used (MV2, GU1) then
+         if Grade_Used (MV2, Integer (GU1)) then
             for Index1 in 1 .. 32 loop
                null;
             end loop;
          end if;
       end loop;
 
-      if (GU2 and GU_1) /= 0 then
+      if (GU2 and GU_0) /= 0 then
          if (GU1 and GU_1) /= 0 then
             Coords (1) := MV1.Coordinates (1) * MV2.Coordinates (1);
          end if;
-         if (GU1 and GU_2) /= 0 then
+         if (GU1 and GU_1) /= 0 then
             For index in 2 .. 6 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_4) /= 0 then
+         if (GU1 and GU_2) /= 0 then
             For index in 7 .. 16 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_8) /= 0 then
+         if (GU1 and GU_4) /= 0 then
             For index in 17 .. 26 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_16) /= 0 then
+         if (GU1 and GU_8) /= 0 then
             For index in 27 .. 31 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_32) /= 0 then
+         if (GU1 and GU_16) /= 0 then
                Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
          end if;
       end if;

@@ -31,7 +31,7 @@ package GA_Maths is
 
    subtype Basis_Index is Integer range 1 .. 2;  --  e1, e2
    subtype Grade_Index is Integer range 0 .. 2;  --  Scalar, Vector, Bivector
-   subtype Grade_Usage is Unsigned_Integer;      --  1, 2, 4 for grades 0, 1, 2
+   subtype Grade_Usage is Unsigned_Integer;
 
    type Basis_Array is array (Basis_Index) of integer;
    type Grade_Array is array (Grade_Index) of integer;
@@ -62,12 +62,12 @@ package GA_Maths is
    Pi      : constant float := Ada.Numerics.Pi;
    Two_Pi  : constant float := 2.0 * Ada.Numerics.Pi;
 
-   GU_1    : constant Grade_Usage := 1;
-   GU_2    : constant Grade_Usage := 2;
-   GU_4    : constant Grade_Usage := 4;
-   GU_8    : constant Grade_Usage := 8;
-   GU_16   : constant Grade_Usage := 16;
-   GU_32   : constant Grade_Usage := 32;
+   GU_0    : constant Grade_Usage := 1;
+   GU_1    : constant Grade_Usage := 2;
+   GU_2    : constant Grade_Usage := 4;
+   GU_4    : constant Grade_Usage := 8;
+   GU_8    : constant Grade_Usage := 16;
+   GU_16   : constant Grade_Usage := 32;
 
    function Canonical_Reordering_Sign (Map_A, Map_B : integer) return float;
 
