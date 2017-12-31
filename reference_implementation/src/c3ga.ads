@@ -30,10 +30,6 @@ package C3GA is
 
    type Normalized_Point is private;
 
-   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
-   end record;
-
    --  Joinable grade definitions
    Grade_0 : constant integer := 1;
    Grade_1 : constant integer := 2;
@@ -41,6 +37,10 @@ package C3GA is
    Grade_3 : constant integer := 8;
    Grade_4 : constant integer := 16;
    Grade_5 : constant integer := 32;
+
+   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+      Coordinates : GA_Maths.MV_Coordinate_Array  := (others => 0.0);  --  m_c[32]
+   end record;
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;

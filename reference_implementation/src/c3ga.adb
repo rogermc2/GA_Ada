@@ -92,6 +92,14 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+      function Grade_Used (MV : Multivector; GU : GA_Maths.Grade_Usage) return Boolean is
+         use GA_Maths;
+      begin
+         return (MV.Grade_Use and GU) /= 0;
+      end Grade_Used;
+
+    --  ------------------------------------------------------------------------
+
    function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
@@ -584,70 +592,70 @@ package body C3GA is
       Sum     : Float := 0.0;
       Product : Multivector (MV_GU);
 
-      function Grade_Used (MV : Multivector; Index : Integer) return Boolean is
-         GU     : Grade_Usage := MV1.Grade_Use;
-         Result : Boolean := False;
-      begin
-         case Index is
-               when 0 => Result := (GU and GU_0) /= 0;
-               when 1 => Result := (GU and GU_1) /= 0;
-               when 2 => Result := (GU and GU_2) /= 0;
-               when 3 => Result := (GU and GU_4) /= 0;
-               when 4 => Result := (GU and GU_8) /= 0;
-               when 5 => Result := (GU and GU_16) /= 0;
-               when others =>
-                   Put_Line ("C3GA.Outer_Product Invalid Index");
-         end case;
-         return Result;
-      end Grade_Used;
+--        function Grade_Used (MV : Multivector; Index : Integer) return Boolean is
+--           GU     : Grade_Usage := MV1.Grade_Use;
+--           Result : Boolean := False;
+--        begin
+--           case Index is
+--                 when 0 => Result := (GU and GU_0) /= 0;
+--                 when 1 => Result := (GU and GU_1) /= 0;
+--                 when 2 => Result := (GU and GU_2) /= 0;
+--                 when 3 => Result := (GU and GU_4) /= 0;
+--                 when 4 => Result := (GU and GU_8) /= 0;
+--                 when 5 => Result := (GU and GU_16) /= 0;
+--                 when others =>
+--                     Put_Line ("C3GA.Outer_Product Invalid Index");
+--           end case;
+--           return Result;
+--        end Grade_Used;
 
    begin
       for Index2 in 1 ..32 loop
-         if Grade_Used (MV2, Integer (GU1)) then
+         if Grade_Used (MV2, GU1) then
             for Index1 in 1 .. 32 loop
                null;
             end loop;
          end if;
       end loop;
 
-      if (GU2 and GU_0) /= 0 then
-         if (GU1 and GU_1) /= 0 then
+      if Grade_Used (MV2, GU_0) then
+         if Grade_Used (MV1, GU_0) then
             Coords (1) := MV1.Coordinates (1) * MV2.Coordinates (1);
          end if;
-         if (GU1 and GU_1) /= 0 then
+         if Grade_Used (MV1, GU_1) then
             For index in 2 .. 6 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_2) /= 0 then
+         if Grade_Used (MV1, GU_2) then
             For index in 7 .. 16 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_4) /= 0 then
+         if Grade_Used (MV1, GU_4) then
             For index in 17 .. 26 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_8) /= 0 then
+         if Grade_Used (MV1, GU_8) then
             For index in 27 .. 31 loop
                Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
             end loop;
          end if;
-         if (GU1 and GU_16) /= 0 then
+         if Grade_Used (MV1, GU_16)then
                Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
          end if;
       end if;
 
-      if (GU2 and GU_1) /= 0 then
-         if (GU1 and GU_1) /= 0 then
+      if Grade_Used (MV2, GU_0) then
+         if Grade_Used (MV1, GU_0) then
             For index in 2 .. 6 loop
                Coords (index) := Coords (index) +
                  MV1.Coordinates (1) * MV2.Coordinates (index);
             end loop;
          end if;
 
-         if (GU1 and GU_2) /= 0 then
+         if Grade_Used (MV1, GU_1) then
             Coords (7) := Coords (7) +
               MV1.Coordinates (2) * MV2.Coordinates (3) -
               MV1.Coordinates (3) * MV2.Coordinates (2);
