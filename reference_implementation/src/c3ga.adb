@@ -10,8 +10,11 @@ package body C3GA is
    MV_Space_Dimension  : constant Integer := 5;
    MV_Metric_Euclidean : constant Boolean := False;
 
+   type Basis_Name is (NOb, E1b, E2b, E3b, NIb);
+   type Grade_Name is (G0, G1, G2, G3, G4, G5);
+
    --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
-   MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
+   MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
 
    no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
    e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);

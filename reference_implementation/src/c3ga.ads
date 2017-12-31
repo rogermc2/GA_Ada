@@ -34,6 +34,14 @@ package C3GA is
       Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
 
+   --  Joinable grade definitions
+   Grade_0 : constant integer := 1;
+   Grade_1 : constant integer := 2;
+   Grade_2 : constant integer := 4;
+   Grade_3 : constant integer := 8;
+   Grade_4 : constant integer := 16;
+   Grade_5 : constant integer := 32;
+
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
    function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
