@@ -592,6 +592,37 @@ package body C3GA is
                Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
          end if;
       end if;
+      if (GU2 and GU_1) /= 0 then
+         if (GU1 and GU_1) /= 0 then
+            For index in 2 .. 6 loop
+               Coords (index) := Coords (index) +
+                 MV1.Coordinates (1) * MV2.Coordinates (index);
+            end loop;
+         end if;
+         if (GU1 and GU_2) /= 0 then
+            Coords (7) := Coords (7) +
+              MV1.Coordinates (2) * MV2.Coordinates (3) -
+              MV1.Coordinates (3) * MV2.Coordinates (2);
+            Coords (8) := Coords (8) +
+              MV1.Coordinates (2) * MV2.Coordinates (4) -
+              MV1.Coordinates (4) * MV2.Coordinates (2);
+            Coords (9) := Coords (9) +
+              MV1.Coordinates (2) * MV2.Coordinates (5) -
+              MV1.Coordinates (5) * MV2.Coordinates (2);
+            Coords (10) := Coords (10) +
+              MV1.Coordinates (3) * MV2.Coordinates (4) -
+              MV1.Coordinates (4) * MV2.Coordinates (3);
+            Coords (11) := Coords (11) +
+              MV1.Coordinates (4) * MV2.Coordinates (5) -
+              MV1.Coordinates (5) * MV2.Coordinates (4);
+            Coords (12) := Coords (12) +
+              MV1.Coordinates (5) * MV2.Coordinates (3) -
+              MV1.Coordinates (3) * MV2.Coordinates (5);
+            Coords (13) := Coords (13) +
+              MV1.Coordinates (3) * MV2.Coordinates (6) -
+              MV1.Coordinates (6) * MV2.Coordinates (3);
+         end if;
+      end if;
       return Product;
    end Outer_Product;
 
