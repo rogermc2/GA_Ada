@@ -10,8 +10,22 @@ package body C3GA is
    MV_Space_Dimension  : constant Integer := 5;
    MV_Metric_Euclidean : constant Boolean := False;
 
-   --  This array can be used to lookup the number of coordinates for a grade part of a general multivector
+   --  This array can be used to lookup the number of coordinates
+   --  for a grade part of a general multivector
    MV_Grade_Size : constant array (1 ..6) of Integer := (1, 5, 10, 10, 5, 1 );
+   --  This array can be used to lookup the number of coordinates
+   --  based on a grade usage bitmap
+   MV_Size       : constant array (1 .. 64) of Integer :=
+		   (0, 1, 5, 6, 10, 11, 15, 16, 10, 11, 15, 16, 20, 21, 25, 26,
+                    5, 6, 10, 11, 15, 16, 20, 21, 15, 16, 20, 21, 25, 26, 30, 31,
+                    1, 2, 6, 7, 11, 12, 16, 17, 11, 12, 16, 17, 21, 22, 26, 27,
+                    6, 7, 11, 12, 16, 17, 21, 22, 16, 17, 21, 22, 26, 27, 31, 32);
+   --  This array contains the order of basis elements in the general multivector
+   --  Use it to answer : 'at what index do I find basis element (x)
+   --  (x = basis vector bitmap)?
+   MV_Basis_Element_Index_By_Bitmap : constant array (1 .. 32) of Integer :=
+	(0, 1, 2, 6, 3, 7, 9, 24, 4, 8, 11, 23, 10, 22, 25, 30,
+         5, 15, 12, 20, 13, 21, 18, 29, 14, 19, 17, 28, 16, 27, 26, 31);
 
    no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
    e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
@@ -561,9 +575,38 @@ package body C3GA is
       Coords  : GA_Maths.Coords_Continuous_Array (1 .. 32);
       GU1     : Grade_Usage := MV1.Grade_Use;
       GU2     : Grade_Usage := MV2.Grade_Use;
+      Size_1  : integer := MV_Size (Integer (MV1.Grade_Use));
+      Size_2  : integer := MV_Size (Integer (MV2.Grade_Use));
+      MV_GU   : Grade_Usage := GU1 or GU2;
       Sum     : Float := 0.0;
-      Product : Multivector (MV1.Grade_Use);
+      Product : Multivector (MV_GU);
+
+      function Grade_Used (MV : Multivector; Index : Integer) return Boolean is
+         GU     : Grade_Usage := MV1.Grade_Use;
+         Result : Boolean := False;
+      begin
+         case Index is
+               when 1 => Result := (GU and GU_1) /= 0;
+               when 2 => Result := (GU and GU_2) /= 0;
+               when 3 => Result := (GU and GU_4) /= 0;
+               when 4 => Result := (GU and GU_8) /= 0;
+               when 5 => Result := (GU and GU_16) /= 0;
+               when 6 => Result := (GU and GU_32) /= 0;
+               when others =>
+                   Put_Line ("C3GA.Outer_Product Invalid Index");
+         end case;
+         return Result;
+      end Grade_Used;
+
    begin
+      for Index2 in 1 ..32 loop
+         if Grade_Used (MV2, GU1) then
+            for Index1 in 1 .. 32 loop
+               null;
+            end loop;
+         end if;
+      end loop;
+
       if (GU2 and GU_1) /= 0 then
          if (GU1 and GU_1) /= 0 then
             Coords (1) := MV1.Coordinates (1) * MV2.Coordinates (1);
@@ -592,6 +635,7 @@ package body C3GA is
                Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
          end if;
       end if;
+
       if (GU2 and GU_1) /= 0 then
          if (GU1 and GU_1) /= 0 then
             For index in 2 .. 6 loop
@@ -599,6 +643,7 @@ package body C3GA is
                  MV1.Coordinates (1) * MV2.Coordinates (index);
             end loop;
          end if;
+
          if (GU1 and GU_2) /= 0 then
             Coords (7) := Coords (7) +
               MV1.Coordinates (2) * MV2.Coordinates (3) -
