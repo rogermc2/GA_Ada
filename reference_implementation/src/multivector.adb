@@ -2,7 +2,18 @@
 
 package body Multivector is
 
-   procedure Simplify (MV : in out Multivector)
+   --  setup conformal algebra:
+   type Basis_Vector_ID is (BV_no, BV_e1, BV_e2, BV_e3, BV_ni);
+   Basis_Vector_Names : constant Array (1 .. 5) of String (1 .. 2) :=
+     ("no", "e1", "e2", "e3", "ni");
+   Basis : array (1 .. 5, 1 ..5) of float :=
+	   ((0.0, 0.0, 0.0, 0.0, -1.0),
+	    (0.0, 1.0, 0.0, 0.0, 0.0),
+	    (0.0, 0.0, 1.0, 0.0, 0.0),
+	    (0.0, 0.0, 0.0 ,1.0, 0.0),
+	    (-1.0, 0.0, 0.0 , 0.0, 0.0));
+
+   procedure Simplify (MV : in out Multivector);
 
      --  -------------------------------------------------------------------------
 
