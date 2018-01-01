@@ -13,11 +13,12 @@ package Multivector is
 
    function Get_Basis_Vector (Index : Integer) return Multivector;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
+   function C3_Multivector return Multivector;
 
 private
    type Multivector is record
       Blades : Blade_List;
-      Sortes : Boolean := False;
+      Sorted : Boolean := False;
    end record;
 
 end Multivector;

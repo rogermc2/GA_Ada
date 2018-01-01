@@ -11,12 +11,28 @@ package body Multivector is
 	    (0.0, 1.0, 0.0, 0.0, 0.0),
 	    (0.0, 0.0, 1.0, 0.0, 0.0),
 	    (0.0, 0.0, 0.0 ,1.0, 0.0),
-	    (-1.0, 0.0, 0.0 , 0.0, 0.0));
+     (-1.0, 0.0, 0.0 , 0.0, 0.0));
+
+   C3_Blade_List : Blade_List;
+
+   no : Multivector := Get_Basis_Vector (0);
+   e1 : Multivector := Get_Basis_Vector (1);
+   e2 : Multivector := Get_Basis_Vector (2);
+   e3 : Multivector := Get_Basis_Vector (3);
+   ni : Multivector := Get_Basis_Vector (4);
 
    procedure Simplify (MV : in out Multivector);
 
      --  -------------------------------------------------------------------------
 
+   function C3_Multivector return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades := C3_Blade_List;
+      return MV;
+   end C3_Multivector;
+
+   --  -------------------------------------------------------------------------
    function Get_Basis_Vector (Index : Integer) return Multivector is
       BB : constant GA_Maths.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
@@ -97,5 +113,12 @@ package body Multivector is
    end Simplify;
 
    --  -------------------------------------------------------------------------
+
+begin
+   C3_Blade_List.Append (New_Basis_Blade (0));
+   C3_Blade_List.Append (New_Basis_Blade (1));
+   C3_Blade_List.Append (New_Basis_Blade (2));
+   C3_Blade_List.Append (New_Basis_Blade (3));
+   C3_Blade_List.Append (New_Basis_Blade (4));
 
 end Multivector;
