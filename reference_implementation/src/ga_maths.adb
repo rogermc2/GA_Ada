@@ -12,6 +12,20 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Bitmap (BB : Basis_Blade) return Unsigned_Integer is
+   begin
+      return BB.Bitmap;
+   end Bitmap;
+
+   --  ------------------------------------------------------------------------
+
+   function Blade_Scale (BB : Basis_Blade) return Float is
+   begin
+      return BB.Scale;
+   end Blade_Scale;
+
+   --  ------------------------------------------------------------------------
+
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
       use Interfaces;
       A     : Unsigned_32 := Shift_Right (Unsigned_32 (Map_A), 1);
@@ -64,6 +78,29 @@ package body GA_Maths is
       Blade.Scale :=Scale;
       return Blade;
    end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Update_Blade (BB : in out Basis_Blade; Scale : Float) is
+   begin
+      BB.Scale := Scale;
+   end Update_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer) is
+   begin
+      BB.Bitmap := Bitmap;
+   end Update_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;
+                           Scale : Float) is
+   begin
+      BB.Bitmap := Bitmap;
+      BB.Scale := Scale;
+   end Update_Blade;
 
    --  ------------------------------------------------------------------------
 
