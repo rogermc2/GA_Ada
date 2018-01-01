@@ -12,6 +12,7 @@ package Multivector is
    type Multivector is private;
 
    function Get_Basis_Vector (Index : Integer) return Multivector;
+   function Outer_Product (MV1, MV2 : Multivector) return Multivector;
 
 private
    type Multivector is record
