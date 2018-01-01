@@ -19,11 +19,10 @@ package GA_Maths is
 
    subtype Safe_Float is Float range Float'Range;
 
-   Infinity : constant Safe_Float := Safe_Float'Last;
-   NI : constant float := Infinity;
-
    type Fixed_4 is delta 0.01 range -1.0 .. 1.0;
    for Fixed_4'Small use 0.01;
+
+   type Basis_Blade is private;
 
    type Unsigned_Integer is mod 2 ** 32;
    US_1 : constant Unsigned_Integer := Unsigned_Integer (1);
@@ -59,16 +58,25 @@ package GA_Maths is
    type Array_4D is array (1 .. 4) of float;
    type Coord4_Array is  Array (1 .. 4) of float;
 
-   Pi      : constant float := Ada.Numerics.Pi;
-   Two_Pi  : constant float := 2.0 * Ada.Numerics.Pi;
+   Infinity : constant Safe_Float := Safe_Float'Last;
+   Pi       : constant float := Ada.Numerics.Pi;
+   Two_Pi   : constant float := 2.0 * Ada.Numerics.Pi;
 
-   GU_0    : constant Grade_Usage := 1;
-   GU_1    : constant Grade_Usage := 2;
-   GU_2    : constant Grade_Usage := 4;
-   GU_4    : constant Grade_Usage := 8;
-   GU_8    : constant Grade_Usage := 16;
-   GU_16   : constant Grade_Usage := 32;
+   GU_0     : constant Grade_Usage := 1;
+   GU_1     : constant Grade_Usage := 2;
+   GU_2     : constant Grade_Usage := 4;
+   GU_4     : constant Grade_Usage := 8;
+   GU_8     : constant Grade_Usage := 16;
+   GU_16    : constant Grade_Usage := 32;
 
-   function Canonical_Reordering_Sign (Map_A, Map_B : integer) return float;
+   function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
+   function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
+   function New_Basis_Blade (Index : Integer; Scale : Float := 1.0) return Basis_Blade;
+
+private
+   type Basis_Blade is record
+      Bitmap : Unsigned_Integer := 0;
+      Scale  : Float := 1.0;
+   end record;
 
 end GA_Maths;
