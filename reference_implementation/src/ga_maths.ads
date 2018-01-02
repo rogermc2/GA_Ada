@@ -73,6 +73,7 @@ package GA_Maths is
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Blade_Scale (BB : Basis_Blade) return Float;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
+   function Grade (Bits : Unsigned_Integer) return Natural;
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function New_Basis_Blade (Index : Integer; Scale : Float := 1.0) return Basis_Blade;
 

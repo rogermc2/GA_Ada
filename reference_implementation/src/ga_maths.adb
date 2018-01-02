@@ -72,6 +72,13 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Grade (Bits : Unsigned_Integer) return Natural is
+   begin
+      return Bit_Count (Bits);
+   end Grade;
+
+   --  ------------------------------------------------------------------------
+
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade is
    begin
       return GP_OP (BA, BB, True);
