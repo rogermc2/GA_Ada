@@ -21,7 +21,7 @@ package body Multivector is
    e3 : Multivector := Get_Basis_Vector (3);
    ni : Multivector := Get_Basis_Vector (4);
 
-   procedure Simplify (MV : in out Multivector);
+    procedure Simplify (MV : in out Multivector);
 
      --  -------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ package body Multivector is
    end C3_Multivector;
 
    --  -------------------------------------------------------------------------
+
    function Get_Basis_Vector (Index : Integer) return Multivector is
       BB : constant GA_Maths.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
@@ -40,6 +41,49 @@ package body Multivector is
       MV.Blades.Append (BB);
       return MV;
    end Get_Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+   --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
+   --  0 is return for null Multivectors.
+--     function Grade (Blades : Blade_List) return Unsigned_Integer is
+--        use Blade_List_Package;
+--        thisBlade : GA_Maths.Basis_Blade;
+--        Cursor_B  : Cursor := Blades.First;
+--        theGrade  : Unsigned_Integer := 0; -- 0 .. 32
+--        OK        : Boolean := True;
+--     begin
+--        while OK and Has_Element (Cursor_B) loop
+--           thisBlade := Element (Cursor_B);
+--           if Cursor_B = Blades.First then
+--              theGrade := GA_Maths.Grade (GA_Maths.Bitmap (thisBlade));
+--           elsif theGrade /= GA_Maths.Grade (GA_Maths.Bitmap (thisBlade)) then
+--              OK := False;
+--           end if;
+--           Next (Cursor_B);
+--        end loop;
+--
+--        return theGrade;
+--     end Grade;
+
+   --  -------------------------------------------------------------------------
+
+   function Grade_Use (MV : Multivector) return Grade_Usage is
+      use GA_Maths;
+      use Interfaces;
+      use Blade_List_Package;
+      Blades     : constant Blade_List := MV.Blades;
+      thisBlade  : Basis_Blade;
+      Cursor_B   : Cursor := Blades.First;
+      GU         : Unsigned_32 := 0;
+   begin
+      while Has_Element (Cursor_B) loop
+         thisBlade := Element (Cursor_B);
+         GU :=  GU or
+            Shift_Left (1, Integer (Grade (Bitmap (thisBlade))));
+         Next (Cursor_B);
+      end loop;
+      return Unsigned_Integer (GU);
+   end Grade_Use;
 
    --  -------------------------------------------------------------------------
 
@@ -62,13 +106,34 @@ package body Multivector is
                while Has_Element (Cursor_2) loop
                   B2 := Element (Cursor_2);
                   MV.Blades.Append (Outer_Product (B1, B2));
+                  Next (Cursor_2);
                end loop;
             end;
+            Next (Cursor_1);
          end loop;
       end;
       Simplify (MV);
       return MV;
    end Outer_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Scalar_Part (MV : Multivector) return Float is
+      use Blade_List_Package;
+      BB       : GA_Maths.Basis_Blade;
+      Blades   : Blade_List := MV.Blades;
+      B_Cursor : Cursor := Blades.First;
+      Sum      : Float := 0.0;
+   begin
+      while Has_Element (B_Cursor) loop
+         BB := Element (B_Cursor);
+         if Bitmap (BB) = 0 then
+            Sum := Sum + Blade_Scale (BB);
+         end if;
+         Next (B_Cursor);
+      end loop;
+      return Sum;
+   end Scalar_Part;
 
    --  -------------------------------------------------------------------------
 
@@ -98,6 +163,7 @@ package body Multivector is
             end if;
             Previous := Current;
          end if;
+         Next (Blade_Cursor);
       end loop;
 
       Blade_Cursor := Blades.First;
@@ -107,6 +173,7 @@ package body Multivector is
             if Blade_Scale (Current) = 0.0 then
                Blades.Delete (Blade_Cursor);
             end if;
+            Next (Blade_Cursor);
          end loop;
       end if;
       MV.Blades := Blades;
