@@ -3,6 +3,7 @@ with Interfaces;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Blade;
 with Multivector;
 with Multivector_Type_Base;
 
@@ -37,11 +38,17 @@ package body C3GA is
 --     e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
 --     ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
-   no_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (0);
-   e1_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (1);
-   e2_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (2);
-   e3_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (3);
-   ni_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (4);
+   X_Origin : constant Integer := 0;
+   X_E1     : constant Integer := 0;
+   X_E2     : constant Integer := 0;
+   X_E3     : constant Integer := 0;
+   X_Inf    : constant Integer := 0;
+
+   no_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (X_Origin);
+   e1_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (X_E1);
+   e2_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (X_E2);
+   e3_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (X_E3);
+   ni_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (X_Inf);
 
    function Init (MV : Multivector.Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
@@ -353,13 +360,19 @@ package body C3GA is
 
    function NO_E1_E2_E3_NI (MV : Multivector.Multivector) return float is
       use GA_Maths;
-      GU    : Grade_Usage := Multivector.Grade_Use (MV);
-      GU_32 : constant Grade_Usage := 32;
+      use Multivector.Blade_List_Package;
+      Blades     : constant Multivector.Blade_List
+        := Multivector.Get_Blade_List (MV);
+      thisBlade  : Blade.Basis_Blade;
+      GU         : Grade_Usage := Multivector.Grade_Use (MV);
+      GU_32      : constant Grade_Usage := 32;
+      Grade_Size : Integer;
    begin
       if (GU and GU_32) = 0 then
          return 0.0;
       else
-         return MV.Coordinates (MV_Grade_Size (Integer (GU and GU_32)));
+         Grade_Size := MV_Grade_Size (Integer (GU and GU_32));
+         return Multivector.Get_Basis_Vector (MV, Grade_Size);
       end if;
    end NO_E1_E2_E3_NI;
 
