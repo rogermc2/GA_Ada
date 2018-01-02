@@ -17,11 +17,11 @@ package body Multivector is
 
    C3_Blade_List : Blade_List;
 
-   no : Multivector := Get_Basis_Vector (0);
-   e1 : Multivector := Get_Basis_Vector (1);
-   e2 : Multivector := Get_Basis_Vector (2);
-   e3 : Multivector := Get_Basis_Vector (3);
-   ni : Multivector := Get_Basis_Vector (4);
+   no_bv : Multivector := Get_Basis_Vector (no);
+   e1_bv : Multivector := Get_Basis_Vector (e1);
+   e2_bv : Multivector := Get_Basis_Vector (e2);
+   e3_bv : Multivector := Get_Basis_Vector (e3);
+   ni_bv : Multivector := Get_Basis_Vector (ni);
 
     procedure Simplify (MV : in out Multivector);
 
@@ -74,7 +74,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : Integer) return Multivector is
+   function Get_Basis_Vector (Index : Base) return Multivector is
       BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
    begin
@@ -270,10 +270,10 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
 begin
-   C3_Blade_List.Append (New_Basis_Blade (0));
-   C3_Blade_List.Append (New_Basis_Blade (1));
-   C3_Blade_List.Append (New_Basis_Blade (2));
-   C3_Blade_List.Append (New_Basis_Blade (3));
-   C3_Blade_List.Append (New_Basis_Blade (4));
+   C3_Blade_List.Append (New_Basis_Blade (no));
+   C3_Blade_List.Append (New_Basis_Blade (e1));
+   C3_Blade_List.Append (New_Basis_Blade (e2));
+   C3_Blade_List.Append (New_Basis_Blade (e3));
+   C3_Blade_List.Append (New_Basis_Blade (ni));
 
 end Multivector;

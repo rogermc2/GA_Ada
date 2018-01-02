@@ -62,11 +62,11 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function New_Basis_Blade (Index : Integer; Scale : Float := 1.0) return Basis_Blade is
+   function New_Basis_Blade (Index : Base; Scale : Float := 1.0) return Basis_Blade is
       use Interfaces;
       Blade : Basis_Blade;
    begin
-      Blade.Bitmap := Unsigned_Integer (Shift_Left (Unsigned_32 (1), Index));
+      Blade.Bitmap := Unsigned_Integer (Shift_Left (Unsigned_32 (1), Index'Enum_Rep));
       Blade.Scale :=Scale;
       return Blade;
    end New_Basis_Blade;

@@ -65,10 +65,10 @@ package C3GA is
    function NO_E2_NI (C : Circle) return float;
    function NO_E3_NI (C : Circle) return float;
 
-   function E1 (DP : Dual_Plane) return float;
-   function E2 (DP : Dual_Plane) return float;
-   function E3 (DP : Dual_Plane) return float;
-   function NI (DP : Dual_Plane) return GA_Base_Types.NI_T;
+   function E1b (DP : Dual_Plane) return float;
+   function E2b (DP : Dual_Plane) return float;
+   function E3b (DP : Dual_Plane) return float;
+   function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T;
 
    function E1_E2_NI (L : Line) return float;
    function E1_E3_NI (L : Line) return float;
@@ -79,11 +79,11 @@ package C3GA is
 
    function NO_E1_E2_E3_NI (MV : Multivector.Multivector) return float;
 
-   function E1 (NP : Normalized_Point) return float;
-   function E2 (NP : Normalized_Point) return float;
-   function E3 (NP : Normalized_Point) return float;
-   function NI (NP : Normalized_Point) return Float;
-   function NO (NP : Normalized_Point) return Float;
+   function E1b (NP : Normalized_Point) return float;
+   function E2b (NP : Normalized_Point) return float;
+   function E3b (NP : Normalized_Point) return float;
+   function NIb (NP : Normalized_Point) return Float;
+   function NOb (NP : Normalized_Point) return Float;
 
    function E1_E2_E3_NI (S : Sphere) return float;
    function E1_E2_NO_NI (S : Sphere) return float;
@@ -97,9 +97,9 @@ package C3GA is
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
-   procedure Set_Multivector (MV : out  Multivector.Multivector; NP : Normalized_Point);
-   procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NO_T);
-   procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NI_T);
+--     procedure Set_Multivector (MV : out  Multivector.Multivector; NP : Normalized_Point);
+--     procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NO_T);
+--     procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NI_T);
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;

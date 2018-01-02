@@ -15,7 +15,7 @@ package Multivector is
    type Multivector is private;
 
    function C3_Multivector return Multivector;
-   function Get_Basis_Vector (Index : Integer) return Multivector;
+   function Get_Basis_Vector (Index : Base) return Multivector;
    function Get_Blade_List (MV : Multivector) return Blade_List;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
