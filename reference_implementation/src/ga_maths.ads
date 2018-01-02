@@ -69,6 +69,7 @@ package GA_Maths is
    GU_8     : constant Grade_Usage := 16;
    GU_16    : constant Grade_Usage := 32;
 
+   function Bit_Count (Bits : Unsigned_Integer) return Natural;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Blade_Scale (BB : Basis_Blade) return Float;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
