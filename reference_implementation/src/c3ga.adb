@@ -3,6 +3,7 @@ with Interfaces;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Multivector;
 with Multivector_Type_Base;
 
 package body C3GA is
@@ -30,13 +31,19 @@ package body C3GA is
 	(0, 1, 2, 6, 3, 7, 9, 24, 4, 8, 11, 23, 10, 22, 25, 30,
          5, 15, 12, 20, 13, 21, 18, 29, 14, 19, 17, 28, 16, 27, 26, 31);
 
-   no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
-   e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
-   e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
-   e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
-   ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
+--     no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
+--     e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
+--     e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
+--     e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
+--     ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
-   function Init (MV : Multivector; Epsilon : float;
+   no_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (0);
+   e1_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (1);
+   e2_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (2);
+   e3_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (3);
+   ni_BV : constant Multivector.Multivector := Multivector.Get_Basis_Vector (4);
+
+   function Init (MV : Multivector.Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
                GU_Count : Integer) return MV_Type;
 
@@ -92,12 +99,12 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
+   function Init (MV : Multivector.Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;
       MV_Info            : MV_Type;
-      GU                 : GA_Maths.Grade_Usage := MV.Grade_Use;
+      GU                 : GA_Maths.Grade_Usage := Multivector.Grade_Use (MV);
       Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
       Count_Index        : Unsigned_Integer := 0;
       Index              : Unsigned_Integer := 0;
@@ -148,7 +155,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Init (MV : Multivector; Epsilon : float;
+   function Init (MV : Multivector.Multivector; Epsilon : float;
                   Use_Algebra_Metric : Boolean;
                   GU_Count : Integer) return MV_Type is
       MV_Info : MV_Type;
@@ -344,9 +351,9 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function NO_E1_E2_E3_NI (MV : Multivector) return float is
+   function NO_E1_E2_E3_NI (MV : Multivector.Multivector) return float is
       use GA_Maths;
-      GU    : Grade_Usage := MV.Grade_Use;
+      GU    : Grade_Usage := Multivector.Grade_Use (MV);
       GU_32 : constant Grade_Usage := 32;
    begin
       if (GU and GU_32) = 0 then
@@ -428,9 +435,9 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_E (MV : Multivector) return Scalar is
+   function Norm_E (MV : Multivector.Multivector) return Scalar is
       use GA_Maths;
-      GU  : Grade_Usage := MV.Grade_Use;
+      GU  : Grade_Usage :=  Multivector.Grade_Use (MV);
       Sum : Float := 0.0;
       E2  : Scalar;
    begin
@@ -520,8 +527,8 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NI_T) is
-      New_MV : Multivector (2);
+   procedure Set_Multivector (MV : out Multivector.Multivector; N : GA_Base_Types.NI_T) is
+      New_MV : Multivector.Multivector;
    begin
       New_MV.Coordinates (1) := 0.0;
       New_MV.Coordinates (2) := 0.0;
@@ -533,8 +540,8 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NO_T) is
-      New_MV : Multivector (2);
+   procedure Set_Multivector (MV : out Multivector.Multivector; N : GA_Base_Types.NO_T) is
+      New_MV : Multivector.Multivector;
    begin
       New_MV.Coordinates (1) := GA_Base_Types.NO (N);
       New_MV.Coordinates (2) := 0.0;
@@ -573,11 +580,12 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Outer_Product (MV1, MV2 : Multivector) return Multivector is
+   function Outer_Product (MV1, MV2 : Multivector.Multivector) return Multivector.Multivector is
+      use Multivector;
       use GA_Maths;
       Coords  : GA_Maths.Coords_Continuous_Array (1 .. 32);
-      GU1     : Grade_Usage := MV1.Grade_Use;
-      GU2     : Grade_Usage := MV2.Grade_Use;
+      GU1     : Grade_Usage := Grade_Usage (MV1);
+      GU2     : Grade_Usage := Grade_Usage (MV2);
       Size_1  : integer := MV_Size (Integer (MV1.Grade_Use));
       Size_2  : integer := MV_Size (Integer (MV2.Grade_Use));
       MV_GU   : Grade_Usage := GU1 or GU2;

@@ -3,6 +3,7 @@ with GA_Base_Types;
 with GA_Maths;
 
 with E3GA;
+with Multivector;
 with Multivector_Type_Base;
 
 package C3GA is
@@ -30,9 +31,9 @@ package C3GA is
 
    type Normalized_Point is private;
 
-   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
-   end record;
+--     type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+--        Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
+--     end record;
 
    --  Joinable grade definitions
    Grade_0 : constant integer := 1;
@@ -44,7 +45,7 @@ package C3GA is
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
-   function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
+   function Init (MV : Multivector.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
@@ -76,7 +77,7 @@ package C3GA is
    function E2_NO_NI (L : Line) return float;
    function E3_NO_NI (L : Line) return float;
 
-   function NO_E1_E2_E3_NI (MV : Multivector) return float;
+   function NO_E1_E2_E3_NI (MV : Multivector.Multivector) return float;
 
    function E1 (NP : Normalized_Point) return float;
    function E2 (NP : Normalized_Point) return float;
@@ -90,21 +91,21 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
-   function Norm_E (MV : Multivector) return Scalar;
+   function Norm_E (MV : Multivector.Multivector) return Scalar;
    function Norm_E2 (V : Vector_E3GA) return Scalar;
 
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
-   procedure Set_Multivector (MV : out Multivector; NP : Normalized_Point);
-   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NO_T);
-   procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NI_T);
+   procedure Set_Multivector (MV : out  Multivector.Multivector; NP : Normalized_Point);
+   procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NO_T);
+   procedure Set_Multivector (MV : out  Multivector.Multivector; N : GA_Base_Types.NI_T);
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
                                   Inf : float := 1.0)
                                   return Normalized_Point;
-   function Outer_Product (MV1, MV2 : Multivector) return Multivector;
+--     function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Unit_R (L : Line) return Line;
 
    --  Underscore functions
