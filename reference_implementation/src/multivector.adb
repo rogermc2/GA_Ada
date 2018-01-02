@@ -1,5 +1,7 @@
 --  Derived from ga_ref_impl Multivector.java
 
+with Maths;
+
 package body Multivector is
 
    --  setup conformal algebra:
@@ -34,13 +36,58 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Extract_Grade (MV : Multivector; Index : integer) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades    : constant Blade_List := MV.Blades;
+      thisBlade : Blade.Basis_Blade;
+      Curs      : Cursor := Blades.First;
+      Max_Grade : Unsigned_Integer := 0;
+      Gr        : array (1 .. Unsigned_Integer (Index)) of Unsigned_Integer;
+      New_List  : Blade_List;
+      aGrade    : Unsigned_Integer;
+      MV_E      : Multivector;
+   begin
+      for k in Gr'Range loop
+         Gr (k) := k;
+         if Gr (k) > Max_Grade then
+            Max_Grade := Gr (k);
+         end if;
+      end loop;
+
+      declare
+         Keep : array (0 .. Max_Grade + 1) of Boolean
+           := (others => True);
+      begin
+
+         while Has_Element (Curs) loop
+            thisBlade := Element (Curs);
+            aGrade := GA_Maths.Grade (Bitmap (thisBlade));
+            if aGrade <= Max_Grade and then Keep (aGrade) then
+               New_List.Append (thisBlade);
+            end if;
+            Next (Curs);
+         end loop;
+      end;
+      return MV_E;
+   end Extract_Grade;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Basis_Vector (Index : Integer) return Multivector is
-      BB : constant GA_Maths.Basis_Blade := New_Basis_Blade (Index);
+      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
    begin
       MV.Blades.Append (BB);
       return MV;
    end Get_Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Blade_List (MV : Multivector) return Blade_List is
+   begin
+      return MV.Blades;
+   end Get_Blade_List;
 
    --  -------------------------------------------------------------------------
    --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
@@ -67,12 +114,12 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Grade_Use (MV : Multivector) return Grade_Usage is
+   function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
       use GA_Maths;
       use Interfaces;
       use Blade_List_Package;
       Blades     : constant Blade_List := MV.Blades;
-      thisBlade  : Basis_Blade;
+      thisBlade  : Blade.Basis_Blade;
       Cursor_B   : Cursor := Blades.First;
       GU         : Unsigned_32 := 0;
    begin
@@ -87,11 +134,32 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Largest_Grade_Part (MV : Multivector) return Multivector is
+      use GA_Maths;
+      use Interfaces;
+      use Blade_List_Package;
+      Blades        : constant Blade_List := MV.Blades;
+      thisBlade     : Blade.Basis_Blade;
+      Cursor_B      : Cursor := Blades.First;
+      GU            : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
+      Largest_Part  : Multivector;
+      Max_Norm      : Float := 0.0;
+   begin
+      for Count in 0 .. Top_Grade_Index (MV) loop
+         if (GU and Shift_Left (1, Integer (Grade (Bitmap (thisBlade))))) /= 0 then
+            null;
+         end if;
+      end loop;
+      return  Largest_Part;
+   end Largest_Grade_Part;
+
+   --  -------------------------------------------------------------------------
+
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
-      B1       : GA_Maths.Basis_Blade;
-      B2       : GA_Maths.Basis_Blade;
+      B1       : Blade.Basis_Blade;
+      B2       : Blade.Basis_Blade;
       List_1   : Blade_List := MV1.Blades;
       Cursor_1 : Cursor := List_1.First;
       MV       : Multivector;
@@ -120,7 +188,8 @@ package body Multivector is
 
    function Scalar_Part (MV : Multivector) return Float is
       use Blade_List_Package;
-      BB       : GA_Maths.Basis_Blade;
+      use GA_Maths;
+      BB       : Blade.Basis_Blade;
       Blades   : Blade_List := MV.Blades;
       B_Cursor : Cursor := Blades.First;
       Sum      : Float := 0.0;
@@ -139,8 +208,9 @@ package body Multivector is
 
    procedure Simplify (MV : in out Multivector) is
       use Blade_List_Package;
-      Current      : GA_Maths.Basis_Blade;
-      Previous     : GA_Maths.Basis_Blade;
+      use GA_Maths;
+      Current      : Blade.Basis_Blade;
+      Previous     : Blade.Basis_Blade;
       Has_Previous : Boolean := False;
       New_MV       : Multivector;
       Blades       : Blade_List := MV.Blades;
@@ -178,6 +248,24 @@ package body Multivector is
       end if;
       MV.Blades := Blades;
    end Simplify;
+
+   --  -------------------------------------------------------------------------
+
+   function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer is
+      use Blade_List_Package;
+      use GA_Maths;
+      Max_G        : Integer := 0;
+      Blades       : Blade_List := MV.Blades;
+      Blade_Cursor : Cursor := Blades.First;
+      Current      : Blade.Basis_Blade;
+   begin
+      while Has_Element (Blade_Cursor) loop
+         Current := Element (Blade_Cursor);
+         Max_G := Maths.Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
+         Next (Blade_Cursor);
+      end loop;
+      return Unsigned_Integer (Max_G);
+   end Top_Grade_Index;
 
    --  -------------------------------------------------------------------------
 
