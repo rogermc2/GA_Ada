@@ -6,13 +6,14 @@ package body Multivector_Type is
    function Init (MV : Multivector.Multivector) return MV_Type_Record is
       use Interfaces;
       use GA_Maths;
-      Rec    : MV_Type_Record;
-      Grade  : Unsigned_Integer := Multivector.Top_Grade_Index (MV);
-      Usage  : Grade_Usage := Multivector.Grade_Use (MV);
-      Count  : array (1 .. 2) of Unsigned_Integer := (0, 0);
-      Index  : Integer := 1;
-      GU     : Unsigned_32 := Unsigned_32 (Usage);
-      MV_Inv : Multivector.Multivector;
+      Rec        : MV_Type_Record;
+      Grade      : Unsigned_Integer := Multivector.Top_Grade_Index (MV);
+      Usage      : Grade_Usage := Multivector.Grade_Use (MV);
+      Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
+      Index      : Integer := 1;
+      GU         : Unsigned_32 := Unsigned_32 (Usage);
+      Versor_Inv : Multivector.Multivector;
+      Grade_Inv  : Multivector.Multivector;
    begin
       while GU /= 0 loop
          if (GU and 1) /= 0 then
@@ -36,7 +37,8 @@ package body Multivector_Type is
          else
             Rec.Parity := Even_Parity;
          end if;
-         MV_Inv := Multivector.Grade_Inversion (MV);
+         Versor_Inv := Multivector.Versor_Inverse (MV);
+
       end if;
 
       return Rec;

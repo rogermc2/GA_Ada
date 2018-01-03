@@ -1,5 +1,7 @@
 --  Derived from ga_ref_impl Multivector.java
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 with Maths;
 
 package body Multivector is
@@ -395,21 +397,21 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Versor_Inverse (MV : Multivector) return Multivector is
-      use Blade_List_Package;
-      use GA_Maths;
-      Max_G        : Integer := 0;
-      Blades       : Blade_List := MV.Blades;
-      Blade_Cursor : Cursor := Blades.First;
-      Current      : Blade.Basis_Blade;
       Rev          : Multivector := Reverse_MV (MV);
-      Scale        : Float := 0.0;
+      S_Product    : Float := 0.0;
    begin
-      while Has_Element (Blade_Cursor) loop
-         Current := Element (Blade_Cursor);
-         Max_G := Maths.Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
-         Next (Blade_Cursor);
-      end loop;
-      return Rev;
+      S_Product := Scalar_Product (MV, Rev);
+      if S_Product = 0.0 then
+         Put_Line ("Multivector.Versor_Inverse encountered a non-invertible multivector");
+         raise MV_Exception;
+      end if;
+
+      return Geometric_Product (Rev, 1.0 / S_Product);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Versor_Inverse.");
+         raise;
    end Versor_Inverse;
 
    --  -------------------------------------------------------------------------

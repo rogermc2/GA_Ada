@@ -2,6 +2,7 @@
 with Interfaces;
 
 with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Exceptions; use Ada.Exceptions;
 
 with Blade;
 with GA_Maths;
@@ -13,6 +14,8 @@ package Multivector is
    type Blade_List is new Blade_List_Package.List with null record;
 
    type Multivector is private;
+
+   MV_Exception : Exception;
 
    function C3_Multivector return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
