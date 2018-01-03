@@ -42,9 +42,12 @@ package body Multivector_Type is
          Grade_Inv := Grade_Inversion (MV);
          if Geometric_Product (Versor_Inv, Grade_Inv) =
            Geometric_Product (Grade_Inv, Versor_Inv) then
+           --  multivector = multivector
             Rec.MV_Kind := Multivector_Type;
+         elsif Bit_Count (Usage) = 1 then
+            Rec.MV_Kind := Blade_MV;
          else
-            null;
+            Rec.MV_Kind := Versor_MV;
          end if;
       end if;
 
