@@ -3,17 +3,14 @@ with Interfaces;
 
 package body Blade is
 
+   function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer is
    begin
       return BB.Bitmap;
    end Bitmap;
-
-   --  ------------------------------------------------------------------------
-
-   function Weight (BB : Basis_Blade) return Float is
-   begin
-      return BB.Weight;
-   end Weight;
 
    --  ------------------------------------------------------------------------
 
@@ -35,6 +32,13 @@ package body Blade is
          return -1.0;
       end if;
    end Canonical_Reordering_Sign;
+
+   --  ------------------------------------------------------------------------
+
+   function Geometric_Product (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
+   begin
+      return GP_OP (BA, BB, False);
+   end Geometric_Product;
 
    --  ------------------------------------------------------------------------
 
@@ -136,6 +140,13 @@ package body Blade is
       BB.Bitmap := Bitmap;
       BB.Weight := Weight;
    end Update_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function Weight (BB : Basis_Blade) return Float is
+   begin
+      return BB.Weight;
+   end Weight;
 
    --  ------------------------------------------------------------------------
 
