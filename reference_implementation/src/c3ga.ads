@@ -39,7 +39,7 @@ package C3GA is
    Grade_5 : constant integer := 32;
 
    type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : GA_Maths.MV_Coordinate_Array  := (others => 0.0);  --  m_c[32]
+      Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
    end record;
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
