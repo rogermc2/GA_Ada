@@ -59,7 +59,6 @@ package body Multivector is
          Keep : array (0 .. Max_Grade + 1) of Boolean
            := (others => True);
       begin
-
          while Has_Element (Curs) loop
             thisBlade := Element (Curs);
             aGrade := GA_Maths.Grade (Bitmap (thisBlade));
@@ -71,6 +70,32 @@ package body Multivector is
       end;
       return MV_E;
    end Extract_Grade;
+
+   --  -------------------------------------------------------------------------
+
+   function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades_1  : constant Blade_List := MV1.Blades;
+      Blades_2  : constant Blade_List := MV2.Blades;
+      New_List  : Blade_List;
+      Curs_1    : Cursor := Blades_1.First;
+      Curs_2    : Cursor := Blades_2.First;
+      Blade_1   : Blade.Basis_Blade;
+      Blade_2   : Blade.Basis_Blade;
+      MV        : Multivector;
+   begin
+      while Has_Element (Curs_1) loop
+           Blade_1 := Element (Curs_1);
+         while Has_Element (Curs_2) loop
+            Blade_2 := Element (Curs_2);
+            New_List.Append (Blade.Geometric_Product (Blade_1, Blade_2));
+            Next (Curs_2);
+         end loop;
+         Next (Curs_1);
+      end loop;
+      return MV;
+   end Geometric_Product;
 
    --  -------------------------------------------------------------------------
 
