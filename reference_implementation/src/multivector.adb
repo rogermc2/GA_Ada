@@ -28,6 +28,48 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Add (MV1 : Multivector; S :Float) return Multivector is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := MV1.Blades;
+      aBlade  : Blade.Basis_Blade;
+      Curs    : Cursor := Blades.First;
+      MV      : Multivector;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         MV.Blades.Append (aBlade);
+         Next (Curs);
+      end loop;
+      MV.Blades.Append (New_Scalar_Blade (S));
+      return MV;
+   end Add;
+
+   --  ------------------------------------------------------------------------
+
+   function Add (MV1, MV2 : Multivector) return Multivector is
+      use Blade_List_Package;
+      Blades_1  : constant Blade_List := MV1.Blades;
+      Blades_2  : constant Blade_List := MV1.Blades;
+      aBlade    : Blade.Basis_Blade;
+      Curs      : Cursor := Blades_1.First;
+      MV        : Multivector;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         MV.Blades.Append (aBlade);
+         Next (Curs);
+      end loop;
+      Curs := Blades_2.First;
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         MV.Blades.Append (aBlade);
+         Next (Curs);
+      end loop;
+      return MV;
+   end Add;
+
+   --  -------------------------------------------------------------------------
+
    function C3_Multivector return Multivector is
       MV : Multivector;
    begin
