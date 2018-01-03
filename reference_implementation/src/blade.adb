@@ -55,10 +55,23 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade is
+   function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
+      W : constant float
+        := Float (Minus_1_Power (Grade (B.Bitmap)) * Unsigned_Integer (B.Weight));
    begin
-      return GP_OP (BA, BB, True);
-   end Outer_Product;
+      return New_Basis_Blade (B.Bitmap, W);
+   end Grade_Inversion;
+
+   --  ------------------------------------------------------------------------
+
+   function Minus_1_Power (Number : Unsigned_Integer) return Unsigned_Integer is
+   begin
+      if (Number and 1) = 0 then
+         return 1;
+      else
+         return -1;
+      end if;
+   end Minus_1_Power;
 
    --  ------------------------------------------------------------------------
 
@@ -70,6 +83,36 @@ package body Blade is
       Blade.Weight := Weight;
       return Blade;
    end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
+                             return Basis_Blade is
+      use Interfaces;
+      Blade : Basis_Blade;
+   begin
+      Blade.Bitmap := Bitmap;
+      Blade.Weight := Weight;
+      return Blade;
+   end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade is
+   begin
+      return GP_OP (BA, BB, True);
+   end Outer_Product;
+
+   --  ------------------------------------------------------------------------
+
+   function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
+      W : constant float
+        := Float (Minus_1_Power
+                  ((Grade (B.Bitmap) * (Grade (B.Bitmap) - 1) / 2)
+                     * Unsigned_Integer (B.Weight)));
+   begin
+      return New_Basis_Blade (B.Bitmap, W);
+   end Reverse_Blade;
 
    --  ------------------------------------------------------------------------
 
