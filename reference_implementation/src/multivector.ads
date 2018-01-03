@@ -18,6 +18,7 @@ package Multivector is
    function Get_Basis_Vector (Index : Base) return Multivector;
    function Get_Blade_List (MV : Multivector) return Blade_List;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
+   function Grade_Inversion (MV : Multivector) return Multivector;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;

@@ -114,6 +114,28 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Grade_Inversion (MV : Multivector) return Multivector is
+      use GA_Maths;
+      use Interfaces;
+      use Blade_List_Package;
+      Blades        : constant Blade_List := MV.Blades;
+      Inversion     : Blade_List;
+      thisBlade     : Blade.Basis_Blade;
+      Cursor_B      : Cursor := Blades.First;
+      GU            : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
+      Largest_Part  : Multivector;
+      Max_Norm      : Float := 0.0;
+   begin
+      while Has_Element (Cursor_B) loop
+         thisBlade := Element (Cursor_B);
+         Inversion.Append (Blade.Grade_Inversion (thisBlade));
+         Next (Cursor_B);
+      end loop;
+      return  (Inversion, False);
+   end Grade_Inversion;
+
+   --  -------------------------------------------------------------------------
+
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
       use GA_Maths;
       use Interfaces;
@@ -197,7 +219,7 @@ package body Multivector is
       while Has_Element (B_Cursor) loop
          BB := Element (B_Cursor);
          if Bitmap (BB) = 0 then
-            Sum := Sum + Blade_Scale (BB);
+            Sum := Sum + Weight (BB);
          end if;
          Next (B_Cursor);
       end loop;
@@ -220,15 +242,15 @@ package body Multivector is
    begin
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
-         if Blade_Scale (Current) = 0.0 then
+         if Weight (Current) = 0.0 then
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
          elsif Has_Previous and then
            Bitmap (Previous) = Bitmap (Current) then
-            Update_Blade (Previous, Blade_Scale (Previous) + Blade_Scale (Current));
+            Update_Blade (Previous, Weight (Previous) + Weight (Current));
             Blades.Delete (Blade_Cursor);
          else
-            if Has_Previous and then Blade_Scale (Previous) = 0.0 then
+            if Has_Previous and then Weight (Previous) = 0.0 then
                Remove_Nulls := True;
             end if;
             Previous := Current;
@@ -240,7 +262,7 @@ package body Multivector is
       if Remove_Nulls then
          while Has_Element (Blade_Cursor) loop
             Current := Element (Blade_Cursor);
-            if Blade_Scale (Current) = 0.0 then
+            if Weight (Current) = 0.0 then
                Blades.Delete (Blade_Cursor);
             end if;
             Next (Blade_Cursor);
