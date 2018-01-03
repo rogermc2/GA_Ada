@@ -259,30 +259,12 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_E (MV : Multivector) return Float is
-      use GA_Maths.Float_Functions;
-      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
+   function New_Multivector (Scale : Float) return Multivector is
+      thisBlade : Blade.Basis_Blade;
+      MV : Multivector;
    begin
-      if theNorm < 0.0 then
-         --  avoid FP round off causing negative value
-         return 0.0;
-      else
-         return
-           Sqrt (theNorm);
-      end if;
-   end Norm_E;
-
-   --  -------------------------------------------------------------------------
-
-   function Norm_E2 (MV : Multivector) return Float is
-      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
-   begin
-      if theNorm < 0.0 then
-         --  avoid FP round off causing negative value
-         theNorm := 0.0;
-      end if;
-      return  theNorm;
-   end Norm_E2;
+      return  MV;
+   end New_Multivector;
 
    --  -------------------------------------------------------------------------
 
