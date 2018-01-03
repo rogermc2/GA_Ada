@@ -415,7 +415,7 @@ package body Multivector is
    begin
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
-         Max_G := Maths.Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
+         Max_G := Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
          Next (Blade_Cursor);
       end loop;
       return Unsigned_Integer (Max_G);
