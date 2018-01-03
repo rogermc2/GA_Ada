@@ -259,10 +259,10 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function New_Multivector (Scale : Float) return Multivector is
-      thisBlade : Blade.Basis_Blade;
+   function New_Multivector (Weight : Float) return Multivector is
       MV : Multivector;
    begin
+      MV.Blades.Append (New_Scalar_Blade (Weight));
       return  MV;
    end New_Multivector;
 
