@@ -73,12 +73,29 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades    : constant Blade_List := MV.Blades;
+      Curs      : Cursor := Blades.First;
+      BB        : Blade.Basis_Blade;
+      New_MV    : Multivector;
+   begin
+      while Has_Element (Curs) loop
+           BB := Element (Curs);
+           New_MV.Blades.Append (Blade.Geometric_Product (BB, Sc));
+         Next (Curs);
+      end loop;
+      return MV;
+   end Geometric_Product;
+
+   --  -------------------------------------------------------------------------
+
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
       use Blade_List_Package;
       use GA_Maths;
       Blades_1  : constant Blade_List := MV1.Blades;
       Blades_2  : constant Blade_List := MV2.Blades;
-      New_List  : Blade_List;
       Curs_1    : Cursor := Blades_1.First;
       Curs_2    : Cursor := Blades_2.First;
       Blade_1   : Blade.Basis_Blade;
@@ -89,11 +106,12 @@ package body Multivector is
            Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
-            New_List.Append (Blade.Geometric_Product (Blade_1, Blade_2));
+            MV.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
             Next (Curs_2);
          end loop;
          Next (Curs_1);
       end loop;
+
       return MV;
    end Geometric_Product;
 
