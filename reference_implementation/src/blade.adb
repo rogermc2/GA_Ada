@@ -35,7 +35,7 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Geometric_Product (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
+   function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade is
    begin
       return GP_OP (BA, BB, False);
    end Geometric_Product;

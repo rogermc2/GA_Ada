@@ -10,7 +10,7 @@ package Blade is
 
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
-   function Geometric_Product (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
+   function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
    function Minus_1_Power (Number : Unsigned_Integer) return Unsigned_Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
