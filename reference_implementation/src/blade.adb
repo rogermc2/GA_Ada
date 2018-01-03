@@ -35,6 +35,14 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade is
+      S_Blade : Basis_Blade := New_Scalar_Blade (Sc);
+   begin
+      return GP_OP (BB, S_Blade, False);
+   end Geometric_Product;
+
+   --  ------------------------------------------------------------------------
+
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade is
    begin
       return GP_OP (BA, BB, False);
@@ -92,13 +100,30 @@ package body Blade is
 
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade is
-      use Interfaces;
       Blade : Basis_Blade;
    begin
       Blade.Bitmap := Bitmap;
       Blade.Weight := Weight;
       return Blade;
    end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade is
+      Blade : Basis_Blade;
+   begin
+      Blade.Bitmap := 0;
+      Blade.Weight := Weight;
+      return Blade;
+   end New_Scalar_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Zero_Blade return Basis_Blade is
+      Blade : Basis_Blade;
+   begin
+      return Blade;
+   end New_Zero_Blade;
 
    --  ------------------------------------------------------------------------
 
