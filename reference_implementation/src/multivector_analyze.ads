@@ -3,6 +3,7 @@ with C3GA;
 with E2GA;
 with E3GA;
 with GA_Maths;
+with Multivector;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
@@ -77,10 +78,10 @@ package Multivector_Analyze is
    end record;
 
    function Default_Epsilon return float;  --  Must precede Analyze
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                       Probe : C3GA.Normalized_Point;
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon);
