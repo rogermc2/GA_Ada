@@ -69,5 +69,9 @@ package GA_Maths is
 
    function Bit_Count (Bits : Unsigned_Integer) return Natural;
    function Grade (Bits : Unsigned_Integer) return Unsigned_Integer;
+   function Maximum (I1, I2 : Integer) return Integer;
+   function Maximum (I1, I2 : Float) return Float;
+   function Minimum (I1, I2 : Integer) return Integer;
+   function Minimum (I1, I2 : Float) return Float;
 
 end GA_Maths;
