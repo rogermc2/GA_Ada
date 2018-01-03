@@ -1,10 +1,11 @@
 
 with GA_Maths;
 with Multivector;
-with Multivector_Type_Base;
 
 package Multivector_Type is
 
+   type MV_Type is (Unspecified_MV_Type, Multivector_Type, Versor_MV, Blade_MV);
+   type Parity_Type is (Odd_Parity, Even_Parity, No_Parity);
    type MV_Type_Record is private;
 
    function Init (MV : Multivector.Multivector) return MV_Type_Record;
@@ -12,11 +13,11 @@ package Multivector_Type is
 private
 
    type MV_Type_Record is record
-      Multivector_Kind : Multivector_Type_Base.Object_Type :=
-                           Multivector_Type_Base.Multivector_Object;
-      Top_Grade        : GA_Maths.Unsigned_Integer;
+      MV_Kind          : MV_Type := Unspecified_MV_Type;
+      Zero             : Boolean;
+      Top_Grade        : GA_Maths.Unsigned_Integer := 0;
       Grade_Use        : GA_Maths.Grade_Usage;
-      Parity           :Boolean;
+      Parity           : Parity_Type := No_Parity;
    end record;
 
 end Multivector_Type;
