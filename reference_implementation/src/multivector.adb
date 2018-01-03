@@ -259,6 +259,33 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Norm_E (MV : Multivector) return Float is
+      use GA_Maths.Float_Functions;
+      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
+   begin
+      if theNorm < 0.0 then
+         --  avoid FP round off causing negative value
+         return 0.0;
+      else
+         return
+           Sqrt (theNorm);
+      end if;
+   end Norm_E;
+
+   --  -------------------------------------------------------------------------
+
+   function Norm_E2 (MV : Multivector) return Float is
+      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
+   begin
+      if theNorm < 0.0 then
+         --  avoid FP round off causing negative value
+         theNorm := 0.0;
+      end if;
+      return  theNorm;
+   end Norm_E2;
+
+   --  -------------------------------------------------------------------------
+
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
@@ -393,6 +420,32 @@ package body Multivector is
       end loop;
       return Unsigned_Integer (Max_G);
    end Top_Grade_Index;
+
+   --  -------------------------------------------------------------------------
+
+   function Unit_E (MV : Multivector) return Multivector is
+   begin
+      return Unit_R (MV);
+   end Unit_E;
+
+   --  -------------------------------------------------------------------------
+
+   function Unit_R (MV : Multivector) return Multivector is
+      use GA_Maths.Float_Functions;
+      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
+   begin
+      if theNorm = 0.0 then
+         Put_Line ("Multivector.Unit_R encountered a null multivector");
+         raise MV_Exception;
+      end if;
+
+      return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Versor_Inverse.");
+         raise;
+   end Unit_R;
 
    --  -------------------------------------------------------------------------
 

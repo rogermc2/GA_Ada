@@ -28,11 +28,15 @@ package Multivector is
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
+   function Norm_E (MV : Multivector) return Float;
+   function Norm_E2 (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
+   function Unit_E (MV : Multivector) return Multivector;
+   function Unit_R (MV : Multivector) return Multivector;
    function Versor_Inverse (MV : Multivector) return Multivector;
 
 private
