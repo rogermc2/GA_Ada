@@ -5,15 +5,14 @@ with Maths;
 package body Multivector is
 
    --  setup conformal algebra:
-   type Basis_Vector_ID is (BV_no, BV_e1, BV_e2, BV_e3, BV_ni);
    Basis_Vector_Names : constant Array (1 .. 5) of String (1 .. 2) :=
      ("no", "e1", "e2", "e3", "ni");
    Basis : array (1 .. 5, 1 ..5) of float :=
-	   ((0.0, 0.0, 0.0, 0.0, -1.0),
-	    (0.0, 1.0, 0.0, 0.0, 0.0),
-	    (0.0, 0.0, 1.0, 0.0, 0.0),
-	    (0.0, 0.0, 0.0 ,1.0, 0.0),
-     (-1.0, 0.0, 0.0 , 0.0, 0.0));
+     ((0.0, 0.0, 0.0, 0.0, -1.0),
+      (0.0, 1.0, 0.0, 0.0, 0.0),
+      (0.0, 0.0, 1.0, 0.0, 0.0),
+      (0.0, 0.0, 0.0 ,1.0, 0.0),
+      (-1.0, 0.0, 0.0 , 0.0, 0.0));
 
    C3_Blade_List : Blade_List;
 
@@ -23,9 +22,9 @@ package body Multivector is
    e3_bv : Multivector := Get_Basis_Vector (e3);
    ni_bv : Multivector := Get_Basis_Vector (ni);
 
-    procedure Simplify (MV : in out Multivector);
+   procedure Simplify (MV : in out Multivector);
 
-     --  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function C3_Multivector return Multivector is
       MV : Multivector;
@@ -82,11 +81,18 @@ package body Multivector is
       New_MV    : Multivector;
    begin
       while Has_Element (Curs) loop
-           BB := Element (Curs);
-           New_MV.Blades.Append (Blade.Geometric_Product (BB, Sc));
+         BB := Element (Curs);
+         New_MV.Blades.Append (Blade.Geometric_Product (BB, Sc));
          Next (Curs);
       end loop;
       return MV;
+   end Geometric_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Geometric_Product (Sc : Float; MV : Multivector) return Multivector is
+   begin
+      return Geometric_Product (MV, Sc);
    end Geometric_Product;
 
    --  -------------------------------------------------------------------------
@@ -103,7 +109,7 @@ package body Multivector is
       MV        : Multivector;
    begin
       while Has_Element (Curs_1) loop
-           Blade_1 := Element (Curs_1);
+         Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
             MV.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
@@ -135,25 +141,25 @@ package body Multivector is
    --  -------------------------------------------------------------------------
    --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
    --  0 is return for null Multivectors.
---     function Grade (Blades : Blade_List) return Unsigned_Integer is
---        use Blade_List_Package;
---        thisBlade : GA_Maths.Basis_Blade;
---        Cursor_B  : Cursor := Blades.First;
---        theGrade  : Unsigned_Integer := 0; -- 0 .. 32
---        OK        : Boolean := True;
---     begin
---        while OK and Has_Element (Cursor_B) loop
---           thisBlade := Element (Cursor_B);
---           if Cursor_B = Blades.First then
---              theGrade := GA_Maths.Grade (GA_Maths.Bitmap (thisBlade));
---           elsif theGrade /= GA_Maths.Grade (GA_Maths.Bitmap (thisBlade)) then
---              OK := False;
---           end if;
---           Next (Cursor_B);
---        end loop;
---
---        return theGrade;
---     end Grade;
+   --     function Grade (Blades : Blade_List) return Unsigned_Integer is
+   --        use Blade_List_Package;
+   --        thisBlade : GA_Maths.Basis_Blade;
+   --        Cursor_B  : Cursor := Blades.First;
+   --        theGrade  : Unsigned_Integer := 0; -- 0 .. 32
+   --        OK        : Boolean := True;
+   --     begin
+   --        while OK and Has_Element (Cursor_B) loop
+   --           thisBlade := Element (Cursor_B);
+   --           if Cursor_B = Blades.First then
+   --              theGrade := GA_Maths.Grade (GA_Maths.Bitmap (thisBlade));
+   --           elsif theGrade /= GA_Maths.Grade (GA_Maths.Bitmap (thisBlade)) then
+   --              OK := False;
+   --           end if;
+   --           Next (Cursor_B);
+   --        end loop;
+   --
+   --        return theGrade;
+   --     end Grade;
 
    --  -------------------------------------------------------------------------
 
@@ -191,11 +197,42 @@ package body Multivector is
       while Has_Element (Cursor_B) loop
          thisBlade := Element (Cursor_B);
          GU :=  GU or
-            Shift_Left (1, Integer (Grade (Bitmap (thisBlade))));
+           Shift_Left (1, Integer (Grade (Bitmap (thisBlade))));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU);
    end Grade_Use;
+
+   --  -------------------------------------------------------------------------
+
+   function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
+                           return Multivector is
+      use Ada.Containers;
+      use Blade_List_Package;
+      B1       : Blade.Basis_Blade;
+      B2       : Blade.Basis_Blade;
+      List_1   : Blade_List := MV1.Blades;
+      Cursor_1 : Cursor := List_1.First;
+      MV       : Multivector;
+   begin
+      while Has_Element (Cursor_1) loop
+         B1 := Element (Cursor_1);
+         declare
+            List_2   : Blade_List := MV1.Blades;
+            Cursor_2 : Cursor := List_2.First;
+         begin
+            while Has_Element (Cursor_2) loop
+               B2 := Element (Cursor_2);
+               MV.Blades.Append (Blade.Inner_Product (B1, B2, Cont));
+               Next (Cursor_2);
+            end loop;
+         end;
+         Next (Cursor_1);
+      end loop;
+
+      Simplify (MV);
+      return MV;
+   end Inner_Product;
 
    --  -------------------------------------------------------------------------
 
@@ -229,25 +266,41 @@ package body Multivector is
       Cursor_1 : Cursor := List_1.First;
       MV       : Multivector;
    begin
-      begin
-         while Has_Element (Cursor_1) loop
-            B1 := Element (Cursor_1);
-            declare
-               List_2   : Blade_List := MV1.Blades;
-               Cursor_2 : Cursor := List_2.First;
-            begin
-               while Has_Element (Cursor_2) loop
-                  B2 := Element (Cursor_2);
-                  MV.Blades.Append (Outer_Product (B1, B2));
-                  Next (Cursor_2);
-               end loop;
-            end;
-            Next (Cursor_1);
-         end loop;
-      end;
+      while Has_Element (Cursor_1) loop
+         B1 := Element (Cursor_1);
+         declare
+            List_2   : Blade_List := MV1.Blades;
+            Cursor_2 : Cursor := List_2.First;
+         begin
+            while Has_Element (Cursor_2) loop
+               B2 := Element (Cursor_2);
+               MV.Blades.Append (Outer_Product (B1, B2));
+               Next (Cursor_2);
+            end loop;
+         end;
+         Next (Cursor_1);
+      end loop;
+
       Simplify (MV);
       return MV;
    end Outer_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Reverse_MV (MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades   : Blade_List := MV.Blades;
+      B_Cursor : Cursor := Blades.First;
+      Rev_MV   : Multivector;
+   begin
+      while Has_Element (B_Cursor) loop
+         Rev_MV.Blades.Append (Blade.Reverse_Blade (Element (B_Cursor)));
+         Next (B_Cursor);
+      end loop;
+
+      return Rev_MV;
+   end Reverse_MV;
 
    --  -------------------------------------------------------------------------
 
@@ -268,6 +321,13 @@ package body Multivector is
       end loop;
       return Sum;
    end Scalar_Part;
+
+   --  -------------------------------------------------------------------------
+
+   function Scalar_Product (MV1, MV2 : Multivector) return float is
+   begin
+      return Scalar_Part (Inner_Product (MV1, MV2, Left_Contraction));
+   end Scalar_Product;
 
    --  -------------------------------------------------------------------------
 
@@ -334,6 +394,25 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Versor_Inverse (MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      Max_G        : Integer := 0;
+      Blades       : Blade_List := MV.Blades;
+      Blade_Cursor : Cursor := Blades.First;
+      Current      : Blade.Basis_Blade;
+      Rev          : Multivector := Reverse_MV (MV);
+      Scale        : Float := 0.0;
+   begin
+      while Has_Element (Blade_Cursor) loop
+         Current := Element (Blade_Cursor);
+         Max_G := Maths.Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
+         Next (Blade_Cursor);
+      end loop;
+      return Rev;
+   end Versor_Inverse;
+
+   --  -------------------------------------------------------------------------
 begin
    C3_Blade_List.Append (New_Basis_Blade (no));
    C3_Blade_List.Append (New_Basis_Blade (e1));
