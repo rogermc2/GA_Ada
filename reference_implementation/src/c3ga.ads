@@ -21,6 +21,8 @@ package C3GA is
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
 
+   subtype Normalized_Point is Multivector.Multivector;
+
    type Circle is private;
    type Dual_Plane is private;
    type Line is private;
@@ -29,7 +31,7 @@ package C3GA is
    type Sphere is private;
    type Vector is private;
 
-   type Normalized_Point is private;
+--     type Normalized_Point is private;
 
 --     type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
 --        Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
@@ -139,11 +141,11 @@ private
       E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
    end record;
 
-   type Normalized_Point is record     --  m_c[4
-      --  Origin             : float := 1.0;      constant
-      E1, E2, E3 : float := 0.0;
-      Inf        : float := 0.0;
-   end record;
+--     type Normalized_Point is record     --  m_c[4
+--        --  Origin             : float := 1.0;      constant
+--        E1, E2, E3 : float := 0.0;
+--        Inf        : float := 0.0;
+--     end record;
 
    type Point is record   --  m_c[5]
       Origin     : GA_Base_Types.NO_T;

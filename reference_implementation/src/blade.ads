@@ -19,7 +19,7 @@ package Blade is
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
                            return Basis_Blade;
-   function Minus_1_Power (Number : Unsigned_Integer) return Unsigned_Integer;
+   function Minus_1_Power (Number : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
    function New_Basis_Blade (Index : Base; Weight : Float := 1.0) return Basis_Blade;

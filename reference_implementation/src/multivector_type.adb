@@ -1,6 +1,8 @@
 
 with Interfaces;
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 package body Multivector_Type is
 
    function Init (MV : Multivector.Multivector) return MV_Type_Record is
@@ -55,5 +57,21 @@ package body Multivector_Type is
    end Init;
 
    --  -------------------------------------------------------------------------
+
+   procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record) is
+   begin
+      Put_Line (Name);
+      Put_Line ("Type      " & MV_Type'Image (Info.MV_Kind));
+      Put_Line ("Zero      " & boolean'Image (Info.Zero));
+      Put_Line ("Top_Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
+      Put_Line ("Grade     " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+      Put_Line ("Parity    " & Parity_Type'Image (Info.Parity));
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
+         raise;
+   end Print_Multivector_Info;
+
+   --  ------------------------------------------------------------------------
 
 end Multivector_Type;

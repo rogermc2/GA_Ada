@@ -9,6 +9,7 @@ package Multivector_Type is
    type MV_Type_Record is private;
 
    function Init (MV : Multivector.Multivector) return MV_Type_Record;
+   procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record);
 
 private
 

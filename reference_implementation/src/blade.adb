@@ -79,7 +79,7 @@ package body Blade is
 
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
       W : constant float
-        := Float (Minus_1_Power (Grade (B.Bitmap)) * Unsigned_Integer (B.Weight));
+        := Float (Minus_1_Power (Grade (B.Bitmap)) * Integer (B.Weight));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Grade_Inversion;
@@ -105,9 +105,9 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Minus_1_Power (Number : Unsigned_Integer) return Unsigned_Integer is
+   function Minus_1_Power (Number : Integer) return Integer is
    begin
-      if (Number and 1) = 0 then
+      if (Unsigned_Integer (Number) and 1) = 0 then
          return 1;
       else
          return -1;
@@ -167,7 +167,7 @@ package body Blade is
       W : constant float
         := Float (Minus_1_Power
                   ((Grade (B.Bitmap) * (Grade (B.Bitmap) - 1) / 2)
-                     * Unsigned_Integer (B.Weight)));
+                     * Integer (B.Weight)));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Reverse_Blade;

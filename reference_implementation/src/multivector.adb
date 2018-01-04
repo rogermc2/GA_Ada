@@ -18,11 +18,11 @@ package body Multivector is
 
    C3_Blade_List : Blade_List;
 
-   no_bv : Multivector := Get_Basis_Vector (no);
-   e1_bv : Multivector := Get_Basis_Vector (e1);
-   e2_bv : Multivector := Get_Basis_Vector (e2);
-   e3_bv : Multivector := Get_Basis_Vector (e3);
-   ni_bv : Multivector := Get_Basis_Vector (ni);
+--     no_bv : Multivector := Get_Basis_Vector (no);
+--     e1_bv : Multivector := Get_Basis_Vector (e1);
+--     e2_bv : Multivector := Get_Basis_Vector (e2);
+--     e3_bv : Multivector := Get_Basis_Vector (e3);
+--     ni_bv : Multivector := Get_Basis_Vector (ni);
 
    procedure Simplify (MV : in out Multivector);
 
@@ -85,10 +85,10 @@ package body Multivector is
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
       Curs      : Cursor := Blades.First;
-      Max_Grade : Unsigned_Integer := 0;
-      Gr        : array (1 .. Unsigned_Integer (Index)) of Unsigned_Integer;
+      Max_Grade : Natural := 0;
+      Gr        : array (1 .. Index) of Natural;
       New_List  : Blade_List;
-      aGrade    : Unsigned_Integer;
+      aGrade    : Natural;
       MV_E      : Multivector;
    begin
       for k in Gr'Range loop
@@ -234,14 +234,14 @@ package body Multivector is
       use Interfaces;
       use Blade_List_Package;
       Blades     : constant Blade_List := MV.Blades;
-      thisBlade  : Blade.Basis_Blade;
+      BB         : Blade.Basis_Blade;
       Cursor_B   : Cursor := Blades.First;
       GU         : Unsigned_32 := 0;
    begin
       while Has_Element (Cursor_B) loop
-         thisBlade := Element (Cursor_B);
+         BB := Element (Cursor_B);
          GU :=  GU or
-           Shift_Left (1, Integer (Grade (Bitmap (thisBlade))));
+           Shift_Left (1, Integer (Grade (Bitmap (BB))));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU);
