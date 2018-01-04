@@ -22,10 +22,10 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Grade (Bits : Unsigned_Integer) return Unsigned_Integer is
+   function Grade (Bits : Unsigned_Integer) return Natural is
    begin
       --  Return the grade as a number in  the range 0 to 31.
-      return Unsigned_Integer (Bit_Count (Bits));
+      return Bit_Count (Bits);
    end Grade;
 
    --  ------------------------------------------------------------------------
