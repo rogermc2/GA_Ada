@@ -11,13 +11,13 @@ package body Multivector_Type is
       use Multivector;
       Rec        : MV_Type_Record;
       Grade      : Unsigned_Integer := Top_Grade_Index (MV);
-      Usage      : Grade_Usage := Grade_Use (MV);
       Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
       Index      : Integer := 1;
-      GU         : Unsigned_32 := Unsigned_32 (Usage);
+      GU         : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
       Versor_Inv : Multivector.Multivector;
       Grade_Inv  : Multivector.Multivector;
    begin
+      Rec.Grade_Use := Grade_Use (MV);
       while GU /= 0 loop
          if (GU and 1) /= 0 then
             Count (Index) := Count (Index) + 1;
@@ -46,7 +46,7 @@ package body Multivector_Type is
            Geometric_Product (Grade_Inv, Versor_Inv) then
            --  multivector = multivector
             Rec.MV_Kind := Multivector_Type;
-         elsif Bit_Count (Usage) = 1 then
+         elsif Bit_Count (Grade_Use (MV)) = 1 then
             Rec.MV_Kind := Blade_MV;
          else
             Rec.MV_Kind := Versor_MV;
@@ -63,8 +63,8 @@ package body Multivector_Type is
       Put_Line (Name);
       Put_Line ("Type      " & MV_Type'Image (Info.MV_Kind));
       Put_Line ("Zero      " & boolean'Image (Info.Zero));
-      Put_Line ("Top_Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
-      Put_Line ("Grade     " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+      Put_Line ("Top Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
+      Put_Line ("Grade Use " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
       Put_Line ("Parity    " & Parity_Type'Image (Info.Parity));
    exception
       when anError :  others =>
