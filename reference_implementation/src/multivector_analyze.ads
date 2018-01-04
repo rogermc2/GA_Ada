@@ -78,9 +78,9 @@ package Multivector_Analyze is
    end record;
 
    function Default_Epsilon return float;  --  Must precede Analyze
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon);
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+--                       Flags : Flag_Type := (Flag_Invalid, False);
+--                       Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                       Probe : C3GA.Normalized_Point;
                       Flags : Flag_Type := (Flag_Invalid, False);

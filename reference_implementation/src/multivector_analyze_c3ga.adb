@@ -8,7 +8,7 @@ with Multivector_Type_Base;
 
 package body Multivector_Analyze_C3GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                        Probe : C3GA.Normalized_Point;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon) is
@@ -16,7 +16,7 @@ package body Multivector_Analyze_C3GA is
       use Multivector_Type_Base;
       use GA_Maths;
 
-      MV_X      : C3GA.Multivector := MV;
+      MV_X      : Multivector.Multivector := MV;
       MV_Info   : E2GA.MV_Type;
       Analysis  : MV_Analysis;
 
@@ -55,7 +55,7 @@ package body Multivector_Analyze_C3GA is
          Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 1.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 1;
-         Analysis.M_Scalors (1) := MV_X.Coordinates (1);
+--           Analysis.M_Scalors (1) := MV_X.Coordinates (1);
 
       elsif Analysis.M_MV_Type.M_Grade_Use = 6 then  --  Grade 5
          Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 6.");

@@ -17,8 +17,9 @@ package Multivector is
 
    MV_Exception : Exception;
 
-   function Add (MV1 : Multivector; S :Float) return Multivector;
+   function Add (MV : Multivector; S :Float) return Multivector;
    function Add (MV1, MV2 : Multivector) return Multivector;
+   function Blades (MV : Multivector) return Blade_List;
    function C3_Multivector return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;

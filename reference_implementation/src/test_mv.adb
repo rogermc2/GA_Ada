@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with C3GA_Utilities;
 with Multivector; use Multivector;
 with Multivector_Type;
 
@@ -20,4 +21,5 @@ begin
    MV := Outer_Product (MV, e1_bv);
    MV_Info := Multivector_Type.Init (MV);
    Multivector_Type.Print_Multivector_Info ("", MV_Info);
+   C3GA_Utilities.Print_Multivector (MV);
 end Test_Mv;
