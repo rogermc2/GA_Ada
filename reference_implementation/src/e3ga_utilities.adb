@@ -89,7 +89,7 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Matrix (Name    : String; aMatrix : GA_Maths.GA_Matrix3) is
+   procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3) is
    begin
       Put_Line (Name & ":");
       for Row in 1 .. 3 loop
