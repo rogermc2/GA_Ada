@@ -7,17 +7,15 @@ package body GA_Maths is
 
    function Bit_Count (Bits : Unsigned_Integer) return Natural is
       use Interfaces;
-      Bits_64 : Unsigned_64 := Interfaces.Unsigned_64 (Bits);
-      Count   : Unsigned_64 := 0;
+      Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bits);
    begin
-      Bits_64 := Bits_64 - (Shift_Right (Bits_64, 1)) and 16#55555555#;
-      Bits_64 := (Bits_64 and 16#33333333#) +
-          (Shift_Right (Bits_64, 2) and 16#33333333#);
-      Bits_64 := (Bits_64 + Shift_Right (Bits_64, 4)) and 16#0F0F0F0F#;
-      Bits_64 := Bits_64 + (Shift_Right (Bits_64, 8));
-      Bits_64 := Bits_64 + (Shift_Right (Bits_64, 16));
+      Count := Count - ((Shift_Right (Count, 1)) and 16#55555555#);
+      Count := (Count and 16#33333333#) + (Shift_Right (Count, 2) and 16#33333333#);
+      Count := (Count + Shift_Right (Count, 4)) and 16#0F0F0F0F#;
+      Count := Count + (Shift_Right (Count, 8));
+      Count := Count + (Shift_Right (Count, 16));
       --  Return count in range 0 to 31.
-      return Natural (Bits_64 and 16#0000003F#);
+      return Natural (Count and 16#0000003F#);
    end Bit_Count;
 
    --  ------------------------------------------------------------------------
