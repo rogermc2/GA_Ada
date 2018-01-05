@@ -20,18 +20,29 @@ package body C3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Multivector (MV : Multivector.Multivector) is
+   procedure Print_Multivector (Name : String; MV : Multivector.Multivector) is
       use Multivector.Blade_List_Package;
       use GA_Maths;
       Blades    : constant Multivector.Blade_List := Multivector.Blades (MV);
       Curs      : Cursor := Blades.First;
       BB        : Blade.Basis_Blade;
+      Index     : Integer := 0;
       New_MV    : Multivector.Multivector;
    begin
+      New_Line;
+
+      Put ("Multivector " & Name);
+      If Is_Empty (List (Blades)) then
+         Put (" is a null multivector.");
+      end if;
+      New_Line;
+
       while Has_Element (Curs) loop
+         Index := Index + 1;
          BB := Element (Curs);
-         Put_Line ("Bitmap, Weight" & Unsigned_Integer'Image (Blade.Bitmap (BB)) &
-                   ",  " & Float'Image (Blade.Weight (BB)));
+         Put_Line ("Blade" & Integer'Image (Index) &  ":  Bitmap, Weight" &
+                   Unsigned_Integer'Image (Blade.Bitmap (BB)) &
+                   ", " & Float'Image (Blade.Weight (BB)));
          Next (Curs);
       end loop;
    end Print_Multivector;
