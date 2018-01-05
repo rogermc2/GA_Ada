@@ -60,7 +60,8 @@ package body Multivector_Type is
 
    procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record) is
    begin
-      Put_Line (Name);
+      New_Line;
+      Put_Line (Name & " multivector information:");
       Put_Line ("Type      " & MV_Type'Image (Info.MV_Kind));
       Put_Line ("Zero      " & boolean'Image (Info.Zero));
       Put_Line ("Top Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
