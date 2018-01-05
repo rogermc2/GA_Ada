@@ -30,7 +30,6 @@ package body C3GA_Utilities is
       New_MV    : Multivector.Multivector;
    begin
       New_Line;
-
       Put ("Multivector " & Name);
       If Is_Empty (List (Blades)) then
          Put (" is a null multivector.");
@@ -40,9 +39,9 @@ package body C3GA_Utilities is
       while Has_Element (Curs) loop
          Index := Index + 1;
          BB := Element (Curs);
-         Put_Line ("Blade" & Integer'Image (Index) &  ":  Bitmap, Weight" &
-                   Unsigned_Integer'Image (Blade.Bitmap (BB)) &
-                   ", " & Float'Image (Blade.Weight (BB)));
+         Put_Line ("Blade" & Integer'Image (Index) &  ":  Bitmap" &
+                   Unsigned_Integer'Image (Blade.Bitmap (BB)) & ",  Weight"  &
+                   Float'Image (Blade.Weight (BB)));
          Next (Curs);
       end loop;
    end Print_Multivector;
