@@ -10,20 +10,21 @@ package body Multivector_Type is
       use GA_Maths;
       use Multivector;
       Rec        : MV_Type_Record;
-      Grade      : Unsigned_Integer := Top_Grade_Index (MV);
       Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
       Index      : Integer := 1;
-      GU         : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
+      GU_Bitmap  : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
       Versor_Inv : Multivector.Multivector;
       Grade_Inv  : Multivector.Multivector;
    begin
       Rec.Grade_Use := Grade_Use (MV);
-      while GU /= 0 loop
-         if (GU and 1) /= 0 then
+--        Put_Line ("Init Grade_Use" & Unsigned_Integer'Image (Grade_Use (MV)));
+      Rec.Top_Grade := Top_Grade_Index (MV);
+      while GU_Bitmap /= 0 loop
+         if (GU_Bitmap and 1) /= 0 then
             Count (Index) := Count (Index) + 1;
          end if;
          Count (Index) := Count (Index) or 1;
-         GU := Shift_Right (GU, 1);
+         GU_Bitmap := Shift_Right (GU_Bitmap, 1);
       end loop;
 
       Rec.Zero := (Count (1) and Count (2)) = 0;
@@ -62,15 +63,12 @@ package body Multivector_Type is
    begin
       New_Line;
       Put_Line (Name & " multivector information:");
-      Put_Line ("Type      " & MV_Type'Image (Info.MV_Kind));
-      Put_Line ("Zero      " & boolean'Image (Info.Zero));
+      Put_Line ("Type       " & MV_Type'Image (Info.MV_Kind));
+      Put_Line ("Zero       " & boolean'Image (Info.Zero));
       Put_Line ("Top Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
-      Put_Line ("Grade Use " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
-      Put_Line ("Parity    " & Parity_Type'Image (Info.Parity));
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
-         raise;
+      Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
+      Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+
    end Print_Multivector_Info;
 
    --  ------------------------------------------------------------------------

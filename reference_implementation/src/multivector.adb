@@ -254,15 +254,21 @@ package body Multivector is
       Blades     : constant Blade_List := MV.Blades;
       BB         : Blade.Basis_Blade;
       Cursor_B   : Cursor := Blades.First;
-      GU         : Unsigned_32 := 0;
+      GU_Bitmap  : Unsigned_32 := 0;
+      Index      : Integer := 0;
    begin
+--        New_Line;
       while Has_Element (Cursor_B) loop
+         Index := Index + 1;
          BB := Element (Cursor_B);
-         GU :=  GU or
-           Shift_Left (1, Integer (Grade (Bitmap (BB))));
+--           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
+--           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
+         GU_Bitmap := GU_Bitmap or
+              Shift_Left (1, Integer (GA_Maths.Grade (Bitmap (BB))) - 1);
+--           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
-      return Unsigned_Integer (GU);
+      return Unsigned_Integer (GU_Bitmap);
    end Grade_Use;
 
    --  -------------------------------------------------------------------------
@@ -451,15 +457,23 @@ package body Multivector is
       use Blade_List_Package;
       use GA_Maths;
       Max_G        : Integer := 0;
+      G            : Integer := 0;
       Blades       : Blade_List := MV.Blades;
       Blade_Cursor : Cursor := Blades.First;
-      Current      : Blade.Basis_Blade;
+      ThisBlade    : Blade.Basis_Blade;
+      Index        : Integer := 0;
    begin
       while Has_Element (Blade_Cursor) loop
-         Current := Element (Blade_Cursor);
-         Max_G := Maximum (Max_G, Integer (GA_Maths.Grade (Bitmap (Current))));
+         Index := Index +1;
+         ThisBlade := Element (Blade_Cursor);
+         G := Integer (GA_Maths.Grade (Bitmap (ThisBlade)));
+         Max_G := Maximum (Max_G, G);
+--           Put_Line ("Top_Grade_Index Index:" & Integer'Image (Index));
+--           Put_Line ("Top_Grade_Index Grade_Use:" & Integer'Image (G));
+--           Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
          Next (Blade_Cursor);
       end loop;
+--         Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
       return Unsigned_Integer (Max_G);
    end Top_Grade_Index;
 
