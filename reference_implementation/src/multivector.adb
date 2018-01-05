@@ -76,6 +76,7 @@ package body Multivector is
    end Blades;
 
    --  -------------------------------------------------------------------------
+
    function C3_Multivector return Multivector is
       MV : Multivector;
    begin
@@ -135,7 +136,7 @@ package body Multivector is
          New_MV.Blades.Append (Blade.Geometric_Product (BB, Sc));
          Next (Curs);
       end loop;
-      return MV;
+      return New_MV;
    end Geometric_Product;
 
    --  -------------------------------------------------------------------------
@@ -158,6 +159,12 @@ package body Multivector is
       Blade_2   : Blade.Basis_Blade;
       MV        : Multivector;
    begin
+      if Is_Empty (List (Blades_1)) then
+         Put_Line ("Geometric_Product, MV1 is null.");
+      end if;
+      if Is_Empty (List (Blades_2)) then
+         Put_Line ("Geometric_Product, MV2 is null.");
+      end if;
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
@@ -168,7 +175,12 @@ package body Multivector is
          Next (Curs_1);
       end loop;
 
+      if Is_Empty (MV.Blades) then
+         Put_Line ("Geometric_Product, product MV is null.");
+      end if;
+      Put_Line ("Leaving Geometric_Product.");
       return MV;
+
    end Geometric_Product;
 
    --  -------------------------------------------------------------------------
@@ -328,7 +340,7 @@ package body Multivector is
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
          declare
-            List_2   : Blade_List := MV1.Blades;
+            List_2   : Blade_List := MV2.Blades;
             Cursor_2 : Cursor := List_2.First;
          begin
             while Has_Element (Cursor_2) loop
