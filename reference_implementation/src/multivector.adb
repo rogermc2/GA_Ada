@@ -89,6 +89,21 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Dual (MV : Multivector; Dim : Integer) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      use Interfaces;
+      Index   : constant Unsigned_32 :=  Shift_Left (1, dim) - 1;
+      Dual_MV : Multivector;
+   begin
+      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Base'Enum_Val (Index)));
+      Dual_MV := Versor_Inverse (Dual_MV);
+      Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
+      return Dual_MV;
+   end Dual;
+
+   --  -------------------------------------------------------------------------
+
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector is
       use Blade_List_Package;
       use GA_Maths;
