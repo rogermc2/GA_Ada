@@ -41,6 +41,7 @@ package body Multivector is
          Next (Curs);
       end loop;
       MV1.Blades.Append (New_Scalar_Blade (S));
+      Simplify (MV1);
       return MV1;
    end Add;
 
@@ -65,6 +66,7 @@ package body Multivector is
          MV.Blades.Append (aBlade);
          Next (Curs);
       end loop;
+      Simplify (MV);
       return MV;
    end Add;
 
@@ -264,7 +266,7 @@ package body Multivector is
 --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
 --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
          GU_Bitmap := GU_Bitmap or
-              Shift_Left (1, Integer (GA_Maths.Grade (Bitmap (BB))) - 1);
+              Shift_Left (1, Integer (GA_Maths.Grade (Bitmap (BB))));
 --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
