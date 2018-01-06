@@ -24,6 +24,7 @@ package body Multivector is
 --     e3_bv : Multivector := Get_Basis_Vector (e3);
 --     ni_bv : Multivector := Get_Basis_Vector (ni);
 
+   procedure Simplify (Blades : in out Blade_List);
    procedure Simplify (MV : in out Multivector);
 
    --  -------------------------------------------------------------------------
@@ -411,13 +412,18 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    procedure Simplify (MV : in out Multivector) is
+   begin
+     Simplify (MV.Blades);
+   end Simplify;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Simplify (Blades : in out Blade_List) is
       use Blade_List_Package;
       use GA_Maths;
       Current      : Blade.Basis_Blade;
       Previous     : Blade.Basis_Blade;
       Has_Previous : Boolean := False;
-      New_MV       : Multivector;
-      Blades       : Blade_List := MV.Blades;
       Blade_Cursor : Cursor := Blades.First;
       Remove_Nulls :  Boolean := False;
 
@@ -450,7 +456,6 @@ package body Multivector is
             Next (Blade_Cursor);
          end loop;
       end if;
-      MV.Blades := Blades;
    end Simplify;
 
    --  -------------------------------------------------------------------------
