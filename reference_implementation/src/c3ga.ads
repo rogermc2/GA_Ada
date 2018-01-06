@@ -47,7 +47,7 @@ package C3GA is
 
 --     function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
-   function Init (MV : Multivector.Multivector; Epsilon : float:= 0.0) return MV_Type;
+--     function Init (MV : Multivector.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
