@@ -96,7 +96,7 @@ package body Multivector is
       Index   : constant Unsigned_32 := Shift_Left (1, dim) - 1;
       Dual_MV : Multivector;
    begin
-      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Base'Enum_Val (Index)));
+      Dual_MV.Blades.Append (Blade.New_Basis_Blade (C3_Base'Enum_Val (Index)));
       Dual_MV := Versor_Inverse (Dual_MV);
       Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
       return Dual_MV;
@@ -203,7 +203,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : Base) return Multivector is
+   function Get_Basis_Vector (Index : C3_Base) return Multivector is
       BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
    begin
