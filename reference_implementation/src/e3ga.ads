@@ -106,7 +106,7 @@ package E3GA is
 
    function Norm_E2 (BV : Bivector) return Scalar;
    function Norm_E2 (V : Vector) return Scalar;
-   function Norm_E2 (MV : E2GA.Multivector) return Scalar;
+--     function Norm_E2 (MV : E2GA.Multivector) return Scalar;
    function Norm_E2 (R : Rotor) return Scalar;
 --     function Norm_E2 (TV : Trivector) return Scalar;
    function Norm_R (BV : Bivector) return Scalar;

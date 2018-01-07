@@ -720,26 +720,26 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Norm_E2 (MV : E2GA.Multivector) return Scalar is
-      Value  : float := 0.0;
-      Norm : Scalar;
-    begin
-        if (MV.Grade_Use and 1) /= 0 then
-            Value := MV.Coordinates (1) * MV.Coordinates (1);
-        end if;
-        if (MV.Grade_Use and 2) /= 0 then
-            Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
-              MV.Coordinates (3) * MV.Coordinates (3);
-        end if;
-        if (MV.Grade_Use and 4) /= 0 then
-            Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
---                MV.Coordinates (5) * MV.Coordinates (5) +
---                MV.Coordinates (6) * MV.Coordinates (6);
-        end if;
-
-      Norm.Coordinates (1) := Value;
-      return Norm;
-    end Norm_E2;
+--      function Norm_E2 (MV : E2GA.Multivector) return Scalar is
+--        Value  : float := 0.0;
+--        Norm : Scalar;
+--      begin
+--          if (MV.Grade_Use and 1) /= 0 then
+--              Value := MV.Coordinates (1) * MV.Coordinates (1);
+--          end if;
+--          if (MV.Grade_Use and 2) /= 0 then
+--              Value := Value + MV.Coordinates (2) * MV.Coordinates (2) +
+--                MV.Coordinates (3) * MV.Coordinates (3);
+--          end if;
+--          if (MV.Grade_Use and 4) /= 0 then
+--              Value := Value + MV.Coordinates (4) * MV.Coordinates (4);
+--  --                MV.Coordinates (5) * MV.Coordinates (5) +
+--  --                MV.Coordinates (6) * MV.Coordinates (6);
+--          end if;
+--
+--        Norm.Coordinates (1) := Value;
+--        return Norm;
+--      end Norm_E2;
 
     --  ------------------------------------------------------------------------
 

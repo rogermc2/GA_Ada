@@ -38,6 +38,7 @@ with E2GA_Draw;
 with E3GA;
 with E3GA_Utilities;
 with GA_Maths;
+with Multivector;
 
 with Silo;
 
@@ -143,7 +144,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          V2, Green, Scale);
 
-         BV := E2GA.Outer_Product (V1, V2);
+         BV := Multivector.Outer_Product (V1, V2);
+--           BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
