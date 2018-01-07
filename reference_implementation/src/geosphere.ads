@@ -1,35 +1,43 @@
 
 with Ada.Containers.Vectors;
 
-with E2GA;
+with GL.Objects.Programs;
+with GL.Types;
+with GL.Types.Colors;
+
+with E3GA;
 
 package Geosphere is
+   use E3GA;
+   --  some very ancient code to compute a triangulated sphere
 
-    type Geosphere_Vertex is record
-        X   : float;
-        Y   : float;
-        Z   : float;
-    end record;
+   type Geosphere is private;
+   type Geosphere_Face is private;
+   type Indices is array (1 .. 3) of integer;
 
-    package Vertices_Package is new Ada.Containers.Vectors (positive, Geosphere_Vertex);
-    type Vertices_Vector is new Vertices_Package.Vector with null record;
+   package Vertex_Vectors is new Ada.Containers.Vectors
+     (Element_Type => E3GA.Vector, Index_Type => Positive);
+   type V_Vector is new Vertex_Vectors.Vector with null record;
 
-    type Geosphere_S is private;
-    type Geosphere_Face_S is private;
-
-    procedure GS_Compute (Sphere : Geosphere_S; Depth : integer);
+    procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
+    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
+                       MV_Matrix : GL.Types.Singles.Matrix4;
+                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
+                       Colour : GL.Types.Colors.Color);
 
 private
-    type V_Array is array (1 .. 3) of integer;
-    type Child_Array is array (1 .. 3) of integer;
-    type Neighbour_Array is array (1 .. 3) of integer;
-    type Contour_Intersect_Array is array (1 .. 3) of integer;
-    type Contour_Visited_Array is array (1 .. 3) of integer;
+   subtype Int3_Range is Integer range 1 .. 3;
+   subtype Int4_Range is Integer range 1 .. 4;
+    type Child_Array is array (Int4_Range) of integer;
+    type Neighbour_Array is array  (Int3_Range)  of integer;
+    type Contour_Intersect_Array is array  (Int3_Range)  of integer;
+    type Contour_Visited_Array is array  (Int3_Range)  of integer;
+    type V_Array is array  (Int3_Range) of integer;
 
-    type Geosphere_Face_S is record
-        V                 : V_Array;
-        Child             : Child_Array;
-        Plane             : E2GA.Bivector;
+    type Geosphere_Face is record
+        Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
+        Child             : Child_Array := (0, 0, 0, 0);
+        Plane             : E3GA.Bivector;
         D                 : float;
         Depth             : integer;
         Neighbour         : Neighbour_Array;
@@ -37,13 +45,17 @@ private
         Contour_Visited   : Contour_Visited_Array;
     end record;
 
-    type Geosphere_S is record
-        Num_Vertices      : Natural;
-        Max_Vertices      : Natural;
-        Num_Faces         : Natural;
-        Max_Faces         : Natural;
-        Num_Primitives         : Natural;
-        Depth             : integer;
-    end record;
+   package Face_Vectors is new Ada.Containers.Vectors
+     (Element_Type => Geosphere_Face, Index_Type => Positive);
+   type F_Vector is new Face_Vectors.Vector with null record;
+
+   type Geosphere is record
+--        Num_Vertices    : integer;
+--        Num_Faces       : integer;
+--        Num_Primitives  : integer;  --  Always = Num_Faces
+      Depth           : integer;
+      Vertices        : V_Vector;
+      Faces           : F_Vector;
+   end record;
 
 end Geosphere;

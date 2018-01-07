@@ -14,7 +14,7 @@ package Multivector_Type_Base is
         M_Zero        : boolean := False; -- True if multivector is zero
         M_Type        : Object_Type := Unspecified_Object_Type;
         M_Grade       : integer := -1;    --  Top grade occupied by the multivector
-        M_Grade_Use    : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
+        M_Grade_Use   : GA_Maths.Grade_Usage := 0; --  Bit map indicating which grades are present
         M_Parity      : Parity := No_Parity;
     end record;
 

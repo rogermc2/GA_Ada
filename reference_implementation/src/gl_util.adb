@@ -6,9 +6,32 @@ with E3GA_Utilities;
 with GA_Maths;
 
 package body GL_Util is
-    use GL.Types;
---  ------------------------------------------------------------------
+   use GL.Types;
 
+   procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
+                          Width, Height : GL.Types.Size);
+
+   --  ------------------------------------------------------------------
+
+   procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
+      A       : constant GL.Types.Single := 0.3;
+      D       : constant GL.Types.Single := 0.7;
+      Ambient : constant array (1 .. 4) of GL.Types.Single
+        := (A * R, A * G, A * B, 1.0);
+      Dif     : constant array (1 .. 4) of GL.Types.Single
+        := (D * R, D * G, D * B, 1.0);
+   begin
+      null;
+   end GL_Color_3fm;
+
+--  ------------------------------------------------------------------
+   --  Load_Pick_Matrix
+   procedure Load_Pick_Matrix is
+   begin
+      null;
+   end Load_Pick_Matrix;
+
+--  ------------------------------------------------------------------
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
     procedure Rotor_GL_Multiply (R : E3GA.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
         use E3GA;
@@ -35,10 +58,18 @@ package body GL_Util is
             end loop;
         end loop;
         GL_Matrix := Matrix * GL_Matrix;
-    end ;
+    end Rotor_GL_Multiply;
 
    --  -------------------------------------------------------------------------
+   --  Pick_Matrix defines a picking region
+   procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
+                          Width, Height : GL.Types.Size) is
+   begin
+      GL.Window.Set_Viewport (Centre_X, Centre_Y, Width, Height);
+   end Pick_Matrix;
 
+--  ------------------------------------------------------------------
+    --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
    function Rotor_To_GL_Matrix (R : E3GA.Rotor) return  GL.Types.Singles.Matrix4 is
         use GL;
         M3        : GA_Maths.GA_Matrix3;

@@ -293,7 +293,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (BV : Bivector) return Bivector_Coords is
+   function Get_Coords (BV : Bivector) return GA_Maths.Bivector_Coords is
    begin
       return BV.Coordinates;
    end Get_Coords;
@@ -335,7 +335,7 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (MV : Multivector) return Coords_Continuous_Array is
+   function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array is
    begin
       return MV.Coordinates;
    exception
@@ -842,7 +842,7 @@ package body E2GA is
       return theScalar;
    end Set_Scalar;
 
-   --  ---------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Set_Rotor (E1_E2 : float) return Rotor is
       theRotor : Rotor;
@@ -850,6 +850,13 @@ package body E2GA is
       theRotor.Coordinates := (E1_E2, 0.0);
       return theRotor;
    end Set_Rotor;
+
+   --  ------------------------------------------------------------------------
+
+    procedure Set_Scalar (S : out Scalar; Value : float) is
+    begin
+        S.Coordinates (1) := Value;
+    end Set_Scalar;
 
    --  ------------------------------------------------------------------------
 

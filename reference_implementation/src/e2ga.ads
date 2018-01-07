@@ -6,16 +6,13 @@ with Multivector_Type_Base;
 
 package E2GA is
 
+   subtype Rotor_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
+   subtype Vector_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
+
    type Rotor is private;
    type Scalar is private;
    --  Vector corresponds to e2ga.Vector coordinate storage float m_c[2]
    type Vector is private;
-
-   type Coords_Continuous_Array is array (integer range <>) of float;
-   subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
-   subtype Rotor_Coords is Coords_Continuous_Array (1 .. 2);
-   subtype Scalar_Coords is Coords_Continuous_Array (1 .. 1);
-   subtype Vector_Coords is Coords_Continuous_Array (1 .. 2);
 
    --  Outermorphism types
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
@@ -36,14 +33,14 @@ package E2GA is
    subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
    type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
-      Coordinates : Coords_Continuous_Array (1 .. 4) := (others => 0.0);   --  m_c[4]
+      Coordinates : GA_Maths.Coords_Continuous_Array (1 .. 4) := (others => 0.0);   --  m_c[4]
    end record;
 
    --  A bivector as defined here the outerproduct of two vectors.
    --  2-blade is the more correct terminology; that is, a 2-vector
    --  is not necessarilly a 2-blade.
    type Bivector is record
-      Coordinates : Bivector_Coords;   --  m_c[1]
+      Coordinates : GA_Maths.Bivector_Coords;   --  m_c[1]
    end record;
 
    --  Joinable grade definitions
@@ -71,7 +68,7 @@ package E2GA is
    function Get_Coord_2 (R : Rotor) return float;
    function Get_Coord_1 (V : Vector) return float;
    function Get_Coord_2 (V : Vector) return float;
-   function Get_Coords (MV : Multivector) return Coords_Continuous_Array;
+   function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array;
    function Get_Size (MV : Multivector) return Integer;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
@@ -93,12 +90,13 @@ package E2GA is
    function Set_Multivector (BV : Bivector) return Multivector;
    function Set_Multivector (R : Rotor) return Multivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
+    procedure Set_Scalar (S : out Scalar; Value : float);
    function Unit_E (V : Vector) return Vector;
    function Unit_E (MV : Multivector) return Vector;
 
 private
    type Scalar is record
-      Coordinates : Scalar_Coords := (others => 0.0);   --  m_c[1]
+      Coordinates : GA_Maths.Scalar_Coords := (others => 0.0);   --  m_c[1]
    end record;
 
    type Rotor is record

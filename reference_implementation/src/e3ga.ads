@@ -1,13 +1,13 @@
 
 with Ada.Strings.Unbounded;
 
-with GA_Maths; use GA_Maths;
 with E2GA;
+with GA_Maths; use GA_Maths;
 
 package E3GA is
 
    type Array_19F is array (1 .. 19) of float;
-   subtype Vector_Coords_3D is E2GA.Coords_Continuous_Array (1 .. 3);
+   subtype Vector_Coords_3D is GA_Maths.Coords_Continuous_Array (1 .. 3);
 
    --  Multivector types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_E3_T, MVT_Scalar,
@@ -27,9 +27,9 @@ package E3GA is
 
    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
    type Vector is private;
-   type MV_Coordinate_Array is new E2GA.Coords_Continuous_Array (1 .. 8);
+   type MV_Coordinate_Array is new GA_Maths.Coords_Continuous_Array (1 .. 8);
 
-   type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
+   type Multivector (Grade_Use : Grade_Usage) is record
       Coordinates : MV_Coordinate_Array  := (others => 0.0);  --  m_c[8]
    end record;
 
@@ -41,6 +41,7 @@ package E3GA is
 
    --  ------------------------------------------------------------------------
 
+   function "=" (V1, V2 : Vector) return Boolean;
    function "+" (V1, V2 : Vector) return Vector;
    function "-" (V : Vector) return Vector;
    function "-" (V1, V2 : Vector) return Vector;
@@ -130,7 +131,7 @@ package E3GA is
 
 private
    type Scalar is record
-      Coordinates : E2GA.Scalar_Coords;  --  m_c[1]
+      Coordinates : Scalar_Coords;  --  m_c[1]
    end record;
 
    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]

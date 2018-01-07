@@ -1,7 +1,9 @@
 
+with C3GA;
 with E2GA;
 with E3GA;
 with GA_Maths;
+with Multivector;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
@@ -22,7 +24,7 @@ package Multivector_Analyze is
    end record;
 
    type Blade_Type is (Non_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
-                       Tangent_Blade, Free_Blade, Zero_Blade);
+                       Tangent_Blade, Free_Blade, Pseudo_Scalar_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Unspecified_Subclass, Vector_Subclass, Bivector_Subclass,
                                 Even_Versor_Subclass);
    type Conformal_Type is (Not_Conformal, Conformal_Multivector, Conformal_Versor,
@@ -79,6 +81,10 @@ package Multivector_Analyze is
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+                      Probe : C3GA.Normalized_Point;
+                      Flags : Flag_Type := (Flag_Invalid, False);
+                      Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
    function isValid (A : MV_Analysis) return Boolean;
    function isDual (A : MV_Analysis) return Boolean;
