@@ -116,7 +116,7 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function New_Basis_Blade (Index : Base; Weight : Float := 1.0) return Basis_Blade is
+   function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade is
       use Interfaces;
       Blade : Basis_Blade;
    begin

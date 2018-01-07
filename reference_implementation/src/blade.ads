@@ -6,7 +6,9 @@ with GA_Maths; use GA_Maths;
 package Blade is
 
    type Basis_Blade is private;
-   type Base is (no, e1, e2, e3, ni);
+   type E2_Base is (e1, e2);
+   type E3_Base is (e1, e2, e3);
+   type C3_Base is (no, e1, e2, e3, ni);
    type Contraction_Type is (Left_Contraction, Right_Contraction,
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);
@@ -22,7 +24,7 @@ package Blade is
    function Minus_1_Power (Number : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
-   function New_Basis_Blade (Index : Base; Weight : Float := 1.0) return Basis_Blade;
+   function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade;
    function New_Zero_Blade return Basis_Blade;
 
