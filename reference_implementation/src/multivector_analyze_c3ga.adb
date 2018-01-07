@@ -8,7 +8,7 @@ with Multivector_Type_Base;
 
 package body Multivector_Analyze_C3GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
                        Probe : C3GA.Normalized_Point;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon) is
@@ -16,12 +16,12 @@ package body Multivector_Analyze_C3GA is
       use Multivector_Type_Base;
       use GA_Maths;
 
-      MV_X      : Multivector.Multivector := MV;
+      MV_X      : C3GA.Multivector := MV;
       MV_Info   : E2GA.MV_Type;
       Analysis  : MV_Analysis;
 
       procedure Classify is
-         OP_Nix : Boolean;
+--           OP_Nix : Boolean;
       begin
          null;
       end Classify;
@@ -37,7 +37,7 @@ package body Multivector_Analyze_C3GA is
 --           MV_X := C3GA.Dual (MV_X);
       end if;
 
-      MV_Info:= C3GA.Init (MV_X, Epsilon);
+      MV_Info := C3GA.Init (MV_X, Epsilon);
       Analysis.M_MV_Type := MV_Info;
       Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
       --  Check for zero blade

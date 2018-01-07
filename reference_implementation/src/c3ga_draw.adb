@@ -14,7 +14,7 @@ package body C3GA_Draw is
 
    procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         Position : Multivector.Multivector; Colour : GL.Types.Colors.Color);
+                         Position : c3ga.Multivector; Colour : GL.Types.Colors.Color);
 
    --  -------------------------------------------------------------------------
 
@@ -42,13 +42,13 @@ package body C3GA_Draw is
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    Point_Position : C3GA.Normalized_Point; Colour : GL.Types.Colors.Color) is
-      MV   : Multivector.Multivector;
-      Anal : Multivector_Analyze.MV_Analysis;
+--        MV   : C3GA.Multivector;
+--        Anal : Multivector_Analyze.MV_Analysis;
    begin
-      Multivector.Set_Multivector (MV, Point_Position);
-      Multivector_Analyze.Analyze (Anal, MV, Point_Position);
-      Draw_Point (Render_Program, Model_View_Matrix, MV, Colour);
-
+--        C3GA.Set_Multivector (MV, Point_Position);
+--        Multivector_Analyze.Analyze (Anal, MV, Point_Position);
+--        Draw_Point (Render_Program, Model_View_Matrix, MV, Colour);
+      null;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in C3GA_Draw.Draw point.");
@@ -59,7 +59,7 @@ package body C3GA_Draw is
    --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
    procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         Position : Multivector.Multivector;
+                         Position : C3GA.Multivector;
                          Colour : GL.Types.Colors.Color) is
       use GL.Types;
       Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;

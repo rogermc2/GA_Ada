@@ -93,7 +93,7 @@ package body Multivector is
       use Blade_List_Package;
       use GA_Maths;
       use Interfaces;
-      Index   : constant Unsigned_32 :=  Shift_Left (1, dim) - 1;
+      Index   : constant Unsigned_32 := Shift_Left (1, dim) - 1;
       Dual_MV : Multivector;
    begin
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Base'Enum_Val (Index)));
