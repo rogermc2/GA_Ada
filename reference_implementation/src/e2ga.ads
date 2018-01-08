@@ -13,7 +13,7 @@ package E2GA is
    type Rotor is private;
    type Scalar is private;
    --  Vector corresponds to e2ga.Vector coordinate storage float m_c[2]
-   type Vector is private;
+--     type Vector is private;
 
    --  Outermorphism types
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
@@ -44,21 +44,22 @@ package E2GA is
 --        Coordinates : GA_Maths.Bivector_Coords;   --  m_c[1]
 --     end record;
    subtype Bivector is Multivector.Multivector;
+   subtype Vector is Multivector.Multivector;
 
    --  Joinable grade definitions
    Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
    Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
 
-   function "+" (V1, V2 : Vector) return Vector;
-   function "-" (V1, V2 : Vector) return Vector;
-   function "*" (Weight : float; V : Vector) return Vector;
-   function "*" (V1, V2 : Vector) return Vector;
+--     function "+" (V1, V2 : Vector) return Vector;
+--     function "-" (V1, V2 : Vector) return Vector;
+--     function "*" (Weight : float; V : Vector) return Vector;
+--     function "*" (V1, V2 : Vector) return Vector;
 --     function "+" (MV1, MV2 : Multivector) return Multivector;
 --     function "-" (MV1, MV2 : Multivector) return Multivector;
 
    function Bivector_String (BV : E2GA.Bivector; Text : String := "") return String;
-   function Dot_Product (V1, V2 : Vector) return float;
+--     function Dot_Product (V1, V2 : Vector) return float;
    function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dual (MV : Multivector) return Multivector;
    function e1 return Vector;
@@ -79,14 +80,15 @@ package E2GA is
 --     function Init (MV : Multivector; Epsilon : float:= 0.0) return MV_Type;
 --     function Largest_Basis_Blade (Map : Bit_Map) return float;
    function Largest_Coordinate return float;
-   function Magnitude (V : Vector) return float;
+--     function Magnitude (V : Vector) return float;
    function Multivector_String (MV : Multivector.Multivector;
                                 Text : String := "") return String;
 --     function Norm_E (MV : Multivector) return Scalar;
 --     function Norm_E2 (MV : E2GA.Multivector) return Scalar;
-   function New_Bivector return Bivector;
+   function New_Bivector (V1, V2 : Vector) return Bivector;
+   function New_Vector (e1, e2 : Float) return Vector;
 --     function Outer_Product (V1, V2 : Vector) return Bivector;
-   function Scalar_Product (V1, V2 : Vector) return Scalar;
+--     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     function Set_Bivector (V1, V2 : Vector) return Bivector;
 --     function Set_Bivector (MV : Multivector) return Bivector;
    procedure Set_Coords (V : out Vector; C1, C2 : float);
@@ -99,10 +101,10 @@ package E2GA is
 --     function Set_Bivector (V : Vector) return Bivector;
 --     function Set_Bivector (R : Rotor) return Bivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
-    procedure Set_Scalar (S : out Scalar; Value : float);
---     function Unit_E (V : Vector) return Vector;
+   procedure Set_Scalar (S : out Scalar; Value : float);
+   function Unit_E (V : Vector) return Vector;
 --     function Unit_E (MV : Multivector) return Vector;
-   function Unit_E (BV : Bivector) return Vector;
+--     function Unit_E (BV : Bivector) return Vector;
 
 private
    type Scalar is record
@@ -113,8 +115,8 @@ private
       Coordinates : Rotor_Coords := (1.0, 0.0);   --  m_c[2]
    end record;
 
-   type Vector is record
-      Coordinates : Vector_Coords := (0.0, 0.0);   --  m_c[2]
-   end record;
+--     type Vector is record
+--        Coordinates : Vector_Coords := (0.0, 0.0);   --  m_c[2]
+--     end record;
 
 end E2GA;
