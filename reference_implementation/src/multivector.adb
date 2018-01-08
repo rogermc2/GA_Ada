@@ -73,6 +73,13 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   procedure Add_Blade (MV : in out Multivector; aBlade : Blade.Basis_Blade) is
+   begin
+      MV.Blades.Append (aBlade);
+   end Add_Blade;
+
+   --  -------------------------------------------------------------------------
+
    function Blades (MV : Multivector) return Blade_List is
    begin
       return MV.Blades;
@@ -200,6 +207,26 @@ package body Multivector is
       return MV;
 
    end Geometric_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Basis_Vector (Index : E2_Base) return Multivector is
+      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
+      MV : Multivector;
+   begin
+      MV.Blades.Append (BB);
+      return MV;
+   end Get_Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Basis_Vector (Index : E3_Base) return Multivector is
+      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
+      MV : Multivector;
+   begin
+      MV.Blades.Append (BB);
+      return MV;
+   end Get_Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
@@ -343,10 +370,10 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function New_Multivector (Weight : Float) return Multivector is
+   function New_Multivector (Scalar_Weight : Float) return Multivector is
       MV : Multivector;
    begin
-      MV.Blades.Append (New_Scalar_Blade (Weight));
+      MV.Blades.Append (New_Scalar_Blade (Scalar_Weight));
       return  MV;
    end New_Multivector;
 
@@ -440,7 +467,7 @@ package body Multivector is
       Previous     : Blade.Basis_Blade;
       Has_Previous : Boolean := False;
       Blade_Cursor : Cursor := Blades.First;
-      Remove_Nulls :  Boolean := False;
+      Remove_Nulls : Boolean := False;
 
    begin
       while Has_Element (Blade_Cursor) loop
@@ -547,10 +574,10 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 begin
-   C3_Blade_List.Append (New_Basis_Blade (no));
-   C3_Blade_List.Append (New_Basis_Blade (e1));
-   C3_Blade_List.Append (New_Basis_Blade (e2));
-   C3_Blade_List.Append (New_Basis_Blade (e3));
-   C3_Blade_List.Append (New_Basis_Blade (ni));
+   C3_Blade_List.Append (New_Basis_Blade (C3_no));
+   C3_Blade_List.Append (New_Basis_Blade (C3_e1));
+   C3_Blade_List.Append (New_Basis_Blade (C3_e2));
+   C3_Blade_List.Append (New_Basis_Blade (C3_e3));
+   C3_Blade_List.Append (New_Basis_Blade (C3_ni));
 
 end Multivector;

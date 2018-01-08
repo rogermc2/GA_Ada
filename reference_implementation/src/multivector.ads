@@ -19,12 +19,16 @@ package Multivector is
 
    function Add (MV : Multivector; S : Float) return Multivector;
    function Add (MV1, MV2 : Multivector) return Multivector;
+   procedure Add_Blade (MV : in out Multivector; aBlade : Blade.Basis_Blade);
    function Blades (MV : Multivector) return Blade_List;
    function C3_Multivector return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
+   --  Get_Basis_Vector returns multivector of the required base.
+   function Get_Basis_Vector (Index : E2_Base) return Multivector;
+   function Get_Basis_Vector (Index : E3_Base) return Multivector;
    function Get_Basis_Vector (Index : C3_Base) return Multivector;
    function Get_Blade_List (MV : Multivector) return Blade_List;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
@@ -32,7 +36,8 @@ package Multivector is
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
-   function New_Multivector (Weight : Float) return Multivector;
+   --  New_Multivector returns a multivector with a scalar blade only
+   function New_Multivector (Scalar_Weight : Float) return Multivector;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
