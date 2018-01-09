@@ -923,8 +923,8 @@ package body E2GA is
       IE       : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (e2s);
       Result   : Vector;
    begin
-      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e1, C1 * IE));
-      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e2, C2 * IE));
+      Multivector.Add_Blade (Result, New_Basis_Blade (E2_e1, C1 * IE));
+      Multivector.Add_Blade (Result, New_Basis_Blade (E2_e2, C2 * IE));
       return  Result;
    end Unit_E;
 

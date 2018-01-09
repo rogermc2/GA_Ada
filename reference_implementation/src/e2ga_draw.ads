@@ -5,6 +5,7 @@ with GL.Objects.Programs;
 with E2GA;
 with GA_Draw;
 with GA_Maths;
+with Multivector;
 
 package E2GA_Draw is
     --  procedure Draw (X : E2GA.Multivector, Method : Integer := 0;
@@ -19,7 +20,7 @@ package E2GA_Draw is
     --  Each procedure Draw implements a separate case of the draw in e2ga_Draw.cpp
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    MV : in out E2GA.Multivector;
+                    MV : in out Multivector.Multivector;
                     Method : GA_Draw.Bivector_Method_Type
                                := GA_Draw.Draw_Bivector_Circle;
                     Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0));
@@ -33,5 +34,5 @@ package E2GA_Draw is
                    Translation_Matrix : GL.Types.Singles.Matrix4;
                    BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
-                               := GA_Draw.Draw_Bivector_Circle);
+                                 := GA_Draw.Draw_Bivector_Circle);
 end E2GA_Draw;

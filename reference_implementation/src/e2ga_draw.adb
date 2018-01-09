@@ -4,6 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Objects.Vertex_Arrays;
 with GL.Uniforms;
 
+with Blade;
 with E3GA;
 with E3GA_Utilities;
 with GA_Draw;
@@ -48,7 +49,7 @@ package body E2GA_Draw is
 
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                   MV : in out E2GA.Multivector;
+                   MV : in out Multivector.Multivector;
                    Method : GA_Draw.Bivector_Method_Type
                             := GA_Draw.Draw_Bivector_Circle;
                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
@@ -82,13 +83,19 @@ package body E2GA_Draw is
 
                V1 := E3GA.To_2D (A.M_Vectors (1));
                V2 := E3GA.To_2D (A.M_Vectors (2));
-               OP := E2GA.Outer_Product (V1, V2);
+               OP := Multivector.Outer_Product (V1, V2);
                declare
-                  OP_MV     : E2GA.Multivector := E2GA.Set_Multivector (OP);
-                  Normal_MV : E2GA.Multivector := E2GA.Set_Multivector (OP);
+                  use Multivector;
+                  use Blade_List_Package;
+                  Blades    : constant Blade_List := Get_Blade_List (OP);
+                  aBlade    : Blade.Basis_Blade;
+                  Curs      : Cursor := Blades.Last;
+                  OP_MV     : Multivector.Multivector := OP;
+                  Normal_MV : Multivector.Multivector := OP;
                begin
-                  Normal_MV := E2GA.Dual (OP_MV);
-                  E3GA.Set_Coords (Normal, 0.0, 0.0, Normal_MV.Coordinates (1));
+                  Normal_MV := Multivector.Dual (OP_MV);
+                  E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
+--                                     Normal_MV.Coordinates (Length (Blades)));
                   GA_Draw.Draw_Bivector (Render_Program,
                                          Model_View_Matrix, Normal,
                                          A.M_Vectors (1), A.M_Vectors (2),
