@@ -59,6 +59,35 @@ package body Multivector_Type is
 
    --  -------------------------------------------------------------------------
 
+   function MV_Kind (MV : MV_Type_Record) return MV_Type is
+   begin
+      return MV.MV_Kind;
+   end MV_Kind;
+
+   --  -------------------------------------------------------------------------
+
+   function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer is
+   begin
+      return MV.Top_Grade;
+   end Top_Grade;
+
+   --  -------------------------------------------------------------------------
+
+   function Grade_Use (MV : MV_Type_Record) return GA_Maths.Grade_Usage is
+   begin
+      return MV.Grade_Use;
+
+   end Grade_Use;
+
+   --  -------------------------------------------------------------------------
+
+   function Parity (MV : MV_Type_Record) return Parity_Type is
+   begin
+      return MV.Parity;
+   end ;
+
+   --  -------------------------------------------------------------------------
+
    procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record) is
    begin
       New_Line;
@@ -73,4 +102,10 @@ package body Multivector_Type is
 
    --  ------------------------------------------------------------------------
 
+   function Zero (MV : MV_Type_Record) return Boolean is
+   begin
+      return MV.Zero;
+   end ;
+
+   --  -------------------------------------------------------------------------
 end Multivector_Type;
