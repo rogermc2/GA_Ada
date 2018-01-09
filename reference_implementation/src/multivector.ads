@@ -24,6 +24,7 @@ package Multivector is
    procedure Add_Blade (MV : in out Multivector; aBlade : Blade.Basis_Blade);
    function Blades (MV : Multivector) return Blade_List;
    function C3_Multivector return Multivector;
+   function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
@@ -44,6 +45,7 @@ package Multivector is
    function Reverse_MV (MV : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
+   function Size (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;

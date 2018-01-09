@@ -133,6 +133,21 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Dual (MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      use GA_Maths;
+      use Interfaces;
+      Index   : constant Unsigned_32 := Shift_Left (1, Size (MV)) - 1;
+      Dual_MV : Multivector;
+   begin
+      Dual_MV.Blades.Append (Blade.New_Basis_Blade (C3_Base'Enum_Val (Index)));
+      Dual_MV := Versor_Inverse (Dual_MV);
+      Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
+      return Dual_MV;
+   end Dual;
+
+   --  -------------------------------------------------------------------------
+
    function Dual (MV : Multivector; Dim : Integer) return Multivector is
       use Blade_List_Package;
       use GA_Maths;
@@ -536,6 +551,15 @@ package body Multivector is
          end loop;
       end if;
    end Simplify;
+
+   --  -------------------------------------------------------------------------
+
+   function Size (MV : Multivector) return Natural is
+      use Blade_List_Package;
+      Blades  : Blade_List := MV.Blades;
+   begin
+      return Natural (Blades.Length);
+   end Size;
 
    --  -------------------------------------------------------------------------
 
