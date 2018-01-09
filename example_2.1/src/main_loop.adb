@@ -139,9 +139,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+         E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                          V1, Red, Scale);
-         E2GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+         E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                          V2, Green, Scale);
 
          BV := Multivector.Outer_Product (V1, V2);
@@ -152,7 +152,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 V1, V1 + V2, V2, Blue);
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
-            E2GA_Draw.Draw (Render_Graphic_Program, BV_Translation_Matrix,
+            E2GA_Draw.Draw_Bivector (Render_Graphic_Program, BV_Translation_Matrix,
                             BV, Yellow);
          end if;
 
