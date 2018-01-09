@@ -4,6 +4,7 @@ with E2GA;
 with E3GA;
 with GA_Maths;
 with Multivector;
+with Multivector_Type;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
@@ -64,7 +65,8 @@ package Multivector_Analyze is
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
-      M_MV_Type        : Multivector_Type_Base.MV_Typebase;
+--        M_MV_Type        : Multivector_Type_Base.MV_Typebase;
+      M_MV_Type        : Multivector_Type.MV_Type_Record;
       Conformal_Kind   : Conformal_Type := Not_Conformal;
       Epsilon          : Float;
       M_Type           : M_Type_Record;

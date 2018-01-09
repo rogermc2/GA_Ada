@@ -3,18 +3,19 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA;
 with GA_Maths;
+with Multivector_Type;
 with Multivector_Type_Base;
 
 package body Multivector_Analyze_E2GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : E2GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
       use Multivector_Type_Base;
 
-      MV_X      : E2GA.Multivector := MV;
-      MV_Info   : E2GA.MV_Type;
+      MV_X      : Multivector.Multivector := MV;
+      MV_Info   : Multivector_Type.MV_Type_Record;
       Analysis  : MV_Analysis;
    begin
       Analysis.M_Flags.Valid := True;
@@ -24,12 +25,12 @@ package body Multivector_Analyze_E2GA is
       if Flags.Dual then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Is Dual.");
          Analysis.M_Flags.Dual := True;
-         MV_X := E2GA.Dual (MV_X);
+         MV_X := Multivector.Dual (MV_X);
       end if;
 
-      MV_Info:= E2GA.Init (MV_X, Epsilon);
+      MV_Info:= Multivector_Type.Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
-      Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
+      Analysis.M_Type.Multivector_Kind := MV_Info.;
       --  Check for zero blade
       if Analysis.M_MV_Type.M_Zero then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
