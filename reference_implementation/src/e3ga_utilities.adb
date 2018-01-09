@@ -1,9 +1,11 @@
 
 with Interfaces;
 
+with Ada.Containers;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Blade;
 with Multivector_Type_Base;
 
 package body E3GA_Utilities is
@@ -103,19 +105,22 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Multivector (Name : String; MV : E2GA.Multivector) is
-      use E2GA;
-      MV_Size : Integer := Get_Size (MV);
-      Coords  : GA_Maths.Coords_Continuous_Array (1 .. MV.Coordinates'Length);
+   procedure Print_Multivector (Name : String; MV : Multivector.Multivector) is
+      use Multivector;
+      use Blade_List_Package;
+      theBlades : constant Blade_List := Blades (MV);
+      aBlade    : Blade.Basis_Blade;
+      Curs      : Cursor := theBlades.First;
    begin
       New_Line;
       Put_Line (Name);
-      Put_Line ("MV Size: " & Integer'Image (MV_Size));
+      Put_Line ("MV Size: " & Ada.Containers.Count_Type'Image (theBlades.Length));
       Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
-      Coords := Get_Coords (MV);
       Put_Line ("Multivector Coordinates:");
-      for index in MV.Coordinates'Range loop
-         Put_Line (float'Image (Coords (index)));
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         Put_Line (float'Image (Blade.Weight (aBlade)));
+         Next (Curs);
       end loop;
    exception
       when anError :  others =>

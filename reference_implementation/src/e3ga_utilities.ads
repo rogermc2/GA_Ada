@@ -2,6 +2,7 @@
 with E2GA;
 with E3GA;
 with GA_Maths;
+with Multivector;
 with Multivector_Analyze;
 
 package E3GA_Utilities is
@@ -13,7 +14,8 @@ package E3GA_Utilities is
    procedure Print_Analysis (Name : String;
                              Info : Multivector_Analyze.MV_Analysis);
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3);
-   procedure Print_Multivector (Name : String; MV : E2GA.Multivector);
+   procedure Print_Multivector (Name : String; MV :
+                                Multivector.Multivector);
    procedure Print_Multivector_Info (Name : String; Info : E2GA.MV_Type);
    procedure Print_Rotor (Name : String; R : E3GA.Rotor);
    procedure Print_Vector (Name : String; aVector : E2GA.Vector);
