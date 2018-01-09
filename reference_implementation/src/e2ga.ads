@@ -51,7 +51,7 @@ package E2GA is
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
    Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
 
---     function "+" (V1, V2 : Vector) return Vector;
+   function "+" (V1, V2 : Vector) return Vector;
 --     function "-" (V1, V2 : Vector) return Vector;
 --     function "*" (Weight : float; V : Vector) return Vector;
 --     function "*" (V1, V2 : Vector) return Vector;
@@ -74,6 +74,8 @@ package E2GA is
 --     function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array;
 --     function Get_Size (MV : Multivector) return Integer;
 --     function Get_Coords (BV : Bivector) return GA_Maths.Coords_Continuous_Array;
+   function Get_Coords (V : Vector) return GA_Maths.Array_F2;
+
 --     function Get_Size (BV : Bivector) return Integer;
 --     function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
 --     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;

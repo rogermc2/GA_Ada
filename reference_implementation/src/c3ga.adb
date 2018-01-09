@@ -107,7 +107,7 @@ package body C3GA is
 
     --  ------------------------------------------------------------------------
 
-   function Init (MV : C3GA.Multivector; Epsilon : float := 0.0) return MV_Type is
+   function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
       use Interfaces;
       use GA_Maths;
       use  Multivector_Type_Base;

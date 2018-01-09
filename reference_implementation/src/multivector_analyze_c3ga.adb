@@ -8,7 +8,7 @@ with Multivector_Type_Base;
 
 package body Multivector_Analyze_C3GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                        Probe : C3GA.Normalized_Point;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon) is
@@ -16,7 +16,7 @@ package body Multivector_Analyze_C3GA is
       use Multivector_Type_Base;
       use GA_Maths;
 
-      MV_X      : C3GA.Multivector := MV;
+      MV_X      : Multivector.Multivector := MV;
       MV_Info   : E2GA.MV_Type;
       Analysis  : MV_Analysis;
 

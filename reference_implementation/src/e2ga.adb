@@ -54,13 +54,21 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
---     function "+" (V1, V2 : Vector) return Vector is
---        Sum : Vector;
---     begin
---        Sum.Coordinates (1) := V1.Coordinates (1) + V2.Coordinates (1);
---        Sum.Coordinates (2) := V1.Coordinates (2) + V2.Coordinates (2);
---        return Sum;
---     end "+";
+   function "+" (V1, V2 : Vector) return Vector is
+      use Multivector.Blade_List_Package;
+      use Blade;
+      Blades_1  : Multivector.Blade_List := Multivector.Get_Blade_List (V1);
+      Blades_2  : Multivector.Blade_List := Multivector.Get_Blade_List (V2);
+      C11       : constant float := Weight (Blades_1.First_Element);
+      C12       : constant float := Weight (Blades_1.Last_Element);
+      C21       : constant float := Weight (Blades_2.First_Element);
+      C22       : constant float := Weight (Blades_2.Last_Element);
+      Sum : Vector;
+   begin
+      Multivector.Add_Blade (Sum, Blade.New_Basis_Blade (Blade.E2_e1, C11 + C21));
+      Multivector.Add_Blade (Sum, Blade.New_Basis_Blade (Blade.E2_e2, C12 + C22));
+      return Sum;
+   end "+";
 
    --  ------------------------------------------------------------------------
 
@@ -331,6 +339,16 @@ package body E2GA is
 --           Put_Line ("An exception occurred in E2GA.Get_Coords MV.");
 --           raise;
 --     end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (V : Vector) return GA_Maths.Array_F2 is
+      use Multivector.Blade_List_Package;
+      use Blade;
+      Blades   : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   begin
+      return (Weight (Blades.First_Element), Weight (Blades.Last_Element));
+   end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
@@ -899,15 +917,14 @@ package body E2GA is
       use Multivector.Blade_List_Package;
       use Blade;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V);
-      C1         : constant float := Weight (Blades.First_Element);
-      C2         : constant float := Weight (Blades.Last_Element);
-      E2_Value   : constant float:= C1 * C1 + C2 * C2;
-      e21        : constant float := e2.Coordinates (1);
-      IE_Value   : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (e21);
-      Result     : Vector;
+      C1       : constant float := Weight (Blades.First_Element);
+      C2       : constant float := Weight (Blades.Last_Element);
+      e2s      : constant float :=  C1 * C1 + C2 * C2;
+      IE       : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (e2s);
+      Result   : Vector;
    begin
-      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e1, C1 * IE_Value));
-      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e2, C2 * IE_Value));
+      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e1, C1 * IE));
+      Multivector.Add_Blade (Result,New_Basis_Blade (E2_e2, C2 * IE));
       return  Result;
    end Unit_E;
 
