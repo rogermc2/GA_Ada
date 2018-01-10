@@ -31,6 +31,7 @@ package body E2GA_Draw is
                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
       use GA_Draw;
       use GA_Maths;
+      use Multivector;
       use Multivector_Analyze;
       A         : MV_Analysis;
       V1        : E2GA.Vector;
@@ -48,13 +49,13 @@ package body E2GA_Draw is
          case Blade_Subclass (A) is
             when Vector_Subclass =>
                Put_Line (" E2GA_Draw Vector_Subclass.");
-               E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
+               E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
                Draw_Vector (Render_Program, Model_View_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
                Put_Line (" E2GA_Draw Bivector_Subclass.");
                if Get_Draw_Mode = OD_Magnitude then
-                  Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
+                  Scale := Float_Functions.Sqrt (Float (Abs (A.M_Scalors (1)))) / Pi;
                end if;
 
                V1 := E3GA.To_2D (A.M_Vectors (1));
