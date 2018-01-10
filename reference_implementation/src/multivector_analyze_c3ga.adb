@@ -5,7 +5,6 @@ with E2GA;
 with E3GA;
 with GA_Maths;
 with Multivector_Type;
-with Multivector_Type_Base;
 
 package body Multivector_Analyze_C3GA is
 
@@ -15,7 +14,6 @@ package body Multivector_Analyze_C3GA is
                        Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
       use Multivector_Type;
-      use Multivector_Type_Base;
       use GA_Maths;
 
       MV_X      : Multivector.Multivector := MV;
