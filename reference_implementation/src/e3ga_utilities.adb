@@ -130,15 +130,15 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Multivector_Info (Name : String; Info : E2GA.MV_Type) is
-      use Multivector_Type_Base;
+   procedure Print_Multivector_Info (Name : String; Info : Multivector_Type.MV_Type_Record) is
+      use Multivector_Type;
    begin
       Put_Line (Name);
-      Put_Line ("M_Zero      " & boolean'Image (Info.M_Zero));
-      Put_Line ("M_Type      " & Object_Type'Image (Info.M_Type));
-      Put_Line ("M_Top_Grade " & Integer'Image (Info.M_Grade));
-      Put_Line ("M_Grade     " & GA_Maths.Unsigned_Integer'Image (Info.M_Grade_Use));
-      Put_Line ("M_Parity    " & Parity'Image (Info.M_Parity));
+      Put_Line ("Zero        " & boolean'Image (Zero (Info)));
+      Put_Line ("MV Type     " & MV_Type'Image (MV_Kind (Info)));
+      Put_Line ("Top_Grade   " & GA_Maths.Unsigned_Integer'Image (Top_Grade (Info)));
+      Put_Line ("Grade use   " & GA_Maths.Unsigned_Integer'Image (Grade_Use (Info)));
+      Put_Line ("Parity      " & Parity_Type'Image (Parity (Info)));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E3GA_Utilities.Print_Multivector_Info.");
