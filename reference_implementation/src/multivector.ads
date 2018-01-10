@@ -14,6 +14,7 @@ package Multivector is
    type Blade_List is new Blade_List_Package.List with null record;
 
    type Multivector is private;
+   type Scalar is new Float;
 
    MV_Exception : Exception;
 
@@ -41,6 +42,8 @@ package Multivector is
    function Largest_Grade_Part (MV : Multivector) return Multivector;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
+   function Norm_E (MV : Multivector) return Scalar;
+   function Norm_E2 (MV : Multivector) return Scalar;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;

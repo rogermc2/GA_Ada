@@ -431,6 +431,32 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Norm_E (MV : Multivector) return Scalar is
+      use GA_Maths.Float_Functions;
+      S : Float := Scalar_Product (MV, Reverse_MV (MV));
+   begin
+      if S < 0.0 then
+         return 0.0;
+      else
+         return Scalar (Sqrt (S));
+      end if;
+   end Norm_E;
+
+   --  -------------------------------------------------------------------------
+
+   function Norm_E2 (MV : Multivector) return Scalar is
+      use GA_Maths.Float_Functions;
+      S : Float := Scalar_Product (MV, Reverse_MV (MV));
+   begin
+      if S < 0.0 then
+         return 0.0;
+      else
+         return Scalar (S);
+      end if;
+   end Norm_E2;
+
+   --  -------------------------------------------------------------------------
+
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
