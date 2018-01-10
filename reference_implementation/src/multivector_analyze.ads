@@ -59,7 +59,7 @@ package Multivector_Analyze is
    end record;
 
    type Point_Array is array (1 .. Number_Of_Points) of E3GA.Vector;
-   type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
+   type Scalar_Array is array (1 .. Number_Of_Scalars) of Multivector.Scalar;
    type Vector_Array is array (1 .. Number_Of_Vectors) of E3GA.Vector;
 
    type MV_Analysis is record
