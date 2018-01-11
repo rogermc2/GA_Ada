@@ -62,7 +62,7 @@ package E2GA is
 --     function "+" (MV1, MV2 : Multivector) return Multivector;
 --     function "-" (MV1, MV2 : Multivector) return Multivector;
 
-   function Bivector_String (BV : E2GA.Bivector; Text : String := "") return String;
+   function Bivector_String (BV : E2GA.Bivector) return String;
 --     function Dot_Product (V1, V2 : Vector) return float;
    function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dual (MV : Multivector) return Multivector;
