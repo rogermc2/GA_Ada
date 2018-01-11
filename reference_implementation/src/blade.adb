@@ -193,10 +193,10 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function To_String (aBlade : Basis_Blade; BV_Names : GA_Base_Types.Basis_Vector_Names)
+   function To_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                        return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
-      use GA_Base_Types.Names_Package;
+      use Names_Package;
       BM        : Unsigned_Integer := aBlade.Bitmap;
       Index     : Natural := 1;
       Scale     : Unbounded_String := To_Unbounded_String (Float'Image (Weight (aBlade)));

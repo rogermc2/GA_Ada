@@ -615,7 +615,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function To_String (MV : Multivector; BV_Names : GA_Base_Types.Basis_Vector_Names)
+   function To_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                        return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade_List_Package;

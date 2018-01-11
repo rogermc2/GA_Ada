@@ -6,7 +6,6 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
 with Blade;
-with GA_Base_Types;
 with GA_Maths;
 
 package Multivector is
@@ -52,7 +51,7 @@ package Multivector is
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Size (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
-   function To_String (MV : Multivector; BV_Names : GA_Base_Types.Basis_Vector_Names)
+   function To_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                        return Ada.Strings.Unbounded.Unbounded_String;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
