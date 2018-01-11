@@ -46,13 +46,13 @@ package body Multivector is
       Blades_2  : constant Blade_List := MV2.Blades;
       Curs_1    : Cursor := Blades_1.First;
       Curs_2    : Cursor := Blades_2.First;
-      Blade_1    : Blade.Basis_Blade;
-      Blade_2    : Blade.Basis_Blade;
+      Blade_1   : Blade.Basis_Blade;
+      Blade_2   : Blade.Basis_Blade;
       Sum       : Float := 0.0;
-      MV3        : Multivector := MV1;
-      Blades_3  : constant Blade_List := MV3.Blades;
+      Blades_3  : Blade_List := MV1.Blades;
       Curs_3    : Cursor := Blades_3.First;
       Blade_3   : Blade.Basis_Blade;
+      MV3       : Multivector := MV1;
    begin
       while Has_Element (Curs_1) and Has_Element (Curs_2) loop
          Blade_1 := Element (Curs_1);
@@ -60,11 +60,12 @@ package body Multivector is
          Blade_3 := Element (Curs_3);
          Sum := Weight (Blade_1) + Weight (Blade_2);
          Blade.Update_Blade (Blade_3, Sum);
-         MV3.Blades.Replace_Element (Curs_3, Blade_3);
+         Blades_3.Replace_Element (Curs_3, Blade_3);
          Next (Curs_1);
          Next (Curs_2);
          Next (Curs_3);
       end loop;
+      MV3.Blades := Blades_3;
       return MV3;
 
    exception

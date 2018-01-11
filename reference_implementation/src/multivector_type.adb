@@ -17,7 +17,6 @@ package body Multivector_Type is
       Grade_Inv  : Multivector.Multivector;
    begin
       Rec.Grade_Use := Grade_Use (MV);
---        Put_Line ("Init Grade_Use" & Unsigned_Integer'Image (Grade_Use (MV)));
       Rec.Top_Grade := Top_Grade_Index (MV);
       while GU_Bitmap /= 0 loop
          if (GU_Bitmap and 1) /= 0 then
@@ -104,7 +103,6 @@ package body Multivector_Type is
       Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
       Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
 
-     Put_Line ("Leaving Multivector_Type.Print_Multivector_Info.");
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
