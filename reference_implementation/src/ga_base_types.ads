@@ -1,5 +1,12 @@
 
+with Ada.Containers.Vectors;
+with Ada.Strings.Unbounded;
+
 package GA_Base_Types is
+   use Ada.Strings.Unbounded;
+   package Names_Package is new
+     Ada.Containers.Vectors (Natural, Unbounded_String);
+   type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type E1_T is private;
    type E2_T is private;
