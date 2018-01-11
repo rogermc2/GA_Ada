@@ -823,8 +823,7 @@ package body E2GA is
 
    procedure Set_Coords (V : out Vector; C1, C2 : float) is
    begin
-      Multivector.Add_Blade (V, Blade.New_Basis_Blade (Blade.E2_e1, C1));
-      Multivector.Add_Blade (V, Blade.New_Basis_Blade (Blade.E2_e2, C2));
+      V := New_Vector (C1, C2);
    end Set_Coords;
 
    --  ------------------------------------------------------------------------
