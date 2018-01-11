@@ -6,20 +6,12 @@ with Maths;
 
 package body Multivector is
 
-   --  setup conformal algebra:
---     Basis_Vector_Names : constant Array (1 .. 5) of String (1 .. 2) :=
---       ("no", "e1", "e2", "e3", "ni");
-   no_bv   : Multivector := Get_Basis_Vector (Blade.C3_no);
-   e1_bv   : Multivector := Get_Basis_Vector (Blade.C3_e1);
-   e2_bv   : Multivector := Get_Basis_Vector (Blade.C3_e2);
-   e3_bv   : Multivector := Get_Basis_Vector (Blade.C3_e3);
-   ni_bv   : Multivector := Get_Basis_Vector (Blade.C3_ni);
-   Basis : array (1 .. 5, 1 ..5) of float :=
-     ((0.0, 0.0, 0.0, 0.0, -1.0),
-      (0.0, 1.0, 0.0, 0.0, 0.0),
-      (0.0, 0.0, 1.0, 0.0, 0.0),
-      (0.0, 0.0, 0.0 ,1.0, 0.0),
-      (-1.0, 0.0, 0.0 , 0.0, 0.0));
+--     Basis : array (1 .. 5, 1 ..5) of float :=
+--       ((0.0, 0.0, 0.0, 0.0, -1.0),
+--        (0.0, 1.0, 0.0, 0.0, 0.0),
+--        (0.0, 0.0, 1.0, 0.0, 0.0),
+--        (0.0, 0.0, 0.0 ,1.0, 0.0),
+--        (-1.0, 0.0, 0.0 , 0.0, 0.0));
 
    C3_Blade_List         : Blade_List;
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
@@ -694,8 +686,10 @@ package body Multivector is
          raise;
    end Versor_Inverse;
 
-   --  -------------------------------------------------------------------------
+--  -------------------------------------------------------------------------
+
 begin
+   --  setup conformal algebra:
    C3_Blade_List.Append (New_Basis_Blade (C3_no));
    C3_Blade_List.Append (New_Basis_Blade (C3_e1));
    C3_Blade_List.Append (New_Basis_Blade (C3_e2));
