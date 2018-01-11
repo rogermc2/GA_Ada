@@ -71,7 +71,9 @@ begin
    MV_Info := Multivector_Type.Init (MV1);
    Multivector_Type.Print_Multivector_Info ("MV = e1", MV_Info);
 
+  Put_Line ("test mv setting MV1p2");
    MV1p2 := e1_bv + e2_bv;
+  Put_Line ("test mv has set MV1p2");
    C3GA_Utilities.Print_Multivector ("e1 + e2", MV1p2);
    MV_Info := Multivector_Type.Init (MV1p2);
    Multivector_Type.Print_Multivector_Info ("e1 + e2", MV_Info);
@@ -94,4 +96,10 @@ begin
    C3GA_Utilities.Print_Multivector ("e1 + ((e2 ^ e3) ^ e1", Add_1_Op23_1);
    MV_Info := Multivector_Type.Init (Add_1_Op23_1);
    Multivector_Type.Print_Multivector_Info ("e1 + ((e2 ^ e3) ^ e1", MV_Info);
-end Test_Mv;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Test_MV.");
+      raise;
+
+end Test_MV;

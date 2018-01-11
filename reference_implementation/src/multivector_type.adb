@@ -55,6 +55,12 @@ package body Multivector_Type is
       end if;
 
       return Rec;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Type.Init.");
+         raise;
+
    end Init;
 
    --  -------------------------------------------------------------------------
@@ -97,6 +103,12 @@ package body Multivector_Type is
       Put_Line ("Top Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
       Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
       Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+
+     Put_Line ("Leaving Multivector_Type.Print_Multivector_Info.");
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
+         raise;
 
    end Print_Multivector_Info;
 

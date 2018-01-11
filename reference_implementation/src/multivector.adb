@@ -43,29 +43,34 @@ package body Multivector is
    function "+" (MV1, MV2 : Multivector) return Multivector is
       use Blade_List_Package;
       Blades_1  : constant Blade_List := MV1.Blades;
-      Blades_2  : constant Blade_List := MV1.Blades;
+      Blades_2  : constant Blade_List := MV2.Blades;
       Blade_1    : Blade.Basis_Blade;
       Blade_2    : Blade.Basis_Blade;
       Curs_1    : Cursor := Blades_1.First;
       Curs_2    : Cursor := Blades_2.First;
       Sum       : Float := 0.0;
-      MV        : Multivector := MV1;
-      Blades_3  : constant Blade_List := MV1.Blades;
+      MV3        : Multivector := MV1;
+      Blades_3  : constant Blade_List := MV3.Blades;
       Blade_3   : Blade.Basis_Blade;
-      Curs_3    : Cursor := Blades_2.First;
+      Curs_3    : Cursor := Blades_3.First;
    begin
-      while Has_Element (Curs_1) loop
+      while Has_Element (Curs_1) and Has_Element (Curs_2) loop
          Blade_1 := Element (Curs_1);
          Blade_2 := Element (Curs_2);
          Blade_3 := Element (Curs_3);
          Sum := Weight (Blade_1) + Weight (Blade_2);
          Blade.Update_Blade (Blade_3, Sum);
-         MV.Blades.Replace_Element (Curs_3, Blade_3);
+         MV3.Blades.Replace_Element (Curs_3, Blade_3);
          Next (Curs_1);
          Next (Curs_2);
          Next (Curs_3);
       end loop;
-      return MV;
+      return MV3;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.+");
+      raise;
    end "+";
 
    --  -------------------------------------------------------------------------
@@ -90,6 +95,12 @@ package body Multivector is
          Next (Curs_2);
       end loop;
       return MV_Neg;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.-");
+      raise;
+
    end "-";
 
    --  -------------------------------------------------------------------------
@@ -98,6 +109,11 @@ package body Multivector is
       MV        : Multivector := -MV2;
    begin
       return MV1 + MV;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.- 2");
+      raise;
    end "-";
 
    --  -------------------------------------------------------------------------
