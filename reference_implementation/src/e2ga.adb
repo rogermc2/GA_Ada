@@ -37,7 +37,8 @@ package body E2GA is
    --  Use it to answer: 'what basis element do I find at index [x]'?
    MV_Basis_Element_Bit_Map_By_Index : constant GA_Maths.Array_I4 := (0, 1, 2, 3);
    MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
-   MV_Basis_Vector_Names             : constant array (1 .. 2) of string (1 .. 2) := ("e1", "e2");
+--     MV_Basis_Vector_Names             : constant array (1 .. 2) of string (1 .. 2) := ("e1", "e2");
+   MV_Basis_Vector_Names             : Blade.Basis_Vector_Names;
 
 --     e1_basis : Vector_Coords := (1.0, 0.0);
 --     e2_basis : Vector_Coords := (0.0, 1.0);
@@ -123,10 +124,11 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Bivector_String (BV : Bivector; Text : String := "") return String is
+      use Ada.Strings.Unbounded;
       MV : Multivector.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);
    begin
-      return Multivector_String (MV, Text);
+      return To_String (Multivector.To_String (MV, MV_Basis_Vector_Names));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -566,84 +568,84 @@ package body E2GA is
    --  int maxLength, const char *fp /* = NULL */)
    --  goal: print [+|-] MV.Coord (k) (* Basis_Vector_1 ^ ... ^ Basis_Vector_N)
    --  theString := theString & float'Image (Abs (Coordinate));
-   function Multivector_String (MV : Multivector.Multivector;
-                                Text : String := "") return String is
-      use Interfaces;
-      use Ada.Strings.Unbounded;
-      use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (MV);
-      Curs   : Multivector.Blade_List_Package.Cursor := Blades.First;
-      aBlade : Blade.Basis_Blade;
-
-      String_Start     : Unbounded_String := To_Unbounded_String ("");
-      String_End       : Unbounded_String := To_Unbounded_String ("");
-      Value            : float_3;
-      theString        : Unbounded_String := String_Start;
-      Basis_Index      : Integer range 1 .. 4 := 1;  --  ia
-      Coord_Index      : Integer := 1;  --  k
-      Basis_Elem_Index : Integer;       --  bei
-      Name_Index       : Integer range 1 .. 2;
-      Coordinate       : float;
-   begin
-      theString := theString & Text;
-      --  Print all coordinates (x, y, z)
-      --  Loop on coordinate  i
-      --    Loop on grade     j
-      --      Loop on  number of coordinates in the grade part
-      --        Print sign and coordinate value
-      --        Loop on basis symbols
-      --          Print symbol
-      --          If not last symbol print ^
-      --        for Coord_Index in 1 .. 3 loop
-      for Grade in GA_Maths.Grade_Index'Range loop
-         if  Unsigned_32 (Multivector.Grade_Use (MV)) /=
-           Shift_Left (Unsigned_32 (Grade), 1) then
-            if Basis_Index - MV_Grade_Size (Grade) + 1 > 0 then
-               Basis_Index := Basis_Index + MV_Grade_Size (Grade);
-            end if;
-         else
-            --  int mv_gradeSize[3] = {1, 2, 1 };
-            --  Vector grade size is 2?
-            --  Loop on grade
-            for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
-               Coord_Index := Basis_Index;
-               aBlade := Element (Curs);
-               Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
-               Abs (Blade.Weight (aBlade));
---                 Abs (MV.Coordinates (Coord_Index));
-               Value := float_3 (Coordinate);
-               theString := theString & float_3'Image (Value);
-               if Grade /= 1 then  --  Not grade 0
-                  --  print [* basisVector1 ^ ... ^ basisVectorN]
-                  theString := theString & " ";
-                  --  Loop on the basis vector symbols
-                  --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
-                  --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
-
-                  Basis_Elem_Index := 1;  --  bei
-                  while MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) >= 0 loop
-                     if Basis_Elem_Index /= 1 then
-                        theString := theString & "^";
-                     end if;
-                     Name_Index := MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) + 1;
-                     theString := theString & MV_Basis_Vector_Names (Name_Index);
-                     Basis_Elem_Index := Basis_Elem_Index + 1;
-                  end loop;  --  MV_Basis_Elements
-               end if;  --  Grade
-               Next (Curs);
-            end loop;  --  Grade_Index
-         end if;  --  MV.Grade_Use
-         if Grade >= 2 then
-            Coord_Index := Coord_Index + 1;
-         end if;
-      end loop;   --  Grade
-
-      return To_String (theString & String_End);
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA.Multivector_String.");
-         raise;
-   end Multivector_String;
+--     function Multivector_String (MV : Multivector.Multivector;
+--                                  Text : String := "") return String is
+--        use Interfaces;
+--        use Ada.Strings.Unbounded;
+--        use Multivector.Blade_List_Package;
+--        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (MV);
+--        Curs   : Multivector.Blade_List_Package.Cursor := Blades.First;
+--        aBlade : Blade.Basis_Blade;
+--
+--        String_Start     : Unbounded_String := To_Unbounded_String ("");
+--        String_End       : Unbounded_String := To_Unbounded_String ("");
+--        Value            : float_3;
+--        theString        : Unbounded_String := String_Start;
+--        Basis_Index      : Integer range 1 .. 4 := 1;  --  ia
+--        Coord_Index      : Integer := 1;  --  k
+--        Basis_Elem_Index : Integer;       --  bei
+--        Name_Index       : Integer range 1 .. 2;
+--        Coordinate       : float;
+--     begin
+--        theString := theString & Text;
+--        --  Print all coordinates (x, y, z)
+--        --  Loop on coordinate  i
+--        --    Loop on grade     j
+--        --      Loop on  number of coordinates in the grade part
+--        --        Print sign and coordinate value
+--        --        Loop on basis symbols
+--        --          Print symbol
+--        --          If not last symbol print ^
+--        --        for Coord_Index in 1 .. 3 loop
+--        for Grade in GA_Maths.Grade_Index'Range loop
+--           if  Unsigned_32 (Multivector.Grade_Use (MV)) /=
+--             Shift_Left (Unsigned_32 (Grade), 1) then
+--              if Basis_Index - MV_Grade_Size (Grade) + 1 > 0 then
+--                 Basis_Index := Basis_Index + MV_Grade_Size (Grade);
+--              end if;
+--           else
+--              --  int mv_gradeSize[3] = {1, 2, 1 };
+--              --  Vector grade size is 2?
+--              --  Loop on grade
+--              for Grade_Index in Integer range 1 .. MV_Grade_Size (Grade) loop  --  j
+--                 Coord_Index := Basis_Index;
+--                 aBlade := Element (Curs);
+--                 Coordinate := MV_Basis_Element_Sign_By_Index (Basis_Index) *
+--                 Abs (Blade.Weight (aBlade));
+--  --                 Abs (MV.Coordinates (Coord_Index));
+--                 Value := float_3 (Coordinate);
+--                 theString := theString & float_3'Image (Value);
+--                 if Grade /= 1 then  --  Not grade 0
+--                    --  print [* basisVector1 ^ ... ^ basisVectorN]
+--                    theString := theString & " ";
+--                    --  Loop on the basis vector symbols
+--                    --  MV_Basis_Elements : array (1 .. 4, 1 .. 3) of integer :=
+--                    --        ((-1, 0, 0), (0, -1, 0), (1, -1, 0), (0, 1, -1));
+--
+--                    Basis_Elem_Index := 1;  --  bei
+--                    while MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) >= 0 loop
+--                       if Basis_Elem_Index /= 1 then
+--                          theString := theString & "^";
+--                       end if;
+--                       Name_Index := MV_Basis_Elements (Basis_Index - 1, Basis_Elem_Index) + 1;
+--                       theString := theString & MV_Basis_Vector_Names (Name_Index);
+--                       Basis_Elem_Index := Basis_Elem_Index + 1;
+--                    end loop;  --  MV_Basis_Elements
+--                 end if;  --  Grade
+--                 Next (Curs);
+--              end loop;  --  Grade_Index
+--           end if;  --  MV.Grade_Use
+--           if Grade >= 2 then
+--              Coord_Index := Coord_Index + 1;
+--           end if;
+--        end loop;   --  Grade
+--
+--        return To_String (theString & String_End);
+--     exception
+--        when anError :  others =>
+--           Put_Line ("An exception occurred in E2GA.Multivector_String.");
+--           raise;
+--     end Multivector_String;
 
    --  -------------------------------------------------------------------------
 
@@ -929,5 +931,8 @@ package body E2GA is
    end Unit_E;
 
    --  -------------------------------------------------------------------------
+begin
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
 
 end E2GA;

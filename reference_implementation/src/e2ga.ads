@@ -1,11 +1,15 @@
 
 with Ada.Strings.Unbounded;
 
+with Blade;
 with GA_Maths;
 with Multivector;
 with Multivector_Type_Base;
 
 package E2GA is
+   use Blade.Names_Package;
+   e1_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.C3_e1);
+   e2_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.C3_e2);
 
    subtype Rotor_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
    subtype Vector_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
@@ -83,8 +87,8 @@ package E2GA is
 --     function Largest_Basis_Blade (Map : Bit_Map) return float;
    function Largest_Coordinate return float;
 --     function Magnitude (V : Vector) return float;
-   function Multivector_String (MV : Multivector.Multivector;
-                                Text : String := "") return String;
+--     function Multivector_String (MV : Multivector.Multivector;
+--                                  Text : String := "") return String;
 --     function Norm_E (MV : Multivector) return Scalar;
 --     function Norm_E2 (MV : E2GA.Multivector) return Scalar;
    function New_Bivector (V1, V2 : Vector) return Bivector;
