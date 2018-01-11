@@ -128,7 +128,7 @@ package body E2GA is
       MV : Multivector.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);
    begin
-      return To_String (Multivector.To_String (MV, MV_Basis_Vector_Names));
+      return To_String (Multivector.Multivector_String (MV, MV_Basis_Vector_Names));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");

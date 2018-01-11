@@ -607,7 +607,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function To_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
+   function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                        return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade_List_Package;
@@ -638,7 +638,7 @@ package body Multivector is
       end loop;
 
       return theString;
-   end To_String;
+   end Multivector_String;
 
    --  -------------------------------------------------------------------------
 
