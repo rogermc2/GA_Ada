@@ -1,0 +1,84 @@
+with "../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
+
+project Mv_Test is
+
+   type Glfw_Version_Type is
+      ("2", "3");
+
+   -- Different operating systems need different linker
+   -- flags. Moreover, some features (such as WGL, GLX,
+   -- CGL) are only available on one specific platform.
+   -- Supported values:
+   --  * windows : Microsoft Windows
+   --  * x11     : X Window System
+   --  * quartz  : Quartz Compositor (OS X)
+   type Windowing_System_Type is
+      ("windows", "x11", "quartz");
+   type Toggle_Type is
+      ("enabled", "disabled");
+   type Library_Kinds is
+      ("static", "relocatable");
+   type Mode_Type is
+      ("debug", "release");
+   type Build_Kind is
+      ("default");
+   for Object_Dir use "obj";
+   for Main use ("test_mv.adb");
+   STRINGS_EDIT_BUILD : Build_Kind := external ("STRINGS_EDIT_BUILD");
+   Mode : Mode_Type := external ("Mode");
+   Library_Type : Library_Kinds := external ("Library_Type");
+   Auto_Exceptions : Toggle_Type := external ("Auto_Exceptions");
+   Windowing_System : Windowing_System_Type := external ("Windowing_System");
+   GLFW_Version : Glfw_Version_Type := external ("GLFW_Version");
+
+   case STRINGS_EDIT_BUILD is
+
+      when "default" =>
+
+         case Mode is
+
+            when "debug" =>
+               for Source_Dirs use ("src");
+
+            when "release" =>
+
+               case Library_Type is
+
+                  when "static" =>
+
+                     case Auto_Exceptions is
+
+                        when "enabled" =>
+
+                           case Windowing_System is
+
+                              when "windows" =>
+                                 for Source_Dirs use ("src");
+
+                              when "x11" =>
+                                 for Source_Dirs use ("src");
+
+                              when "quartz" =>
+
+                                 case GLFW_Version is
+
+                                    when "2" =>
+                                       for Source_Dirs use ("src");
+
+                                    when "3" =>
+                                       for Source_Dirs use ("reference_implementation/src", "test/src");
+                                 end case;
+                           end case;
+
+                        when "disabled" =>
+                           for Source_Dirs use ("src");
+                     end case;
+
+                  when "relocatable" =>
+                     for Source_Dirs use ("src");
+               end case;
+         end case;
+   end case;
+
+end Mv_Test;
+
