@@ -10,6 +10,40 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
+                          return Ada.Strings.Unbounded.Unbounded_String is
+      use Ada.Strings.Unbounded;
+      use Names_Package;
+      BM        : Unsigned_Integer := aBlade.Bitmap;
+      Index     : Natural := 1;
+      Scale     : Unbounded_String := To_Unbounded_String (Float'Image (Weight (aBlade)));
+      theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
+   begin
+      while BM /= 0 loop
+         if (BM and 1) /= 0 then
+            if Length (theString) > 0 then
+               theString := theString & "^";
+            end if;
+            if Is_Empty (Vector (BV_Names)) or
+              (Index > Natural (Length (Vector (BV_Names))) or
+              (Index - 1) < 1) then
+               theString := theString & "e" & Natural'Image (Index);
+            else
+               theString := theString & "^";
+            end if;
+         end if;
+         BM := BM / 2;  --  BM >>= 1;
+         Index := Index + 1;
+      end loop;
+
+      if Length (theString) > 0 then
+         theString := Scale & " * " & theString;
+      end if;
+      return theString;
+   end Blade_String;
+
+   --  -------------------------------------------------------------------------
+
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer is
    begin
       return BB.Bitmap;
@@ -192,40 +226,6 @@ package body Blade is
    end Reverse_Blade;
 
    --  ------------------------------------------------------------------------
-
-   function To_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                       return Ada.Strings.Unbounded.Unbounded_String is
-      use Ada.Strings.Unbounded;
-      use Names_Package;
-      BM        : Unsigned_Integer := aBlade.Bitmap;
-      Index     : Natural := 1;
-      Scale     : Unbounded_String := To_Unbounded_String (Float'Image (Weight (aBlade)));
-      theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
-   begin
-      while BM /= 0 loop
-         if (BM and 1) /= 0 then
-            if Length (theString) > 0 then
-               theString := theString & "^";
-            end if;
-            if Is_Empty (Vector (BV_Names)) or
-              (Index > Natural (Length (Vector (BV_Names))) or
-              (Index - 1) < 1) then
-               theString := theString & "e" & Natural'Image (Index);
-            else
-               theString := theString & "^";
-            end if;
-         end if;
-         BM := BM / 2;  --  BM >>= 1;
-         Index := Index + 1;
-      end loop;
-
-      if Length (theString) > 0 then
-         theString := Scale & " * " & theString;
-      end if;
-      return theString;
-   end To_String;
-
-   --  -------------------------------------------------------------------------
 
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
    begin

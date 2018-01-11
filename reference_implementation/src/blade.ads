@@ -23,6 +23,8 @@ package Blade is
                              Modified_Hestenes_Inner_Product);
 
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
+   function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
+                          return Ada.Strings.Unbounded.Unbounded_String;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
@@ -41,8 +43,6 @@ package Blade is
 
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
-   function To_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                       return Ada.Strings.Unbounded.Unbounded_String;
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;

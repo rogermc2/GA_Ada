@@ -619,7 +619,7 @@ package body Multivector is
    begin
       while Has_Element (Blade_Cursor) loop
          ThisBlade := Element (Blade_Cursor);
-         Blade_US := Blade.To_String (ThisBlade, BV_Names);
+         Blade_US := Blade.Blade_String (ThisBlade, BV_Names);
          declare
             Blade_String : String := To_String (Blade_US);
          begin
