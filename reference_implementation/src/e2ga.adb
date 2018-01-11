@@ -123,7 +123,8 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Bivector_String (BV : Bivector; Text : String := "") return String is
+--     function Bivector_String (BV : Bivector; Text : String := "") return String is
+   function Bivector_String (BV : Bivector) return String is
       use Ada.Strings.Unbounded;
       MV : Multivector.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);

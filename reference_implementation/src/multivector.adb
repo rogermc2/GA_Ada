@@ -443,25 +443,34 @@ package body Multivector is
       while Has_Element (Blade_Cursor) loop
          ThisBlade := Element (Blade_Cursor);
          Blade_US := Blade.Blade_String (ThisBlade, BV_Names);
-         declare
-            Blade_String : String := To_String (Blade_US);
-         begin
-            Put_Line ("Multivector_String Blade_String" & Blade_String);
-            if Blade_Cursor = Blades.First then
-               theString := To_Unbounded_String (Blade_String);
-            else
-               if Blade_String (1) = '-' then
-                  theString := theString & " - ";
+         if Length (Blade_US) > 0 then
+            declare
+               Blade_String : String := To_String (Blade_US);
+            begin
+               Put_Line ("Multivector_String Blade_String: " & Blade_String);
+               New_Line;
+               if Blade_Cursor = Blades.First then
+                  theString := To_Unbounded_String (Blade_String);
                else
-                  theString := theString & " + ";
+                  if Blade_String (1) = '-' then
+                     theString := theString & " - ";
+                  else
+                     theString := theString & " + ";
+                  end if;
+                  theString := theString & Blade_String (2 .. Blade_String'Length);
                end if;
-               theString := theString & Blade_String (2 .. Blade_String'Length);
-            end if;
-         end;
+            end;
+         end if;
          Next (Blade_Cursor);
       end loop;
 
       return theString;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Multivector_String.");
+         Put_Line (Exception_Information (anError));
+         raise;
    end Multivector_String;
 
    --  -------------------------------------------------------------------------
