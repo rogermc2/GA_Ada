@@ -29,11 +29,13 @@ procedure Test_Mv is
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
+   Put_Line ("Test_MV starting");
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
+   Put_Line ("Test_MV BV_Names loaded");
 
 --     MV_Info := Multivector_Type.Init (MV);
 --     C3GA_Utilities.Print_Multivector ("New", MV);
@@ -64,6 +66,7 @@ begin
 --     Multivector_Type.Print_Multivector_Info ("ni", MV_Info);
 --
    MV1 := e1_bv;
+   Put_Line ("Test_MV calling Print_Multivector");
    C3GA_Utilities.Print_Multivector ("MV = e1", MV1);
    MV_Info := Multivector_Type.Init (MV1);
    Multivector_Type.Print_Multivector_Info ("MV = e1", MV_Info);
