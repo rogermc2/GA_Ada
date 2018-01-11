@@ -1,5 +1,4 @@
 
-
 package GA_Base_Types is
 
    type E1_T is private;
