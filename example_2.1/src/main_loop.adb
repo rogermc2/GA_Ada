@@ -133,10 +133,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       GA_Draw.Set_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
-      Set_Coords (V1, E11, E12);
+      V1 := New_Vector (E11, E12);
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
-         Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
+         V2 := New_Vector (Cos (A) * E11 - Sin (A) * E21,
                      Cos (A) * E21 - Sin (A) * E22);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
@@ -145,7 +145,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          V2, Green, Scale);
 
          BV := Multivector.Outer_Product (V1, V2);
---           BV := E2GA.Outer_Product (V1, V2);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
@@ -166,6 +165,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
+         E3GA_Utilities.Print_Multivector ("BV", BV);
          Put_Line ("Display bivector label: " & E2GA.Bivector_String (BV));
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
                                  (E2GA.Bivector_String

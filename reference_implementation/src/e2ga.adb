@@ -660,15 +660,14 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function New_Vector (e1, e2 : Float) return Vector is
-      use Multivector.Blade_List_Package;
       use Blade;
       V       : Vector;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V);
-      aBlade  : Basis_Blade := New_Basis_Blade (E2_e1);
+      aBlade  : Basis_Blade := New_Basis_Blade (E2_e1, e1);
    begin
-      Blades.Append (aBlade);
-      aBlade :=  New_Basis_Blade (E2_e2);
-      Blades.Append (aBlade);
+      Multivector.Add_Blade (V, aBlade);
+      aBlade :=  New_Basis_Blade (E2_e2, e2);
+      Multivector.Add_Blade (V, aBlade);
       return V;
    end New_Vector;
 
