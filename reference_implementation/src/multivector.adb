@@ -7,8 +7,13 @@ with Maths;
 package body Multivector is
 
    --  setup conformal algebra:
-   Basis_Vector_Names : constant Array (1 .. 5) of String (1 .. 2) :=
-     ("no", "e1", "e2", "e3", "ni");
+--     Basis_Vector_Names : constant Array (1 .. 5) of String (1 .. 2) :=
+--       ("no", "e1", "e2", "e3", "ni");
+   no_bv   : Multivector := Get_Basis_Vector (Blade.C3_no);
+   e1_bv   : Multivector := Get_Basis_Vector (Blade.C3_e1);
+   e2_bv   : Multivector := Get_Basis_Vector (Blade.C3_e2);
+   e3_bv   : Multivector := Get_Basis_Vector (Blade.C3_e3);
+   ni_bv   : Multivector := Get_Basis_Vector (Blade.C3_ni);
    Basis : array (1 .. 5, 1 ..5) of float :=
      ((0.0, 0.0, 0.0, 0.0, -1.0),
       (0.0, 1.0, 0.0, 0.0, 0.0),
@@ -16,13 +21,8 @@ package body Multivector is
       (0.0, 0.0, 0.0 ,1.0, 0.0),
       (-1.0, 0.0, 0.0 , 0.0, 0.0));
 
-   C3_Blade_List : Blade_List;
-
---     no_bv : Multivector := Get_Basis_Vector (no);
---     e1_bv : Multivector := Get_Basis_Vector (e1);
---     e2_bv : Multivector := Get_Basis_Vector (e2);
---     e3_bv : Multivector := Get_Basis_Vector (e3);
---     ni_bv : Multivector := Get_Basis_Vector (ni);
+   C3_Blade_List         : Blade_List;
+   MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
 
    procedure Simplify (Blades : in out Blade_List);
    procedure Simplify (MV : in out Multivector);
@@ -701,5 +701,11 @@ begin
    C3_Blade_List.Append (New_Basis_Blade (C3_e2));
    C3_Blade_List.Append (New_Basis_Blade (C3_e3));
    C3_Blade_List.Append (New_Basis_Blade (C3_ni));
+
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
+   MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
 end Multivector;

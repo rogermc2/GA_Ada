@@ -931,6 +931,7 @@ package body E2GA is
    end Unit_E;
 
    --  -------------------------------------------------------------------------
+
 begin
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
