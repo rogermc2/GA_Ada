@@ -67,21 +67,33 @@ begin
    C3GA_Utilities.Print_Multivector ("MV = e1", MV1);
    MV_Info := Multivector_Type.Init (MV1);
    Multivector_Type.Print_Multivector_Info ("MV = e1", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1, BV_Names)));
 
    MV1p2 := e1_bv + e2_bv;
    C3GA_Utilities.Print_Multivector ("e1 + e2", MV1p2);
    MV_Info := Multivector_Type.Init (MV1p2);
    Multivector_Type.Print_Multivector_Info ("e1 + e2", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1p2, BV_Names)));
 
    MV12 := Outer_Product (e1_bv, e2_bv);
    C3GA_Utilities.Print_Multivector ("e1 ^ e2", MV12);
    MV_Info := Multivector_Type.Init (MV12);
    Multivector_Type.Print_Multivector_Info ("e1 ^ e2", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV12, BV_Names)));
 
    MV13 := Outer_Product (e1_bv, e3_bv);
    C3GA_Utilities.Print_Multivector ("e1 ^ e3", MV13);
    MV_Info := Multivector_Type.Init (MV12);
    Multivector_Type.Print_Multivector_Info ("e1 ^ e3", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV13, BV_Names)));
 
    --  Multivector A = e1.add(e2.op(e3).op(e1));
    --                = e1 + (e2^e3)^e1)
@@ -91,6 +103,9 @@ begin
    C3GA_Utilities.Print_Multivector ("e1 + ((e2 ^ e3) ^ e1", Add_1_Op23_1);
    MV_Info := Multivector_Type.Init (Add_1_Op23_1);
    Multivector_Type.Print_Multivector_Info ("e1 + ((e2 ^ e3) ^ e1", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (Add_1_Op23_1, BV_Names)));
 
    exception
       when anError :  others =>
