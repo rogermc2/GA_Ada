@@ -1,6 +1,9 @@
 
 with Interfaces;
 
+with Ada.Strings.Unbounded;
+
+with GA_Base_Types;
 with GA_Maths; use GA_Maths;
 
 package Blade is
@@ -33,6 +36,8 @@ package Blade is
 
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
+   function To_String (aBlade : Basis_Blade; BV_Names : GA_Base_Types.Basis_Vector_Names)
+                       return Ada.Strings.Unbounded.Unbounded_String;
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;

@@ -615,6 +615,41 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function To_String (MV : Multivector; BV_Names : GA_Base_Types.Basis_Vector_Names)
+                       return Ada.Strings.Unbounded.Unbounded_String is
+      use Ada.Strings.Unbounded;
+      use Blade_List_Package;
+      Blades       : Blade_List := MV.Blades;
+      Blade_Cursor : Cursor := Blades.First;
+      ThisBlade    : Blade.Basis_Blade;
+      Blade_US     : Ada.Strings.Unbounded.Unbounded_String;
+      theString    : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
+   begin
+      while Has_Element (Blade_Cursor) loop
+         ThisBlade := Element (Blade_Cursor);
+         Blade_US := Blade.To_String (ThisBlade, BV_Names);
+         declare
+            Blade_String : String := To_String (Blade_US);
+         begin
+            if Blade_Cursor = Blades.First then
+               theString := To_Unbounded_String (Blade_String);
+            else
+               if Blade_String (1) = '-' then
+                  theString := theString & " - ";
+               else
+                  theString := theString & " + ";
+               end if;
+               theString := theString & Blade_String (2 .. Blade_String'Length);
+            end if;
+         end;
+         Next (Blade_Cursor);
+      end loop;
+
+      return theString;
+   end To_String;
+
+   --  -------------------------------------------------------------------------
+
    function Unit_E (MV : Multivector) return Multivector is
    begin
       return Unit_R (MV);
