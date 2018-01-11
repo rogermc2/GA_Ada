@@ -1,6 +1,8 @@
 
 with Interfaces;
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 package body Blade is
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
@@ -17,20 +19,29 @@ package body Blade is
       BM        : Unsigned_Integer := aBlade.Bitmap;
       Index     : Natural := 1;
       Scale     : Unbounded_String := To_Unbounded_String (Float'Image (Weight (aBlade)));
+      Name      : Unbounded_String;
+      Val       : Unbounded_String;
       theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
    begin
       while BM /= 0 loop
+         Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
          if (BM and 1) /= 0 then
             if Length (theString) > 0 then
                theString := theString & "^";
             end if;
+
             if Is_Empty (Vector (BV_Names)) or
               (Index > Natural (Length (Vector (BV_Names))) or
               (Index - 1) < 1) then
-               theString := theString & "e" & Natural'Image (Index);
+               theString := theString & "e";
+               Val := To_Unbounded_String (Natural'Image (Index));
+               Val := Trim (Val, Ada.Strings.Left);
+               theString := theString & Val;
             else
-               theString := theString & "^";
+               Name := Element (BV_Names, Index - 1);
+               theString := theString & Name;
             end if;
+            Put_Line ("Blade theString:  " & To_String (theString));
          end if;
          BM := BM / 2;  --  BM >>= 1;
          Index := Index + 1;
@@ -40,6 +51,11 @@ package body Blade is
          theString := Scale & " * " & theString;
       end if;
       return theString;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Blade_String.");
+         raise;
    end Blade_String;
 
    --  -------------------------------------------------------------------------
