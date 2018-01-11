@@ -166,6 +166,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
+         Put_Line ("Display bivector label: " & E2GA.Bivector_String (BV));
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
                                  (E2GA.Bivector_String
                                     (BV)), Label_Position);
