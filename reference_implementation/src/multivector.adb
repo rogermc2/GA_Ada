@@ -44,15 +44,15 @@ package body Multivector is
       use Blade_List_Package;
       Blades_1  : constant Blade_List := MV1.Blades;
       Blades_2  : constant Blade_List := MV2.Blades;
-      Blade_1    : Blade.Basis_Blade;
-      Blade_2    : Blade.Basis_Blade;
       Curs_1    : Cursor := Blades_1.First;
       Curs_2    : Cursor := Blades_2.First;
+      Blade_1    : Blade.Basis_Blade;
+      Blade_2    : Blade.Basis_Blade;
       Sum       : Float := 0.0;
       MV3        : Multivector := MV1;
       Blades_3  : constant Blade_List := MV3.Blades;
-      Blade_3   : Blade.Basis_Blade;
       Curs_3    : Cursor := Blades_3.First;
+      Blade_3   : Blade.Basis_Blade;
    begin
       while Has_Element (Curs_1) and Has_Element (Curs_2) loop
          Blade_1 := Element (Curs_1);
