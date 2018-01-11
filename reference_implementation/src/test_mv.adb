@@ -26,13 +26,15 @@ procedure Test_Mv is
    Op23         : Multivector.Multivector;
    Op23_1       : Multivector.Multivector;
    Add_1_Op23_1 : Multivector.Multivector;
-   MV_Info : Multivector_Type.MV_Type_Record;
+   MV_Info      : Multivector_Type.MV_Type_Record;
+
 begin
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
+
 --     MV_Info := Multivector_Type.Init (MV);
 --     C3GA_Utilities.Print_Multivector ("New", MV);
 --     Multivector_Type.Print_Multivector_Info ("Null MV", MV_Info);

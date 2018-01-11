@@ -44,6 +44,11 @@ package body C3GA_Utilities is
                    Float'Image (Blade.Weight (BB)));
          Next (Curs);
       end loop;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in C3GA_Utilities.Print_Multivector.");
+         raise;
    end Print_Multivector;
 
    --  -------------------------------------------------------------------------

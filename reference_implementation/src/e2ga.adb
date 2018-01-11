@@ -128,7 +128,8 @@ package body E2GA is
       MV : Multivector.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);
    begin
-      return To_String (Multivector.Multivector_String (MV, MV_Basis_Vector_Names));
+      return To_String (Multivector.Multivector_String
+                        (MV, MV_Basis_Vector_Names));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA.Bivector_String.");
@@ -148,13 +149,13 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector_Name (Index : GA_Maths.Basis_Index) return String is
-   begin
-      case Index is
-         when 1 => return "e1";
-         when 2 => return "e2";
-      end case;
-   end Basis_Vector_Name;
+--     function Basis_Vector_Name (Index : GA_Maths.Basis_Index) return String is
+--     begin
+--        case Index is
+--           when 1 => return "e1";
+--           when 2 => return "e2";
+--        end case;
+--     end Basis_Vector_Name;
 
    --  -------------------------------------------------------------------------
 
