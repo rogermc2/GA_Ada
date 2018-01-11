@@ -9,7 +9,7 @@ with GA_Maths;
 with Multivector; use Multivector;
 with Multivector_Type;
 
-procedure Test_Mv is
+procedure Test_MV is
    use Blade.Names_Package;
    no_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_no);
    e1_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_e1);
