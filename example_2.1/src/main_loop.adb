@@ -145,6 +145,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          V2, Green, Scale);
 
          BV := Multivector.Outer_Product (V1, V2);
+         E3GA_Utilities.Print_Multivector ("V1", V1);
+         E3GA_Utilities.Print_Multivector ("V2", V2);
+         E3GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,

@@ -438,15 +438,15 @@ package body Multivector is
       Blades       : Blade_List := MV.Blades;
       Blade_Cursor : Cursor := Blades.First;
       ThisBlade    : Blade.Basis_Blade;
-      Blade_US     : Ada.Strings.Unbounded.Unbounded_String;
+      Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
       theString    : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
    begin
       while Has_Element (Blade_Cursor) loop
          ThisBlade := Element (Blade_Cursor);
-         Blade_US := Blade.Blade_String (ThisBlade, BV_Names);
-         if Length (Blade_US) > 0 then
+         Blade_UBS := Blade.Blade_String (ThisBlade, BV_Names);
+         if Length (Blade_UBS) > 0 then
             declare
-               Blade_String : String := To_String (Blade_US);
+               Blade_String : String := To_String (Blade_UBS);
             begin
                Put_Line ("Multivector_String Blade_String: " & Blade_String);
                New_Line;

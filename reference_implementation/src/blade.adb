@@ -104,18 +104,19 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
-      New_Blade : Basis_Blade;
-      Sign      : Float;
+      OP_Blade : Basis_Blade;
+      Sign     : Float;
    begin
-      if Outer and ((BA.Bitmap and BB.Bitmap) /= 0) then
-         New_Blade.Weight := 0.0;
+      if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
+         OP_Blade.Weight := 0.0;
+         Put_Line ("Blade.GP_OP not independent?");
       else
-         New_Blade.Bitmap := BA.Bitmap or BB.Bitmap;
+         OP_Blade.Bitmap := BA.Bitmap or BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
-         New_Blade.Weight := Sign * BA.Weight * BB.Weight;
+         OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
       end if;
 
-      return New_Blade;
+      return OP_Blade;
    end GP_OP;
 
    --  ------------------------------------------------------------------------
