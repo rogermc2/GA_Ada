@@ -116,10 +116,11 @@ package body E3GA_Utilities is
       Put_Line (Name);
       Put_Line ("MV Size: " & Ada.Containers.Count_Type'Image (theBlades.Length));
       Put_Line ("Grade Use: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
-      Put_Line ("Multivector Coordinates:");
+      Put_Line ("Multivector Blades, Bitmap and Weight:");
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         Put_Line (float'Image (Blade.Weight (aBlade)));
+         Put_Line (GA_Maths.Unsigned_Integer'Image (Blade.Bitmap (aBlade)) &
+                   "  " & float'Image (Blade.Weight (aBlade)));
          Next (Curs);
       end loop;
    exception
