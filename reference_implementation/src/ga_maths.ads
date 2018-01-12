@@ -12,6 +12,8 @@ package GA_Maths is
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
 
+   type float_3 is digits 3;
+
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Scalar_Coords is Coords_Continuous_Array (1 .. 1);
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);

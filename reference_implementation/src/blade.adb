@@ -18,7 +18,7 @@ package body Blade is
       use Names_Package;
       BM        : Unsigned_Integer := aBlade.Bitmap;
       Index     : Natural := 1;
-      Scale     : Unbounded_String := To_Unbounded_String (Float'Image (Weight (aBlade)));
+      Scale     : GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
       Name      : Unbounded_String;
       Val       : Unbounded_String;
       theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
@@ -48,7 +48,7 @@ package body Blade is
       end loop;
 
       if Length (theString) > 0 then
-         theString := Scale & " * " & theString;
+         theString := GA_Maths.float_3'Image (Scale) & " * " & theString;
       end if;
       return theString;
 
