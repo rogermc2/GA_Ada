@@ -178,14 +178,14 @@ package body Multivector is
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
       Curs      : Cursor := Blades.First;
-      Max_Grade : Natural := 0;
-      Gr        : array (1 .. Index) of Natural;
+      Max_Grade : Unsigned_Integer := 0;
+      Gr        : array (1 .. Index) of Unsigned_Integer;
       New_List  : Blade_List;
-      aGrade    : Natural;
+      aGrade    : Unsigned_Integer;
       MV_E      : Multivector;
    begin
       for k in Gr'Range loop
-         Gr (k) := k;
+         Gr (k) := Unsigned_Integer (k);
          if Gr (k) > Max_Grade then
             Max_Grade := Gr (k);
          end if;
@@ -197,7 +197,7 @@ package body Multivector is
       begin
          while Has_Element (Curs) loop
             thisBlade := Element (Curs);
-            aGrade := GA_Maths.Grade (Bitmap (thisBlade));
+            aGrade := Blade.Grade (thisBlade);
             if aGrade <= Max_Grade and then Keep (aGrade) then
                New_List.Append (thisBlade);
             end if;
@@ -370,7 +370,7 @@ package body Multivector is
 --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
 --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
          GU_Bitmap := GU_Bitmap or
-              Shift_Left (1, Integer (GA_Maths.Grade (Bitmap (BB))));
+              Shift_Left (1, Integer (Blade.Grade (BB)));
 --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
@@ -422,7 +422,7 @@ package body Multivector is
       Max_Norm      : Float := 0.0;
    begin
       for Count in 0 .. Top_Grade_Index (MV) loop
-         if (GU and Shift_Left (1, Integer (Grade (Bitmap (thisBlade))))) /= 0 then
+         if (GU and Shift_Left (1, Integer (Grade (thisBlade)))) /= 0 then
             null;
          end if;
       end loop;
@@ -656,7 +656,7 @@ package body Multivector is
       while Has_Element (Blade_Cursor) loop
          Index := Index +1;
          ThisBlade := Element (Blade_Cursor);
-         G := Integer (GA_Maths.Grade (Bitmap (ThisBlade)));
+         G := Integer (Blade.Grade (ThisBlade));
          Max_G := Maximum (Max_G, G);
 --           Put_Line ("Top_Grade_Index Index:" & Integer'Image (Index));
 --           Put_Line ("Top_Grade_Index Grade_Use:" & Integer'Image (G));

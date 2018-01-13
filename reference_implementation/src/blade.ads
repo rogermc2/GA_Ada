@@ -16,8 +16,12 @@ package Blade is
    type Basis_Blade is private;
 
    type E2_Base is (E2_e1, E2_e2);
+   for E2_Base use (E2_e1 => 0, E2_e2 => 1);
    type E3_Base is (E3_e1, E3_e2, E3_e3);
+   for E3_Base use (E3_e1 => 0, E3_e2 => 1, E3_e3 => 2);
    type C3_Base is (C3_no, C3_e1, C3_e2, C3_e3, C3_ni);
+   for C3_Base use (C3_no => 0, C3_e1 => 1, C3_e2 => 2, C3_e3 => 3, C3_ni => 4);
+
    type Contraction_Type is (Left_Contraction, Right_Contraction,
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);

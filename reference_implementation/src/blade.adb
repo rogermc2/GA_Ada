@@ -109,7 +109,6 @@ package body Blade is
    begin
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          OP_Blade.Weight := 0.0;
-         Put_Line ("Blade.GP_OP not independent?");
       else
          OP_Blade.Bitmap := BA.Bitmap or BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
@@ -130,7 +129,7 @@ package body Blade is
 
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
       W : constant float
-        := Float (Minus_1_Power (Grade (B.Bitmap)) * Integer (B.Weight));
+        := Float (Minus_1_Power (Integer (Grade (B))) * Integer (B.Weight));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Grade_Inversion;
@@ -236,8 +235,7 @@ package body Blade is
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
       W : constant float
         := Float (Minus_1_Power
-                  ((Grade (B.Bitmap) * (Grade (B.Bitmap) - 1) / 2)
-                     * Integer (B.Weight)));
+                  (Integer (Grade (B) * (Grade (B) - 1) / 2) * Integer (B.Weight)));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Reverse_Blade;
