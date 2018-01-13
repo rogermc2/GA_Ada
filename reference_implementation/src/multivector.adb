@@ -4,6 +4,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
+with GA_Utilities;
+
 package body Multivector is
 
 --     Basis : array (1 .. 5, 1 ..5) of float :=
@@ -518,7 +520,7 @@ package body Multivector is
       B2       : Blade.Basis_Blade;
       List_1   : Blade_List := MV1.Blades;
       Cursor_1 : Cursor := List_1.First;
-      MV       : Multivector;
+      OP       : Multivector;
    begin
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
@@ -528,15 +530,16 @@ package body Multivector is
          begin
             while Has_Element (Cursor_2) loop
                B2 := Element (Cursor_2);
-               MV.Blades.Append (Outer_Product (B1, B2));
+               OP.Blades.Append (Outer_Product (B1, B2));
                Next (Cursor_2);
             end loop;
          end;
          Next (Cursor_1);
       end loop;
+      GA_Utilities.Print_Multivector ("Outer_Product OP", OP);
 
-      Simplify (MV);
-      return MV;
+      Simplify (OP);
+      return OP;
    end Outer_Product;
 
    --  -------------------------------------------------------------------------

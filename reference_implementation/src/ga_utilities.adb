@@ -2,7 +2,6 @@
 with Interfaces;
 
 with Ada.Containers;
-with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;

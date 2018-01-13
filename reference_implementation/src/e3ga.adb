@@ -264,17 +264,17 @@ package body E3GA is
 
    --  -------------------------------------------------------------------------
 
-    function e1 (V : E2GA.Vector) return float is
-    begin
-        return E2GA.Get_Coord_1 (V);
-    end e1;
+--      function e1 (V : E2GA.Vector) return float is
+--      begin
+--          return E2GA.Get_Coord_1 (V);
+--      end e1;
 
     --  ------------------------------------------------------------------------
 
-    function e2 (V : E2GA.Vector) return float is
-    begin
-        return E2GA.Get_Coord_2 (V);
-    end e2;
+--      function e2 (V : E2GA.Vector) return float is
+--      begin
+--          return E2GA.Get_Coord_2 (V);
+--      end e2;
 
     --  ------------------------------------------------------------------------
 
@@ -889,22 +889,22 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-   function To_2D (V : Vector) return E2GA.Vector is
-      V2 : E2GA.Vector;
-   begin
-      E2GA.Set_Coords (V2, V.Coordinates (1), V.Coordinates (2));
-      return V2;
-   end To_2D;
+--     function To_2D (V : Vector) return E2GA.Vector is
+--        V2 : E2GA.Vector;
+--     begin
+--        E2GA.Set_Coords (V2, V.Coordinates (1), V.Coordinates (2));
+--        return V2;
+--     end To_2D;
 
     --  ------------------------------------------------------------------------
 
-   function To_3D (V : E2GA.Vector) return Vector is
-      theVector : Vector;
-   begin
-      theVector.Coordinates (1) := E2GA.Get_Coord_1 (V);
-      theVector.Coordinates (2) := E2GA.Get_Coord_2 (V);
-      return theVector;
-   end To_3D;
+--     function To_3D (V : E2GA.Vector) return Vector is
+--        theVector : Vector;
+--     begin
+--        theVector.Coordinates (1) := E2GA.Get_Coord_1 (V);
+--        theVector.Coordinates (2) := E2GA.Get_Coord_2 (V);
+--        return theVector;
+--     end To_3D;
 
     --  ------------------------------------------------------------------------
 

@@ -1,7 +1,6 @@
 
 with Ada.Strings.Unbounded;
 
-with E2GA;
 with GA_Maths; use GA_Maths;
 
 package E3GA is
@@ -56,8 +55,8 @@ package E3GA is
    function "+" (W : float; R : Rotor) return Rotor;
    function "-" (W : float; R : Rotor) return Rotor;
 
-   function e1 (V : E2GA.Vector) return float;
-   function e2 (V : E2GA.Vector) return float;
+--     function e1 (V : E2GA.Vector) return float;
+--     function e2 (V : E2GA.Vector) return float;
 
    function e1 return Vector;
    function e2 return Vector;
@@ -121,8 +120,8 @@ package E3GA is
    procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
     procedure Set_Scalar (S : out Scalar; Value : float);
     function To_Unsigned (V : Vector) return Vector_Unsigned;
-    function To_2D (V : Vector) return E2GA.Vector;
-    function To_3D (V : E2GA.Vector) return Vector;
+--      function To_2D (V : Vector) return E2GA.Vector;
+--      function To_3D (V : E2GA.Vector) return Vector;
    function To_Vector (MV : Syn_SMultivector) return Vector;
    --  Unit_e normalizes rotor R
    function Unit_e (R : Rotor) return Rotor;

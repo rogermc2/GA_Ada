@@ -1,6 +1,5 @@
 
 with C3GA;
-with E2GA;
 with E3GA;
 with GA_Maths;
 with Multivector;
