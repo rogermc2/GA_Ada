@@ -281,6 +281,7 @@ package body E2GA is
 --     end Get_Basis_Vector_Names;
 
    --  ------------------------------------------------------------------------
+
    function Get_Coord (BV : Bivector) return float is
    begin
       return E1_E2 (BV);
@@ -656,28 +657,6 @@ package body E2GA is
 --     end Multivector_String;
 
    --  -------------------------------------------------------------------------
-
-   function New_Bivector (V1, V2 : Vector) return Bivector is
-      BV : Bivector;
-   begin
-      return Multivector.Outer_Product (V1, V2);
-   end New_Bivector;
-
-   --  -------------------------------------------------------------------------
-
-   function New_Vector (e1, e2 : Float) return Vector is
-      use Blade;
-      V       : Vector;
-      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V);
-      aBlade  : Basis_Blade := New_Basis_Blade (E2_e1, e1);
-   begin
-      Multivector.Add_Blade (V, aBlade);
-      aBlade :=  New_Basis_Blade (E2_e2, e2);
-      Multivector.Add_Blade (V, aBlade);
-      return V;
-   end New_Vector;
-
-   --  ------------------------------------------------------------------------
 
 --     function Norm_E2 (V2 : Vector) return Scalar is
 --        Norm : Scalar;

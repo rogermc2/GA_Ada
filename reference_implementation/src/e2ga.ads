@@ -47,8 +47,6 @@ package E2GA is
 --     type Bivector is record
 --        Coordinates : GA_Maths.Bivector_Coords;   --  m_c[1]
 --     end record;
-   subtype Bivector is Multivector.Multivector;
-   subtype Vector is Multivector.Multivector;
 
    --  Joinable grade definitions
    Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
@@ -62,7 +60,7 @@ package E2GA is
 --     function "+" (MV1, MV2 : Multivector) return Multivector;
 --     function "-" (MV1, MV2 : Multivector) return Multivector;
 
-   function Bivector_String (BV : E2GA.Bivector) return String;
+   function Bivector_String (BV : Multivector.Bivector) return String;
 --     function Dot_Product (V1, V2 : Vector) return float;
    function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dual (MV : Multivector) return Multivector;
@@ -92,8 +90,6 @@ package E2GA is
 --                                  Text : String := "") return String;
 --     function Norm_E (MV : Multivector) return Scalar;
 --     function Norm_E2 (MV : E2GA.Multivector) return Scalar;
-   function New_Bivector (V1, V2 : Vector) return Bivector;
-   function New_Vector (e1, e2 : Float) return Vector;
 --     function Outer_Product (V1, V2 : Vector) return Bivector;
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     function Set_Bivector (V1, V2 : Vector) return Bivector;

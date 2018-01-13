@@ -8,12 +8,12 @@ with GA_Utilities;
 
 package body Multivector is
 
---     Basis : array (1 .. 5, 1 ..5) of float :=
---       ((0.0, 0.0, 0.0, 0.0, -1.0),
---        (0.0, 1.0, 0.0, 0.0, 0.0),
---        (0.0, 0.0, 1.0, 0.0, 0.0),
---        (0.0, 0.0, 0.0 ,1.0, 0.0),
---        (-1.0, 0.0, 0.0 , 0.0, 0.0));
+   --     Basis : array (1 .. 5, 1 ..5) of float :=
+   --       ((0.0, 0.0, 0.0, 0.0, -1.0),
+   --        (0.0, 1.0, 0.0, 0.0, 0.0),
+   --        (0.0, 0.0, 1.0, 0.0, 0.0),
+   --        (0.0, 0.0, 0.0 ,1.0, 0.0),
+   --        (-1.0, 0.0, 0.0 , 0.0, 0.0));
 
    C3_Blade_List         : Blade_List;
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
@@ -73,7 +73,7 @@ package body Multivector is
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector.+");
-      raise;
+         raise;
    end "+";
 
    --  -------------------------------------------------------------------------
@@ -102,7 +102,7 @@ package body Multivector is
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector.-");
-      raise;
+         raise;
 
    end "-";
 
@@ -116,7 +116,7 @@ package body Multivector is
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector.- 2");
-      raise;
+         raise;
    end "-";
 
    --  -------------------------------------------------------------------------
@@ -365,15 +365,15 @@ package body Multivector is
       GU_Bitmap  : Unsigned_32 := 0;
       Index      : Integer := 0;
    begin
---        New_Line;
+      --        New_Line;
       while Has_Element (Cursor_B) loop
          Index := Index + 1;
          BB := Element (Cursor_B);
---           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
---           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
+         --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
+         --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
          GU_Bitmap := GU_Bitmap or
-              Shift_Left (1, Integer (Blade.Grade (BB)));
---           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
+           Shift_Left (1, Integer (Blade.Grade (BB)));
+         --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU_Bitmap);
@@ -478,6 +478,14 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function New_Bivector (V1, V2 : Vector) return Bivector is
+      BV : Bivector;
+   begin
+      return Outer_Product (V1, V2);
+   end New_Bivector;
+
+   --  -------------------------------------------------------------------------
+
    function New_Multivector (Scalar_Weight : Float) return Multivector is
       MV : Multivector;
    begin
@@ -486,6 +494,20 @@ package body Multivector is
    end New_Multivector;
 
    --  -------------------------------------------------------------------------
+
+   function New_Vector (e1, e2 : Float) return Vector is
+      use Blade;
+      V       : Vector;
+      Blades  : Blade_List := Get_Blade_List (V);
+      aBlade  : Basis_Blade := New_Basis_Blade (E2_e1, e1);
+   begin
+      Add_Blade (V, aBlade);
+      aBlade :=  New_Basis_Blade (E2_e2, e2);
+      Add_Blade (V, aBlade);
+      return V;
+   end New_Vector;
+
+   --  ------------------------------------------------------------------------
 
    function Norm_E (MV : Multivector) return Scalar is
       use GA_Maths.Float_Functions;
@@ -590,7 +612,7 @@ package body Multivector is
 
    procedure Simplify (MV : in out Multivector) is
    begin
-     Simplify (MV.Blades);
+      Simplify (MV.Blades);
    end Simplify;
 
    --  -------------------------------------------------------------------------
@@ -661,16 +683,16 @@ package body Multivector is
          ThisBlade := Element (Blade_Cursor);
          G := Integer (Blade.Grade (ThisBlade));
          Max_G := Maximum (Max_G, G);
---           Put_Line ("Top_Grade_Index Index:" & Integer'Image (Index));
---           Put_Line ("Top_Grade_Index Grade_Use:" & Integer'Image (G));
---           Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
+         --           Put_Line ("Top_Grade_Index Index:" & Integer'Image (Index));
+         --           Put_Line ("Top_Grade_Index Grade_Use:" & Integer'Image (G));
+         --           Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
          Next (Blade_Cursor);
       end loop;
---         Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
+      --         Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
       return Unsigned_Integer (Max_G);
    end Top_Grade_Index;
 
-  --  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function Unit_E (MV : Multivector) return Multivector is
    begin
@@ -716,7 +738,7 @@ package body Multivector is
          raise;
    end Versor_Inverse;
 
---  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
 begin
    --  setup conformal algebra:

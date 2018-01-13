@@ -15,6 +15,9 @@ package Multivector is
    type Blade_List is new Blade_List_Package.List with null record;
 
    type Multivector is private;
+   subtype Bivector is Multivector;
+   subtype Vector is Multivector;
+
    type Scalar is new Float;
 
    MV_Exception : Exception;
@@ -44,7 +47,9 @@ package Multivector is
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
    --  New_Multivector returns a multivector with a scalar blade only
+   function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Multivector (Scalar_Weight : Float) return Multivector;
+   function New_Vector (e1, e2 : Float) return Vector;
    function Norm_E (MV : Multivector) return Scalar;
    function Norm_E2 (MV : Multivector) return Scalar;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
