@@ -4,6 +4,7 @@ with GL.Window;
 
 with E3GA_Utilities;
 with GA_Maths;
+with GA_Utilities;
 
 package body GL_Util is
    use GL.Types;
@@ -78,7 +79,7 @@ package body GL_Util is
         Mcol      : integer := 0;
    begin
         E3GA_Utilities.Rotor_To_Matrix (R, M3);
-        E3GA_Utilities.Print_Matrix ("Rotor_To_Matrix, M3", M3);
+        GA_Utilities.Print_Matrix ("Rotor_To_Matrix, M3", M3);
         for row in Index_Homogeneous range X .. Z loop
             Mrow := Mrow + 1;
             for col in Index_Homogeneous range X .. Z loop

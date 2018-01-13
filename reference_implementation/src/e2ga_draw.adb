@@ -6,8 +6,8 @@ with GL.Uniforms;
 
 with Blade;
 with E3GA;
-with E3GA_Utilities;
 with GA_Draw;
+with GA_Utilities;
 with Multivector_Analyze;
 
 package body E2GA_Draw is
@@ -42,7 +42,7 @@ package body E2GA_Draw is
       Scale     : float := 1.0;
    begin
       Analyze (A, MV);
-      E3GA_Utilities.Print_Analysis ("E2GA Draw Analysis", A);
+      GA_Utilities.Print_Analysis ("E2GA Draw Analysis", A);
       Put_Line ("E2GA_Draw Draw 2.");
       if isBlade (A) then
          Put_Line ("E2GA_Draw isBlade.");

@@ -275,6 +275,12 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
+--     function Get_Basis_Vector_Names return Blade.Basis_Vector_Names is
+--     begin
+--        return MV_Basis_Vector_Names;
+--     end Get_Basis_Vector_Names;
+
+   --  ------------------------------------------------------------------------
    function Get_Coord (BV : Bivector) return float is
    begin
       return E1_E2 (BV);

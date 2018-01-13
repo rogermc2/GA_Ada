@@ -36,8 +36,8 @@ with GL_Util;
 with E2GA;
 with E2GA_Draw;
 with E3GA;
-with E3GA_Utilities;
 with GA_Maths;
+with GA_Utilities;
 with Multivector;
 
 with Silo;
@@ -144,9 +144,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          V2, Green, Scale);
 
          BV := Multivector.Outer_Product (V1, V2);
-         E3GA_Utilities.Print_Multivector ("V1", V1);
-         E3GA_Utilities.Print_Multivector ("V2", V2);
-         E3GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
+         GA_Utilities.Print_Multivector ("V1", V1);
+         GA_Utilities.Print_Multivector ("V2", V2);
+         GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
             Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
@@ -167,11 +167,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
-         E3GA_Utilities.Print_Multivector ("BV", BV);
+         GA_Utilities.Print_Multivector ("BV", BV);
          Put_Line ("Display bivector label: " & E2GA.Bivector_String (BV));
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
-                                 (E2GA.Bivector_String
-                                    (BV)), Label_Position);
+                                 (E2GA.Bivector_String (BV)), Label_Position);
          Silo.Push (Label);
 
          --  Set X position of next diagram
