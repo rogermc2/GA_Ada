@@ -195,6 +195,24 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function E1 (V : Vector) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (V);
+   begin
+      return Blade.Weight (Blades.First_Element);
+   end E1;
+
+   --  -------------------------------------------------------------------------
+
+   function E2 (V : Vector) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (V);
+   begin
+      return Blade.Weight (Blades.Last_Element);
+   end E2;
+
+   --  -------------------------------------------------------------------------
+
    function E1_E2 (BV : Bivector) return float is
       use Blade_List_Package;
       Blades  : constant Blade_List := Get_Blade_List (BV);
@@ -539,27 +557,27 @@ package body Multivector is
 
    --  ------------------------------------------------------------------------
 
-   function Norm_E (MV : Multivector) return Scalar is
+   function Norm_E (MV : Multivector) return Float is
       use GA_Maths.Float_Functions;
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
          return 0.0;
       else
-         return Scalar (Sqrt (S));
+         return Sqrt (S);
       end if;
    end Norm_E;
 
    --  -------------------------------------------------------------------------
 
-   function Norm_E2 (MV : Multivector) return Scalar is
+   function Norm_E2 (MV : Multivector) return Float is
       use GA_Maths.Float_Functions;
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
          return 0.0;
       else
-         return Scalar (S);
+         return S;
       end if;
    end Norm_E2;
 

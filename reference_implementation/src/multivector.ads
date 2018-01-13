@@ -34,6 +34,8 @@ package Multivector is
    function C3_Multivector return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
+   function E1 (V : Vector) return float;
+   function E2 (V : Vector) return float;
    function E1_E2 (BV : Bivector) return float;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
@@ -54,8 +56,8 @@ package Multivector is
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Vector (e1, e2 : Float) return Vector;
-   function Norm_E (MV : Multivector) return Scalar;
-   function Norm_E2 (MV : Multivector) return Scalar;
+   function Norm_E (MV : Multivector) return Float;
+   function Norm_E2 (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;

@@ -16,6 +16,7 @@ package Blade is
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type Basis_Blade is private;
+
    type E2_Base is (E2_e1, E2_e2);
    for E2_Base use (E2_e1 => 0, E2_e2 => 1);
    type E3_Base is (E3_e1, E3_e2, E3_e3);
