@@ -57,7 +57,7 @@ package Multivector_Analyze is
    end record;
 
    type Point_Array is array (1 .. Number_Of_Points) of Multivector.Vector;
-   type Scalar_Array is array (1 .. Number_Of_Scalars) of Multivector.Scalar;
+   type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
    type Vector_Array is array (1 .. Number_Of_Vectors) of Multivector.Vector;
 
    type MV_Analysis is record
