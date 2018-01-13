@@ -481,7 +481,7 @@ package body Multivector is
    function New_Bivector (V1, V2 : Vector) return Bivector is
       BV : Bivector;
    begin
-      return Outer_Product (V1, V2);
+      return Bivector (Outer_Product (V1, V2));
    end New_Bivector;
 
    --  -------------------------------------------------------------------------

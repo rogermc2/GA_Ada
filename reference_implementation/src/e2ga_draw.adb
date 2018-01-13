@@ -5,6 +5,7 @@ with GL.Objects.Vertex_Arrays;
 with GL.Uniforms;
 
 with Blade;
+with E2GA;
 with E3GA;
 with GA_Draw;
 with GA_Utilities;
@@ -25,7 +26,7 @@ package body E2GA_Draw is
 
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                   MV : in out Multivector.Multivector;
+                   MV     : in out Multivector.Multivector;
                    Method : GA_Draw.Bivector_Method_Type
                             := GA_Draw.Draw_Bivector_Circle;
                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
@@ -36,7 +37,7 @@ package body E2GA_Draw is
       A         : MV_Analysis;
       V1        : E2GA.Vector;
       V2        : E2GA.Vector;
-      OP        : E2GA.Bivector;
+      OP        : Multivector.Multivector;
       Normal    : E3GA.Vector;
       Direction : E3GA.Vector;
       Scale     : float := 1.0;

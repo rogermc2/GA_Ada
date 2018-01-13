@@ -55,24 +55,6 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function "+" (V1, V2 : Vector) return Vector is
-      use Multivector.Blade_List_Package;
-      use Blade;
-      Blades_1  : Multivector.Blade_List := Multivector.Get_Blade_List (V1);
-      Blades_2  : Multivector.Blade_List := Multivector.Get_Blade_List (V2);
-      C11       : constant float := Weight (Blades_1.First_Element);
-      C12       : constant float := Weight (Blades_1.Last_Element);
-      C21       : constant float := Weight (Blades_2.First_Element);
-      C22       : constant float := Weight (Blades_2.Last_Element);
-      Sum : Vector;
-   begin
-      Multivector.Add_Blade (Sum, Blade.New_Basis_Blade (Blade.E2_e1, C11 + C21));
-      Multivector.Add_Blade (Sum, Blade.New_Basis_Blade (Blade.E2_e2, C12 + C22));
-      return Sum;
-   end "+";
-
-   --  ------------------------------------------------------------------------
-
 --     function "-" (V1, V2 : Vector) return Vector is
 --        Diff : Vector;
 --     begin
@@ -124,7 +106,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
 --     function Bivector_String (BV : Bivector; Text : String := "") return String is
-   function Bivector_String (BV : Bivector) return String is
+   function Bivector_String (BV : Multivector.Bivector) return String is
       use Ada.Strings.Unbounded;
       MV : Multivector.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);
