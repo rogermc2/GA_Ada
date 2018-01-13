@@ -2,7 +2,6 @@
 with GL.Types.Colors;
 with GL.Objects.Programs;
 
-with E2GA;
 with GA_Draw;
 with GA_Maths;
 with Multivector;
@@ -27,13 +26,13 @@ package E2GA_Draw is
 
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                    Translation_Matrix : GL.Types.Singles.Matrix4;
-                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
+                   BV : Multivector.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
                             := GA_Draw.Draw_Bivector_Circle);
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
+                    aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
                     Scale : float := 1.0);
 
 end E2GA_Draw;

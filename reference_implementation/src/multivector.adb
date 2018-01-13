@@ -128,6 +128,27 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   procedure Add_Blade (MV : in out Multivector; Index : E2_Base; Value : Float) is
+   begin
+      MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+   end Add_Blade;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float) is
+   begin
+      MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+   end Add_Blade;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float) is
+   begin
+      MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+   end Add_Blade;
+
+   --  -------------------------------------------------------------------------
+
    function Blades (MV : Multivector) return Blade_List is
    begin
       return MV.Blades;
@@ -171,6 +192,15 @@ package body Multivector is
       Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
       return Dual_MV;
    end Dual;
+
+   --  -------------------------------------------------------------------------
+
+   function E1_E2 (BV : Bivector) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (BV);
+   begin
+      return Blade.Weight (Element (Blades.First));
+   end E1_E2;
 
    --  -------------------------------------------------------------------------
 

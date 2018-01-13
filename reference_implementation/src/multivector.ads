@@ -16,9 +16,9 @@ package Multivector is
 
    type Multivector is private;
    subtype Bivector is Multivector;
+   subtype Rotor is Multivector;
+   subtype Scalar is Multivector;
    subtype Vector is Multivector;
-
-   type Scalar is new Float;
 
    MV_Exception : Exception;
 
@@ -27,10 +27,14 @@ package Multivector is
    function "-" (MV : Multivector) return Multivector;
    function "-" (MV1, MV2 : Multivector) return Multivector;
    procedure Add_Blade (MV : in out Multivector; aBlade : Blade.Basis_Blade);
+   procedure Add_Blade (MV : in out Multivector; Index : E2_Base; Value : Float);
+   procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float);
+   procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
    function Blades (MV : Multivector) return Blade_List;
    function C3_Multivector return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
+   function E1_E2 (BV : Bivector) return float;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;

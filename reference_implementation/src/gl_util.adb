@@ -2,6 +2,7 @@
 with GL;
 with GL.Window;
 
+with Blade;
 with E3GA_Utilities;
 with GA_Maths;
 with GA_Utilities;
@@ -35,21 +36,23 @@ package body GL_Util is
 --  ------------------------------------------------------------------
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
     procedure Rotor_GL_Multiply (R : E3GA.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
-        use E3GA;
-        use GL;
-        use GL.Types.Singles;
-        IR        : Rotor := Inverse (R);
-        VGP       : E3GA.Vector;
+      use E3GA;
+      use GL;
+      use GL.Types.Singles;
+      use Multivector;
+--          IR        : Multivector.Rotor := Inverse (R);
+        VGP       : Multivector.Vector;
         Image     : Vector3_Array (1 .. 4);
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
     begin
-        --  compute the images of all OpenGL basis vectors
-        VGP := To_Vector (Geometric_Product (R, Geometric_Product (e1, IR)));
-        Image (1) := To_GL (VGP);
-        VGP := To_Vector (Geometric_Product (R, Geometric_Product (e2, IR)));
-        Image (2) := To_GL (VGP);
-        VGP := To_Vector (Geometric_Product (R, Geometric_Product (e3, IR)));
+      --  compute the images of all OpenGL basis vectors
+      --  TO BE FIXED
+--          VGP := Geometric_Product (R, Geometric_Product (e1, IR));
+--          Image (1) := To_GL (VGP);
+--          VGP := To_Vector (Geometric_Product (R, Geometric_Product (e2, IR)));
+--          Image (2) := To_GL (VGP);
+--          VGP := To_Vector (Geometric_Product (R, Geometric_Product (e3, IR)));
         Image (3) := To_GL (VGP);
         Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
         for row in GL.Index_Homogeneous loop
@@ -93,30 +96,47 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : E3GA.Vector) return GL.Types.Doubles.Vector3 is
-        use GL.Types;
-        use E3GA;
+   function To_GL (V3 : Multivector.Vector) return GL.Types.Doubles.Vector3 is
+      use GL.Types;
+      use Multivector.Blade_List_Package;
+      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
+      curs    : Cursor := Blades.First;
+      Val1    : Double:= Double (Blade.Weight (Element (Curs)));
+      Val2    : Double;
+      Val3    : Double;
    begin
-        return (Double (Get_Coord_1 (V3)), Double (Get_Coord_2 (V3)),
-                                      Double (Get_Coord_3 (V3)));
+      Next (Curs);
+      Val2 := Double (Blade.Weight (Element (Curs)));
+      Next (Curs);
+      Val3 := Double (Blade.Weight (Element (Curs)));
+      return (Val1, Val2, Val3);
    end To_GL;
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
-        use E3GA;
+   function To_GL (V3 : Multivector.Vector) return GL.Types.Singles.Vector3 is
+      use GL.Types;
+      use Multivector.Blade_List_Package;
+      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
+      curs    : Cursor := Blades.First;
+      Val1    : Single:= Single (Blade.Weight (Element (Curs)));
+      Val2    : Single;
+      Val3    : Single;
    begin
-        return (Single (Get_Coord_1 (V3)), Single (Get_Coord_2 (V3)),
-                                      Single (Get_Coord_3 (V3)));
+      Next (Curs);
+      Val2 := Single (Blade.Weight (Element (Curs)));
+      Next (Curs);
+      Val3 := Single (Blade.Weight (Element (Curs)));
+      return (Val1, Val2, Val3);
    end To_GL;
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V2 : E2GA.Vector) return GL.Types.Singles.Vector3 is
-        use E2GA;
-   begin
-        return (Single (Get_Coord_1 (V2)), Single (Get_Coord_2 (V2)), 0.0);
-   end To_GL;
+--     function To_GL (V2 : Multivector.Vector) return GL.Types.Singles.Vector3 is
+--          use E2GA;
+--     begin
+--          return (Single (Get_Coord_1 (V2)), Single (Get_Coord_2 (V2)), 0.0);
+--     end To_GL;
 
    --  -------------------------------------------------------------------------
 

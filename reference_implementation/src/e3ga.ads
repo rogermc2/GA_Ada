@@ -72,13 +72,13 @@ package E3GA is
 --     function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
    function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dot_Product (V1, V2 : Vector) return float;
---      function Get_Coord (S : Scalar) return float;
+    function Get_Coord (S : Scalar) return float;
 --     function Get_Coords (BV : Bivector) return Array_3D;
 --     function Get_Coords (MV : Multivector) return MV_Coordinate_Array;
    function Get_Coords (R : Rotor) return Array_4D;
---      function Get_Coord_1 (V : Vector) return float;
---      function Get_Coord_2 (V : Vector) return float;
---      function Get_Coord_3 (V : Vector) return float;
+    function Get_Coord_1 (V : Multivector.Vector) return float;
+    function Get_Coord_2 (V : Multivector.Vector) return float;
+    function Get_Coord_3 (V : Multivector.Vector) return float;
 --      function Get_Coords (V : Vector) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
@@ -112,6 +112,7 @@ package E3GA is
 --     function Norm_R (BV : Bivector) return Scalar;
 --     function Norm_R2 (BV : Bivector) return Scalar;
 --      procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
+    procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
    procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);

@@ -12,9 +12,11 @@ package body E3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   function exp (BV : E3GA.Bivector) return E3GA.Rotor is
+   function exp (BV : Multivector.Bivector) return E3GA.Rotor is
       use E3GA;
-      X2         : float := E3GA.Get_Coord (Left_Contraction (BV, BV));
+      V          : Multivector.Vector :=
+        Multivector.Inner_Product (BV, BV, Blade.Left_Contraction);
+      X2         : float := Multivector.E1_E2 (V);
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
@@ -37,12 +39,12 @@ package body E3GA_Utilities is
    --  ----------------------------------------------------------------------------
 
    --  special log() for 3D rotors
-   function log (R : E3GA.Rotor) return E3GA.Bivector is
-      use E3GA;
+   function log (R : E3GA.Rotor) return Modular_Aux.Bivector is
+      use Multivector;
       R2       : float;
       R1       : float;
-      BV       : Bivector;
-      Result   : Bivector;
+      BV       : Multivector.Bivector;
+      Result   : MultivectorBivector;
    begin
       --  get the bivector 2-blade part of R
       Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
