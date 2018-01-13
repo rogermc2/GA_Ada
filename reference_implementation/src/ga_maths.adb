@@ -20,14 +20,6 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Grade (Bits : Unsigned_Integer) return Natural is
-   begin
-      --  Return the grade as a number in  the range 0 to 31.
-      return Bit_Count (Bits);
-   end Grade;
-
-   --  ------------------------------------------------------------------------
-
    function Maximum (I1, I2 : Integer) return Integer is
       Max : Integer;
    begin

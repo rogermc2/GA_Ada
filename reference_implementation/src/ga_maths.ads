@@ -72,7 +72,6 @@ package GA_Maths is
    GU_16    : constant Grade_Usage := 32;
 
    function Bit_Count (Bits : Unsigned_Integer) return Natural;
-   function Grade (Bits : Unsigned_Integer) return Natural;
    function Maximum (I1, I2 : Integer) return Integer;
    function Maximum (I1, I2 : Float) return Float;
    function Minimum (I1, I2 : Integer) return Integer;
