@@ -1,6 +1,7 @@
 
 with Ada.Strings.Unbounded;
 
+with Blade;
 with GA_Maths; use GA_Maths;
 with Multivector; use Multivector;
 
@@ -79,7 +80,7 @@ package E3GA is
     function Get_Coord_1 (V : Multivector.Vector) return float;
     function Get_Coord_2 (V : Multivector.Vector) return float;
     function Get_Coord_3 (V : Multivector.Vector) return float;
---      function Get_Coords (V : Vector) return Array_3D;
+   function Get_Coords (V : Multivector.Vector) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;

@@ -115,7 +115,7 @@ package body GA_Draw is
       O2                   : Multivector.Vector := Ortho_2;
       MVP_Matrix           : Matrix4 := Singles.Identity4;
       Scaled               : GL.Types.Single;
-      Normed_E2            : Multivector.Scalar;
+      Normed_E2            : Float;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -474,7 +474,7 @@ package body GA_Draw is
    --  Based on draw.cpp drawTriVector
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Position : E3GA.Vector; Colour : GL.Types.Colors.Color;
+                             Position : Multivector.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
@@ -501,7 +501,7 @@ package body GA_Draw is
          Scale_Sign := -1.0;
       end if;
 
-      if E3GA.Get_Coord (E3GA.Norm_E2 (Position)) >= 0.0 then
+      if E3GA.Get_Coord (Multivector.Norm_E2 (Position)) >= 0.0 then
          Translation_Matrix :=
           Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Position)),
                                      Single (E3GA.Get_Coord_2 (Position)),
@@ -574,12 +574,14 @@ package body GA_Draw is
       GL_Dir               : Vector3 := GL_Util.To_GL (Direction);
 
       Z                    : Single := 0.0;
-      Dir_e1               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
-      Dir_e2               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e2));
-      Dir_e3               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e3));
-      Tail_e1              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
-      Tail_e2              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e2));
-      Tail_e3              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e3));
+--        Dir_e1               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
+--        Tail_e1              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
+      Dir_e1               : Single := Single (E3GA.Get_Coord_1 (Direction, E3_e1));
+      Dir_e2               : Single := Single (E3GA.Get_Coord_2 (Direction, E3_e2));
+      Dir_e3               : Single := Single (E3GA.Get_Coord_1 (Direction, E3_e3));
+      Tail_e1              : Single := Single (E3GA.Get_Coord_1 (Tail, E3_e1));
+      Tail_e2              : Single := Single (E3GA.Get_Coord_2 (Tail, E3_e2));
+      Tail_e3              : Single := Single (E3GA.Get_Coord_3 (Tail, E3_e3));
       Scale_Factor1        : Single := Single (1.2 / Scale);
       Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
       Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
