@@ -55,6 +55,7 @@ package Multivector is
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Multivector (Scalar_Weight : Float) return Multivector;
+   function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Vector (e1, e2 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
    function Norm_E2 (MV : Multivector) return Float;

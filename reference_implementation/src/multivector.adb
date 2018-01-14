@@ -543,6 +543,18 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor is
+      R : Rotor;
+   begin
+      R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+      R.Blades.Append (New_Basis_Blade (E3_e1, e1));
+      R.Blades.Append (New_Basis_Blade (E3_e2, e2));
+      R.Blades.Append (New_Basis_Blade (E3_e3, e3));
+      return  R;
+   end New_Rotor;
+
+   --  -------------------------------------------------------------------------
+
    function New_Vector (e1, e2 : Float) return Vector is
       use Blade;
       V       : Vector;
