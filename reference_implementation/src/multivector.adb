@@ -254,6 +254,7 @@ package body Multivector is
             Next (Curs);
          end loop;
       end;
+      MV_E.Blades := New_List;
       return MV_E;
    end Extract_Grade;
 
