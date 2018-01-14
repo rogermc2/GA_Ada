@@ -543,6 +543,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function New_Rotor (Scalar_Weight : Float) return Rotor is
+      R : Rotor;
+   begin
+      R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+      return  R;
+   end New_Rotor;
+
+   --  -------------------------------------------------------------------------
+
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor is
       R : Rotor;
    begin
@@ -780,6 +789,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   procedure Update_Scalar_Part (MV : in out Multivector; Value : Float) is
+      use Blade_List_Package;
+      use Blade;
+      Blades    : Blade_List := Get_Blade_List (MV);
+   begin
+      MV.Blades.Replace_Element (Blades.First, New_Scalar_Blade (Value));
+   end Update_Scalar_Part;
+
+   --  -------------------------------------------------------------------------
    function Versor_Inverse (MV : Multivector) return Multivector is
       Rev          : Multivector := Reverse_MV (MV);
       S_Product    : Float := 0.0;

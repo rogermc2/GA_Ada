@@ -52,9 +52,10 @@ package Multivector is
    function Largest_Grade_Part (MV : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
-   --  New_Multivector returns a multivector with a scalar blade only
    function New_Bivector (V1, V2 : Vector) return Bivector;
+   --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
+   function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Vector (e1, e2 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
@@ -67,6 +68,7 @@ package Multivector is
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
+   procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
    function Versor_Inverse (MV : Multivector) return Multivector;
 
 private
