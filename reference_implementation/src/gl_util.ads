@@ -25,8 +25,8 @@ package GL_Util is
 
    procedure GL_Color_3fm (R, G, B : GL.Types.Single);
    procedure Load_Pick_Matrix;
-   function Rotor_To_GL_Matrix (R : E3GA.Rotor) return  GL.Types.Singles.Matrix4;
-   procedure Rotor_GL_Multiply (R : E3GA.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4);
+   function Rotor_To_GL_Matrix (R : Multivector.Rotor) return  GL.Types.Singles.Matrix4;
+   procedure Rotor_GL_Multiply (R : Multivector.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4);
    function To_GL (V3 : Multivector.Vector) return GL.Types.Doubles.Vector3;
    function To_GL (V3 : Multivector.Vector) return GL.Types.Singles.Vector3;
 --     function To_GL (V2 : Multivector.Vector) return GL.Types.Singles.Vector3;
