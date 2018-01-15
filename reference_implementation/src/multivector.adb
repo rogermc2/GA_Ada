@@ -797,6 +797,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   procedure Update (MV : in out Multivector; Blades : Blade_List;
+                     Sorted : Boolean := False) is
+   begin
+      MV.Blades := Blades;
+      MV.Sorted := Sorted;
+   end Update;
+
+   --  -------------------------------------------------------------------------
+
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float) is
       use Blade_List_Package;
       use Blade;
@@ -806,6 +815,7 @@ package body Multivector is
    end Update_Scalar_Part;
 
    --  -------------------------------------------------------------------------
+
    function Versor_Inverse (MV : Multivector) return Multivector is
       Rev          : Multivector := Reverse_MV (MV);
       S_Product    : Float := 0.0;

@@ -69,6 +69,8 @@ package Multivector is
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
+   procedure Update (MV : in out Multivector; Blades : Blade_List;
+                     Sorted : Boolean := False);
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
    function Versor_Inverse (MV : Multivector) return Multivector;
 
