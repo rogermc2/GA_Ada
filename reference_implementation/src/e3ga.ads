@@ -23,7 +23,7 @@ package E3GA is
 --     type Bivector is private;
    type Outermorphism is private;
    type Syn_SMultivector is private;
-   type Rotor is private;
+--     type Rotor is private;
 --     type Trivector is private;
 
    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
@@ -71,7 +71,7 @@ package E3GA is
 
 --     function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
 --     function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
-   function Dot_Product (R1, R2 : Rotor) return float;
+--     function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dot_Product (V1, V2 : Vector) return float;
     function Get_Coord (S : Scalar) return float;
 --     function Get_Coords (BV : Bivector) return Array_3D;
@@ -150,13 +150,13 @@ private
 
    type Outermorphism is new Array_19F;
 
-   type Rotor is record
-      --        Coords_Type : Rotor_Coordinates_Type := Rotor_Scalar_e1e2_e2e3_e3e1;
-      C1_Scalar   : float := 0.0;
-      C2_e1e2     : float := 0.0;
-      C3_e2e3     : float := 0.0;
-      C4_e3e1     : float := 0.0;
-   end record;
+--     type Rotor is record
+--        --        Coords_Type : Rotor_Coordinates_Type := Rotor_Scalar_e1e2_e2e3_e3e1;
+--        C1_Scalar   : float := 0.0;
+--        C2_e1e2     : float := 0.0;
+--        C3_e2e3     : float := 0.0;
+--        C4_e3e1     : float := 0.0;
+--     end record;
 
    type Syn_SMultivector is record
       C1_e1       : float := 0.0;

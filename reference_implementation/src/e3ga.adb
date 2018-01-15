@@ -115,9 +115,31 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function "*" (R1, R2 : Rotor) return Rotor is
+      use Blade_List_Package;
+      use Blade;
+      R1_Blades  : Blade_List := Get_Blade_List (R1);
+      R2_Blades  : Blade_List := Get_Blade_List (R2);
+      Curs_1     : Cursor := R1_Blades.First;
+      Curs_2     : Cursor := R2_Blades.First;
+      Blade_1    : Basis_Blade;
+      Blade_2    : Basis_Blade;
+      New_Blade  : Basis_Blade;
+      Index      : E3_Base := E3_e1;
+      Product    : Rotor :=
+        New_Rotor (Scalar_Part (R1) * Scalar_Part (R2));
    begin
-      return (R1.C1_Scalar * R2.C1_Scalar, R1.C2_e1e2 * R2.C2_e1e2,
-              R1.C3_e2e3 * R2.C3_e2e3, R1.C4_e3e1 * R2.C4_e3e1);
+      --  R1.C1_Scalar * R2.C1_Scalar, R1.C2_e1e2 * R2.C2_e1e2,
+      --  R1.C3_e2e3 * R2.C3_e2e3, R1.C4_e3e1 * R2.C4_e3e1
+      while Has_Element (Curs_1) and Has_Element (Curs_2) loop
+         Blade_1 := Element (Curs_1);
+         Blade_2 := Element (Curs_2);
+         New_Blade := New_Basis_Blade (Index, Weight (Blade_1) * Weight (Blade_2));
+         Add_Blade (Product, New_Blade);
+         Next (Curs_1);
+         Next (Curs_2);
+         Index := E3_Base'Succ (Index);
+      end loop;
+      return Product;
    end "*";
 
    --  ------------------------------------------------------------------------
@@ -142,9 +164,25 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "/" (R : Rotor; S : float) return Rotor is
+   function "/" (R : Rotor; S : float) return Multivector.Rotor is
+      use Blade_List_Package;
+      use Blade;
+      Blades    : Blade_List := Get_Blade_List (R);
+      Curs      : Cursor := Blades.First;
+      aBlade    : Basis_Blade;
+      New_Blade : Basis_Blade;
+      Index     : E3_Base := E3_e1;
+      Quotient  : Rotor :=
+        New_Rotor (Scalar_Part (R) / S);
    begin
-      return (R.C1_Scalar / S,  R.C2_e1e2 / S, R.C3_e2e3 / S, R.C4_e3e1 / S);
+       while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         New_Blade := New_Basis_Blade (Index, Weight (aBlade) * S);
+         Add_Blade (Quotient, New_Blade);
+         Next (Curs);
+         Index := E3_Base'Succ (Index);
+       end loop;
+       return Quotient;
    end "/";
 
    --  ------------------------------------------------------------------------
@@ -156,16 +194,28 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "+" (W : float; R : Rotor) return Rotor is
+   function "+" (W : float; R : Multivector.Rotor) return Multivector.Rotor is
+      Sum       : Rotor := R;
    begin
-      return (W + R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+      Update_Scalar_Part (Sum, Scalar_Part (R) + W);
+       return Sum;
+ --     return (W + R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
    end "+";
 
    --  ------------------------------------------------------------------------
 
-   function "-" (W : float; R : Rotor) return Rotor is
+--     function "-" (W : float; R : muRotor) return Multivector.Rotor is
+--     begin
+--        return (W - R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+--     end "-";
+
+   --  ------------------------------------------------------------------------
+
+   function "-" (W : float; R : Rotor) return Multivector.Rotor is
+       Sum       : Rotor := R;
    begin
-      return (W - R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+      Update_Scalar_Part (Sum, W - Scalar_Part (R));
+       return Sum;
    end "-";
 
    --  ------------------------------------------------------------------------
@@ -239,10 +289,24 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Dot_Product (R1, R2 : Rotor) return float is
+   function Dot_Product (R1, R2 : Rotor) return Float is
+      use Blade_List_Package;
+      use Blade;
+      R1_Blades : Blade_List := Get_Blade_List (R1);
+      R2_Blades : Blade_List := Get_Blade_List (R2);
+      R1_Curs   : Cursor := R1_Blades.First;
+      R2_Curs   : Cursor := R2_Blades.First;
+      Product   : Float := Scalar_Part (R1) * Scalar_Part (R2);
    begin
-      return R1.C1_Scalar * R2.C1_Scalar + R1.C2_e1e2 * R2.C2_e1e2 +
-        R1.C3_e2e3 * R2.C3_e2e3 + R1.C4_e3e1 * R2.C4_e3e1;
+      while Has_Element (R1_Curs) and Has_Element (R2_Curs) loop
+         Product := Product +
+           Weight (Element (R1_Curs)) * Weight (Element (R1_Curs));
+         Next (R1_Curs);
+         Next (R2_Curs);
+      end loop;
+      return Product;
+--        return R1.C1_Scalar * R2.C1_Scalar + R1.C2_e1e2 * R2.C2_e1e2 +
+--          R1.C3_e2e3 * R2.C3_e2e3 + R1.C4_e3e1 * R2.C4_e3e1;
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -309,22 +373,35 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function e1e2 (R : Rotor) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (R);
+      Curs    : Cursor := Blades.First;
    begin
-      return R.C2_e1e2;
+      Next (Curs);
+      return Blade.Weight (Element (Curs));
+--        return R.C2_e1e2;
    end e1e2;
 
    --  ------------------------------------------------------------------------
 
    function e2e3 (R : Rotor) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (R);
+      Curs    : Cursor := Blades.First;
    begin
-      return R.C3_e2e3;
+      Next (Curs);
+      Next (Curs);
+      return Blade.Weight (Element (Curs));
+--        return R.C3_e2e3;
    end e2e3;
 
    --  ------------------------------------------------------------------------
 
    function e3e1 (R : Rotor) return float is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (R);
    begin
-      return R.C4_e3e1;
+      return Blade.Weight (Blades.Last_Element);
    end e3e1;
 
    --  ------------------------------------------------------------------------
@@ -472,23 +549,23 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Geometric_Product (R1, R2 : Rotor) return Rotor is
-   begin
-      return (-R1.C2_e1e2 * R2.C2_e1e2 - R1.C3_e2e3 * R2.C3_e2e3 - R1.C4_e3e1 * R2.C4_e3e1 + R1.C1_Scalar * R2.C1_Scalar,
-              -R1.C3_e2e3 * R2.C4_e3e1 + R1.C2_e1e2 * R2.C1_Scalar + R1.C4_e3e1 * R2.C3_e2e3 + R1.C1_Scalar * R2.C2_e1e2,
-              -R1.C4_e3e1 * R2.C2_e1e2 + R1.C1_Scalar * R2.C3_e2e3 - R1.C2_e1e2 * R2.C4_e3e1 + R1.C3_e2e3 * R2.C1_Scalar,
-              -R1.C2_e1e2 * R2.C3_e2e3 + R1.C3_e2e3 * R2.C2_e1e2 + R1.C4_e3e1 * R2.C1_Scalar + R1.C1_Scalar * R2.C4_e3e1);
-   end Geometric_Product;
+--     function Geometric_Product (R1, R2 : Rotor) return Rotor is
+--     begin
+--        return (-R1.C2_e1e2 * R2.C2_e1e2 - R1.C3_e2e3 * R2.C3_e2e3 - R1.C4_e3e1 * R2.C4_e3e1 + R1.C1_Scalar * R2.C1_Scalar,
+--                -R1.C3_e2e3 * R2.C4_e3e1 + R1.C2_e1e2 * R2.C1_Scalar + R1.C4_e3e1 * R2.C3_e2e3 + R1.C1_Scalar * R2.C2_e1e2,
+--                -R1.C4_e3e1 * R2.C2_e1e2 + R1.C1_Scalar * R2.C3_e2e3 - R1.C2_e1e2 * R2.C4_e3e1 + R1.C3_e2e3 * R2.C1_Scalar,
+--                -R1.C2_e1e2 * R2.C3_e2e3 + R1.C3_e2e3 * R2.C2_e1e2 + R1.C4_e3e1 * R2.C1_Scalar + R1.C1_Scalar * R2.C4_e3e1);
+--     end Geometric_Product;
 
    --  ------------------------------------------------------------------------
 
-   function Geometric_Product (R : Rotor; MV : Syn_SMultivector) return Syn_SMultivector is
-   begin
-      return (-R.C4_e3e1 * MV.C3_e3 + R.C2_e1e2 * MV.C2_e2 + R.C1_Scalar * MV.C1_e1 - R.C3_e2e3 * MV.C4_e1e2e3,
-              R.C3_e2e3 * MV.C3_e3 - R.C4_e3e1 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C2_e2 - R.C2_e1e2 * MV.C1_e1,
-              R.C4_e3e1 * MV.C1_e1 - R.C3_e2e3 * MV.C2_e2 - R.C2_e1e2 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C3_e3,
-              R.C3_e2e3 * MV.C1_e1 + R.C1_Scalar * MV.C3_e3 + R.C4_e3e1 * MV.C2_e2 + R.C2_e1e2 * MV.C3_e3);
-   end Geometric_Product;
+--     function Geometric_Product (R : Rotor; MV : Syn_SMultivector) return Syn_SMultivector is
+--     begin
+--        return (-R.C4_e3e1 * MV.C3_e3 + R.C2_e1e2 * MV.C2_e2 + R.C1_Scalar * MV.C1_e1 - R.C3_e2e3 * MV.C4_e1e2e3,
+--                R.C3_e2e3 * MV.C3_e3 - R.C4_e3e1 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C2_e2 - R.C2_e1e2 * MV.C1_e1,
+--                R.C4_e3e1 * MV.C1_e1 - R.C3_e2e3 * MV.C2_e2 - R.C2_e1e2 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C3_e3,
+--                R.C3_e2e3 * MV.C1_e1 + R.C1_Scalar * MV.C3_e3 + R.C4_e3e1 * MV.C2_e2 + R.C2_e1e2 * MV.C3_e3);
+--     end Geometric_Product;
 
    --  ------------------------------------------------------------------------
 
@@ -543,8 +620,19 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coords (R : Rotor) return Array_4D is
+      use Blade_List_Package;
+      Blades  : constant Blade_List := Get_Blade_List (R);
+      Curs    : Cursor := Blades.First;
+      Index   : Integer := 0;
+      Result  : Array_4D;
    begin
-      return (R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+      while Has_Element (Curs) and Index < 4 loop
+         Index := Index + 1;
+         Result (Index) := Blade.Weight (Element (Curs));
+         Next (Curs);
+      end loop;
+      return Result;
+--        return (R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
@@ -578,11 +666,32 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function Inverse (aRotor : Rotor) return Rotor is
-      Norm_Inv  : float;
+      use Blade_List_Package;
+      use Blade;
+      Inv_R    : Rotor := aRotor;
+      Blades   : Blade_List;
+      aBlade   : Basis_Blade;
+      Curs     : Cursor;
+      Value    : Float;
+      Norm_Inv : Float;
+      Index    : E3_Base := Blade.E3_e1;
    begin
       Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
-      return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
-               -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
+      Update_Scalar_Part (Inv_R, Norm_Inv * Scalar_Part (aRotor));
+      Blades := Get_Blade_List (Inv_R);
+      Curs := Blades.First;
+      Next (Curs);
+      while Has_Element (Curs) loop
+         Value := Norm_Inv * Weight (Element (Curs));
+         aBlade := New_Basis_Blade (Index, Value);
+         Replace_Element (Blades, Curs, aBlade);
+         Index := Blade.E3_Base'Succ (Index);
+         Next (Curs);
+      end loop;
+      Update (Inv_R, Blades);
+      return Inv_R;
+--        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
+--                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
    end Inverse;
 
    --  ------------------------------------------------------------------------
@@ -858,7 +967,7 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function R_Scalar (R : Rotor) return float is
+   function R_Scalar (R : Multivector.Rotor) return float is
    begin
       return R.C1_Scalar;
    end R_Scalar;
