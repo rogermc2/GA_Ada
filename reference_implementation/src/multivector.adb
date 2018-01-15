@@ -165,6 +165,13 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Dot (MV1, MV2 : Multivector) return Multivector is
+   begin
+      return Inner_Product (MV1, MV2, Hestenes_Inner_Product);
+   end Dot;
+
+   --  -------------------------------------------------------------------------
+
    function Dual (MV : Multivector) return Multivector is
       use Blade_List_Package;
       use GA_Maths;

@@ -32,6 +32,7 @@ package Multivector is
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
    function Blades (MV : Multivector) return Blade_List;
    function C3_Multivector return Multivector;
+   function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function E1 (V : Vector) return float;
