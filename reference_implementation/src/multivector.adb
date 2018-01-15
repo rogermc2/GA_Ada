@@ -24,20 +24,18 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Add (MV : Multivector; S :Float) return Multivector is
-      use Blade_List_Package;
-      Blades  : constant Blade_List := MV.Blades;
-      aBlade  : Blade.Basis_Blade;
-      Curs    : Cursor := Blades.First;
-      MV1     : Multivector;
+      MV1     : Multivector := MV;
    begin
-      while Has_Element (Curs) loop
-         aBlade := Element (Curs);
-         MV1.Blades.Append (aBlade);
-         Next (Curs);
-      end loop;
       MV1.Blades.Append (New_Scalar_Blade (S));
       Simplify (MV1);
       return MV1;
+   end Add;
+
+   --  ------------------------------------------------------------------------
+
+   function Add (S :Float; MV : Multivector) return Multivector is
+   begin
+      return Add (MV, S);
    end Add;
 
    --  ------------------------------------------------------------------------
@@ -77,7 +75,7 @@ package body Multivector is
    end "+";
 
    --  -------------------------------------------------------------------------
-
+   --  Return negative value of a  multivector
    function "-" (MV : Multivector) return Multivector is
       use Blade_List_Package;
       Blades_1   : constant Blade_List := MV.Blades;
@@ -120,6 +118,34 @@ package body Multivector is
    end "-";
 
    --  -------------------------------------------------------------------------
+
+   function "*" (Scale : float; MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      Blades : Blade_List := Get_Blade_List (MV);
+      Curs   : Cursor := Blades.First;
+      aBlade : Basis_Blade;
+      Prod   : Float;
+      New_MV : Multivector := MV;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         Prod := Scale * Weight (aBlade);
+         Blade.Update_Blade (aBlade, Prod);
+         New_MV.Blades.Replace_Element (Curs, aBlade);
+         Next (Curs);
+      end loop;
+      return New_MV;
+--        return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
+   end "*";
+
+   --  ------------------------------------------------------------------------
+
+   function "*" (MV : Multivector; Scale : float) return Multivector is
+   begin
+      return Scale * MV;
+   end "*";
+
+   --  ------------------------------------------------------------------------
 
    procedure Add_Blade (MV : in out Multivector; aBlade : Blade.Basis_Blade) is
    begin
