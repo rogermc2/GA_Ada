@@ -34,13 +34,14 @@ package Multivector is
    procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
    function Blades (MV : Multivector) return Blade_List;
-   function C3_Multivector return Multivector;
+--     function C3_Multivector return Multivector;
+   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return float;
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
-   function E1 (V : Vector) return float;
-   function E2 (V : Vector) return float;
-   function E1_E2 (BV : Bivector) return float;
+   function E1 (MV : Multivector) return float;
+   function E2 (MV : Multivector) return float;
+   function E1_E2 (MV : Multivector) return float;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;

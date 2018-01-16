@@ -182,12 +182,33 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function C3_Multivector return Multivector is
-      MV : Multivector;
+--     function C3_Multivector return Multivector is
+--        MV : Multivector;
+--     begin
+--        MV.Blades := C3_Blade_List;
+--        return MV;
+--     end C3_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return float is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades  : constant Blade_List := Get_Blade_List (MV);
+      Curs    : Cursor := Blades.First;
+      Value   : Float := 0.0;
+      Found   : Boolean := False;
    begin
-      MV.Blades := C3_Blade_List;
-      return MV;
-   end C3_Multivector;
+      while Has_Element (Curs) and not Found loop
+         Found := Blade.Bitmap (Element (Curs)) = BM;
+         if found then
+           Value :=  Blade.Weight (Element (Curs));
+         else
+            Next (Curs);
+         end if;
+      end loop;
+      return Value;
+   end Component;
 
    --  -------------------------------------------------------------------------
 
@@ -228,29 +249,40 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function E1 (V : Vector) return float is
-      use Blade_List_Package;
-      Blades  : constant Blade_List := Get_Blade_List (V);
+   function E1 (MV : Multivector) return float is
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
+      BM_E1   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Blade.Weight (Blades.First_Element);
+      return Component (MV, BM_E1);
    end E1;
 
    --  -------------------------------------------------------------------------
 
-   function E2 (V : Vector) return float is
-      use Blade_List_Package;
-      Blades  : constant Blade_List := Get_Blade_List (V);
+   function E2 (MV : Multivector) return float is
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e2));
+      BM_E2   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Blade.Weight (Blades.Last_Element);
+      return Component (MV, BM_E2);
    end E2;
 
    --  -------------------------------------------------------------------------
 
-   function E1_E2 (BV : Bivector) return float is
-      use Blade_List_Package;
-      Blades  : constant Blade_List := Get_Blade_List (BV);
+   function E1_E2 (MV : Multivector) return float is
+      use GA_Maths;
+      Use Interfaces;
+      BM_E1   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
+      BM_E2   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e2));
+      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (BM_E1 or BM_E2);
    begin
-      return Blade.Weight (Element (Blades.First));
+      return Component (MV, BM_E12);
    end E1_E2;
 
    --  -------------------------------------------------------------------------
