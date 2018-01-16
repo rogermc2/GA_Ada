@@ -39,9 +39,6 @@ package Multivector is
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
-   function E1 (MV : Multivector) return float;
-   function E2 (MV : Multivector) return float;
-   function E1_E2 (MV : Multivector) return float;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;

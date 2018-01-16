@@ -372,6 +372,47 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
+   function E1 (MV : Multivector.Multivector) return float is
+      use Blade;
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
+      BM_E1   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
+   begin
+      return Component (MV, BM_E1);
+   end E1;
+
+   --  -------------------------------------------------------------------------
+
+   function E2 (MV : Multivector.Multivector) return float is
+      use Blade;
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1,E3_Base'Enum_Rep (E3_e2));
+      BM_E2   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
+   begin
+      return Component (MV, BM_E2);
+   end E2;
+
+   --  -------------------------------------------------------------------------
+
+   function E1_E2 (MV : Multivector.Multivector) return float is
+      use Blade;
+      use GA_Maths;
+      use Interfaces;
+      BM_E1   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
+      BM_E2   : constant Unsigned_32 :=
+        Shift_Left (1, E3_Base'Enum_Rep (E3_e2));
+      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (BM_E1 or BM_E2);
+   begin
+      return Component (MV, BM_E12);
+   end E1_E2;
+
+   --  -------------------------------------------------------------------------
+
    function e1e2 (R : Rotor) return float is
       use Blade_List_Package;
       Blades  : constant Blade_List := Get_Blade_List (R);
