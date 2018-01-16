@@ -206,26 +206,16 @@ package body E2GA is
 
    function e1 (MV : Multivector.Multivector) return float is
       use Blade;
-      use GA_Maths;
-      Use Interfaces;
-      BM_32   : constant Unsigned_32 :=
-        Shift_Left (1, E2_Base'Enum_Rep (E2_e1));
-      BM_E1   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Component (MV, BM_E1);
+      return Component (MV, E2_Base'Enum_Rep (E2_e1));
    end e1;
 
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
-      use GA_Maths;
-      Use Interfaces;
-      BM_32   : constant Unsigned_32 :=
-        Shift_Left (1,E2_Base'Enum_Rep (E2_e2));
-      BM_E2   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Component (MV, BM_E2);
+      return Component (MV, E2_Base'Enum_Rep (E2_e2));
    end e2;
 
    --  -------------------------------------------------------------------------
@@ -233,12 +223,8 @@ package body E2GA is
    function e1_e2 (BV : Multivector.Bivector) return float is
       use Blade;
       use GA_Maths;
-      use Interfaces;
-      BM_E1   : constant Unsigned_32 :=
-        Shift_Left (1, E2_Base'Enum_Rep (E2_e1));
-      BM_E2   : constant Unsigned_32 :=
-        Shift_Left (1, E2_Base'Enum_Rep (E2_e2));
-      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (BM_E1 or BM_E2);
+      BM_E12   : constant Unsigned_Integer :=
+        Unsigned_Integer (E2_Base'Enum_Rep (E2_e1)) or Unsigned_Integer (E2_Base'Enum_Rep (E2_e2));
    begin
       return Component (BV, BM_E12);
    end e1_e2;

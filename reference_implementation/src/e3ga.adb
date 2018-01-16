@@ -47,9 +47,9 @@ package body E3GA is
    MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
      (0, 1, 1, 2, 1, 2, 2, 3);
 
-   e1_basis : Array_3D := (1.0, 0.0, 0.0);
-   e2_basis : Array_3D := (0.0, 1.0, 0.0);
-   e3_basis : Array_3D := (0.0, 0.0, 1.0);
+--     e1_basis : Array_3D := (1.0, 0.0, 0.0);
+--     e2_basis : Array_3D := (0.0, 1.0, 0.0);
+--     e3_basis : Array_3D := (0.0, 0.0, 1.0);
 
    --  ------------------------------------------------------------------------
 
@@ -374,39 +374,24 @@ package body E3GA is
 
    function e1 (MV : Multivector.Multivector) return float is
       use Blade;
-      use GA_Maths;
-      Use Interfaces;
-      BM_32   : constant Unsigned_32 :=
-        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
-      BM_E1   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Component (MV, BM_E1);
+      return Component (MV, E3_Base'Enum_Rep (E3_e1));
    end e1;
 
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
-      use GA_Maths;
-      Use Interfaces;
-      BM_32   : constant Unsigned_32 :=
-        Shift_Left (1,E3_Base'Enum_Rep (E3_e2));
-      BM_E2   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
    begin
-      return Component (MV, BM_E2);
+      return Component (MV, E3_Base'Enum_Rep (E3_e2));
    end e2;
 
    --  -------------------------------------------------------------------------
 
    function e1_e2 (MV : Multivector.Multivector) return float is
       use Blade;
-      use GA_Maths;
-      use Interfaces;
-      BM_E1   : constant Unsigned_32 :=
-        Shift_Left (1, E3_Base'Enum_Rep (E3_e1));
-      BM_E2   : constant Unsigned_32 :=
-        Shift_Left (1, E3_Base'Enum_Rep (E3_e2));
-      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (BM_E1 or BM_E2);
+      BM_E12   : constant Unsigned_Integer :=
+        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e2));
    begin
       return Component (MV, BM_E12);
    end e1_e2;
