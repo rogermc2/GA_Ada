@@ -559,6 +559,17 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector is
+     BV : Bivector;
+   begin
+      BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
+      BV.Blades.Append (New_Basis_Blade (BV_e2e3, e2e3));
+      BV.Blades.Append (New_Basis_Blade (BV_e3e1, e3e1));
+      return BV;
+   end New_Bivector;
+
+   --  -------------------------------------------------------------------------
+
    function New_Multivector (Scalar_Weight : Float) return Multivector is
       MV : Multivector;
    begin

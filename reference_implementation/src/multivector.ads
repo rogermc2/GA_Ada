@@ -55,6 +55,7 @@ package Multivector is
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
    function New_Bivector (V1, V2 : Vector) return Bivector;
+   function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Rotor (Scalar_Weight : Float) return Rotor;
