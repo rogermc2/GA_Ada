@@ -71,7 +71,7 @@ package E3GA is
    function e1e2 (R : Rotor) return float;
    function e2e3 (R : Rotor) return float;
    function e3e1 (R : Rotor) return float;
-   function R_Scalar (R : Rotor) return float;
+--     function R_Scalar (R : Rotor) return float;
 
 --     function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
 --     function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
@@ -120,8 +120,8 @@ package E3GA is
     procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
-   procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);
-   procedure Set_Rotor (X : out Rotor; C_Scalar : float);
+--     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);
+--     procedure Set_Rotor (X : out Rotor; C_Scalar : float);
 --     procedure Set_Rotor (X : out Rotor; MV : Multivector);
 --     procedure Set_Rotor (X : out Rotor; BV : Bivector);
 --     procedure Set_Rotor (X : out Rotor; C_Scalar : float; BV : Bivector);
@@ -131,7 +131,7 @@ package E3GA is
 --      function To_3D (V : E2GA.Vector) return Vector;
 --     function To_Vector (MV : Syn_SMultivector) return Vector;
    --  Unit_e normalizes rotor R
-   function Unit_e (R : Rotor) return Rotor;
+--     function Unit_e (R : Rotor) return Rotor;
    --  Unit_e normalizes Vector X
 --     function Unit_e (X : Vector) return Vector;
 

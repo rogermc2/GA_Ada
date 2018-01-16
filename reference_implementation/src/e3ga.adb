@@ -1008,10 +1008,10 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function R_Scalar (R : Multivector.Rotor) return float is
-   begin
-      return R.C1_Scalar;
-   end R_Scalar;
+--     function R_Scalar (R : Multivector.Rotor) return float is
+--     begin
+--        return R.C1_Scalar;
+--     end R_Scalar;
 
    --  -----------------------------------------------------------------------
 
@@ -1074,17 +1074,17 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Rotor (X : out Rotor; C_Scalar : float) is
-   begin
-      X := (C_Scalar, 0.0, 0.0, 0.0);
-   end Set_Rotor;
+--     procedure Set_Rotor (X : out Rotor; C_Scalar : float) is
+--     begin
+--        X := (C_Scalar, 0.0, 0.0, 0.0);
+--     end Set_Rotor;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float) is
-   begin
-      X := (C_Scalar, C2, C3, C4);
-   end Set_Rotor;
+--     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float) is
+--     begin
+--        X := (C_Scalar, C2, C3, C4);
+--     end Set_Rotor;
 
    --  ------------------------------------------------------------------------
 
@@ -1132,19 +1132,19 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
    --  Unit_e normalizes rotor R
-   function Unit_e (R : Rotor) return Rotor is
-      R2         : float;
-      Scale      : float;
-      Norm_Rotor : Rotor;
-   begin
-      R2 := R.C1_Scalar * R.C1_Scalar + R.C2_e1e2 * R.C2_e1e2 +
-        R.C3_e2e3 * R.C3_e2e3 + R.C4_e3e1 * R.C4_e3e1;
-      Scale := 1.0 / (Float_Functions.Sqrt (R2));
-
-      Set_Rotor (Norm_Rotor, R.C1_Scalar * Scale, R.C2_e1e2 * Scale,
-                 R.C3_e2e3 * Scale, R.C4_e3e1 * Scale);
-      return Norm_Rotor;
-   end Unit_E;
+--     function Unit_e (R : Rotor) return Rotor is
+--        R2         : float;
+--        Scale      : float;
+--        Norm_Rotor : Rotor;
+--     begin
+--        R2 := R.C1_Scalar * R.C1_Scalar + R.C2_e1e2 * R.C2_e1e2 +
+--          R.C3_e2e3 * R.C3_e2e3 + R.C4_e3e1 * R.C4_e3e1;
+--        Scale := 1.0 / (Float_Functions.Sqrt (R2));
+--
+--        Set_Rotor (Norm_Rotor, R.C1_Scalar * Scale, R.C2_e1e2 * Scale,
+--                   R.C3_e2e3 * Scale, R.C4_e3e1 * Scale);
+--        return Norm_Rotor;
+--     end Unit_E;
 
    --  ------------------------------------------------------------------------
    --  Unit_e normalizes vector X
