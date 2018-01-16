@@ -118,8 +118,8 @@ package E3GA is
 --     function Norm_E2 (MV : E2GA.Multivector) return Scalar;
 --     function Norm_E2 (R : Rotor) return Scalar;
 --     function Norm_E2 (TV : Trivector) return Scalar;
---     function Norm_R (BV : Bivector) return Scalar;
---     function Norm_R2 (BV : Bivector) return Scalar;
+   function Norm_R (BV : Bivector) return Float;
+   function Norm_R2 (BV : Bivector) return Float;
 --      procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
     procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;

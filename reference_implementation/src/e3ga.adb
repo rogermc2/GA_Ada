@@ -47,9 +47,9 @@ package body E3GA is
    MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
      (0, 1, 1, 2, 1, 2, 2, 3);
 
---     e1_basis : Array_3D := (1.0, 0.0, 0.0);
---     e2_basis : Array_3D := (0.0, 1.0, 0.0);
---     e3_basis : Array_3D := (0.0, 0.0, 1.0);
+   --     e1_basis : Array_3D := (1.0, 0.0, 0.0);
+   --     e2_basis : Array_3D := (0.0, 1.0, 0.0);
+   --     e3_basis : Array_3D := (0.0, 0.0, 1.0);
 
    --  ------------------------------------------------------------------------
 
@@ -175,14 +175,14 @@ package body E3GA is
       Quotient  : Rotor :=
         New_Rotor (Scalar_Part (R) / S);
    begin
-       while Has_Element (Curs) loop
+      while Has_Element (Curs) loop
          aBlade := Element (Curs);
          New_Blade := New_Basis_Blade (Index, Weight (aBlade) * S);
          Add_Blade (Quotient, New_Blade);
          Next (Curs);
          Index := E3_Base'Succ (Index);
-       end loop;
-       return Quotient;
+      end loop;
+      return Quotient;
    end "/";
 
    --  ------------------------------------------------------------------------
@@ -198,24 +198,24 @@ package body E3GA is
       Sum       : Rotor := R;
    begin
       Update_Scalar_Part (Sum, Scalar_Part (R) + W);
-       return Sum;
- --     return (W + R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+      return Sum;
+      --     return (W + R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
    end "+";
 
    --  ------------------------------------------------------------------------
 
---     function "-" (W : float; R : muRotor) return Multivector.Rotor is
---     begin
---        return (W - R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
---     end "-";
+   --     function "-" (W : float; R : muRotor) return Multivector.Rotor is
+   --     begin
+   --        return (W - R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+   --     end "-";
 
    --  ------------------------------------------------------------------------
 
    function "-" (W : float; R : Rotor) return Multivector.Rotor is
-       Sum       : Rotor := R;
+      Sum       : Rotor := R;
    begin
       Update_Scalar_Part (Sum, W - Scalar_Part (R));
-       return Sum;
+      return Sum;
    end "-";
 
    --  ------------------------------------------------------------------------
@@ -305,8 +305,8 @@ package body E3GA is
          Next (R2_Curs);
       end loop;
       return Product;
---        return R1.C1_Scalar * R2.C1_Scalar + R1.C2_e1e2 * R2.C2_e1e2 +
---          R1.C3_e2e3 * R2.C3_e2e3 + R1.C4_e3e1 * R2.C4_e3e1;
+      --        return R1.C1_Scalar * R2.C1_Scalar + R1.C2_e1e2 * R2.C2_e1e2 +
+      --          R1.C3_e2e3 * R2.C3_e2e3 + R1.C4_e3e1 * R2.C4_e3e1;
    end Dot_Product;
 
    --  ------------------------------------------------------------------------
@@ -444,7 +444,7 @@ package body E3GA is
    begin
       Next (Curs);
       return Blade.Weight (Element (Curs));
---        return R.C2_e1e2;
+      --        return R.C2_e1e2;
    end e1e2;
 
    --  ------------------------------------------------------------------------
@@ -457,7 +457,7 @@ package body E3GA is
       Next (Curs);
       Next (Curs);
       return Blade.Weight (Element (Curs));
---        return R.C3_e2e3;
+      --        return R.C3_e2e3;
    end e2e3;
 
    --  ------------------------------------------------------------------------
@@ -614,23 +614,23 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
---     function Geometric_Product (R1, R2 : Rotor) return Rotor is
---     begin
---        return (-R1.C2_e1e2 * R2.C2_e1e2 - R1.C3_e2e3 * R2.C3_e2e3 - R1.C4_e3e1 * R2.C4_e3e1 + R1.C1_Scalar * R2.C1_Scalar,
---                -R1.C3_e2e3 * R2.C4_e3e1 + R1.C2_e1e2 * R2.C1_Scalar + R1.C4_e3e1 * R2.C3_e2e3 + R1.C1_Scalar * R2.C2_e1e2,
---                -R1.C4_e3e1 * R2.C2_e1e2 + R1.C1_Scalar * R2.C3_e2e3 - R1.C2_e1e2 * R2.C4_e3e1 + R1.C3_e2e3 * R2.C1_Scalar,
---                -R1.C2_e1e2 * R2.C3_e2e3 + R1.C3_e2e3 * R2.C2_e1e2 + R1.C4_e3e1 * R2.C1_Scalar + R1.C1_Scalar * R2.C4_e3e1);
---     end Geometric_Product;
+   --     function Geometric_Product (R1, R2 : Rotor) return Rotor is
+   --     begin
+   --        return (-R1.C2_e1e2 * R2.C2_e1e2 - R1.C3_e2e3 * R2.C3_e2e3 - R1.C4_e3e1 * R2.C4_e3e1 + R1.C1_Scalar * R2.C1_Scalar,
+   --                -R1.C3_e2e3 * R2.C4_e3e1 + R1.C2_e1e2 * R2.C1_Scalar + R1.C4_e3e1 * R2.C3_e2e3 + R1.C1_Scalar * R2.C2_e1e2,
+   --                -R1.C4_e3e1 * R2.C2_e1e2 + R1.C1_Scalar * R2.C3_e2e3 - R1.C2_e1e2 * R2.C4_e3e1 + R1.C3_e2e3 * R2.C1_Scalar,
+   --                -R1.C2_e1e2 * R2.C3_e2e3 + R1.C3_e2e3 * R2.C2_e1e2 + R1.C4_e3e1 * R2.C1_Scalar + R1.C1_Scalar * R2.C4_e3e1);
+   --     end Geometric_Product;
 
    --  ------------------------------------------------------------------------
 
---     function Geometric_Product (R : Rotor; MV : Syn_SMultivector) return Syn_SMultivector is
---     begin
---        return (-R.C4_e3e1 * MV.C3_e3 + R.C2_e1e2 * MV.C2_e2 + R.C1_Scalar * MV.C1_e1 - R.C3_e2e3 * MV.C4_e1e2e3,
---                R.C3_e2e3 * MV.C3_e3 - R.C4_e3e1 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C2_e2 - R.C2_e1e2 * MV.C1_e1,
---                R.C4_e3e1 * MV.C1_e1 - R.C3_e2e3 * MV.C2_e2 - R.C2_e1e2 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C3_e3,
---                R.C3_e2e3 * MV.C1_e1 + R.C1_Scalar * MV.C3_e3 + R.C4_e3e1 * MV.C2_e2 + R.C2_e1e2 * MV.C3_e3);
---     end Geometric_Product;
+   --     function Geometric_Product (R : Rotor; MV : Syn_SMultivector) return Syn_SMultivector is
+   --     begin
+   --        return (-R.C4_e3e1 * MV.C3_e3 + R.C2_e1e2 * MV.C2_e2 + R.C1_Scalar * MV.C1_e1 - R.C3_e2e3 * MV.C4_e1e2e3,
+   --                R.C3_e2e3 * MV.C3_e3 - R.C4_e3e1 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C2_e2 - R.C2_e1e2 * MV.C1_e1,
+   --                R.C4_e3e1 * MV.C1_e1 - R.C3_e2e3 * MV.C2_e2 - R.C2_e1e2 * MV.C4_e1e2e3 + R.C1_Scalar * MV.C3_e3,
+   --                R.C3_e2e3 * MV.C1_e1 + R.C1_Scalar * MV.C3_e3 + R.C4_e3e1 * MV.C2_e2 + R.C2_e1e2 * MV.C3_e3);
+   --     end Geometric_Product;
 
    --  ------------------------------------------------------------------------
 
@@ -697,7 +697,7 @@ package body E3GA is
          Next (Curs);
       end loop;
       return Result;
---        return (R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
+      --        return (R.C1_Scalar, R.C2_e1e2, R.C3_e2e3, R.C4_e3e1);
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
@@ -755,8 +755,8 @@ package body E3GA is
       end loop;
       Update (Inv_R, Blades);
       return Inv_R;
---        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
---                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
+      --        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
+      --                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
    end Inverse;
 
    --  ------------------------------------------------------------------------
@@ -1007,6 +1007,30 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
+   function Norm_R (BV : Bivector) return Float is
+      use GA_Maths.Float_Functions;
+      DP     : constant float := Dot_Product (BV, BV);
+      Result : Float := 0.0;
+   begin
+      if DP /= 0.0 then
+         if DP < 0.0 then
+            Result := -Sqrt (-DP);
+         else
+            Result := Sqrt (DP);
+         end if;
+      end if;
+      return Result;
+   end Norm_R;
+
+   --  ------------------------------------------------------------------------
+
+      function Norm_R2 (BV : Bivector) return Float is
+      begin
+         return Dot_Product (BV, BV);
+      end Norm_R2;
+
+   --  ------------------------------------------------------------------------
+
    --     function Norm_R2 (BV : Bivector) return Scalar is
    --        Norm : Scalar;
    --     begin
@@ -1032,10 +1056,10 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
---     function R_Scalar (R : Multivector.Rotor) return float is
---     begin
---        return R.C1_Scalar;
---     end R_Scalar;
+   --     function R_Scalar (R : Multivector.Rotor) return float is
+   --     begin
+   --        return R.C1_Scalar;
+   --     end R_Scalar;
 
    --  -----------------------------------------------------------------------
 
@@ -1098,17 +1122,17 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
---     procedure Set_Rotor (X : out Rotor; C_Scalar : float) is
---     begin
---        X := (C_Scalar, 0.0, 0.0, 0.0);
---     end Set_Rotor;
+   --     procedure Set_Rotor (X : out Rotor; C_Scalar : float) is
+   --     begin
+   --        X := (C_Scalar, 0.0, 0.0, 0.0);
+   --     end Set_Rotor;
 
    --  ------------------------------------------------------------------------
 
---     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float) is
---     begin
---        X := (C_Scalar, C2, C3, C4);
---     end Set_Rotor;
+   --     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float) is
+   --     begin
+   --        X := (C_Scalar, C2, C3, C4);
+   --     end Set_Rotor;
 
    --  ------------------------------------------------------------------------
 
@@ -1156,19 +1180,19 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
    --  Unit_e normalizes rotor R
---     function Unit_e (R : Rotor) return Rotor is
---        R2         : float;
---        Scale      : float;
---        Norm_Rotor : Rotor;
---     begin
---        R2 := R.C1_Scalar * R.C1_Scalar + R.C2_e1e2 * R.C2_e1e2 +
---          R.C3_e2e3 * R.C3_e2e3 + R.C4_e3e1 * R.C4_e3e1;
---        Scale := 1.0 / (Float_Functions.Sqrt (R2));
---
---        Set_Rotor (Norm_Rotor, R.C1_Scalar * Scale, R.C2_e1e2 * Scale,
---                   R.C3_e2e3 * Scale, R.C4_e3e1 * Scale);
---        return Norm_Rotor;
---     end Unit_E;
+   --     function Unit_e (R : Rotor) return Rotor is
+   --        R2         : float;
+   --        Scale      : float;
+   --        Norm_Rotor : Rotor;
+   --     begin
+   --        R2 := R.C1_Scalar * R.C1_Scalar + R.C2_e1e2 * R.C2_e1e2 +
+   --          R.C3_e2e3 * R.C3_e2e3 + R.C4_e3e1 * R.C4_e3e1;
+   --        Scale := 1.0 / (Float_Functions.Sqrt (R2));
+   --
+   --        Set_Rotor (Norm_Rotor, R.C1_Scalar * Scale, R.C2_e1e2 * Scale,
+   --                   R.C3_e2e3 * Scale, R.C4_e3e1 * Scale);
+   --        return Norm_Rotor;
+   --     end Unit_E;
 
    --  ------------------------------------------------------------------------
    --  Unit_e normalizes vector X
