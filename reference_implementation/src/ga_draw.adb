@@ -116,6 +116,7 @@ package body GA_Draw is
       MVP_Matrix           : Matrix4 := Singles.Identity4;
       Scaled               : GL.Types.Single;
       Normed_E2            : Float;
+      RT                   : Multivector.Rotor;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -127,12 +128,16 @@ package body GA_Draw is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
-      if  Method = Draw_Bivector_Parallelogram and then
-        Method = Draw_Bivector_Parallelogram_No_Vectors then
+      if  Method /= Draw_Bivector_Parallelogram and then
+        Method /= Draw_Bivector_Parallelogram_No_Vectors then
          MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+         --  Rotate e3 to normal direction
+         RT := E3GA_Utilities.Rotor_Vector_To_Vector
+           (Multivector.Get_Basis_Vector (Blade.E3_e3), Normal);
+         GL_Util.Rotor_GL_Multiply (RT, MVP_Matrix);
       else
          Normed_E2 := Multivector.Norm_E2 (Multivector.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (E3GA.Get_Coord (Normed_E2)));
+         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / Normed_E2));
          MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
            * MVP_Matrix;
       end if;
@@ -173,7 +178,7 @@ package body GA_Draw is
       Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       MVP_Matrix           : Matrix4 := Singles.Identity4;
       Scaled               : GL.Types.Single;
-      E2_Norm              : Multivector.Scalar;
+      E2_Norm              : Float;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -191,7 +196,7 @@ package body GA_Draw is
                     Single (E3GA.Get_Coord_2 (Base)),
                     Single (E3GA.Get_Coord_3 (Base)));
       E2_Norm := Multivector.Norm_E2 (Base);
-      if  E3GA.Get_Coord (E2_Norm) /= 0.0  then
+      if  E2_Norm /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
       end if;
 
@@ -200,7 +205,7 @@ package body GA_Draw is
          MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
       else
          E2_Norm := Multivector.Norm_E2 (Multivector.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (E3GA.Get_Coord (E2_Norm)));
+         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (pi / E2_Norm));
          MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
            * MVP_Matrix;
       end if;
@@ -501,7 +506,7 @@ package body GA_Draw is
          Scale_Sign := -1.0;
       end if;
 
-      if E3GA.Get_Coord (Multivector.Norm_E2 (Position)) >= 0.0 then
+      if Multivector.Norm_E2 (Position) >= 0.0 then
          Translation_Matrix :=
           Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Position)),
                                      Single (E3GA.Get_Coord_2 (Position)),
@@ -563,6 +568,7 @@ package body GA_Draw is
       use GL.Types.Singles;
       use GA_Maths;
       use GA_Maths.Float_Functions;
+      use Multivector;
 
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       MV_Matrix_ID         : GL.Uniforms.Uniform;
@@ -576,17 +582,17 @@ package body GA_Draw is
       Z                    : Single := 0.0;
 --        Dir_e1               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
 --        Tail_e1              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
-      Dir_e1               : Single := Single (E3GA.Get_Coord_1 (Direction, E3_e1));
-      Dir_e2               : Single := Single (E3GA.Get_Coord_2 (Direction, E3_e2));
-      Dir_e3               : Single := Single (E3GA.Get_Coord_1 (Direction, E3_e3));
-      Tail_e1              : Single := Single (E3GA.Get_Coord_1 (Tail, E3_e1));
-      Tail_e2              : Single := Single (E3GA.Get_Coord_2 (Tail, E3_e2));
-      Tail_e3              : Single := Single (E3GA.Get_Coord_3 (Tail, E3_e3));
+      Dir_e1               : Single := Single (E3GA.e1 (Direction));
+      Dir_e2               : Single := Single (E3GA.e2 (Direction));
+      Dir_e3               : Single := Single (E3GA.e3 (Direction));
+      Tail_e1              : Single := Single (E3GA.e1 (Tail));
+      Tail_e2              : Single := Single (E3GA.e2 (Tail));
+      Tail_e3              : Single := Single (E3GA.e3 (Tail));
       Scale_Factor1        : Single := Single (1.2 / Scale);
       Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
       Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
       Scale_Factor2_V      : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
-      aRotor               : E3GA.Rotor;
+      aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
       if Scale /= 0.0 then
@@ -600,7 +606,7 @@ package body GA_Draw is
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
          Model_View_Matrix := MV_Matrix;
 
-         if E3GA.Get_Coord (Multivector.Norm_e2 (Tail)) /= 0.0 then
+         if Norm_e2 (Tail) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
@@ -609,13 +615,13 @@ package body GA_Draw is
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
-         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector (E3GA.e3, E3GA.Unit_e (Direction));
+         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
 
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector
-         if E3GA.Get_Coord (E3GA.Norm_e2 (Tail)) /= 0.0 then
+         if Norm_e2 (Tail) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
