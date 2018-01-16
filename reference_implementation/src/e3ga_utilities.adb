@@ -12,14 +12,16 @@ package body E3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   function exp (BV : Multivector.Bivector) return E3GA.Rotor is
+   function exp (BV : Multivector.Bivector) return Multivector.Rotor is
       use E3GA;
-      V          : Multivector.Vector :=
-        Multivector.Inner_Product (BV, BV, Blade.Left_Contraction);
-      X2         : float := Multivector.E1_E2 (V);
+      use Multivector;
+      V          : Vector :=
+        Inner_Product (BV, BV, Blade.Left_Contraction);
+      X2         : float := E3GA.e1_e2 (V);
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
+      Sum        : Bivector;
       Result     : Rotor;
    begin
       if X2 > 0.0 then
@@ -27,10 +29,13 @@ package body E3GA_Utilities is
       end if;
       Half_Angle := GA_Maths.Float_Functions.Sqrt (-X2);
       if Half_Angle = 0.0 then
-         Set_Rotor (Result, 1.0);
+         Update_Scalar_Part (Result, 1.0);
+--           Set_Rotor (Result, 1.0);
       else
          Cos_HA := GA_Maths.Float_Functions.Cos (Half_Angle);
          Sin_HA := GA_Maths.Float_Functions.Sin (Half_Angle) / Half_Angle;
+         Sum := Add (Cos_HA, Sin_HA * BV);
+         Result := New_Rotor (0.0, BV);
          E3GA.Set_Rotor (Result, Cos_HA, Sin_HA * BV);
       end if;
       return Result;
@@ -39,17 +44,17 @@ package body E3GA_Utilities is
    --  ----------------------------------------------------------------------------
 
    --  special log() for 3D rotors
-   function log (R : E3GA.Rotor) return Modular_Aux.Bivector is
+   function log (R : Multivector.Rotor) return Multivector.Bivector is
       use Multivector;
       R2       : float;
       R1       : float;
       BV       : Multivector.Bivector;
-      Result   : MultivectorBivector;
+      Result   : Multivector.Bivector;
    begin
       --  get the bivector 2-blade part of R
       Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := E3GA.Get_Coord (Norm_R (BV));
+      R2 := E3GA.Norm_R (BV);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, R_Scalar (R)) / R2;
@@ -67,7 +72,7 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Rotor (Name : String; R : E3GA.Rotor) is
+   procedure Print_Rotor (Name : String; R : Multivector.Rotor) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       Put_Line (Name & ": " & float'Image (Rot (1)) & ",  " & float'Image (Rot (2))
@@ -128,12 +133,12 @@ package body E3GA_Utilities is
       V2     : Vector_Unsigned := To_Unsigned (V_To);
       C1     : float;
       S      : float;
-      w0     : E3GA.Vector;
-      w1     : E3GA.Vector;
-      w2     : E3GA.Vector;
-      N2     : Scalar;
-      R      : Rotor;
-      Result : Rotor;
+      w0     : Multivector.Vector;
+      w1     : Multivector.Vector;
+      w2     : Multivector.Vector;
+      N2     : Float;
+      R      : Multivector.Rotor;
+      Result : Multivector.Rotor;
    begin
       Set_Coords (w0, 0.0, 0.0, 0.0);
       Set_Coords (w1, 0.0, 0.0, 0.0);
