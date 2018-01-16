@@ -35,7 +35,7 @@ package body GL_Util is
 
 --  ------------------------------------------------------------------
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
-    procedure Rotor_GL_Multiply (R : E3GA.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
+    procedure Rotor_GL_Multiply (R : Multivector.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
       use E3GA;
       use GL;
       use GL.Types.Singles;
@@ -74,7 +74,7 @@ package body GL_Util is
 
 --  ------------------------------------------------------------------
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
-   function Rotor_To_GL_Matrix (R : E3GA.Rotor) return  GL.Types.Singles.Matrix4 is
+   function Rotor_To_GL_Matrix (R : Multivector.Rotor) return  GL.Types.Singles.Matrix4 is
         use GL;
         M3        : GA_Maths.GA_Matrix3;
         GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
