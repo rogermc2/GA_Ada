@@ -388,6 +388,14 @@ package body E3GA is
 
    --  -------------------------------------------------------------------------
 
+   function e3 (MV : Multivector.Multivector) return float is
+      use Blade;
+   begin
+      return Component (MV, E3_Base'Enum_Rep (E3_e3));
+   end e3;
+
+   --  -------------------------------------------------------------------------
+
    function e1_e2 (MV : Multivector.Multivector) return float is
       use Blade;
       BM_E12   : constant Unsigned_Integer :=
@@ -395,6 +403,37 @@ package body E3GA is
    begin
       return Component (MV, BM_E12);
    end e1_e2;
+
+   --  -------------------------------------------------------------------------
+
+   function e1_e3 (MV : Multivector.Multivector) return float is
+      use Blade;
+      BM_E13   : constant Unsigned_Integer :=
+        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+   begin
+      return Component (MV, BM_E13);
+   end e1_e3;
+
+   --  -------------------------------------------------------------------------
+
+   function e2_e3 (MV : Multivector.Multivector) return float is
+      use Blade;
+      BM_E23   : constant Unsigned_Integer :=
+        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+   begin
+      return Component (MV, BM_E23);
+   end e2_e3;
+
+   --  -------------------------------------------------------------------------
+
+   function e1_e2_e3 (MV : Multivector.Multivector) return float is
+      use Blade;
+      BM   : constant Unsigned_Integer :=
+        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
+        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+   begin
+      return Component (MV, BM);
+   end e1_e2_e3;
 
    --  -------------------------------------------------------------------------
 

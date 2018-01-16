@@ -50,7 +50,11 @@ package C3GA is
 
    function e1 (MV : Multivector.Multivector) return float;
    function e2 (MV : Multivector.Multivector) return float;
+   function e3 (MV : Multivector.Multivector) return float;
    function e1_e2 (MV : Multivector.Multivector) return float;
+   function e1_e3 (MV : Multivector.Multivector) return float;
+   function e2_e3 (MV : Multivector.Multivector) return float;
+   function e1_e2_e3 (MV : Multivector.Multivector) return float;
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;

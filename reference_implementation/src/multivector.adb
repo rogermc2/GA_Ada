@@ -350,30 +350,27 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : E2_Base) return Multivector is
-      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
       MV : Multivector;
    begin
-      MV.Blades.Append (BB);
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : E3_Base) return Multivector is
-      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
-      MV : Multivector;
+       MV : Multivector;
    begin
-      MV.Blades.Append (BB);
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : C3_Base) return Multivector is
-      BB : constant Blade.Basis_Blade := New_Basis_Blade (Index);
-      MV : Multivector;
+       MV : Multivector;
    begin
-      MV.Blades.Append (BB);
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
