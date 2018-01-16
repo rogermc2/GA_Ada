@@ -48,6 +48,10 @@ package C3GA is
    function Coord (S : Scalar) return float;
 --     function Init (MV : Multivector.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
+   function e1 (MV : Multivector.Multivector) return float;
+   function e2 (MV : Multivector.Multivector) return float;
+   function e1_e2 (MV : Multivector.Multivector) return float;
+
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
    function E2_E3_NI (C : Circle) return float;
