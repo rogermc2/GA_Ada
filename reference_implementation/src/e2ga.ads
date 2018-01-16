@@ -66,7 +66,9 @@ package E2GA is
 --     function Dual (MV : Multivector) return Multivector;
    function e1 return Multivector.Vector;
    function e2 return Multivector.Vector;
---     function E1_E2 (BV : Bivector) return float;
+   function e1 (MV : Multivector.Multivector) return float;
+   function e2 (MV : Multivector.Multivector) return float;
+   function e1_e2 (BV : Multivector.Bivector) return float;
 --     function Get_Basis_Vector_Names return Blade.Basis_Vector_Names;
    function Get_Coord (BV : Bivector) return float;
    function Get_Coord (S : Scalar) return float;

@@ -12,7 +12,7 @@ with E3GA_Utilities;
 package body E2GA is
 
    type Basis_Name is (E1b, E2b);
-   type E2_Base is (e1_b, e2_b);
+--     type E2_Base is (e1_b, e2_b);
 
    type Array_BM4 is array (Bit_Map range 1 .. 4) of integer;
    type Array_F4 is array (1 .. 4) of float;
@@ -204,12 +204,44 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
---     function E1_E2 (BV : Bivector) return float is
---        use Multivector.Blade_List_Package;
---        Blades  : constant Multivector.Blade_List := Multivector.Get_Blade_List (BV);
---     begin
---        return Blade.Weight (Element (Blades.First));
---     end E1_E2;
+   function e1 (MV : Multivector.Multivector) return float is
+      use Blade;
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1, E2_Base'Enum_Rep (E2_e1));
+      BM_E1   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
+   begin
+      return Component (MV, BM_E1);
+   end e1;
+
+   --  -------------------------------------------------------------------------
+
+   function e2 (MV : Multivector.Multivector) return float is
+      use Blade;
+      use GA_Maths;
+      Use Interfaces;
+      BM_32   : constant Unsigned_32 :=
+        Shift_Left (1,E2_Base'Enum_Rep (E2_e2));
+      BM_E2   : constant Unsigned_Integer := Unsigned_Integer (BM_32);
+   begin
+      return Component (MV, BM_E2);
+   end e2;
+
+   --  -------------------------------------------------------------------------
+
+   function e1_e2 (BV : Multivector.Bivector) return float is
+      use Blade;
+      use GA_Maths;
+      use Interfaces;
+      BM_E1   : constant Unsigned_32 :=
+        Shift_Left (1, E2_Base'Enum_Rep (E2_e1));
+      BM_E2   : constant Unsigned_32 :=
+        Shift_Left (1, E2_Base'Enum_Rep (E2_e2));
+      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (BM_E1 or BM_E2);
+   begin
+      return Component (BV, BM_E12);
+   end e1_e2;
 
    --  -------------------------------------------------------------------------
 
