@@ -17,6 +17,8 @@ package Blade is
 
    type Basis_Blade is private;
 
+   type BV_Base is (BV_e1e2, BV_e2e3, BV_e3e1);
+   for BV_Base use (BV_e1e2 => 1, BV_e2e3 => 2, BV_e3e1 => 4);
    type E2_Base is (E2_e1, E2_e2);
    for E2_Base use (E2_e1 => 1, E2_e2 => 2);
    type E3_Base is (E3_e1, E3_e2, E3_e3);
@@ -41,6 +43,8 @@ package Blade is
    function Minus_1_Power (Number : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
+
+   function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
