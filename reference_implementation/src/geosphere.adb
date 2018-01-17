@@ -22,7 +22,7 @@ with GA_Draw;
 package body Geosphere is
 
    type Indices_Array is array (Integer range <>) of Indices;
-   type Vertices_Array is array (Integer range <>) of V_Vector;
+   type Vertices_Array is array (Integer range <>) of Vector;
 --     type Vertices_Array is array (Integer range <>) of E3GA.Vector;
 
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
@@ -219,12 +219,12 @@ package body Geosphere is
             (2, 5, 6));
       Vertices       : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
    begin
-      Set_Coords (Vertices (1), 0.0, -1.0, 0.0);
-      Set_Coords (Vertices (2), 0.0, 1.0, 0.0);
-      Set_Coords (Vertices (3), 0.707, 0.0, 0.707);
-      Set_Coords (Vertices (4), 0.707, 0.0, -0.707);
-      Set_Coords (Vertices (5), -0.707, 0.0, -0.707);
-      Set_Coords (Vertices (6), -0.707, 0.0, 0.707);
+      Vertices (1) := New_Vector (0.0, -1.0, 0.0);
+      Vertices (2) := New_Vector (0.0, 1.0, 0.0);
+      Vertices (3) := New_Vector (0.707, 0.0, 0.707);
+      Vertices (4) := New_Vector (0.707, 0.0, -0.707);
+      Vertices (5) := New_Vector (-0.707, 0.0, -0.707);
+      Vertices (6) := New_Vector (-0.707, 0.0, 0.707);
 
       --  set initial geometry
 --        Sphere.Num_Faces := Num_Faces;
