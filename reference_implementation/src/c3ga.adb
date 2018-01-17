@@ -116,6 +116,13 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function e1 return Multivector.Multivector is
+   begin
+      return Multivector.Get_Basis_Vector (Blade.C3_e1);
+   end e1;
+
+   --  -------------------------------------------------------------------------
+
    function e1 (MV : Multivector.Multivector) return float is
       use Blade;
    begin
@@ -124,11 +131,25 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function e2 return Multivector.Multivector is
+   begin
+      return Multivector.Get_Basis_Vector (Blade.C3_e2);
+   end e2;
+
+   --  -------------------------------------------------------------------------
+
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
    begin
       return Multivector.Component (MV, C3_Base'Enum_Rep (C3_e2));
    end e2;
+
+   --  -------------------------------------------------------------------------
+
+   function e3 return Multivector.Multivector is
+   begin
+      return Multivector.Get_Basis_Vector (Blade.C3_e3);
+   end e3;
 
    --  -------------------------------------------------------------------------
 
@@ -339,6 +360,20 @@ package body C3GA is
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
+
+   function ni return Multivector.Multivector is
+   begin
+      return Multivector.Get_Basis_Vector (Blade.C3_ni);
+   end ni;
+
+   --  -------------------------------------------------------------------------
+
+   function no return Multivector.Multivector is
+   begin
+      return Multivector.Get_Basis_Vector (Blade.C3_no);
+   end no;
+
+   --  -------------------------------------------------------------------------
 
    function NO_E1_E2 (C : Circle) return float is
    begin

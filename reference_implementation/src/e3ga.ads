@@ -63,6 +63,9 @@ package E3GA is
 --     function e1 return Vector;
 --     function e2 return Vector;
 --     function e3 return Vector;
+   function e1 return Multivector.Multivector;
+   function e2 return Multivector.Multivector;
+   function e3 return Multivector.Multivector;
 
    function e1 (MV : Multivector.Multivector) return float;
    function e2 (MV : Multivector.Multivector) return float;
