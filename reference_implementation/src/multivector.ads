@@ -43,6 +43,7 @@ package Multivector is
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
    --  Get_Basis_Vector returns multivector of the required base.
+   function Get_Basis_Vector (Index : BV_Base) return Multivector;
    function Get_Basis_Vector (Index : E2_Base) return Multivector;
    function Get_Basis_Vector (Index : E3_Base) return Multivector;
    function Get_Basis_Vector (Index : C3_Base) return Multivector;
@@ -59,6 +60,7 @@ package Multivector is
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Rotor (Scalar_Weight : Float) return Rotor;
+   function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Vector (e1, e2 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;

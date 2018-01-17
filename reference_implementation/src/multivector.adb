@@ -349,6 +349,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Basis_Vector (Index : BV_Base) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (New_Basis_Blade (Index));
+      return MV;
+   end Get_Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Basis_Vector (Index : E2_Base) return Multivector is
       MV : Multivector;
    begin
@@ -382,6 +391,25 @@ package body Multivector is
    end Get_Blade_List;
 
    --  -------------------------------------------------------------------------
+
+   function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer) return Blade.Basis_Blade is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades    : constant Blade_List := MV.Blades;
+      thisBlade : Blade.Basis_Blade;
+      Curs      : Cursor := Blades.First;
+      Found     : Boolean := False;
+   begin
+      while Has_Element (Curs) and not Found loop
+         thisBlade := Element (Curs);
+         Found := Blade.Grade (thisBlade) = Index;
+         Next (Curs);
+      end loop;
+      return thisBlade;
+   end Get_Blade;
+
+   --  -------------------------------------------------------------------------
+
    --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
    --  0 is return for null Multivectors.
    --     function Grade (Blades : Blade_List) return Unsigned_Integer is
@@ -583,6 +611,18 @@ package body Multivector is
       R : Rotor;
    begin
       R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+      return  R;
+   end New_Rotor;
+
+   --  -------------------------------------------------------------------------
+
+   function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor is
+      R : Rotor;
+   begin
+      R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+      R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e1e2)));
+      R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e2e3)));
+      R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e3e1)));
       return  R;
    end New_Rotor;
 
