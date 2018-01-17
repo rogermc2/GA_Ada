@@ -34,9 +34,8 @@ package body E3GA_Utilities is
       else
          Cos_HA := GA_Maths.Float_Functions.Cos (Half_Angle);
          Sin_HA := GA_Maths.Float_Functions.Sin (Half_Angle) / Half_Angle;
-         Sum := Add (Cos_HA, Sin_HA * BV);
-         Result := New_Rotor (0.0, BV);
-         E3GA.Set_Rotor (Result, Cos_HA, Sin_HA * BV);
+         Result := New_Rotor (0.0, Add (Cos_HA, Sin_HA * BV));
+--           E3GA.Set_Rotor (Result, Cos_HA, Sin_HA * BV);
       end if;
       return Result;
    end exp;
@@ -45,6 +44,7 @@ package body E3GA_Utilities is
 
    --  special log() for 3D rotors
    function log (R : Multivector.Rotor) return Multivector.Bivector is
+      use E3GA;
       use Multivector;
       R2       : float;
       R1       : float;
@@ -52,20 +52,22 @@ package body E3GA_Utilities is
       Result   : Multivector.Bivector;
    begin
       --  get the bivector 2-blade part of R
-      Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
+--        Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
+      BV := New_Bivector (e1e2 (R), e2e3 (R), e3e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
       R2 := E3GA.Norm_R (BV);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
-         R1 := GA_Maths.Float_Functions.Arctan (R2, R_Scalar (R)) / R2;
+         R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
          Result := R1 * BV;
 
          --  otherwise, avoid divide-by-zero (and below zero due to FP roundoff)
-      elsif R_Scalar (R) < 0.0 then
+      elsif Scalar_Part (R) < 0.0 then
          --  Return a 360 degree rotation in an arbitrary plane
          Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
       else
-         Set_Bivector (Result, 0.0, 0.0, 0.0);
+         BV := New_Bivector (0.0, 0.0, 0.0);
+--           Set_Bivector (Result, 0.0, 0.0, 0.0);
       end if;
       return Result;
    end log;
@@ -103,7 +105,7 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Rotor_To_Matrix (R : E3GA.Rotor;  M : out GA_Maths.GA_Matrix3) is
+   procedure Rotor_To_Matrix (R : Multivector.Rotor;  M : out GA_Maths.GA_Matrix3) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       Print_Rotor ("Rotor_To_Matrix, R", R);
@@ -124,21 +126,22 @@ package body E3GA_Utilities is
    --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
    --                                = bx        + i by  (with respect to a)
    --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (V_From, V_To : E3GA.Vector) return E3GA.Rotor is
+   function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector) return Multivector.Rotor is
       use Interfaces;
       use GA_Maths;
       use GA_Maths.Float_Functions;
       use E3GA;
+      use Multivector;
       V1     : Vector_Unsigned := To_Unsigned (V_From);
       V2     : Vector_Unsigned := To_Unsigned (V_To);
       C1     : float;
       S      : float;
-      w0     : Multivector.Vector;
-      w1     : Multivector.Vector;
-      w2     : Multivector.Vector;
+      w0     : Vector;
+      w1     : Vector;
+      w2     : Vector;
       N2     : Float;
-      R      : Multivector.Rotor;
-      Result : Multivector.Rotor;
+      R      : Rotor;
+      Result : Rotor;
    begin
       Set_Coords (w0, 0.0, 0.0, 0.0);
       Set_Coords (w1, 0.0, 0.0, 0.0);
