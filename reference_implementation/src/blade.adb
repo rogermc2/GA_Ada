@@ -199,28 +199,28 @@ package body Blade is
 
    function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
-      return New_Basis_Blade (Index'Enum_Rep, Weight);
+      return (Index'Enum_Rep, Weight);
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
 
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
-      return New_Basis_Blade (Index'Enum_Rep, Weight);
+      return (Index'Enum_Rep, Weight);
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
 
    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
-      return New_Basis_Blade (Index'Enum_Rep, Weight);
+      return (Index'Enum_Rep, Weight);
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
 
    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
-      return New_Basis_Blade (Index'Enum_Rep, Weight);
+      return (Index'Enum_Rep, Weight);
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
