@@ -651,11 +651,22 @@ package body Multivector is
       use Blade;
       V       : Vector;
       Blades  : Blade_List := Get_Blade_List (V);
-      aBlade  : Basis_Blade := New_Basis_Blade (E2_e1, e1);
    begin
-      Add_Blade (V, aBlade);
-      aBlade :=  New_Basis_Blade (E2_e2, e2);
-      Add_Blade (V, aBlade);
+      Add_Blade (V, New_Basis_Blade (E2_e1, e1));
+      Add_Blade (V, New_Basis_Blade (E2_e2, e2));
+      return V;
+   end New_Vector;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Vector (e1, e2, e3 : Float) return Vector is
+      use Blade;
+      V       : Vector;
+      Blades  : Blade_List := Get_Blade_List (V);
+   begin
+      Add_Blade (V, New_Basis_Blade (E3_e1, e1));
+      Add_Blade (V, New_Basis_Blade (E3_e2, e2));
+      Add_Blade (V, New_Basis_Blade (E3_e3, e3));
       return V;
    end New_Vector;
 
