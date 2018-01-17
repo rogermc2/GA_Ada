@@ -16,36 +16,38 @@ with GL.Window;
 with Glfw;
 with Glfw.Windows;
 
+with Blade;
 with GA_Draw;
 
 package body Geosphere is
 
    type Indices_Array is array (Integer range <>) of Indices;
-   type Vertices_Array is array (Integer range <>) of E3GA.Vector;
+   type Vertices_Array is array (Integer range <>) of V_Vector;
+--     type Vertices_Array is array (Integer range <>) of E3GA.Vector;
 
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean;
 
    --  -------------------------------------------------------------------------
 
-   function Add_Vertex (Sphere : in out Geosphere; Pos : E3GA.Vector;
+   function Add_Vertex (Sphere : in out Geosphere; Pos : Vector;
                         New_Index : out Integer) return Boolean is
       use Ada.Numerics;
-      use E3GA;
       Vertices : constant V_Vector := Sphere.Vertices;
       V        : Vector;
       Index    : Integer := 0;
       Found    : Boolean := False;
    begin
+      --  first check if vertex already exists
       New_Index := 0;
       while index <= Sphere.Vertices.Last_Index and not Found loop
          Index := Index + 1;
          V :=  Pos - Vertices.Element (index);
          --  first check if vertex already exists
-         Found := Get_Coord (Norm_E2 (V)) > e ** (-10);
+         Found := Norm_E2 (V) > e ** (-10);
       end loop;
 
-      if not Found then
+      if not Found then  --  reate new vertex
          Sphere.Vertices.Append (Pos);
       end if;
       return Found;
@@ -172,17 +174,24 @@ package body Geosphere is
 
    procedure Get_Vertices (Sphere : Geosphere; aFace : Geosphere_Face;
                            Vertices : in out GL.Types.Singles.Vector3_Array) is
+      use Blade_List_Package;
       use GL.Types;
+      Blades       : Blade_List;
+      Curs         : Cursor;
       Indices      : V_Array := aFace.Vertex_Indices;
       Vertex_Index : Positive;
-      GA_Vector    : E3GA.Vector;
+      GA_Vector    : Multivector.Vector;
    begin
       for index in Positive range 1 .. 3 loop
          Vertex_Index := Indices (index);
          GA_Vector := Sphere.Vertices.Element (Vertex_Index);
-         Vertices (Int (index)) (GL.X) := Single (E3GA.Get_Coord_1 (GA_Vector));
-         Vertices (Int (index)) (GL.Y) := Single (E3GA.Get_Coord_2 (GA_Vector));
-         Vertices (Int (index)) (GL.Z) := Single (E3GA.Get_Coord_3 (GA_Vector));
+         Blades := Get_Blade_List (GA_Vector);
+         Curs := Blades.First;
+         Vertices (Int (index)) (GL.X) := Single (Blade.Weight (Element (Curs)));
+         Next (Curs);
+         Vertices (Int (index)) (GL.Y) := Single (Blade.Weight (Element (Curs)));
+         Next (Curs);
+         Vertices (Int (index)) (GL.Z) := Single (Blade.Weight (Element (Curs)));
       end loop;
 
    exception
@@ -208,7 +217,7 @@ package body Geosphere is
             (2, 3, 4),
             (2, 4 ,5),
             (2, 5, 6));
-      Vertices       : Vertices_Array (1 .. Num_Vertices);
+      Vertices       : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
    begin
       Set_Coords (Vertices (1), 0.0, -1.0, 0.0);
       Set_Coords (Vertices (2), 0.0, 1.0, 0.0);
@@ -342,7 +351,6 @@ package body Geosphere is
 
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean is
-      use E3GA;
       Faces           : F_Vector := Sphere.Faces;
       this_Face       : Geosphere_Face:= Faces.Element (Face_index);
       Vertex_Indicies : V_Array := this_Face.Vertex_Indices;

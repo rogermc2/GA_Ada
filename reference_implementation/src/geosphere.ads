@@ -34,16 +34,16 @@ private
     type Contour_Visited_Array is array  (Int3_Range)  of integer;
     type V_Array is array  (Int3_Range) of integer;
 
-    type Geosphere_Face is record
-        Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
-        Child             : Child_Array := (0, 0, 0, 0);
-      Plane               : Multivector.Bivector;
-        D                 : float;
-        Depth             : integer;
-        Neighbour         : Neighbour_Array;
-        Contour_Intersect : Contour_Intersect_Array;
-        Contour_Visited   : Contour_Visited_Array;
-    end record;
+   type Geosphere_Face is record
+      Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
+      Child             : Child_Array := (0, 0, 0, 0);
+      Plane             : Multivector.Bivector;
+      D                 : float;
+      Depth             : integer;
+      Neighbour         : Neighbour_Array;
+      Contour_Intersect : Contour_Intersect_Array;
+      Contour_Visited   : Contour_Visited_Array;
+   end record;
 
    package Face_Vectors is new Ada.Containers.Vectors
      (Element_Type => Geosphere_Face, Index_Type => Positive);
