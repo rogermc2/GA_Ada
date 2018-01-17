@@ -53,6 +53,7 @@ package Multivector is
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
+   function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
    function New_Bivector (V1, V2 : Vector) return Bivector;
@@ -67,6 +68,7 @@ package Multivector is
    function Norm_E2 (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
+   function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Size (MV : Multivector) return Natural;

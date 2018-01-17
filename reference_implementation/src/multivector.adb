@@ -534,6 +534,13 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
+   begin
+      return  Inner_Product (MV1, MV2, Left_Contraction);
+   end Left_Contraction;
+
+   --  -------------------------------------------------------------------------
+
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
@@ -725,6 +732,13 @@ package body Multivector is
 
       return Rev_MV;
    end Reverse_MV;
+
+   --  -------------------------------------------------------------------------
+
+   function Right_Contraction (MV1, MV2 : Multivector) return Multivector is
+   begin
+      return  Inner_Product (MV1, MV2, Right_Contraction);
+   end Right_Contraction;
 
    --  -------------------------------------------------------------------------
 
