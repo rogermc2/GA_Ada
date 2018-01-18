@@ -96,6 +96,8 @@ package Multivector_Analyze is
    function Num_Points return integer;
    function Num_Vectors return integer;
    function Num_Scalars return integer;
+   procedure Print_Analysis (Name : String;
+                             Info : MV_Analysis);
    function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
 
 end Multivector_Analyze;

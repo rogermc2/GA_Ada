@@ -112,6 +112,31 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
+   procedure Print_Analysis (Name : String; Info : MV_Analysis) is
+      use Multivector_Type;
+      use Multivector_Type_Base;
+   begin
+      Put_Line (Name);
+      Put_Line ("Valid Flag    " & boolean'Image (Info.M_Flags.Valid));
+      Put_Line ("Dual Flag     " & boolean'Image (Info.M_Flags.Dual));
+      Print_Multivector_Info (Name & " M_MV_Type data", Info.M_MV_Type);
+      Put_Line ("Conformal Type     " & Conformal_Type'Image (Info.Conformal_Kind));
+      Put_Line ("Epsilon    " & Float'Image (Info.Epsilon));
+      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
+      Put_Line ("Versor_Kind    " & Versor_Type'Image (Info.Versor_Kind));
+      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
+      Put_Line ("Points array length    " & integer'Image (Info.M_Points'Length));
+      Put_Line ("Scalars array length    " & integer'Image (Info.M_Scalors'Length));
+      Put_Line ("Vectors array length    " & integer'Image (Info.M_Vectors'Length));
+      New_Line;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Analysis.");
+         raise;
+   end Print_Analysis;
+
+   --  ------------------------------------------------------------------------
+
    function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
    begin
       return Blade_Subclass (A);
