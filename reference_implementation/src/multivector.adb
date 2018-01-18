@@ -490,21 +490,19 @@ package body Multivector is
       B1       : Blade.Basis_Blade;
       B2       : Blade.Basis_Blade;
       List_1   : Blade_List := MV1.Blades;
+      List_2   : Blade_List := MV2.Blades;
       Cursor_1 : Cursor := List_1.First;
+      Cursor_2 : Cursor;
       MV       : Multivector;
    begin
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
-         declare
-            List_2   : Blade_List := MV2.Blades;
-            Cursor_2 : Cursor := List_2.First;
-         begin
-            while Has_Element (Cursor_2) loop
-               B2 := Element (Cursor_2);
-               MV.Blades.Append (Blade.Inner_Product (B1, B2, Cont));
-               Next (Cursor_2);
-            end loop;
-         end;
+         Cursor_2:= List_2.First;
+         while Has_Element (Cursor_2) loop
+            B2 := Element (Cursor_2);
+            MV.Blades.Append (Blade.Inner_Product (B1, B2, Cont));
+            Next (Cursor_2);
+         end loop;
          Next (Cursor_1);
       end loop;
 
