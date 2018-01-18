@@ -91,7 +91,7 @@ package body E2GA_Draw is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 2.");
+         Put_Line ("An exception occurred in E2GA_Draw.Draw.");
          raise;
    end Draw;
 
@@ -118,7 +118,7 @@ package body E2GA_Draw is
                              Colour, Scale, Method_Type);
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 3.");
+         Put_Line ("An exception occurred in E2GA_Draw.Draw_Bivector.");
          raise;
    end Draw_Bivector;
 
@@ -141,7 +141,7 @@ package body E2GA_Draw is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 1.");
+         Put_Line ("An exception occurred in E2GA_Draw.Draw_Vector.");
          raise;
    end Draw_Vector;
 
