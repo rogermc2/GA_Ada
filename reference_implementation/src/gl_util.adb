@@ -136,7 +136,7 @@ package body GL_Util is
       use GL.Types;
       use Multivector.Blade_List_Package;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
-      curs    : Cursor := Blades.First;
+      Curs    : Cursor := Blades.First;
       Val1    : Single:= Single (Blade.Weight (Element (Curs)));
       Val2    : Single;
       Val3    : Single;
