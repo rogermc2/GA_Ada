@@ -885,6 +885,11 @@ package body Multivector is
    function Unit_E (MV : Multivector) return Multivector is
    begin
       return Unit_R (MV);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Unit_E.");
+         raise;
    end Unit_E;
 
    --  -------------------------------------------------------------------------
