@@ -496,7 +496,7 @@ package body Multivector is
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
          declare
-            List_2   : Blade_List := MV1.Blades;
+            List_2   : Blade_List := MV2.Blades;
             Cursor_2 : Cursor := List_2.First;
          begin
             while Has_Element (Cursor_2) loop
