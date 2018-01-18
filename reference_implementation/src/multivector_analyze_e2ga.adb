@@ -1,4 +1,5 @@
 
+with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -109,6 +110,11 @@ package body Multivector_Analyze_E2GA is
       else
          Put_Line ("Multivector_Analyze_E2GA.Analyze Multivector Type.");
       end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Analyze_E2GA.Analyze.");
+         raise;
    end Analyze;
 
 end Multivector_Analyze_E2GA;

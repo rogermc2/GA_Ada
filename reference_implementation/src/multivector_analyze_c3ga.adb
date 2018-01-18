@@ -1,4 +1,5 @@
 
+with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA;
@@ -70,6 +71,11 @@ package body Multivector_Analyze_C3GA is
          --  TO BE COMPLETED
          Put_Line ("Multivector_Analyze_C3GA.Analyze Multivector Type.");
       end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze.");
+         raise;
    end Analyze;
 
 end Multivector_Analyze_C3GA;
