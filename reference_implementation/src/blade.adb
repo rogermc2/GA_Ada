@@ -110,7 +110,7 @@ package body Blade is
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          OP_Blade.Weight := 0.0;
       else
-         OP_Blade.Bitmap := BA.Bitmap or BB.Bitmap;
+         OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
          OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
       end if;

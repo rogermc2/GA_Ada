@@ -493,6 +493,7 @@ package body Multivector is
       List_2   : Blade_List := MV2.Blades;
       Cursor_1 : Cursor := List_1.First;
       Cursor_2 : Cursor;
+      IP       : Blade.Basis_Blade;
       MV       : Multivector;
    begin
       while Has_Element (Cursor_1) loop
@@ -500,7 +501,10 @@ package body Multivector is
          Cursor_2:= List_2.First;
          while Has_Element (Cursor_2) loop
             B2 := Element (Cursor_2);
-            MV.Blades.Append (Blade.Inner_Product (B1, B2, Cont));
+            IP := Blade.Inner_Product (B1, B2, Cont);
+            if Blade.Weight (IP) /= 0.0 then
+               MV.Blades.Append (IP);
+            end if;
             Next (Cursor_2);
          end loop;
          Next (Cursor_1);
