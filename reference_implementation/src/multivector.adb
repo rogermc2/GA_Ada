@@ -361,7 +361,13 @@ package body Multivector is
    function Get_Basis_Vector (Index : E2_Base) return Multivector is
       MV : Multivector;
    begin
-      MV.Blades.Append (New_Basis_Blade (Index));
+      for Idx in E2_Base loop
+         if Idx = Index then
+            MV.Blades.Append (New_Basis_Blade (Index));
+         else
+            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
+         end if;
+      end loop;
       return MV;
    end Get_Basis_Vector;
 
@@ -370,7 +376,13 @@ package body Multivector is
    function Get_Basis_Vector (Index : E3_Base) return Multivector is
        MV : Multivector;
    begin
-      MV.Blades.Append (New_Basis_Blade (Index));
+      for Idx in E3_Base loop
+         if Idx = Index then
+            MV.Blades.Append (New_Basis_Blade (Index));
+         else
+            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
+         end if;
+      end loop;
       return MV;
    end Get_Basis_Vector;
 
@@ -379,7 +391,13 @@ package body Multivector is
    function Get_Basis_Vector (Index : C3_Base) return Multivector is
        MV : Multivector;
    begin
-      MV.Blades.Append (New_Basis_Blade (Index));
+      for Idx in C3_Base loop
+         if Idx = Index then
+            MV.Blades.Append (New_Basis_Blade (Index));
+         else
+            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
+         end if;
+      end loop;
       return MV;
    end Get_Basis_Vector;
 
