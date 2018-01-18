@@ -148,26 +148,30 @@ package body Blade is
    function Inner_Product_Filter (Grade_1, Grade_2 : Unsigned_Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade is
-      IP_Blade : Basis_Blade := BB;
+      IP_Blade : Basis_Blade;
    begin
       case Cont is
          when Left_Contraction =>
-            if (Grade_1 > Grade_2) or (Grade (BB) /= Grade_2 - Grade_1) then
-                IP_Blade := New_Basis_Blade (Grade (BB));
+            if (Grade_1 > Grade_2) or (Grade (BB) /= (Grade_2 - Grade_1)) then
+               null;
+            else
+                IP_Blade := BB;
             end if;
          when Right_Contraction =>
             if (Grade_1 < Grade_2) or (Grade (BB) /= Grade_1 - Grade_2) then
-                IP_Blade := New_Basis_Blade (Grade (BB));
+               null;
+            else
+                IP_Blade := BB;
             end if;
          when Hestenes_Inner_Product =>
             if (Grade_1 = 0) or (Grade_2 = 0) then
-               IP_Blade := New_Basis_Blade (Grade (BB));
-            elsif Abs (Grade_1 - Grade_2) /= Grade (BB) then
-               IP_Blade := New_Basis_Blade (Grade (BB));
+               null;
+            elsif Abs (Grade_1 - Grade_2) = Grade (BB) then
+               IP_Blade := BB;
             end if;
          when Modified_Hestenes_Inner_Product =>
-            if Abs (Grade_1 - Grade_2) /= Grade (BB) then
-               IP_Blade := New_Basis_Blade (Grade (BB));
+            if Abs (Grade_1 - Grade_2) = Grade (BB) then
+               IP_Blade := BB;
             end if;
       end case;
       return IP_Blade;
