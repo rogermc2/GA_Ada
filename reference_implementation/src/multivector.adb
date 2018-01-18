@@ -455,7 +455,8 @@ package body Multivector is
    end Grade_Inversion;
 
    --  -------------------------------------------------------------------------
-
+   --  Grade_Use returns a bitmap of grades that are in use in MV
+   --  Bit 1: Scalar, Bit 2 etc non-scalar grades
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
       use GA_Maths;
       use Interfaces;
@@ -466,15 +467,15 @@ package body Multivector is
       GU_Bitmap  : Unsigned_32 := 0;
       Index      : Integer := 0;
    begin
-      --        New_Line;
       while Has_Element (Cursor_B) loop
          Index := Index + 1;
          BB := Element (Cursor_B);
-         --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
-         --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
+--           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
+--           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
+--           Put_Line ("Grade_Use, Grade" & Unsigned_Integer'Image (Blade.Grade (BB)));
          GU_Bitmap := GU_Bitmap or
            Shift_Left (1, Integer (Blade.Grade (BB)));
-         --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
+--           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU_Bitmap);
