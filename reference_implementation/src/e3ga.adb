@@ -1,13 +1,12 @@
 
 with Interfaces;
 
-with E2GA;
 with Blade;
 
 package body E3GA is
    use GA_Maths;
 
-   type Array_BM8 is array (E2GA.Bit_Map range 1 .. 8) of integer;
+   type Array_BM8 is array (GA_Maths.Bit_Map range 1 .. 8) of integer;
 
    MV_Space_Dim          : constant Integer := 3;
    MV_Metric_Euclidean   : constant Boolean := True; -- The space's metric is Euclidean

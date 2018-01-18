@@ -5,16 +5,15 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
-with Multivector_Analyze;
+with GA_Maths;
 with Multivector_Type_Base;
-with E3GA_Utilities;
 
 package body E2GA is
 
    type Basis_Name is (E1b, E2b);
 --     type E2_Base is (e1_b, e2_b);
 
-   type Array_BM4 is array (Bit_Map range 1 .. 4) of integer;
+   type Array_BM4 is array (GA_Maths.Bit_Map range 1 .. 4) of integer;
    type Array_F4 is array (1 .. 4) of float;
    type float_3 is digits 3;
 

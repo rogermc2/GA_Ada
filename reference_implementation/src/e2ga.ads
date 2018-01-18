@@ -22,9 +22,6 @@ package E2GA is
    --  Outermorphism types
    type OM_Type is (OMT_None, OMT_OM, OMT_Last);
 
-   type Bit_Map is new integer range 0 .. 2 ** 30;
-   type Bit_Map_Array is array (integer range <>) of Bit_Map;
-
    type E2_Bit_Map is new integer range 0 .. 4;
 
    --  Multivector types

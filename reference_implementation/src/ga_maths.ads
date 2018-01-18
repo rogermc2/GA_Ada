@@ -13,6 +13,8 @@ package GA_Maths is
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
 
    type float_3 is digits 3;
+   type Bit_Map is new integer range 0 .. 2 ** 30;
+   type Bit_Map_Array is array (integer range <>) of Bit_Map;
 
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Scalar_Coords is Coords_Continuous_Array (1 .. 1);

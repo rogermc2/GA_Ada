@@ -1,7 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E2GA;
 with E3GA;
 with GA_Maths;
 with Multivector_Type;
@@ -65,7 +64,7 @@ package body Multivector_Analyze_C3GA is
          Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 6.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 6;
-         Analysis.M_Scalors (1) := Multivector.Scalar (C3GA.NO_E1_E2_E3_NI (MV));
+         Analysis.M_Scalors (1) := C3GA.NO_E1_E2_E3_NI (MV);
       else
          Classify;
          --  TO BE COMPLETED
