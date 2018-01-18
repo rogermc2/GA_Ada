@@ -359,15 +359,9 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : E2_Base) return Multivector is
-      MV : Multivector;
+       MV : Multivector;
    begin
-      for Idx in E2_Base loop
-         if Idx = Index then
-            MV.Blades.Append (New_Basis_Blade (Index));
-         else
-            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
-         end if;
-      end loop;
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
@@ -376,13 +370,7 @@ package body Multivector is
    function Get_Basis_Vector (Index : E3_Base) return Multivector is
        MV : Multivector;
    begin
-      for Idx in E3_Base loop
-         if Idx = Index then
-            MV.Blades.Append (New_Basis_Blade (Index));
-         else
-            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
-         end if;
-      end loop;
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
@@ -391,13 +379,7 @@ package body Multivector is
    function Get_Basis_Vector (Index : C3_Base) return Multivector is
        MV : Multivector;
    begin
-      for Idx in C3_Base loop
-         if Idx = Index then
-            MV.Blades.Append (New_Basis_Blade (Index));
-         else
-            MV.Blades.Append (New_Basis_Blade (Idx, 0.0));
-         end if;
-      end loop;
+      MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
    end Get_Basis_Vector;
 
@@ -576,7 +558,7 @@ package body Multivector is
             declare
                Blade_String : String := To_String (Blade_UBS);
             begin
-               Put_Line ("Multivector_String Blade_String: " & Blade_String);
+--                 Put_Line ("Multivector_String, Blade_String: " & Blade_String);
                New_Line;
                if Blade_Cursor = Blades.First then
                   theString := To_Unbounded_String (Blade_String);
