@@ -1,4 +1,7 @@
 
+with Ada.Exceptions; use Ada.Exceptions;
+with Ada.Text_IO; use Ada.Text_IO;
+
 with GL;
 with GL.Window;
 
@@ -61,7 +64,12 @@ package body GL_Util is
                     Matrix (row, col) := Image (Image_Row) (col);
             end loop;
         end loop;
-        GL_Matrix := Matrix * GL_Matrix;
+      GL_Matrix := Matrix * GL_Matrix;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.Rotor_GL_Multiply.");
+         raise;
     end Rotor_GL_Multiply;
 
    --  -------------------------------------------------------------------------
@@ -91,7 +99,12 @@ package body GL_Util is
             end loop;
             Mcol := 0;
         end loop;
-        return GL_Matrix;
+      return GL_Matrix;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.Rotor_To_GL_Matrix.");
+         raise;
    end Rotor_To_GL_Matrix;
 
    --  -------------------------------------------------------------------------
@@ -110,6 +123,11 @@ package body GL_Util is
       Next (Curs);
       Val3 := Double (Blade.Weight (Element (Curs)));
       return (Val1, Val2, Val3);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.To_GL 1.");
+         raise;
    end To_GL;
 
    --  -------------------------------------------------------------------------
@@ -128,6 +146,11 @@ package body GL_Util is
       Next (Curs);
       Val3 := Single (Blade.Weight (Element (Curs)));
       return (Val1, Val2, Val3);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.To_GL 2.");
+         raise;
    end To_GL;
 
    --  -------------------------------------------------------------------------
@@ -159,6 +182,11 @@ package body GL_Util is
       GL.Window.Get_Viewport (VP_X, VP_Y, Window_Width, Window_Height);
       Coords (X) := Single (VP_X) + (1.0 + PT2 (X) / PT2 (W)) * Single (Window_Width) / 2.0;
       Coords (Y) := Single (VP_Y) + (1.0 + PT2 (Y) / PT2 (W)) * Single (Window_Height) / 2.0;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.Viewport_Coordinates.");
+         raise;
    end Viewport_Coordinates;
 
    --  -------------------------------------------------------------------------
