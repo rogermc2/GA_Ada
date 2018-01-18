@@ -35,11 +35,11 @@ package body E2GA_Draw is
       use Multivector;
       use Multivector_Analyze;
       A         : MV_Analysis;
-      V1        : Multivector.Vector;
-      V2        : Multivector.Vector;
+      V1        : Vector;
+      V2        : Vector;
       OP        : Multivector.Multivector;
-      Normal    : Multivector.Vector;
-      Direction : Multivector.Vector;
+      Normal    : Vector;
+      Direction : Vector;
       Scale     : float := 1.0;
    begin
       Analyze (A, MV);
@@ -50,7 +50,8 @@ package body E2GA_Draw is
          case Blade_Subclass (A) is
             when Vector_Subclass =>
                Put_Line (" E2GA_Draw Vector_Subclass.");
-               E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
+--                 E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
+               Direction := New_Vector (0.0, 0.0, Float (A.M_Scalors (1)));
                Draw_Vector (Render_Program, Model_View_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
@@ -65,7 +66,6 @@ package body E2GA_Draw is
                V2 := A.M_Vectors (2);
                OP := Multivector.Outer_Product (V1, V2);
                declare
-                  use Multivector;
                   use Blade_List_Package;
                   Blades    : constant Blade_List := Get_Blade_List (OP);
                   aBlade    : Blade.Basis_Blade;
@@ -84,6 +84,7 @@ package body E2GA_Draw is
             when Even_Versor_Subclass => null;
             when Unspecified_Subclass => null;
          end case;
+
       elsif isVersor (A) and then A.M_Scalors (1) > 0.0001 then
          Put_Line ("E2GA_Draw isVersor.");
       end if;
@@ -104,15 +105,16 @@ package body E2GA_Draw is
                                  := GA_Draw.Draw_Bivector_Circle) is
       use GA_Maths.Float_Functions;
       use GL.Types.Colors;
-      Radius   : Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
-      Scale    : Float := 20.0;
-      Ortho_1  : Multivector.Vector;
-      Ortho_2  : Multivector.Vector;
-      Normal   : Multivector.Vector;  --  Default: (0.0, 0.0, 0.0)
+      use Multivector;
+      Radius   : constant Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
+      Scale    : constant Float := 20.0;
+      Ortho_1  : constant Vector := New_Vector (Radius, 0.0, 0.0);
+      Ortho_2  : constant Vector := New_Vector (0.0, Radius, 0.0);
+      Normal   : Vector := New_Vector (0.0, 0.0);
    begin
       Multivector.Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
-      E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
-      E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
+--        E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
+--        E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Normal, Ortho_1, Ortho_2,
                              Colour, Scale, Method_Type);
@@ -127,15 +129,24 @@ package body E2GA_Draw is
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
-                   Scale : float := 1.0) is
-      Vec_3D  : Multivector.Vector;
-      Tail    : Multivector.Vector;
+                          Scale : float := 1.0) is
+      use Multivector;
+      use Blade_List_Package;
+      Blades  : Blade_List := Get_Blade_List (aVector);
+      Curs    : Cursor := Blades.First;
+      C1      : Float;
+      C2      : Float;
+      Vec_3D  : Vector;
+      Tail    : constant Vector := Multivector.New_Vector (0.0, 0.0, 0.0);
    begin
       --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
       --  constructed from v1
-      E3GA.Set_Coords (Vec_3D, E2GA.Get_Coord_1 (aVector),
-                       E2GA.Get_Coord_2 (aVector), 0.0);
-      E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
+      C1 := Blade.Weight (Element (Curs));
+      C2 := Blade.Weight (Element (Next (Curs)));
+      Vec_3D := New_Vector (C1, C2, 0.0);
+--        E3GA.Set_Coords (Vec_3D, E2GA.Get_Coord_1 (aVector),
+--                         E2GA.Get_Coord_2 (aVector), 0.0);
+--        E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
 

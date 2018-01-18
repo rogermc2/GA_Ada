@@ -325,7 +325,7 @@ package body GA_Draw is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in GA_Draw.Draw_Cone.");
+         Put_Line ("An exception occurred in GA_Draw.Draw_Circle.");
          raise;
    end Draw_Circle;
 
@@ -402,7 +402,8 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_Dir               : Vector3 := GL_Util.To_GL (Direction);
+      GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
+      GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       GL_e1                : Vector3 :=
         GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
       GL_e2                : Vector3 :=
@@ -453,6 +454,7 @@ package body GA_Draw is
       Geosphere.GS_Compute (Sphere, 4);
       --  gsDraw(m_sphere, 0.0f);
       Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, 0.0, Colour);
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -576,10 +578,9 @@ package body GA_Draw is
       Colour_Location      : GL.Uniforms.Uniform;
       Model_View_Matrix    : GL.Types.Singles.Matrix4;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_Tail              : Vector3 := GL_Util.To_GL (Tail);
-      GL_Dir               : Vector3 := GL_Util.To_GL (Direction);
-
-      Z                    : Single := 0.0;
+      GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
+      GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
+--        Z                    : Single := 0.0;
 --        Dir_e1               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
 --        Tail_e1              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
       Dir_e1               : Single := Single (E3GA.e1 (Direction));
@@ -615,9 +616,14 @@ package body GA_Draw is
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
-         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
+         Put_Line ("GA_Draw.Draw_Vector, line drawn");
+         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
+           (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
+
+         Put_Line ("GA_Draw.Draw_Vector, Rotor_Vector_To_Vector done");
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
 
+         Put_Line ("GA_Draw.Draw_Vector, Rotor_GL_Multiply done");
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector
@@ -625,10 +631,12 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
+
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
          Enable (Cull_Face);
          Set_Front_Face (GL.Types.Clockwise);
          Set_Cull_Face (Front);
+         Put_Line ("GA_Draw.Draw_Vector, Set_Front_Face done");
 
          Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
          Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
@@ -720,6 +728,10 @@ package body GA_Draw is
       Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Y + VP_Height),
                                          Single (VP_X), Single (VP_X + VP_Width),
                                          Near, Far, theMatrix);
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Set_Projection_Matrix.");
+         raise;
    end Set_Projection_Matrix;
 
    --  ------------------------------------------------------------------------
