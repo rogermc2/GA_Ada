@@ -5,9 +5,9 @@ with Interfaces;
 
 package body GA_Maths is
 
-   function Bit_Count (Bits : Unsigned_Integer) return Natural is
+   function Bit_Count (Bitmap : Unsigned_Integer) return Natural is
       use Interfaces;
-      Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bits);
+      Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bitmap);
    begin
       Count := Count - ((Shift_Right (Count, 1)) and 16#55555555#);
       Count := (Count and 16#33333333#) + (Shift_Right (Count, 2) and 16#33333333#);
