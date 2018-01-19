@@ -115,13 +115,17 @@ package body GL_Util is
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
       curs    : Cursor := Blades.First;
       Val1    : Double:= Double (Blade.Weight (Element (Curs)));
-      Val2    : Double;
-      Val3    : Double;
+      Val2    : Double := 0.0;
+      Val3    : Double := 0.0;
    begin
       Next (Curs);
-      Val2 := Double (Blade.Weight (Element (Curs)));
-      Next (Curs);
-      Val3 := Double (Blade.Weight (Element (Curs)));
+      if Has_Element (Curs) then
+         Val2 := Double (Blade.Weight (Element (Curs)));
+         Next (Curs);
+         if Has_Element (Curs) then
+            Val3 := Double (Blade.Weight (Element (Curs)));
+         end if;
+      end if;
       return (Val1, Val2, Val3);
 
    exception
@@ -138,13 +142,17 @@ package body GL_Util is
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
       Val1    : Single:= Single (Blade.Weight (Element (Curs)));
-      Val2    : Single;
-      Val3    : Single;
+      Val2    : Single := 0.0;
+      Val3    : Single := 0.0;
    begin
       Next (Curs);
-      Val2 := Single (Blade.Weight (Element (Curs)));
-      Next (Curs);
-      Val3 := Single (Blade.Weight (Element (Curs)));
+      if Has_Element (Curs) then
+         Val2 := Single (Blade.Weight (Element (Curs)));
+         Next (Curs);
+         if Has_Element (Curs) then
+            Val3 := Single (Blade.Weight (Element (Curs)));
+         end if;
+      end if;
       return (Val1, Val2, Val3);
 
    exception

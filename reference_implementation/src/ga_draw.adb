@@ -19,6 +19,7 @@ with GL.Window;
 
 with Maths;
 with GA_Maths;
+with GA_Utilities;
 with Utilities;
 
 with Blade;
@@ -404,15 +405,12 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-      GL_e1                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
-      GL_e2                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
-      GL_e3                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
-      Dir_e1               : Single := Single (Dot_Product (GL_Dir, GL_e1));
-      Dir_e2               : Single := Single (Dot_Product (GL_Dir, GL_e2));
-      Dir_e3               : Single := Single (Dot_Product (GL_Dir, GL_e3));
+      GL_e1                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
+      GL_e2                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
+      GL_e3                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
+      Dir_e1               : constant Single := Single (Dot_Product (GL_Dir, GL_e1));
+      Dir_e2               : constant Single := Single (Dot_Product (GL_Dir, GL_e2));
+      Dir_e3               : constant Single := Single (Dot_Product (GL_Dir, GL_e3));
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
       Vertices             : Singles.Vector3_Array (1 .. 2);
    begin
@@ -597,6 +595,7 @@ package body GA_Draw is
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
       if Scale /= 0.0 then
+         Put_Line ("GA_Draw.Draw_Vector Scale /= 0.0");
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
@@ -611,6 +610,7 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
+         Put_Line ("GA_Draw.Draw_Vector calling Draw_Line");
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
