@@ -14,4 +14,6 @@ bin
 bivectors
 circle
 test_mv
+test_e2mv
+
 
