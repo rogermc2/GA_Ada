@@ -139,7 +139,6 @@ package body E3GA_Utilities is
       R      : Float;
       Result : Rotor;
    begin
-      Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector entered.");
       Set_Coords (w0, 0.0, 0.0, 0.0);
       Set_Coords (w1, 0.0, 0.0, 0.0);
       Set_Coords (w2, 0.0, 0.0, 0.0);

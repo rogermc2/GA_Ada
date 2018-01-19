@@ -43,19 +43,20 @@ package body GL_Util is
       use GL;
       use GL.Types.Singles;
       use Multivector;
---          IR        : Multivector.Rotor := Inverse (R);
+        IR        : Multivector.Rotor := Inverse (R);
         VGP       : Multivector.Vector;
         Image     : Vector3_Array (1 .. 4);
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
     begin
       --  compute the images of all OpenGL basis vectors
-      --  TO BE FIXED
---          VGP := Geometric_Product (R, Geometric_Product (e1, IR));
---          Image (1) := To_GL (VGP);
---          VGP := To_Vector (Geometric_Product (R, Geometric_Product (e2, IR)));
---          Image (2) := To_GL (VGP);
---          VGP := To_Vector (Geometric_Product (R, Geometric_Product (e3, IR)));
+--          GA_Utilities.Print_Multivector ("Rotor_GL_Multiply R", R);
+        VGP := Geometric_Product (R, Geometric_Product (e1, IR));
+--          GA_Utilities.Print_Multivector ("Rotor_GL_Multiply VGP 1", VGP);
+        Image (1) := To_GL (VGP);
+        VGP := Geometric_Product (R, Geometric_Product (e2, IR));
+        Image (2) := To_GL (VGP);
+        VGP := Geometric_Product (R, Geometric_Product (e3, IR));
         Image (3) := To_GL (VGP);
         Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
         for row in GL.Index_Homogeneous loop
