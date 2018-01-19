@@ -342,7 +342,6 @@ package body Multivector is
       if Is_Empty (MV.Blades) then
          Put_Line ("Geometric_Product, product MV is null.");
       end if;
-      Put_Line ("Leaving Geometric_Product.");
       return MV;
 
    end Geometric_Product;
