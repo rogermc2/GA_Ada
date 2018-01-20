@@ -148,7 +148,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                                 V1, Red, Scale);
-         GA_Utilities.Print_Multivector("main-loop V2", V2);
+         Put_Line ("main-loop V1 drawn");
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                          V2, Green, Scale);
 

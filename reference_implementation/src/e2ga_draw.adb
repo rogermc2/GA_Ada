@@ -44,7 +44,6 @@ package body E2GA_Draw is
    begin
       Analyze (A, MV);
       Print_Analysis ("E2GA Draw Analysis", A);
-      Put_Line ("E2GA_Draw Draw 2.");
       if isBlade (A) then
          Put_Line ("E2GA_Draw isBlade.");
          case Blade_Subclass (A) is
@@ -129,24 +128,28 @@ package body E2GA_Draw is
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
-                          Scale : float := 1.0) is
+                   Scale : float := 1.0) is
       use Multivector;
       use Blade_List_Package;
       Blades  : Blade_List := Get_Blade_List (aVector);
       Curs    : Cursor := Blades.First;
-      C1      : Float;
-      C2      : Float;
+      C1      : Float := 0.0;
+      C2      : Float := 0.0;
       Vec_3D  : Vector;
       Tail    : constant Vector := Multivector.New_Vector (0.0, 0.0, 0.0);
    begin
       --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
       --  constructed from v1
-      C1 := Blade.Weight (Element (Curs));
-      C2 := Blade.Weight (Element (Next (Curs)));
+      if Has_Element (Curs) then
+         C1 := Blade.Weight (Element (Curs));
+         Curs := Next (Curs);
+         if Has_Element (Curs) then
+            C2 := Blade.Weight (Element (Curs));
+         end if;
+      else
+         Put_Line ("E2GA_Draw.Draw_Vector detected a null vector.");
+      end if;
       Vec_3D := New_Vector (C1, C2, 0.0);
---        E3GA.Set_Coords (Vec_3D, E2GA.Get_Coord_1 (aVector),
---                         E2GA.Get_Coord_2 (aVector), 0.0);
---        E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
 
