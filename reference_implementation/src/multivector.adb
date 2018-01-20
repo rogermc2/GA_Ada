@@ -44,28 +44,21 @@ package body Multivector is
       use Blade_List_Package;
       Blades_1  : constant Blade_List := MV1.Blades;
       Blades_2  : constant Blade_List := MV2.Blades;
-      Curs_1    : Cursor := Blades_1.First;
-      Curs_2    : Cursor := Blades_2.First;
-      Blade_1   : Blade.Basis_Blade;
-      Blade_2   : Blade.Basis_Blade;
-      Sum       : Float := 0.0;
-      Blades_3  : Blade_List := MV1.Blades;
-      Curs_3    : Cursor := Blades_3.First;
-      Blade_3   : Blade.Basis_Blade;
-      MV3       : Multivector := MV1;
+      Blades_3  : Blade_List;
+      Curs      : Cursor := Blades_1.First;
+      MV3       : Multivector;
    begin
-      while Has_Element (Curs_1) and Has_Element (Curs_2) loop
-         Blade_1 := Element (Curs_1);
-         Blade_2 := Element (Curs_2);
-         Blade_3 := Element (Curs_3);
-         Sum := Weight (Blade_1) + Weight (Blade_2);
-         Blade.Update_Blade (Blade_3, Sum);
-         Blades_3.Replace_Element (Curs_3, Blade_3);
-         Next (Curs_1);
-         Next (Curs_2);
-         Next (Curs_3);
+      while Has_Element (Curs) loop
+         Blades_3.Append (Element (Curs));
+         Next (Curs);
+      end loop;
+      Curs := Blades_2.First;
+      while Has_Element (Curs) loop
+         Blades_3.Append (Element (Curs));
+         Next (Curs);
       end loop;
       MV3.Blades := Blades_3;
+      Simplify (MV3);
       return MV3;
 
    exception
@@ -78,24 +71,24 @@ package body Multivector is
    --  Return negative value of a  multivector
    function "-" (MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades_1   : constant Blade_List := MV.Blades;
-      Blade_1    : Blade.Basis_Blade;
-      Curs_1     : Cursor := Blades_1.First;
-      Neg        : Float := 0.0;
-      MV_Neg     : Multivector := MV;
-      Blades_2   : constant Blade_List := MV_Neg.Blades;
-      Blade_2    : Blade.Basis_Blade;
-      Curs_2     : Cursor := Blades_2.First;
+      MV_Blades  : constant Blade_List := MV.Blades;
+      MV_Curs    : Cursor := MV_Blades.First;
+      Neg_MV     : Multivector := MV;
+      Neg_Blades : Blade_List := Neg_MV.Blades;
+      Neg_Curs   : Cursor := Neg_Blades.First;
+      Blade_MV   : Blade.Basis_Blade;
+      Blade_Neg  : Blade.Basis_Blade;
    begin
-      while Has_Element (Curs_1) loop
-         Blade_1 := Element (Curs_1);
-         Neg := - Weight (Blade_1);
-         Blade.Update_Blade (Blade_2, Neg);
-         MV_Neg.Blades.Replace_Element (Curs_2, Blade_2);
-         Next (Curs_1);
-         Next (Curs_2);
+      while Has_Element (MV_Curs) and Has_Element (Neg_Curs) loop
+         Blade_MV := Element (MV_Curs);
+         Blade_Neg := Blade_MV;
+         Blade.Update_Blade (Blade_Neg, - Weight (Blade_MV));
+         Neg_Blades.Replace_Element (Neg_Curs, Blade_Neg);
+         Next (MV_Curs);
+         Next (Neg_Curs);
       end loop;
-      return MV_Neg;
+      Neg_MV.Blades := Neg_Blades;
+      return Neg_MV;
 
    exception
       when anError :  others =>
@@ -107,9 +100,9 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function "-" (MV1, MV2 : Multivector) return Multivector is
-      MV        : Multivector := -MV2;
+      Neg_MV2   : Multivector := -MV2;
    begin
-      return MV1 + MV;
+      return MV1 + Neg_MV2;
 
    exception
       when anError :  others =>

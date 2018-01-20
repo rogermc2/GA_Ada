@@ -24,7 +24,7 @@ package body Blade is
       theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
    begin
       while BM /= 0 loop
-         Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
+--           Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
          if (BM and 1) /= 0 then
             if Length (theString) > 0 then
                theString := theString & "^";
@@ -41,7 +41,7 @@ package body Blade is
                Name := Element (BV_Names, Index - 1);
                theString := theString & Name;
             end if;
-            Put_Line ("Blade theString:  " & To_String (theString));
+--              Put_Line ("Blade theString:  " & To_String (theString));
          end if;
          BM := BM / 2;  --  BM >>= 1;
          Index := Index + 1;
@@ -267,6 +267,10 @@ package body Blade is
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
    begin
       BB.Weight := Weight;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 1");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------
@@ -274,6 +278,10 @@ package body Blade is
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer) is
    begin
       BB.Bitmap := Bitmap;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 2");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------
@@ -283,6 +291,10 @@ package body Blade is
    begin
       BB.Bitmap := Bitmap;
       BB.Weight := Weight;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 3");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------
