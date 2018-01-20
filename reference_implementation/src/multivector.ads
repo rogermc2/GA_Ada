@@ -22,8 +22,8 @@ package Multivector is
 
    MV_Exception : Exception;
 
-   function Add (MV : Multivector; S : Float) return Multivector;
-   function Add (S : Float; MV : Multivector) return Multivector;
+   function  "+" (MV : Multivector; S : Float) return Multivector;
+   function  "+" (S : Float; MV : Multivector) return Multivector;
    function "+" (MV1, MV2 : Multivector) return Multivector;
    function "-" (MV : Multivector) return Multivector;
    function "-" (MV1, MV2 : Multivector) return Multivector;

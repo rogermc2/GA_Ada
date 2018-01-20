@@ -23,20 +23,20 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Add (MV : Multivector; S :Float) return Multivector is
+   function "+" (MV : Multivector; S :Float) return Multivector is
       MV1     : Multivector := MV;
    begin
       MV1.Blades.Append (New_Scalar_Blade (S));
       Simplify (MV1);
       return MV1;
-   end Add;
+   end  "+";
 
    --  ------------------------------------------------------------------------
 
-   function Add (S :Float; MV : Multivector) return Multivector is
+   function  "+" (S :Float; MV : Multivector) return Multivector is
    begin
-      return Add (MV, S);
-   end Add;
+      return  MV + S;
+   end  "+";
 
    --  ------------------------------------------------------------------------
 
@@ -891,7 +891,7 @@ package body Multivector is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.Versor_Inverse.");
+         Put_Line ("An exception occurred in Multivector.Unit_R.");
          raise;
    end Unit_R;
 
