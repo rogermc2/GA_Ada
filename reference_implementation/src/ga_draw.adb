@@ -595,7 +595,6 @@ package body GA_Draw is
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
       if Scale /= 0.0 then
-         Put_Line ("GA_Draw.Draw_Vector Scale /= 0.0");
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
@@ -610,13 +609,14 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-         Put_Line ("GA_Draw.Draw_Vector calling Draw_Line");
+
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
          Put_Line ("GA_Draw.Draw_Vector, line drawn");
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
 
@@ -640,6 +640,7 @@ package body GA_Draw is
 
          Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
          Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
+         Put_Line ("GA_Draw.Draw_Vector, base done");
          Set_Cull_Face (Saved_Cull_Face);
          Disable (Cull_Face);
       end if;

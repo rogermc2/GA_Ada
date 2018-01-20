@@ -20,6 +20,7 @@ procedure Test_E2MV is
    MV11         : Multivector.Multivector;
    MV12         : Multivector.Multivector;
    MV1p2        : Multivector.Multivector;
+   MV1m2        : Multivector.Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
@@ -55,6 +56,15 @@ begin
    New_Line;
    Put_Line ("Multivector_String, e1 + e2:");
    Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1p2, BV_Names)));
+   New_Line;
+
+   MV1m2 := e1_bv - e2_bv;
+   GA_Utilities.Print_Multivector ("e1 - e2", MV1m2);
+   MV_Info := Multivector_Type.Init (MV1m2);
+--     Multivector_Type.Print_Multivector_Info ("e1 - e2", MV_Info);
+   New_Line;
+   Put_Line ("Multivector_String, e1 - e2:");
+   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1m2, BV_Names)));
    New_Line;
 
    MV12 := Outer_Product (e1_bv, e2_bv);

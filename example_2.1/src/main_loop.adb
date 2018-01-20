@@ -31,6 +31,7 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with Blade;
 with GA_Draw;
 with GL_Util;
 with E2GA;
@@ -105,7 +106,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                    : Vector; --  2D vector (0, 0), (1, 0)
+      e1_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e1);
+      e2_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e2);
+      V1                    : constant Vector := e1_bv; --  2D vector (0, 0), (1, 0)
       V2                    : Vector;
 
       Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -133,13 +136,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       GA_Draw.Set_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
-      V1 := Multivector.New_Vector (1.0, 0.0);
+--        V1 := Multivector.New_Vector (1.0, 0.0);
+      GA_Utilities.Print_Multivector("main-loop V1", V1);
+      New_Line;
+
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
-         V2 := Multivector.New_Vector (Cos (A) - Sin (A), Cos (A) - Sin (A));
+--           V2 := Cos (A) * e1_bv + Sin (A) * e2_bv;
+         V2 := e1_bv + e2_bv;
+         GA_Utilities.Print_Multivector("main-loop V2", V2);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
-                         V1, Red, Scale);
+                                V1, Red, Scale);
+         GA_Utilities.Print_Multivector("main-loop V2", V2);
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                          V2, Green, Scale);
 
