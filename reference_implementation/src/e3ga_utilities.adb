@@ -34,7 +34,7 @@ package body E3GA_Utilities is
       else
          Cos_HA := GA_Maths.Float_Functions.Cos (Half_Angle);
          Sin_HA := GA_Maths.Float_Functions.Sin (Half_Angle) / Half_Angle;
-         Result := New_Rotor (0.0, Add (Cos_HA, Sin_HA * BV));
+         Result := New_Rotor (0.0, Cos_HA + Sin_HA * BV);
 --           E3GA.Set_Rotor (Result, Cos_HA, Sin_HA * BV);
       end if;
       return Result;
