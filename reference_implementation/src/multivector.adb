@@ -114,19 +114,21 @@ package body Multivector is
 
    function "*" (Scale : float; MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades : Blade_List := Get_Blade_List (MV);
-      Curs   : Cursor := Blades.First;
-      aBlade : Basis_Blade;
-      Prod   : Float;
-      New_MV : Multivector := MV;
+      Blades   : Blade_List := Get_Blade_List (MV);
+      Curs     : Cursor := Blades.First;
+      aBlade   : Basis_Blade;
+      New_MV   : Multivector := MV;
+      N_Blades : Blade_List := Get_Blade_List (New_MV);
+      N_Curs   : Cursor := N_Blades.First;
    begin
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         Prod := Scale * Weight (aBlade);
-         Blade.Update_Blade (aBlade, Prod);
-         New_MV.Blades.Replace_Element (Curs, aBlade);
+         Blade.Update_Blade (aBlade, Scale * Weight (aBlade));
+         N_Blades.Replace_Element (N_Curs, aBlade);
          Next (Curs);
+         Next (N_Curs);
       end loop;
+      New_MV.Blades := N_Blades;
       return New_MV;
 --        return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
    end "*";
