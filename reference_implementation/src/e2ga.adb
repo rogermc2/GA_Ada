@@ -182,11 +182,11 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function e1 return Multivector.Vector is
-      use Multivector.Blade_List_Package;
       use Blade;
       Basis   : Multivector.Vector;
    begin
-      Multivector.Add_Blade (Basis, New_Basis_Blade (E2_e1));
+      Multivector.Add_Blade (Basis, E2_e1, 1.0);
+      Multivector.Add_Blade (Basis, E2_e2, 0.0);
       return Basis;
    end e1;
 
@@ -197,7 +197,8 @@ package body E2GA is
       use Blade;
       Basis : Multivector.Vector;
    begin
-      Multivector.Add_Blade (Basis, New_Basis_Blade (E2_e2));
+      Multivector.Add_Blade (Basis, E2_e1, 0.0);
+      Multivector.Add_Blade (Basis, E2_e2, 1.0);
       return Basis;
    end e2;
 
