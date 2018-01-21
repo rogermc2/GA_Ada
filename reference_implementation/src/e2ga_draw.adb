@@ -130,29 +130,12 @@ package body E2GA_Draw is
                    aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
       use Multivector;
-      use Blade_List_Package;
-      Blades  : Blade_List := Get_Blade_List (aVector);
-      Curs    : Cursor := Blades.First;
-      C1      : Float := 0.0;
-      C2      : Float := 0.0;
       Vec_3D  : Vector;
-      Tail    : constant Vector := Multivector.New_Vector (0.0, 0.0, 0.0);
+      Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
-      --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
-      --  constructed from v1
-      if Has_Element (Curs) then
-         C1 := Blade.Weight (Element (Curs));
-         Curs := Next (Curs);
-         if Has_Element (Curs) then
-            C2 := Blade.Weight (Element (Curs));
-         end if;
-      else
-         Put_Line ("E2GA_Draw.Draw_Vector detected a null vector.");
-      end if;
-      Vec_3D := New_Vector (C1, C2, 0.0);
+      Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
-
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in E2GA_Draw.Draw_Vector.");
