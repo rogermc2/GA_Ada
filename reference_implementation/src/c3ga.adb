@@ -117,8 +117,15 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1 return Multivector.Multivector is
+      use Blade;
+      Basis   : Multivector.Vector;
    begin
-      return Multivector.Get_Basis_Vector (Blade.C3_e1);
+      Multivector.Add_Blade (Basis, C3_no, 0.0);
+      Multivector.Add_Blade (Basis, C3_e1, 1.0);
+      Multivector.Add_Blade (Basis, C3_e2, 0.0);
+      Multivector.Add_Blade (Basis, C3_e3, 0.0);
+      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
@@ -132,8 +139,15 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e2 return Multivector.Multivector is
+      use Blade;
+      Basis   : Multivector.Vector;
    begin
-      return Multivector.Get_Basis_Vector (Blade.C3_e2);
+      Multivector.Add_Blade (Basis, C3_no, 0.0);
+      Multivector.Add_Blade (Basis, C3_e1, 0.0);
+      Multivector.Add_Blade (Basis, C3_e2, 1.0);
+      Multivector.Add_Blade (Basis, C3_e3, 0.0);
+      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      return Basis;
    end e2;
 
    --  -------------------------------------------------------------------------
@@ -147,8 +161,15 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e3 return Multivector.Multivector is
+      use Blade;
+      Basis   : Multivector.Vector;
    begin
-      return Multivector.Get_Basis_Vector (Blade.C3_e3);
+      Multivector.Add_Blade (Basis, C3_no, 0.0);
+      Multivector.Add_Blade (Basis, C3_e1, 0.0);
+      Multivector.Add_Blade (Basis, C3_e2, 0.0);
+      Multivector.Add_Blade (Basis, C3_e3, 1.0);
+      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      return Basis;
    end e3;
 
    --  -------------------------------------------------------------------------
@@ -362,15 +383,29 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function ni return Multivector.Multivector is
+      use Blade;
+      Basis   : Multivector.Vector;
    begin
-      return Multivector.Get_Basis_Vector (Blade.C3_ni);
+      Multivector.Add_Blade (Basis, C3_no, 0.0);
+      Multivector.Add_Blade (Basis, C3_e1, 0.0);
+      Multivector.Add_Blade (Basis, C3_e2, 0.0);
+      Multivector.Add_Blade (Basis, C3_e3, 0.0);
+      Multivector.Add_Blade (Basis, C3_ni, 1.0);
+      return Basis;
    end ni;
 
    --  -------------------------------------------------------------------------
 
    function no return Multivector.Multivector is
+      use Blade;
+      Basis   : Multivector.Vector;
    begin
-      return Multivector.Get_Basis_Vector (Blade.C3_no);
+      Multivector.Add_Blade (Basis, C3_no, 1.0);
+      Multivector.Add_Blade (Basis, C3_e1, 0.0);
+      Multivector.Add_Blade (Basis, C3_e2, 0.0);
+      Multivector.Add_Blade (Basis, C3_e3, 0.0);
+      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      return Basis;
    end no;
 
    --  -------------------------------------------------------------------------
