@@ -39,6 +39,7 @@ package Multivector is
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
+   function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
@@ -47,6 +48,9 @@ package Multivector is
    function Get_Basis_Vector (Index : E2_Base) return Multivector;
    function Get_Basis_Vector (Index : E3_Base) return Multivector;
    function Get_Basis_Vector (Index : C3_Base) return Multivector;
+   function Get_Blade (MV : Multivector; MV1 : out Multivector;
+                       Index : GA_Maths.Unsigned_Integer) return Boolean;
+
    function Get_Blade_List (MV : Multivector) return Blade_List;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;

@@ -402,6 +402,29 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Blade (MV : Multivector; MV1 : out Multivector;
+                       Index : GA_Maths.Unsigned_Integer) return Boolean is
+      use Blade_List_Package;
+      use Blade;
+      use GA_Maths;
+      Blades   : Blade_List := MV.Blades;
+      Curs     : Cursor := Blades.First;
+      Found    : Boolean := False;
+
+   begin
+      while Has_Element (Curs) and not Found loop
+         Found := Bitmap (Element (Curs)) = Index;
+         if Found then
+            MV1.Blades.Append (Element (Curs));
+         else
+            Next (Curs);
+         end if;
+      end loop;
+
+      return Found;
+   end Get_Blade;
+
+   --  -------------------------------------------------------------------------
    --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
    --  0 is return for null Multivectors.
    --     function Grade (Blades : Blade_List) return Unsigned_Integer is
