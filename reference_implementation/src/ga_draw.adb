@@ -51,12 +51,9 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1           : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
-      GL_e2           : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
-      GL_e3           : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
+      GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
+      GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
+      GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
       Z               : float := 0.0;
       Num_Steps       : constant int := 32;
       Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -268,12 +265,9 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
-      GL_e2                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
-      GL_e3                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
+      GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
+      GL_e2                : Vector3 :=GL_Util.To_GL (E3GA.e2);
+      GL_e3                : Vector3 :=GL_Util.To_GL (E3GA.e3);
       Angle                : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -344,12 +338,9 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
-      GL_e2                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
-      GL_e3                : Vector3 :=
-        GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
+      GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
+      GL_e2                : Vector3 := GL_Util.To_GL (E3GA.e2);
+      GL_e3                : Vector3 := GL_Util.To_GL (E3GA.e3);
       Z                    : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -405,9 +396,9 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-      GL_e1                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e1));
-      GL_e2                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e2));
-      GL_e3                : constant Vector3 := GL_Util.To_GL (Multivector.Get_Basis_Vector (Blade.E3_e3));
+      GL_e1                : constant Vector3 := GL_Util.To_GL (E3GA.e1);
+      GL_e2                : constant Vector3 := GL_Util.To_GL (E3GA.e2);
+      GL_e3                : constant Vector3 := GL_Util.To_GL (E3GA.e3);
       Dir_e1               : constant Single := Single (Dot_Product (GL_Dir, GL_e1));
       Dir_e2               : constant Single := Single (Dot_Product (GL_Dir, GL_e2));
       Dir_e3               : constant Single := Single (Dot_Product (GL_Dir, GL_e3));
@@ -610,12 +601,12 @@ package body GA_Draw is
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
 
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
          --  rotate e3 to vector direction
          Model_View_Matrix := GL.Types.Singles.Identity4;
---           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
 
