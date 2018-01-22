@@ -192,6 +192,25 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
+   function e1 (MV : Multivector.Multivector) return float is
+      use Blade;
+      Value : Float;
+      OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
+   begin
+      if not OK then
+         Put_Line ("E2GA.e1 detected missing value");
+         raise E2_Exception;
+      end if;
+      return Value;
+
+    exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.e1.");
+         raise;
+   end e1;
+
+   --  -------------------------------------------------------------------------
+
    function e2 return Multivector.Vector is
       use Multivector.Blade_List_Package;
       use Blade;
@@ -204,22 +223,22 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function e1 (MV : Multivector.Multivector) return float is
-      use Blade;
-      Value : Float;
-      OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
-   begin
-      return Value;
-   end e1;
-
-   --  -------------------------------------------------------------------------
-
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e2), Value);
    begin
+
+      if not OK then
+         Put_Line ("E2GA.e2 detected missing value");
+         raise E2_Exception;
+      end if;
       return Value;
+
+    exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.e2.");
+         raise;
    end e2;
 
    --  -------------------------------------------------------------------------
@@ -232,7 +251,16 @@ package body E2GA is
       Value    : Float;
       OK       : constant Boolean := Component (BV, BM_E12, Value);
    begin
+      if not OK then
+         Put_Line ("E2GA.e1_e2 detected missing value");
+         raise E2_Exception;
+      end if;
       return Value;
+
+    exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA.e1_e2.");
+         raise;
    end e1_e2;
 
    --  -------------------------------------------------------------------------

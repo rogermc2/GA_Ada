@@ -50,6 +50,8 @@ package E2GA is
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
    Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
 
+   E2_Exception : Exception;
+
 --     function "+" (V1, V2 : Vector) return Vector;
 --     function "-" (V1, V2 : Vector) return Vector;
 --     function "*" (Weight : float; V : Vector) return Vector;
