@@ -186,14 +186,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return float is
+   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
+                       Value : out Float) return Boolean is
       use Blade_List_Package;
       use GA_Maths;
       Blades  : constant Blade_List := Get_Blade_List (MV);
       Curs    : Cursor := Blades.First;
-      Value   : Float := 0.0;
       Found   : Boolean := False;
    begin
+      Value := 0.0;
       while Has_Element (Curs) and not Found loop
          Found := Blade.Bitmap (Element (Curs)) = BM;
          if found then
@@ -202,7 +203,7 @@ package body Multivector is
             Next (Curs);
          end if;
       end loop;
-      return Value;
+      return Found;
    end Component;
 
    --  -------------------------------------------------------------------------
