@@ -255,11 +255,17 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
-      W : constant float
-        := Float (Minus_1_Power
-                  (Integer (Grade (B) * (Grade (B) - 1) / 2) * Integer (B.Weight)));
+      W   : constant float
+        := Float (Minus_1_Power (Integer (Grade (B) * (Grade (B) - 1) / 2)))
+           * B.Weight;
+      Rev : constant Basis_Blade := (B.Bitmap, W);
    begin
-      return New_Basis_Blade (B.Bitmap, W);
+      return Rev;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Reverse_Blade");
+         raise;
    end Reverse_Blade;
 
    --  ------------------------------------------------------------------------
