@@ -722,11 +722,13 @@ package body Multivector is
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
-      B1       : Blade.Basis_Blade;
-      B2       : Blade.Basis_Blade;
-      List_1   : Blade_List := MV1.Blades;
-      Cursor_1 : Cursor := List_1.First;
-      OP       : Multivector;
+      B1        : Blade.Basis_Blade;
+      B2        : Blade.Basis_Blade;
+      List_1    : Blade_List := MV1.Blades;
+      Cursor_1  : Cursor := List_1.First;
+      OP_Blades : Blade_List;
+      Blade_OP  : Blade.Basis_Blade;
+      OP        : Multivector;
    begin
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
@@ -736,15 +738,20 @@ package body Multivector is
          begin
             while Has_Element (Cursor_2) loop
                B2 := Element (Cursor_2);
-               OP.Blades.Append (Outer_Product (B1, B2));
+               Blade_OP := Outer_Product (B1, B2);
+               if Weight (Blade_OP) /= 0.0 then
+                  OP_Blades.Append (Blade_OP);
+               end if;
                Next (Cursor_2);
             end loop;
          end;
          Next (Cursor_1);
       end loop;
-      GA_Utilities.Print_Multivector ("Outer_Product OP", OP);
 
-      Simplify (OP);
+      GA_Utilities.Print_Multivector ("Multivector.Outer_Product OP before simplify", OP);
+      Simplify (OP_Blades);
+      OP.Blades := OP_Blades;
+      GA_Utilities.Print_Multivector ("Multivector.Outer_Product OP", OP);
       return OP;
    end Outer_Product;
 
@@ -802,8 +809,11 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    procedure Simplify (MV : in out Multivector) is
+      use Blade_List_Package;
+      Blades : Blade_List := MV.Blades;
    begin
-      Simplify (MV.Blades);
+      Simplify (Blades);
+      MV.Blades := Blades;
    end Simplify;
 
    --  -------------------------------------------------------------------------
@@ -813,27 +823,34 @@ package body Multivector is
       use GA_Maths;
       Current      : Blade.Basis_Blade;
       Previous     : Blade.Basis_Blade;
+      Prev_Curs    : Cursor;
       Has_Previous : Boolean := False;
       Blade_Cursor : Cursor := Blades.First;
       Remove_Nulls : Boolean := False;
-
    begin
+      if not Has_Element (Blade_Cursor) then
+         Put_Line ("Multivector.Simplify, entered with empty list");
+      end if;
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
+         Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
          if Weight (Current) = 0.0 then
+            Put_Line ("Multivector.Simplify, 0.0  weight detected");
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
          elsif Has_Previous and then
            Bitmap (Previous) = Bitmap (Current) then
             Update_Blade (Previous, Weight (Previous) + Weight (Current));
+            Blades.Replace_Element (Prev_Curs, Previous);
             Blades.Delete (Blade_Cursor);
          else
             if Has_Previous and then Weight (Previous) = 0.0 then
                Remove_Nulls := True;
             end if;
             Previous := Current;
+            Prev_Curs := Blade_Cursor;
+            Next (Blade_Cursor);
          end if;
-         Next (Blade_Cursor);
       end loop;
 
       Blade_Cursor := Blades.First;
@@ -842,8 +859,9 @@ package body Multivector is
             Current := Element (Blade_Cursor);
             if Weight (Current) = 0.0 then
                Blades.Delete (Blade_Cursor);
+            else
+               Next (Blade_Cursor);
             end if;
-            Next (Blade_Cursor);
          end loop;
       end if;
    end Simplify;
