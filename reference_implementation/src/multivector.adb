@@ -845,14 +845,17 @@ package body Multivector is
       Has_Previous : Boolean := False;
       Remove_Nulls : Boolean := False;
    begin
+      Put_Line ("Multivector.Simplify, List length:" &
+                  Ada.Containers.Count_Type'Image (Length (Blades)));
       Blade_Sort_Package.Sort (List (Blades));
+      Reverse_Elements (Blades);
       Blade_Cursor := Blades.First;
       Prev_Curs := No_Element;
       if not Has_Element (Blade_Cursor) then
          Put_Line ("Multivector.Simplify, sorted with empty list");
-      else
-         Put_Line ("Multivector.Simplify, sorted");
       end if;
+      Put_Line ("Multivector.Simplify, Sorted list length:" &
+                  Ada.Containers.Count_Type'Image (Length (Blades)));
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
          Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
@@ -889,6 +892,8 @@ package body Multivector is
             end if;
          end loop;
       end if;
+      Put_Line ("Multivector.Simplify, Simplified list length:" &
+                  Ada.Containers.Count_Type'Image (Length (Blades)));
       Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
    end Simplify;
 
