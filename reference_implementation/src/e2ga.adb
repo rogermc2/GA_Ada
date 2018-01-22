@@ -206,16 +206,20 @@ package body E2GA is
 
    function e1 (MV : Multivector.Multivector) return float is
       use Blade;
+      Value : Float;
+      OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
    begin
-      return Component (MV, E2_Base'Enum_Rep (E2_e1));
+      return Value;
    end e1;
 
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
+      Value : Float;
+      OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e2), Value);
    begin
-      return Component (MV, E2_Base'Enum_Rep (E2_e2));
+      return Value;
    end e2;
 
    --  -------------------------------------------------------------------------
@@ -225,8 +229,10 @@ package body E2GA is
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer :=
         Unsigned_Integer (E2_Base'Enum_Rep (E2_e1)) or Unsigned_Integer (E2_Base'Enum_Rep (E2_e2));
+      Value    : Float;
+      OK       : constant Boolean := Component (BV, BM_E12, Value);
    begin
-      return Component (BV, BM_E12);
+      return Value;
    end e1_e2;
 
    --  -------------------------------------------------------------------------

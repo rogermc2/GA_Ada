@@ -386,8 +386,10 @@ package body E3GA is
 
    function e1 (MV : Multivector.Multivector) return float is
       use Blade;
+      Value : Float;
+      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e1), Value);
    begin
-      return Component (MV, E3_Base'Enum_Rep (E3_e1));
+      return Value;
    end e1;
 
    --  -------------------------------------------------------------------------
@@ -406,8 +408,10 @@ package body E3GA is
 
    function e2 (MV : Multivector.Multivector) return float is
       use Blade;
+      Value : Float;
+      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e2), Value);
    begin
-      return Component (MV, E3_Base'Enum_Rep (E3_e2));
+      return Value;
    end e2;
 
    --  -------------------------------------------------------------------------
@@ -426,8 +430,10 @@ package body E3GA is
 
    function e3 (MV : Multivector.Multivector) return float is
       use Blade;
+      Value : Float;
+      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e3), Value);
    begin
-      return Component (MV, E3_Base'Enum_Rep (E3_e3));
+      return Value;
    end e3;
 
    --  -------------------------------------------------------------------------
@@ -436,8 +442,10 @@ package body E3GA is
       use Blade;
       BM_E12   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e2));
+      Value : Float;
+      OK    : Boolean := Component (MV, BM_E12, Value);
    begin
-      return Component (MV, BM_E12);
+      return Value;
    end e1_e2;
 
    --  -------------------------------------------------------------------------
@@ -446,8 +454,10 @@ package body E3GA is
       use Blade;
       BM_E13   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+     Value : Float;
+      OK    : Boolean := Component (MV, BM_E13, Value);
    begin
-      return Component (MV, BM_E13);
+      return Value;
    end e1_e3;
 
    --  -------------------------------------------------------------------------
@@ -456,8 +466,10 @@ package body E3GA is
       use Blade;
       BM_E23   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+       Value : Float;
+      OK    : Boolean := Component (MV, BM_E23, Value);
    begin
-      return Component (MV, BM_E23);
+      return Value;
    end e2_e3;
 
    --  -------------------------------------------------------------------------
@@ -467,8 +479,10 @@ package body E3GA is
       BM   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+        Value : Float;
+        OK    : Boolean := Component (MV, BM, Value);
    begin
-      return Component (MV, BM);
+      return Value;
    end e1_e2_e3;
 
    --  -------------------------------------------------------------------------
