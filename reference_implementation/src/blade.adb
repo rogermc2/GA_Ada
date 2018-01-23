@@ -23,32 +23,36 @@ package body Blade is
       Val       : Unbounded_String;
       theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
    begin
-      while BM /= 0 loop
---           Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
-         if (BM and 1) /= 0 then
-            if Length (theString) > 0 then
-               theString := theString & "^";
-            end if;
+      if BM = 0 then
+         theString := To_Unbounded_String (GA_Maths.float_3'Image (Scale));
+      else
+         while BM /= 0 loop
+            --           Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
+            if (BM and 1) /= 0 then
+               if Length (theString) > 0 then
+                  theString := theString & "^";
+               end if;
 
-            if Is_Empty (Vector (BV_Names)) or
-              (Index > Natural (Length (Vector (BV_Names))) or
-              (Index - 1) < 1) then
-               theString := theString & "e";
-               Val := To_Unbounded_String (Natural'Image (Index));
-               Val := Trim (Val, Ada.Strings.Left);
-               theString := theString & Val;
-            else
-               Name := Element (BV_Names, Index - 1);
-               theString := theString & Name;
+               if Is_Empty (Vector (BV_Names)) or
+                 (Index > Natural (Length (Vector (BV_Names))) or
+                      (Index - 1) < 1) then
+                  theString := theString & "e";
+                  Val := To_Unbounded_String (Natural'Image (Index));
+                  Val := Trim (Val, Ada.Strings.Left);
+                  theString := theString & Val;
+               else
+                  Name := Element (BV_Names, Index - 1);
+                  theString := theString & Name;
+               end if;
+               --              Put_Line ("Blade theString:  " & To_String (theString));
             end if;
---              Put_Line ("Blade theString:  " & To_String (theString));
+            BM := BM / 2;  --  BM >>= 1;
+            Index := Index + 1;
+         end loop;
+
+         if Length (theString) > 0 then
+            theString := GA_Maths.float_3'Image (Scale) & " * " & theString;
          end if;
-         BM := BM / 2;  --  BM >>= 1;
-         Index := Index + 1;
-      end loop;
-
-      if Length (theString) > 0 then
-         theString := GA_Maths.float_3'Image (Scale) & " * " & theString;
       end if;
       return theString;
 

@@ -80,7 +80,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
 
       use Maths.Single_Math_Functions;
-
       use GA_Maths;
       use GA_Maths.Float_Functions;
       use Multivector;
@@ -106,9 +105,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      e1_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e1);
-      e2_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e2);
-      V1                    : constant Vector := e1_bv; --  2D vector (0, 0), (1, 0)
+--        e1_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e1);
+--        e2_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e2);
+      V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
       V2                    : Vector;
 
       Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -143,23 +142,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
 --           V2 := Cos (A) * e1_bv + Sin (A) * e2_bv;
-         V2 := e1_bv + e2_bv;
-         GA_Utilities.Print_Multivector("main-loop V2", V2);
+         GA_Utilities.Print_Multivector ("V1", V1);
+         V2 := E2GA.e1 + Sin (A) * E2GA.e2;
+         GA_Utilities.Print_Multivector ("V2", V2);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                                 V1, Red, Scale);
-         Put_Line ("main-loop V1 drawn");
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                          V2, Green, Scale);
 
          BV := Outer_Product (V1, V2);
-         GA_Utilities.Print_Multivector ("V1", V1);
-         GA_Utilities.Print_Multivector ("V2", V2);
          GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
-            Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
-                                V1, V1 + V2, V2, Blue);
+--              Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
+--                                  V1, V1 + V2, V2, Blue);
+            null;
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw_Bivector (Render_Graphic_Program, BV_Translation_Matrix,
