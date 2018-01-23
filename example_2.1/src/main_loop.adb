@@ -136,14 +136,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GA_Draw.Set_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
 --        V1 := Multivector.New_Vector (1.0, 0.0);
-      GA_Utilities.Print_Multivector("main-loop V1", V1);
-      New_Line;
 
       while A < Two_Pi - 0.1 loop
          --  E2GA.e2 vector (0, 0), (0, 1)
 --           V2 := Cos (A) * e1_bv + Sin (A) * e2_bv;
          GA_Utilities.Print_Multivector ("V1", V1);
-         V2 := E2GA.e1 + Sin (A) * E2GA.e2;
+         V2 := Cos (A) * E2GA.e1 + Sin (A) * E2GA.e2;
          GA_Utilities.Print_Multivector ("V2", V2);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
