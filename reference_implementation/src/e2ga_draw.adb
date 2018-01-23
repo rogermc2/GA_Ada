@@ -134,6 +134,7 @@ package body E2GA_Draw is
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
       Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
+      GA_Utilities.Print_Multivector ("E2GA.Draw_Vector.Vec_3D", Vec_3D);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
    exception

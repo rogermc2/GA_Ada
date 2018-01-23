@@ -8,8 +8,8 @@ with Multivector_Type_Base;
 
 package E2GA is
    use Blade.Names_Package;
---     e1_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.C3_e1);
---     e2_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.C3_e2);
+--     e1_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e1);
+--     e2_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e2);
 
    subtype Rotor_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
    subtype Vector_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);

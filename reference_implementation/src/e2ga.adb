@@ -186,7 +186,6 @@ package body E2GA is
       Basis   : Multivector.Vector;
    begin
       Multivector.Add_Blade (Basis, E2_e1, 1.0);
-      Multivector.Add_Blade (Basis, E2_e2, 0.0);
       return Basis;
    end e1;
 
@@ -197,10 +196,10 @@ package body E2GA is
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
    begin
-      if not OK then
-         Put_Line ("E2GA.e1 detected missing value");
-         raise E2_Exception;
-      end if;
+--        if not OK then
+--           Put_Line ("E2GA.e1 detected missing value");
+--           raise E2_Exception;
+--        end if;
       return Value;
 
     exception
@@ -216,7 +215,6 @@ package body E2GA is
       use Blade;
       Basis : Multivector.Vector;
    begin
-      Multivector.Add_Blade (Basis, E2_e1, 0.0);
       Multivector.Add_Blade (Basis, E2_e2, 1.0);
       return Basis;
    end e2;
@@ -228,11 +226,10 @@ package body E2GA is
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e2), Value);
    begin
-
-      if not OK then
-         Put_Line ("E2GA.e2 detected missing value");
-         raise E2_Exception;
-      end if;
+--        if not OK then
+--           Put_Line ("E2GA.e2 detected missing value");
+--           raise E2_Exception;
+--        end if;
       return Value;
 
     exception

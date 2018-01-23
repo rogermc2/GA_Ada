@@ -51,9 +51,6 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1           : Vector3 := GL_Util.To_GL (E3GA.e1);
-      GL_e2           : Vector3 := GL_Util.To_GL (E3GA.e2);
-      GL_e3           : Vector3 := GL_Util.To_GL (E3GA.e3);
       Z               : float := 0.0;
       Num_Steps       : constant int := 32;
       Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -265,9 +262,6 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
-      GL_e2                : Vector3 :=GL_Util.To_GL (E3GA.e2);
-      GL_e3                : Vector3 :=GL_Util.To_GL (E3GA.e3);
       Angle                : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -338,9 +332,6 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_e1                : Vector3 := GL_Util.To_GL (E3GA.e1);
-      GL_e2                : Vector3 := GL_Util.To_GL (E3GA.e2);
-      GL_e3                : Vector3 := GL_Util.To_GL (E3GA.e3);
       Z                    : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -396,12 +387,9 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-      GL_e1                : constant Vector3 := GL_Util.To_GL (E3GA.e1);
-      GL_e2                : constant Vector3 := GL_Util.To_GL (E3GA.e2);
-      GL_e3                : constant Vector3 := GL_Util.To_GL (E3GA.e3);
-      Dir_e1               : constant Single := Single (Dot_Product (GL_Dir, GL_e1));
-      Dir_e2               : constant Single := Single (Dot_Product (GL_Dir, GL_e2));
-      Dir_e3               : constant Single := Single (Dot_Product (GL_Dir, GL_e3));
+      Dir_e1               : constant Single := GL_Dir (GL.X);
+      Dir_e2               : constant Single := GL_Dir (GL.Y);
+      Dir_e3               : constant Single := GL_Dir (GL.Z);
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
       Vertices             : Singles.Vector3_Array (1 .. 2);
    begin
@@ -569,19 +557,16 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
---        Z                    : Single := 0.0;
---        Dir_e1               : Single := Single (E3GA.Dot_Product (Direction, E3GA.e1));
---        Tail_e1              : Single := Single (E3GA.Dot_Product (Tail, E3GA.e1));
       Dir_e1               : Single := Single (E3GA.e1 (Direction));
       Dir_e2               : Single := Single (E3GA.e2 (Direction));
       Dir_e3               : Single := Single (E3GA.e3 (Direction));
       Tail_e1              : Single := Single (E3GA.e1 (Tail));
       Tail_e2              : Single := Single (E3GA.e2 (Tail));
       Tail_e3              : Single := Single (E3GA.e3 (Tail));
-      Scale_Factor1        : Single := Single (1.2 / Scale);
-      Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
-      Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
-      Scale_Factor2_V      : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
+--        Scale_Factor1        : Single := Single (1.2 / Scale);
+--        Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
+--        Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
+--        Scale_Factor2_V      : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
       aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
