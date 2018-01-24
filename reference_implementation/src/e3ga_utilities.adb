@@ -136,7 +136,8 @@ package body E3GA_Utilities is
       w1     : Vector;
       w2     : Vector;
       N2     : Float;
-      R      : Float;
+      --        R      : Float;
+      R      : Rotor;
       Result : Rotor;
    begin
 --        Set_Coords (w0, 0.0, 0.0, 0.0);
@@ -165,14 +166,18 @@ package body E3GA_Utilities is
             end if;
          else  --  N2 /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
-            S := Sqrt (2.0 * float (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
-            R := (1.0 - Scalar_Part (Geometric_Product (V_To, V_From))) / S;
+            S := 1.0 / Sqrt (2.0 * float (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
+--              R := (1.0 - Scalar_Part (Geometric_Product (V_To, V_From))) / S;
+            R := New_Rotor (S);
+            R := R - S * Geometric_Product (V_To, V_From);
             Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
          end if;
       else
-         S := Sqrt (2.0 * float (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
-         R := (1.0 + Scalar_Part (Geometric_Product (V_To, V_From))) / S;
-         Result := New_Rotor (R);
+         S := 1.0 / Sqrt (2.0 * float (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
+--           R := (1.0 + Scalar_Part (Geometric_Product (V_To, V_From))) / S;
+         R := New_Rotor (S);
+         Result := R + S * Geometric_Product (V_To, V_From);
+--           Result := New_Rotor (R);
       end if;
       return Result;
 
