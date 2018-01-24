@@ -50,9 +50,7 @@ package body GL_Util is
         Image_Row : Int := 0;
     begin
       --  compute the images of all OpenGL basis vectors
---          GA_Utilities.Print_Multivector ("Rotor_GL_Multiply R", R);
         VGP := Geometric_Product (R, Geometric_Product (e1, IR));
---          GA_Utilities.Print_Multivector ("Rotor_GL_Multiply VGP 1", VGP);
         Image (1) := To_GL (VGP);
         VGP := Geometric_Product (R, Geometric_Product (e2, IR));
         Image (2) := To_GL (VGP);

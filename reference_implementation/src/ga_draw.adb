@@ -571,7 +571,7 @@ package body GA_Draw is
       aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
-      GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
+--        GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
       if Scale /= 0.0 then
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
@@ -595,9 +595,9 @@ package body GA_Draw is
          Model_View_Matrix := GL.Types.Singles.Identity4;
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
-         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
-         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
-         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
+--           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
+--           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
+--           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
 
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
 

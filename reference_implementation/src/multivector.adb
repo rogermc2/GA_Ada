@@ -340,8 +340,8 @@ package body Multivector is
       if Is_Empty (List (Blades_2)) then
          Put_Line ("Geometric_Product, MV2 is null.");
       end if;
-      GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
-      GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
+--        GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
+--        GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
@@ -351,9 +351,9 @@ package body Multivector is
          end loop;
          Next (Curs_1);
       end loop;
-      GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
+--        GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
       Simplify (GP);
-      GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
+--        GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
 
       if Is_Empty (GP.Blades) then
          Put_Line ("Geometric_Product, product MV is null.");
@@ -768,11 +768,9 @@ package body Multivector is
          Next (Cursor_1);
       end loop;
 
-      GA_Utilities.Print_Multivector ("Multivector.Outer_Product OP before simplify", OP);
       Simplify (OP_Blades, Sorted);
       OP.Blades := OP_Blades;
       OP.Sorted := Sorted;
-      GA_Utilities.Print_Multivector ("Multivector.Outer_Product OP", OP);
       return OP;
    end Outer_Product;
 
