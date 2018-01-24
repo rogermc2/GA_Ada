@@ -571,6 +571,7 @@ package body GA_Draw is
       aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
+      GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
       if Scale /= 0.0 then
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
@@ -587,7 +588,6 @@ package body GA_Draw is
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
 
-         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 

@@ -50,7 +50,8 @@ package body E2GA_Draw is
             when Vector_Subclass =>
                Put_Line (" E2GA_Draw Vector_Subclass.");
 --                 E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
-               Direction := New_Vector (0.0, 0.0, Float (A.M_Scalors (1)));
+--                 Direction := New_Vector (0.0, 0.0, Float (A.M_Scalors (1)));
+               Add_Blade (Direction, Blade.E3_e3, Float (A.M_Scalors (1)));
                Draw_Vector (Render_Program, Model_View_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
@@ -113,8 +114,6 @@ package body E2GA_Draw is
       Normal   : Vector := New_Vector (0.0, 0.0);
    begin
       Multivector.Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
---        E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
---        E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Normal, Ortho_1, Ortho_2,
                              Colour, Scale, Method_Type);
@@ -134,7 +133,13 @@ package body E2GA_Draw is
       Vec_3D  : Vector;
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
-      Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
+      if E2GA.e1 (aVector) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e1, E2GA.e1 (aVector));
+      end if;
+      if E2GA.e2 (aVector) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e2, E2GA.e2 (aVector));
+      end if;
+--        Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
    exception
