@@ -136,30 +136,22 @@ package body E3GA_Utilities is
       w1     : Vector;
       w2     : Vector;
       N2     : Float;
-      --        R      : Float;
       R      : Rotor;
       Result : Rotor;
    begin
---        Set_Coords (w0, 0.0, 0.0, 0.0);
---        Set_Coords (w1, 0.0, 0.0, 0.0);
---        Set_Coords (w2, 0.0, 0.0, 0.0);
 --        if float (E3GA.Get_Coord (Scalar_Product (V_From, V_To))) < -0.9 then
 --           C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
       if  Scalar_Product (V_From, V_To) < -0.9 then
          C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
          Add_Blade (w1, Blade.E3_e1, C1);
---          Set_Coords (w0, C1, 0.0, 0.0);
          N2 := Norm_E2 (w0);
 
          if N2 = 0.0 then
             C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
             Add_Blade (w1, Blade.E3_e1, C1);
---              Set_Coords (w1, C1, 0.0, 0.0);
             C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, e2)));
             Add_Blade (w2, Blade.E3_e1, C1);
---              Set_Coords (w2, C1, 0.0, 0.0);
             if Norm_E2 (w1) > Norm_E2 (w2) then
---                 Set_Rotor (Result, Outer_Product (V_From, Unit_e (w1)));
                Result := Outer_Product (V_From, Unit_e (w1));
             else
                Result := Outer_Product (V_From, Unit_e (w2));
@@ -167,17 +159,14 @@ package body E3GA_Utilities is
          else  --  N2 /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
             S := 1.0 / Sqrt (2.0 * float (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
---              R := (1.0 - Scalar_Part (Geometric_Product (V_To, V_From))) / S;
             R := New_Rotor (S);
             R := R - S * Geometric_Product (V_To, V_From);
             Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
          end if;
       else
          S := 1.0 / Sqrt (2.0 * float (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
---           R := (1.0 + Scalar_Part (Geometric_Product (V_To, V_From))) / S;
          R := New_Rotor (S);
          Result := R + S * Geometric_Product (V_To, V_From);
---           Result := New_Rotor (R);
       end if;
       return Result;
 
