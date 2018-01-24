@@ -377,8 +377,6 @@ package body E3GA is
       Basis   : Multivector.Vector;
    begin
       Multivector.Add_Blade (Basis, E3_e1, 1.0);
-      Multivector.Add_Blade (Basis, E3_e2, 0.0);
-      Multivector.Add_Blade (Basis, E3_e3, 0.0);
       return Basis;
    end e1;
 
@@ -398,9 +396,7 @@ package body E3GA is
       use Blade;
       Basis   : Multivector.Vector;
    begin
-      Multivector.Add_Blade (Basis, E3_e1, 0.0);
       Multivector.Add_Blade (Basis, E3_e2, 1.0);
-      Multivector.Add_Blade (Basis, E3_e3, 0.0);
       return Basis;
    end e2;
 
@@ -420,8 +416,6 @@ package body E3GA is
       use Blade;
       Basis   : Multivector.Vector;
    begin
-      Multivector.Add_Blade (Basis, E3_e1, 0.0);
-      Multivector.Add_Blade (Basis, E3_e2, 0.0);
       Multivector.Add_Blade (Basis, E3_e3, 1.0);
       return Basis;
    end e3;
