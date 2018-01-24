@@ -73,7 +73,8 @@ package body E2GA_Draw is
                   Normal_MV : Multivector.Multivector := OP;
                begin
                   Normal_MV := Multivector.Dual (OP_MV);
-                  E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
+                  Add_Blade (Normal, Blade.E3_e3, Blade.Weight (Element (curs)));
+--                    E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
 --                                     Normal_MV.Coordinates (Length (Blades)));
                   GA_Draw.Draw_Bivector (Render_Program,
                                          Model_View_Matrix, Normal,
@@ -134,7 +135,6 @@ package body E2GA_Draw is
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
       Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
-      GA_Utilities.Print_Multivector ("E2GA.Draw_Vector.Vec_3D", Vec_3D);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
    exception

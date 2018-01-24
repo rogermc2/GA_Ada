@@ -187,9 +187,9 @@ package body GA_Draw is
 
       MVP_Matrix := Model_View_Matrix;
       Cords := E3GA.Get_Coords (Base);
-      Translate := (Single (E3GA.Get_Coord_1 (Base)),
-                    Single (E3GA.Get_Coord_2 (Base)),
-                    Single (E3GA.Get_Coord_3 (Base)));
+      Translate := (Single (E3GA.e1 (Base)),
+                    Single (E3GA.e2 (Base)),
+                    Single (E3GA.e3 (Base)));
       E2_Norm := Multivector.Norm_E2 (Base);
       if  E2_Norm /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
@@ -269,14 +269,15 @@ package body GA_Draw is
       Fan                  : Singles.Vector3_Array (1 .. Num_Steps);
 
       procedure Draw_Part (Part : Circle_Part) is
-         Normal : Multivector.Vector;
+--           Normal : Multivector.Vector;
          Norm_Z : float;
       begin
          Case Part is
             when Back_Part | Outline_Part => Norm_Z := 1.0;
             when Front_Part => Norm_Z := -1.0;
          end case;
-         E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
+--           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
+--           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
          Fan (1) := (0.0, 0.0, 0.0);
          for Count in 2 .. Num_Steps loop
@@ -487,9 +488,9 @@ package body GA_Draw is
 
       if Multivector.Norm_E2 (Position) >= 0.0 then
          Translation_Matrix :=
-          Maths.Translation_Matrix ((Single (E3GA.Get_Coord_1 (Position)),
-                                     Single (E3GA.Get_Coord_2 (Position)),
-                                     Single (E3GA.Get_Coord_3 (Position))));
+          Maths.Translation_Matrix ((Single (E3GA.e1 (Position)),
+                                     Single (E3GA.e2 (Position)),
+                                     Single (E3GA.e3 (Position))));
       end if;
       Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
@@ -594,8 +595,13 @@ package body GA_Draw is
          Model_View_Matrix := GL.Types.Singles.Identity4;
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
 
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
+
+         Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 1", Model_View_Matrix);
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector

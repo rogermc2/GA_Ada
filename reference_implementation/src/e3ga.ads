@@ -88,9 +88,9 @@ package E3GA is
 --     function Get_Coords (BV : Bivector) return Array_3D;
 --     function Get_Coords (MV : Multivector) return MV_Coordinate_Array;
    function Get_Coords (R : Rotor) return Array_4D;
-    function Get_Coord_1 (V : Multivector.Vector) return float;
-    function Get_Coord_2 (V : Multivector.Vector) return float;
-    function Get_Coord_3 (V : Multivector.Vector) return float;
+--      function Get_Coord_1 (V : Multivector.Vector) return float;
+--      function Get_Coord_2 (V : Multivector.Vector) return float;
+--      function Get_Coord_3 (V : Multivector.Vector) return float;
    function Get_Coords (V : Multivector.Vector) return Array_3D;
    function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
@@ -124,7 +124,7 @@ package E3GA is
    function Norm_R (BV : Bivector) return Float;
    function Norm_R2 (BV : Bivector) return Float;
 --      procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
-    procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
+--      procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
 --     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);

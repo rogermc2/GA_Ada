@@ -551,12 +551,12 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_1 (V : Multivector.Vector) return float is
-      use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
-   begin
-      return Blade.Weight (Blades.First_Element);
-   end Get_Coord_1;
+--     function Get_Coord_1 (V : Multivector.Vector) return float is
+--        use Multivector.Blade_List_Package;
+--        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+--     begin
+--        return Blade.Weight (Blades.First_Element);
+--     end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
