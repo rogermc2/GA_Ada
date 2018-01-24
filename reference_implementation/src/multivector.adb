@@ -301,14 +301,16 @@ package body Multivector is
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       Curs      : Cursor := Blades.First;
-      BB        : Blade.Basis_Blade;
       New_MV    : Multivector;
    begin
       while Has_Element (Curs) loop
-         BB := Element (Curs);
-         New_MV.Blades.Append (Blade.Geometric_Product (BB, Sc));
+         New_MV.Blades.Append (Blade.Geometric_Product (Element (Curs), Sc));
          Next (Curs);
       end loop;
+      Simplify (New_MV);
+      if Is_Empty (New_MV.Blades) then
+         Put_Line ("Geometric_Product, scalar product MV is null.");
+      end if;
       return New_MV;
    end Geometric_Product;
 
@@ -330,7 +332,7 @@ package body Multivector is
       Curs_2    : Cursor := Blades_2.First;
       Blade_1   : Blade.Basis_Blade;
       Blade_2   : Blade.Basis_Blade;
-      MV        : Multivector;
+      GP        : Multivector;
    begin
       if Is_Empty (List (Blades_1)) then
          Put_Line ("Geometric_Product, MV1 is null.");
@@ -338,20 +340,25 @@ package body Multivector is
       if Is_Empty (List (Blades_2)) then
          Put_Line ("Geometric_Product, MV2 is null.");
       end if;
+      GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
+      GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
-            MV.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
+            GP.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
             Next (Curs_2);
          end loop;
          Next (Curs_1);
       end loop;
+      GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
+      Simplify (GP);
+      GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
 
-      if Is_Empty (MV.Blades) then
+      if Is_Empty (GP.Blades) then
          Put_Line ("Geometric_Product, product MV is null.");
       end if;
-      return MV;
+      return GP;
 
    end Geometric_Product;
 
@@ -844,22 +851,22 @@ package body Multivector is
       Has_Previous : Boolean := False;
       Remove_Nulls : Boolean := False;
    begin
-      Put_Line ("Multivector.Simplify, List length:" &
-                  Ada.Containers.Count_Type'Image (Length (Blades)));
+--        Put_Line ("Multivector.Simplify, List length:" &
+--                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Blade_Sort_Package.Sort (List (Blades));
       Reverse_Elements (Blades);
       Blade_Cursor := Blades.First;
       Prev_Curs := No_Element;
-      if not Has_Element (Blade_Cursor) then
-         Put_Line ("Multivector.Simplify, sorted with empty list");
-      end if;
-      Put_Line ("Multivector.Simplify, Sorted list length:" &
-                  Ada.Containers.Count_Type'Image (Length (Blades)));
+--        if not Has_Element (Blade_Cursor) then
+--           Put_Line ("Multivector.Simplify, sorted with empty list");
+--        end if;
+--        Put_Line ("Multivector.Simplify, Sorted list length:" &
+--                    Ada.Containers.Count_Type'Image (Length (Blades)));
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
-         Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
+--           Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
          if Weight (Current) = 0.0 then
-            Put_Line ("Multivector.Simplify, 0.0  weight detected");
+--              Put_Line ("Multivector.Simplify, 0.0  weight detected");
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
             --  Delete sets Blade_Cursor to No_Element
@@ -891,8 +898,8 @@ package body Multivector is
             end if;
          end loop;
       end if;
-      Put_Line ("Multivector.Simplify, Simplified list length:" &
-                  Ada.Containers.Count_Type'Image (Length (Blades)));
+--        Put_Line ("Multivector.Simplify, Simplified list length:" &
+--                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
    end Simplify;
 
