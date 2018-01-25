@@ -609,7 +609,7 @@ package body GA_Draw is
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
          Enable (Cull_Face);
          Set_Front_Face (GL.Types.Clockwise);
-         Set_Cull_Face (Front);
+         Set_Cull_Face (Back);
 
          Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
          Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
