@@ -386,7 +386,6 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       Dir_e1               : constant Single := GL_Dir (GL.X);
       Dir_e2               : constant Single := GL_Dir (GL.Y);
@@ -558,13 +557,14 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-      Dir_e1               : Single := Single (E3GA.e1 (Direction));
-      Dir_e2               : Single := Single (E3GA.e2 (Direction));
-      Dir_e3               : Single := Single (E3GA.e3 (Direction));
-      Tail_e1              : Single := Single (E3GA.e1 (Tail));
-      Tail_e2              : Single := Single (E3GA.e2 (Tail));
-      Tail_e3              : Single := Single (E3GA.e3 (Tail));
---        Scale_Factor1        : Single := Single (1.2 / Scale);
+--        Dir_e1               : constant Single := GL_Dir (GL.X);
+--        Dir_e2               : constant Single := GL_Dir (GL.Y);
+--        Dir_e3               : constant Single := GL_Dir (GL.Z);
+--        Tail_e1              : constant Single := GL_Tail (GL.X);
+--        Tail_e2              : constant Single := GL_Tail (GL.Y);
+--        Tail_e3              : constant Single := GL_Tail (GL.Z);
+
+      --        Scale_Factor1        : Single := Single (1.2 / Scale);
 --        Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
 --        Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
 --        Scale_Factor2_V      : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
@@ -584,8 +584,7 @@ package body GA_Draw is
          Model_View_Matrix := MV_Matrix;
 
          if Norm_e2 (Tail) /= 0.0 then
-            Model_View_Matrix := Maths.Translation_Matrix
-              ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
+            Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
          end if;
          Put_Line ("GA_Draw.Draw,  Norm_e2 (Tail)" & float'Image (Norm_e2 (Tail)));
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
@@ -603,6 +602,9 @@ package body GA_Draw is
          Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 1", Model_View_Matrix);
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
+         if Norm_e2 (Tail) /= 0.0 then
+            Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
+         end if;
          --  Translate to head of vector
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
          Enable (Cull_Face);
