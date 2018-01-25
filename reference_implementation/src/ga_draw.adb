@@ -587,29 +587,23 @@ package body GA_Draw is
             Model_View_Matrix := Maths.Translation_Matrix
               ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
          end if;
-
+         Put_Line ("GA_Draw.Draw,  Norm_e2 (Tail)" & float'Image (Norm_e2 (Tail)));
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
+         --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
-         Model_View_Matrix := GL.Types.Singles.Identity4;
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
 --           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
 --           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
 --           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
-
+         Model_View_Matrix := GL.Types.Singles.Identity4;
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
-
          Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 1", Model_View_Matrix);
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
          --  Translate to head of vector
-         if Norm_e2 (Tail) /= 0.0 then
-            Model_View_Matrix := Maths.Translation_Matrix
-              ((Tail_e1, Tail_e2, Tail_e3)) * Model_View_Matrix;
-         end if;
-
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
          Enable (Cull_Face);
          Set_Front_Face (GL.Types.Clockwise);
