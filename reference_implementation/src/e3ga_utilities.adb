@@ -30,12 +30,10 @@ package body E3GA_Utilities is
       Half_Angle := GA_Maths.Float_Functions.Sqrt (-X2);
       if Half_Angle = 0.0 then
          Update_Scalar_Part (Result, 1.0);
---           Set_Rotor (Result, 1.0);
       else
          Cos_HA := GA_Maths.Float_Functions.Cos (Half_Angle);
          Sin_HA := GA_Maths.Float_Functions.Sin (Half_Angle) / Half_Angle;
          Result := New_Rotor (0.0, Cos_HA + Sin_HA * BV);
---           E3GA.Set_Rotor (Result, Cos_HA, Sin_HA * BV);
       end if;
       return Result;
    end exp;
@@ -52,7 +50,6 @@ package body E3GA_Utilities is
       Result   : Multivector.Bivector;
    begin
       --  get the bivector 2-blade part of R
---        Set_Bivector (BV, e1e2 (R), e2e3 (R), e3e1 (R));
       BV := New_Bivector (e1e2 (R), e2e3 (R), e3e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
       R2 := E3GA.Norm_R (BV);
@@ -67,7 +64,6 @@ package body E3GA_Utilities is
          Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
       else
          BV := New_Bivector (0.0, 0.0, 0.0);
---           Set_Bivector (Result, 0.0, 0.0, 0.0);
       end if;
       return Result;
    end log;
@@ -83,32 +79,9 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
---     procedure Print_Vector (Name : String; aVector : E2GA.Vector) is
---     begin
---        Put (Name & ":  ");
---        Put (float'Image (E2GA.Get_Coord_1 (aVector)) & "   ");
---        Put (float'Image (E2GA.Get_Coord_2 (aVector)) & "   ");
---        New_Line;
---     end Print_Vector;
-
-   --  ------------------------------------------------------------------------
---
---     procedure Print_Vector (Name : String; aVector : E3GA.Vector) is
---        Coords : GA_Maths.Array_3D := E3GA.Get_Coords (aVector);
---     begin
---        Put (Name & ":  ");
---        for Index in Coords'Range loop
---           Put (float'Image (Coords (Index)) & "   ");
---        end loop;
---        New_Line;
---     end Print_Vector;
-
-   --  ------------------------------------------------------------------------
-
    procedure Rotor_To_Matrix (R : Multivector.Rotor;  M : out GA_Maths.GA_Matrix3) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
-      Print_Rotor ("Rotor_To_Matrix, R", R);
       M (1, 1) := 1.0 - 2.0 * (Rot (3) * Rot (3) + Rot (4) * Rot (4));
       M (2, 1) := 2.0 * (Rot (2) * Rot (3) + Rot (4) * Rot (1));
       M (3, 1) := 2.0 * (Rot (2) * Rot (4) - Rot (3) * Rot (1));
