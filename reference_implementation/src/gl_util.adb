@@ -1,9 +1,12 @@
 
+with Interfaces;
+
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL;
 with GL.Window;
+with Utilities;
 
 with Blade;
 with E3GA_Utilities;
@@ -29,47 +32,52 @@ package body GL_Util is
       null;
    end GL_Color_3fm;
 
---  ------------------------------------------------------------------
+   --  ------------------------------------------------------------------
    --  Load_Pick_Matrix
    procedure Load_Pick_Matrix is
    begin
       null;
    end Load_Pick_Matrix;
 
---  ------------------------------------------------------------------
-    --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
-    procedure Rotor_GL_Multiply (R : Multivector.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
+   --  ------------------------------------------------------------------
+   --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
+   procedure Rotor_GL_Multiply (R : Multivector.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
       use E3GA;
       use GL;
       use GL.Types.Singles;
       use Multivector;
-        IR        : Multivector.Rotor := Inverse (R);
-        VGP       : Multivector.Vector;
-        Image     : Vector3_Array (1 .. 4);
-        Matrix    : Matrix4 := Identity4;
-        Image_Row : Int := 0;
-    begin
+      IR        : Multivector.Rotor := Inverse (R);
+      VGP       : Multivector.Vector;
+      Image     : Vector3_Array (1 .. 4);
+      Matrix    : Matrix4 := Identity4;
+      Image_Row : Int := 0;
+   begin
       --  compute the images of all OpenGL basis vectors
-        VGP := Geometric_Product (R, Geometric_Product (e1, IR));
-        Image (1) := To_GL (VGP);
-        VGP := Geometric_Product (R, Geometric_Product (e2, IR));
-        Image (2) := To_GL (VGP);
-        VGP := Geometric_Product (R, Geometric_Product (e3, IR));
-        Image (3) := To_GL (VGP);
-        Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
-        for row in GL.Index_Homogeneous loop
-            Image_Row := Image_Row + 1;
-            for col in GL.Index_Homogeneous range X .. Z loop
-                    Matrix (row, col) := Image (Image_Row) (col);
-            end loop;
-        end loop;
+      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply IR", IR);
+      VGP := Geometric_Product (R, Geometric_Product (e1, IR));
+      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply VGP", VGP);
+      Image (1) := To_GL (VGP);
+      VGP := Geometric_Product (R, Geometric_Product (e2, IR));
+      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply VGP", VGP);
+      Image (2) := To_GL (VGP);
+      VGP := Geometric_Product (R, Geometric_Product (e3, IR));
+      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply VGP", VGP);
+      Image (3) := To_GL (VGP);
+      Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
+      Utilities.Print_GL_Array3 ("GL_Util.Rotor_GL_Multiply Image", Image);
+      for row in GL.Index_Homogeneous loop
+         Image_Row := Image_Row + 1;
+         for col in GL.Index_Homogeneous range X .. Z loop
+            Matrix (row, col) := Image (Image_Row) (col);
+         end loop;
+      end loop;
       GL_Matrix := Matrix * GL_Matrix;
 
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GL_Util.Rotor_GL_Multiply.");
          raise;
-    end Rotor_GL_Multiply;
+   end Rotor_GL_Multiply;
 
    --  -------------------------------------------------------------------------
    --  Pick_Matrix defines a picking region
@@ -79,25 +87,25 @@ package body GL_Util is
       GL.Window.Set_Viewport (Centre_X, Centre_Y, Width, Height);
    end Pick_Matrix;
 
---  ------------------------------------------------------------------
+   --  ------------------------------------------------------------------
 
    function Rotor_To_GL_Matrix (R : Multivector.Rotor) return  GL.Types.Singles.Matrix4 is
-        use GL;
-        M3        : GA_Maths.GA_Matrix3;
-        GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-        Mrow      : integer := 0;
-        Mcol      : integer := 0;
+      use GL;
+      M3        : GA_Maths.GA_Matrix3;
+      GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Mrow      : integer := 0;
+      Mcol      : integer := 0;
    begin
-        E3GA_Utilities.Rotor_To_Matrix (R, M3);
-        GA_Utilities.Print_Matrix ("Rotor_To_Matrix, M3", M3);
-        for row in Index_Homogeneous range X .. Z loop
-            Mrow := Mrow + 1;
-            for col in Index_Homogeneous range X .. Z loop
-                Mcol := Mcol + 1;
-                GL_Matrix (col, row) := GL.Types.Single (M3 (Mrow, Mcol));
-            end loop;
-            Mcol := 0;
-        end loop;
+      E3GA_Utilities.Rotor_To_Matrix (R, M3);
+      GA_Utilities.Print_Matrix ("Rotor_To_Matrix, M3", M3);
+      for row in Index_Homogeneous range X .. Z loop
+         Mrow := Mrow + 1;
+         for col in Index_Homogeneous range X .. Z loop
+            Mcol := Mcol + 1;
+            GL_Matrix (col, row) := GL.Types.Single (M3 (Mrow, Mcol));
+         end loop;
+         Mcol := 0;
+      end loop;
       return GL_Matrix;
 
    exception
@@ -109,24 +117,31 @@ package body GL_Util is
    --  -------------------------------------------------------------------------
 
    function To_GL (V3 : Multivector.Vector) return GL.Types.Doubles.Vector3 is
-           use GL.Types;
+      use Interfaces;
+      use GL.Types;
       use Multivector.Blade_List_Package;
       use Blade;
+      use GA_Maths;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
+      BM      : Unsigned_32;
       Value   : Double;
       Val_X   : Double := 0.0;
       Val_Y   : Double := 0.0;
       Val_Z   : Double := 0.0;
    begin
       while Has_Element (Curs) loop
+         BM := Unsigned_32 (Bitmap (Element (Curs)));
          Value := Double (Blade.Weight (Element (Curs)));
-         case Bitmap (Element (Curs)) is
-            when E3_Base'Enum_Rep (E3_e1) => Val_X := Value;
-            when E3_Base'Enum_Rep (E3_e2) => Val_Y := Value;
-            when E3_Base'Enum_Rep (E3_e3) => Val_Z := Value;
-            when others => null;
-         end case;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e1) - 1) and 1) /= 0 then
+            Val_X := Val_X + Value;
+         end if;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e2) - 1) and 1)  /= 0 then
+            Val_Y:= Val_Y + Value;
+         end if;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e3) - 1) and 1)  /= 0 then
+            Val_Z := Val_Z + Value;
+         end if;
          Next (Curs);
       end loop;
       return (Val_X, Val_Y, Val_Z);
@@ -135,24 +150,30 @@ package body GL_Util is
    --  -------------------------------------------------------------------------
 
    function To_GL (V3 : Multivector.Vector) return GL.Types.Singles.Vector3 is
+      use Interfaces;
       use GL.Types;
       use Multivector.Blade_List_Package;
       use Blade;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
+      BM      : Unsigned_32;
       Value   : Single;
       Val_X   : Single := 0.0;
       Val_Y   : Single := 0.0;
       Val_Z   : Single := 0.0;
    begin
       while Has_Element (Curs) loop
+         BM := Unsigned_32 (Bitmap (Element (Curs)));
          Value := Single (Blade.Weight (Element (Curs)));
-         case Bitmap (Element (Curs)) is
-            when E3_Base'Enum_Rep (E3_e1) => Val_X := Value;
-            when E3_Base'Enum_Rep (E3_e2) => Val_Y := Value;
-            when E3_Base'Enum_Rep (E3_e3) => Val_Z := Value;
-            when others => null;
-         end case;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e1) - 1) and 1) /= 0 then
+            Val_X := Val_X + Value;
+         end if;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e2) - 1) and 1)  /= 0 then
+            Val_Y:= Val_Y + Value;
+         end if;
+         if (Shift_Right (BM, E3_Base'Enum_Rep (E3_e3) - 1) and 1)  /= 0 then
+            Val_Z := Val_Z + Value;
+         end if;
          Next (Curs);
       end loop;
       return (Val_X, Val_Y, Val_Z);
@@ -160,11 +181,11 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
---     function To_GL (V2 : Multivector.Vector) return GL.Types.Singles.Vector3 is
---          use E2GA;
---     begin
---          return (Single (Get_Coord_1 (V2)), Single (Get_Coord_2 (V2)), 0.0);
---     end To_GL;
+   --     function To_GL (V2 : Multivector.Vector) return GL.Types.Singles.Vector3 is
+   --          use E2GA;
+   --     begin
+   --          return (Single (Get_Coord_1 (V2)), Single (Get_Coord_2 (V2)), 0.0);
+   --     end To_GL;
 
    --  -------------------------------------------------------------------------
 
@@ -183,7 +204,7 @@ package body GL_Util is
                         Single (Pt_World (3)), 1.0);
       PT2 : Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
    begin
-   --   PT1 := Projection_Matrix * PT2;
+      --   PT1 := Projection_Matrix * PT2;
       GL.Window.Get_Viewport (VP_X, VP_Y, Window_Width, Window_Height);
       Coords (X) := Single (VP_X) + (1.0 + PT2 (X) / PT2 (W)) * Single (Window_Width) / 2.0;
       Coords (Y) := Single (VP_Y) + (1.0 + PT2 (Y) / PT2 (W)) * Single (Window_Height) / 2.0;
