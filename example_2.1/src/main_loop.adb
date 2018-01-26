@@ -53,7 +53,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
    Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
-   Back_Colour    : constant Colors.Color := (0.7, 0.7, 0.7, 1.0);
+   Back_Colour    : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
    Parallelogram  : boolean := True;
 
@@ -99,14 +99,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       A                 : float := 0.0;
       BV                : Multivector.Bivector;
---        E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
---        E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
---        E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
---        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
---        e1_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e1);
---        e2_bv                 : constant Vector := Get_Basis_Vector (Blade.E2_e2);
       V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
       V2                    : Vector;
 
@@ -153,9 +147,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
---              Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
---                                  V1, V1 + V2, V2, Blue);
-            null;
+            Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
+                                V1, V1 + V2, V2, Blue);
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw_Bivector (Render_Graphic_Program, BV_Translation_Matrix,
@@ -173,7 +166,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
          GA_Utilities.Print_Multivector ("BV", BV);
-         Put_Line ("Display bivector label: " & E2GA.Bivector_String (BV));
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
                                  (E2GA.Bivector_String (BV)), Label_Position);
          Silo.Push (Label);
