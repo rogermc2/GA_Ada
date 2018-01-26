@@ -20,6 +20,13 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural is
+   begin
+      return 31 - Number_Of_Leading_Zero_Bits (Bitmap);
+   end Highest_One_Bit;
+
+   --  ------------------------------------------------------------------------
+
    function Maximum (I1, I2 : Integer) return Integer is
       Max : Integer;
    begin
@@ -69,6 +76,20 @@ package body GA_Maths is
       end if;
       return Min;
    end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_Integer) return Natural is
+      use Interfaces;
+      Num : Unsigned_32 := Unsigned_32 (Bitmap);
+   begin
+      Num := Num or Shift_Right (Num, 1);
+      Num := Num or Shift_Right (Num, 2);
+      Num := Num or Shift_Right (Num, 4);
+      Num := Num or Shift_Right (Num, 8);
+      Num := Num or Shift_Right (Num, 16);
+      return Natural (Bit_Count (Unsigned_Integer (Not Num)));
+   end Number_Of_Leading_Zero_Bits;
 
    --  ------------------------------------------------------------------------
 
