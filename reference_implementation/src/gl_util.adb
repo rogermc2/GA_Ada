@@ -80,7 +80,7 @@ package body GL_Util is
    end Pick_Matrix;
 
 --  ------------------------------------------------------------------
-    --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
+
    function Rotor_To_GL_Matrix (R : Multivector.Rotor) return  GL.Types.Singles.Matrix4 is
         use GL;
         M3        : GA_Maths.GA_Matrix3;
@@ -109,28 +109,27 @@ package body GL_Util is
    --  -------------------------------------------------------------------------
 
    function To_GL (V3 : Multivector.Vector) return GL.Types.Doubles.Vector3 is
-      use GL.Types;
+           use GL.Types;
       use Multivector.Blade_List_Package;
+      use Blade;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
-      curs    : Cursor := Blades.First;
-      Val1    : Double:= Double (Blade.Weight (Element (Curs)));
-      Val2    : Double := 0.0;
-      Val3    : Double := 0.0;
+      Curs    : Cursor := Blades.First;
+      Value   : Double;
+      Val_X   : Double := 0.0;
+      Val_Y   : Double := 0.0;
+      Val_Z   : Double := 0.0;
    begin
-      Next (Curs);
-      if Has_Element (Curs) then
-         Val2 := Double (Blade.Weight (Element (Curs)));
+      while Has_Element (Curs) loop
+         Value := Double (Blade.Weight (Element (Curs)));
+         case Bitmap (Element (Curs)) is
+            when E3_Base'Enum_Rep (E3_e1) => Val_X := Value;
+            when E3_Base'Enum_Rep (E3_e2) => Val_Y := Value;
+            when E3_Base'Enum_Rep (E3_e3) => Val_Z := Value;
+            when others => null;
+         end case;
          Next (Curs);
-         if Has_Element (Curs) then
-            Val3 := Double (Blade.Weight (Element (Curs)));
-         end if;
-      end if;
-      return (Val1, Val2, Val3);
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in GL_Util.To_GL 1.");
-         raise;
+      end loop;
+      return (Val_X, Val_Y, Val_Z);
    end To_GL;
 
    --  -------------------------------------------------------------------------
@@ -138,26 +137,25 @@ package body GL_Util is
    function To_GL (V3 : Multivector.Vector) return GL.Types.Singles.Vector3 is
       use GL.Types;
       use Multivector.Blade_List_Package;
+      use Blade;
       Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
-      Val1    : Single:= Single (Blade.Weight (Element (Curs)));
-      Val2    : Single := 0.0;
-      Val3    : Single := 0.0;
+      Value   : Single;
+      Val_X   : Single := 0.0;
+      Val_Y   : Single := 0.0;
+      Val_Z   : Single := 0.0;
    begin
-      Next (Curs);
-      if Has_Element (Curs) then
-         Val2 := Single (Blade.Weight (Element (Curs)));
+      while Has_Element (Curs) loop
+         Value := Single (Blade.Weight (Element (Curs)));
+         case Bitmap (Element (Curs)) is
+            when E3_Base'Enum_Rep (E3_e1) => Val_X := Value;
+            when E3_Base'Enum_Rep (E3_e2) => Val_Y := Value;
+            when E3_Base'Enum_Rep (E3_e3) => Val_Z := Value;
+            when others => null;
+         end case;
          Next (Curs);
-         if Has_Element (Curs) then
-            Val3 := Single (Blade.Weight (Element (Curs)));
-         end if;
-      end if;
-      return (Val1, Val2, Val3);
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in GL_Util.To_GL 2.");
-         raise;
+      end loop;
+      return (Val_X, Val_Y, Val_Z);
    end To_GL;
 
    --  -------------------------------------------------------------------------
