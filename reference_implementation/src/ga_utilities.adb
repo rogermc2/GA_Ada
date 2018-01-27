@@ -25,6 +25,22 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Matrix (Name : String; aMatrix : Real_Matrix) is
+   begin
+      Put_Line (Name & ":");
+      Put_Line ("Size:" & Integer'Image (aMatrix'Length) & " X"
+                  & Integer'Image (aMatrix'Length(2)));
+      for Row in aMatrix'Range(1) loop
+         for Column in aMatrix'Range(2) loop
+            Put (float'Image (aMatrix (Row, Column)) & "   ");
+         end loop;
+         New_Line;
+      end loop;
+      New_Line;
+   end Print_Matrix;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Multivector (Name : String; MV : Multivector.Multivector) is
       use Multivector;
       use Blade_List_Package;
