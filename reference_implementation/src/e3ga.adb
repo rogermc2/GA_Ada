@@ -774,37 +774,37 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
    --  Based on e3ga.h rotor inverse
-   function Inverse (aRotor : Rotor) return Rotor is
-      use Blade_List_Package;
-      use Blade;
-      Blades     : Blade_List := Get_Blade_List (aRotor);
-      Curs       : Cursor := Blades.First;
-      aBlade     : Basis_Blade;
-      Norm_Inv   : Float;
-      Index      : E3_Base := Blade.E3_e1;
-      Inv_Blades : Blade_List;
-      Inv_R      : Rotor;
-   begin
-      Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
-      Inv_R := New_Multivector (Norm_Inv * Scalar_Part (aRotor));
-
-      Norm_Inv := -Norm_Inv;
-      while Has_Element (Curs) loop
-         aBlade := New_Basis_Blade (Index, Norm_Inv * Weight (Element (Curs)));
-         Inv_Blades.Append (aBlade);
-         Index := Blade.E3_Base'Succ (Index);
-         Next (Curs);
-      end loop;
-      Update (Inv_R, Inv_Blades);
-      return Inv_R;
-      --        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
-      --                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E3GA.Inverse.");
-         raise;
-   end Inverse;
+--     function Inverse (aRotor : Rotor) return Rotor is
+--        use Blade_List_Package;
+--        use Blade;
+--        Blades     : Blade_List := Get_Blade_List (aRotor);
+--        Curs       : Cursor := Blades.First;
+--        aBlade     : Basis_Blade;
+--        Norm_Inv   : Float;
+--        Index      : E3_Base := Blade.E3_e1;
+--        Inv_Blades : Blade_List;
+--        Inv_R      : Rotor;
+--     begin
+--        Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
+--        Inv_R := New_Multivector (Norm_Inv * Scalar_Part (aRotor));
+--
+--        Norm_Inv := -Norm_Inv;
+--        while Has_Element (Curs) loop
+--           aBlade := New_Basis_Blade (Index, Norm_Inv * Weight (Element (Curs)));
+--           Inv_Blades.Append (aBlade);
+--           Index := Blade.E3_Base'Succ (Index);
+--           Next (Curs);
+--        end loop;
+--        Update (Inv_R, Inv_Blades);
+--        return Inv_R;
+--        --        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
+--        --                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
+--
+--     exception
+--        when anError :  others =>
+--           Put_Line ("An exception occurred in E3GA.Inverse.");
+--           raise;
+--     end Inverse;
 
    --  ------------------------------------------------------------------------
 
