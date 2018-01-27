@@ -13,6 +13,9 @@ package body Multivector is
    package Blade_Sort_Package is new
      Blade_List_Package.Generic_Sorting ("<");
 
+--     type Blade_Matrix is array (GA_Maths.Unsigned_Integer range <>,
+--                                 GA_Maths.Unsigned_Integer range <>) of Basis_Blade;
+
    --     Basis : array (1 .. 5, 1 ..5) of float :=
    --       ((0.0, 0.0, 0.0, 0.0, -1.0),
    --        (0.0, 1.0, 0.0, 0.0, 0.0),
@@ -25,6 +28,7 @@ package body Multivector is
 
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
    procedure Simplify (MV : in out Multivector);
+   function Space_Dimension (MV : Multivector) return Integer;
 
    --  -------------------------------------------------------------------------
 
@@ -143,7 +147,7 @@ package body Multivector is
       end loop;
       New_MV.Blades := N_Blades;
       return New_MV;
---        return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
+      --        return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
    end "*";
 
    --  ------------------------------------------------------------------------
@@ -183,6 +187,31 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix;
+                            BB, BC : Blade.Basis_Blade) is
+      use Blade;
+      BMB  : Integer := Integer (Bitmap (BC));
+      BMC  : Integer := Integer (Bitmap (BC));
+      V    : Float := M (BMC, BMC);
+   begin
+      M (BMC, BMB) := V + Weight (BC);
+   end Add_To_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
+                            Blades  : Blade_List) is
+      use Blade_List_Package;
+      Curs    : Cursor := Blades.First;
+   begin
+      while Has_Element (Curs) loop
+         Add_To_Matrix (M, BB, Element (Curs));
+         Next (Curs);
+      end loop;
+   end Add_To_Matrix;
+
+   --  -------------------------------------------------------------------------
+
    function Blades (MV : Multivector) return Blade_List is
    begin
       return MV.Blades;
@@ -190,12 +219,12 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
---     function C3_Multivector return Multivector is
---        MV : Multivector;
---     begin
---        MV.Blades := C3_Blade_List;
---        return MV;
---     end C3_Multivector;
+   --     function C3_Multivector return Multivector is
+   --        MV : Multivector;
+   --     begin
+   --        MV.Blades := C3_Blade_List;
+   --        return MV;
+   --     end C3_Multivector;
 
    --  -------------------------------------------------------------------------
 
@@ -211,7 +240,7 @@ package body Multivector is
       while Has_Element (Curs) and not Found loop
          Found := Blade.Bitmap (Element (Curs)) = BM;
          if found then
-           Value :=  Blade.Weight (Element (Curs));
+            Value :=  Blade.Weight (Element (Curs));
          else
             Next (Curs);
          end if;
@@ -340,8 +369,8 @@ package body Multivector is
       if Is_Empty (List (Blades_2)) then
          Put_Line ("Geometric_Product, MV2 is null.");
       end if;
---        GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
---        GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
+      --        GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
+      --        GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
@@ -351,9 +380,9 @@ package body Multivector is
          end loop;
          Next (Curs_1);
       end loop;
---        GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
+      --        GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
       Simplify (GP);
---        GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
+      --        GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
 
       if Is_Empty (GP.Blades) then
          Put_Line ("Geometric_Product, product MV is null.");
@@ -374,7 +403,7 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : E2_Base) return Multivector is
-       MV : Multivector;
+      MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -383,7 +412,7 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : E3_Base) return Multivector is
-       MV : Multivector;
+      MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -392,7 +421,7 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Get_Basis_Vector (Index : C3_Base) return Multivector is
-       MV : Multivector;
+      MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -508,12 +537,12 @@ package body Multivector is
       while Has_Element (Cursor_B) loop
          Index := Index + 1;
          BB := Element (Cursor_B);
---           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
---           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
---           Put_Line ("Grade_Use, Grade" & Unsigned_Integer'Image (Blade.Grade (BB)));
+         --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
+         --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
+         --           Put_Line ("Grade_Use, Grade" & Unsigned_Integer'Image (Blade.Grade (BB)));
          GU_Bitmap := GU_Bitmap or
            Shift_Left (1, Integer (Blade.Grade (BB)));
---           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
+         --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU_Bitmap);
@@ -551,6 +580,52 @@ package body Multivector is
       Simplify (MV);
       return MV;
    end Inner_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Inverse (MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      use Blade;
+      use GA_Maths;
+      use GA_Maths.Float_Array_Package;
+      use GA_Maths.Float_Functions;
+      Blades     : constant Blade_List := MV.Blades;
+      Result     : Blade_List;
+      thisBlade  : Blade.Basis_Blade;
+      Curs       : Cursor := Blades.First;
+      Dim        : constant Integer :=  Space_Dimension (MV);
+      Mat        : Float_Matrix (1 .. Dim, 1 ..Dim) := (others => (0.0, 0.0));
+      Inv_Mat    : Float_Matrix (1 .. Dim, 1 ..Dim) := (others => (0.0, 0.0));
+      BBs        : array (1 .. 2 ** Natural (Dim)) of Basis_Blade;
+      aBlade     : Basis_Blade;
+      Value      : Float;
+      Inv        : Multivector;
+   begin
+      for index in BBs'Range loop
+         BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
+      end loop;
+      --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
+      --  the coordinates of another multivector 'x' (stored in a vector)
+      --  would result in the geometric product of 'Mat' and 'x'
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         for index in BBs'Range loop
+            Add_To_Matrix (Mat, BBs (index),
+                           Geometric_Product (aBlade, BBs (index)));
+         end loop;
+         Next (Curs);
+      end loop;
+
+      Inv_Mat := Inverse (Mat);
+      for Index in 1 .. Dim loop
+         Value := Inv_Mat (Index, 1);
+         if Value /= 0.0 then
+            Result.Append (New_Basis_Blade (Unsigned_Integer (Index), Value));
+         end if;
+      end loop;
+      Inv.Blades := Result;
+      return Inv;
+   end Inverse;
 
    --  -------------------------------------------------------------------------
 
@@ -635,7 +710,7 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector is
-     BV : Bivector;
+      BV : Bivector;
    begin
       BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
       BV.Blades.Append (New_Basis_Blade (BV_e2e3, e2e3));
@@ -849,22 +924,22 @@ package body Multivector is
       Has_Previous : Boolean := False;
       Remove_Nulls : Boolean := False;
    begin
---        Put_Line ("Multivector.Simplify, List length:" &
---                    Ada.Containers.Count_Type'Image (Length (Blades)));
+      --        Put_Line ("Multivector.Simplify, List length:" &
+      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Blade_Sort_Package.Sort (List (Blades));
       Reverse_Elements (Blades);
       Blade_Cursor := Blades.First;
       Prev_Curs := No_Element;
---        if not Has_Element (Blade_Cursor) then
---           Put_Line ("Multivector.Simplify, sorted with empty list");
---        end if;
---        Put_Line ("Multivector.Simplify, Sorted list length:" &
---                    Ada.Containers.Count_Type'Image (Length (Blades)));
+      --        if not Has_Element (Blade_Cursor) then
+      --           Put_Line ("Multivector.Simplify, sorted with empty list");
+      --        end if;
+      --        Put_Line ("Multivector.Simplify, Sorted list length:" &
+      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
---           Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
+         --           Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
          if Weight (Current) = 0.0 then
---              Put_Line ("Multivector.Simplify, 0.0  weight detected");
+            --              Put_Line ("Multivector.Simplify, 0.0  weight detected");
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
             --  Delete sets Blade_Cursor to No_Element
@@ -896,8 +971,8 @@ package body Multivector is
             end if;
          end loop;
       end if;
---        Put_Line ("Multivector.Simplify, Simplified list length:" &
---                    Ada.Containers.Count_Type'Image (Length (Blades)));
+      --        Put_Line ("Multivector.Simplify, Simplified list length:" &
+      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
    end Simplify;
 
@@ -909,6 +984,24 @@ package body Multivector is
    begin
       return Natural (Blades.Length);
    end Size;
+
+   --  -------------------------------------------------------------------------
+
+   function Space_Dimension (MV : Multivector) return Integer is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades       : Blade_List := MV.Blades;
+      Blade_Cursor : Cursor := Blades.First;
+      High_Bit     : Integer;
+      Max_Dim      : Integer := 0;
+   begin
+      while Has_Element (Blade_Cursor) loop
+         High_Bit := Highest_One_Bit (Bitmap (Element (Blade_Cursor)));
+         Max_Dim := Maximum (Max_Dim, High_Bit);
+         Next (Blade_Cursor);
+      end loop;
+      return Max_Dim + 1;
+   end Space_Dimension;
 
    --  -------------------------------------------------------------------------
 

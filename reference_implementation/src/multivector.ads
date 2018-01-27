@@ -57,6 +57,7 @@ package Multivector is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
+   function Inverse (MV : Multivector) return Multivector;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
