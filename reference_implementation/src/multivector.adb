@@ -3,6 +3,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
+with Utilities;
 
 with GA_Utilities;
 
@@ -190,11 +191,17 @@ package body Multivector is
    procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix;
                             BB, BC : Blade.Basis_Blade) is
       use Blade;
-      BMB  : Integer := Integer (Bitmap (BC));
-      BMC  : Integer := Integer (Bitmap (BC));
-      V    : Float := M (BMC, BMC);
+      BMB  : Integer := Integer (Bitmap (BB)) + 1;
+      BMC  : Integer := Integer (Bitmap (BC)) + 1;
+      V    : Float;
    begin
+      V := M (BMC, BMB);
       M (BMC, BMB) := V + Weight (BC);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Add_To_Matrix");
+         raise;
    end Add_To_Matrix;
 
    --  -------------------------------------------------------------------------
@@ -584,19 +591,21 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function Inverse (MV : Multivector) return Multivector is
+      use Interfaces;
       use Blade_List_Package;
       use Blade;
       use GA_Maths;
       use GA_Maths.Float_Array_Package;
       use GA_Maths.Float_Functions;
+      Dim        : constant Integer :=  Space_Dimension (MV);
+      Max_G      : constant Integer := 2 ** Dim;
       Blades     : constant Blade_List := MV.Blades;
       Result     : Blade_List;
       thisBlade  : Blade.Basis_Blade;
       Curs       : Cursor := Blades.First;
-      Dim        : constant Integer :=  Space_Dimension (MV);
-      Mat        : Float_Matrix (1 .. Dim, 1 ..Dim) := (others => (0.0, 0.0));
-      Inv_Mat    : Float_Matrix (1 .. Dim, 1 ..Dim) := (others => (0.0, 0.0));
-      BBs        : array (1 .. 2 ** Natural (Dim)) of Basis_Blade;
+      Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
+      Inv_Mat    : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
+      BBs        : array (1 .. Max_G) of Basis_Blade;
       aBlade     : Basis_Blade;
       Value      : Float;
       Inv        : Multivector;
@@ -604,12 +613,20 @@ package body Multivector is
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
       end loop;
+      Put_Line ("Multivector.Inverse, Dim, Max_G:" & Integer'Image (Dim)
+                & Integer'Image (Max_G));
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
       --  the coordinates of another multivector 'x' (stored in a vector)
       --  would result in the geometric product of 'Mat' and 'x'
+
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          for index in BBs'Range loop
+--              Put_Line ("Multivector.Inverse, Index" & Integer'Image (Index));
+--              Put_Line ("Bitmap BB" &
+--                 Unsigned_Integer'Image (Bitmap (BBs (index))));
+--              Put_Line ("Bitmap GP" &
+--                 Unsigned_Integer'Image (Bitmap (Geometric_Product (aBlade, BBs (index)))));
             Add_To_Matrix (Mat, BBs (index),
                            Geometric_Product (aBlade, BBs (index)));
          end loop;
@@ -617,7 +634,7 @@ package body Multivector is
       end loop;
 
       Inv_Mat := Inverse (Mat);
-      for Index in 1 .. Dim loop
+      for Index in Mat'Range loop
          Value := Inv_Mat (Index, 1);
          if Value /= 0.0 then
             Result.Append (New_Basis_Blade (Unsigned_Integer (Index), Value));
@@ -625,6 +642,11 @@ package body Multivector is
       end loop;
       Inv.Blades := Result;
       return Inv;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Inverse");
+         raise;
    end Inverse;
 
    --  -------------------------------------------------------------------------
