@@ -15,14 +15,14 @@ package body GA_Maths is
       Count := Count + (Shift_Right (Count, 8));
       Count := Count + (Shift_Right (Count, 16));
       --  Return count in range 0 to 31.
-      return Natural (Count and 16#0000003F#);
+      return Natural (Count and 16#3F#);
    end Bit_Count;
 
    --  ------------------------------------------------------------------------
 
    function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural is
    begin
-      return 31 - Number_Of_Leading_Zero_Bits (Bitmap);
+      return 32 - Number_Of_Leading_Zero_Bits (Bitmap);
    end Highest_One_Bit;
 
    --  ------------------------------------------------------------------------
