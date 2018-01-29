@@ -6,6 +6,7 @@ with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with GA_Utilities;
 with Multivector_Type_Base;
 
 package body E3GA_Utilities is
@@ -73,8 +74,7 @@ package body E3GA_Utilities is
    procedure Print_Rotor (Name : String; R : Multivector.Rotor) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
-      Put_Line (Name & ": " & float'Image (Rot (1)) & ",  " & float'Image (Rot (2))
-                & ",  " & float'Image (Rot (3)) & ",  " & float'Image (Rot (4)));
+      GA_Utilities.Print_Multivector (Name, R);
    end Print_Rotor;
 
    --  ------------------------------------------------------------------------
@@ -111,8 +111,7 @@ package body E3GA_Utilities is
       R      : Rotor;
       Result : Rotor;
    begin
---        if float (E3GA.Get_Coord (Scalar_Product (V_From, V_To))) < -0.9 then
---           C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
+      New_Line;
       if  Scalar_Product (V_From, V_To) < -0.9 then
          N2 := Norm_E2 (w0);
          if N2 = 0.0 then
