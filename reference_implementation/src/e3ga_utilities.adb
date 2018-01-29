@@ -101,11 +101,10 @@ package body E3GA_Utilities is
    --  for theta = angle from a to b.
    function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector) return Multivector.Rotor is
       use GA_Maths.Float_Functions;
-      use E3GA;
       use Multivector;
-      C1     : float;
       S      : float;
-      w0     : Vector;
+      w0     : constant Vector :=
+        Left_Contraction (V_From, Outer_Product (V_From, V_To));
       w1     : Vector;
       w2     : Vector;
       N2     : Float;
@@ -115,17 +114,10 @@ package body E3GA_Utilities is
 --        if float (E3GA.Get_Coord (Scalar_Product (V_From, V_To))) < -0.9 then
 --           C1 := E3GA.Get_Coord_1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
       if  Scalar_Product (V_From, V_To) < -0.9 then
-         C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
-         Add_Blade (w1, Blade.E3_e1, C1);
          N2 := Norm_E2 (w0);
-         Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, Norm_E2 (w0)" &
-                     float'Image (N2));
-
          if N2 = 0.0 then
-            C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
-            Add_Blade (w1, Blade.E3_e1, C1);
-            C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, e2)));
-            Add_Blade (w2, Blade.E3_e1, C1);
+            w1 :=  Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e1)));
+            w2 := Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e2)));
             if Norm_E2 (w1) > Norm_E2 (w2) then
                Result := Outer_Product (V_From, Unit_e (w1));
             else
