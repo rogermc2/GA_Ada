@@ -147,8 +147,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
-            Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
-                                V1, V1 + V2, V2, Blue);
+--              Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
+--                                  V1, V1 + V2, V2, Blue);
+           null;
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw_Bivector (Render_Graphic_Program, BV_Translation_Matrix,
