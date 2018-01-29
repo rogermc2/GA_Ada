@@ -557,21 +557,11 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
---        Dir_e1               : constant Single := GL_Dir (GL.X);
---        Dir_e2               : constant Single := GL_Dir (GL.Y);
---        Dir_e3               : constant Single := GL_Dir (GL.Z);
---        Tail_e1              : constant Single := GL_Tail (GL.X);
---        Tail_e2              : constant Single := GL_Tail (GL.Y);
---        Tail_e3              : constant Single := GL_Tail (GL.Z);
-
-      --        Scale_Factor1        : Single := Single (1.2 / Scale);
---        Scale_Factor2        : Single := 1.1 * Single (Sqrt (float (Scale)));
---        Scale_Factor1_V      : Singles.Vector3 := (Scale_Factor1, Scale_Factor1, Scale_Factor1);
---        Scale_Factor2_V      : Singles.Vector3 := (Scale_Factor2, Scale_Factor2, Scale_Factor2);
       aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
---        GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
+      GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
+      Utilities.Print_Vector ("GA_Draw.Draw_Vector GL_Dir", GL_Dir);
       if Scale /= 0.0 then
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
@@ -592,11 +582,11 @@ package body GA_Draw is
 
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
---           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector E3_e3", Get_Basis_Vector (Blade.E3_e3));
---           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Unit_e", Unit_e (Direction));
---           GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
+         GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector aRotor", aRotor);
          Model_View_Matrix := GL.Types.Singles.Identity4;
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
          Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 1", Model_View_Matrix);
@@ -607,14 +597,15 @@ package body GA_Draw is
          end if;
          --  Translate to head of vector
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
+
+         Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 2", Model_View_Matrix);
          Enable (Cull_Face);
          Set_Front_Face (GL.Types.Clockwise);
-         Set_Cull_Face (Back);
+         Set_Cull_Face (Front);
 
          Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
          Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
-         Disable (Cull_Face);
       end if;
 
    exception

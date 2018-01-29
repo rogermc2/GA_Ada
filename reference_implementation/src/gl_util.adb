@@ -46,14 +46,15 @@ package body GL_Util is
       use GL;
       use GL.Types.Singles;
       use Multivector;
-      IR        : Multivector.Rotor := Multivector.Inverse (R);
-      VGP       : Multivector.Vector;
+      IR        : constant Rotor := Versor_Inverse (R);
+      VGP       : Vector;
       Image     : Vector3_Array (1 .. 4);
       Matrix    : Matrix4 := Identity4;
       Image_Row : Int := 0;
    begin
       --  compute the images of all OpenGL basis vectors
       GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply IR", IR);
+      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply GP IR R", Geometric_Product (IR, R));
       VGP := Geometric_Product (R, Geometric_Product (e1, IR));
       GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply VGP", VGP);
       Image (1) := To_GL (VGP);

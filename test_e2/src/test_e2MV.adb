@@ -21,6 +21,9 @@ procedure Test_E2MV is
    MV12         : Multivector.Multivector;
    MV1p2        : Multivector.Multivector;
    MV1m2        : Multivector.Multivector;
+   MV_Inv       : Multivector.Multivector;
+   MV_GInv       : Multivector.Multivector;
+   MV_VInv       : Multivector.Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
@@ -90,6 +93,21 @@ begin
    New_Line;
    Put ("Multivector_String e1 . e2: ");
    Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV12, BV_Names)));
+
+   MV1 := e1_bv;
+   MV_Inv := Versor_Inverse (MV1);
+   GA_Utilities.Print_Multivector ("MV1 ", MV1);
+   GA_Utilities.Print_Multivector ("MV_Inv ", MV_Inv);
+   GA_Utilities.Print_Multivector ("MV * MV_Inv", Geometric_Product (MV1, MV_Inv));
+
+   MV12 := Outer_Product (e1_bv, e2_bv);
+   MV_GInv := General_Inverse (MV12);
+   MV_VInv := Versor_Inverse (MV12);
+   GA_Utilities.Print_Multivector ("MV12 ", MV12);
+   GA_Utilities.Print_Multivector ("MV_GInv ", MV_GInv);
+   GA_Utilities.Print_Multivector ("MV_VInv ", MV_VInv);
+   GA_Utilities.Print_Multivector ("MV * MV_GInv", Geometric_Product (MV12, MV_GInv));
+   GA_Utilities.Print_Multivector ("MV * MV_VInv", Geometric_Product (MV12, MV_VInv));
 
     exception
       when anError :  others =>

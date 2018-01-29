@@ -26,17 +26,18 @@ package body GA_Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_Matrix (Name : String; aMatrix : Real_Matrix) is
+      use GA_Maths;
    begin
       Put_Line (Name & ":");
       Put_Line ("Size:" & Integer'Image (aMatrix'Length) & " X"
                   & Integer'Image (aMatrix'Length(2)));
       for Row in aMatrix'Range(1) loop
          for Column in aMatrix'Range(2) loop
-            Put (float'Image (aMatrix (Row, Column)) & "   ");
+            Put (Float_3'Image (Float_3 (aMatrix (Row, Column))) & "   ");
          end loop;
          New_Line;
+         New_Line;
       end loop;
-      New_Line;
    end Print_Matrix;
 
    --  ------------------------------------------------------------------------

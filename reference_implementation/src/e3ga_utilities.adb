@@ -118,6 +118,8 @@ package body E3GA_Utilities is
          C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, V_To)));
          Add_Blade (w1, Blade.E3_e1, C1);
          N2 := Norm_E2 (w0);
+         Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, Norm_E2 (w0)" &
+                     float'Image (N2));
 
          if N2 = 0.0 then
             C1 := E3GA.e1 (Left_Contraction (V_From, Outer_Product (V_From, e1)));
@@ -137,6 +139,7 @@ package body E3GA_Utilities is
             Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
          end if;
       else
+         Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, else > -0.9");
          S := 1.0 / Sqrt (2.0 * float (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
          R := New_Rotor (S);
          Result := R + S * Geometric_Product (V_To, V_From);

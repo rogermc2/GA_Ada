@@ -3,8 +3,8 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
-with C3GA_Utilities;
 with GA_Maths;
+with GA_Utilities;
 
 with Multivector; use Multivector;
 with Multivector_Type;
@@ -64,7 +64,7 @@ begin
 --     Multivector_Type.Print_Multivector_Info ("ni", MV_Info);
 --
    MV1 := e1_bv;
-   C3GA_Utilities.Print_Multivector ("MV = e1", MV1);
+   GA_Utilities.Print_Multivector ("MV = e1", MV1);
    MV_Info := Multivector_Type.Init (MV1);
    Multivector_Type.Print_Multivector_Info ("MV = e1", MV_Info);
    New_Line;
@@ -72,7 +72,7 @@ begin
    Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1, BV_Names)));
 
    MV1p2 := e1_bv + e2_bv;
-   C3GA_Utilities.Print_Multivector ("e1 + e2", MV1p2);
+   GA_Utilities.Print_Multivector ("e1 + e2", MV1p2);
    MV_Info := Multivector_Type.Init (MV1p2);
    Multivector_Type.Print_Multivector_Info ("e1 + e2", MV_Info);
    New_Line;
@@ -80,7 +80,7 @@ begin
    Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV1p2, BV_Names)));
 
    MV12 := Outer_Product (e1_bv, e2_bv);
-   C3GA_Utilities.Print_Multivector ("e1 ^ e2", MV12);
+   GA_Utilities.Print_Multivector ("e1 ^ e2", MV12);
    MV_Info := Multivector_Type.Init (MV12);
    Multivector_Type.Print_Multivector_Info ("e1 ^ e2", MV_Info);
    New_Line;
@@ -88,7 +88,7 @@ begin
    Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (MV12, BV_Names)));
 
    MV13 := Outer_Product (e1_bv, e3_bv);
-   C3GA_Utilities.Print_Multivector ("e1 ^ e3", MV13);
+   GA_Utilities.Print_Multivector ("e1 ^ e3", MV13);
    MV_Info := Multivector_Type.Init (MV12);
    Multivector_Type.Print_Multivector_Info ("e1 ^ e3", MV_Info);
    New_Line;
@@ -100,13 +100,15 @@ begin
    Op23 := Outer_Product (e2_bv, e3_bv);
    Op23_1 := Outer_Product (Op23, e1_bv);
    Add_1_Op23_1 := e1_bv + Op23_1;
-   C3GA_Utilities.Print_Multivector ("e1 + ((e2 ^ e3) ^ e1", Add_1_Op23_1);
-   MV_Info := Multivector_Type.Init (Add_1_Op23_1);
-   Multivector_Type.Print_Multivector_Info ("e1 + ((e2 ^ e3) ^ e1", MV_Info);
-   New_Line;
-   Put_Line ("Multivector_String:");
-   Put_Line (Ada.Strings.Unbounded.To_String (Multivector_String (Add_1_Op23_1, BV_Names)));
+   GA_Utilities.Print_Multivector ("Op23: e2 ^ e3", Op23);
+   GA_Utilities.Print_Multivector ("Op23_1: (e2 ^ e3) ^ e1", Op23_1);
 
+   GA_Utilities.Print_Multivector ("Op23 G Inverse", General_Inverse (Op23));
+   GA_Utilities.Print_Multivector ("Op23 V Inverse", Versor_Inverse (Op23));
+   GA_Utilities.Print_Multivector ("Op23_1: (e2 ^ e3) ^ e1", Op23_1);
+   GA_Utilities.Print_Multivector ("Add_1_Op23_1: e1 + ((e2 ^ e3) ^ e1", Add_1_Op23_1);
+   GA_Utilities.Print_Multivector ("Add_1_Op23_1 G Inverse", General_Inverse (Add_1_Op23_1));
+   GA_Utilities.Print_Multivector ("Add_1_Op23_1 V Inverse", Versor_Inverse (Add_1_Op23_1));
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Test_MV.");
