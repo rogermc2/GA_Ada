@@ -14,9 +14,6 @@ package body Multivector is
    package Blade_Sort_Package is new
      Blade_List_Package.Generic_Sorting ("<");
 
---     type Blade_Matrix is array (GA_Maths.Unsigned_Integer range <>,
---                                 GA_Maths.Unsigned_Integer range <>) of Basis_Blade;
-
    --     Basis : array (1 .. 5, 1 ..5) of float :=
    --       ((0.0, 0.0, 0.0, 0.0, -1.0),
    --        (0.0, 1.0, 0.0, 0.0, 0.0),
@@ -40,8 +37,8 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function "+" (MV : Multivector; S :Float) return Multivector is
-      MV1     : Multivector := MV;
+   function "+" (MV : Multivector; S : Float) return Multivector is
+      MV1 : Multivector := MV;
    begin
       MV1.Blades.Append (New_Scalar_Blade (S));
       Simplify (MV1);
@@ -148,7 +145,6 @@ package body Multivector is
       end loop;
       New_MV.Blades := N_Blades;
       return New_MV;
-      --        return (BV.Grade_Use, Weight * BV.C1_e1e2, Weight * BV.C2_e2e3, Weight * BV.C3_e3e1);
    end "*";
 
    --  ------------------------------------------------------------------------
@@ -157,6 +153,28 @@ package body Multivector is
    begin
       return Scale * MV;
    end "*";
+
+   --  ------------------------------------------------------------------------
+
+   function "/" (MV : Multivector; Scale : float) return Multivector is
+      use Blade_List_Package;
+      Blades   : Blade_List := Get_Blade_List (MV);
+      Curs     : Cursor := Blades.First;
+      aBlade   : Basis_Blade;
+      New_MV   : Multivector := MV;
+      N_Blades : Blade_List := Get_Blade_List (New_MV);
+      N_Curs   : Cursor := N_Blades.First;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         Blade.Update_Blade (aBlade, Weight (aBlade) / Scale);
+         N_Blades.Replace_Element (N_Curs, aBlade);
+         Next (Curs);
+         Next (N_Curs);
+      end loop;
+      New_MV.Blades := N_Blades;
+      return New_MV;
+   end "/";
 
    --  ------------------------------------------------------------------------
 
@@ -189,18 +207,17 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix;
-                            BB, BC : Blade.Basis_Blade) is
+                            BB, GP : Blade.Basis_Blade) is
       use Blade;
-      BMB  : Integer := Integer (Bitmap (BB)) + 1;
-      BMC  : Integer := Integer (Bitmap (BC)) + 1;
-      V    : Float;
+      BMB  : constant Integer := Integer (Bitmap (BB)) + 1;
+      BMGP : constant Integer := Integer (Bitmap (GP)) + 1;
    begin
-      V := M (BMC, BMB);
-      M (BMC, BMB) := V + Weight (BC);
+      M (BMGP, BMB) :=  M (BMGP, BMB) + Weight (GP);
 
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector.Add_To_Matrix");
+         Put_Line ("BMB, BMGP: " & Integer'Image (BMB) &  Integer'Image (BMGP));
          raise;
    end Add_To_Matrix;
 
@@ -223,15 +240,6 @@ package body Multivector is
    begin
       return MV.Blades;
    end Blades;
-
-   --  -------------------------------------------------------------------------
-
-   --     function C3_Multivector return Multivector is
-   --        MV : Multivector;
-   --     begin
-   --        MV.Blades := C3_Blade_List;
-   --        return MV;
-   --     end C3_Multivector;
 
    --  -------------------------------------------------------------------------
 
@@ -300,14 +308,14 @@ package body Multivector is
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
       Curs      : Cursor := Blades.First;
-      Max_Grade : Unsigned_Integer := 0;
-      Gr        : array (1 .. Index) of Unsigned_Integer;
+      Max_Grade : Integer := 0;
+      Gr        : array (1 .. Index) of Integer;
       New_List  : Blade_List;
-      aGrade    : Unsigned_Integer;
+      aGrade    : Integer;
       MV_E      : Multivector;
    begin
       for k in Gr'Range loop
-         Gr (k) := Unsigned_Integer (k);
+         Gr (k) := k;
          if Gr (k) > Max_Grade then
             Max_Grade := Gr (k);
          end if;
@@ -334,18 +342,22 @@ package body Multivector is
 
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
       use Blade_List_Package;
+      use Blade;
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       Curs      : Cursor := Blades.First;
       New_MV    : Multivector;
    begin
-      while Has_Element (Curs) loop
-         New_MV.Blades.Append (Blade.Geometric_Product (Element (Curs), Sc));
-         Next (Curs);
-      end loop;
-      Simplify (New_MV);
-      if Is_Empty (New_MV.Blades) then
-         Put_Line ("Geometric_Product, scalar product MV is null.");
+      if Sc /= 0.0 then
+         while Has_Element (Curs) loop
+            New_MV.Blades.Append (New_Basis_Blade (Bitmap (Element (Curs)),
+                                  Sc * Weight (Element (Curs))));
+            Next (Curs);
+         end loop;
+         Simplify (New_MV);
+         if Is_Empty (New_MV.Blades) then
+            Put_Line ("Geometric_Product, scalar product MV is null.");
+         end if;
       end if;
       return New_MV;
    end Geometric_Product;
@@ -376,8 +388,7 @@ package body Multivector is
       if Is_Empty (List (Blades_2)) then
          Put_Line ("Geometric_Product, MV2 is null.");
       end if;
-      --        GA_Utilities.Print_Multivector("Geometric_Product MV1", MV1);
-      --        GA_Utilities.Print_Multivector("Geometric_Product MV2", MV2);
+
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          while Has_Element (Curs_2) loop
@@ -387,9 +398,7 @@ package body Multivector is
          end loop;
          Next (Curs_1);
       end loop;
-      --        GA_Utilities.Print_Multivector("Geometric_Product GP", GP);
       Simplify (GP);
-      --        GA_Utilities.Print_Multivector("Geometric_Product after simplify", GP);
 
       if Is_Empty (GP.Blades) then
          Put_Line ("Geometric_Product, product MV is null.");
@@ -397,6 +406,60 @@ package body Multivector is
       return GP;
 
    end Geometric_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function General_Inverse (MV : Multivector) return Multivector is
+      use Interfaces;
+      use Blade_List_Package;
+      use Blade;
+      use GA_Maths;
+      use GA_Maths.Float_Array_Package;
+      use GA_Maths.Float_Functions;
+      Dim        : constant Integer :=  Space_Dimension (MV);
+      Max_G      : constant Integer := 2 ** (Dim + 1);
+      Blades     : constant Blade_List := MV.Blades;
+      aBlade     : Basis_Blade;
+      Result     : Blade_List;
+      Curs       : Cursor := Blades.First;
+      Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
+      Inv_Mat    : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
+      BBs        : array (1 .. Max_G) of Basis_Blade;
+      Value      : Float;
+      Inv        : Multivector;
+   begin
+      for index in BBs'Range loop
+         BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
+      end loop;
+      --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
+      --  the coordinates of another multivector 'x' (stored in a vector)
+      --  would result in the geometric product of 'Mat' and 'x'
+
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         for index in BBs'Range loop
+            Add_To_Matrix (Mat, BBs (index),
+                           Geometric_Product (aBlade, BBs (index)));
+         end loop;
+         Next (Curs);
+      end loop;
+
+      Inv_Mat := Inverse (Mat);
+      for Index in Inv_Mat'Range loop
+         Value := Inv_Mat (Index, 1);
+         if Value /= 0.0 then
+            Update_Blade (BBs (Index), Value);
+            Result.Append (BBs (Index));
+         end if;
+      end loop;
+      Inv.Blades := Result;
+      return Inv;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.General_Inverse");
+         raise;
+   end General_Inverse;
 
    --  -------------------------------------------------------------------------
 
@@ -453,7 +516,7 @@ package body Multivector is
    begin
       while Has_Element (Curs) and not Found loop
          thisBlade := Element (Curs);
-         Found := Blade.Grade (thisBlade) = Index;
+         Found := Blade.Grade (thisBlade) = Integer (Index);
          Next (Curs);
       end loop;
       return thisBlade;
@@ -544,12 +607,8 @@ package body Multivector is
       while Has_Element (Cursor_B) loop
          Index := Index + 1;
          BB := Element (Cursor_B);
-         --           Put_Line ("Grade_Use Index:" & Integer'Image (Index));
-         --           Put_Line ("Grade_Use, Bitmap" & Unsigned_Integer'Image (Bitmap (BB)));
-         --           Put_Line ("Grade_Use, Grade" & Unsigned_Integer'Image (Blade.Grade (BB)));
-         GU_Bitmap := GU_Bitmap or
+           GU_Bitmap := GU_Bitmap or
            Shift_Left (1, Integer (Blade.Grade (BB)));
-         --           Put_Line ("Grade_Use, GU Bitmap" & Unsigned_32'Image (GU_Bitmap));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU_Bitmap);
@@ -587,67 +646,6 @@ package body Multivector is
       Simplify (MV);
       return MV;
    end Inner_Product;
-
-   --  -------------------------------------------------------------------------
-
-   function Inverse (MV : Multivector) return Multivector is
-      use Interfaces;
-      use Blade_List_Package;
-      use Blade;
-      use GA_Maths;
-      use GA_Maths.Float_Array_Package;
-      use GA_Maths.Float_Functions;
-      Dim        : constant Integer :=  Space_Dimension (MV);
-      Max_G      : constant Integer := 2 ** Dim;
-      Blades     : constant Blade_List := MV.Blades;
-      Result     : Blade_List;
-      thisBlade  : Blade.Basis_Blade;
-      Curs       : Cursor := Blades.First;
-      Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
-      Inv_Mat    : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
-      BBs        : array (1 .. Max_G) of Basis_Blade;
-      aBlade     : Basis_Blade;
-      Value      : Float;
-      Inv        : Multivector;
-   begin
-      for index in BBs'Range loop
-         BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
-      end loop;
-      Put_Line ("Multivector.Inverse, Dim, Max_G:" & Integer'Image (Dim)
-                & Integer'Image (Max_G));
-      --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
-      --  the coordinates of another multivector 'x' (stored in a vector)
-      --  would result in the geometric product of 'Mat' and 'x'
-
-      while Has_Element (Curs) loop
-         aBlade := Element (Curs);
-         for index in BBs'Range loop
---              Put_Line ("Multivector.Inverse, Index" & Integer'Image (Index));
---              Put_Line ("Bitmap BB" &
---                 Unsigned_Integer'Image (Bitmap (BBs (index))));
---              Put_Line ("Bitmap GP" &
---                 Unsigned_Integer'Image (Bitmap (Geometric_Product (aBlade, BBs (index)))));
-            Add_To_Matrix (Mat, BBs (index),
-                           Geometric_Product (aBlade, BBs (index)));
-         end loop;
-         Next (Curs);
-      end loop;
-
-      Inv_Mat := Inverse (Mat);
-      for Index in Mat'Range loop
-         Value := Inv_Mat (Index, 1);
-         if Value /= 0.0 then
-            Result.Append (New_Basis_Blade (Unsigned_Integer (Index), Value));
-         end if;
-      end loop;
-      Inv.Blades := Result;
-      return Inv;
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.Inverse");
-         raise;
-   end Inverse;
 
    --  -------------------------------------------------------------------------
 
@@ -875,16 +873,16 @@ package body Multivector is
 
    function Reverse_MV (MV : Multivector) return Multivector is
       use Blade_List_Package;
-      use GA_Maths;
-      Blades   : Blade_List := MV.Blades;
-      B_Cursor : Cursor := Blades.First;
-      Rev_MV   : Multivector;
+      Blades     : Blade_List := MV.Blades;
+      B_Cursor   : Cursor := Blades.First;
+      Rev_Blades : Blade_List;
+      Rev_MV     : Multivector;
    begin
       while Has_Element (B_Cursor) loop
-         Rev_MV.Blades.Append (Blade.Reverse_Blade (Element (B_Cursor)));
+         Rev_Blades.Append (Blade.Reverse_Blade (Element (B_Cursor)));
          Next (B_Cursor);
       end loop;
-
+      Rev_MV.Blades := Rev_Blades;
       return Rev_MV;
    end Reverse_MV;
 
@@ -946,22 +944,13 @@ package body Multivector is
       Has_Previous : Boolean := False;
       Remove_Nulls : Boolean := False;
    begin
-      --        Put_Line ("Multivector.Simplify, List length:" &
-      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Blade_Sort_Package.Sort (List (Blades));
       Reverse_Elements (Blades);
       Blade_Cursor := Blades.First;
       Prev_Curs := No_Element;
-      --        if not Has_Element (Blade_Cursor) then
-      --           Put_Line ("Multivector.Simplify, sorted with empty list");
-      --        end if;
-      --        Put_Line ("Multivector.Simplify, Sorted list length:" &
-      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       while Has_Element (Blade_Cursor) loop
          Current := Element (Blade_Cursor);
-         --           Put_Line ("Multivector.Simplify, Weight (Current):" & Float'Image (Weight (Current)));
          if Weight (Current) = 0.0 then
-            --              Put_Line ("Multivector.Simplify, 0.0  weight detected");
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
             --  Delete sets Blade_Cursor to No_Element
@@ -993,8 +982,6 @@ package body Multivector is
             end if;
          end loop;
       end if;
-      --        Put_Line ("Multivector.Simplify, Simplified list length:" &
-      --                    Ada.Containers.Count_Type'Image (Length (Blades)));
       Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
    end Simplify;
 
@@ -1102,18 +1089,17 @@ package body Multivector is
    end Update_Scalar_Part;
 
    --  -------------------------------------------------------------------------
-
+   --  Geometric ALgebra for Computer Scientists, Section 21.1
    function Versor_Inverse (MV : Multivector) return Multivector is
-      Rev          : Multivector := Reverse_MV (MV);
-      S_Product    : Float := 0.0;
+      Rev          : constant Multivector := Reverse_MV (MV);
+      S_Product    : constant Float := Scalar_Product (MV, Rev);
    begin
-      S_Product := Scalar_Product (MV, Rev);
       if S_Product = 0.0 then
          Put_Line ("Multivector.Versor_Inverse encountered a non-invertible multivector");
          raise MV_Exception;
       end if;
 
-      return Geometric_Product (Rev, 1.0 / S_Product);
+      return Rev / S_Product;
 
    exception
       when anError :  others =>
