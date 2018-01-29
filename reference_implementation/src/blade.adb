@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 package body Blade is
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
-   function Inner_Product_Filter (Grade_1, Grade_2 : Unsigned_Integer;
+   function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade;
 
@@ -124,9 +124,9 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Grade (BB : Basis_Blade) return Unsigned_Integer is
+   function Grade (BB : Basis_Blade) return Integer is
    begin
-      return Unsigned_Integer (GA_Maths.Bit_Count (BB.Bitmap));
+      return  GA_Maths.Bit_Count (BB.Bitmap);
    end Grade;
 
    --  ------------------------------------------------------------------------
@@ -149,7 +149,7 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Inner_Product_Filter (Grade_1, Grade_2 : Unsigned_Integer;
+   function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade is
       IP_Blade : Basis_Blade;
@@ -183,13 +183,9 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Minus_1_Power (Number : Integer) return Integer is
+   function Minus_1_Power (Power : Integer) return Integer is
    begin
-      if (Unsigned_Integer (Number) and 1) = 0 then
-         return 1;
-      else
-         return -1;
-      end if;
+      return (-1) ** Power;
    end Minus_1_Power;
 
    --  ------------------------------------------------------------------------
@@ -259,17 +255,12 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
+      G   : constant Integer := Grade (B); -- Bit_Count (B.Bitmap)
       W   : constant float
-        := Float (Minus_1_Power (Integer (Grade (B) * (Grade (B) - 1) / 2)))
-           * B.Weight;
+        := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
       Rev : constant Basis_Blade := (B.Bitmap, W);
    begin
       return Rev;
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Blade.Reverse_Blade");
-         raise;
    end Reverse_Blade;
 
    --  ------------------------------------------------------------------------

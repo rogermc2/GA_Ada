@@ -36,11 +36,11 @@ package Blade is
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
-   function Grade (BB : Basis_Blade) return Unsigned_Integer;
+   function Grade (BB : Basis_Blade) return Integer;
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
                            return Basis_Blade;
-   function Minus_1_Power (Number : Integer) return Integer;
+   function Minus_1_Power (Power : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
 
