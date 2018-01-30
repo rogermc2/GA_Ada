@@ -131,7 +131,7 @@ package body E3GA_Utilities is
          end if;
       else
          Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, else > -0.9");
-         S := 1.0 / Sqrt (2.0 * float (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
+         S := 1.0 / Sqrt (2.0 * (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
          R := New_Rotor (S);
          Result := R + S * Geometric_Product (V_To, V_From);
       end if;
