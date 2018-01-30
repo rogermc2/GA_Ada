@@ -103,8 +103,7 @@ package body E3GA_Utilities is
       use GA_Maths.Float_Functions;
       use Multivector;
       S      : float;
-      w0     : constant Vector :=
-        Left_Contraction (V_From, Outer_Product (V_From, V_To));
+      w0     : Vector;
       w1     : Vector;
       w2     : Vector;
       N2     : Float;
@@ -113,6 +112,7 @@ package body E3GA_Utilities is
    begin
       New_Line;
       if  Scalar_Product (V_From, V_To) < -0.9 then
+         w0 := Left_Contraction (V_From, Outer_Product (V_From, V_To));
          N2 := Norm_E2 (w0);
          if N2 = 0.0 then
             w1 :=  Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e1)));
@@ -124,7 +124,7 @@ package body E3GA_Utilities is
             end if;
          else  --  N2 /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
-            S := 1.0 / Sqrt (2.0 * float (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
+            S := 1.0 / Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
             R := New_Rotor (S);
             R := R - S * Geometric_Product (V_To, V_From);
             Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
