@@ -51,7 +51,7 @@ package body E3GA_Utilities is
       Result   : Multivector.Bivector;
    begin
       --  get the bivector 2-blade part of R
-      BV := New_Bivector (e1e2 (R), e2e3 (R), e3e1 (R));
+      BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
       R2 := E3GA.Norm_R (BV);
       if R2 > 0.0 then
@@ -99,48 +99,65 @@ package body E3GA_Utilities is
    --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
    --                                = bx        + i by  (with respect to a)
    --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector) return Multivector.Rotor is
-      use GA_Maths.Float_Functions;
-      use Multivector;
-      S      : float;
-      w0     : Vector;
-      w1     : Vector;
-      w2     : Vector;
-      N2     : Float;
-      R      : Rotor;
-      Result : Rotor;
-   begin
-      New_Line;
-      if  Scalar_Product (V_From, V_To) < -0.9 then
-         w0 := Left_Contraction (V_From, Outer_Product (V_From, V_To));
-         N2 := Norm_E2 (w0);
-         if N2 = 0.0 then
-            w1 :=  Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e1)));
-            w2 := Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e2)));
-            if Norm_E2 (w1) > Norm_E2 (w2) then
-               Result := Outer_Product (V_From, Unit_e (w1));
-            else
-               Result := Outer_Product (V_From, Unit_e (w2));
-            end if;
-         else  --  N2 /= 0.0
-            --  Replace V1 with -V1 and additional 180 degree rotation.
-            S := 1.0 / Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
-            R := New_Rotor (S);
-            R := R - S * Geometric_Product (V_To, V_From);
-            Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
-         end if;
-      else
-         Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, else > -0.9");
-         S := 1.0 / Sqrt (2.0 * (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
-         R := New_Rotor (S);
-         Result := R + S * Geometric_Product (V_To, V_From);
-      end if;
-      return Result;
+--     function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector) return Multivector.Rotor is
+--        use GA_Maths.Float_Functions;
+--        use Multivector;
+--        S      : float;
+--        w0     : Vector;
+--        w1     : Vector;
+--        w2     : Vector;
+--        Unit_V : Vector;
+--        N2     : Float;
+--        R      : Rotor;
+--        Result : Rotor;
+--     begin
+--        Unit_V := New_Vector (1.0, 1.0, 1.0);
+--        if  Scalar_Product (V_From, V_To) < -0.9 then
+--           w0 := Left_Contraction (V_From, Outer_Product (V_From, V_To));
+--           N2 := Norm_E2 (w0);
+--           if N2 = 0.0 then
+--              w1 :=  Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e1)));
+--              w2 := Left_Contraction (V_From, Outer_Product (V_From, Get_Basis_Vector (Blade.E3_e2)));
+--              if Norm_E2 (w1) > Norm_E2 (w2) then
+--                 Result := Outer_Product (V_From, Unit_e (w1));
+--              else
+--                 Result := Outer_Product (V_From, Unit_e (w2));
+--              end if;
+--           else  --  N2 /= 0.0
+--              --  Replace V1 with -V1 and additional 180 degree rotation.
+--              S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (V_To, V_From))));
+--              R := (Unit_V + Geometric_Product (V_To, V_From)) / S;
+--              Result := Geometric_Product (R, Outer_Product (V_From, Unit_e (w0)));
+--           end if;
+--        else
+--           Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, else > -0.9");
+--           S := Sqrt (2.0 * (1.0 + Scalar_Part (Left_Contraction (V_To, V_From))));
+--           Result :=  (Unit_V + Geometric_Product (V_To, V_From)) / S;
+--        end if;
+--        Simplify (Result);
+--        return Result;
+--
+--     exception
+--        when anError :  others =>
+--           Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
+--           raise;
+--     end Rotor_Vector_To_Vector;
 
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
-         raise;
+   --  ----------------------------------------------------------------------------
+
+   function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector) return Multivector.Rotor is
+      use Multivector;
+      Result : Rotor :=  Geometric_Product (V_To, V_From);
+   begin
+      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_From", V_From);
+      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_To", V_To);
+      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector Result", Result);
+      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector ~Result", Multivector.Reverse_MV (Result));
+      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector R~R",
+           Multivector.Geometric_Product (Result, Multivector.Reverse_MV (Result)));
+      return Result;
    end Rotor_Vector_To_Vector;
+
+   --  ----------------------------------------------------------------------------
 
 end E3GA_Utilities;

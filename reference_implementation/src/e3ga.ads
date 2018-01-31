@@ -73,18 +73,19 @@ package E3GA is
    function e1_e2 (MV : Multivector.Multivector) return float;
    function e1_e3 (MV : Multivector.Multivector) return float;
    function e2_e3 (MV : Multivector.Multivector) return float;
+   function e3_e1 (MV : Multivector.Multivector) return float;
    function e1_e2_e3 (MV : Multivector.Multivector) return float;
-
-   function e1e2 (R : Rotor) return float;
-   function e2e3 (R : Rotor) return float;
-   function e3e1 (R : Rotor) return float;
+--
+--     function e1e2 (R : Rotor) return float;
+--     function e2e3 (R : Rotor) return float;
+--     function e3e1 (R : Rotor) return float;
 --     function R_Scalar (R : Rotor) return float;
 
 --     function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
 --     function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
 --     function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dot_Product (V1, V2 : Vector) return float;
-    function Get_Coord (S : Scalar) return float;
+--      function Get_Coord (S : Scalar) return float;
 --     function Get_Coords (BV : Bivector) return Array_3D;
 --     function Get_Coords (MV : Multivector) return MV_Coordinate_Array;
    function Get_Coords (R : Rotor) return Array_4D;
@@ -92,7 +93,7 @@ package E3GA is
 --      function Get_Coord_2 (V : Multivector.Vector) return float;
 --      function Get_Coord_3 (V : Multivector.Vector) return float;
    function Get_Coords (V : Multivector.Vector) return Array_3D;
-   function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
+--     function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;
 --     function Geometric_Product (BV : Bivector; R : Rotor) return Rotor;
