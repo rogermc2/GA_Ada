@@ -149,12 +149,12 @@ package body E3GA_Utilities is
       use Multivector;
       Result : Rotor :=  Geometric_Product (V_To, V_From);
    begin
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_From", V_From);
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_To", V_To);
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector Result", Result);
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector ~Result", Multivector.Reverse_MV (Result));
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector R~R",
-           Multivector.Geometric_Product (Result, Multivector.Reverse_MV (Result)));
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_From", V_From);
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector V_To", V_To);
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector Result", Result);
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector ~Result", Multivector.Reverse_MV (Result));
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector R~R",
+--             Multivector.Geometric_Product (Result, Multivector.Reverse_MV (Result)));
       return Result;
    end Rotor_Vector_To_Vector;
 

@@ -59,7 +59,7 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.0, 0.0, -0.25);
+      Fan (1) := (0.1, 0.0, -0.25);
       for Count in 2 .. Num_Steps + 1 loop
          Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
@@ -341,7 +341,7 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.0, 0.0, 0.0);
+      Fan (1) := (0.1, 0.0, 0.0);
       for Count in 2 .. Num_Steps loop
          Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
@@ -560,8 +560,6 @@ package body GA_Draw is
       aRotor               : Rotor;
       Saved_Cull_Face      : Face_Selector := Cull_Face;
    begin
-      GA_Utilities.Print_Multivector("GA_Draw.Draw_Vector Direction", Direction);
-      Utilities.Print_Vector ("GA_Draw.Draw_Vector GL_Dir", GL_Dir);
       if Scale /= 0.0 then
          GL.Objects.Programs.Use_Program (Render_Program);
          Vertex_Array_Object.Initialize_Id;
@@ -576,7 +574,6 @@ package body GA_Draw is
          if Norm_e2 (Tail) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
          end if;
-         Put_Line ("GA_Draw.Draw,  Norm_e2 (Tail)" & float'Image (Norm_e2 (Tail)));
          Draw_Line (Render_Program, Model_View_Matrix, Tail,
                     Direction, Colour, Scale);
 
@@ -604,7 +601,7 @@ package body GA_Draw is
          Set_Cull_Face (Front);
 
          Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
-         Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
+--           Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
       end if;
 

@@ -32,7 +32,7 @@ package E2GA_Draw is
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                    Direction : Multivector.Vector; Colour : GL.Types.Colors.Color;
                     Scale : float := 1.0);
 
 end E2GA_Draw;

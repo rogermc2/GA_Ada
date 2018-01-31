@@ -127,19 +127,18 @@ package body E2GA_Draw is
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                   aVector : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                   Direction : Multivector.Vector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
       use Multivector;
       Vec_3D  : Vector;
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
-      if E2GA.e1 (aVector) /= 0.0 then
-         Add_Blade (Vec_3D, Blade.E3_e1, E2GA.e1 (aVector));
+      if E2GA.e1 (Direction) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e1, E2GA.e1 (Direction));
       end if;
-      if E2GA.e2 (aVector) /= 0.0 then
-         Add_Blade (Vec_3D, Blade.E3_e2, E2GA.e2 (aVector));
+      if E2GA.e2 (Direction) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e2, E2GA.e2 (Direction));
       end if;
---        Vec_3D := New_Vector (E2GA.e1 (aVector), E2GA.e2 (aVector), 0.0);
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
    exception

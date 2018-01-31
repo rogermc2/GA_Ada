@@ -104,8 +104,8 @@ begin
    MV_GInv := General_Inverse (MV12);
    MV_VInv := Versor_Inverse (MV12);
    GA_Utilities.Print_Multivector ("MV12 ", MV12);
-   GA_Utilities.Print_Multivector ("MV_GInv ", MV_GInv);
-   GA_Utilities.Print_Multivector ("MV_VInv ", MV_VInv);
+   GA_Utilities.Print_Multivector ("MV12_GInv ", MV_GInv);
+   GA_Utilities.Print_Multivector ("MV12_VInv ", MV_VInv);
    GA_Utilities.Print_Multivector ("MV * MV_GInv", Geometric_Product (MV12, MV_GInv));
    GA_Utilities.Print_Multivector ("MV * MV_VInv", Geometric_Product (MV12, MV_VInv));
 
