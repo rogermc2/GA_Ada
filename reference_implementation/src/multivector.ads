@@ -38,6 +38,8 @@ package Multivector is
 --     function C3_Multivector return Multivector;
    function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
                         Value : out Float) return Boolean;
+   function Cosine (MV : Multivector) return Multivector;
+   function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
@@ -59,6 +61,9 @@ package Multivector is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
+   function Is_Null (MV : Multivector) return Boolean;
+   function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
+   function Is_Scalar (MV : Multivector) return Boolean;
    function Largest_Grade_Part (MV : Multivector) return Multivector;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
@@ -81,6 +86,8 @@ package Multivector is
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    procedure Simplify (MV : in out Multivector);
+   function Sine (MV : Multivector) return Multivector;
+   function Sine (MV : Multivector; Order : Integer) return Multivector;
    function Size (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;

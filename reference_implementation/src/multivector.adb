@@ -24,7 +24,11 @@ package body Multivector is
    C3_Blade_List         : Blade_List;
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
 
+   procedure Compress (MV : in out Multivector);
+   procedure Compress (MV : in out Multivector; Epsilon : Float);
+   function Cosine_Series (MV : Multivector; Order : Integer) return Multivector;
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
+   function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
    function Space_Dimension (MV : Multivector) return Integer;
 
    --  -------------------------------------------------------------------------
@@ -264,7 +268,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   Procedure Compress (MV : in out Multivector; Epsilon : Float) is
+   procedure Compress (MV : in out Multivector; Epsilon : Float) is
       use Blade_List_Package;
       use GA_Maths;
       Blades    : Blade_List := MV.Blades;
@@ -273,9 +277,9 @@ package body Multivector is
       Max_Mag   : Float := 0.0;
    begin
       while Has_Element (Curs) loop
-            thisBlade := Element (Curs);
-            Max_Mag := Maximum (Weight (thisBlade), Max_Mag);
-            Next (Curs);
+         thisBlade := Element (Curs);
+         Max_Mag := Maximum (Weight (thisBlade), Max_Mag);
+         Next (Curs);
       end loop;
 
       if Max_Mag = 0.0 then
@@ -293,6 +297,70 @@ package body Multivector is
       end if;
 
    end Compress;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Compress (MV : in out Multivector) is
+   begin
+      Compress (MV, 10.0 ** (-13));
+   end Compress;
+
+   --  -------------------------------------------------------------------------
+
+   function Cosine (MV : Multivector) return Multivector is
+   begin
+      return Cosine (MV, 12);
+   end Cosine;
+
+   --  -------------------------------------------------------------------------
+
+   function Cosine (MV : Multivector; Order : Integer) return Multivector is
+      use GA_Maths.Float_Functions;
+      A2        : Multivector := Geometric_Product (MV, MV);
+      A2_Scalar : Float;
+      Alpha     : Float;
+      Result    : Multivector;
+   begin
+      Compress (A2);
+      if Is_Null (A2, 10.0 ** (-8)) then
+         Result := New_Multivector (1.0);
+      elsif Is_Scalar (A2) then
+         A2_Scalar := Scalar_Part (A2);
+         if A2_Scalar < 0.0 then
+            Alpha := Sqrt (-A2_Scalar);
+            Result := New_Multivector (Cosh (Alpha));
+         else
+            Alpha := Sqrt (A2_Scalar);
+            Result := New_Multivector (Cos (Alpha));
+         end if;
+      else  --  Not null and not scalar
+         Result :=  Cosine_Series (MV, Order);
+      end if;
+      return Result;
+   end Cosine;
+
+   --  -------------------------------------------------------------------------
+
+   function Cosine_Series (MV : Multivector; Order : Integer)
+                           return Multivector is
+      use GA_Maths;
+      Scaled    : Multivector := MV;
+      Scaled_GP : Multivector;
+      Temp      : Multivector := Scaled;
+      Sign      : Integer := -1;
+      Result    : Multivector := New_Multivector (1.0);
+   begin
+      --  Taylor approximation
+      for Count in 2 .. Order loop
+         Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
+         Temp := Geometric_Product (Temp, Scaled_GP);
+         if (GA_Maths.Unsigned_Integer (Count) and 1) = 0 then
+            Result := Result + Geometric_Product (Temp, Float (Sign));
+            Sign := -Sign;
+         end if;
+      end loop;
+      return Result;
+   end Cosine_Series;
 
    --  -------------------------------------------------------------------------
 
@@ -330,6 +398,42 @@ package body Multivector is
       Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
       return Dual_MV;
    end Dual;
+
+   --  -------------------------------------------------------------------------
+   --  Possibly imprecise
+   function Exp_Series (MV : Multivector; Order : Integer)
+                        return Multivector is
+      Scaled    : Multivector;
+      Scaled_GP : Multivector;
+      Temp      : Multivector := New_Multivector (1.0);
+      Sign      : Integer := -1;
+      Scale     : Integer := 1;
+      Max       : Float := Norm_E (MV);
+      Result    : Multivector := Temp;
+   begin
+      if Max > 1.0 then
+         Scale := 2;
+      end if;
+      while Max > 1.0 loop
+         Max := Max / 2.0;
+         Scale := 2 * Scale;
+      end loop;
+      Scaled := Geometric_Product (MV, 1.0 / Float (Scale));
+
+      --  Taylor approximation
+      for Count in 1 .. Order loop
+         Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
+         Temp := Geometric_Product (Temp, Scaled_GP);
+         Result := Result + Temp;
+      end loop;
+
+      --  Undo scaling
+      while Scale > 1 loop
+         Result := Geometric_Product (Result, Result);
+         Scale := Scale / 2;
+      end loop;
+      return Result;
+   end Exp_Series;
 
    --  -------------------------------------------------------------------------
 
@@ -638,7 +742,7 @@ package body Multivector is
       while Has_Element (Cursor_B) loop
          Index := Index + 1;
          BB := Element (Cursor_B);
-           GU_Bitmap := GU_Bitmap or
+         GU_Bitmap := GU_Bitmap or
            Shift_Left (1, Integer (Blade.Grade (BB)));
          Next (Cursor_B);
       end loop;
@@ -694,6 +798,21 @@ package body Multivector is
    begin
       return S < Epsilon * Epsilon;
    end Is_Null;
+
+   --  -------------------------------------------------------------------------
+
+   function Is_Scalar (MV : Multivector) return Boolean is
+      use Ada.Containers;
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades : Blade_List := MV.Blades;
+      Result : Boolean := Is_Null (MV);
+   begin
+      if not Result and then Blades.Length = 1 then
+         Result := Bitmap (Element (Blades.First)) = 0;
+      end if;
+      return Result;
+   end Is_Scalar;
 
    --  -------------------------------------------------------------------------
 
@@ -1039,6 +1158,63 @@ package body Multivector is
       end if;
       Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
    end Simplify;
+
+   --  -------------------------------------------------------------------------
+
+   function Sine (MV : Multivector) return Multivector is
+   begin
+      return Sine (MV, 12);
+   end Sine;
+
+   --  -------------------------------------------------------------------------
+
+   function Sine (MV : Multivector; Order : Integer) return Multivector is
+      use GA_Maths.Float_Functions;
+      A2        : Multivector := Geometric_Product (MV, MV);
+      A2_Scalar : Float;
+      Alpha     : Float;
+      Result    : Multivector;
+   begin
+      Compress (A2);
+      if Is_Null (A2, 10.0 ** (-8)) then
+         Result := MV;
+      elsif Is_Scalar (A2) then
+         A2_Scalar := Scalar_Part (A2);
+         if A2_Scalar < 0.0 then
+            Alpha := Sqrt (-A2_Scalar);
+            Result := Geometric_Product (MV, Sinh (Alpha) / Alpha);
+         else
+            Alpha := Sqrt (A2_Scalar);
+            Result := Geometric_Product (MV, Sin (Alpha) / Alpha);
+         end if;
+      else  --  Not null and not scalar
+         Result :=  Sine_Series (MV, Order);
+      end if;
+      return Result;
+   end Sine;
+
+   --  -------------------------------------------------------------------------
+
+   function Sine_Series (MV : Multivector; Order : Integer) return Multivector is
+      use GA_Maths;
+      Scaled    : Multivector := MV;
+      Scaled_GP : Multivector;
+      Temp      : Multivector := Scaled;
+      Sign      : Integer := -1;
+      Result    : Multivector := Scaled;
+   begin
+      --  Taylor approximation
+      for Count in 2 .. Order loop
+         Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
+         Temp := Geometric_Product (Temp, Scaled_GP);
+         if (GA_Maths.Unsigned_Integer (Count) and 1) /= 0 then
+            --  use only the odd part of the series
+            Result := Result + Geometric_Product (Temp, Float (Sign));
+            Sign := -Sign;
+         end if;
+      end loop;
+      return Result;
+   end Sine_Series;
 
    --  -------------------------------------------------------------------------
 
