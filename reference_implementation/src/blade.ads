@@ -16,6 +16,8 @@ package Blade is
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type Basis_Blade is private;
+   type Metric is array (Integer range <>, Integer range <>) of float;
+   type Metric_Data is array (Integer range <>) of float;
 
    type BV_Base is (BV_e1e2, BV_e2e3, BV_e3e1);
    for BV_Base use (BV_e1e2 => 1, BV_e2e3 => 2, BV_e3e1 => 4);
@@ -48,6 +50,8 @@ package Blade is
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
+   function New_Metric (Dimension : Integer) return Metric;
+   function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric;
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade;
    function New_Zero_Blade return Basis_Blade;
 
