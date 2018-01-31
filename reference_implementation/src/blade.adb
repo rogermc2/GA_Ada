@@ -110,7 +110,7 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (BA, BB : Basis_Blade;
-                               Met : Metric_Array) return Basis_Blade is
+                               Met : Metric_Data) return Basis_Blade is
       Result : Basis_Blade := Geometric_Product (BA, BB);
       BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
       Index  : Integer := 1;
