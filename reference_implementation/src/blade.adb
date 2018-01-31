@@ -5,6 +5,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Blade is
 
+   type Metric_Array is array (Integer range <>) of float;
+
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
@@ -107,12 +109,30 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   function Geometric_Product (BA, BB : Basis_Blade;
+                               Met : Metric_Array) return Basis_Blade is
+      Result : Basis_Blade := Geometric_Product (BA, BB);
+      BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
+      Index  : Integer := 1;
+   begin
+      while BM /= 0 loop
+         if (BM and 1) /= 0 then
+            Result.Weight := Result.Weight * Met (Index);
+         end if;
+         Index := Index + 1;
+         BM := BM / 2;
+      end loop;
+      return Result;
+   end Geometric_Product;
+
+   --  ------------------------------------------------------------------------
+
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
       OP_Blade : Basis_Blade;
       Sign     : Float;
    begin
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
-         OP_Blade.Weight := 0.0;
+         null;  --  return zero blade
       else
          OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
@@ -158,8 +178,9 @@ package body Blade is
          when Left_Contraction =>
             if (Grade_1 > Grade_2) or (Grade (BB) /= (Grade_2 - Grade_1)) then
                null;
-            else
-                IP_Blade := BB;
+            else  --  Grade_1 <= Grade_2 and Grade (BB) = Grade_2 - Grade_1
+               IP_Blade := BB;
+--                 Print_Blade ("Inner_Product_Filter LC result", IP_Blade);
             end if;
          when Right_Contraction =>
             if (Grade_1 < Grade_2) or (Grade (BB) /= Grade_1 - Grade_2) then
@@ -251,6 +272,16 @@ package body Blade is
    begin
       return GP_OP (BA, BB, True);
    end Outer_Product;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Blade (Name : String; B : Basis_Blade) is
+   begin
+      New_Line;
+      Put_Line (Name & " Bitmap and Weight");
+         Put_Line (GA_Maths.Unsigned_Integer'Image (Bitmap (B)) &
+                   "  " & float'Image (Weight (B)));
+   end Print_Blade;
 
    --  ------------------------------------------------------------------------
 
