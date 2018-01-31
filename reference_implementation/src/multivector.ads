@@ -67,6 +67,7 @@ package Multivector is
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
+   function New_Rotor return Rotor;
    function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
@@ -79,6 +80,7 @@ package Multivector is
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
+   procedure Simplify (MV : in out Multivector);
    function Size (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;

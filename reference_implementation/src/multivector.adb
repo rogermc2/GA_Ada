@@ -25,7 +25,6 @@ package body Multivector is
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
 
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
-   procedure Simplify (MV : in out Multivector);
    function Space_Dimension (MV : Multivector) return Integer;
 
    --  -------------------------------------------------------------------------
@@ -265,6 +264,38 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   Procedure Compress (MV : in out Multivector; Epsilon : Float) is
+      use Blade_List_Package;
+      use GA_Maths;
+      Blades    : Blade_List := MV.Blades;
+      thisBlade : Blade.Basis_Blade;
+      Curs      : Cursor := Blades.First;
+      Max_Mag   : Float := 0.0;
+   begin
+      while Has_Element (Curs) loop
+            thisBlade := Element (Curs);
+            Max_Mag := Maximum (Weight (thisBlade), Max_Mag);
+            Next (Curs);
+      end loop;
+
+      if Max_Mag = 0.0 then
+         MV.Blades.Clear;
+      else
+         Max_Mag := Epsilon;
+         while Has_Element (Curs) loop
+            thisBlade := Element (Curs);
+            if Abs (Weight (thisBlade)) < Max_Mag then
+               Blades.Delete (Curs);
+            end if ;
+            Next (Curs);
+         end loop;
+         MV.Blades := Blades;
+      end if;
+
+   end Compress;
+
+   --  -------------------------------------------------------------------------
+
    function Dot (MV1, MV2 : Multivector) return Multivector is
    begin
       return Inner_Product (MV1, MV2, Hestenes_Inner_Product);
@@ -383,10 +414,10 @@ package body Multivector is
       GP        : Multivector;
    begin
       if Is_Empty (List (Blades_1)) then
-         Put_Line ("Geometric_Product, MV1 is null.");
+         Put_Line ("Multivector.Geometric_Product, MV1 is null.");
       end if;
       if Is_Empty (List (Blades_2)) then
-         Put_Line ("Geometric_Product, MV2 is null.");
+         Put_Line ("Multivector.Geometric_Product, MV2 is null.");
       end if;
 
       while Has_Element (Curs_1) loop
@@ -401,7 +432,7 @@ package body Multivector is
       Simplify (GP);
 
       if Is_Empty (GP.Blades) then
-         Put_Line ("Geometric_Product, product MV is null.");
+         Put_Line ("Multivector.Geometric_Product, product MV is null.");
       end if;
       return GP;
 
@@ -649,6 +680,23 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
+   function Is_Null (MV : Multivector) return Boolean is
+      M : Multivector := MV;
+   begin
+      Simplify (M);
+      return M.Blades.Is_Empty;
+   end Is_Null;
+
+   --  -------------------------------------------------------------------------
+
+   function Is_Null (MV : Multivector; Epsilon : Float) return Boolean is
+      S : Float := Norm_E2 (MV);
+   begin
+      return S < Epsilon * Epsilon;
+   end Is_Null;
+
+   --  -------------------------------------------------------------------------
+
    function Largest_Grade_Part (MV : Multivector) return Multivector is
       use GA_Maths;
       use Interfaces;
@@ -746,6 +794,13 @@ package body Multivector is
       MV.Blades.Append (New_Scalar_Blade (Scalar_Weight));
       return  MV;
    end New_Multivector;
+
+   --  -------------------------------------------------------------------------
+
+   function New_Rotor return Rotor is
+   begin
+      return  New_Rotor (1.0);
+   end New_Rotor;
 
    --  -------------------------------------------------------------------------
 
