@@ -737,10 +737,8 @@ package body Multivector is
       BB         : Blade.Basis_Blade;
       Cursor_B   : Cursor := Blades.First;
       GU_Bitmap  : Unsigned_32 := 0;
-      Index      : Integer := 0;
    begin
       while Has_Element (Cursor_B) loop
-         Index := Index + 1;
          BB := Element (Cursor_B);
          GU_Bitmap := GU_Bitmap or
            Shift_Left (1, Integer (Blade.Grade (BB)));
@@ -902,6 +900,7 @@ package body Multivector is
       BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
       BV.Blades.Append (New_Basis_Blade (BV_e2e3, e2e3));
       BV.Blades.Append (New_Basis_Blade (BV_e3e1, e3e1));
+      Simplify (BV);
       return BV;
    end New_Bivector;
 
