@@ -1,6 +1,4 @@
 
-with Interfaces;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 package body Blade is
@@ -75,14 +73,12 @@ package body Blade is
 
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
       use GA_Maths;
-      use Interfaces;
-      A     : Unsigned_32 := Shift_Right (Unsigned_32 (Map_A), 1);
-      B     : Unsigned_32 := Unsigned_32 (Map_B);
+      A     : Unsigned_Integer :=  Map_A / 2;
       Swaps : Natural := 0;
    begin
       while A /= 0 loop
-         Swaps := Swaps + Bit_Count (Unsigned_Integer (A and B));
-         A := Shift_Right (Unsigned_32 (A), 1);
+         Swaps := Swaps + Bit_Count (A and Map_B);
+         A := A / 2;
       end loop;
 
       if Swaps mod 2 = 0 then  -- an even number of swaps
@@ -134,6 +130,8 @@ package body Blade is
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          null;  --  return zero blade
       else
+         --  if BA.Bitmap = BB.Bitmap, then Dot product part of MV
+         --  else Outer product part of MV
          OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
          OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
