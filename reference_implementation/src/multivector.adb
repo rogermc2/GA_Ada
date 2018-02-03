@@ -1110,35 +1110,37 @@ package body Multivector is
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean) is
       use Blade_List_Package;
       use GA_Maths;
-      Current      : Blade.Basis_Blade;
-      Previous     : Blade.Basis_Blade;
-      Blade_Cursor : Cursor;
-      Prev_Curs    : Cursor;
-      Has_Previous : Boolean := False;
-      Remove_Nulls : Boolean := False;
+      Current_Blade  : Blade.Basis_Blade;
+      Previous_Blade : Blade.Basis_Blade;
+      Blade_Cursor   : Cursor;
+      Prev_Curs      : Cursor;
+      Has_Previous   : Boolean := False;
+      Remove_Nulls   : Boolean := False;
    begin
       Blade_Sort_Package.Sort (List (Blades));
       Reverse_Elements (Blades);
       Blade_Cursor := Blades.First;
       Prev_Curs := No_Element;
       while Has_Element (Blade_Cursor) loop
-         Current := Element (Blade_Cursor);
-         if Weight (Current) = 0.0 then
+         Current_Blade := Element (Blade_Cursor);
+         if Weight (Current_Blade) = 0.0 then
             Blades.Delete (Blade_Cursor);
             Has_Previous := False;
             --  Delete sets Blade_Cursor to No_Element
             Blade_Cursor := Prev_Curs;
          elsif Has_Previous and then
-           Bitmap (Previous) = Bitmap (Current) then
-            Update_Blade (Previous, Weight (Previous) + Weight (Current));
-            Blades.Replace_Element (Prev_Curs, Previous);
+           Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
+            Update_Blade (Previous_Blade,
+                          Weight (Previous_Blade) + Weight (Current_Blade));
+            Blades.Replace_Element (Prev_Curs, Previous_Blade);
             Blades.Delete (Blade_Cursor);
             Blade_Cursor := Prev_Curs;
          else
-            if Has_Previous and then Weight (Previous) = 0.0 then
+            if Has_Previous and then Weight (Previous_Blade) = 0.0 then
                Remove_Nulls := True;
             end if;
-            Previous := Current;
+            Previous_Blade := Current_Blade;
+            Has_Previous := True;
             Prev_Curs := Blade_Cursor;
          end if;
          Next (Blade_Cursor);
@@ -1147,8 +1149,7 @@ package body Multivector is
       Blade_Cursor := Blades.First;
       if Remove_Nulls then
          while Has_Element (Blade_Cursor) loop
-            Current := Element (Blade_Cursor);
-            if Weight (Current) = 0.0 then
+            if Weight (Element (Blade_Cursor)) = 0.0 then
                Blades.Delete (Blade_Cursor);
             else
                Next (Blade_Cursor);
