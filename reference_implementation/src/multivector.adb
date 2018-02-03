@@ -34,8 +34,9 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
+      use GA_Maths;
    begin
-      return Weight (Left) < Weight (Right);
+      return Bitmap (Left) < Bitmap (Right);
    end "<";
 
    --  -------------------------------------------------------------------------
@@ -1115,39 +1116,35 @@ package body Multivector is
       Blade_Cursor   : Cursor;
       Prev_Curs      : Cursor;
       Has_Previous   : Boolean := False;
-      Remove_Nulls   : Boolean := False;
    begin
-      Blade_Sort_Package.Sort (List (Blades));
-      Reverse_Elements (Blades);
-      Blade_Cursor := Blades.First;
-      Prev_Curs := No_Element;
-      while Has_Element (Blade_Cursor) loop
-         Current_Blade := Element (Blade_Cursor);
-         if Weight (Current_Blade) = 0.0 then
-            Blades.Delete (Blade_Cursor);
-            Has_Previous := False;
-            --  Delete sets Blade_Cursor to No_Element
-            Blade_Cursor := Prev_Curs;
-         elsif Has_Previous and then
-           Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
-            Update_Blade (Previous_Blade,
-                          Weight (Previous_Blade) + Weight (Current_Blade));
-            Blades.Replace_Element (Prev_Curs, Previous_Blade);
-            Blades.Delete (Blade_Cursor);
-            Blade_Cursor := Prev_Curs;
-         else
-            if Has_Previous and then Weight (Previous_Blade) = 0.0 then
-               Remove_Nulls := True;
+      if List (Blades) /= Empty_List then
+         Blade_Sort_Package.Sort (List (Blades));
+         Reverse_Elements (Blades);
+         Blade_Cursor := Blades.First;
+         Prev_Curs := No_Element;
+         while Has_Element (Blade_Cursor) loop
+            Current_Blade := Element (Blade_Cursor);
+            if Weight (Current_Blade) = 0.0 then
+               Blades.Delete (Blade_Cursor);
+               Has_Previous := False;
+               --  Delete sets Blade_Cursor to No_Element
+               Blade_Cursor := Prev_Curs;
+            elsif Has_Previous and then
+              Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
+               Update_Blade (Previous_Blade,
+                             Weight (Previous_Blade) + Weight (Current_Blade));
+               Blades.Replace_Element (Prev_Curs, Previous_Blade);
+               Blades.Delete (Blade_Cursor);
+               Blade_Cursor := Prev_Curs;
+            else
+               Previous_Blade := Current_Blade;
+               Has_Previous := True;
+               Prev_Curs := Blade_Cursor;
             end if;
-            Previous_Blade := Current_Blade;
-            Has_Previous := True;
-            Prev_Curs := Blade_Cursor;
-         end if;
-         Next (Blade_Cursor);
-      end loop;
+            Next (Blade_Cursor);
+         end loop;
 
-      Blade_Cursor := Blades.First;
-      if Remove_Nulls then
+         Blade_Cursor := Blades.First;
          while Has_Element (Blade_Cursor) loop
             if Weight (Element (Blade_Cursor)) = 0.0 then
                Blades.Delete (Blade_Cursor);
