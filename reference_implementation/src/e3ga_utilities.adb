@@ -133,7 +133,7 @@ package body E3GA_Utilities is
          else  --  N2 /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
             S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To, From))));
-            R := (1.0 + Geometric_Product (To, From)) / S;
+            R := (1.0 - Geometric_Product (To, From)) / S;
             Result := Geometric_Product (R, Outer_Product (From, Unit_e (w0)));
          end if;
       else
@@ -144,52 +144,52 @@ package body E3GA_Utilities is
       end if;
       Simplify (Result);
 
-      GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector Dot product",
-                                     Dot (To, From));
-      New_Line;
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector GP (To, From)", Geometric_Product (To, From));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector GP (From, To)", Geometric_Product (From, To));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ab", ab);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba", ba);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ba", 1.0 + ba);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ab", 1.0 + ab);
-      --  (1 + ba)(1 + ab) = 1 + ab + ba + baab
+--        GA_Utilities.Print_Multivector("E3GA_Utilities.Rotor_Vector_To_Vector Dot product",
+--                                       Dot (To, From));
+--        New_Line;
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector GP (To, From)", Geometric_Product (To, From));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector GP (From, To)", Geometric_Product (From, To));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ab", ab);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba", ba);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ba", 1.0 + ba);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ab", 1.0 + ab);
+--        --  (1 + ba)(1 + ab) = 1 + ab + ba + baab
       --                   = 1 + a.b + a^b + b.a + b^a + 1
       --                   = 2 + 2a.b + a^b - a^b
       --                   = 2(1 + a.b)
 
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector (1 + ba)(1 + ab)",
-                                   Geometric_Product (1.0 + ba, 1.0 + ab));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1", ba1);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ab1", ab1);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector (1 + ba)(1 + ab)",
+--                                     Geometric_Product (1.0 + ba, 1.0 + ab));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1", ba1);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ab1", ab1);
       --  ba1 ab1 = ba1.ab1 + ba1 ^ ab1
-      ba1ab1 := Dot (ba1, ab1) + Outer_Product (ba1, ab1);
-      Simplify (ba1ab1);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1ab1 = ba1.ab1 + ba1 ^ ab1",
-                                      ba1ab1);
-      ba1ab1 := Outer_Product (ba1, ab1);
-      Simplify (ba1ab1);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1 ^ ab1",
-                                      ba1ab1);
-
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1 ab1 should = ba1.ab1 + ba1 ^ ab1",
-                                       Geometric_Product (ba1, ab1));
-      ba1ab1 := 1.0 + ab + ba + Geometric_Product (To, Geometric_Product (From, ab));
-      Simplify (ba1ab1);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ab + ba + baab",
-                                       ba1ab1);
-      Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, S 1/S: " &
-                 Float'Image (S) & Float'Image (1.0 / S));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector a.b", Dot (From, To));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector b.a", Dot (To, From));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector aa", aa);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector baab", baab);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector a^b + b^a", OP_Sum);
-
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result", Result);
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ~Result", Reverse_MV (Result));
-      GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R~R",
-           Geometric_Product (Result, Reverse_MV (Result)));
+--        ba1ab1 := Dot (ba1, ab1) + Outer_Product (ba1, ab1);
+--        Simplify (ba1ab1);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1ab1 = ba1.ab1 + ba1 ^ ab1",
+--                                        ba1ab1);
+--        ba1ab1 := Outer_Product (ba1, ab1);
+--        Simplify (ba1ab1);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1 ^ ab1",
+--                                        ba1ab1);
+--
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ba1 ab1 should = ba1.ab1 + ba1 ^ ab1",
+--                                         Geometric_Product (ba1, ab1));
+--        ba1ab1 := 1.0 + ab + ba + Geometric_Product (To, Geometric_Product (From, ab));
+--        Simplify (ba1ab1);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector 1 + ab + ba + baab",
+--                                         ba1ab1);
+--        Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, S 1/S: " &
+--                   Float'Image (S) & Float'Image (1.0 / S));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector a.b", Dot (From, To));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector b.a", Dot (To, From));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector aa", aa);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector baab", baab);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector a^b + b^a", OP_Sum);
+--
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result", Result);
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector ~Result", Reverse_MV (Result));
+--        GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R~R",
+--             Geometric_Product (Result, Reverse_MV (Result)));
       return Result;
    end Rotor_Vector_To_Vector;
 
