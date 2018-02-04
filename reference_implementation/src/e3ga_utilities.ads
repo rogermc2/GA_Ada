@@ -15,6 +15,6 @@ package E3GA_Utilities is
 --     procedure Print_Vector (Name : String; aVector : E2GA.Vector);
 --     procedure Print_Vector (Name : String; aVector : E3GA.Vector);
    procedure Rotor_To_Matrix (R : Multivector.Rotor; M : out GA_Maths.GA_Matrix3);
-   function Rotor_Vector_To_Vector (V_From, V_To : Multivector.Vector)
+   function Rotor_Vector_To_Vector (From, To : Multivector.Vector)
                                      return Multivector.Rotor;
 end E3GA_Utilities;
