@@ -220,7 +220,7 @@ package body Multivector is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.Add_To_Matrix");
+         Put_Line ("An exception occurred in Multivector.Add_To_Matrix 1");
          Put_Line ("BMB, BMGP: " & Integer'Image (BMB) &  Integer'Image (BMGP));
          raise;
    end Add_To_Matrix;
@@ -236,6 +236,11 @@ package body Multivector is
          Add_To_Matrix (M, BB, Element (Curs));
          Next (Curs);
       end loop;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
+         raise;
    end Add_To_Matrix;
 
    --  -------------------------------------------------------------------------
@@ -513,7 +518,7 @@ package body Multivector is
       Blades_1  : constant Blade_List := MV1.Blades;
       Blades_2  : constant Blade_List := MV2.Blades;
       Curs_1    : Cursor := Blades_1.First;
-      Curs_2    : Cursor := Blades_2.First;
+      Curs_2    : Cursor;
       Blade_1   : Blade.Basis_Blade;
       Blade_2   : Blade.Basis_Blade;
       GP        : Multivector;
@@ -527,6 +532,7 @@ package body Multivector is
 
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
+         Curs_2 := Blades_2.First;
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
             GP.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
@@ -545,13 +551,15 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function General_Inverse (MV : Multivector) return Multivector is
+   function General_Inverse (MV : Multivector;
+                             Met : Metric.Metric := Metric.Null_Metric) return Multivector is
       use Interfaces;
       use Blade_List_Package;
       use Blade;
       use GA_Maths;
       use GA_Maths.Float_Array_Package;
       use GA_Maths.Float_Functions;
+      use Metric;
       Dim        : constant Integer :=  Space_Dimension (MV);
       Max_G      : constant Integer := 2 ** (Dim + 1);
       Blades     : constant Blade_List := MV.Blades;
@@ -574,11 +582,18 @@ package body Multivector is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          for index in BBs'Range loop
-            Add_To_Matrix (Mat, BBs (index),
-                           Geometric_Product (aBlade, BBs (index)));
+            if Met = Metric.Null_Metric then
+               Add_To_Matrix (Mat, BBs (index),
+                              Geometric_Product (aBlade, BBs (index)));
+            else
+               Add_To_Matrix (Mat, BBs (index),
+                              Geometric_Product (aBlade, BBs (index), Met));
+            end if;
          end loop;
+         Put_Line ("Multivector.General_Inverse loop exit");
          Next (Curs);
       end loop;
+      Put_Line ("Multivector.General_Inverse outer loop exit");
 
       Inv_Mat := Inverse (Mat);
       for Index in Inv_Mat'Range loop

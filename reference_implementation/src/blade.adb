@@ -73,7 +73,7 @@ package body Blade is
 
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
       use GA_Maths;
-      A     : Unsigned_Integer :=  Map_A / 2;
+      A     : Unsigned_Integer := Map_A / 2;
       Swaps : Natural := 0;
    begin
       while A /= 0 loop
@@ -106,19 +106,30 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (BA, BB : Basis_Blade;
-                               Met : Metric_Data) return Basis_Blade is
+                               Met : Metric.Metric) return Basis_Blade is
       Result : Basis_Blade := Geometric_Product (BA, BB);
       BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
-      Index  : Integer := 1;
+      Row    : Integer range 1 .. 6 := 1;
+      Col    : Integer range 1 .. 5 := 1;
    begin
       while BM /= 0 loop
          if (BM and 1) /= 0 then
-            Result.Weight := Result.Weight * Met (Index);
+            Result.Weight := Result.Weight * Met (Row, Col);
          end if;
-         Index := Index + 1;
+         if Col = 5 then
+            Row := Row + 1;
+            Col := 1;
+         else
+            Col := Col + 1;
+         end if;
          BM := BM / 2;
       end loop;
       return Result;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Geometric_Product with Metric.");
+         raise;
    end Geometric_Product;
 
    --  ------------------------------------------------------------------------
@@ -130,8 +141,8 @@ package body Blade is
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          null;  --  return zero blade
       else
-         --  if BA.Bitmap = BB.Bitmap, then Dot product part of MV
-         --  else Outer product part of MV
+         --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
+         --  else xor > 0 so Outer product part of MV
          OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
          OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
@@ -248,8 +259,8 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Dimension : Integer) return Metric is
-      theMetric : Metric (1 .. Dimension, 1 .. Dimension) :=
+   function New_Metric (Dimension : Integer) return Metric.Metric is
+      theMetric : Metric.Metric (1 .. Dimension, 1 .. Dimension) :=
       (others => (others => 0.0));
    begin
       return theMetric;
@@ -257,8 +268,9 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric is
-      theMetric : Metric (1 .. Dimension, 1 .. Dimension) :=
+   function New_Metric (Dimension : Integer; Data : Metric.Metric_Data)
+                        return Metric.Metric is
+      theMetric : Metric.Metric (1 .. Dimension, 1 .. Dimension) :=
       (others => (others => 0.0));
    begin
       for Index in 1 .. Dimension loop
