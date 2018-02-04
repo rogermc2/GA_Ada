@@ -75,6 +75,7 @@ package GA_Maths is
 
    function Bit_Count (Bitmap : Unsigned_Integer) return Natural;
    function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural;
+   function Is_Diagonal (aMatrix : Float_Matrix) return Boolean;
    function Maximum (I1, I2 : Integer) return Integer;
    function Maximum (I1, I2 : Float) return Float;
    function Minimum (I1, I2 : Integer) return Integer;
