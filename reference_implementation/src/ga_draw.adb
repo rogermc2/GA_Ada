@@ -41,7 +41,7 @@ package body GA_Draw is
 
    procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Scale             : Gl.Types.Single) is
+                        Scale             : Float) is
 
       use GL.Objects.Buffers;
       use GL.Types.Singles;
@@ -51,6 +51,7 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
+      S_Scale              : constant Single := Single (10.0 / Scale);
       Z               : float := 0.0;
       Num_Steps       : constant int := 32;
       Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -59,9 +60,9 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.5, 0.0, -0.25);
+      Fan (1) := (S_Scale, 0.0, -0.25);
       for Count in 2 .. Num_Steps + 1 loop
-         Fan (Count) := (Single (0.5 * Cos (Z)), Single (0.5 * Sin (Z)), -0.25);
+         Fan (Count) := (S_Scale * Single (Cos (Z)), S_Scale * Single (Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
       end loop;
 
@@ -323,7 +324,7 @@ package body GA_Draw is
 
    procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Scale             : Gl.Types.Single) is
+                        Scale             : Float) is
 
       use GL.Objects.Buffers;
       use GL.Types.Singles;
@@ -333,6 +334,7 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
+      S_Scale              : constant Single := Single (10.0 / Scale);
       Z                    : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -341,9 +343,9 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.5, 0.0, 0.0);
+      Fan (1) := (S_Scale, 0.0, 0.0);
       for Count in 2 .. Num_Steps loop
-         Fan (Count) := (Single (0.5 * Cos (Z)), Single (0.5 * Sin (Z)), -0.25);
+         Fan (Count) := (S_Scale * Single (Cos (Z)), S_Scale * Single (Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
       end loop;
 
@@ -600,8 +602,8 @@ package body GA_Draw is
          Set_Front_Face (GL.Types.Clockwise);
          Set_Cull_Face (Front);
 
-         Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
-         Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
+         Draw_Cone (Render_Program, Model_View_Matrix, Scale);
+         Draw_Base (Render_Program, Model_View_Matrix, Scale);
          Set_Cull_Face (Saved_Cull_Face);
       end if;
 
