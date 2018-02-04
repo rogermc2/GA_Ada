@@ -106,15 +106,16 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (BA, BB : Basis_Blade;
-                               Met : Metric.Metric) return Basis_Blade is
-      Result : Basis_Blade := Geometric_Product (BA, BB);
-      BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
-      Row    : Integer range 1 .. 6 := 1;
-      Col    : Integer range 1 .. 5 := 1;
+                               Met : Metric.Metric_Record) return Basis_Blade is
+      Result     : Basis_Blade := Geometric_Product (BA, BB);
+      BM         : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
+      Row        : Integer range 1 .. 6 := 1;
+      Col        : Integer range 1 .. 5 := 1;
+      Met_Matrix : GA_Maths.Float_Matrix := Metric.Matrix (Met);
    begin
       while BM /= 0 loop
          if (BM and 1) /= 0 then
-            Result.Weight := Result.Weight * Met (Row, Col);
+            Result.Weight := Result.Weight * Met_Matrix (Row, Col);
          end if;
          if Col = 5 then
             Row := Row + 1;
@@ -259,28 +260,6 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Dimension : Integer) return Metric.Metric is
-      theMetric : Metric.Metric (1 .. Dimension, 1 .. Dimension) :=
-      (others => (others => 0.0));
-   begin
-      return theMetric;
-   end New_Metric;
-
-   --  ------------------------------------------------------------------------
-
-   function New_Metric (Dimension : Integer; Data : Metric.Metric_Data)
-                        return Metric.Metric is
-      theMetric : Metric.Metric (1 .. Dimension, 1 .. Dimension) :=
-      (others => (others => 0.0));
-   begin
-      for Index in 1 .. Dimension loop
-         theMetric (Index, Index) := Data (Index);
-      end loop;
-      return theMetric;
-   end New_Metric;
-
-   --  ------------------------------------------------------------------------
-
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade is
       Blade : Basis_Blade;
    begin
@@ -330,6 +309,7 @@ package body Blade is
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
    begin
       BB.Weight := Weight;
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Blade.Update_Blade 1");

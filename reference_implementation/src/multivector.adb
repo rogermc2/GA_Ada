@@ -552,7 +552,7 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
    function General_Inverse (MV : Multivector;
-                             Met : Metric.Metric := Metric.Null_Metric) return Multivector is
+                             Met : Metric.Metric_Record) return Multivector is
       use Interfaces;
       use Blade_List_Package;
       use Blade;
@@ -582,7 +582,7 @@ package body Multivector is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          for index in BBs'Range loop
-            if Met = Metric.Null_Metric then
+            if Met.Dim = 0 then
                Add_To_Matrix (Mat, BBs (index),
                               Geometric_Product (aBlade, BBs (index)));
             else
