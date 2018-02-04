@@ -25,6 +25,8 @@ package Multivector is
 
    function  "+" (MV : Multivector; S : Float) return Multivector;
    function  "+" (S : Float; MV : Multivector) return Multivector;
+   function  "-" (MV : Multivector; S : Float) return Multivector;
+   function  "-" (S : Float; MV : Multivector) return Multivector;
    function "+" (MV1, MV2 : Multivector) return Multivector;
    function "-" (MV : Multivector) return Multivector;
    function "-" (MV1, MV2 : Multivector) return Multivector;
