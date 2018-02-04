@@ -630,7 +630,7 @@ package body Multivector is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.General_Inverse");
+         Put_Line ("An exception occurred in Multivector.General_Inverse Metric");
          raise;
    end General_Inverse;
 

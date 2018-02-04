@@ -59,9 +59,9 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.1, 0.0, -0.25);
+      Fan (1) := (0.5, 0.0, -0.25);
       for Count in 2 .. Num_Steps + 1 loop
-         Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
+         Fan (Count) := (Single (0.5 * Cos (Z)), Single (0.5 * Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
       end loop;
 
@@ -341,9 +341,9 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Fan (1) := (0.1, 0.0, 0.0);
+      Fan (1) := (0.5, 0.0, 0.0);
       for Count in 2 .. Num_Steps loop
-         Fan (Count) := (Single (0.1 * Cos (Z)), Single (0.1 * Sin (Z)), -0.25);
+         Fan (Count) := (Single (0.5 * Cos (Z)), Single (0.5 * Sin (Z)), -0.25);
          Z := Z + Rotor_Step;
       end loop;
 
@@ -596,12 +596,12 @@ package body GA_Draw is
          Model_View_Matrix := Maths.Translation_Matrix (Single (Scale) * GL_Dir) * Model_View_Matrix;
 
          Utilities.Print_Matrix ("GA_Draw.Draw_Vector, Model_View_Matrix 2", Model_View_Matrix);
-         Enable (Cull_Face);
-         Set_Front_Face (GL.Types.Clockwise);
-         Set_Cull_Face (Front);
+--           Enable (Cull_Face);
+--           Set_Front_Face (GL.Types.Clockwise);
+--           Set_Cull_Face (Front);
 
-         Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
---           Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
+--           Draw_Cone (Render_Program, Model_View_Matrix, Single (Scale));
+         Draw_Base (Render_Program, Model_View_Matrix, Single (Scale));
          Set_Cull_Face (Saved_Cull_Face);
       end if;
 
