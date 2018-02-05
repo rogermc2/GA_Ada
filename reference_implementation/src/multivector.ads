@@ -50,6 +50,7 @@ package Multivector is
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
+   function General_Inverse (MV : Multivector) return Multivector;
    function General_Inverse (MV : Multivector;
                              Met : Metric.Metric_Record) return Multivector;
    --  Get_Basis_Vector returns multivector of the required base.
