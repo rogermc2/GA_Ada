@@ -1,14 +1,68 @@
 
-with Interfaces;
+with Ada.Text_IO; use Ada.Text_IO;
 
 package body Blade is
 
+   type Metric_Array is array (Integer range <>) of float;
+
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
-   function Inner_Product_Filter (Grade_1, Grade_2 : Unsigned_Integer;
+   function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade;
 
    --  ------------------------------------------------------------------------
+
+   function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
+                          return Ada.Strings.Unbounded.Unbounded_String is
+      use Ada.Strings.Unbounded;
+      use Names_Package;
+      BM        : Unsigned_Integer := aBlade.Bitmap;
+      Index     : Natural := 1;
+      Scale     : GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
+      Name      : Unbounded_String;
+      Val       : Unbounded_String;
+      theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
+   begin
+      if BM = 0 then
+         theString := To_Unbounded_String (GA_Maths.float_3'Image (Scale));
+      else
+         while BM /= 0 loop
+            --           Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
+            if (BM and 1) /= 0 then
+               if Length (theString) > 0 then
+                  theString := theString & "^";
+               end if;
+
+               if Is_Empty (Vector (BV_Names)) or
+                 (Index > Natural (Length (Vector (BV_Names))) or
+                      (Index - 1) < 1) then
+                  theString := theString & "e";
+                  Val := To_Unbounded_String (Natural'Image (Index));
+                  Val := Trim (Val, Ada.Strings.Left);
+                  theString := theString & Val;
+               else
+                  Name := Element (BV_Names, Index - 1);
+                  theString := theString & Name;
+               end if;
+               --              Put_Line ("Blade theString:  " & To_String (theString));
+            end if;
+            BM := BM / 2;  --  BM >>= 1;
+            Index := Index + 1;
+         end loop;
+
+         if Length (theString) > 0 then
+            theString := GA_Maths.float_3'Image (Scale) & " * " & theString;
+         end if;
+      end if;
+      return theString;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Blade_String.");
+         raise;
+   end Blade_String;
+
+   --  -------------------------------------------------------------------------
 
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer is
    begin
@@ -19,14 +73,12 @@ package body Blade is
 
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
       use GA_Maths;
-      use Interfaces;
-      A     : Unsigned_32 := Shift_Right (Unsigned_32 (Map_A), 1);
-      B     : Unsigned_32 := Unsigned_32 (Map_B);
+      A     : Unsigned_Integer := Map_A / 2;
       Swaps : Natural := 0;
    begin
       while A /= 0 loop
-         Swaps := Swaps + Bit_Count (Unsigned_Integer (A and B));
-         A := Shift_Right (Unsigned_32 (A), 1);
+         Swaps := Swaps + Bit_Count (A and Map_B);
+         A := A / 2;
       end loop;
 
       if Swaps mod 2 = 0 then  -- an even number of swaps
@@ -53,33 +105,65 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
-      New_Blade : Basis_Blade;
-      Sign      : Float;
+   function Geometric_Product (BA, BB : Basis_Blade;
+                               Met : Metric.Metric_Record) return Basis_Blade is
+      Result     : Basis_Blade := Geometric_Product (BA, BB);
+      BM         : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
+      Row        : Integer range 1 .. 6 := 1;
+      Col        : Integer range 1 .. 5 := 1;
+      Met_Matrix : GA_Maths.Float_Matrix := Metric.Matrix (Met);
    begin
-      if Outer and ((BA.Bitmap and BB.Bitmap) /= 0) then
-         New_Blade.Weight := 0.0;
+      while BM /= 0 loop
+         if (BM and 1) /= 0 then
+            Result.Weight := Result.Weight * Met_Matrix (Row, Col);
+         end if;
+         if Col = 5 then
+            Row := Row + 1;
+            Col := 1;
+         else
+            Col := Col + 1;
+         end if;
+         BM := BM / 2;
+      end loop;
+      return Result;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Geometric_Product with Metric.");
+         raise;
+   end Geometric_Product;
+
+   --  ------------------------------------------------------------------------
+
+   function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
+      OP_Blade : Basis_Blade;
+      Sign     : Float;
+   begin
+      if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
+         null;  --  return zero blade
       else
-         New_Blade.Bitmap := BA.Bitmap or BB.Bitmap;
+         --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
+         --  else xor > 0 so Outer product part of MV
+         OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
-         New_Blade.Weight := Sign * BA.Weight * BB.Weight;
+         OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
       end if;
 
-      return New_Blade;
+      return OP_Blade;
    end GP_OP;
 
    --  ------------------------------------------------------------------------
 
-   function Grade (BB : Basis_Blade) return Unsigned_Integer is
+   function Grade (BB : Basis_Blade) return Integer is
    begin
-      return Unsigned_Integer (GA_Maths.Bit_Count (BB.Bitmap));
+      return  GA_Maths.Bit_Count (BB.Bitmap);
    end Grade;
 
    --  ------------------------------------------------------------------------
 
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
       W : constant float
-        := Float (Minus_1_Power (Grade (B.Bitmap)) * Integer (B.Weight));
+        := Float (Minus_1_Power (Integer (Grade (B))) * Integer (B.Weight));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Grade_Inversion;
@@ -95,35 +179,45 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Inner_Product_Filter (Grade_1, Grade_2 : Unsigned_Integer;
+   function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade is
       IP_Blade : Basis_Blade;
    begin
+      case Cont is
+         when Left_Contraction =>
+            if (Grade_1 > Grade_2) or (Grade (BB) /= (Grade_2 - Grade_1)) then
+               null;
+            else  --  Grade_1 <= Grade_2 and Grade (BB) = Grade_2 - Grade_1
+               IP_Blade := BB;
+--                 Print_Blade ("Inner_Product_Filter LC result", IP_Blade);
+            end if;
+         when Right_Contraction =>
+            if (Grade_1 < Grade_2) or (Grade (BB) /= Grade_1 - Grade_2) then
+               null;
+            else
+                IP_Blade := BB;
+            end if;
+         when Hestenes_Inner_Product =>
+            if (Grade_1 = 0) or (Grade_2 = 0) then
+               null;
+            elsif Abs (Grade_1 - Grade_2) = Grade (BB) then
+               IP_Blade := BB;
+            end if;
+         when Modified_Hestenes_Inner_Product =>
+            if Abs (Grade_1 - Grade_2) = Grade (BB) then
+               IP_Blade := BB;
+            end if;
+      end case;
       return IP_Blade;
    end Inner_Product_Filter;
 
    --  ------------------------------------------------------------------------
 
-   function Minus_1_Power (Number : Integer) return Integer is
+   function Minus_1_Power (Power : Integer) return Integer is
    begin
-      if (Unsigned_Integer (Number) and 1) = 0 then
-         return 1;
-      else
-         return -1;
-      end if;
+      return (-1) ** Power;
    end Minus_1_Power;
-
-   --  ------------------------------------------------------------------------
-
-   function New_Basis_Blade (Index : Base; Weight : Float := 1.0) return Basis_Blade is
-      use Interfaces;
-      Blade : Basis_Blade;
-   begin
-      Blade.Bitmap := Unsigned_Integer (Shift_Left (Unsigned_32 (1), Index'Enum_Rep));
-      Blade.Weight := Weight;
-      return Blade;
-   end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
 
@@ -134,6 +228,34 @@ package body Blade is
       Blade.Bitmap := Bitmap;
       Blade.Weight := Weight;
       return Blade;
+   end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade is
+   begin
+      return (Index'Enum_Rep, Weight);
+   end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
+   begin
+      return (Index'Enum_Rep, Weight);
+   end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade is
+   begin
+      return (Index'Enum_Rep, Weight);
+   end New_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade is
+   begin
+      return (Index'Enum_Rep, Weight);
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
@@ -163,13 +285,23 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
-      W : constant float
-        := Float (Minus_1_Power
-                  ((Grade (B.Bitmap) * (Grade (B.Bitmap) - 1) / 2)
-                     * Integer (B.Weight)));
+   procedure Print_Blade (Name : String; B : Basis_Blade) is
    begin
-      return New_Basis_Blade (B.Bitmap, W);
+      New_Line;
+      Put_Line (Name & " Bitmap and Weight");
+         Put_Line (GA_Maths.Unsigned_Integer'Image (Bitmap (B)) &
+                   "  " & float'Image (Weight (B)));
+   end Print_Blade;
+
+   --  ------------------------------------------------------------------------
+
+   function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
+      G   : constant Integer := Grade (B); -- Bit_Count (B.Bitmap)
+      W   : constant float
+        := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
+      Rev : constant Basis_Blade := (B.Bitmap, W);
+   begin
+      return Rev;
    end Reverse_Blade;
 
    --  ------------------------------------------------------------------------
@@ -177,6 +309,11 @@ package body Blade is
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
    begin
       BB.Weight := Weight;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 1");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------
@@ -184,6 +321,10 @@ package body Blade is
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer) is
    begin
       BB.Bitmap := Bitmap;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 2");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------
@@ -193,6 +334,10 @@ package body Blade is
    begin
       BB.Bitmap := Bitmap;
       BB.Weight := Weight;
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.Update_Blade 3");
+         raise;
    end Update_Blade;
 
    --  ------------------------------------------------------------------------

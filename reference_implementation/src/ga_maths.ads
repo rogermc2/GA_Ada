@@ -12,6 +12,10 @@ package GA_Maths is
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
 
+   type float_3 is digits 3;
+   type Bit_Map is new integer range 0 .. 2 ** 30;
+   type Bit_Map_Array is array (integer range <>) of Bit_Map;
+
    type Coords_Continuous_Array is array (integer range <>) of float;
    subtype Scalar_Coords is Coords_Continuous_Array (1 .. 1);
    subtype Bivector_Coords is Coords_Continuous_Array (1 .. 1);
@@ -40,6 +44,8 @@ package GA_Maths is
    type Array_UI3 is array (1 .. 3) of Unsigned_Integer;
    type Array_UI4 is array (1 .. 4) of Unsigned_Integer;
    type Array_UI8 is array (1 .. 8) of Unsigned_Integer;
+   type Array_F1 is array (1 .. 1) of float;
+   type Array_F2 is array (1 .. 2) of float;
    type Array_F4 is array (1 .. 4) of float;
    type Array_F8 is array (1 .. 8) of float;
 
@@ -67,11 +73,13 @@ package GA_Maths is
    GU_8     : constant Grade_Usage := 16;
    GU_16    : constant Grade_Usage := 32;
 
-   function Bit_Count (Bits : Unsigned_Integer) return Natural;
-   function Grade (Bits : Unsigned_Integer) return Natural;
+   function Bit_Count (Bitmap : Unsigned_Integer) return Natural;
+   function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural;
+   function Is_Diagonal (aMatrix : Float_Matrix) return Boolean;
    function Maximum (I1, I2 : Integer) return Integer;
    function Maximum (I1, I2 : Float) return Float;
    function Minimum (I1, I2 : Integer) return Integer;
    function Minimum (I1, I2 : Float) return Float;
+   function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_Integer) return Natural;
 
 end GA_Maths;

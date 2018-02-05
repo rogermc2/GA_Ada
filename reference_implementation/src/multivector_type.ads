@@ -9,7 +9,13 @@ package Multivector_Type is
    type MV_Type_Record is private;
 
    function Init (MV : Multivector.Multivector) return MV_Type_Record;
+
+   function MV_Kind (MV : MV_Type_Record) return MV_Type;
+   function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer;
+   function Grade_Use (MV : MV_Type_Record) return GA_Maths.Grade_Usage;
+   function Parity (MV : MV_Type_Record) return Parity_Type;
    procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record);
+   function Zero (MV : MV_Type_Record) return Boolean;
 
 private
 

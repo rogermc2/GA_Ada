@@ -5,18 +5,18 @@ with GL.Objects.Programs;
 with GL.Types;
 with GL.Types.Colors;
 
-with E3GA;
+with Multivector;
 
 package Geosphere is
-   use E3GA;
    --  some very ancient code to compute a triangulated sphere
+   use Multivector;
 
    type Geosphere is private;
    type Geosphere_Face is private;
    type Indices is array (1 .. 3) of integer;
 
    package Vertex_Vectors is new Ada.Containers.Vectors
-     (Element_Type => E3GA.Vector, Index_Type => Positive);
+     (Element_Type => Vector, Index_Type => Positive);
    type V_Vector is new Vertex_Vectors.Vector with null record;
 
     procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
@@ -34,16 +34,16 @@ private
     type Contour_Visited_Array is array  (Int3_Range)  of integer;
     type V_Array is array  (Int3_Range) of integer;
 
-    type Geosphere_Face is record
-        Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
-        Child             : Child_Array := (0, 0, 0, 0);
-        Plane             : E3GA.Bivector;
-        D                 : float;
-        Depth             : integer;
-        Neighbour         : Neighbour_Array;
-        Contour_Intersect : Contour_Intersect_Array;
-        Contour_Visited   : Contour_Visited_Array;
-    end record;
+   type Geosphere_Face is record
+      Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
+      Child             : Child_Array := (0, 0, 0, 0);
+      Plane             : Multivector.Bivector;
+      D                 : float;
+      Depth             : integer;
+      Neighbour         : Neighbour_Array;
+      Contour_Intersect : Contour_Intersect_Array;
+      Contour_Visited   : Contour_Visited_Array;
+   end record;
 
    package Face_Vectors is new Ada.Containers.Vectors
      (Element_Type => Geosphere_Face, Index_Type => Positive);

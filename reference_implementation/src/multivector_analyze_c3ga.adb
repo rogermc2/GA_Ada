@@ -1,23 +1,24 @@
 
+with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E2GA;
 with E3GA;
 with GA_Maths;
-with Multivector_Type_Base;
+with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : C3GA.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                        Probe : C3GA.Normalized_Point;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon) is
       use Multivector_Analyze;
-      use Multivector_Type_Base;
+      use Multivector_Type;
       use GA_Maths;
 
-      MV_X      : C3GA.Multivector := MV;
-      MV_Info   : E2GA.MV_Type;
+      MV_X      : Multivector.Multivector := MV;
+--        MV_Info   : E2GA.MV_Type;
+      MV_Info   : Multivector_Type.MV_Type_Record;
       Analysis  : MV_Analysis;
 
       procedure Classify is
@@ -37,27 +38,30 @@ package body Multivector_Analyze_C3GA is
 --           MV_X := C3GA.Dual (MV_X);
       end if;
 
-      MV_Info := C3GA.Init (MV_X, Epsilon);
+--        MV_Info := C3GA.Init (MV_X, Epsilon);
+      MV_Info := Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
-      Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
+      --        Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
+
       --  Check for zero blade
-      if Analysis.M_MV_Type.M_Zero then
+--        if Analysis.M_MV_Type.M_Zero then
+      if Zero (Analysis.M_MV_Type) then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
 
-      elsif Analysis.M_MV_Type.M_Type = Versor_MV then
+      elsif MV_Kind (Analysis.M_MV_Type) = Versor_MV then
          Put_Line ("Multivector_Analyze_C3GA.Analyze Versor_Object 2.");
          Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
          Analysis.M_Vectors (1) := E3GA.e1;
 
-      elsif Analysis.M_MV_Type.M_Grade_Use = 1 then  --  Grade 0
+      elsif Grade_Use (Analysis.M_MV_Type) = 1 then  --  Grade 0
          Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 1.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 1;
 --           Analysis.M_Scalors (1) := MV_X.Coordinates (1);
 
-      elsif Analysis.M_MV_Type.M_Grade_Use = 6 then  --  Grade 5
+      elsif Grade_Use (Analysis.M_MV_Type) = 6 then  --  Grade 5
          Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 6.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 6;
@@ -67,6 +71,11 @@ package body Multivector_Analyze_C3GA is
          --  TO BE COMPLETED
          Put_Line ("Multivector_Analyze_C3GA.Analyze Multivector Type.");
       end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze.");
+         raise;
    end Analyze;
 
 end Multivector_Analyze_C3GA;

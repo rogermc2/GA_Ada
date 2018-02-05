@@ -17,7 +17,6 @@ package body Multivector_Type is
       Grade_Inv  : Multivector.Multivector;
    begin
       Rec.Grade_Use := Grade_Use (MV);
---        Put_Line ("Init Grade_Use" & Unsigned_Integer'Image (Grade_Use (MV)));
       Rec.Top_Grade := Top_Grade_Index (MV);
       while GU_Bitmap /= 0 loop
          if (GU_Bitmap and 1) /= 0 then
@@ -55,7 +54,42 @@ package body Multivector_Type is
       end if;
 
       return Rec;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Type.Init.");
+         raise;
+
    end Init;
+
+   --  -------------------------------------------------------------------------
+
+   function MV_Kind (MV : MV_Type_Record) return MV_Type is
+   begin
+      return MV.MV_Kind;
+   end MV_Kind;
+
+   --  -------------------------------------------------------------------------
+
+   function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer is
+   begin
+      return MV.Top_Grade;
+   end Top_Grade;
+
+   --  -------------------------------------------------------------------------
+
+   function Grade_Use (MV : MV_Type_Record) return GA_Maths.Grade_Usage is
+   begin
+      return MV.Grade_Use;
+
+   end Grade_Use;
+
+   --  -------------------------------------------------------------------------
+
+   function Parity (MV : MV_Type_Record) return Parity_Type is
+   begin
+      return MV.Parity;
+   end ;
 
    --  -------------------------------------------------------------------------
 
@@ -69,8 +103,19 @@ package body Multivector_Type is
       Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
       Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
 
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
+         raise;
+
    end Print_Multivector_Info;
 
    --  ------------------------------------------------------------------------
 
+   function Zero (MV : MV_Type_Record) return Boolean is
+   begin
+      return MV.Zero;
+   end ;
+
+   --  -------------------------------------------------------------------------
 end Multivector_Type;
