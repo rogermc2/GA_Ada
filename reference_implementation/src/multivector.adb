@@ -27,7 +27,7 @@ package body Multivector is
    procedure Compress (MV : in out Multivector);
    procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine_Series (MV : Multivector; Order : Integer) return Multivector;
-   function Invert (Mat : GA_Maths.Float_Matrix) return Multivector;
+   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix) return Multivector;
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
    function Space_Dimension (MV : Multivector) return Integer;
@@ -131,7 +131,6 @@ package body Multivector is
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector.-");
          raise;
-
    end "-";
 
    --  -------------------------------------------------------------------------
@@ -601,7 +600,7 @@ package body Multivector is
          Next (Curs);
       end loop;
 
-      return Invert (Mat);
+      return Matrix_To_MV_Invert (Mat);
 
    exception
       when anError :  others =>
@@ -643,7 +642,7 @@ package body Multivector is
          Next (Curs);
       end loop;
 
-      return Invert (Mat);
+      return Matrix_To_MV_Invert (Mat);
 
    exception
       when anError :  others =>
@@ -837,7 +836,7 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Invert (Mat : GA_Maths.Float_Matrix) return Multivector is
+   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix) return Multivector is
       use GA_Maths.Float_Array_Package;
       Dim        : Integer := Mat'Last - Mat'First + 1;
       Inv_Mat    : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
@@ -859,9 +858,9 @@ package body Multivector is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.Invert");
+         Put_Line ("An exception occurred in Multivector.Matrix_To_MV_Invert");
          raise;
-   end Invert;
+   end Matrix_To_MV_Invert;
 
    --  -------------------------------------------------------------------------
 
