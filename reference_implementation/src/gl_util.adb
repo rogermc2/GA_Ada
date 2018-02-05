@@ -54,28 +54,21 @@ package body GL_Util is
       Image_Row : Int := 0;
    begin
       --  compute the images of all OpenGL basis vectors
-      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply IR", IR);
       E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
-      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply e1 IR", Geometric_Product (e1, IR));
-      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply R e1 IR", E_Rot);
       Image (1) := To_GL (E_Rot);
       E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
-      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply R e2 IR", E_Rot);
       Image (2) := To_GL (E_Rot);
       E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
-      GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply R e3 IR", E_Rot);
       Image (3) := To_GL (E_Rot);
       Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
-      Utilities.Print_GL_Array3 ("GL_Util.Rotor_GL_Multiply Image", Image);
       --  Transfer the coordinates to the OpenGL matrix
       for row in GL.Index_Homogeneous loop
          Image_Row := Image_Row + 1;
          VC := Image (Image_Row);
-         Matrix (row, X) := Dot_Product (VC, To_GL (e1));
-         Matrix (row, Y) := Dot_Product (VC, To_GL (e2));
-         Matrix (row, Z) := Dot_Product (VC, To_GL (e3));
+         Matrix (row, X) := VC (X);
+         Matrix (row, Y) := VC (Y);
+         Matrix (row, Z) := VC (Z);
       end loop;
-      Utilities.Print_Matrix ("GL_Util.Rotor_GL_Multiply Matrix", Matrix);
       GL_Matrix := Matrix * GL_Matrix;
 
    exception
@@ -102,7 +95,6 @@ package body GL_Util is
       Mcol      : integer := 0;
    begin
       E3GA_Utilities.Rotor_To_Matrix (R, M3);
-      GA_Utilities.Print_Matrix ("Rotor_To_Matrix, M3", M3);
       for row in Index_Homogeneous range X .. Z loop
          Mrow := Mrow + 1;
          for col in Index_Homogeneous range X .. Z loop
@@ -171,13 +163,13 @@ package body GL_Util is
          BM := Unsigned_32 (Bitmap (Element (Curs)));
          Value := Single (Blade.Weight (Element (Curs)));
          if (BM and E3_Base'Enum_Rep (E3_e1)) /= 0 then
-            Val_X := Value;
+            Val_X := Val_X + Value;
          end if;
          if (BM and E3_Base'Enum_Rep (E3_e2)) /= 0 then
-            Val_Y:= Value;
+            Val_Y:= Val_Y + Value;
          end if;
          if (BM and E3_Base'Enum_Rep (E3_e3)) /= 0 then
-            Val_Z := Value;
+            Val_Z := Val_Z + Value;
          end if;
          Next (Curs);
       end loop;

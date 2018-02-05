@@ -102,14 +102,6 @@ package body E3GA_Utilities is
    function Rotor_Vector_To_Vector (From, To : Multivector.Vector) return Multivector.Rotor is
       use GA_Maths.Float_Functions;
       use Multivector;
-      ab     : Multivector.Multivector := Geometric_Product (From, To);
-      ba     : Multivector.Multivector := Geometric_Product (To, From);
-      ab1    : Multivector.Multivector := 1.0 + ab;
-      ba1    : Multivector.Multivector := 1.0 + ba;
-      aa     : Multivector.Multivector := Geometric_Product (From, From);
-      baab   : Multivector.Multivector := Geometric_Product (To, Geometric_Product (aa, To));
-      OP_Sum : Multivector.Multivector := Outer_Product (From, To) + Outer_Product (To, From);
-      ba1ab1 : Multivector.Multivector;
       S      : float;
       w0     : Vector;
       w1     : Vector;
@@ -118,12 +110,11 @@ package body E3GA_Utilities is
       R      : Rotor;
       Result : Rotor;
    begin
-      Simplify (OP_Sum);
       if  Scalar_Product (From, To) < -0.9 then
          w0 := Left_Contraction (From, Outer_Product (From, To));
          N2 := Norm_E2 (w0);
          if N2 = 0.0 then
-            w1 :=  Left_Contraction (From, Outer_Product (From, Get_Basis_Vector (Blade.E3_e1)));
+            w1 := Left_Contraction (From, Outer_Product (From, Get_Basis_Vector (Blade.E3_e1)));
             w2 := Left_Contraction (From, Outer_Product (From, Get_Basis_Vector (Blade.E3_e2)));
             if Norm_E2 (w1) > Norm_E2 (w2) then
                Result := Outer_Product (From, Unit_e (w1));
@@ -138,7 +129,6 @@ package body E3GA_Utilities is
          end if;
       else
          --  Geometric Algebra fot Computer Science, Equation (10.13)
-         Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector, else > -0.9");
          S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To, From))));
          Result :=  (1.0 + Geometric_Product (To, From)) / S;
       end if;
