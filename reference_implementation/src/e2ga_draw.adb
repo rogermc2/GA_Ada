@@ -4,8 +4,9 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Objects.Vertex_Arrays;
 with GL.Uniforms;
 
+with Blade;
+with E2GA;
 with E3GA;
-with E3GA_Utilities;
 with GA_Draw;
 with Multivector_Analyze;
 
@@ -22,82 +23,68 @@ package body E2GA_Draw is
 --  If this gets annoying, allow DrawState to be passed along
 --  as argument (and also integrate 'Palet')
 
-   --  Draw Vector
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
-                   Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
-                   Scale : float := 1.0) is
-      Vec_3D  : E3GA.Vector;
-      Tail    : E3GA.Vector;
-   begin
-      --  MV_Analysis (MV) declares A as a variable of class mvAnalysis
-      --  constructed from v1
-      E3GA.Set_Coords (Vec_3D, E2GA.Get_Coord_1 (aVector),
-                       E2GA.Get_Coord_2 (aVector), 0.0);
-      E3GA.Set_Coords (Tail, 0.0, 0.0, 0.0);
-      GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
-                           Tail, Vec_3D, Colour, Scale);
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 1.");
-         raise;
-   end Draw;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Draw (Render_Program : GL.Objects.Programs.Program;
-                   Model_View_Matrix,
-                   Projection_Matrix : GL.Types.Singles.Matrix4;
-                   MV : in out E2GA.Multivector;
+                   Model_View_Matrix : GL.Types.Singles.Matrix4;
+                   MV     : in out Multivector.Multivector;
                    Method : GA_Draw.Bivector_Method_Type
                             := GA_Draw.Draw_Bivector_Circle;
                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
       use GA_Draw;
       use GA_Maths;
+      use Multivector;
       use Multivector_Analyze;
       A         : MV_Analysis;
-      V1        : E2GA.Vector;
-      V2        : E2GA.Vector;
-      OP        : E2GA.Bivector;
-      Normal    : E3GA.Vector;
-      Direction : E3GA.Vector;
+      V1        : Vector;
+      V2        : Vector;
+      OP        : Multivector.Multivector;
+      Normal    : Vector;
+      Direction : Vector;
       Scale     : float := 1.0;
    begin
       Analyze (A, MV);
-      E3GA_Utilities.Print_Analysis ("E2GA Draw Analysis", A);
-      Put_Line ("E2GA_Draw Draw 2.");
+      Print_Analysis ("E2GA Draw Analysis", A);
       if isBlade (A) then
          Put_Line ("E2GA_Draw isBlade.");
          case Blade_Subclass (A) is
             when Vector_Subclass =>
                Put_Line (" E2GA_Draw Vector_Subclass.");
-               E3GA.Set_Coords (Direction, 0.0, 0.0, A.M_Scalors (1));
-               Draw_Vector (Render_Program, Model_View_Matrix, Projection_Matrix,
+--                 E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
+--                 Direction := New_Vector (0.0, 0.0, Float (A.M_Scalors (1)));
+               Add_Blade (Direction, Blade.E3_e3, Float (A.M_Scalors (1)));
+               Draw_Vector (Render_Program, Model_View_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
                Put_Line (" E2GA_Draw Bivector_Subclass.");
                if Get_Draw_Mode = OD_Magnitude then
-                  Scale := Float_Functions.Sqrt (Abs (A.M_Scalors (1))) / Pi;
+                  Scale := Float_Functions.Sqrt (Float (Abs (A.M_Scalors (1)))) / Pi;
                end if;
 
-               V1 := E3GA.To_2D (A.M_Vectors (1));
-               V2 := E3GA.To_2D (A.M_Vectors (2));
-               OP := E2GA.Outer_Product (V1, V2);
+--                 V1 := E3GA.To_2D (A.M_Vectors (1));
+--                 V2 := E3GA.To_2D (A.M_Vectors (2));
+               V1 := A.M_Vectors (1);
+               V2 := A.M_Vectors (2);
+               OP := Multivector.Outer_Product (V1, V2);
                declare
-                  OP_MV     : E2GA.Multivector := E2GA.Set_Multivector (OP);
-                  Normal_MV : E2GA.Multivector := E2GA.Set_Multivector (OP);
+                  use Blade_List_Package;
+                  Blades    : constant Blade_List := Get_Blade_List (OP);
+                  aBlade    : Blade.Basis_Blade;
+                  Curs      : Cursor := Blades.Last;
+                  OP_MV     : Multivector.Multivector := OP;
+                  Normal_MV : Multivector.Multivector := OP;
                begin
-                  Normal_MV := E2GA.Dual (OP_MV);
-                  E3GA.Set_Coords (Normal, 0.0, 0.0, Normal_MV.Coordinates (1));
+                  Normal_MV := Multivector.Dual (OP_MV);
+                  Add_Blade (Normal, Blade.E3_e3, Blade.Weight (Element (curs)));
+--                    E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
+--                                     Normal_MV.Coordinates (Length (Blades)));
                   GA_Draw.Draw_Bivector (Render_Program,
-                                         Model_View_Matrix, Projection_Matrix,
-                                         Normal, A.M_Vectors (1), A.M_Vectors (2),
+                                         Model_View_Matrix, Normal,
+                                         A.M_Vectors (1), A.M_Vectors (2),
                                          Colour, Scale, Method);
                end;
             when Even_Versor_Subclass => null;
             when Unspecified_Subclass => null;
          end case;
+
       elsif isVersor (A) and then A.M_Scalors (1) > 0.0001 then
          Put_Line ("E2GA_Draw isVersor.");
       end if;
@@ -105,49 +92,59 @@ package body E2GA_Draw is
 
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 2.");
+         Put_Line ("An exception occurred in E2GA_Draw.Draw.");
          raise;
    end Draw;
 
    --  -------------------------------------------------------------------------
 
-   --  Draw Bivector
-   procedure Draw (Render_Program  : GL.Objects.Programs.Program;
-                   Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
+   procedure Draw_Bivector (Render_Program  : GL.Objects.Programs.Program;
+                   Translation_Matrix : GL.Types.Singles.Matrix4;
+                   BV : Multivector.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
                                  := GA_Draw.Draw_Bivector_Circle) is
       use GA_Maths.Float_Functions;
       use GL.Types.Colors;
-      Radius   : Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
-      Scale    : Float := 20.0;
-      Ortho_1  : E3GA.Vector;
-      Ortho_2  : E3GA.Vector;
-      Normal   : E3GA.Vector := E3GA.e3;  --  Default: (0.0, 0.0, 0.0)
+      use Multivector;
+      Radius   : constant Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
+      Scale    : constant Float := 20.0;
+      Ortho_1  : constant Vector := New_Vector (Radius, 0.0, 0.0);
+      Ortho_2  : constant Vector := New_Vector (0.0, Radius, 0.0);
+      Normal   : Vector := New_Vector (0.0, 0.0);
    begin
-      E3GA.Set_Coords (Ortho_1, Radius, 0.0, 0.0);
-      E3GA.Set_Coords (Ortho_2, 0.0, Radius, 0.0);
+      Multivector.Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
-                             Projection_Matrix, Normal, Ortho_1, Ortho_2,
+                             Normal, Ortho_1, Ortho_2,
                              Colour, Scale, Method_Type);
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in E2GA_Draw.Draw 3.");
+         Put_Line ("An exception occurred in E2GA_Draw.Draw_Bivector.");
          raise;
-   end Draw;
+   end Draw_Bivector;
 
    --  -------------------------------------------------------------------------
- --  Draw Bivector
---     procedure Draw (Render_Program  : GL.Objects.Programs.Program;
---                     Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
---                     BV : E2GA.Bivector;  Method_Type : GA_Draw.Bivector_Method_Type
---                                                        := GA_Draw.Draw_Bivector_Circle;
---                     Colour  : GL.Types.Colors.Color := (0.0, 0.0, 1.0, 1.0)) is
---        MV : E2GA.Multivector := E2GA.Set_Multivector (BV);
---     begin
---        Draw (Render_Program , Model_View_Matrix, Projection_Matrix,
---               MV, Method_Type, Colour);
---     end Draw;
+
+   procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
+                   Model_View_Matrix : GL.Types.Singles.Matrix4;
+                   Direction : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                   Scale : float := 1.0) is
+      use Multivector;
+      Vec_3D  : Vector;
+      Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
+   begin
+      if E2GA.e1 (Direction) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e1, E2GA.e1 (Direction));
+      end if;
+      if E2GA.e2 (Direction) /= 0.0 then
+         Add_Blade (Vec_3D, Blade.E3_e2, E2GA.e2 (Direction));
+      end if;
+      GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
+                           Tail, Vec_3D, Colour, Scale);
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E2GA_Draw.Draw_Vector.");
+         raise;
+   end Draw_Vector;
 
    --  -------------------------------------------------------------------------
 

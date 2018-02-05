@@ -2,9 +2,9 @@
 with GL.Types.Colors;
 with GL.Objects.Programs;
 
-with E2GA;
 with GA_Draw;
 with GA_Maths;
+with Multivector;
 
 package E2GA_Draw is
     --  procedure Draw (X : E2GA.Multivector, Method : Integer := 0;
@@ -18,20 +18,21 @@ package E2GA_Draw is
     --  passed as an argument (and also integrate 'Palet')
     --  Each procedure Draw implements a separate case of the draw in e2ga_Draw.cpp
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
-                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                    MV : in out E2GA.Multivector;
+                    Model_View_Matrix : GL.Types.Singles.Matrix4;
+                    MV : in out Multivector.Multivector;
                     Method : GA_Draw.Bivector_Method_Type
                                := GA_Draw.Draw_Bivector_Circle;
                     Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0));
-   --  Case Vector
-   procedure Draw (Render_Program : GL.Objects.Programs.Program;
-                    Model_View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                    aVector : E2GA.Vector; Colour : GL.Types.Colors.Color;
-                    Scale : float := 1.0);
-   --  Case Bivector
-   procedure Draw (Render_Program : GL.Objects.Programs.Program;
-                   Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
-                   BV : E2GA.Bivector; Colour : GL.Types.Colors.Color;
+
+   procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
+                   Translation_Matrix : GL.Types.Singles.Matrix4;
+                   BV : Multivector.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
-                               := GA_Draw.Draw_Bivector_Circle);
+                            := GA_Draw.Draw_Bivector_Circle);
+
+   procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
+                    Model_View_Matrix : GL.Types.Singles.Matrix4;
+                    Direction : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                    Scale : float := 1.0);
+
 end E2GA_Draw;
