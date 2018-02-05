@@ -38,7 +38,6 @@ with E2GA;
 with E2GA_Draw;
 with E3GA;
 with GA_Maths;
-with GA_Utilities;
 with Multivector;
 
 with Silo;
@@ -125,35 +124,28 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  Set scale and position of first diagram
       Translation_Matrix := Maths.Translation_Matrix
         ((Entry_Width * Scale_S / 2.0,
-          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
-     Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+         (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
+      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
       GA_Draw.Set_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
---        V1 := Multivector.New_Vector (1.0, 0.0);
 
       while A < Two_Pi - 0.1 loop
-         --  E2GA.e2 vector (0, 0), (0, 1)
---           V2 := Cos (A) * e1_bv + Sin (A) * e2_bv;
-         GA_Utilities.Print_Multivector ("V1", V1);
          V2 := Cos (A) * E2GA.e1 + Sin (A) * E2GA.e2;
-         GA_Utilities.Print_Multivector ("V2", V2);
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                                 V1, Red, Scale);
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
-                         V2, Green, Scale);
+                                V2, Green, Scale);
 
          BV := Outer_Product (V1, V2);
-         GA_Utilities.Print_Multivector ("BV = OP (V1, V2)", BV);
          if Parallelogram then
             --  Draw Quad with vertices: origin -> V1 -> V1+V2 -> V2
---              Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
---                                  V1, V1 + V2, V2, Blue);
-           null;
+            Draw_Parallelogram (Render_Graphic_Program, Model_View_Matrix,
+                                V1, V1 + V2, V2, Blue);
          else
             BV_Translation_Matrix := Translation_Matrix * BV_Translation_Matrix;
             E2GA_Draw.Draw_Bivector (Render_Graphic_Program, BV_Translation_Matrix,
-                            BV, Yellow);
+                                     BV, Yellow);
          end if;
 
          if A < Pi - 0.1 then
@@ -166,14 +158,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL_Util.Viewport_Coordinates (Text_Coords, Model_View_Matrix,
                                        Projection_Matrix, Label_Position);
          --  store bivector label:
-         GA_Utilities.Print_Multivector ("BV", BV);
          Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String
                                  (E2GA.Bivector_String (BV)), Label_Position);
          Silo.Push (Label);
 
          --  Set X position of next diagram
          Translation_Matrix := Maths.Translation_Matrix ((Entry_Width * Scale_S,
-                                                        0.0, 0.0));
+                                                         0.0, 0.0));
          if Position_X < Num_Bivector_X - 1 then
             Position_X := Position_X + 1;
          else
@@ -182,7 +173,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Position_Y := Position_Y + Entry_Height;
             Translation_Matrix := Maths.Translation_Matrix
               ((-Single (Num_Bivector_X) * Entry_Width * Scale_S,
-                Position_Y, 0.0)) * Translation_Matrix;
+               Position_Y, 0.0)) * Translation_Matrix;
          end if;
          A := A + Step;
       end loop;
@@ -230,7 +221,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GA_Draw.Set_Projection_Matrix (Projection_Matrix );
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
-                                Colour_Location);
+                                        Colour_Location);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       Vertex_Buffer.Initialize_Id;

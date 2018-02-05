@@ -19,7 +19,6 @@ with GL.Window;
 
 with Maths;
 with GA_Maths;
-with GA_Utilities;
 with Utilities;
 
 with Blade;
@@ -51,7 +50,7 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      S_Scale              : constant Single := Single (10.0 / Scale);
+      S_Scale              : constant Single := Single (5.0 / Scale);
       Z               : float := 0.0;
       Num_Steps       : constant int := 32;
       Rotor_Step      : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
@@ -334,7 +333,7 @@ package body GA_Draw is
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      S_Scale              : constant Single := Single (10.0 / Scale);
+      S_Scale              : constant Single := Single (5.0 / Scale);
       Z                    : float := 0.0;
       Num_Steps            : constant int := 256;
       Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);

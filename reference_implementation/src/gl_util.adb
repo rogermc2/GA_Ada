@@ -178,14 +178,6 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   --     function To_GL (V2 : Multivector.Vector) return GL.Types.Singles.Vector3 is
-   --          use E2GA;
-   --     begin
-   --          return (Single (Get_Coord_1 (V2)), Single (Get_Coord_2 (V2)), 0.0);
-   --     end To_GL;
-
-   --  -------------------------------------------------------------------------
-
    procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
                                    Model_View_Matrix,
                                    Projection_Matrix : GL.Types.Singles.Matrix4;

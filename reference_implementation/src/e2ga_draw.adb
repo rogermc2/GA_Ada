@@ -8,7 +8,6 @@ with Blade;
 with E2GA;
 with E3GA;
 with GA_Draw;
-with GA_Utilities;
 with Multivector_Analyze;
 
 package body E2GA_Draw is
