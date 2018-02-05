@@ -46,8 +46,8 @@ package body GL_Util is
       use Multivector;
       use GL;
       use GL.Types.Singles;
-      IR        : constant Rotor := Versor_Inverse (R);
-      E_Rot      : Vector;
+      IR        : constant Rotor := General_Inverse (R);
+      E_Rot     : Vector;
       Image     : Vector3_Array (1 .. 4);
       VC        : Vector3;
       Matrix    : Matrix4 := Identity4;
