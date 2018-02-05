@@ -9,6 +9,8 @@ with GA_Utilities;
 
 package body Multivector is
 
+   type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
+
    function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
 
    package Blade_Sort_Package is new
@@ -27,7 +29,8 @@ package body Multivector is
    procedure Compress (MV : in out Multivector);
    procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine_Series (MV : Multivector; Order : Integer) return Multivector;
-   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix) return Multivector;
+   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix;
+                                 BBs : in out Basis_Blade_Array) return Multivector;
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
    function Space_Dimension (MV : Multivector) return Integer;
@@ -582,7 +585,7 @@ package body Multivector is
       aBlade     : Basis_Blade;
       Curs       : Cursor := Blades.First;
       Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
-      BBs        : array (1 .. Max_G) of Basis_Blade;
+      BBs        : Basis_Blade_Array (1 .. Max_G);
    begin
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
@@ -600,7 +603,7 @@ package body Multivector is
          Next (Curs);
       end loop;
 
-      return Matrix_To_MV_Invert (Mat);
+      return Matrix_To_MV_Invert (Mat, BBs);
 
    exception
       when anError :  others =>
@@ -624,7 +627,7 @@ package body Multivector is
       aBlade     : Basis_Blade;
       Curs       : Cursor := Blades.First;
       Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
-      BBs        : array (1 .. Max_G) of Basis_Blade;
+      BBs        : Basis_Blade_Array (1 .. Max_G);
    begin
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
@@ -642,7 +645,7 @@ package body Multivector is
          Next (Curs);
       end loop;
 
-      return Matrix_To_MV_Invert (Mat);
+      return Matrix_To_MV_Invert (Mat, BBs);
 
    exception
       when anError :  others =>
@@ -836,25 +839,25 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix) return Multivector is
+   function Matrix_To_MV_Invert (Mat : GA_Maths.Float_Matrix;
+                                 BBs : in out Basis_Blade_Array) return Multivector is
       use GA_Maths.Float_Array_Package;
       Dim        : Integer := Mat'Last - Mat'First + 1;
       Inv_Mat    : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-      BBs        : array (1 .. Dim) of Basis_Blade;
       Value      : Float;
-      Result     : Blade_List;
-      Inv        : Multivector;
+      Blades     : Blade_List;
+      Inv_MV     : Multivector;
    begin
       Inv_Mat := Inverse (Mat);
       for Index in Inv_Mat'Range loop
          Value := Inv_Mat (Index, 1);
          if Value /= 0.0 then
             Update_Blade (BBs (Index), Value);
-            Result.Append (BBs (Index));
+            Blades.Append (BBs (Index));
          end if;
       end loop;
-      Inv.Blades := Result;
-      return Inv;
+      Inv_MV.Blades := Blades;
+      return Inv_MV;
 
    exception
       when anError :  others =>
