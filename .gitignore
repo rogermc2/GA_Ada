@@ -11,6 +11,9 @@ bin
 *.ali
 *.xml
 *.db
+*.cgpr
+*.stderr
+*.stdout
 bivectors
 circle
 test_mv

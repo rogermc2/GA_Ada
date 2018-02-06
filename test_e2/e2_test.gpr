@@ -2,7 +2,7 @@ with "../../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
 
 project E2_Test is
 
-   for Source_Dirs use ("src", "../reference_implementation/src");
+   for Source_Dirs use ("src", "../ga_lib/src");
    for Main use ("test_e2mv.adb");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
