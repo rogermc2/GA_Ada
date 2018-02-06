@@ -3,6 +3,7 @@ with GL.Types; use GL.Types;
 
 with C3GA;
 with E3GA;
+with Multivector;
 
 package Points is
    use C3GA;
@@ -22,7 +23,7 @@ package Points is
    Circle_Point_Index : Int := 3;
    Plane_Point_Index  : Int := 6;
 
-   n  : constant E3GA.Vector := E3GA.e2;  --  n is a direction vector
+   n  : constant Multivector.Vector := E3GA.e2;  --  n is a direction vector
    L1 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (1));
    L2 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (2));
 
