@@ -5,6 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Multivector_Type is
 
+   --  Init is based on c3ga.cpp Init
    function Init (MV : Multivector.Multivector) return MV_Type_Record is
       use Interfaces;
       use GA_Maths;
@@ -26,7 +27,7 @@ package body Multivector_Type is
          GU_Bitmap := Shift_Right (GU_Bitmap, 1);
       end loop;
 
-      Rec.Zero := (Count (1) and Count (2)) = 0;
+      Rec.Zero := Count (1) = 0 and Count (2) = 0;
       if Rec.Zero then
          --  multivector = zero blade
          Rec.MV_Kind := Blade_MV;
@@ -44,7 +45,6 @@ package body Multivector_Type is
          Grade_Inv := Grade_Inversion (MV);
          if Geometric_Product (Versor_Inv, Grade_Inv) =
            Geometric_Product (Grade_Inv, Versor_Inv) then
-           --  multivector = multivector
             Rec.MV_Kind := Multivector_Type;
          elsif Bit_Count (Grade_Use (MV)) = 1 then
             Rec.MV_Kind := Blade_MV;
