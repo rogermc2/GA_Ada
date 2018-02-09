@@ -695,6 +695,43 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Norm_R (MV : Multivector.Multivector) return Float is
+      use GA_Maths.Float_Functions;
+      use Multivector;
+      DP     : constant float := Scalar_Part (Dot (MV, MV));
+      Result : Float := 0.0;
+   begin
+      if DP /= 0.0 then
+         if DP < 0.0 then
+            Result := -Sqrt (-DP);
+         else
+            Result := Sqrt (DP);
+         end if;
+      end if;
+      return Result;
+   end Norm_R;
+
+   --  ------------------------------------------------------------------------
+
+   function Norm_R2 (MV : Multivector.Multivector) return Float is
+      use Multivector;
+   begin
+      return Scalar_Part (Dot (MV, MV));
+   end Norm_R2;
+
+   --  ------------------------------------------------------------------------
+
+   function Probe (Pr : Blade.C3_Base) return Normalized_Point is
+      use Blade;
+      NP  : Normalized_Point;
+   begin
+      --  thePoint.Origin of a Normalized_Point is a constant 1.0
+      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
+      return NP;
+   end Probe;
+
+   --  ------------------------------------------------------------------------
+
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
    begin
       V.Coordinates (1) := C1;
