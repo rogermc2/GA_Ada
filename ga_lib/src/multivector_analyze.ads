@@ -83,6 +83,7 @@ package Multivector_Analyze is
                      Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                       Probe : C3GA.Normalized_Point;
+--                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

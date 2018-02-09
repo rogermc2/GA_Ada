@@ -23,6 +23,7 @@ package body Multivector_Analyze is
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                       Probe : C3GA.Normalized_Point;
+--                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon) is
    begin
@@ -131,7 +132,7 @@ package body Multivector_Analyze is
       New_Line;
    exception
       when anError :  others =>
-         Put_Line ("An exception occurred in GA_Utilities.Print_Analysis.");
+         Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis.");
          raise;
    end Print_Analysis;
 

@@ -3,6 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
+with Blade;
 with E3GA_Utilities;
 with E3GA;
 with GA_Draw;
@@ -42,12 +43,11 @@ package body C3GA_Draw is
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    Point_Position : C3GA.Normalized_Point; Colour : GL.Types.Colors.Color) is
 --        MV   : C3GA.Multivector;
---        Anal : Multivector_Analyze.MV_Analysis;
+      Anal : Multivector_Analyze.MV_Analysis;
    begin
 --        C3GA.Set_Multivector (MV, Point_Position);
---        Multivector_Analyze.Analyze (Anal, MV, Point_Position);
---        Draw_Point (Render_Program, Model_View_Matrix, MV, Colour);
-      null;
+      Multivector_Analyze.Analyze (Anal, Point_Position, C3GA.Probe (Blade.C3_no));
+      Draw_Point (Render_Program, Model_View_Matrix, Point_Position, Colour);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in C3GA_Draw.Draw point.");

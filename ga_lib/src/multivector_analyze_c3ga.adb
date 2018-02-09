@@ -17,12 +17,14 @@ package body Multivector_Analyze_C3GA is
       use GA_Maths;
 
       MV_X      : Multivector.Multivector := MV;
---        MV_Info   : E2GA.MV_Type;
       MV_Info   : Multivector_Type.MV_Type_Record;
       Analysis  : MV_Analysis;
 
       procedure Classify is
---           OP_Nix : Boolean;
+         use Multivector;
+         OP_Nix : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
+         IP_Nix : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
+         X2     : constant Float := E3GA.Norm_R2 (MV_X);
       begin
          null;
       end Classify;
@@ -41,12 +43,14 @@ package body Multivector_Analyze_C3GA is
 --        MV_Info := C3GA.Init (MV_X, Epsilon);
       MV_Info := Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
+      Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info", MV_Info);
+     New_Line;
       --        Analysis.M_Type.Multivector_Kind := MV_Info.M_Type;
 
       --  Check for zero blade
 --        if Analysis.M_MV_Type.M_Zero then
       if Zero (Analysis.M_MV_Type) then
-         Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
+         Put_Line ("Multivector_Analyze_C3GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
          Analysis.M_Scalors (1) := 0.0;
 
@@ -56,13 +60,13 @@ package body Multivector_Analyze_C3GA is
          Analysis.M_Vectors (1) := E3GA.e1;
 
       elsif Grade_Use (Analysis.M_MV_Type) = 1 then  --  Grade 0
-         Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 1.");
+         Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 1.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 1;
 --           Analysis.M_Scalors (1) := MV_X.Coordinates (1);
 
       elsif Grade_Use (Analysis.M_MV_Type) = 6 then  --  Grade 5
-         Put_Line ("Multivector_Analyze_E2GA.Analyze Grade_Use = 6.");
+         Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 6.");
          Analysis.M_Type.Blade_Class := Scalar_Blade;
          Analysis.M_Type.M_Grade := 6;
          Analysis.M_Scalors (1) := C3GA.NO_E1_E2_E3_NI (MV);
