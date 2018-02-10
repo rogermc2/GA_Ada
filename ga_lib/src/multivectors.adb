@@ -34,7 +34,6 @@ package body Multivectors is
                                  BBs : in out Basis_Blade_Array) return Multivector;
    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
-   function Space_Dimension (MV : Multivector) return Integer;
 
    --  -------------------------------------------------------------------------
 
@@ -263,6 +262,13 @@ package body Multivectors is
          Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
          raise;
    end Add_To_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector)is
+   begin
+      MV_List.Append (MV);
+   end Add_Multivector;
 
    --  -------------------------------------------------------------------------
 
@@ -502,14 +508,14 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
+    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
       use Blade_List_Package;
       use Blade;
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       Curs      : Cursor := Blades.First;
       New_MV    : Multivector;
-   begin
+    begin
       if Sc /= 0.0 then
          while Has_Element (Curs) loop
             New_MV.Blades.Append (New_Basis_Blade (Bitmap (Element (Curs)),
@@ -522,7 +528,7 @@ package body Multivectors is
          end if;
       end if;
       return New_MV;
-   end Geometric_Product;
+    end Geometric_Product;
 
    --  -------------------------------------------------------------------------
 

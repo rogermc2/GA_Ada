@@ -16,6 +16,7 @@ package Multivectors is
    type Blade_List is new Blade_List_Package.List with null record;
 
    type Multivector is private;
+   type Multivector_List is private;
    subtype Bivector is Multivector;
    subtype Rotor is Multivector;
    subtype Scalar is Multivector;
@@ -37,6 +38,7 @@ package Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : E2_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
+   procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector);
    function Blades (MV : Multivector) return Blade_List;
 --     function C3_Multivector return Multivector;
    function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
@@ -94,6 +96,7 @@ package Multivectors is
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
    function Size (MV : Multivector) return Natural;
+   function Space_Dimension (MV : Multivector) return Integer;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
@@ -107,5 +110,9 @@ private
       Blades : Blade_List;
       Sorted : Boolean := False;
    end record;
+
+   package MV_List_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Multivector);
+   type Multivector_List is new MV_List_Package.List with null Record;
 
 end Multivectors;
