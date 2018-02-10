@@ -180,7 +180,7 @@ package body Geosphere is
       Curs         : Cursor;
       Indices      : V_Array := aFace.Vertex_Indices;
       Vertex_Index : Positive;
-      GA_Vector    : Multivector.Vector;
+      GA_Vector    : Multivectors.Vector;
    begin
       for index in Positive range 1 .. 3 loop
          Vertex_Index := Indices (index);

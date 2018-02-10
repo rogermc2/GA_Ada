@@ -1,7 +1,7 @@
 
 with C3GA;
 with GA_Maths;
-with Multivector;
+with Multivectors;
 with Multivector_Type;
 with Multivector_Type_Base;
 
@@ -56,9 +56,9 @@ package Multivector_Analyze is
       Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of Multivector.Vector;
+   type Point_Array is array (1 .. Number_Of_Points) of Multivectors.Vector;
    type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
-   type Vector_Array is array (1 .. Number_Of_Vectors) of Multivector.Vector;
+   type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
@@ -78,10 +78,10 @@ package Multivector_Analyze is
    end record;
 
    function Default_Epsilon return float;  --  Must precede Analyze
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Probe : C3GA.Normalized_Point;
 --                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
                       Flags : Flag_Type := (Flag_Invalid, False);

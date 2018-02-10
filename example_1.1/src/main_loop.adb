@@ -40,7 +40,7 @@ with E2GA_Draw;
 with E3GA;
 with E3GA_Utilities;
 with GA_Maths;
-with Multivector;
+with Multivectors;
 
 with Silo;
 with Text_Management;
@@ -59,7 +59,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Key_Pressed    : boolean := False;
 
    --  rotor g_modelRotor(_rotor(1.0f))
-   Model_Rotor     : Multivector.Rotor;
+   Model_Rotor     : Multivectors.Rotor;
    Rotate_Model    : boolean := False;
    Rotate_Model_Out_Of_Plane  : boolean := False;
    Pick            : GL_Util.GL_Pick;
@@ -99,8 +99,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
 --        E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
 --        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
-      V1                : Multivector.Vector; --  2D vector (0, 0), (1, 0)
-      V2                : Multivector.Vector;
+      V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
+      V2                : Multivectors.Vector;
 
       Point_Position      : C3GA.Normalized_Point;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -189,7 +189,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GA_Draw.Set_Point_Size (0.05);
 --        GA_Draw.Set_Point_Size (0.005);
 
-      Model_Rotor := Multivector.New_Rotor;
+      Model_Rotor := Multivectors.New_Rotor;
 
       Render_Graphic_Program := Program_Loader.Program_From
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),

@@ -10,16 +10,16 @@ with Multivector_Type_Base;
 
 package body Multivector_Analyze_E2GA is
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
-      use Multivector;
+      use Multivectors;
       use Multivector_Analyze;
       use Multivector_Type;
       use Multivector_Type_Base;
       use Blade_List_Package;
 
-      MV_X      : Multivector.Multivector := MV;
+      MV_X      : Multivectors.Multivector := MV;
       Norm_MV_X : Float;
       Blades    : constant Blade_List := Get_Blade_List (MV_X);
       aBlade    : Blade.Basis_Blade;
@@ -34,7 +34,7 @@ package body Multivector_Analyze_E2GA is
       if Flags.Dual then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Is Dual.");
          Analysis.M_Flags.Dual := True;
-         MV_X := Multivector.Dual (MV_X);
+         MV_X := Multivectors.Dual (MV_X);
       end if;
       Norm_MV_X := Norm_E2 (MV_X);
 

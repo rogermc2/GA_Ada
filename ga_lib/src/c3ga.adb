@@ -4,7 +4,7 @@ with Interfaces;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
-with Multivector;
+with Multivectors;
 with Multivector_Type_Base;
 
 package body C3GA is
@@ -94,16 +94,17 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
+      use Multivectors;
       use Blade;
-      NP      : Multivector.Multivector;
+      NP      : Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, V.Coordinates (1)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, V.Coordinates (2)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, V.Coordinates (3)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni,
-                             0.5 * Norm_E2 (V) * GA_Base_Types.NI));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, V.Coordinates (1)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, V.Coordinates (2)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, V.Coordinates (3)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_ni,
+                 0.5 * Norm_E2 (V) * GA_Base_Types.NI));
       return Normalized_Point (NP);
    end C3GA_Point;
 
@@ -116,125 +117,128 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function e1 return Multivector.Multivector is
+   function e1 return Multivectors.Multivector is
       use Blade;
-      Basis   : Multivector.Vector;
+      use Multivectors;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, C3_no, 0.0);
-      Multivector.Add_Blade (Basis, C3_e1, 1.0);
-      Multivector.Add_Blade (Basis, C3_e2, 0.0);
-      Multivector.Add_Blade (Basis, C3_e3, 0.0);
-      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      Add_Blade (Basis, C3_no, 0.0);
+      Add_Blade (Basis, C3_e1, 1.0);
+      Add_Blade (Basis, C3_e2, 0.0);
+      Add_Blade (Basis, C3_e3, 0.0);
+      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
 
-   function e1 (MV : Multivector.Multivector) return float is
+   function e1 (MV : Multivectors.Multivector) return float is
       use Blade;
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, C3_Base'Enum_Rep (C3_e1), Value);
+      OK       : constant Boolean := Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e1), Value);
    begin
       return Value;
    end e1;
 
    --  -------------------------------------------------------------------------
 
-   function e2 return Multivector.Multivector is
+   function e2 return Multivectors.Multivector is
       use Blade;
-      Basis   : Multivector.Vector;
+      use Multivectors;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, C3_no, 0.0);
-      Multivector.Add_Blade (Basis, C3_e1, 0.0);
-      Multivector.Add_Blade (Basis, C3_e2, 1.0);
-      Multivector.Add_Blade (Basis, C3_e3, 0.0);
-      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      Add_Blade (Basis, C3_no, 0.0);
+      Add_Blade (Basis, C3_e1, 0.0);
+      Add_Blade (Basis, C3_e2, 1.0);
+      Add_Blade (Basis, C3_e3, 0.0);
+      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e2;
 
    --  -------------------------------------------------------------------------
 
-   function e2 (MV : Multivector.Multivector) return float is
+   function e2 (MV : Multivectors.Multivector) return float is
       use Blade;
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, C3_Base'Enum_Rep (C3_e2), Value);
+      OK       : constant Boolean := Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e2), Value);
    begin
       return Value;
    end e2;
 
    --  -------------------------------------------------------------------------
 
-   function e3 return Multivector.Multivector is
+   function e3 return Multivectors.Multivector is
       use Blade;
-      Basis   : Multivector.Vector;
+      use Multivectors;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, C3_no, 0.0);
-      Multivector.Add_Blade (Basis, C3_e1, 0.0);
-      Multivector.Add_Blade (Basis, C3_e2, 0.0);
-      Multivector.Add_Blade (Basis, C3_e3, 1.0);
-      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      Add_Blade (Basis, C3_no, 0.0);
+      Add_Blade (Basis, C3_e1, 0.0);
+      Add_Blade (Basis, C3_e2, 0.0);
+      Add_Blade (Basis, C3_e3, 1.0);
+      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e3;
 
    --  -------------------------------------------------------------------------
 
-   function e3 (MV : Multivector.Multivector) return float is
+   function e3 (MV : Multivectors.Multivector) return float is
       use Blade;
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, C3_Base'Enum_Rep (C3_e3), Value);
+      OK       : constant Boolean := Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e3), Value);
    begin
       return Value;
    end e3;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e2 (MV : Multivector.Multivector) return float is
+   function e1_e2 (MV : Multivectors.Multivector) return float is
       use Blade;
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer := Unsigned_Integer (C3_Base'Enum_Rep (C3_e1))
         or Unsigned_Integer (C3_Base'Enum_Rep (C3_e2));
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, BM_E12, Value);
+      OK       : constant Boolean := Multivectors.Component (MV, BM_E12, Value);
    begin
       return Value;
    end e1_e2;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e3 (MV : Multivector.Multivector) return float is
+   function e1_e3 (MV : Multivectors.Multivector) return float is
       use Blade;
       use GA_Maths;
       BM_E13   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, BM_E13, Value);
+      OK       : constant Boolean := Multivectors.Component (MV, BM_E13, Value);
    begin
       return Value;
    end e1_e3;
 
    --  -------------------------------------------------------------------------
 
-   function e2_e3 (MV : Multivector.Multivector) return float is
+   function e2_e3 (MV : Multivectors.Multivector) return float is
       use Blade;
       use GA_Maths;
       BM_E23   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, BM_E23, Value);
+      OK       : constant Boolean := Multivectors.Component (MV, BM_E23, Value);
    begin
       return Value;
    end e2_e3;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e2_e3 (MV : Multivector.Multivector) return float is
+   function e1_e2_e3 (MV : Multivectors.Multivector) return float is
       use Blade;
       use GA_Maths;
       BM   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
       Value    : Float;
-      OK       : constant Boolean := Multivector.Component (MV, BM, Value);
+      OK       : constant Boolean := Multivectors.Component (MV, BM, Value);
    begin
       return Value;
    end e1_e2_e3;
@@ -380,9 +384,9 @@ package body C3GA is
 
    function Get_Coords (NP : Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
-      use Multivector.Blade_List_Package;
-      NP_MV  : Multivector.Multivector;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (NP_MV);
+      use Multivectors.Blade_List_Package;
+      NP_MV  : Multivectors.Multivector;
+      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (NP_MV);
       Curs   : Cursor := Blades.First;
       Coords : GA_Maths.Coords_Continuous_Array (1 .. 4);
       Index  : Integer := 0;
@@ -397,29 +401,31 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function ni return Multivector.Multivector is
+   function ni return Multivectors.Multivector is
       use Blade;
-      Basis   : Multivector.Vector;
+      use Multivectors;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, C3_no, 0.0);
-      Multivector.Add_Blade (Basis, C3_e1, 0.0);
-      Multivector.Add_Blade (Basis, C3_e2, 0.0);
-      Multivector.Add_Blade (Basis, C3_e3, 0.0);
-      Multivector.Add_Blade (Basis, C3_ni, 1.0);
+      Add_Blade (Basis, C3_no, 0.0);
+      Add_Blade (Basis, C3_e1, 0.0);
+      Add_Blade (Basis, C3_e2, 0.0);
+      Add_Blade (Basis, C3_e3, 0.0);
+      Add_Blade (Basis, C3_ni, 1.0);
       return Basis;
    end ni;
 
    --  -------------------------------------------------------------------------
 
-   function no return Multivector.Multivector is
+   function no return Multivectors.Multivector is
       use Blade;
-      Basis   : Multivector.Vector;
+      use Multivectors;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, C3_no, 1.0);
-      Multivector.Add_Blade (Basis, C3_e1, 0.0);
-      Multivector.Add_Blade (Basis, C3_e2, 0.0);
-      Multivector.Add_Blade (Basis, C3_e3, 0.0);
-      Multivector.Add_Blade (Basis, C3_ni, 0.0);
+      Add_Blade (Basis, C3_no, 1.0);
+      Add_Blade (Basis, C3_e1, 0.0);
+      Add_Blade (Basis, C3_e2, 0.0);
+      Add_Blade (Basis, C3_e3, 0.0);
+      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end no;
 
@@ -467,31 +473,31 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
---     function E1b (DP : Dual_Plane) return float is
---     begin
---        return DP.E1;
---     end E1b;
+   --     function E1b (DP : Dual_Plane) return float is
+   --     begin
+   --        return DP.E1;
+   --     end E1b;
 
    --  -------------------------------------------------------------------------
 
---     function E2b (DP : Dual_Plane) return float is
---     begin
---        return DP.E2;
---     end E2b;
+   --     function E2b (DP : Dual_Plane) return float is
+   --     begin
+   --        return DP.E2;
+   --     end E2b;
 
    --  -------------------------------------------------------------------------
 
---     function E3b (DP : Dual_Plane) return float is
---     begin
---        return DP.E3;
---     end E3b;
+   --     function E3b (DP : Dual_Plane) return float is
+   --     begin
+   --        return DP.E3;
+   --     end E3b;
 
    --  -------------------------------------------------------------------------
 
---     function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T is
---     begin
---        return DP.Inf;
---     end NIb;
+   --     function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T is
+   --     begin
+   --        return DP.Inf;
+   --     end NIb;
 
    --  -------------------------------------------------------------------------
 
@@ -537,16 +543,16 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function NO_E1_E2_E3_NI (MV : Multivector.Multivector) return float is
+   function NO_E1_E2_E3_NI (MV : Multivectors.Multivector) return float is
       use GA_Maths;
       --        use Multivector.Blade_List_Package;
       --        Blades     : constant Multivector.Blade_List
       --          := Multivector.Get_Blade_List (MV);
       --        thisBlade  : Blade.Basis_Blade;
-      GU         : Grade_Usage := Multivector.Grade_Use (MV);
+      GU         : Grade_Usage := Multivectors.Grade_Use (MV);
       GU_32      : constant Grade_Usage := 32;
       Grade_Size : Integer;
-      MV2        : Multivector.Multivector;
+      MV2        : Multivectors.Multivector;
    begin
       if (GU and GU_32) = 0 then
          return 0.0;
@@ -560,9 +566,9 @@ package body C3GA is
    --  ---------------------------------------------------------
 
    function E1b (NP : Normalized_Point) return float is
-      use Multivector;
-      use Multivector.Blade_List_Package;
-      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
+      use Multivectors;
+      use Multivectors.Blade_List_Package;
+      Blades     : constant Blade_List := Get_Blade_List (Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -572,9 +578,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function E2b (NP : Normalized_Point) return float is
-      use Multivector;
-      use Multivector.Blade_List_Package;
-      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
+      use Multivectors;
+      use Blade_List_Package;
+      Blades     : constant Blade_List := Get_Blade_List (Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -585,9 +591,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function E3b (NP : Normalized_Point) return float is
-      use Multivector;
-      use Multivector.Blade_List_Package;
-      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
+      use Multivectors;
+      use Blade_List_Package;
+      Blades     : constant Blade_List := Get_Blade_List (Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -599,9 +605,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NIb (NP : Normalized_Point) return Float is
-      use Multivector;
-      use Multivector.Blade_List_Package;
-      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
+      use Multivectors;
+      use Blade_List_Package;
+      Blades     : constant Blade_List := Get_Blade_List (Multivector (NP));
       Curs       : Cursor := Blades.Last;  --  ai
    begin
       return Blade.Weight (Element (Curs));
@@ -700,9 +706,9 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_R (MV : Multivector.Multivector) return Float is
+   function Norm_R (MV : Multivectors.Multivector) return Float is
       use GA_Maths.Float_Functions;
-      use Multivector;
+      use Multivectors;
       DP     : constant float := Scalar_Part (Dot (MV, MV));
       Result : Float := 0.0;
    begin
@@ -718,8 +724,8 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Norm_R2 (MV : Multivector.Multivector) return Float is
-      use Multivector;
+   function Norm_R2 (MV : Multivectors.Multivector) return Float is
+      use Multivectors;
    begin
       return Scalar_Part (Dot (MV, MV));
    end Norm_R2;
@@ -728,10 +734,10 @@ package body C3GA is
 
    function Probe (Pr : Blade.C3_Base) return Normalized_Point is
       use Blade;
-      NP  : Multivector.Multivector;
+      NP  : Multivectors.Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
+      Multivectors.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
       return Normalized_Point (NP);
    end Probe;
 
@@ -789,7 +795,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   --     procedure Set_Multivector (MV : out Multivector; N : GA_Base_Types.NO_T) is
+   --     procedure Set_Multivector (MV : out Multivectors; N : GA_Base_Types.NO_T) is
    --     begin
    --        MV.Coordinates (1) := GA_Base_Types.NO (N);
    --        MV.Coordinates (2) := 0.0;
@@ -803,14 +809,15 @@ package body C3GA is
    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;
-      NP    : Multivector.Multivector;
+      use Multivectors;
+      NP  : Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, E1));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, E2));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, E3));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, E1));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, E2));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, E3));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
       return Normalized_Point (NP);
    end Set_Normalized_Point;
 
@@ -820,13 +827,14 @@ package body C3GA is
                                   Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;
-      NP     : Multivector.Multivector;
+      use Multivectors;
+      NP : Multivector;
    begin
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, Point (2)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, Point (3)));
-      Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, Point (2)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, Point (3)));
+      Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
       return Normalized_Point (NP);
    end Set_Normalized_Point;
 

@@ -1,6 +1,6 @@
 
 with GA_Maths;
-with Multivector;
+with Multivectors;
 
 package Multivector_Type is
 
@@ -8,7 +8,7 @@ package Multivector_Type is
    type Parity_Type is (Odd_Parity, Even_Parity, No_Parity);
    type MV_Type_Record is private;
 
-   function Init (MV : Multivector.Multivector) return MV_Type_Record;
+   function Init (MV : Multivectors.Multivector) return MV_Type_Record;
 
    function MV_Kind (MV : MV_Type_Record) return MV_Type;
    function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer;

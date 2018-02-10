@@ -5,11 +5,11 @@ with GL.Objects.Programs;
 with GL.Types;
 with GL.Types.Colors;
 
-with Multivector;
+with Multivectors;
 
 package Geosphere is
    --  some very ancient code to compute a triangulated sphere
-   use Multivector;
+   use Multivectors;
 
    type Geosphere is private;
    type Geosphere_Face is private;
@@ -37,7 +37,7 @@ private
    type Geosphere_Face is record
       Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
       Child             : Child_Array := (0, 0, 0, 0);
-      Plane             : Multivector.Bivector;
+      Plane             : Multivectors.Bivector;
       D                 : float;
       Depth             : integer;
       Neighbour         : Neighbour_Array;

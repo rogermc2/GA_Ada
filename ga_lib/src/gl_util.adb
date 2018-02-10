@@ -41,9 +41,10 @@ package body GL_Util is
 
    --  ------------------------------------------------------------------
    --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
-   procedure Rotor_GL_Multiply (R : Multivector.Rotor; GL_Matrix : in out GL.Types.Singles.Matrix4) is
+   procedure Rotor_GL_Multiply (R : Multivectors.Rotor;
+                                GL_Matrix : in out GL.Types.Singles.Matrix4) is
       use E3GA;
-      use Multivector;
+      use Multivectors;
       use GL;
       use GL.Types.Singles;
       IR        : constant Rotor := General_Inverse (R);
@@ -87,7 +88,7 @@ package body GL_Util is
 
    --  ------------------------------------------------------------------
 
-   function Rotor_To_GL_Matrix (R : Multivector.Rotor) return  GL.Types.Singles.Matrix4 is
+   function Rotor_To_GL_Matrix (R : Multivectors.Rotor) return  GL.Types.Singles.Matrix4 is
       use GL;
       M3        : GA_Maths.GA_Matrix3;
       GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -113,13 +114,13 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : Multivector.Vector) return GL.Types.Doubles.Vector3 is
+   function To_GL (V3 : Multivectors.Vector) return GL.Types.Doubles.Vector3 is
       use Interfaces;
       use GL.Types;
-      use Multivector.Blade_List_Package;
+      use Multivectors.Blade_List_Package;
       use Blade;
       use GA_Maths;
-      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
+      Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
       BM      : Unsigned_32;
       Value   : Double;
@@ -146,12 +147,12 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : Multivector.Vector) return GL.Types.Singles.Vector3 is
+   function To_GL (V3 : Multivectors.Vector) return GL.Types.Singles.Vector3 is
       use Interfaces;
       use GL.Types;
-      use Multivector.Blade_List_Package;
+      use Multivectors.Blade_List_Package;
       use Blade;
-      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V3);
+      Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
       BM      : Unsigned_32;
       Value   : Single;

@@ -13,9 +13,9 @@ package body E3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   function exp (BV : Multivector.Bivector) return Multivector.Rotor is
+   function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
       use E3GA;
-      use Multivector;
+      use Multivectors;
       V          : Vector :=
         Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := E3GA.e1_e2 (V);
@@ -42,13 +42,13 @@ package body E3GA_Utilities is
    --  ----------------------------------------------------------------------------
 
    --  special log() for 3D rotors
-   function log (R : Multivector.Rotor) return Multivector.Bivector is
+   function log (R : Multivectors.Rotor) return Multivectors.Bivector is
       use E3GA;
-      use Multivector;
+      use Multivectors;
       R2       : float;
       R1       : float;
-      BV       : Multivector.Bivector;
-      Result   : Multivector.Bivector;
+      BV       : Bivector;
+      Result   : Bivector;
    begin
       --  get the bivector 2-blade part of R
       BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
@@ -71,7 +71,7 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Rotor (Name : String; R : Multivector.Rotor) is
+   procedure Print_Rotor (Name : String; R : Multivectors.Rotor) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       GA_Utilities.Print_Multivector (Name, R);
@@ -79,7 +79,7 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Rotor_To_Matrix (R : Multivector.Rotor;  M : out GA_Maths.GA_Matrix3) is
+   procedure Rotor_To_Matrix (R : Multivectors.Rotor;  M : out GA_Maths.GA_Matrix3) is
       Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       M (1, 1) := 1.0 - 2.0 * (Rot (3) * Rot (3) + Rot (4) * Rot (4));
@@ -99,9 +99,9 @@ package body E3GA_Utilities is
    --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
    --                                = bx        + i by  (with respect to a)
    --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (From, To : Multivector.Vector) return Multivector.Rotor is
+   function Rotor_Vector_To_Vector (From, To : Multivectors.Vector) return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
-      use Multivector;
+      use Multivectors;
       S      : float;
       w0     : Vector;
       w1     : Vector;

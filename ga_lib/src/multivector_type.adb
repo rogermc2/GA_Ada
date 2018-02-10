@@ -6,16 +6,16 @@ with Ada.Text_IO; use Ada.Text_IO;
 package body Multivector_Type is
 
    --  Init is based on c3ga.cpp Init
-   function Init (MV : Multivector.Multivector) return MV_Type_Record is
+   function Init (MV : Multivectors.Multivector) return MV_Type_Record is
       use Interfaces;
       use GA_Maths;
-      use Multivector;
+      use Multivectors;
       Rec        : MV_Type_Record;
       Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
       Index      : Integer := 1;
       GU_Bitmap  : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
-      Versor_Inv : Multivector.Multivector;
-      Grade_Inv  : Multivector.Multivector;
+      Versor_Inv : Multivectors.Multivector;
+      Grade_Inv  : Multivectors.Multivector;
    begin
       Rec.Grade_Use := Grade_Use (MV);
       Rec.Top_Grade := Top_Grade_Index (MV);

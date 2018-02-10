@@ -42,8 +42,8 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Multivector (Name : String; MV : Multivector.Multivector) is
-      use Multivector;
+   procedure Print_Multivector (Name : String; MV : Multivectors.Multivector) is
+      use Multivectors;
       use Blade_List_Package;
       theBlades : constant Blade_List := Blades (MV);
       aBlade    : Blade.Basis_Blade;

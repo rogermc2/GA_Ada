@@ -2,7 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with E3GA_Utilities;
-with Multivector;
+with Multivectors;
 with Multivector_Analyze_E2GA;
 with Multivector_Analyze_C3GA;
 
@@ -12,7 +12,7 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon) is
    begin
@@ -21,7 +21,7 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Probe : C3GA.Normalized_Point;
 --                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
                       Flags : Flag_Type := (Flag_Invalid, False);

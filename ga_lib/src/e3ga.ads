@@ -3,14 +3,14 @@ with Ada.Strings.Unbounded;
 
 with Blade;
 with GA_Maths; use GA_Maths;
-with Multivector; use Multivector;
+with Multivectors ; use Multivectors;
 
 package E3GA is
 
    type Array_19F is array (1 .. 19) of float;
    subtype Vector_Coords_3D is GA_Maths.Coords_Continuous_Array (1 .. 3);
 
-   --  Multivector types
+   --  types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_E3_T, MVT_Scalar,
                     MVT_Vector_2D, MVT_Vector, MVT_Bivector, MVT_Trivector,
                     MVT_Rotor, MVT_E1_CT, MVT_E2_CT, MVT_E3_CT,
@@ -63,18 +63,18 @@ package E3GA is
 --     function e1 return Vector;
 --     function e2 return Vector;
 --     function e3 return Vector;
-   function e1 return Multivector.Multivector;
-   function e2 return Multivector.Multivector;
-   function e3 return Multivector.Multivector;
+   function e1 return Multivector;
+   function e2 return Multivector;
+   function e3 return Multivector;
 
-   function e1 (MV : Multivector.Multivector) return float;
-   function e2 (MV : Multivector.Multivector) return float;
-   function e3 (MV : Multivector.Multivector) return float;
-   function e1_e2 (MV : Multivector.Multivector) return float;
-   function e1_e3 (MV : Multivector.Multivector) return float;
-   function e2_e3 (MV : Multivector.Multivector) return float;
-   function e3_e1 (MV : Multivector.Multivector) return float;
-   function e1_e2_e3 (MV : Multivector.Multivector) return float;
+   function e1 (MV : Multivector) return float;
+   function e2 (MV : Multivector) return float;
+   function e3 (MV : Multivector) return float;
+   function e1_e2 (MV : Multivector) return float;
+   function e1_e3 (MV : Multivector) return float;
+   function e2_e3 (MV : Multivector) return float;
+   function e3_e1 (MV : Multivector) return float;
+   function e1_e2_e3 (MV : Multivector) return float;
 --
 --     function e1e2 (R : Rotor) return float;
 --     function e2e3 (R : Rotor) return float;
@@ -89,10 +89,10 @@ package E3GA is
 --     function Get_Coords (BV : Bivector) return Array_3D;
 --     function Get_Coords (MV : Multivector) return MV_Coordinate_Array;
    function Get_Coords (R : Rotor) return Array_4D;
---      function Get_Coord_1 (V : Multivector.Vector) return float;
---      function Get_Coord_2 (V : Multivector.Vector) return float;
---      function Get_Coord_3 (V : Multivector.Vector) return float;
-   function Get_Coords (V : Multivector.Vector) return Array_3D;
+--      function Get_Coord_1 (V : Vector) return float;
+--      function Get_Coord_2 (V : Vector) return float;
+--      function Get_Coord_3 (V : Vector) return float;
+   function Get_Coords (V : Vector) return Array_3D;
 --     function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;
@@ -125,7 +125,7 @@ package E3GA is
    function Norm_R (BV : Bivector) return Float;
    function Norm_R2 (BV : Bivector) return Float;
 --      procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
---      procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float);
+--      procedure Set_Coords (MV : out Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
 --     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);

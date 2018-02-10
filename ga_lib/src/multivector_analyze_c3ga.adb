@@ -9,12 +9,12 @@ with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
 
-   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                        Flags : Flag_Type; Epsilon : float);
 
    --  -------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                        Probe : C3GA.Normalized_Point;
                        Flags : Flag_Type := (Flag_Invalid, false);
                        Epsilon : float := Default_Epsilon) is
@@ -22,12 +22,12 @@ package body Multivector_Analyze_C3GA is
       use Multivector_Type;
       use GA_Maths;
 
-      MV_X      : Multivector.Multivector := MV;
+      MV_X      : Multivectors.Multivector := MV;
       MV_Info   : Multivector_Type.MV_Type_Record;
       Analysis  : MV_Analysis;
 
       procedure Classify is
-         use Multivector;
+         use Multivectors;
          OP_Nix_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
          IP_Nix_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
          X2_Val     : constant Float := E3GA.Norm_R2 (MV_X);
@@ -103,26 +103,26 @@ package body Multivector_Analyze_C3GA is
 
 --  ----------------------------------------------------------------------------
 
-   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                            Flags : Flag_Type; Epsilon : float) is
-      use Multivector;
+      use Multivectors;
       Grade    : constant GA_Maths.Unsigned_Integer :=
         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       Weight   : constant Float := Norm_E (MV);
-      Attitude : Multivector.Multivector := MV;
+      Attitude : Multivector := MV;
       No       : constant Vector := Get_Basis_Vector (Blade.C3_no);
    begin
-      theAnalysis.M_Points (1) := Multivector.Get_Basis_Vector (Blade.C3_no);
+      theAnalysis.M_Points (1) := Get_Basis_Vector (Blade.C3_no);
       theAnalysis.M_Scalors (1) := Weight;
       case Grade is
          when 2 =>  --  F Vector
             theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (No, MV));
          when 3 =>  --  F Bivector
             declare
-               Factor : array (1 .. 5) of Dual_Sphere;
-               Blade_Grade : Unsigned_Integer := 2;
+               Factor : array (1 .. 5) of C3GA.Dual_Sphere;
+               Blade_Grade : GA_Maths.Unsigned_Integer := 2;
             begin
-
+               null;
             end;
          when 4 =>  --  F Trivector
             theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);

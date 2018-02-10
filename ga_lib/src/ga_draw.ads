@@ -7,7 +7,7 @@ with GL.Uniforms;
 
 with GA_Maths;
 with Geosphere;
-with Multivector;
+with Multivectors;
 
 package GA_Draw is
    use  GL.Types;
@@ -26,29 +26,29 @@ package GA_Draw is
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                           MV_Matrix : GL.Types.Singles.Matrix4;
-                          Tail, Direction : Multivector.Vector;
+                          Tail, Direction : Multivectors.Vector;
                           Colour : Color; Scale : float);
 
    --  Draw_Bivector draws a bivector at Base (:= null for origin).
    --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                             Translation_Matrix : GL.Types.Singles.Matrix4;
-                            Normal, Ortho_1, Ortho_2 : Multivector.Vector;
+                            Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                             Colour : GL.Types.Colors.Color; Scale : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                             Translation_Matrix : GL.Types.Singles.Matrix4;
-                            Base, Normal, Ortho_1, Ortho_2 : Multivector.Vector;
+                            Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                             Colour : GL.Types.Colors.Color; Scale : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix : GL.Types.Singles.Matrix4;
-                             Base : Multivector.Vector; Colour : GL.Types.Colors.Color;
-                             Scale : float := 1.0; V : Multivector.Vector;
+                             Base : Multivectors.Vector; Colour : GL.Types.Colors.Color;
+                             Scale : float := 1.0; V : Multivectors.Vector;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Position : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                             Position : Multivectors.Vector; Colour : GL.Types.Colors.Color;
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
 

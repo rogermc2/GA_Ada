@@ -105,12 +105,12 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
 --     function Bivector_String (BV : Bivector; Text : String := "") return String is
-   function Bivector_String (BV : Multivector.Bivector) return String is
+   function Bivector_String (BV : Multivectors.Bivector) return String is
       use Ada.Strings.Unbounded;
-      MV : Multivector.Multivector := BV;
+      MV : Multivectors.Multivector := BV;
 --        MV : Multivector := Set_Multivector (BV);
    begin
-      return To_String (Multivector.Multivector_String
+      return To_String (Multivectors.Multivector_String
                         (MV, MV_Basis_Vector_Names));
    exception
       when anError :  others =>
@@ -181,17 +181,17 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function e1 return Multivector.Vector is
+   function e1 return Multivectors.Vector is
       use Blade;
-      Basis   : Multivector.Vector;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, E2_e1, 1.0);
+      Multivectors.Add_Blade (Basis, E2_e1, 1.0);
       return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
 
-   function e1 (MV : Multivector.Multivector) return float is
+   function e1 (MV : Multivectors.Multivector) return float is
       use Blade;
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
@@ -210,18 +210,18 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function e2 return Multivector.Vector is
-      use Multivector.Blade_List_Package;
+   function e2 return Multivectors.Vector is
+      use Multivectors.Blade_List_Package;
       use Blade;
-      Basis : Multivector.Vector;
+      Basis : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, E2_e2, 1.0);
+      Multivectors.Add_Blade (Basis, E2_e2, 1.0);
       return Basis;
    end e2;
 
    --  -------------------------------------------------------------------------
 
-   function e2 (MV : Multivector.Multivector) return float is
+   function e2 (MV : Multivectors.Multivector) return float is
       use Blade;
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e2), Value);
@@ -240,7 +240,7 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function e1_e2 (BV : Multivector.Bivector) return float is
+   function e1_e2 (BV : Multivectors.Bivector) return float is
       use Blade;
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer :=
@@ -355,18 +355,18 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_1 (V : Multivector.Vector) return float is
-      use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   function Get_Coord_1 (V : Multivectors.Vector) return float is
+      use Multivectors.Blade_List_Package;
+      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.First_Element);
    end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_2 (V : Multivector.Vector) return float is
-      use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   function Get_Coord_2 (V : Multivectors.Vector) return float is
+      use Multivectors.Blade_List_Package;
+      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.Last_Element);
    end Get_Coord_2;
@@ -384,10 +384,10 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coords (V : Multivector.Vector) return GA_Maths.Array_F2 is
-      use Multivector.Blade_List_Package;
+   function Get_Coords (V : Multivectors.Vector) return GA_Maths.Array_F2 is
+      use Multivectors.Blade_List_Package;
       use Blade;
-      Blades   : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+      Blades   : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return (Weight (Blades.First_Element), Weight (Blades.Last_Element));
    end Get_Coords;
@@ -837,7 +837,7 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Coords (V : out Multivector.Vector; C1, C2 : float) is
+   procedure Set_Coords (V : out Multivectors.Vector; C1, C2 : float) is
    begin
       V := New_Vector (C1, C2);
    end Set_Coords;
@@ -931,18 +931,18 @@ package body E2GA is
 
    --  -------------------------------------------------------------------------
 
-   function Unit_E (V : Multivector.Vector) return Multivector.Vector is
-      use Multivector.Blade_List_Package;
+   function Unit_E (V : Multivectors.Vector) return Multivectors.Vector is
+      use Multivectors.Blade_List_Package;
       use Blade;
-      Blades  : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+      Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
       C1       : constant float := Weight (Blades.First_Element);
       C2       : constant float := Weight (Blades.Last_Element);
       e2s      : constant float :=  C1 * C1 + C2 * C2;
       IE       : constant float := 1.0 / GA_Maths.Float_Functions.Sqrt (e2s);
-      Result   : Multivector.Vector;
+      Result   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Result, New_Basis_Blade (E2_e1, C1 * IE));
-      Multivector.Add_Blade (Result, New_Basis_Blade (E2_e2, C2 * IE));
+      Multivectors.Add_Blade (Result, New_Basis_Blade (E2_e1, C1 * IE));
+      Multivectors.Add_Blade (Result, New_Basis_Blade (E2_e2, C2 * IE));
       return  Result;
    end Unit_E;
 

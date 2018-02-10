@@ -25,18 +25,18 @@ package body E2GA_Draw is
 
    procedure Draw (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                   MV     : in out Multivector.Multivector;
+                   MV     : in out Multivectors.Multivector;
                    Method : GA_Draw.Bivector_Method_Type
                             := GA_Draw.Draw_Bivector_Circle;
                    Colour : GL.Types.Colors.Color := (0.0, 0.5, 0.5, 1.0)) is
       use GA_Draw;
       use GA_Maths;
-      use Multivector;
+      use Multivectors;
       use Multivector_Analyze;
       A         : MV_Analysis;
       V1        : Vector;
       V2        : Vector;
-      OP        : Multivector.Multivector;
+      OP        : Multivector;
       Normal    : Vector;
       Direction : Vector;
       Scale     : float := 1.0;
@@ -63,16 +63,16 @@ package body E2GA_Draw is
 --                 V2 := E3GA.To_2D (A.M_Vectors (2));
                V1 := A.M_Vectors (1);
                V2 := A.M_Vectors (2);
-               OP := Multivector.Outer_Product (V1, V2);
+               OP := Outer_Product (V1, V2);
                declare
                   use Blade_List_Package;
                   Blades    : constant Blade_List := Get_Blade_List (OP);
                   aBlade    : Blade.Basis_Blade;
                   Curs      : Cursor := Blades.Last;
-                  OP_MV     : Multivector.Multivector := OP;
-                  Normal_MV : Multivector.Multivector := OP;
+                  OP_MV     : Multivector := OP;
+                  Normal_MV : Multivector := OP;
                begin
-                  Normal_MV := Multivector.Dual (OP_MV);
+                  Normal_MV := Dual (OP_MV);
                   Add_Blade (Normal, Blade.E3_e3, Blade.Weight (Element (curs)));
 --                    E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
 --                                     Normal_MV.Coordinates (Length (Blades)));
@@ -100,19 +100,19 @@ package body E2GA_Draw is
 
    procedure Draw_Bivector (Render_Program  : GL.Objects.Programs.Program;
                    Translation_Matrix : GL.Types.Singles.Matrix4;
-                   BV : Multivector.Bivector; Colour : GL.Types.Colors.Color;
+                   BV : Multivectors.Bivector; Colour : GL.Types.Colors.Color;
                    Method_Type : GA_Draw.Bivector_Method_Type
                                  := GA_Draw.Draw_Bivector_Circle) is
       use GA_Maths.Float_Functions;
       use GL.Types.Colors;
-      use Multivector;
+      use Multivectors;
       Radius   : constant Float := Sqrt (Abs (E2GA.Get_Coord (BV)));
       Scale    : constant Float := 20.0;
       Ortho_1  : constant Vector := New_Vector (Radius, 0.0, 0.0);
       Ortho_2  : constant Vector := New_Vector (0.0, Radius, 0.0);
       Normal   : Vector := New_Vector (0.0, 0.0);
    begin
-      Multivector.Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
+      Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Normal, Ortho_1, Ortho_2,
                              Colour, Scale, Method_Type);
@@ -126,9 +126,9 @@ package body E2GA_Draw is
 
    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                   Direction : Multivector.Vector; Colour : GL.Types.Colors.Color;
+                   Direction : Multivectors.Vector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
-      use Multivector;
+      use Multivectors;
       Vec_3D  : Vector;
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
