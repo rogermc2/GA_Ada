@@ -69,7 +69,7 @@ package Multivector is
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
-   function Largest_Grade_Part (MV : Multivector) return Multivector;
+   function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;

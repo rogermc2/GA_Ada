@@ -23,8 +23,9 @@ package body Multivector is
    --        (0.0, 0.0, 0.0 ,1.0, 0.0),
    --        (-1.0, 0.0, 0.0 , 0.0, 0.0));
 
-   C3_Blade_List         : Blade_List;
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
+   --  This array can be used to lookup the number of coordinates for
+   --  the grade part of a general multivector
 
    procedure Compress (MV : in out Multivector);
    procedure Compress (MV : in out Multivector; Epsilon : Float);
@@ -899,26 +900,29 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-   function Largest_Grade_Part (MV : Multivector) return Multivector is
+   function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade is
       use GA_Maths;
       use Interfaces;
       use Blade_List_Package;
-      Blades        : constant Blade_List := MV.Blades;
-      thisBlade     : Blade.Basis_Blade;
-      Cursor_B      : Cursor := Blades.First;
-      GU            : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
-      Largest_Part  : Multivector;
-      Max_Norm      : Float := 0.0;
+      theMV          : Multivector := MV;
+      Blades         : constant Blade_List := theMV.Blades;
+      Cursor_B       : Cursor := Blades.First;
+      Largest_Blade  : Blade.Basis_Blade;
+      Best_Scale     : Float := -1.0;
    begin
-      for Count in 0 .. Top_Grade_Index (MV) loop
-         if (GU and Shift_Left (1, Integer (Grade (thisBlade)))) /= 0 then
-            null;
+      Simplify (theMV);
+      while Has_Element (Cursor_B) loop
+         if Abs (Blade.Weight (Element (Cursor_B))) > Best_Scale then
+            Best_Scale := Abs (Blade.Weight (Element (Cursor_B)));
+            Largest_Blade := Element (Cursor_B);
          end if;
+         Next (Cursor_B);
       end loop;
-      return  Largest_Part;
-   end Largest_Grade_Part;
+      return  Largest_Blade;
+   end Largest_Basis_Blade;
 
    --  -------------------------------------------------------------------------
+
 
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
    begin
@@ -1422,13 +1426,6 @@ package body Multivector is
    --  -------------------------------------------------------------------------
 
 begin
-   --  setup conformal algebra:
-   C3_Blade_List.Append (New_Basis_Blade (C3_no));
-   C3_Blade_List.Append (New_Basis_Blade (C3_e1));
-   C3_Blade_List.Append (New_Basis_Blade (C3_e2));
-   C3_Blade_List.Append (New_Basis_Blade (C3_e3));
-   C3_Blade_List.Append (New_Basis_Blade (C3_ni));
-
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
