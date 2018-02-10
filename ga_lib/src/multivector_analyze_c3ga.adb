@@ -2,11 +2,17 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Blade;
 with E3GA;
 with GA_Maths;
 with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
+
+   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+                       Flags : Flag_Type; Epsilon : float);
+
+   --  -------------------------------------------------------------------------
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
                        Probe : C3GA.Normalized_Point;
@@ -22,11 +28,24 @@ package body Multivector_Analyze_C3GA is
 
       procedure Classify is
          use Multivector;
-         OP_Nix : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
-         IP_Nix : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-         X2     : constant Float := E3GA.Norm_R2 (MV_X);
+         OP_Nix_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
+         IP_Nix_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
+         X2_Val     : constant Float := E3GA.Norm_R2 (MV_X);
+         OP_Nix : constant Boolean := Abs (OP_Nix_Val) >= Epsilon;
+         IP_Nix  : constant Boolean := Abs (IP_Nix_Val) >= Epsilon;
+         X2      : constant Boolean := Abs (X2_Val) >= Epsilon;
       begin
-         null;
+         if not OP_Nix and not IP_Nix then
+            Analyze_Free (theAnalysis, MV ,Flags, Epsilon);
+         elsif not OP_Nix and IP_Nix then
+            null;
+         elsif OP_Nix and not IP_Nix then
+            null;
+         elsif OP_Nix and IP_Nix and not X2 then
+            null;
+         elsif OP_Nix and IP_Nix and X2 then
+            null;
+         end if;
       end Classify;
 
    begin
@@ -81,5 +100,38 @@ package body Multivector_Analyze_C3GA is
          Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze.");
          raise;
    end Analyze;
+
+--  ----------------------------------------------------------------------------
+
+   procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
+                           Flags : Flag_Type; Epsilon : float) is
+      use Multivector;
+      Grade    : constant GA_Maths.Unsigned_Integer :=
+        Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+      Weight   : constant Float := Norm_E (MV);
+      Attitude : Multivector.Multivector := MV;
+      No       : constant Vector := Get_Basis_Vector (Blade.C3_no);
+   begin
+      theAnalysis.M_Points (1) := Multivector.Get_Basis_Vector (Blade.C3_no);
+      theAnalysis.M_Scalors (1) := Weight;
+      case Grade is
+         when 2 =>  --  F Vector
+            theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (No, MV));
+         when 3 =>  --  F Bivector
+            declare
+               Factor : array (1 .. 5) of Dual_Sphere;
+               Blade_Grade : Unsigned_Integer := 2;
+            begin
+
+            end;
+         when 4 =>  --  F Trivector
+            theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
+            theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
+            theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
+         when others => null;
+      end case;
+   end Analyze_Free;
+
+--  ----------------------------------------------------------------------------
 
 end Multivector_Analyze_C3GA;

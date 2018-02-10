@@ -750,7 +750,7 @@ package body E3GA is
    begin
       Result (1) := Scalar_Part (R);
       while Has_Element (Curs) loop
-         BM := Bitmap (Element (Curs));
+         BM := Unsigned_Integer (Bitmap (Element (Curs)));
          if (BM and E3_Base'Enum_Rep (E3_e1)) /= 0 then
             Result (2) := Blade.Weight (Element (Curs));
          end if;
