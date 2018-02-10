@@ -7,7 +7,7 @@ with Utilities;
 
 with GA_Utilities;
 
-package body Multivector is
+package body Multivectors is
 
    type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
@@ -923,7 +923,6 @@ package body Multivector is
 
    --  -------------------------------------------------------------------------
 
-
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
    begin
       return  Inner_Product (MV1, MV2, Left_Contraction);
@@ -1432,4 +1431,4 @@ begin
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    MV_Basis_Vector_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
-end Multivector;
+end Multivectors;

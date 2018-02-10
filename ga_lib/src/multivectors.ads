@@ -9,7 +9,7 @@ with Blade;
 with GA_Maths;
 with Metric;
 
-package Multivector is
+package Multivectors is
    use Blade;
    package Blade_List_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => Blade.Basis_Blade);
@@ -108,4 +108,4 @@ private
       Sorted : Boolean := False;
    end record;
 
-end Multivector;
+end Multivectors;
