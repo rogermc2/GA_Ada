@@ -5,9 +5,57 @@ with Ada.Containers;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Multivectors;
 with Multivector_Type_Base;
 
 package body GA_Utilities is
+
+   --  ------------------------------------------------------------------------
+
+   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Scale_Array)
+                             return Multivectors.Multivector_List is
+      use GA_Maths;
+      use Multivectors;
+      use Blade_List_Package;
+      MV_Info  : Multivector_Type.MV_Type_Record := Multivector_Type.Init (MV);
+      k        : Unsigned_Integer := Multivector_Type.Top_Grade (MV_Info);
+      E        : Blade.Basis_Blade := Largest_Basis_Blade (MV);
+      Blades   : Blade_List;
+      B_Cursor : Cursor;
+      Index    : Integer := 0;
+      Dim      : Integer := Space_Dimension (MV);
+      Current  : Multivector;
+      MV_2     : Multivector;
+      Result   : Multivectors.Multivector_List;
+   begin
+      if k = 0 then
+         Scale (1) := Scalar_Part (MV);
+      else
+         Scale (1) := Norm_E (MV);
+      end if;
+      if Scale (1) /= 0.0 and k /= 0 then
+         Blades.Append (Blade.New_Basis_Blade (k));
+         for g in 0 .. Dim - 1 loop
+            if (Blade.Bitmap (E) and 2 ** g) /= 0 then
+                Blades.Append (Blade.New_Basis_Blade (2 ** g, 1.0));
+            end if;
+         end loop;
+         Current := Geometric_Product (MV, 1.0 / Scale (1));
+         Add_Multivector (Result, New_Multivector (Float (K)));
+         B_Cursor := Blades.First;
+         while Has_Element (B_Cursor) loop
+            MV_2 := New_Multivector (Blade.Weight (Element (B_Cursor)));
+            MV_2 := Inner_Product (MV_2, Current, Blade.Left_Contraction);
+            MV_2 := Inner_Product (MV_2, Current, Blade.Left_Contraction);
+            MV_2 := Unit_E (MV_2);
+            Add_Multivector (Result, MV_2);
+            Current := Left_Contraction (MV_2, Current);
+            Next (B_Cursor);
+         end loop;
+         Add_Multivector (Result, Unit_E (Current));
+      end if;
+      return Result;
+   end Factorize_Blade;
 
    --  -------------------------------------------------------------------------
 
