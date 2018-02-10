@@ -23,27 +23,29 @@ package C3GA is
    --	__no_ct__ no; declared in c3ga.cpp origin
 
    type Circle is private;
-   type Dual_Plane is private;
    type Line is private;
    type Point is private;  -- 5D conformal null vector
    type Scalar is private;
    type Sphere is private;
    type Vector is private;
 
+   type Dual_Plane is new Multivector.Multivector;
+   type Dual_Sphere is new Multivector.Multivector;
+   type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
 --     type Normalized_Point is private;
-   subtype Normalized_Point is Multivector.Multivector;
+   type Normalized_Point is new Multivector.Multivector;
 
 --     type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
 --        Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
 --     end record;
 
    --  Joinable grade definitions
-   Grade_0 : constant integer := 1;
-   Grade_1 : constant integer := 2;
-   Grade_2 : constant integer := 4;
-   Grade_3 : constant integer := 8;
-   Grade_4 : constant integer := 16;
-   Grade_5 : constant integer := 32;
+   Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
+   Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
+   Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
+   Grade_3 : constant GA_Maths.Unsigned_Integer := 8;
+   Grade_4 : constant GA_Maths.Unsigned_Integer := 16;
+   Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Scalar) return float;
@@ -81,10 +83,10 @@ package C3GA is
    function NO_E2_NI (C : Circle) return float;
    function NO_E3_NI (C : Circle) return float;
 
-   function E1b (DP : Dual_Plane) return float;
-   function E2b (DP : Dual_Plane) return float;
-   function E3b (DP : Dual_Plane) return float;
-   function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T;
+--     function E1b (DP : Dual_Plane) return float;
+--     function E2b (DP : Dual_Plane) return float;
+--     function E3b (DP : Dual_Plane) return float;
+--     function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T;
 
    function E1_E2_NI (L : Line) return float;
    function E1_E3_NI (L : Line) return float;
@@ -146,10 +148,10 @@ private
       NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
    end record;
 
-   type Dual_Plane is record   --  m_c[4]
-      E1, E2, E3 : float := 0.0;
-      Inf        : GA_Base_Types.NI_T;
-   end record;
+--     type Dual_Sphere is record   --  m_c[4]
+--        NO, E1, E2, E3, NI : float := 0.0;
+--        Inf                : GA_Base_Types.NI_T;
+--     end record;
 
    type Line is record   --  m_c[6]
       E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;

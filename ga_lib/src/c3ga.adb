@@ -95,7 +95,7 @@ package body C3GA is
 
    function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
       use Blade;
-      NP      : Normalized_Point;
+      NP      : Multivector.Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
@@ -104,7 +104,7 @@ package body C3GA is
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, V.Coordinates (3)));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni,
                              0.5 * Norm_E2 (V) * GA_Base_Types.NI));
-      return NP;
+      return Normalized_Point (NP);
    end C3GA_Point;
 
    --  ------------------------------------------------------------------------
@@ -381,7 +381,8 @@ package body C3GA is
    function Get_Coords (NP : Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
       use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (NP);
+      NP_MV  : Multivector.Multivector;
+      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (NP_MV);
       Curs   : Cursor := Blades.First;
       Coords : GA_Maths.Coords_Continuous_Array (1 .. 4);
       Index  : Integer := 0;
@@ -466,31 +467,31 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function E1b (DP : Dual_Plane) return float is
-   begin
-      return DP.E1;
-   end E1b;
+--     function E1b (DP : Dual_Plane) return float is
+--     begin
+--        return DP.E1;
+--     end E1b;
 
    --  -------------------------------------------------------------------------
 
-   function E2b (DP : Dual_Plane) return float is
-   begin
-      return DP.E2;
-   end E2b;
+--     function E2b (DP : Dual_Plane) return float is
+--     begin
+--        return DP.E2;
+--     end E2b;
 
    --  -------------------------------------------------------------------------
 
-   function E3b (DP : Dual_Plane) return float is
-   begin
-      return DP.E3;
-   end E3b;
+--     function E3b (DP : Dual_Plane) return float is
+--     begin
+--        return DP.E3;
+--     end E3b;
 
    --  -------------------------------------------------------------------------
 
-   function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T is
-   begin
-      return DP.Inf;
-   end NIb;
+--     function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T is
+--     begin
+--        return DP.Inf;
+--     end NIb;
 
    --  -------------------------------------------------------------------------
 
@@ -559,8 +560,9 @@ package body C3GA is
    --  ---------------------------------------------------------
 
    function E1b (NP : Normalized_Point) return float is
+      use Multivector;
       use Multivector.Blade_List_Package;
-      Blades     : constant Multivector.Blade_List:= Multivector.Get_Blade_List (NP);
+      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -570,8 +572,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function E2b (NP : Normalized_Point) return float is
+      use Multivector;
       use Multivector.Blade_List_Package;
-      Blades     : constant Multivector.Blade_List:= Multivector.Get_Blade_List (NP);
+      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -582,8 +585,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function E3b (NP : Normalized_Point) return float is
+      use Multivector;
       use Multivector.Blade_List_Package;
-      Blades     : constant Multivector.Blade_List:= Multivector.Get_Blade_List (NP);
+      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
       Curs       : Cursor := Blades.First;  --  ao
    begin
       Next (Curs);  -- e1
@@ -595,8 +599,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NIb (NP : Normalized_Point) return Float is
+      use Multivector;
       use Multivector.Blade_List_Package;
-      Blades     : constant Multivector.Blade_List:= Multivector.Get_Blade_List (NP);
+      Blades     : constant Blade_List := Get_Blade_List (Multivector.Multivector (NP));
       Curs       : Cursor := Blades.Last;  --  ai
    begin
       return Blade.Weight (Element (Curs));
@@ -723,11 +728,11 @@ package body C3GA is
 
    function Probe (Pr : Blade.C3_Base) return Normalized_Point is
       use Blade;
-      NP  : Normalized_Point;
+      NP  : Multivector.Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
-      return NP;
+      return Normalized_Point (NP);
    end Probe;
 
    --  ------------------------------------------------------------------------
@@ -798,7 +803,7 @@ package body C3GA is
    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;
-      NP    : Normalized_Point;
+      NP    : Multivector.Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
@@ -806,7 +811,7 @@ package body C3GA is
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, E2));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, E3));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
-      return NP;
+      return Normalized_Point (NP);
    end Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
@@ -815,14 +820,14 @@ package body C3GA is
                                   Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;
-      NP     : Normalized_Point;
+      NP     : Multivector.Multivector;
    begin
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, Point (2)));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, Point (3)));
       Multivector.Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
-      return NP;
+      return Normalized_Point (NP);
    end Set_Normalized_Point;
 
    --  -------------------------------------------------------------------------
