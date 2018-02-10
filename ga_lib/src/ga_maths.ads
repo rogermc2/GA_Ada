@@ -11,6 +11,7 @@ package GA_Maths is
    package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
+   subtype Float_Vector is Float_Array_Package.Real_Vector;
 
    type float_3 is digits 3;
    type Bit_Map is new integer range 0 .. 2 ** 30;
