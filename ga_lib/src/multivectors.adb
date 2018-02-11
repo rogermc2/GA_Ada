@@ -980,6 +980,27 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function MV_First (MV_List : Multivector_List) return Multivector is
+   begin
+      return MV_List.First_Element;
+   end MV_First;
+
+   --  -------------------------------------------------------------------------
+
+   function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector is
+      use MV_List_Package;
+      Curs : Cursor := MV_List.First;
+   begin
+      if Index > 1 then
+         for count in 2 .. Index loop
+            Next (Curs);
+         end loop;
+      end if;
+      return Element (Curs);
+   end MV_Item;
+
+   --  -------------------------------------------------------------------------
+
    function New_Bivector (V1, V2 : Vector) return Bivector is
       BV : Bivector;
    begin

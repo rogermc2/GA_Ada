@@ -75,6 +75,8 @@ package Multivectors is
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
+   function MV_First (MV_List : Multivector_List) return Multivector;
+   function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector;
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    --  New_Multivector returns a multivector with a scalar blade only
