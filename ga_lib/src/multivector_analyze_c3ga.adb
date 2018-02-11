@@ -5,6 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Blade;
 with E3GA;
 with GA_Maths;
+with GA_Utilities;
 with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
@@ -120,9 +121,11 @@ package body Multivector_Analyze_C3GA is
          when 3 =>  --  F Bivector
             declare
                Factor : array (1 .. 5) of C3GA.Dual_Sphere;
-               Blade_Grade : GA_Maths.Unsigned_Integer := 2;
+               Blade_Grade   : GA_Maths.Unsigned_Integer := 2;
+               Blade_Factors : Multivectors.Multivector_List;
+               Scales        : GA_Utilities.Scale_Array (1 .. 5);
             begin
-               null;
+               Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scales);
             end;
          when 4 =>  --  F Trivector
             theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
