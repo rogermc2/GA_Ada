@@ -1009,6 +1009,15 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function New_Multivector (aBlade : Basis_Blade) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (aBlade);
+      return  MV;
+   end New_Multivector;
+
+   --  -------------------------------------------------------------------------
+
    function New_Rotor return Rotor is
    begin
       return  New_Rotor (1.0);
