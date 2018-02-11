@@ -7,7 +7,7 @@ package GA_Utilities is
    use GA_Maths.Float_Array_Package;
     type Scale_Array is new GA_Maths.Float_Vector;
 
-   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Scale_Array)
+   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                              return Multivectors.Multivector_List;
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3);
    procedure Print_Matrix (Name : String; aMatrix : Real_Matrix);

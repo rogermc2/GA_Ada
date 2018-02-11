@@ -12,7 +12,7 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Scale_Array)
+   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                              return Multivectors.Multivector_List is
       use GA_Maths;
       use Multivectors;
@@ -31,12 +31,12 @@ package body GA_Utilities is
    begin
       --  get scale of blade with highest grade
       if Top_G = 0 then  --  k
-         Scale (1) := Scalar_Part (MV);
+         Scale := Scalar_Part (MV);
       else
-         Scale (1) := Norm_E (MV);
+         Scale := Norm_E (MV);
       end if;
 
-      if Scale (1) /= 0.0 and Top_G /= 0 then
+      if Scale /= 0.0 and Top_G /= 0 then
          --  Initialize a list e of basis blades
          Blades.Append (Blade.New_Basis_Blade (Top_G));  --  add BB(k) to e
          for Power_of_2 in 0 .. Dim - 1 loop
@@ -47,8 +47,8 @@ package body GA_Utilities is
             end if;
          end loop;
 
-         thisBlade := Geometric_Product (MV, 1.0 / Scale (1));
-         Add_Multivector (Factors, New_Multivector (Float (Top_G)));
+         --  Factorize MV
+         thisBlade := Geometric_Product (MV, 1.0 / Scale);
          B_Cursor := Blades.First;
          while Has_Element (B_Cursor) loop
             --  project basis vector e[i]
