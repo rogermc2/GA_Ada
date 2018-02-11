@@ -34,7 +34,8 @@ package Multivector_Analyze is
    type Model_Type is (Vector_Space, Homogenous_Model, Conformal_Model);
 
    type M_Type_Type is (Unspecified_Type, Scalar_Type, Vector_Type,
-                        Bivector_Type, Trivector_Type);
+                        Bivector_Type, Trivector_Type, Point_Type, Point_Pair_Type,
+                        Line_Type, Circle_Type, Plane_Type, Sphere_Type);
 
    type N_Vector_Type is (N_Vector, N_Bivector, N_Trivector);
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
@@ -63,7 +64,6 @@ package Multivector_Analyze is
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
---        M_MV_Type        : Multivector_Type_Base.MV_Typebase;
       M_MV_Type        : Multivector_Type.MV_Type_Record;
       Conformal_Kind   : Conformal_Type := Not_Conformal;
       Epsilon          : Float;
