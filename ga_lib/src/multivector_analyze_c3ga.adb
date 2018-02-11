@@ -107,27 +107,31 @@ package body Multivector_Analyze_C3GA is
    procedure Analyze_Free (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                            Flags : Flag_Type; Epsilon : float) is
       use Multivectors;
-      Grade    : constant GA_Maths.Unsigned_Integer :=
+      Grade         : constant GA_Maths.Unsigned_Integer :=
         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
-      Weight   : constant Float := Norm_E (MV);
-      Attitude : Multivector := MV;
-      No       : constant Vector := Get_Basis_Vector (Blade.C3_no);
+      Weight        : constant Float := Norm_E (MV);
+      Attitude      : Multivector := MV;
+      No            : constant Vector := Get_Basis_Vector (Blade.C3_no);
+      Blade_Factors : Multivectors.Multivector_List;
+      Scale         : Float;
    begin
       theAnalysis.M_Points (1) := Get_Basis_Vector (Blade.C3_no);
       theAnalysis.M_Scalors (1) := Weight;
       case Grade is
+         when 1 => theAnalysis.M_Type.MV_Subtype := Scalar_Type;
          when 2 =>  --  F Vector
+            theAnalysis.M_Type.MV_Subtype := Vector_Type;
             theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (No, MV));
          when 3 =>  --  F Bivector
-            declare
-               Factor : array (1 .. 5) of C3GA.Dual_Sphere;
-               Blade_Grade   : GA_Maths.Unsigned_Integer := 2;
-               Blade_Factors : Multivectors.Multivector_List;
-               Scales        : GA_Utilities.Scale_Array (1 .. 5);
-            begin
-               Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scales);
-            end;
+            theAnalysis.M_Type.MV_Subtype := Bivector_Type;
+            Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scale);
+            theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
+            theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
+            theAnalysis.M_Vectors (3) :=
+              -Dual (Outer_Product (theAnalysis.M_Vectors (1),
+                     theAnalysis.M_Vectors (2)));
          when 4 =>  --  F Trivector
+            theAnalysis.M_Type.MV_Subtype := Trivector_Type;
             theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
             theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
             theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
