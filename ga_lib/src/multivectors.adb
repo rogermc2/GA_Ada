@@ -1001,6 +1001,23 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function Negate (MV : Multivector) return Multivector is
+      use Blade_List_Package;
+      Blades : Blade_List := MV.Blades;
+      Curs   : Cursor := Blades.First;
+      aBlade : Blade.Basis_Blade;
+      Neg    : Multivector;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         Blade.Update_Blade (aBlade, -Weight (aBlade));
+         Neg.Blades.Append (aBlade);
+      end loop;
+      return Neg;
+   end Negate;
+
+   --  -----------------------------------------------------------
+
    function New_Bivector (V1, V2 : Vector) return Bivector is
       BV : Bivector;
    begin

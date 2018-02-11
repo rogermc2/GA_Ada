@@ -77,6 +77,7 @@ package Multivectors is
                                 return Ada.Strings.Unbounded.Unbounded_String;
    function MV_First (MV_List : Multivector_List) return Multivector;
    function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector;
+   function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    --  New_Multivector returns a multivector with a scalar blade only
