@@ -29,8 +29,8 @@ with GL_Util;
 
 package body GA_Draw is
 
-   Palet                : Colour_Palet;
-   G_Draw_State         : Draw_State;
+   Palet          : Colour_Palet;
+   G_Draw_State   : Draw_State;
 
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
@@ -125,10 +125,10 @@ package body GA_Draw is
 
       if  Method /= Draw_Bivector_Parallelogram and then
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
-         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix (Scale_S);
          --  Rotate e3 to normal direction
          RT := E3GA_Utilities.Rotor_Vector_To_Vector
-           (Multivectors.Get_Basis_Vector (Blade.E3_e3), Normal);
+           (Multivectors.Basis_Vector (Blade.E3_e3), Normal);
          GL_Util.Rotor_GL_Multiply (RT, MVP_Matrix);
       else
          Normed_E2 := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
@@ -269,15 +269,15 @@ package body GA_Draw is
       Fan                  : Singles.Vector3_Array (1 .. Num_Steps);
 
       procedure Draw_Part (Part : Circle_Part) is
---           Normal : Multivector.Vector;
+         --           Normal : Multivector.Vector;
          Norm_Z : float;
       begin
          Case Part is
             when Back_Part | Outline_Part => Norm_Z := 1.0;
             when Front_Part => Norm_Z := -1.0;
          end case;
---           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
---           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
+         --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
+         --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
          Fan (1) := (0.0, 0.0, 0.0);
          for Count in 2 .. Num_Steps loop
@@ -427,12 +427,23 @@ package body GA_Draw is
    procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                           MV_Matrix : GL.Types.Singles.Matrix4;
                           Normal : GL.Types.Single; Colour : GL.Types.Colors.Color) is
-      Sphere : Geosphere.Geosphere;
+      use Geosphere;
+      --        Sphere : Geosphere.Geosphere;
    begin
-      Geosphere.GS_Compute (Sphere, 4);
-      --  gsDraw(m_sphere, 0.0f);
-      Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, 0.0, Colour);
+      if Sphere_State_Null (G_Draw_State.M_Sphere) then
+         Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
+         Geosphere.New_Sphere_List (G_Draw_State.M_Sphere);
+         --  gsDraw(m_sphere, 0.0f);
+         Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
+                            0.0, Colour);
+      end if;
 
+      if Normal = 0.0 then
+         Draw_Sphere_List (Render_Program, MV_Matrix, Normal, Colour);
+      else
+         Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
+                            Normal, Colour);
+      end if;
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -441,19 +452,19 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
---     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
---                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
---                            Normal : E3GA.Vector; Scale : float := 1.0;
---                            Colour : GL.Types.Colors.Color) is
---     begin
---        if G_Draw_State.Max_Vertices = 0 then
---           Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
---        end if;
---     exception
---        when anError :  others =>
---           Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
---           raise;
---     end Draw_Sphere;
+   --     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
+   --                            Translation_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4;
+   --                            Normal : E3GA.Vector; Scale : float := 1.0;
+   --                            Colour : GL.Types.Colors.Color) is
+   --     begin
+   --        if G_Draw_State.Max_Vertices = 0 then
+   --           Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
+   --        end if;
+   --     exception
+   --        when anError :  others =>
+   --           Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
+   --           raise;
+   --     end Draw_Sphere;
 
    --  ------------------------------------------------------------------------
    --  Based on draw.cpp drawTriVector
@@ -488,20 +499,24 @@ package body GA_Draw is
 
       if Multivectors.Norm_E2 (Position) >= 0.0 then
          Translation_Matrix :=
-          Maths.Translation_Matrix ((Single (E3GA.e1 (Position)),
+           Maths.Translation_Matrix ((Single (E3GA.e1 (Position)),
                                      Single (E3GA.e2 (Position)),
                                      Single (E3GA.e3 (Position))));
       end if;
-      Scaling_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
+      Scaling_Matrix := Maths.Scaling_Matrix (Scale_S);
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
 
       case Method is
          when DRAW_TV_SPHERE =>
+            --  g_drawState.drawSphere
+            --  (((g_drawState.getDrawMode() & OD_ORIENTATION) ?
+            --     s * 0.1f : 0.0f));
             if Get_Draw_Mode = OD_Orientation then
                s := 0.1;
             else
                s := 0.0;
             end if;
+            --  g_drawState.drawSphere (s)
             Draw_Sphere (Render_Program, MV_Matrix, s, Colour);
          when others => null;
       end case;
@@ -581,7 +596,7 @@ package body GA_Draw is
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-           (Get_Basis_Vector (Blade.E3_e3), Unit_e (Direction));
+           (Basis_Vector (Blade.E3_e3), Unit_e (Direction));
          Model_View_Matrix := Identity4;
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;
@@ -622,7 +637,7 @@ package body GA_Draw is
                                        MV_Matrix_ID, Projection_Matrix_ID,
                                        Colour_Location : out GL.Uniforms.Uniform) is
    begin
-       MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
+      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MV_Matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "Proj_Matrix");
@@ -674,7 +689,7 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Projection_Matrix (theMatrix : out GL.Types.Singles.Matrix4;
+   procedure Set_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
                                     Near : GL.Types.Single := -100.0;
                                     Far  : GL.Types.Single := 100.0) is
       use GL.Types;
@@ -684,9 +699,11 @@ package body GA_Draw is
       VP_Width  : Int;
    begin
       GL.Window.Get_Viewport (VP_X, VP_Y, VP_Width, VP_Height);
+      --  Init_Orthographic_Transform
+      --  (Top, Bottom, Left, Right, Z_Near, Z_Far, Proj_Matrixles.Matrix4)
       Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Y + VP_Height),
                                          Single (VP_X), Single (VP_X + VP_Width),
-                                         Near, Far, theMatrix);
+                                         Near, Far, Proj_Matrix);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Set_Projection_Matrix.");

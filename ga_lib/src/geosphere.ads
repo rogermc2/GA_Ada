@@ -19,20 +19,27 @@ package Geosphere is
      (Element_Type => Vector, Index_Type => Positive);
    type V_Vector is new Vertex_Vectors.Vector with null record;
 
-    procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
-    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
-                       MV_Matrix : GL.Types.Singles.Matrix4;
-                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
-                       Colour : GL.Types.Colors.Color);
+   procedure Add_To_Sphere_List (Sphere : Geosphere);
+   procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
+                               MV_Matrix : GL.Types.Singles.Matrix4;
+                               Normal : GL.Types.Single := 0.0;
+                               Colour : GL.Types.Colors.Color);
+   procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
+   procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
+                      MV_Matrix : GL.Types.Singles.Matrix4;
+                      Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
+                      Colour : GL.Types.Colors.Color);
+   procedure New_Sphere_List (Sphere : Geosphere);
+   function Sphere_State_Null (Sphere : Geosphere) return Boolean;
 
 private
    subtype Int3_Range is Integer range 1 .. 3;
    subtype Int4_Range is Integer range 1 .. 4;
-    type Child_Array is array (Int4_Range) of integer;
-    type Neighbour_Array is array  (Int3_Range)  of integer;
-    type Contour_Intersect_Array is array  (Int3_Range)  of integer;
-    type Contour_Visited_Array is array  (Int3_Range)  of integer;
-    type V_Array is array  (Int3_Range) of integer;
+   type Child_Array is array (Int4_Range) of integer;
+   type Neighbour_Array is array  (Int3_Range)  of integer;
+   type Contour_Intersect_Array is array  (Int3_Range)  of integer;
+   type Contour_Visited_Array is array  (Int3_Range)  of integer;
+   type V_Array is array  (Int3_Range) of integer;
 
    type Geosphere_Face is record
       Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
@@ -50,12 +57,13 @@ private
    type F_Vector is new Face_Vectors.Vector with null record;
 
    type Geosphere is record
---        Num_Vertices    : integer;
---        Num_Faces       : integer;
---        Num_Primitives  : integer;  --  Always = Num_Faces
-      Depth           : integer;
-      Vertices        : V_Vector;
-      Faces           : F_Vector;
+      --        Num_Vertices    : integer;
+      --        Num_Faces       : integer;
+      --        Num_Primitives  : integer;  --  Always = Num_Faces
+      Depth      : integer := 0;
+      Vertices   : V_Vector;
+      Faces      : F_Vector;
+      isNull     : Boolean := True;
    end record;
 
 end Geosphere;

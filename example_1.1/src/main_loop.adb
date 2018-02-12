@@ -109,6 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Pick                : GL_Util.GL_Pick;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Projection_Matrix   : GL.Types.Singles.Matrix4;
       Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
    begin
@@ -119,8 +120,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-      Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
+      Model_View_Matrix := Maths.Scaling_Matrix (Scale_S) * Model_View_Matrix;
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+      GA_Draw.Set_Projection_Matrix (Projection_Matrix);
 
       --  The final MVP matrix is set up in the draw routines
 --        Set_Coords (V1, E11, E12);

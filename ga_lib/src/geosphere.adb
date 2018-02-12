@@ -21,12 +21,24 @@ with GA_Draw;
 
 package body Geosphere is
 
+   package Sphere_Vector_Package is new Ada.Containers.Vectors
+     (Element_Type => Geosphere, Index_Type => Positive);
+   type Sphere_Vector is new Sphere_Vector_Package.Vector with null record;
+
    type Indices_Array is array (Integer range <>) of Indices;
    type Vertices_Array is array (Integer range <>) of Vector;
---     type Vertices_Array is array (Integer range <>) of E3GA.Vector;
+
+   Sphere_List : Sphere_Vector;
 
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Add_To_Sphere_List (Sphere : Geosphere) is
+   begin
+      Sphere_List.Append (Sphere);
+   end Add_To_Sphere_List;
 
    --  -------------------------------------------------------------------------
 
@@ -129,6 +141,14 @@ package body Geosphere is
 
       --  ---------------------------------------------------------------------
 
+      procedure New_Sphere_List (Sphere : Geosphere) is
+      begin
+         Sphere_List.Clear;
+         Sphere_List.Append (Sphere);
+      end New_Sphere_List;
+
+      --  ---------------------------------------------------------------------
+
       procedure Reset_Relation (C : Face_Vectors.Cursor) is
          Face_Index : Integer := Face_Vectors.To_Index (C);
          aFace : Geosphere_Face := Sphere.Faces.Element (Face_Index);
@@ -150,6 +170,21 @@ package body Geosphere is
          Put_Line ("An exception occurred in Geosphere.Compute_Neighbours.");
          raise;
    end Compute_Neighbours;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
+                               MV_Matrix : GL.Types.Singles.Matrix4;
+                               Normal : GL.Types.Single := 0.0;
+                               Colour : GL.Types.Colors.Color) is
+      use Sphere_Vector_Package;
+      Curs : Cursor := Sphere_List.First;
+   begin
+      while Has_Element (Curs) loop
+         GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal, Colour);
+         Next (Curs);
+      end loop;
+   end Draw_Sphere_List;
 
    --  -------------------------------------------------------------------------
 
@@ -250,6 +285,7 @@ package body Geosphere is
       Sphere.Depth := Depth;
 
       Compute_Neighbours (Sphere);
+      Sphere.isNull := False;
 
    exception
       when anError :  others =>
@@ -328,8 +364,10 @@ package body Geosphere is
       GL.Objects.Programs.Use_Program (Render_Program);
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
-      Model_View_Matrix := MV_Matrix;
+      Model_View_Matrix := Maths.Scaling_Matrix (0.5) * MV_Matrix;
       GA_Draw.Set_Projection_Matrix (Proj_Matrix);
+      Proj_Matrix := Maths.Translation_Matrix ((1.0, -1.0, 0.0)) *
+        Proj_Matrix;
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Proj_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
@@ -339,6 +377,9 @@ package body Geosphere is
 
       --  Implement for (i = 0; i < sphere->nbPrimitives; i++)
       --                 gsDraw(sphere, i, normal);
+      Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix);
+--        Utilities.Print_Matrix ("Geosphere.GS_Draw Proj_Matrix", Proj_Matrix);
+--        Utilities.Print_Matrix ("Geosphere.GS_Draw MVP Matrix", Proj_Matrix * Model_View_Matrix);
       Iterate (Sphere.Faces, Draw'Access);
 
    exception
@@ -346,6 +387,14 @@ package body Geosphere is
          Put_Line ("An exception occurred in Geosphere.GS_Draw.");
          raise;
    end GS_Draw;
+
+   --  -------------------------------------------------------------------------
+
+   procedure New_Sphere_List (Sphere : Geosphere) is
+   begin
+      Sphere_List.Clear;
+      Sphere_List.Append (Sphere);
+   end New_Sphere_List;
 
    --  -------------------------------------------------------------------------
 
@@ -409,6 +458,13 @@ package body Geosphere is
          Put_Line ("An exception occurred in Geosphere.Refine_Face.");
          raise;
    end Refine_Face;
+
+   --  -------------------------------------------------------------------------
+
+   function Sphere_State_Null (Sphere : Geosphere) return Boolean is
+   begin
+      return Sphere.isNull;
+   end Sphere_State_Null;
 
    --  -------------------------------------------------------------------------
 
