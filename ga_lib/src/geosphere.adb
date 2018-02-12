@@ -1,4 +1,5 @@
 
+with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Numerics;
@@ -21,14 +22,14 @@ with GA_Draw;
 
 package body Geosphere is
 
-   package Sphere_Vector_Package is new Ada.Containers.Vectors
-     (Element_Type => Geosphere, Index_Type => Positive);
-   type Sphere_Vector is new Sphere_Vector_Package.Vector with null record;
+   package Sphere_List_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Geosphere);
+   type Sphere_DL_List is new Sphere_List_Package.List with null record;
 
    type Indices_Array is array (Integer range <>) of Indices;
    type Vertices_Array is array (Integer range <>) of Vector;
 
-   Sphere_List : Sphere_Vector;
+   Sphere_List : Sphere_DL_List;
 
    function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
                          return Boolean;
@@ -177,7 +178,7 @@ package body Geosphere is
                                MV_Matrix : GL.Types.Singles.Matrix4;
                                Normal : GL.Types.Single := 0.0;
                                Colour : GL.Types.Colors.Color) is
-      use Sphere_Vector_Package;
+      use Sphere_List_Package;
       Curs : Cursor := Sphere_List.First;
    begin
       while Has_Element (Curs) loop
