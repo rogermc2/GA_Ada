@@ -38,7 +38,7 @@ with E2GA;
 with E2GA_Draw;
 with E3GA;
 with GA_Maths;
-with Multivector;
+with Multivectors;
 
 with Silo;
 
@@ -58,7 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program : GL.Objects.Programs.Program;
                                  MV_Matrix      : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4     : Multivector.Vector;
+                                 V2, V3, V4     : Multivectors.Vector;
                                  Colour         : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
@@ -81,7 +81,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Maths.Single_Math_Functions;
       use GA_Maths;
       use GA_Maths.Float_Functions;
-      use Multivector;
+      use Multivectors;
 
       Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2;
@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_Y        : single := 100.0;
 
       A                 : float := 0.0;
-      BV                : Multivector.Bivector;
+      BV                : Multivectors.Bivector;
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
       V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
@@ -195,7 +195,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program  : GL.Objects.Programs.Program;
                                  MV_Matrix       : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4      : Multivector.Vector;
+                                 V2, V3, V4      : Multivectors.Vector;
                                  Colour          : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
