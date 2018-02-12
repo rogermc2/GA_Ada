@@ -22,8 +22,8 @@ package Geosphere is
    procedure Add_To_Sphere_List (Sphere : Geosphere);
    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
                                MV_Matrix : GL.Types.Singles.Matrix4;
-                               Normal : GL.Types.Single := 0.0;
-                               Colour : GL.Types.Colors.Color);
+                               Colour : GL.Types.Colors.Color;
+                               Normal : GL.Types.Single := 0.0);
    procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                       MV_Matrix : GL.Types.Singles.Matrix4;

@@ -724,7 +724,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Blade (MV : Multivector; MV1 : out Multivector;
+   function Get_Blade (MV : Multivector; theBlade : out Multivector;
                        Index : GA_Maths.Unsigned_Integer) return Boolean is
       use Blade_List_Package;
       use Blade;
@@ -737,7 +737,7 @@ package body Multivectors is
       while Has_Element (Curs) and not Found loop
          Found := Bitmap (Element (Curs)) = Index;
          if Found then
-            MV1.Blades.Append (Element (Curs));
+            theBlade.Blades.Append (Element (Curs));
          else
             Next (Curs);
          end if;

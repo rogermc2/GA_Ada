@@ -22,7 +22,7 @@ with GA_Maths;
 with Utilities;
 
 with Blade;
-with E3GA;
+with C3GA;
 with E3GA_Utilities;
 with Geosphere;
 with GL_Util;
@@ -167,7 +167,6 @@ package body GA_Draw is
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
       Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
-      Cords                : Array_3D := (0.0, 0.0, 0.0);
       Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       O2                   : Multivectors.Vector := Ortho_2;
       Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -186,10 +185,9 @@ package body GA_Draw is
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
       MVP_Matrix := Model_View_Matrix;
-      Cords := E3GA.Get_Coords (Base);
-      Translate := (Single (E3GA.e1 (Base)),
-                    Single (E3GA.e2 (Base)),
-                    Single (E3GA.e3 (Base)));
+      Translate := (Single (C3GA.e1 (Base)),
+                    Single (C3GA.e2 (Base)),
+                    Single (C3GA.e3 (Base)));
       E2_Norm := Multivectors.Norm_E2 (Base);
       if  E2_Norm /= 0.0  then
          MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
@@ -439,7 +437,7 @@ package body GA_Draw is
       end if;
 
       if Normal = 0.0 then
-         Draw_Sphere_List (Render_Program, MV_Matrix, Normal, Colour);
+         Draw_Sphere_List (Render_Program, MV_Matrix, Colour);
       else
          Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
                             Normal, Colour);
@@ -474,35 +472,27 @@ package body GA_Draw is
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
-      Scale_Sign          : Single := 1.0;
-      Scale_S             : Single := Single (Scale);
+      Scale_S             : Single := Single (Abs (Scale));
       Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
-      s                   : Single;
+      Normal              : Single;  -- s
       Translation_Matrix  : Matrix4 := Identity4;
       Scaling_Matrix      : Matrix4 := Identity4;
       MV_Matrix           : Matrix4;
    begin
       --  scaleSign = (scale < 0.0f) ? -1.0f : 1.0f;
-      if Scale < 0.0 then
-         Scale_Sign := -1.0;
-      end if;
       --  adjust scale for sphere
-      Scale_S := Scale_Sign *
-        Maths.Cube_Root (Scale_Sign * Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi)));
+      Scale_S := Abs (Maths.Cube_Root
+                      (Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi))));
       --  main part of draw.cpp drawTriVector
       --  s = (scale < 0.0f) ? -1.0f : 1.0f, f;
-      if Scale_S >= 0.0 then
-         Scale_Sign := 1.0;
-      else
-         Scale_Sign := -1.0;
-      end if;
-
       if Multivectors.Norm_E2 (Position) >= 0.0 then
          Translation_Matrix :=
-           Maths.Translation_Matrix ((Single (E3GA.e1 (Position)),
-                                     Single (E3GA.e2 (Position)),
-                                     Single (E3GA.e3 (Position))));
+           Maths.Translation_Matrix ((Single (C3GA.e1 (Position)),
+                                     Single (C3GA.e2 (Position)),
+                                     Single (C3GA.e3 (Position))));
       end if;
+      Utilities.Print_Matrix ("GA_Draw.Draw_Trivector Translation_Matrix", Translation_Matrix);
+
       Scaling_Matrix := Maths.Scaling_Matrix (Scale_S);
       MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
 
@@ -512,12 +502,12 @@ package body GA_Draw is
             --  (((g_drawState.getDrawMode() & OD_ORIENTATION) ?
             --     s * 0.1f : 0.0f));
             if Get_Draw_Mode = OD_Orientation then
-               s := 0.1;
+               Normal := 0.1;
             else
-               s := 0.0;
+               Normal := 0.0;
             end if;
             --  g_drawState.drawSphere (s)
-            Draw_Sphere (Render_Program, MV_Matrix, s, Colour);
+            Draw_Sphere (Render_Program, MV_Matrix, Normal, Colour);
          when others => null;
       end case;
 

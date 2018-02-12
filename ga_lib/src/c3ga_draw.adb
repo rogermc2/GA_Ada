@@ -67,7 +67,7 @@ package body C3GA_Draw is
 --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
 
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                              Position, Colour, Scale);
+                              Position, Colour, 1.0 * Scale);
 
    exception
       when anError :  others =>

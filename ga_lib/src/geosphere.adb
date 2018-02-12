@@ -18,7 +18,9 @@ with Glfw;
 with Glfw.Windows;
 
 with Blade;
+with C3GA;
 with GA_Draw;
+with GL_Util;
 
 package body Geosphere is
 
@@ -176,8 +178,8 @@ package body Geosphere is
 
    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
                                MV_Matrix : GL.Types.Singles.Matrix4;
-                               Normal : GL.Types.Single := 0.0;
-                               Colour : GL.Types.Colors.Color) is
+                               Colour : GL.Types.Colors.Color;
+                               Normal : GL.Types.Single := 0.0) is
       use Sphere_List_Package;
       Curs : Cursor := Sphere_List.First;
    begin
@@ -205,6 +207,41 @@ package body Geosphere is
          Put_Line ("An exception occurred in Geosphere.Create_Face.");
          raise;
    end Create_Face;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Vertex (Sphere : Geosphere; aFace : Geosphere_Face;
+                        Vertex_Index : Positive) return GL.Types.Singles.Vector3 is
+      use GL.Types;
+      theVertex    : Singles.Vector3;
+      GA_Vector    : Multivectors.Vector :=
+        Sphere.Vertices.Element (Vertex_Index);
+   begin
+      theVertex (GL.X) := Single (C3GA.e1 (GA_Vector));
+      theVertex (GL.Y) := Single (C3GA.e2 (GA_Vector));
+      theVertex (GL.Z) := Single (C3GA.e3 (GA_Vector));
+      return theVertex;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Get_Vertices 1.");
+         raise;
+   end Get_Vertex;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Vertex (Sphere : Geosphere; aFace : Geosphere_Face;
+                        Vertex_Index : Positive) return Multivectors.Vector is
+       GA_Vector    : Multivectors.Vector :=
+        Sphere.Vertices.Element (Vertex_Index);
+   begin
+      return GA_Vector;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Geosphere.Get_Vertices 2.");
+         raise;
+   end Get_Vertex;
 
    --  -------------------------------------------------------------------------
 
@@ -329,7 +366,10 @@ package body Geosphere is
             null;
          end Draw;
 
-         Vertices : GL.Types.Singles.Vector3_Array (1 .. 3);
+         Vertices : Singles.Vector3_Array (1 .. 3);
+         Lines    : Singles.Vector3_Array (1 .. 6);
+         V1       : Singles.Vector3;
+         V1_MV    : Multivectors.Vector;
       begin
          if thisFace.Child (1) > 0 then
             Put_Line ("Geosphere.GS_Draw has child");
@@ -355,6 +395,26 @@ package body Geosphere is
                                                   First => 0,
                                                   Count => 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+            if Normal /= 0.0 then
+               --  Draw three lines
+               for index in 1 .. 3 loop
+                  V1_MV := Unit_E (Get_Vertex (Sphere, thisFace, index));
+                  V1 := GL_Util.To_GL (V1_MV);
+                  Lines (2 * Int (index - 1) + 1) := Get_Vertex (Sphere, thisFace, index);
+                  Lines (2 * Int (index - 1) + 2) :=
+                    Get_Vertex (Sphere, thisFace, index) + V1 * Normal;
+               end loop;
+
+               Utilities.Load_Vertex_Buffer (Array_Buffer, Lines, Static_Draw);
+               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
+               GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+               GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
+                                                     First => 0,
+                                                     Count => 3);
+               GL.Attributes.Disable_Vertex_Attrib_Array (0);
+            end if;
          end if;
       end Draw;
 
