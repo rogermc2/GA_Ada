@@ -173,7 +173,7 @@ package body Multivector_Analyze_C3GA is
       Scale         : Float;
    begin
       theAnalysis.M_Type.Blade_Class := Free_Blade;
-      theAnalysis.M_Points (1) := Get_Basis_Vector (Blade.C3_no);
+      theAnalysis.M_Points (1) := Basis_Vector (Blade.C3_no);
       theAnalysis.M_Scalors (1) := Weight;
       case Grade is
          when 1 => theAnalysis.M_Type.MV_Subtype := Scalar_Type;
@@ -190,9 +190,9 @@ package body Multivector_Analyze_C3GA is
                      theAnalysis.M_Vectors (2)));
          when 4 =>  --  F Trivector
             theAnalysis.M_Type.MV_Subtype := Trivector_Type;
-            theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
-            theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
-            theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
+            theAnalysis.M_Vectors (1) := Basis_Vector (Blade.E3_e1);
+            theAnalysis.M_Vectors (2) := Basis_Vector (Blade.E3_e2);
+            theAnalysis.M_Vectors (3) := Basis_Vector (Blade.E3_e3);
          when others => null;
       end case;
    end Analyze_Free;
@@ -243,9 +243,9 @@ package body Multivector_Analyze_C3GA is
          when 1 =>
             theAnalysis.M_Type.MV_Subtype := Sphere_Type;
             theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
-            theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
-            theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
-            theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
+            theAnalysis.M_Vectors (1) := Basis_Vector (Blade.E3_e1);
+            theAnalysis.M_Vectors (2) := Basis_Vector (Blade.E3_e2);
+            theAnalysis.M_Vectors (3) := Basis_Vector (Blade.E3_e3);
          when 2 =>
             theAnalysis.M_Type.MV_Subtype := Point_Pair_Type;
             theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (C3GA.no, Attitude));
@@ -259,9 +259,9 @@ package body Multivector_Analyze_C3GA is
                      theAnalysis.M_Vectors (2)));
          when 4 =>
             theAnalysis.M_Type.MV_Subtype := Sphere_Type;
-            theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
-            theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
-            theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
+            theAnalysis.M_Vectors (1) := Basis_Vector (Blade.E3_e1);
+            theAnalysis.M_Vectors (2) := Basis_Vector (Blade.E3_e2);
+            theAnalysis.M_Vectors (3) := Basis_Vector (Blade.E3_e3);
          when others => null;
          end case;
       end if;
@@ -310,9 +310,9 @@ package body Multivector_Analyze_C3GA is
                      theAnalysis.M_Vectors (2)));
          when 4 =>
             theAnalysis.M_Type.MV_Subtype := Trivector_Type;
-            theAnalysis.M_Vectors (1) := Get_Basis_Vector (Blade.E3_e1);
-            theAnalysis.M_Vectors (2) := Get_Basis_Vector (Blade.E3_e2);
-            theAnalysis.M_Vectors (3) := Get_Basis_Vector (Blade.E3_e3);
+            theAnalysis.M_Vectors (1) := Basis_Vector (Blade.E3_e1);
+            theAnalysis.M_Vectors (2) := Basis_Vector (Blade.E3_e2);
+            theAnalysis.M_Vectors (3) := Basis_Vector (Blade.E3_e3);
          when others => null;
       end case;
    end Analyze_Tangent;

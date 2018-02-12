@@ -56,10 +56,10 @@ package Multivectors is
    function General_Inverse (MV : Multivector;
                              Met : Metric.Metric_Record) return Multivector;
    --  Get_Basis_Vector returns multivector of the required base.
-   function Get_Basis_Vector (Index : BV_Base) return Multivector;
-   function Get_Basis_Vector (Index : E2_Base) return Multivector;
-   function Get_Basis_Vector (Index : E3_Base) return Multivector;
-   function Get_Basis_Vector (Index : C3_Base) return Multivector;
+   function Basis_Vector (Index : BV_Base) return Multivector;
+   function Basis_Vector (Index : E2_Base) return Multivector;
+   function Basis_Vector (Index : E3_Base) return Multivector;
+   function Basis_Vector (Index : C3_Base) return Multivector;
    function Get_Blade (MV : Multivector; MV1 : out Multivector;
                        Index : GA_Maths.Unsigned_Integer) return Boolean;
 

@@ -44,11 +44,7 @@ package body C3GA_Draw is
                    Point_Position : C3GA.Normalized_Point;
                    Colour : GL.Types.Colors.Color) is
       use Multivectors;
---        MV   : C3GA.Multivector;
-      Anal : Multivector_Analyze.MV_Analysis;
    begin
---        C3GA.Set_Multivector (MV, Point_Position);
-      Multivector_Analyze.Analyze (Anal, Multivector (Point_Position), C3GA.Probe (Blade.C3_no));
       Draw_Point (Render_Program, Model_View_Matrix, Multivector (Point_Position), Colour);
    exception
       when anError :  others =>

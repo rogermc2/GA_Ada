@@ -503,6 +503,7 @@ package body Multivectors is
          end loop;
       end;
       MV_E.Blades := New_List;
+      Simplify (MV_E);
       return MV_E;
    end Extract_Grade;
 
@@ -662,39 +663,39 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : BV_Base) return Multivector is
+   function Basis_Vector (Index : BV_Base) return Multivector is
       MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
-   end Get_Basis_Vector;
+   end Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : E2_Base) return Multivector is
+   function Basis_Vector (Index : E2_Base) return Multivector is
       MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
-   end Get_Basis_Vector;
+   end Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : E3_Base) return Multivector is
+   function Basis_Vector (Index : E3_Base) return Multivector is
       MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
-   end Get_Basis_Vector;
+   end Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Basis_Vector (Index : C3_Base) return Multivector is
+   function Basis_Vector (Index : C3_Base) return Multivector is
       MV : Multivector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
-   end Get_Basis_Vector;
+   end Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
