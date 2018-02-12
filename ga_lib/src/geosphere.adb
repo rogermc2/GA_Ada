@@ -247,24 +247,14 @@ package body Geosphere is
 
    procedure Get_Vertices (Sphere : Geosphere; aFace : Geosphere_Face;
                            Vertices : in out GL.Types.Singles.Vector3_Array) is
-      use Blade_List_Package;
       use GL.Types;
-      Blades       : Blade_List;
-      Curs         : Cursor;
       Indices      : V_Array := aFace.Vertex_Indices;
       Vertex_Index : Positive;
-      GA_Vector    : Multivectors.Vector;
    begin
       for index in Positive range 1 .. 3 loop
          Vertex_Index := Indices (index);
-         GA_Vector := Sphere.Vertices.Element (Vertex_Index);
-         Blades := Get_Blade_List (GA_Vector);
-         Curs := Blades.First;
-         Vertices (Int (index)) (GL.X) := Single (Blade.Weight (Element (Curs)));
-         Next (Curs);
-         Vertices (Int (index)) (GL.Y) := Single (Blade.Weight (Element (Curs)));
-         Next (Curs);
-         Vertices (Int (index)) (GL.Z) := Single (Blade.Weight (Element (Curs)));
+         Vertices (Int (index)) :=
+           GL_Util.To_GL (Sphere.Vertices.Element (Vertex_Index));
       end loop;
 
    exception
@@ -412,7 +402,7 @@ package body Geosphere is
 
                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
                                                      First => 0,
-                                                     Count => 3);
+                                                     Count => 2);
                GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
