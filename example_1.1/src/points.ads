@@ -24,14 +24,14 @@ package Points is
    Plane_Point_Index  : Int := 6;
 
    n  : constant Multivectors.Vector := E3GA.e2;  --  n is a direction vector
-   L1 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (1));
-   L2 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (2));
+   L1 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (1));
+   L2 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (2));
 
-   C1 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (3));
-   C2 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (4));
-   C3 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (5));
+   C1 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (3));
+   C2 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (4));
+   C3 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (5));
 
-   P1 : constant Normalized_Point := C3GA.C3GA_Point (Point_Data (6));
+   P1 : constant Normalized_Point := C3GA.Set_Normalized_Point (Point_Data (6));
 
    Normalized_Points : constant Normalized_Points_Array (1 .. Num_Points) :=
                     (L1, L2, C1, C2, C3, P1);

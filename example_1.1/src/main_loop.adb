@@ -95,10 +95,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --        Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
---        E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
---        E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
---        E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
---        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
       V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
       V2                : Multivectors.Vector;
 

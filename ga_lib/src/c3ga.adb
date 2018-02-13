@@ -93,20 +93,20 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
+   function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point is
       use Multivectors;
       use Blade;
-      NP      : Multivector;
+      NP      : Normalized_Point;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
-      Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
-      Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, V.Coordinates (1)));
-      Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, V.Coordinates (2)));
-      Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, V.Coordinates (3)));
-      Add_Blade (NP, Blade.New_Basis_Blade (C3_ni,
+      Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
+      Add_Blade (NP, New_Basis_Blade (C3_e1, V.Coordinates (1)));
+      Add_Blade (NP, New_Basis_Blade (C3_e2, V.Coordinates (2)));
+      Add_Blade (NP, New_Basis_Blade (C3_e3, V.Coordinates (3)));
+      Add_Blade (NP, New_Basis_Blade (C3_ni,
                  0.5 * Norm_E2 (V) * GA_Base_Types.NI));
-      return Normalized_Point (NP);
-   end C3GA_Point;
+      return NP;
+   end Set_Normalized_Point;
 
    --  ------------------------------------------------------------------------
 
