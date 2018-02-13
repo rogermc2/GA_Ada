@@ -16,7 +16,9 @@ package Blade_Types is
                     C3_e1_no, C3_e2_no, C3_e3_no, C3_e1_ni, C3_e2_ni, C3_e3_ni,
                     C3_e1_e2_e3, C3_e1_e2_no, C3_e1_e2_ni,
                     C3_e1_e3_no, C3_e1_e3_ni, C3_e2_e3_no, C3_e2_e3_ni,
-                    C3_e1_no_ni, C3_e2_no_ni, C3_e3_no_ni);
+                    C3_e1_no_ni, C3_e2_no_ni, C3_e3_no_ni, C3_e1_e2_e3_ni,
+                    C3_e1_e2_e3_no, C3_e1_e2_no_ni,C3_e1_e3_no_ni,
+                    C3_e2_e3_no_ni, C3_e1_e2_e3_no_ni);
    for C3_Base use
      (C3_no => 1, C3_e1 => 2, C3_e2 => 4, C3_e3 => 8, C3_ni => 16,
       C3_e1_e2 => 2 ** 5, C3_e1_e3 => 2 ** 6, C3_e2_e3 => 2 ** 7,
@@ -25,6 +27,9 @@ package Blade_Types is
       C3_e1_e2_e3 => 2 ** 14, C3_e1_e2_no => 2 ** 15, C3_e1_e2_ni => 2 ** 16,
       C3_e1_e3_no => 2 ** 17, C3_e1_e3_ni => 2 ** 18,
       C3_e2_e3_no => 2 ** 19, C3_e2_e3_ni => 2 ** 20,
-      C3_e1_no_ni => 2 ** 21, C3_e2_no_ni => 2 ** 22, C3_e3_no_ni => 2 ** 23);
+      C3_e1_no_ni => 2 ** 21, C3_e2_no_ni => 2 ** 22, C3_e3_no_ni => 2 ** 23,
+      C3_e1_e2_e3_ni => 2 ** 24, C3_e1_e2_e3_no => 2 ** 25,
+      C3_e1_e2_no_ni => 2 ** 26, C3_e1_e3_no_ni => 2 ** 27,
+      C3_e2_e3_no_ni => 2 ** 28, C3_e1_e2_e3_no_ni => 2 ** 29);
 
 end Blade_Types;
