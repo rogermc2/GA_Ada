@@ -706,7 +706,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer) return Blade.Basis_Blade is
+   function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
+                       return Blade.Basis_Blade is
       use Blade_List_Package;
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
