@@ -69,9 +69,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      C3GA.Unit_R (C3GA.Outer_Product
                   (Points.L1, C3GA.Outer_Product (Points.L2, C3GA.ni)));
    C  : constant C3GA.Circle :=
-     Circle (C3GA.Outer_Product (Points.C1, C3GA.Outer_Product (Points.C2, Points.C3)));
+     C3GA.Circle (C3GA.Outer_Product (Points.C1, C3GA.Outer_Product (Points.C2, Points.C3)));
    P  : constant C3GA.Dual_Plane :=
-     Dual_Plane (Left_Contraction (Points.P1, C3GA.Outer_Product (Points.n, C3GA.ni)));
+     C3GA.Dual_Plane (Left_Contraction (Points.P1, C3GA.Outer_Product (Points.n, C3GA.ni)));
 --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
 --                          theText         : String;
 --                          Render_Program  : GL.Objects.Programs.Program;
