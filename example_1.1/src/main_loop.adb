@@ -128,7 +128,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
 --                                   Label_Position);
 --           Silo.Push (Label);
-         Point_Position := Points.Normalized_Points (count);
+         Point_Position := Points.Point_Data (count);
 --           C3GA_Utilities.Print_Vector ("Display, Point_Position", Point_Position);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Point_Position, Red);
       end loop;
