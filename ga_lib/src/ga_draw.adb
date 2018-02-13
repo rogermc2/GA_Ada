@@ -22,6 +22,7 @@ with GA_Maths;
 with Utilities;
 
 with Blade;
+with Blade_Types;
 with C3GA;
 with E3GA_Utilities;
 with Geosphere;
@@ -128,7 +129,7 @@ package body GA_Draw is
          MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix (Scale_S);
          --  Rotate e3 to normal direction
          RT := E3GA_Utilities.Rotor_Vector_To_Vector
-           (Multivectors.Basis_Vector (Blade.E3_e3), Normal);
+           (Multivectors.Basis_Vector (Blade_Types.E3_e3), Normal);
          GL_Util.Rotor_GL_Multiply (RT, MVP_Matrix);
       else
          Normed_E2 := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
@@ -586,7 +587,7 @@ package body GA_Draw is
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-           (Basis_Vector (Blade.E3_e3), Unit_e (Direction));
+           (Basis_Vector (Blade_Types.E3_e3), Unit_e (Direction));
          Model_View_Matrix := Identity4;
          GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix);
          Model_View_Matrix := MV_Matrix * Model_View_Matrix;

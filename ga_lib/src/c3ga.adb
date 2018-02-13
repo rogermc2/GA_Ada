@@ -4,6 +4,7 @@ with Interfaces;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types; use Blade_Types;
 with Multivectors;
 with Multivector_Type_Base;
 
@@ -732,7 +733,7 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Probe (Pr : Blade.C3_Base) return Normalized_Point is
+   function Probe (Pr : C3_Base) return Normalized_Point is
       use Blade;
       NP  : Multivectors.Multivector;
    begin
@@ -770,6 +771,14 @@ package body C3GA is
       P.E3 := C3;
       P.Inf := Inf;
    end Set_Coords;
+
+   --  -------------------------------------------------------------------------
+
+   function Set_Line return Line is
+      theLine : Line;
+   begin
+      return theLine;
+   end Set_Line;
 
    --  -------------------------------------------------------------------------
 

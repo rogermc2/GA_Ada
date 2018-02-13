@@ -3,6 +3,7 @@ with GA_Base_Types;
 with GA_Maths;
 
 with Blade;
+with Blade_Types;
 with E3GA;
 with Multivectors;
 with Multivector_Type_Base;
@@ -111,7 +112,7 @@ package C3GA is
 
 --     function Norm_E (MV : Multivectors.Multivector) return Scalar;
    function Norm_E2 (V : Vector_E3GA) return Float;
-   function Probe (Pr : Blade.C3_Base) return Normalized_Point;
+   function Probe (Pr : Blade_Types.C3_Base) return Normalized_Point;
 
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
@@ -119,6 +120,7 @@ package C3GA is
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; NP : Normalized_Point);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NO_T);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NI_T);
+   function Set_Line return Line;
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;

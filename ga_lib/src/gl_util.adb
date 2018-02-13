@@ -9,6 +9,7 @@ with GL.Window;
 with Utilities;
 
 with Blade;
+with Blade_Types;
 with E3GA_Utilities;
 with GA_Maths;
 with GA_Utilities;
@@ -119,6 +120,7 @@ package body GL_Util is
       use GL.Types;
       use Multivectors.Blade_List_Package;
       use Blade;
+      use Blade_Types;
       use GA_Maths;
       Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
@@ -152,6 +154,7 @@ package body GL_Util is
       use GL.Types;
       use Multivectors.Blade_List_Package;
       use Blade;
+      use Blade_Types;
       Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
       Curs    : Cursor := Blades.First;
       BM      : Unsigned_32;

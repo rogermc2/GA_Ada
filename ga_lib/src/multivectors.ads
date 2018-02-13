@@ -6,6 +6,7 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
 with Blade;
+with Blade_Types; use Blade_Types;
 with GA_Maths;
 with Metric;
 

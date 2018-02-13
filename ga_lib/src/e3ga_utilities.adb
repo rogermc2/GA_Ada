@@ -6,6 +6,7 @@ with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
 with GA_Utilities;
 with Multivector_Type_Base;
 
@@ -114,8 +115,8 @@ package body E3GA_Utilities is
          w0 := Left_Contraction (From, Outer_Product (From, To));
          N2 := Norm_E2 (w0);
          if N2 = 0.0 then
-            w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade.E3_e1)));
-            w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade.E3_e2)));
+            w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e1)));
+            w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e2)));
             if Norm_E2 (w1) > Norm_E2 (w2) then
                Result := Outer_Product (From, Unit_e (w1));
             else

@@ -5,6 +5,7 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
 with GA_Maths;
 with Multivector_Type_Base;
 
@@ -182,19 +183,19 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function e1 return Multivectors.Vector is
-      use Blade;
       Basis   : Multivectors.Vector;
    begin
-      Multivectors.Add_Blade (Basis, E2_e1, 1.0);
+      Multivectors.Add_Blade (Basis, Blade_Types.E2_e1, 1.0);
       return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
 
    function e1 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       Value : Float;
-      OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
+      OK    : constant Boolean :=
+        Component (MV, E2_Base'Enum_Rep (E2_e1), Value);
    begin
 --        if not OK then
 --           Put_Line ("E2GA.e1 detected missing value");
@@ -212,7 +213,7 @@ package body E2GA is
 
    function e2 return Multivectors.Vector is
       use Multivectors.Blade_List_Package;
-      use Blade;
+      use Blade_Types;
       Basis : Multivectors.Vector;
    begin
       Multivectors.Add_Blade (Basis, E2_e2, 1.0);
@@ -222,7 +223,7 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       Value : Float;
       OK    : constant Boolean := Component (MV, E2_Base'Enum_Rep (E2_e2), Value);
    begin
@@ -242,6 +243,7 @@ package body E2GA is
 
    function e1_e2 (BV : Multivectors.Bivector) return float is
       use Blade;
+      use Blade_Types;
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer :=
         Unsigned_Integer (E2_Base'Enum_Rep (E2_e1)) or Unsigned_Integer (E2_Base'Enum_Rep (E2_e2));
@@ -934,6 +936,7 @@ package body E2GA is
    function Unit_E (V : Multivectors.Vector) return Multivectors.Vector is
       use Multivectors.Blade_List_Package;
       use Blade;
+      use Blade_Types;
       Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
       C1       : constant float := Weight (Blades.First_Element);
       C2       : constant float := Weight (Blades.Last_Element);

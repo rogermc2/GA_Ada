@@ -3,6 +3,7 @@ with Interfaces;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
 
 package body E3GA is
    use GA_Maths;
@@ -117,6 +118,7 @@ package body E3GA is
    function "*" (R1, R2 : Rotor) return Rotor is
       use Blade_List_Package;
       use Blade;
+      use Blade_Types;
       R1_Blades  : Blade_List := Get_Blade_List (R1);
       R2_Blades  : Blade_List := Get_Blade_List (R2);
       Curs_1     : Cursor := R1_Blades.First;
@@ -171,7 +173,7 @@ package body E3GA is
       Curs      : Cursor := Blades.First;
       aBlade    : Basis_Blade;
       New_Blade : Basis_Blade;
-      Index     : E3_Base := E3_e1;
+      Index     : Blade_Types.E3_Base := Blade_Types.E3_e1;
       Quotient  : Rotor :=
         New_Rotor (Scalar_Part (R) / S);
    begin
@@ -180,7 +182,7 @@ package body E3GA is
          New_Blade := New_Basis_Blade (Index, Weight (aBlade) * S);
          Add_Blade (Quotient, New_Blade);
          Next (Curs);
-         Index := E3_Base'Succ (Index);
+         Index := Blade_Types.E3_Base'Succ (Index);
       end loop;
       return Quotient;
    end "/";
@@ -376,14 +378,14 @@ package body E3GA is
       use Blade;
       Basis   : Multivectors.Vector;
    begin
-      Multivectors.Add_Blade (Basis, E3_e1, 1.0);
+      Multivectors.Add_Blade (Basis, Blade_Types.E3_e1, 1.0);
       return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
 
    function e1 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       Value : Float;
       OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e1), Value);
    begin
@@ -393,7 +395,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e2 return Multivectors.Multivector is
-      use Blade;
+      use Blade_Types;
       Basis   : Multivectors.Vector;
    begin
       Multivectors.Add_Blade (Basis, E3_e2, 1.0);
@@ -403,7 +405,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       Value : Float;
       OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e2), Value);
    begin
@@ -413,7 +415,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e3 return Multivectors.Multivector is
-      use Blade;
+      use Blade_Types;
       Basis   : Multivectors.Vector;
    begin
       Multivectors.Add_Blade (Basis, E3_e3, 1.0);
@@ -423,7 +425,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       Value : Float;
       OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e3), Value);
    begin
@@ -433,7 +435,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       BM_E12   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e2));
       Value : Float;
@@ -445,7 +447,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       BM_E13   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
      Value : Float;
@@ -457,7 +459,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e2_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       BM_E23   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
        Value : Float;
@@ -469,7 +471,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e3_e1 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       BM_E31   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
        Value : Float;
@@ -481,7 +483,7 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
+      use Blade_Types;
       BM   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
@@ -743,6 +745,7 @@ package body E3GA is
    function Get_Coords (R : Rotor) return Array_4D is
       use Blade_List_Package;
       use Blade;
+      use Blade_Types;
       Blades  : constant Blade_List := Get_Blade_List (R);
       Curs    : Cursor := Blades.First;
       BM      : Unsigned_Integer;
@@ -1160,7 +1163,7 @@ package body E3GA is
    --  ------------------------------------------------------------
 
    procedure Set_Coords (MV : out Multivectors.Multivector; C1, C2, C3 : float) is
-      use Blade;
+      use Blade_Types;
    begin
       Multivectors.Add_Blade (MV, E3_e1, C1);
       Multivectors.Add_Blade (MV, E3_e2, C2);

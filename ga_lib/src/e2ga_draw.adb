@@ -5,6 +5,7 @@ with GL.Objects.Vertex_Arrays;
 with GL.Uniforms;
 
 with Blade;
+with Blade_Types;
 with E2GA;
 with E3GA;
 with GA_Draw;
@@ -50,7 +51,7 @@ package body E2GA_Draw is
                Put_Line (" E2GA_Draw Vector_Subclass.");
 --                 E3GA.Set_Coords (Direction, 0.0, 0.0, Float (A.M_Scalors (1)));
 --                 Direction := New_Vector (0.0, 0.0, Float (A.M_Scalors (1)));
-               Add_Blade (Direction, Blade.E3_e3, Float (A.M_Scalors (1)));
+               Add_Blade (Direction, Blade_Types.E3_e3, Float (A.M_Scalors (1)));
                Draw_Vector (Render_Program, Model_View_Matrix,
                             A.M_Vectors (1), Direction, Colour, Scale);
             when Bivector_Subclass =>
@@ -73,7 +74,7 @@ package body E2GA_Draw is
                   Normal_MV : Multivector := OP;
                begin
                   Normal_MV := Dual (OP_MV);
-                  Add_Blade (Normal, Blade.E3_e3, Blade.Weight (Element (curs)));
+                  Add_Blade (Normal, Blade_Types.E3_e3, Blade.Weight (Element (curs)));
 --                    E3GA.Set_Coords (Normal, 0.0, 0.0, Blade.Weight (Element (curs)));
 --                                     Normal_MV.Coordinates (Length (Blades)));
                   GA_Draw.Draw_Bivector (Render_Program,
@@ -112,7 +113,7 @@ package body E2GA_Draw is
       Ortho_2  : constant Vector := New_Vector (0.0, Radius, 0.0);
       Normal   : Vector := New_Vector (0.0, 0.0);
    begin
-      Add_Blade (Normal, Blade.New_Basis_Blade (Blade.E3_e3));
+      Add_Blade (Normal, Blade.New_Basis_Blade (Blade_Types.E3_e3));
       GA_Draw.Draw_Bivector (Render_Program, Translation_Matrix,
                              Normal, Ortho_1, Ortho_2,
                              Colour, Scale, Method_Type);
@@ -133,10 +134,10 @@ package body E2GA_Draw is
       Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
    begin
       if E2GA.e1 (Direction) /= 0.0 then
-         Add_Blade (Vec_3D, Blade.E3_e1, E2GA.e1 (Direction));
+         Add_Blade (Vec_3D, Blade_Types.E3_e1, E2GA.e1 (Direction));
       end if;
       if E2GA.e2 (Direction) /= 0.0 then
-         Add_Blade (Vec_3D, Blade.E3_e2, E2GA.e2 (Direction));
+         Add_Blade (Vec_3D, Blade_Types.E3_e2, E2GA.e2 (Direction));
       end if;
       GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                            Tail, Vec_3D, Colour, Scale);
