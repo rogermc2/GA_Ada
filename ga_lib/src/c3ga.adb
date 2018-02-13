@@ -770,6 +770,14 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
+   function Outer_Product (NP1, NP2 : Normalized_Point) return Normalized_Point is
+      use Multivectors;
+   begin
+      return Normalized_Point (Outer_Product (Multivector (NP1), Multivector (NP1)));
+   end Outer_Product;
+
+   --  ------------------------------------------------------------------------
+
    function Probe (Pr : C3_Base) return Normalized_Point is
       use Blade;
       NP  : Multivectors.Multivector;
