@@ -23,6 +23,8 @@ package Blade is
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);
 
+   function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
+   function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String;

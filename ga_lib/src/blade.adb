@@ -12,6 +12,20 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   function "*" (S : Float; BB : Basis_Blade) return Basis_Blade is
+
+   begin
+      return (BB.Bitmap, S * BB.Weight);
+   end "*";
+
+  --  ------------------------------------------------------------------------
+
+   function "*" (BB : Basis_Blade; S : Float) return Basis_Blade is
+   begin
+      return S * BB;
+   end "*";
+
+  --  ------------------------------------------------------------------------
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
