@@ -23,13 +23,13 @@ package C3GA is
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
 
-   type Circle is private;
    type Point is private;  -- 5D conformal null vector
    type Scalar is private;
-   type Sphere is private;
    type Vector is private;
 
    type Line is new Multivectors.Multivector;
+   type Circle is new Multivectors.Multivector;
+   type Sphere is new Multivectors.Multivector;
    type Dual_Plane is new Multivectors.Multivector;
    type Dual_Sphere is new Multivectors.Multivector;
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
@@ -68,8 +68,8 @@ package C3GA is
 
    function E1_E2_NI (C : Circle) return float;
    function E1_E2_E3 (C : Circle) return float;
+   function E1_E3_NI (C : Circle) return float;
    function E2_E3_NI (C : Circle) return float;
-   function E3_E1_NI (C : Circle) return float;
    function Get_Coord_1 (V : Vector_E3GA) return float;
    function Get_Coord_2 (V : Vector_E3GA) return float;
    function Get_Coord_3 (V : Vector_E3GA) return float;
@@ -110,7 +110,7 @@ package C3GA is
    function E2_E3_NO_NI (S : Sphere) return float;
    function E1_E2_E3_NO (S : Sphere) return float;
 
-   function Outer_Product (NP1, NP2 : Normalized_Point) return Normalized_Point;
+   function Outer_Product (NP1, NP2 : Normalized_Point) return Line;
    function Outer_Product (NP : Normalized_Point; MV : Multivectors.Multivector)
                            return Normalized_Point;
    function Outer_Product (L1, L2 : Line) return Line;
@@ -150,10 +150,10 @@ private
       Coordinates : E3GA.Vector_Coords_3D := (0.0, 0.0, 0.0);   --  m_c[3]
    end record;
 
-   type Circle is record   --  m_c[10]
-      E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;
-      NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
-   end record;
+--     type Circle is record   --  m_c[10]
+--        E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;
+--        NO_E1_E3, NO_E1_NI, NO_E2_E3, NO_E2_NI, NO_E3_NI : float := 0.0;
+--     end record;
 
 --     type Dual_Sphere is record   --  m_c[4]
 --        NO, E1, E2, E3, NI : float := 0.0;
@@ -177,10 +177,10 @@ private
       Inf        : float := 0.0;
    end record;
 
-   type Sphere is record   --  m_c[5]
-      E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;
-      E2_E3_NO_NI, E1_E2_E3_NO              : float := 0.0;
-   end record;
+--     type Sphere is record   --  m_c[5]
+--        E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;
+--        E2_E3_NO_NI, E1_E2_E3_NO              : float := 0.0;
+--     end record;
 
    type Vector is new GA_Maths.Coords_Continuous_Array (1 .. 5);
 
