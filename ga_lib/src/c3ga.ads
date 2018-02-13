@@ -24,12 +24,12 @@ package C3GA is
    --	__no_ct__ no; declared in c3ga.cpp origin
 
    type Circle is private;
-   type Line is private;
    type Point is private;  -- 5D conformal null vector
    type Scalar is private;
    type Sphere is private;
    type Vector is private;
 
+   type Line is new Multivectors.Multivector;
    type Dual_Plane is new Multivectors.Multivector;
    type Dual_Sphere is new Multivectors.Multivector;
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
@@ -120,7 +120,8 @@ package C3GA is
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; NP : Normalized_Point);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NO_T);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NI_T);
-   function Set_Line return Line;
+   function Set_Line (E1_E2_NI, E1_E3_NI, E2_E3_NI,
+                      E1_NO_NI, E2_NO_NI, E3_NO_NI : Float) return Line;
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
@@ -155,10 +156,10 @@ private
 --        Inf                : GA_Base_Types.NI_T;
 --     end record;
 
-   type Line is record   --  m_c[6]
-      E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;
-      E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
-   end record;
+--     type Line is record   --  m_c[6]
+--        E1_E2_NI, E1_E3_NI, E2_E3_NI : float := 0.0;
+--        E1_NO_NI, E2_NO_NI, E3_NO_NI : float := 0.0;
+--     end record;
 
 --     type Normalized_Point is record     --  m_c[4
 --        --  Origin             : float := 1.0;      constant
