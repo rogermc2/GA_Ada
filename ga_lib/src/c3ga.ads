@@ -122,11 +122,13 @@ package C3GA is
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
+   function Set_Dual_Plane (P1, P2 : Normalized_Point) return Dual_Plane;
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; NP : Normalized_Point);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NO_T);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NI_T);
    function Set_Line (E1_E2_NI, E1_E3_NI, E2_E3_NI,
                       E1_NO_NI, E2_NO_NI, E3_NO_NI : Float) return Line;
+   function Set_Line (P1, P2 : Normalized_Point) return Line;
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;

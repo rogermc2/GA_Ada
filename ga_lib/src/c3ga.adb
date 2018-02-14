@@ -857,6 +857,14 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Dual_Plane (P1, P2 : Normalized_Point) return Dual_Plane is
+      use Multivectors;
+   begin
+      return Dual_Plane (Left_Contraction (P1, Outer_Product (P2, ni)));
+   end Set_Dual_Plane;
+
+   --  ------------------------------------------------------------------------
+
    function Set_Line (E1_E2_NI, E1_E3_NI, E2_E3_NI,
                       E1_NO_NI, E2_NO_NI, E3_NO_NI : Float) return Line is
       use Blade;
@@ -873,6 +881,13 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function Set_Line (P1, P2 : Normalized_Point) return Line is
+      use Multivectors;
+   begin
+      return Unit_R (Outer_Product (P1, Outer_Product (P2, ni)));
+   end Set_Line;
+
+   --  ------------------------------------------------------------------------
    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;
