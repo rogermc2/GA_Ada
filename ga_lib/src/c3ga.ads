@@ -118,6 +118,7 @@ package C3GA is
    function Norm_E2 (V : Vector_E3GA) return Float;
    function Probe (Pr : Blade_Types.C3_Base) return Normalized_Point;
 
+   function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle;
    procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;

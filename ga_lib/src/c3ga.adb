@@ -807,14 +807,6 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Outer_Product (NP : Normalized_Point; L : Line) return Circle is
-      use Multivectors;
-   begin
-      return Circle (Outer_Product (Multivector (NP), Multivector (L)));
-   end Outer_Product;
-
-   --  ------------------------------------------------------------------------
-
    function Probe (Pr : C3_Base) return Normalized_Point is
       use Blade;
       NP  : Multivectors.Multivector;
@@ -823,6 +815,15 @@ package body C3GA is
       Multivectors.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
       return Normalized_Point (NP);
    end Probe;
+
+   --  ------------------------------------------------------------------------
+
+   function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle is
+      use Multivectors;
+   begin
+      return Circle (Outer_Product (Multivector (P1),
+                     Outer_Product (Multivector (P2), Multivector (P3))));
+   end Set_Circle;
 
    --  ------------------------------------------------------------------------
 

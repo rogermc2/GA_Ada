@@ -69,7 +69,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      C3GA.Unit_R (C3GA.Outer_Product
                   (Points.L1, C3GA.Outer_Product (Points.L2, C3GA.ni)));
    C  : constant C3GA.Circle :=
-     C3GA.Circle (C3GA.Outer_Product (Points.C1, C3GA.Outer_Product (Points.C2, Points.C3)));
+      C3GA.Set_Circle (Points.C1, Points.C2, Points.C3);
    P  : constant C3GA.Dual_Plane :=
      C3GA.Dual_Plane (Left_Contraction (Points.P1, C3GA.Outer_Product (Points.n, C3GA.ni)));
 --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
