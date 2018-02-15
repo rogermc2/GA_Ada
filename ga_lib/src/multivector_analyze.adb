@@ -124,7 +124,7 @@ package body Multivector_Analyze is
       Put_Line ("Conformal Type     " & Conformal_Type'Image (Info.Conformal_Kind));
       Put_Line ("Epsilon    " & Float'Image (Info.Epsilon));
       Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
-      Put_Line ("Versor_Kind    " & Versor_Type'Image (Info.Versor_Kind));
+      Put_Line ("Versor_Kind    " & Versor_Subclass_Type'Image (Info.Versor_Kind));
       Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
       Put_Line ("Points array length    " & integer'Image (Info.M_Points'Length));
       Put_Line ("Scalars array length    " & integer'Image (Info.M_Scalors'Length));

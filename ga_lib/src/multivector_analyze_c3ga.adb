@@ -85,7 +85,7 @@ package body Multivector_Analyze_C3GA is
 
       elsif MV_Kind (Analysis.M_MV_Type) = Versor_MV then
          Put_Line ("Multivector_Analyze_C3GA.Analyze Versor_Object 2.");
-         Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
+         Analysis.M_Type.Versor_Subclass := Even_Versor;
          Analysis.M_Vectors (1) := E3GA.e1;
 
       elsif Grade_Use (Analysis.M_MV_Type) = 1 then  --  Grade 0

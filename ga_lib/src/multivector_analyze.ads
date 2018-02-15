@@ -25,8 +25,8 @@ package Multivector_Analyze is
    type Blade_Type is (Non_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
                        Tangent_Blade, Free_Blade, Pseudo_Scalar_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Unspecified_Subclass, Point_Subclass, Line_Subclass,
-                           Plane_Subclass);
---     type Blade_Subclass_Type is (Unspecified_Blade_Subclass, Vector_Subclass, Bivector_Subclass,
+                           Plane_Subclass, Vector_Subclass, Bivector_Subclass);
+--     type Blade_Subclass_Type is (Unspecified_Blade_Subclass,
 --                                  Even_Versor_Subclass);
    type Conformal_Type is (Not_Conformal, Conformal_Multivector, Conformal_Versor,
                            Conformal_Blade);
@@ -41,7 +41,7 @@ package Multivector_Analyze is
 
    type N_Vector_Type is (N_Vector, N_Bivector, N_Trivector);
    type Round_Type is (Round_Invalid, Round_Point_Pair, Round_Circle, Round_Sphere);
-   type Versor_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
+   type Versor_Subclass_Type is (Invalid_Versor, Even_Versor, Odd_Versor, Rotor_Versor);
 
 --  mv_analysis
    type M_Type_Record is record
@@ -55,7 +55,7 @@ package Multivector_Analyze is
       M_Grade          : GA_Maths.Grade_Usage;
       MV_Subtype       : M_Type_Type := Unspecified_Type;
       Blade_Subclass   : Blade_Subclass_Type := Unspecified_Subclass;
-      Versor_Subclass  : Versor_Type := Invalid_Versor;
+      Versor_Subclass  : Versor_Subclass_Type := Invalid_Versor;
       Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
@@ -71,7 +71,7 @@ package Multivector_Analyze is
       Epsilon          : Float;
       M_Type           : M_Type_Record;
       Pseudo_Scalar    : Boolean := False;
-      Versor_Kind      : Versor_Type := Invalid_Versor;
+      Versor_Kind      : Versor_Subclass_Type := Invalid_Versor;
       --  Each analyzed multivector is decomposed into
       --  (analysis dependent) points, vectors and scalars.
       M_Points         : Point_Array;

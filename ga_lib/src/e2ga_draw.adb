@@ -82,8 +82,7 @@ package body E2GA_Draw is
                                          A.M_Vectors (1), A.M_Vectors (2),
                                          Colour, Scale, Method);
                end;
-            when Even_Versor_Subclass => null;
-            when Unspecified_Subclass => null;
+            when others => null;
          end case;
 
       elsif isVersor (A) and then A.M_Scalors (1) > 0.0001 then

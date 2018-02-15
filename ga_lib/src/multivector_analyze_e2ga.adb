@@ -52,7 +52,7 @@ package body Multivector_Analyze_E2GA is
       elsif MV_Kind (MV_Info) = Versor_MV then
 --        elsif Analysis.M_MV_Type.M_Type = Versor_MV then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Versor_Object 2.");
-         Analysis.M_Type.Blade_Subclass := Even_Versor_Subclass;
+         Analysis.M_Type.Versor_Subclass := Even_Versor;
          Analysis.M_Vectors (1) := E2GA.e1;
 
 --           if MV_X.Coordinates (1) < 0.0 then
