@@ -371,6 +371,44 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
+   procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
+                        Model_View_Matrix : GL.Types.Singles.Matrix4;
+                        Point : Multivectors.Vector;
+                        Direction : Multivectors.Vector;
+                        Weight : Float; Colour : GL.Types.Colors.Color) is
+      use GL.Types;
+      use GL.Types.Singles;
+      use Maths;
+      use C3GA;
+      use Multivectors;
+      Scale     : constant Single := Single (GA_Draw.Get_Line_Length);
+      Step      : constant Single := 0.1;
+      Num_Points : Int := Int (2.0 * Scale / Step);
+      aRotor    : Rotor;
+      MV_Matrix : Matrix4 := Model_View_Matrix;
+      Translate : constant Vector3 :=
+        (Single (e1 (Point)), Single (e2 (Point)), Single (e3 (Point)));
+      Vertices  : Singles.Vector3_Array (1 .. Num_Points);
+      Pos       : Single := -Scale;
+   begin
+      MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
+      --  rotate e3 to line direction
+      aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
+        (Basis_Vector (Blade_Types.E3_e3), Unit_e (Direction));
+      GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+      for Index in 1 .. Num_Points loop
+         Vertices (Index) := (0.0, 0.0, Pos);
+         Pos := Pos + Step * Scale;
+      end loop;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in C3GA_Draw.Draw_Line.");
+         raise;
+   end Draw_Line;
+
+   --  ------------------------------------------------------------------------
+
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                         Tail, Direction   : Multivectors.Vector;
@@ -621,6 +659,13 @@ package body GA_Draw is
    begin
       return G_Draw_State.M_Draw_Mode;
    end Get_Draw_Mode;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Line_Length return Float is
+   begin
+      return G_Draw_State.Line_Length;
+   end Get_Line_Length;
 
    --  ------------------------------------------------------------------------
 

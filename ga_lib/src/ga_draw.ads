@@ -41,6 +41,11 @@ package GA_Draw is
                             Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                             Colour : GL.Types.Colors.Color; Scale : float := 1.0;
                             Method : Bivector_Method_Type := Draw_Bivector_Circle);
+   procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
+                        Model_View_Matrix : GL.Types.Singles.Matrix4;
+                        Point : Multivectors.Vector;
+                        Direction : Multivectors.Vector;
+                        Weight : Float; Colour : GL.Types.Colors.Color);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix : GL.Types.Singles.Matrix4;
                              Base : Multivectors.Vector; Colour : GL.Types.Colors.Color;
@@ -53,6 +58,7 @@ package GA_Draw is
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
 
    function Get_Draw_Mode return Draw_Mode;
+   function Get_Line_Length return Float;
    procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
                                        MV_Matrix_ID, Projection_Matrix_ID,
                                        Colour_Location : out GL.Uniforms.Uniform);
