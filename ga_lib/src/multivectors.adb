@@ -509,14 +509,14 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
+   function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
       use Blade_List_Package;
       use Blade;
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       Curs      : Cursor := Blades.First;
       New_MV    : Multivector;
-    begin
+   begin
       if Sc /= 0.0 then
          while Has_Element (Curs) loop
             New_MV.Blades.Append (New_Basis_Blade (Bitmap (Element (Curs)),
@@ -529,7 +529,7 @@ package body Multivectors is
          end if;
       end if;
       return New_MV;
-    end Geometric_Product;
+   end Geometric_Product;
 
    --  -------------------------------------------------------------------------
 
@@ -1387,25 +1387,19 @@ package body Multivectors is
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer is
       use Blade_List_Package;
       use GA_Maths;
-      Max_G        : Integer := 0;
-      G            : Integer := 0;
-      Blades       : Blade_List := MV.Blades;
-      Blade_Cursor : Cursor := Blades.First;
-      ThisBlade    : Blade.Basis_Blade;
-      Index        : Integer := 0;
+      Max_Grade_Count : Integer := 0;
+      Grade_Count     : Integer := 0;
+      Blades          : Blade_List := MV.Blades;
+      Blade_Cursor    : Cursor := Blades.First;
    begin
       while Has_Element (Blade_Cursor) loop
-         Index := Index +1;
-         ThisBlade := Element (Blade_Cursor);
-         G := Integer (Blade.Grade (ThisBlade));
-         Max_G := Maximum (Max_G, G);
-         --           Put_Line ("Top_Grade_Index Index:" & Integer'Image (Index));
-         --           Put_Line ("Top_Grade_Index Grade_Use:" & Integer'Image (G));
-         --           Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
+         --  Grade_Count = bit count
+         Grade_Count := Integer (Blade.Grade (Element (Blade_Cursor)));
+         Max_Grade_Count := Maximum (Max_Grade_Count, Grade_Count);
          Next (Blade_Cursor);
       end loop;
-      --         Put_Line ("Top_Grade_Index Max_G:" & Integer'Image (Max_G));
-      return Unsigned_Integer (Max_G);
+      Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
+      return Unsigned_Integer (Grade_Count);
    end Top_Grade_Index;
 
    --  -------------------------------------------------------------------------
