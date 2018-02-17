@@ -22,7 +22,7 @@ private
    type MV_Type_Record is record
       MV_Kind          : MV_Type := Unspecified_MV_Type;
       Zero             : Boolean;
-      Top_Grade        : GA_Maths.Unsigned_Integer := 0;
+      Number_Of_Grades : GA_Maths.Unsigned_Integer := 0;  --  Top_Grade
       Grade_Use        : GA_Maths.Grade_Usage;
       Parity           : Parity_Type := No_Parity;
    end record;

@@ -77,12 +77,21 @@ package body Multivector_Analyze_E2GA is
 --        elsif Analysis.M_MV_Type.M_Type = Blade_MV then
       elsif MV_Kind (MV_Info) = Blade_MV then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Blade_Object.");
---           Analysis.M_Type.M_Grade := Analysis.M_MV_Type.M_Grade_Use;
---           Analysis.M_Scalors (1) := E2GA.Get_Coord (E2GA.Norm_E (MV_X));
          Analysis.M_Type.M_Grade := Multivector_Type.Grade_Use (Analysis.M_MV_Type);
+         case Analysis.M_Type.M_Grade is
+            when 1 =>
+               Analysis.M_Type.Blade_Subclass := Point_Subclass;
+            when 2=>
+               Analysis.M_Type.Blade_Subclass := Line_Subclass;
+            when 3 =>
+               Analysis.M_Type.Blade_Subclass := Plane_Subclass;
+            when others =>
+               Analysis.M_Type.Blade_Subclass := Unspecified_Subclass;
+         end case;
          Analysis.M_Scalors (1) := Norm_MV_X;
 
          if Analysis.M_Type.MV_Subtype = Vector_Type then
+            Put_Line ("Multivector_Analyze_E2GA.Analyze Vector_Type.");
             declare
                use E2GA;
                Xn  : Vector;

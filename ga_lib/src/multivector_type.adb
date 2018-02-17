@@ -18,7 +18,7 @@ package body Multivector_Type is
       Grade_Inv  : Multivectors.Multivector;
    begin
       Rec.Grade_Use := Grade_Use (MV);
-      Rec.Top_Grade := Top_Grade_Index (MV);
+      Rec.Number_Of_Grades := Top_Grade_Index (MV);
       while GU_Bitmap /= 0 loop
          if (GU_Bitmap and 1) /= 0 then
             Count (Index) := Count (Index) + 1;
@@ -73,7 +73,7 @@ package body Multivector_Type is
 
    function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer is
    begin
-      return MV.Top_Grade;
+      return MV.Number_Of_Grades;
    end Top_Grade;
 
    --  -------------------------------------------------------------------------
@@ -99,9 +99,9 @@ package body Multivector_Type is
       Put_Line (Name & " multivector information:");
       Put_Line ("Type       " & MV_Type'Image (Info.MV_Kind));
       Put_Line ("Zero       " & boolean'Image (Info.Zero));
-      Put_Line ("Top Grade " & GA_Maths.Unsigned_Integer'Image (Info.Top_Grade));
       Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
       Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+      Put_Line ("Number Of_Grades   " & GA_Maths.Unsigned_Integer'Image (Info.Number_Of_Grades));
 
    exception
       when anError :  others =>
