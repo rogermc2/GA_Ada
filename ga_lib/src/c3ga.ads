@@ -135,7 +135,7 @@ package C3GA is
                                   Inf : float := 1.0)
                                   return Normalized_Point;
 --     function Outer_Product (MV1, MV2 : Multivectors.Multivector) return Multivectors.Multivector;
-   function Unit_R (L : Line) return Line;
+--     function Unit_R (L : Line) return Line;
 
    --  Underscore functions
 --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;

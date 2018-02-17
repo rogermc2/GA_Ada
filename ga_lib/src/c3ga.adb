@@ -136,11 +136,7 @@ package body C3GA is
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
-      Add_Blade (Basis, C3_no, 0.0);
       Add_Blade (Basis, C3_e1, 1.0);
-      Add_Blade (Basis, C3_e2, 0.0);
-      Add_Blade (Basis, C3_e3, 0.0);
-      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e1;
 
@@ -161,11 +157,7 @@ package body C3GA is
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
-      Add_Blade (Basis, C3_no, 0.0);
-      Add_Blade (Basis, C3_e1, 0.0);
       Add_Blade (Basis, C3_e2, 1.0);
-      Add_Blade (Basis, C3_e3, 0.0);
-      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e2;
 
@@ -186,11 +178,7 @@ package body C3GA is
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
-      Add_Blade (Basis, C3_no, 0.0);
-      Add_Blade (Basis, C3_e1, 0.0);
-      Add_Blade (Basis, C3_e2, 0.0);
       Add_Blade (Basis, C3_e3, 1.0);
-      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end e3;
 
@@ -431,10 +419,6 @@ package body C3GA is
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
-      Add_Blade (Basis, C3_no, 0.0);
-      Add_Blade (Basis, C3_e1, 0.0);
-      Add_Blade (Basis, C3_e2, 0.0);
-      Add_Blade (Basis, C3_e3, 0.0);
       Add_Blade (Basis, C3_ni, 1.0);
       return Basis;
    end ni;
@@ -447,10 +431,6 @@ package body C3GA is
       Basis   : Multivectors.Vector;
    begin
       Add_Blade (Basis, C3_no, 1.0);
-      Add_Blade (Basis, C3_e1, 0.0);
-      Add_Blade (Basis, C3_e2, 0.0);
-      Add_Blade (Basis, C3_e3, 0.0);
-      Add_Blade (Basis, C3_ni, 0.0);
       return Basis;
    end no;
 
@@ -1025,24 +1005,25 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Unit_R (L : Line) return Line is
-      use Blade;
-      use Blade_Types;
-      use GA_Maths.Float_Functions;
-      use Multivectors;
-      Blade_1 : constant Basis_Blade :=
-        Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e1_no_ni));
-      Blade_2 : constant Basis_Blade :=
-        Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e2_no_ni));
-      Blade_3 : constant Basis_Blade :=
-        Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e3_no_ni));
-      R_Sq : constant float := -(Weight (Blade_1) * Weight (Blade_1) +
-                                 Weight (Blade_2) * Weight (Blade_2) +
-                                 Weight (Blade_3) * Weight (Blade_3));
-      Inv  : constant float := 1.0 / Sqrt (Abs (R_Sq));
-   begin
-      return L * Inv;
-   end Unit_R;
+--     function Unit_R (L : Line) return Line is
+--        use Blade;
+--        use Blade_Types;
+--        use GA_Maths.Float_Functions;
+--        use Multivectors;
+--        Blade_1 : constant Basis_Blade :=
+--          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e1_no_ni));
+--        Blade_2 : constant Basis_Blade :=
+--          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e2_no_ni));
+--        Blade_3 : constant Basis_Blade :=
+--          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e3_no_ni));
+--        R_Sq : constant float := -(Weight (Blade_1) * Weight (Blade_1) +
+--                                   Weight (Blade_2) * Weight (Blade_2) +
+--                                   Weight (Blade_3) * Weight (Blade_3));
+--        Inv  : constant float := 1.0 / Sqrt (Abs (R_Sq));
+--     begin
+--
+--        return L * Inv;
+--     end Unit_R;
 
    --  -------------------------------------------------------------------------
 
