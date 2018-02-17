@@ -140,8 +140,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Silo.Push (Label);
          Point_Position := Points.Point_Data (count);
 --           C3GA_Utilities.Print_Vector ("Display, Point_Position", Point_Position);
-         C3GA_Draw.Draw_Point (Render_Graphic_Program, Model_View_Matrix, Point_Position, Red);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Multivectors.Multivector (Point_Position), Red);
       end loop;
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Display.");

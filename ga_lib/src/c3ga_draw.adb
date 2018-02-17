@@ -8,13 +8,15 @@ with E3GA_Utilities;
 with E3GA;
 with GA_Draw;
 with GA_Maths;
+with GA_Utilities;
 with Multivector_Analyze;
+with Multivector_Type;
 
 package body C3GA_Draw is
 
    procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Analysis : Multivector_Analyze.MV_Analysis;
+                        Analyzed_MV : Multivector_Analyze.MV_Analysis;
                         Colour : GL.Types.Colors.Color;
                         Scale : float := 1.0);
 
@@ -24,10 +26,13 @@ package body C3GA_Draw is
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    MV : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
-      theAnalysis : Multivector_Analyze.MV_Analysis;
+      Analyzed_MV : Multivector_Analyze.MV_Analysis;
    begin
-      Multivector_Analyze.Analyze (theAnalysis, MV);
-      Draw_C3GA (Render_Program, Model_View_Matrix, theAnalysis, Colour, Scale);
+      Put_Line ("C3GA_Draw.Draw Calling Multivector_Analyze.Analyze.");
+      Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.Normalized_Point (C3GA.no));
+      Put_Line ("C3GA_Draw.Draw Calling Draw_C3GA.");
+      Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+      Put_Line ("C3GA_Draw.Draw returned from Draw_C3GA.");
 
    exception
       when anError :  others =>
@@ -63,16 +68,22 @@ package body C3GA_Draw is
                         Colour : GL.Types.Colors.Color;
                         Scale : float := 1.0) is
       use Multivector_Analyze;
+       P_Scale : Float;
    begin
       case Analysis.M_Type.Blade_Subclass is
-         when Line_Subclass
-            => GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
-                                  Analysis.M_Points (1), Analysis.M_Vectors (1),
-                                  Analysis.M_Scalors (1), Colour);
-         when Plane_Subclass
-            => null;
-         when Point_Subclass
-            => null;
+         when Line_Subclass =>
+            Put_Line ("C3GA_Draw.Draw_Flat Line.");
+            GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
+                               Analysis.M_Points (1), Analysis.M_Vectors (1),
+                               Analysis.M_Scalors (1), Colour);
+         when Plane_Subclass =>
+            Put_Line ("C3GA_Draw.Draw_Flat Plane.");
+         when Point_Subclass =>
+            Put_Line ("C3GA_Draw.Draw_Flat Point.");
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+            GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
+                                    Analysis.M_Points (1), Colour, 1.0 * P_Scale);
+
          when others => null;
       end case;
 
@@ -128,22 +139,28 @@ package body C3GA_Draw is
 
    procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Analysis : Multivector_Analyze.MV_Analysis;
+                        Analyzed_MV : Multivector_Analyze.MV_Analysis;
                         Colour : GL.Types.Colors.Color;
                         Scale : float := 1.0) is
       use Multivector_Analyze;
+      MV_Info : Multivector_Type.MV_Type_Record := Analyzed_MV.M_MV_Type;
    begin
-      if Analysis.M_Type.Model_Kind = Conformal_Model then
-         case Analysis.M_Type.Blade_Class is
-            when Flat_Blade
-                  =>  Draw_Flat (Render_Program, Model_View_Matrix, Analysis, Colour, Scale);
-            when Free_Blade
-                  => null;
-            when Round_Blade
-                  => null;
-            when Tangent_Blade
-                  => null;
-            when others => null;
+      GA_Utilities.Print_Multivector_Info ("C3GA_Draw.Draw_C3GA", MV_Info);
+      New_Line;
+      if Analyzed_MV.M_Type.Model_Kind = Conformal_Model then
+         case Analyzed_MV.M_Type.Blade_Class is
+            when Flat_Blade =>
+                  Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
+                   Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+            when Free_Blade => null;
+                  Put_Line ("C3GA_Draw.Draw_C3GA Free.");
+            when Round_Blade =>
+                  Put_Line ("C3GA_Draw.Draw_C3GA Round.");
+            when Tangent_Blade =>
+                  Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
+            when others =>
+               Put_Line ("C3GA_Draw.Draw_C3GA Others.");
+               null;
          end case;
       end if;
 
