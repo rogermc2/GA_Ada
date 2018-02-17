@@ -1014,6 +1014,7 @@ package body Multivectors is
          aBlade := Element (Curs);
          Blade.Update_Blade (aBlade, -Weight (aBlade));
          Neg.Blades.Append (aBlade);
+         Next (Curs);
       end loop;
       return Neg;
    end Negate;
