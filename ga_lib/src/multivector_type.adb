@@ -5,7 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Multivector_Type is
 
-   --  Init is based on c3ga.cpp Init
+   --  Init is based on MultivectorType.java
    function Init (MV : Multivectors.Multivector) return MV_Type_Record is
       use Interfaces;
       use GA_Maths;
@@ -17,8 +17,8 @@ package body Multivector_Type is
       Versor_Inv : Multivectors.Multivector;
       Grade_Inv  : Multivectors.Multivector;
    begin
-      Rec.Grade_Use := Grade_Use (MV);
       Rec.Number_Of_Grades := Top_Grade_Index (MV);
+      Rec.Grade_Use := Grade_Use (MV);
       while GU_Bitmap /= 0 loop
          if (GU_Bitmap and 1) /= 0 then
             Count (Index) := Count (Index) + 1;
@@ -41,6 +41,7 @@ package body Multivector_Type is
          else
             Rec.Parity := Even_Parity;
          end if;
+
          Versor_Inv := Versor_Inverse (MV);
          Grade_Inv := Grade_Inversion (MV);
          if Geometric_Product (Versor_Inv, Grade_Inv) =
@@ -52,7 +53,6 @@ package body Multivector_Type is
             Rec.MV_Kind := Versor_MV;
          end if;
       end if;
-
       return Rec;
 
    exception
@@ -101,7 +101,7 @@ package body Multivector_Type is
       Put_Line ("Zero       " & boolean'Image (Info.Zero));
       Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
       Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
-      Put_Line ("Number Of_Grades   " & GA_Maths.Unsigned_Integer'Image (Info.Number_Of_Grades));
+      Put_Line ("Number Of Grades   " & GA_Maths.Unsigned_Integer'Image (Info.Number_Of_Grades));
 
    exception
       when anError :  others =>
