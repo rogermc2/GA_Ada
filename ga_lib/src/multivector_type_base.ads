@@ -6,7 +6,7 @@ package Multivector_Type_Base is
    --  Object_Type mvtypebase.h lines 8 - 13 and 36
    --  A versor is also a multivetor
    --  A blade is also a versor and, therfore, also a multivector
-    type Object_Type is (Unspecified_Object_Type, Multivector_Object, Versor_MV, Blade_MV);
+    type Object_Type is (Unspecified_Object_Type, Blade_MV, Versor_MV, MV_Object);
     type Parity is (No_Parity, Even_Parity, Odd_Parity);  --  line 43
 
    --  mvtypebase.h lines 33 - 43

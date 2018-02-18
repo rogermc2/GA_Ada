@@ -40,7 +40,7 @@ package body Multivector_Analyze_E2GA is
 
       MV_Info:= Multivector_Type.Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
-      Analysis.M_Type.Multivector_Kind := Multivector_Type_Base.Multivector_Object;
+      Analysis.M_Type.Multivector_Kind := Multivector_Type_Base.MV_Object;
 
       --  Check for zero blade
       if Zero (MV_Info) then
@@ -90,7 +90,7 @@ package body Multivector_Analyze_E2GA is
          end case;
          Analysis.M_Scalors (1) := Norm_MV_X;
 
-         if Analysis.M_Type.MV_Subtype = Vector_Type then
+         if Analysis.M_Type.Blade_Subclass = Vector_Subclass then
             Put_Line ("Multivector_Analyze_E2GA.Analyze Vector_Type.");
             declare
                use E2GA;
@@ -101,14 +101,13 @@ package body Multivector_Analyze_E2GA is
                                          E2GA.Get_Coord_2 (Xn) * E2GA.e2 ;
             end;
 
-         elsif Analysis.M_Type.MV_Subtype = Bivector_Type then
+         elsif Analysis.M_Type.Blade_Subclass = Bivector_Subclass then
             Put_Line ("Multivector_Analyze_E2GA.Analyze Bivector_Type.");
             Analysis.M_Vectors (1) := E2GA.e1;
             declare
                use E2GA;
             begin
 --        BV.Coordinates (1) := MV.Coordinates (4);
---                 if E2GA.Set_Bivector (MV_X).Coordinates (1) < 0.0 then
                if Blade.Weight (Element (Curs)) < 0.0 then
                   Analysis.M_Vectors (2) := -E2GA.e2;
                else

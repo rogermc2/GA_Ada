@@ -20,7 +20,7 @@ package Multivector_Type is
 private
 
    type MV_Type_Record is record
-      MV_Kind          : MV_Type := Unspecified_MV_Type;
+      MV_Kind          : MV_Type := Unspecified_MV_Type;  -- type MV, Versor or Blade
       Zero             : Boolean;
       Number_Of_Grades : GA_Maths.Unsigned_Integer := 0;  --  Top_Grade
       Grade_Use        : GA_Maths.Grade_Usage;

@@ -28,11 +28,8 @@ package body C3GA_Draw is
                    Scale : float := 1.0) is
       Analyzed_MV : Multivector_Analyze.MV_Analysis;
    begin
-      Put_Line ("C3GA_Draw.Draw Calling Multivector_Analyze.Analyze.");
       Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.Normalized_Point (C3GA.no));
-      Put_Line ("C3GA_Draw.Draw Calling Draw_C3GA.");
       Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
-      Put_Line ("C3GA_Draw.Draw returned from Draw_C3GA.");
 
    exception
       when anError :  others =>

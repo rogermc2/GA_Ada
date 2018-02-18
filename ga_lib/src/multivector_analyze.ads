@@ -12,10 +12,6 @@ package Multivector_Analyze is
    Number_Of_Points      : integer := 3;
    Number_Of_Scalars     : integer := 3;
    Number_Of_Vectors     : integer := 3;
---   Number_Of_Type_Levels : integer := 4;   Not required as M_Type is a record
-
-   --  subtype MV_Type is declared in E2GA to prevent circular dependency
-   --  subtype MV_Type is Multivector_Type_Base.M_Type_Type; --  m_mvType
 
    type Flag_Type is record
       Valid : boolean := Flag_Invalid;
@@ -28,7 +24,7 @@ package Multivector_Analyze is
                                 Point_Pair_Subclass, Line_Subclass,
                                 Circle_Subclass, Plane_Subclass, Scalar_Subclass,
                                 Pseudo_Scalar_Subclass, Vector_Subclass,
-                                Sphere_Subclass, Bivector_Subclass);
+                                Sphere_Subclass, Bivector_Subclass, Trivector_Subclass);
    type Conformal_Type is (Not_Conformal, Conformal_Multivector, Conformal_Versor,
                            Conformal_Blade);
    type Conformal_Blade_Class is (Blade_Scalar, Blade_Flat, Blade_Round,
@@ -46,18 +42,29 @@ package Multivector_Analyze is
 
 --  mv_analysis
    type M_Type_Record is record
-      Model_Kind       : Model_Type := Vector_Space;  --  m_type[0] = model
-       --  m_type[1] = multivector type (c3ga_type::BLADE, c3ga_type::VERSOR,
-       --              c3ga_type::MULTIVECTOR,)
-      Multivector_Kind : Multivector_Type_Base.Object_Type :=
-                           Multivector_Type_Base.Multivector_Object;
-      Blade_Class      : Blade_Type := Non_Blade;  --  m_type[2] = class (round, flat, free, etc)
+      --  mv_analyze.h data format:
+      --  m_pt   points
+      --  m_vc   vectors
+      --  m_sc   scalars
+      --  m_type(0 .. 3), Intended use:
+	  --  m_type[0] = model
+	  --  m_type[1] = multivector type (c3ga_type::BLADE, c3ga_type::VERSOR, c3ga_type::MULTIVECTOR,)
+	  --  m_type[2] = class (round, flat, free, etc)
+	  --  m_type[3] = grade / class dependent
+      --  m_flags
+      --  m_epsilon
+      --  m_mvType
+
+      Model_Kind       : Model_Type := Vector_Space;           --  m_type[0]
+      Multivector_Kind : Multivector_Type_Base.Object_Type :=  --  m_type[1]
+                           Multivector_Type_Base.MV_Object;
+      Blade_Class      : Blade_Type := Non_Blade;              --  m_type[2]
       --  m_type[3] = grade / class dependent
       M_Grade          : GA_Maths.Grade_Usage;
-      MV_Subtype       : M_Type_Type := Unspecified_Type;
+--        MV_Subtype       : M_Type_Type := Unspecified_Type;
       Blade_Subclass   : Blade_Subclass_Type := Unspecified_Subclass;  --  m_type[3]
       Versor_Subclass  : Versor_Subclass_Type := Invalid_Versor;       --  m_type[3]
-      Round_Kind       : Round_Type := Round_Invalid;
+--        Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
    type Point_Array is array (1 .. Number_Of_Points) of Multivectors.Vector;
@@ -65,6 +72,7 @@ package Multivector_Analyze is
    type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
 
    type MV_Analysis is record
+      --
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
       M_MV_Type        : Multivector_Type.MV_Type_Record;
@@ -101,7 +109,7 @@ package Multivector_Analyze is
    function Num_Vectors return integer;
    function Num_Scalars return integer;
    procedure Print_Analysis (Name : String;
-                             Info : MV_Analysis);
+                             Analysis : MV_Analysis);
    function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
 
 end Multivector_Analyze;

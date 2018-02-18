@@ -5,7 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Multivector_Type is
 
-   --  Init is based on MultivectorType.java
+   --  Init is based on MultivectorType.java Init
    function Init (MV : Multivectors.Multivector) return MV_Type_Record is
       use Interfaces;
       use GA_Maths;

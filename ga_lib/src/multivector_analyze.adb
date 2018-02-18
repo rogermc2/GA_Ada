@@ -113,23 +113,25 @@ package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Print_Analysis (Name : String; Info : MV_Analysis) is
+   procedure Print_Analysis (Name : String; Analysis : MV_Analysis) is
       use Multivector_Type;
       use Multivector_Type_Base;
    begin
       Put_Line (Name);
-      Put_Line ("Valid Flag    " & boolean'Image (Info.M_Flags.Valid));
-      Put_Line ("Dual Flag     " & boolean'Image (Info.M_Flags.Dual));
-      Print_Multivector_Info (Name & " M_MV_Type data", Info.M_MV_Type);
-      Put_Line ("Conformal Type     " & Conformal_Type'Image (Info.Conformal_Kind));
-      Put_Line ("Epsilon    " & Float'Image (Info.Epsilon));
-      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
-      Put_Line ("Versor_Kind    " & Versor_Subclass_Type'Image (Info.Versor_Kind));
-      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
-      Put_Line ("Points array length    " & integer'Image (Info.M_Points'Length));
-      Put_Line ("Scalars array length    " & integer'Image (Info.M_Scalors'Length));
-      Put_Line ("Vectors array length    " & integer'Image (Info.M_Vectors'Length));
+      Put_Line ("Valid Flag    " & boolean'Image (Analysis.M_Flags.Valid));
+      Put_Line ("Dual Flag     " & boolean'Image (Analysis.M_Flags.Dual));
+      Print_Multivector_Info (Name & " M_MV_Type data", Analysis.M_MV_Type);
+      Put_Line ("Model Type    " &
+                  Model_Type'Image (Analysis.M_Type.Model_Kind));
+      Put_Line ("Epsilon      " & Float'Image (Analysis.Epsilon));
+      Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
+      Put_Line ("Versor_Kind   " & Versor_Subclass_Type'Image (Analysis.Versor_Kind));
+      Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
+      Put_Line ("Points  array length  " & integer'Image (Analysis.M_Points'Length));
+      Put_Line ("Scalars array length  " & integer'Image (Analysis.M_Scalors'Length));
+      Put_Line ("Vectors array length  " & integer'Image (Analysis.M_Vectors'Length));
       New_Line;
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis.");
