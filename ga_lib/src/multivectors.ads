@@ -102,7 +102,7 @@ package Multivectors is
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
-   function Size (MV : Multivector) return Natural;
+   function MV_Size (MV : Multivector) return Natural;
    function Space_Dimension (MV : Multivector) return Integer;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
    function Unit_E (MV : Multivector) return Multivector;

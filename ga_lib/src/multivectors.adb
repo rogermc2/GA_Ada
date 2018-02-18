@@ -407,11 +407,12 @@ package body Multivectors is
    function Dual (MV : Multivector) return Multivector is
       use Blade_List_Package;
       use GA_Maths;
-      use Interfaces;
-      Index   : constant Unsigned_32 := Shift_Left (1, Size (MV)) - 1;
+      Index   : constant Unsigned_Integer := 2 ** Space_Dimension (MV) - 1;
       Dual_MV : Multivector;
    begin
-      Dual_MV.Blades.Append (Blade.New_Basis_Blade (C3_Base'Enum_Val (Index)));
+      Put_Line ("Multivectors.Dual Space_Dimension (MV)" & Integer'Image (Space_Dimension (MV)));
+      Put_Line ("Multivectors.Dual Index" & Unsigned_Integer'Image (Index));
+      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
       Dual_MV := Versor_Inverse (Dual_MV);
       Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
       return Dual_MV;
@@ -422,11 +423,10 @@ package body Multivectors is
    function Dual (MV : Multivector; Dim : Integer) return Multivector is
       use Blade_List_Package;
       use GA_Maths;
-      use Interfaces;
-      Index   : constant Unsigned_32 := Shift_Left (1, dim) - 1;
+      Index   : constant Unsigned_Integer := 2 ** Dim - 1;
       Dual_MV : Multivector;
    begin
-      Dual_MV.Blades.Append (Blade.New_Basis_Blade (C3_Base'Enum_Val (Index)));
+      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
       Dual_MV := Versor_Inverse (Dual_MV);
       Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
       return Dual_MV;
@@ -1358,12 +1358,12 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Size (MV : Multivector) return Natural is
+   function MV_Size (MV : Multivector) return Natural is
       use Blade_List_Package;
       Blades  : Blade_List := MV.Blades;
    begin
       return Natural (Blades.Length);
-   end Size;
+   end MV_Size;
 
    --  -------------------------------------------------------------------------
 
