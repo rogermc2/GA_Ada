@@ -44,10 +44,10 @@ package Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
    procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector);
-   function Basis_Vector (Index : BV_Base) return Multivector;
-   function Basis_Vector (Index : E2_Base) return Multivector;
-   function Basis_Vector (Index : E3_Base) return Multivector;
-   function Basis_Vector (Index : C3_Base) return Multivector;
+   function Basis_Vector (Index : BV_Base) return Vector;
+   function Basis_Vector (Index : E2_Base) return Vector;
+   function Basis_Vector (Index : E3_Base) return Vector;
+   function Basis_Vector (Index : C3_Base) return Vector;
    function Blades (MV : Multivector) return Blade_List;
 --     function C3_Multivector return Multivector;
    function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
@@ -112,6 +112,7 @@ package Multivectors is
    function MV_Size (MV : Multivector) return Natural;
    function Space_Dimension (MV : Multivector) return Integer;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
+   function To_Rotor (MV : Multivector) return Rotor;
    function To_Vector (MV : Multivector) return Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;

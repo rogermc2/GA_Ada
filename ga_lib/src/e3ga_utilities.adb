@@ -135,7 +135,7 @@ package body E3GA_Utilities is
          --                   = 2(1 + a.b)
          --  Geometric Algebra fot Computer Science, Equation (10.13)
          S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To, From))));
-         Result :=  (1.0 + Geometric_Product (To, From)) / S;
+         Result :=  To_Rotor ((1.0 + Geometric_Product (To, From)) / S);
       end if;
       Simplify (Result);
 

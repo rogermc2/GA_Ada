@@ -272,8 +272,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector (Index : BV_Base) return Multivector is
-      MV : Multivector;
+   function Basis_Vector (Index : BV_Base) return Vector is
+      MV : Vector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -281,8 +281,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector (Index : E2_Base) return Multivector is
-      MV : Multivector;
+   function Basis_Vector (Index : E2_Base) return Vector is
+      MV : Vector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -290,8 +290,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector (Index : E3_Base) return Multivector is
-      MV : Multivector;
+   function Basis_Vector (Index : E3_Base) return Vector is
+      MV : Vector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -299,8 +299,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Basis_Vector (Index : C3_Base) return Multivector is
-      MV : Multivector;
+   function Basis_Vector (Index : C3_Base) return Vector is
+      MV : Vector;
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
@@ -1434,6 +1434,21 @@ package body Multivectors is
       Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
       return Unsigned_Integer (Grade_Count);
    end Top_Grade_Index;
+
+   --  -------------------------------------------------------------------------
+
+   function To_Rotor (MV : Multivector) return Rotor is
+      use Blade_List_Package;
+      Blades     : constant Blade_List := MV.Blades;
+      Curs       : Cursor := Blades.First;
+      Rot        : Rotor;
+   begin
+      while Has_Element (Curs) loop
+         Add_Blade (Rot, Element (Curs));
+         Next (Curs);
+      end loop;
+      return Rot;
+   end To_Rotor;
 
    --  -------------------------------------------------------------------------
 
