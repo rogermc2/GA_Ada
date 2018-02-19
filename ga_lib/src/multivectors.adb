@@ -789,7 +789,7 @@ package body Multivectors is
          Inversion.Append (Blade.Grade_Inversion (thisBlade));
          Next (Cursor_B);
       end loop;
-      return  (Inversion, False);
+      return  (MV.Type_Of_MV, Inversion, False);
    end Grade_Inversion;
 
    --  -------------------------------------------------------------------------

@@ -16,6 +16,8 @@ package Multivectors is
      (Element_Type => Blade.Basis_Blade);
    type Blade_List is new Blade_List_Package.List with null record;
 
+   type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
+                    MV_Trivector, MV_Rotor);
    type Multivector is private;
    type Multivector_List is private;
    subtype Bivector is Multivector;
@@ -114,8 +116,9 @@ package Multivectors is
 
 private
    type Multivector is record
-      Blades : Blade_List;
-      Sorted : Boolean := False;
+      Type_Of_MV : MV_Type := MV_Multivector;
+      Blades     : Blade_List;
+      Sorted     : Boolean := False;
    end record;
 
    package MV_List_Package is new Ada.Containers.Doubly_Linked_Lists
