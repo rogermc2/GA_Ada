@@ -1,5 +1,4 @@
 
-with GA_Base_Types;
 with GA_Maths;
 
 with Blade;
@@ -23,9 +22,9 @@ package C3GA is
    --	__ni_ct__ ni; declared in c3ga.cpp infinitiy
    --	__no_ct__ no; declared in c3ga.cpp origin
 
-   type Point is private;  -- 5D conformal null vector
-   type Scalar is private;
-   type Vector is private;
+--     type Point is private;  -- 5D conformal null vector
+--     type Scalar is private;
+--     type Vector is private;
 
    subtype Line is Multivectors.Multivector (Multivectors.MV_Line);
    subtype Circle is Multivectors.Multivector (Multivectors.MV_Circle);
@@ -48,14 +47,14 @@ package C3GA is
    Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
 
    function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point;
-   function Coord (S : Scalar) return float;
+   function Coord (S : Multivectors.Scalar) return float;
 --     function Init (MV : Multivectors.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
    function e1 return Multivectors.Multivector;
    function e2 return Multivectors.Multivector;
    function e3 return Multivectors.Multivector;
    function ni return Multivectors.Multivector;
-   function no return Multivectors.Multivector;
+   function no return Normalized_Point;
 
    function e1 (MV :  Multivectors.Multivector) return float;
    function e2 (MV : Multivectors.Multivector) return float;
@@ -118,7 +117,7 @@ package C3GA is
    function Probe (Pr : Blade_Types.C3_Base) return Normalized_Point;
 
    function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle;
-   procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float);
+--     procedure Set_Coords (P : out Multivectors.Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
    function Set_Dual_Plane (P1 : Normalized_Point; Dir : Multivectors.Vector) return Dual_Plane;
@@ -173,11 +172,11 @@ private
 --        Inf        : float := 0.0;
 --     end record;
 
-   type Point is record   --  m_c[5]
-      Origin     : GA_Base_Types.NO_T;
-      E1, E2, E3 : float := 0.0;
-      Inf        : float := 0.0;
-   end record;
+--     type Point is record   --  m_c[5]
+--        Origin     : GA_Base_Types.NO_T;
+--        E1, E2, E3 : float := 0.0;
+--        Inf        : float := 0.0;
+--     end record;
 
 --     type Sphere is record   --  m_c[5]
 --        E1_E2_E3_NI, E1_E2_NO_NI, E1_E3_NO_NI : float := 0.0;

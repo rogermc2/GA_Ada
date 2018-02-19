@@ -38,7 +38,7 @@ package body Multivector_Analyze_C3GA is
          use Multivectors;
          OP_Nix_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
          IP_Nix_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-         X2_Val     : constant Float := E3GA.Norm_R2 (MV_X);
+         X2_Val     : constant Float := Norm_R2 (MV_X);
          OP_Nix     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
          IP_Nix     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
          X2         : constant Boolean := Abs (X2_Val) > Epsilon;
@@ -147,17 +147,18 @@ package body Multivector_Analyze_C3GA is
       if Grade = 1 then
          Weight := Scalar_Product (MV, C3GA.no);
       else
-         Weight := Abs (E3GA.Norm_R (MV));
+         Weight := Abs (Norm_R (MV));
       end if;
 
-      theAnalysis.M_Points (1) := Location;
+      theAnalysis.M_Points (1) := To_Vector (Location);
       theAnalysis.M_Scalors (1) := Weight;
       case Grade is
          when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
          when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
          when 3 =>  --  Line
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
-            theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (C3GA.no, MV));
+            theAnalysis.M_Vectors (1) :=
+              To_Vector (Unit_E (Left_Contraction (C3GA.no, MV)));
          when 4 =>  --  Plane
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
             Blade_Factors := GA_Utilities.Factorize_Blade
@@ -252,7 +253,7 @@ package body Multivector_Analyze_C3GA is
 
          NI_X2 := Scalar_Product (LC_NI_MV, LC_NI_MV);
          Radius_Sq := Scalar_Part (Geometric_Product (MV_X, 1.0 / NI_X2 * Grade_Inversion (MV_X)));
-         Weight := E3GA.Norm_R (Left_Contraction (C3GA.no, Attitude));
+         Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
          theAnalysis.M_Points (1) := Location;
          theAnalysis.M_Scalors (1) := Weight;
@@ -311,7 +312,7 @@ package body Multivector_Analyze_C3GA is
       Location :=
         Geometric_Product (MV, General_Inverse (LC_NI_MV));
       Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
-      Weight := E3GA.Norm_R (Left_Contraction (C3GA.no, Attitude));
+      Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
       theAnalysis.M_Points (1) := Location;
       theAnalysis.M_Scalors (1) := Weight;

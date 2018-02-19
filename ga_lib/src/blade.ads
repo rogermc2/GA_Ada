@@ -5,7 +5,6 @@ with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;
 
 with Blade_Types; use Blade_Types;
-with GA_Base_Types;
 with GA_Maths; use GA_Maths;
 with Metric;
 

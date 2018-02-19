@@ -27,8 +27,9 @@ package body C3GA_Draw is
                    MV : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
                    Scale : float := 1.0) is
       Analyzed_MV : Multivector_Analyze.MV_Analysis;
+      NO          : constant Multivectors.Multivector := C3GA.Normalized_Point (C3GA.no);
    begin
-      Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.Normalized_Point (C3GA.no));
+      Multivector_Analyze.Analyze (Analyzed_MV, MV, NO);
       Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
 
    exception

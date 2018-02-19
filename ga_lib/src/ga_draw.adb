@@ -394,7 +394,7 @@ package body GA_Draw is
       MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
       --  rotate e3 to line direction
       aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-        (Basis_Vector (Blade_Types.E3_e3), Unit_e (Direction));
+        (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
       GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
       for Index in 1 .. Num_Points loop
          Vertices (Index) := (0.0, 0.0, Pos);

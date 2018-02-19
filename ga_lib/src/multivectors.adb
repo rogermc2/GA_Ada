@@ -272,6 +272,42 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function Basis_Vector (Index : BV_Base) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (New_Basis_Blade (Index));
+      return MV;
+   end Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
+   function Basis_Vector (Index : E2_Base) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (New_Basis_Blade (Index));
+      return MV;
+   end Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
+   function Basis_Vector (Index : E3_Base) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (New_Basis_Blade (Index));
+      return MV;
+   end Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
+   function Basis_Vector (Index : C3_Base) return Multivector is
+      MV : Multivector;
+   begin
+      MV.Blades.Append (New_Basis_Blade (Index));
+      return MV;
+   end Basis_Vector;
+
+   --  -------------------------------------------------------------------------
+
    function Blades (MV : Multivector) return Blade_List is
    begin
       return MV.Blades;
@@ -660,42 +696,6 @@ package body Multivectors is
          Put_Line ("An exception occurred in Multivector.General_Inverse Metric");
          raise;
    end General_Inverse;
-
-   --  -------------------------------------------------------------------------
-
-   function Basis_Vector (Index : BV_Base) return Multivector is
-      MV : Multivector;
-   begin
-      MV.Blades.Append (New_Basis_Blade (Index));
-      return MV;
-   end Basis_Vector;
-
-   --  -------------------------------------------------------------------------
-
-   function Basis_Vector (Index : E2_Base) return Multivector is
-      MV : Multivector;
-   begin
-      MV.Blades.Append (New_Basis_Blade (Index));
-      return MV;
-   end Basis_Vector;
-
-   --  -------------------------------------------------------------------------
-
-   function Basis_Vector (Index : E3_Base) return Multivector is
-      MV : Multivector;
-   begin
-      MV.Blades.Append (New_Basis_Blade (Index));
-      return MV;
-   end Basis_Vector;
-
-   --  -------------------------------------------------------------------------
-
-   function Basis_Vector (Index : C3_Base) return Multivector is
-      MV : Multivector;
-   begin
-      MV.Blades.Append (New_Basis_Blade (Index));
-      return MV;
-   end Basis_Vector;
 
    --  -------------------------------------------------------------------------
 
@@ -1131,8 +1131,9 @@ package body Multivectors is
       if S < 0.0 then
          return 0.0;
       else
-         return Sqrt (S);
+         S := Sqrt (S);
       end if;
+      return S;
    end Norm_E;
 
    --  -------------------------------------------------------------------------
@@ -1142,14 +1143,29 @@ package body Multivectors is
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
-         return 0.0;
-      else
-         return S;
+         S := 0.0;
       end if;
+      return S;
    end Norm_E2;
 
    --  -------------------------------------------------------------------------
 
+   function Norm_R (MV : Multivector) return Float is
+      use Multivectors;
+      use GA_Maths.Float_Functions;
+   begin
+      return Sqrt (Abs (Scalar_Part (Dot (MV, MV))));
+   end Norm_R;
+
+   --  ------------------------------------------------------------------------
+
+   function Norm_R2 (MV : Multivector) return Float is
+      use Multivectors;
+   begin
+      return Scalar_Part (Dot (MV, MV));
+   end Norm_R2;
+
+   --  ------------------------------------------------------------------------
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
@@ -1209,6 +1225,22 @@ package body Multivectors is
    begin
       return  Inner_Product (MV1, MV2, Right_Contraction);
    end Right_Contraction;
+
+   --  -------------------------------------------------------------------------
+
+   function Rotor_Inverse (R : Rotor) return Rotor is
+      use Blade_List_Package;
+      MV         : constant Multivector := General_Inverse (R);
+      Blades     : constant Blade_List := MV.Blades;
+      Curs       : Cursor := Blades.First;
+      IR         : Rotor;
+   begin
+      while Has_Element (Curs) loop
+         Add_Blade (IR, Element (Curs));
+         Next (Curs);
+      end loop;
+      return IR;
+   end Rotor_Inverse;
 
    --  -------------------------------------------------------------------------
 
@@ -1402,6 +1434,21 @@ package body Multivectors is
       Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
       return Unsigned_Integer (Grade_Count);
    end Top_Grade_Index;
+
+   --  -------------------------------------------------------------------------
+
+   function To_Vector (MV : Multivector) return Vector is
+      use Blade_List_Package;
+      Blades     : constant Blade_List := MV.Blades;
+      Curs       : Cursor := Blades.First;
+      Vec        : Vector;
+   begin
+      while Has_Element (Curs) loop
+         Add_Blade (Vec, Element (Curs));
+         Next (Curs);
+      end loop;
+      return Vec;
+   end To_Vector;
 
    --  -------------------------------------------------------------------------
 

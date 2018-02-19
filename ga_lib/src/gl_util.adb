@@ -48,8 +48,8 @@ package body GL_Util is
       use Multivectors;
       use GL;
       use GL.Types.Singles;
-      IR        : constant Rotor := General_Inverse (R);
-      E_Rot     : Vector;
+      IR        : constant Rotor := Rotor_Inverse (R);
+      E_Rot     : Multivectors.Multivector;
       Image     : Vector3_Array (1 .. 4);
       VC        : Vector3;
       Matrix    : Matrix4 := Identity4;
@@ -115,7 +115,7 @@ package body GL_Util is
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : Multivectors.Vector) return GL.Types.Doubles.Vector3 is
+   function To_GL (V3 : Multivectors.Multivector) return GL.Types.Doubles.Vector3 is
       use Interfaces;
       use GL.Types;
       use Multivectors.Blade_List_Package;
@@ -145,11 +145,16 @@ package body GL_Util is
          Next (Curs);
       end loop;
       return (Val_X, Val_Y, Val_Z);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.To_GL Double.");
+         raise;
    end To_GL;
 
    --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : Multivectors.Vector) return GL.Types.Singles.Vector3 is
+   function To_GL (V3 : Multivectors.Multivector) return GL.Types.Singles.Vector3 is
       use Interfaces;
       use GL.Types;
       use Multivectors.Blade_List_Package;
@@ -178,6 +183,11 @@ package body GL_Util is
          Next (Curs);
       end loop;
       return (Val_X, Val_Y, Val_Z);
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GL_Util.To_GL Single.");
+         raise;
    end To_GL;
 
    --  -------------------------------------------------------------------------

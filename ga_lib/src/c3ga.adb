@@ -5,6 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
 with Blade_Types; use Blade_Types;
+with GA_Base_Types;
 with Multivectors;
 with Multivector_Type_Base;
 
@@ -124,9 +125,9 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Coord (S : Scalar) return float is
+   function Coord (S : Multivectors.Scalar) return float is
    begin
-      return S.Coordinates (1);
+      return Multivectors.Scalar_Part (S);
    end Coord;
 
    --  -------------------------------------------------------------------------
@@ -436,10 +437,10 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function no return Multivectors.Multivector is
+   function no return Normalized_Point is
       use Blade;
       use Multivectors;
-      Basis   : Multivectors.Vector;
+      Basis  : Normalized_Point;
    begin
       Add_Blade (Basis, C3_no, 1.0);
       return Basis;
@@ -847,15 +848,15 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float) is
-      use GA_Base_Types;
-   begin
-      Set_NO (P.Origin, Origin);
-      P.E1 := C1;
-      P.E2 := C2;
-      P.E3 := C3;
-      P.Inf := Inf;
-   end Set_Coords;
+--     procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float) is
+--        use GA_Base_Types;
+--     begin
+--        Set_NO (P.Origin, Origin);
+--        P.E1 := C1;
+--        P.E2 := C2;
+--        P.E3 := C3;
+--        P.Inf := Inf;
+--     end Set_Coords;
 
    --  -------------------------------------------------------------------------
 

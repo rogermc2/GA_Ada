@@ -54,7 +54,7 @@ package body E3GA_Utilities is
       --  get the bivector 2-blade part of R
       BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := E3GA.Norm_R (BV);
+      R2 := Norm_R (BV);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
