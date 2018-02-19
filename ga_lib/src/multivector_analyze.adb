@@ -71,7 +71,7 @@ package body Multivector_Analyze is
 
    function isVersor (A : MV_Analysis) return Boolean is
    begin
-      return A.Versor_Kind /= Invalid_Versor;
+      return A.Versor_Kind /= Not_A_Versor;
    end isVersor;
 
    --  --------------------------------------------------------------------------
