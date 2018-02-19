@@ -374,7 +374,7 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function e1 return Multivectors.Multivector is
+   function e1 return Multivectors.Vector is
       use Blade;
       Basis   : Multivectors.Vector;
    begin
@@ -394,7 +394,7 @@ package body E3GA is
 
    --  -------------------------------------------------------------------------
 
-   function e2 return Multivectors.Multivector is
+   function e2 return Multivectors.Vector is
       use Blade_Types;
       Basis   : Multivectors.Vector;
    begin
@@ -414,7 +414,7 @@ package body E3GA is
 
    --  -------------------------------------------------------------------------
 
-   function e3 return Multivectors.Multivector is
+   function e3 return Multivectors.Vector is
       use Blade_Types;
       Basis   : Multivectors.Vector;
    begin

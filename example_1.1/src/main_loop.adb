@@ -70,7 +70,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    aCircle  : constant C3GA.Circle :=
       C3GA.Set_Circle (Points.C1, Points.C2, Points.C3);
    aDual_Plane  : constant C3GA.Dual_Plane :=
-     C3GA.Set_Dual_Plane (Points.P1, C3GA.Normalized_Point (Points.n));
+     C3GA.Set_Dual_Plane (Points.P1, Points.n);
 
 --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
 --                          theText         : String;

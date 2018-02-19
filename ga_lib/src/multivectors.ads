@@ -17,13 +17,14 @@ package Multivectors is
    type Blade_List is new Blade_List_Package.List with null record;
 
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
-                    MV_Trivector, MV_Rotor);
-   type Multivector is private;
+                    MV_Trivector, MV_Rotor, MV_Normalized_Point, MV_Line,
+                    MV_Circle, MV_Sphere, MV_Dual_Plane, MV_Dual_Sphere);
+   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is private;
    type Multivector_List is private;
-   subtype Bivector is Multivector;
-   subtype Rotor is Multivector;
-   subtype Scalar is Multivector;
-   subtype Vector is Multivector;
+   subtype Bivector is Multivector (MV_Bivector);
+   subtype Rotor is Multivector (MV_Rotor);
+   subtype Scalar is Multivector (MV_Scalar);
+   subtype Vector is Multivector (MV_Vector);
 
    MV_Exception : Exception;
 
@@ -115,8 +116,7 @@ package Multivectors is
    function Versor_Inverse (MV : Multivector) return Multivector;
 
 private
-   type Multivector is record
-      Type_Of_MV : MV_Type := MV_Multivector;
+   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is record
       Blades     : Blade_List;
       Sorted     : Boolean := False;
    end record;
