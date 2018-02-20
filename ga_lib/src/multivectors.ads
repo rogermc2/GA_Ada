@@ -22,7 +22,6 @@ package Multivectors is
    type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is private;
    type Multivector_List is private;
    subtype Bivector is Multivector (MV_Bivector);
-   subtype Point is Multivector (MV_Point);
    subtype Rotor is Multivector (MV_Rotor);
    subtype Scalar is Multivector (MV_Scalar);
    subtype Vector is Multivector (MV_Vector);
