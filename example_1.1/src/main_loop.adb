@@ -182,9 +182,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        GL.Toggles.Enable (GL.Toggles.Lighting);
 --        GL.Toggles.Enable (GL.Toggles.Light0);
       --        GL.Toggles.Enable (GL.Toggles.Normalize);
-      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
+      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
+      --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the
+      --  maximum width.
       GL.Rasterization.Set_Line_Width (1.0);
-      GA_Draw.Set_Point_Size (0.05);
+      GA_Draw.Set_Point_Size (0.9);
 --        GA_Draw.Set_Point_Size (0.005);
 
       Model_Rotor := Multivectors.New_Rotor;

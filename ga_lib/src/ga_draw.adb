@@ -16,10 +16,11 @@ with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Window;
+with Utilities;
 
 with Maths;
 with GA_Maths;
-with Utilities;
+with GA_Utilities;
 
 with Blade;
 with Blade_Types;
@@ -373,7 +374,7 @@ package body GA_Draw is
 
    procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        Point : Multivectors.Vector;
+                        aPoint : Multivectors.Vector;
                         Direction : Multivectors.Vector;
                         Weight : Float; Colour : GL.Types.Colors.Color) is
 
@@ -389,36 +390,41 @@ package body GA_Draw is
       Colour_Location      : GL.Uniforms.Uniform;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       Scale                : constant Single := Single (GA_Draw.Get_Line_Length);
-      Step                 : constant Single := 0.1;
+      Step                 : constant Single := 0.5;
       Num_Points           : constant Int := Int (2.0 * Scale / Step);
       aRotor               : Rotor;
       MV_Matrix            : Matrix4 := Model_View_Matrix;
       Translate            : constant Vector3 :=
-        (Single (e1 (Point)), Single (e2 (Point)), Single (e3 (Point)));
+        (Single (e1 (aPoint)), Single (e2 (aPoint)), Single (e3 (aPoint)));
       Vertices             : Singles.Vector3_Array (1 .. Num_Points);
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-      Pos                  : Single := -Scale;
+      Pos                  : Single := - Scale;
    begin
+      GA_Utilities.Print_Multivector ("C3GA_Draw.Draw_Line aPoint", aPoint);
+      Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Initial MV_Matrix", MV_Matrix);
+      Utilities.Print_Vector ("C3GA_Draw.Draw_Line Translate", Translate);
       GL.Objects.Programs.Use_Program (Render_Program);
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
 
-      MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
-      --  rotate e3 to line direction
-      aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-        (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
-      GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
-
       for Index in 1 .. Num_Points loop
+--           Put_Line ("C3GA_Draw.Draw_Line Pos  " & Single'Image (Pos));
          Vertices (Index) := (0.0, 0.0, Pos);
          Pos := Pos + Step * Scale;
       end loop;
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
-                                Projection_Matrix_ID, Colour_Location);
+      MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
+      Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
+      --  rotate e3 to line direction
+      aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
+        (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
+      GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+      Utilities.Print_Matrix ("C3GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
       GL.Uniforms.Set_Single (MV_Matrix_ID, MV_Matrix);
       Init_Projection_Matrix (Projection_Matrix);
@@ -428,7 +434,7 @@ package body GA_Draw is
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
                                             First => 0,
-                                            Count => Num_Points * 3);
+                                            Count => Num_Points);
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
    exception

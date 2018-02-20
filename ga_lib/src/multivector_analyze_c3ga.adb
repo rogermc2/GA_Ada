@@ -142,6 +142,10 @@ package body Multivector_Analyze_C3GA is
 
       Location := Left_Contraction (Left_Contraction (Multivector (Probe), MV),
                                     General_Inverse (MV));
+      GA_Utilities.Print_Multivector
+        ("Multivector_Analyze_C3GA.Analyze_Flat C3GA.ni  ", C3GA.ni);
+       GA_Utilities.Print_Multivector
+        ("Multivector_Analyze_C3GA.Analyze_Flat Location 1  ", Location);
       Location := Geometric_Product (Location,
                                      -1.0 / Scalar_Product (C3GA.ni, Location));
       if Grade = 1 then
@@ -150,8 +154,13 @@ package body Multivector_Analyze_C3GA is
          Weight := Abs (Norm_R (MV));
       end if;
 
+      GA_Utilities.Print_Multivector
+        ("Multivector_Analyze_C3GA.Analyze_Flat Location 2  ", Location);
       theAnalysis.M_Points (1) := To_Vector (Location);
       theAnalysis.M_Scalors (1) := Weight;
+      GA_Utilities.Print_Multivector
+        ("Multivector_Analyze_C3GA.Analyze_Flat M_Points (1)  ",
+         theAnalysis.M_Vectors (1));
       case Grade is
          when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
          when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
@@ -159,6 +168,9 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
               To_Vector (Unit_E (Left_Contraction (C3GA.no, MV)));
+            GA_Utilities.Print_Multivector
+              ("Multivector_Analyze_C3GA.Analyze_Flat M_Vectors (1)  ",
+               theAnalysis.M_Vectors (1));
          when 4 =>  --  Plane
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
             Blade_Factors := GA_Utilities.Factorize_Blade
