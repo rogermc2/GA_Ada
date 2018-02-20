@@ -416,7 +416,7 @@ package body Geosphere is
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
       Model_View_Matrix := Maths.Scaling_Matrix (0.5) * MV_Matrix;
-      GA_Draw.Set_Projection_Matrix (Proj_Matrix);
+      GA_Draw.Init_Projection_Matrix (Proj_Matrix);
       Proj_Matrix := Maths.Translation_Matrix ((1.0, -1.0, 0.0)) *
         Proj_Matrix;
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);

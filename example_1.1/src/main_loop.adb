@@ -64,14 +64,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Rotate_Model_Out_Of_Plane  : boolean := False;
    Pick            : GL_Util.GL_Pick;
 
-   --  ni = einf = point at infinity
-   aLine  : constant C3GA.Line :=
-     C3GA.Set_Line (Points.L1, Points.L2);
-   aCircle  : constant C3GA.Circle :=
-      C3GA.Set_Circle (Points.C1, Points.C2, Points.C3);
-   aDual_Plane  : constant C3GA.Dual_Plane :=
-     C3GA.Set_Dual_Plane (Points.P1, Points.n);
-
 --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
 --                          theText         : String;
 --                          Render_Program  : GL.Objects.Programs.Program;
@@ -96,24 +88,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GA_Maths;
       use GA_Maths.Float_Functions;
 
-      Scale             : constant float := 40.0;
-      Scale_S           : constant single := single (Scale);
-      Position_X        : integer := 0;
-      Position_Y        : single := 160.0;
+      Scale               : constant float := 40.0;
+      Scale_S             : constant single := single (Scale);
+      Position_X          : integer := 0;
+      Position_Y          : single := 160.0;
       --        Label             : Silo.Label_Data;
-      Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
+      Label_Position      : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
-      V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
-      V2                : Multivectors.Vector;
-
+   --  ni = einf = point at infinity
+      aLine               : constant C3GA.Line := C3GA.Set_Line (Points.L1, Points.L2);
+      aCircle             : constant C3GA.Circle := C3GA.Set_Circle (Points.C1, Points.C2, Points.C3);
+      aDual_Plane         : constant C3GA.Dual_Plane := C3GA.Set_Dual_Plane (Points.P1, Points.n);
       Point_Position      : C3GA.Normalized_Point;
+
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       Pick                : GL_Util.GL_Pick;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
---        Projection_Matrix   : GL.Types.Singles.Matrix4;
       Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
    begin
@@ -126,14 +119,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
       Model_View_Matrix := Maths.Scaling_Matrix (Scale_S) * Model_View_Matrix;
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
---        GA_Draw.Set_Projection_Matrix (Projection_Matrix);
 
-      --  The final MVP matrix is set up in the draw routines
---        Set_Coords (V1, E11, E12);
---           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
---                       Cos (A) * E21 - Sin (A) * E22);
-      C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                      Multivectors.Multivector (aLine), Red);
+      --  The projection matrix and final MVP matrix is set up in the draw routines
+      C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aLine, Red);
 --        for count in 1 .. Points.Num_Points loop
 --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
 --                                   Label_Position);

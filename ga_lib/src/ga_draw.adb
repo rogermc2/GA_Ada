@@ -68,7 +68,7 @@ package body GA_Draw is
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
-      Set_Projection_Matrix (Projection_Matrix);
+      Init_Projection_Matrix (Projection_Matrix);
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
@@ -120,7 +120,7 @@ package body GA_Draw is
 
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
-      Set_Projection_Matrix (Projection_Matrix);
+      Init_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
@@ -181,7 +181,7 @@ package body GA_Draw is
 
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
-      Set_Projection_Matrix (Projection_Matrix);
+      Init_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
@@ -286,7 +286,7 @@ package body GA_Draw is
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
-         Set_Projection_Matrix (Projection_Matrix);
+         Init_Projection_Matrix (Projection_Matrix);
          GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
@@ -349,7 +349,7 @@ package body GA_Draw is
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
-      Set_Projection_Matrix (Projection_Matrix);
+      Init_Projection_Matrix (Projection_Matrix);
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
@@ -376,20 +376,27 @@ package body GA_Draw is
                         Point : Multivectors.Vector;
                         Direction : Multivectors.Vector;
                         Weight : Float; Colour : GL.Types.Colors.Color) is
+
+      use GL.Objects.Buffers;
       use GL.Types;
       use GL.Types.Singles;
       use Maths;
       use C3GA;
       use Multivectors;
-      Scale     : constant Single := Single (GA_Draw.Get_Line_Length);
-      Step      : constant Single := 0.1;
-      Num_Points : Int := Int (2.0 * Scale / Step);
-      aRotor    : Rotor;
-      MV_Matrix : Matrix4 := Model_View_Matrix;
-      Translate : constant Vector3 :=
+      MV_Matrix_ID         : GL.Uniforms.Uniform;
+      Projection_Matrix_ID : GL.Uniforms.Uniform;
+      Colour_Location      : GL.Uniforms.Uniform;
+      Projection_Matrix    : GL.Types.Singles.Matrix4;
+      Scale                : constant Single := Single (GA_Draw.Get_Line_Length);
+      Step                 : constant Single := 0.1;
+      Num_Points           : constant Int := Int (2.0 * Scale / Step);
+      aRotor               : Rotor;
+      MV_Matrix            : Matrix4 := Model_View_Matrix;
+      Translate            : constant Vector3 :=
         (Single (e1 (Point)), Single (e2 (Point)), Single (e3 (Point)));
-      Vertices  : Singles.Vector3_Array (1 .. Num_Points);
-      Pos       : Single := -Scale;
+      Vertices             : Singles.Vector3_Array (1 .. Num_Points);
+      Vertex_Buffer        : GL.Objects.Buffers.Buffer;
+      Pos                  : Single := -Scale;
    begin
       MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
       --  rotate e3 to line direction
@@ -400,6 +407,29 @@ package body GA_Draw is
          Vertices (Index) := (0.0, 0.0, Pos);
          Pos := Pos + Step * Scale;
       end loop;
+
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
+      Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                Projection_Matrix_ID, Colour_Location);
+      Put_Line ("C3GA_Draw.Draw_Line Load_Vertex_Buffer");
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+      Put_Line ("C3GA_Draw.Draw_Line Set Colour");
+      GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
+      Put_Line ("C3GA_Draw.Draw_Line setting  MV_Matrix");
+      GL.Uniforms.Set_Single (MV_Matrix_ID, MV_Matrix);
+      Put_Line ("C3GA_Draw.Draw_Line Set_Projection_Matrix");
+      Init_Projection_Matrix (Projection_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+      Put_Line ("C3GA_Draw.Draw_Line calling Draw_Arrays ");
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
+                                            First => 0,
+                                            Count => Num_Points * 3);
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
    exception
       when anError :  others =>
@@ -440,7 +470,7 @@ package body GA_Draw is
                                 Projection_Matrix_ID, Colour_Location);
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-      Set_Projection_Matrix (Projection_Matrix);
+      Init_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
       GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
@@ -610,7 +640,7 @@ package body GA_Draw is
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
 
-         Set_Projection_Matrix (Projection_Matrix);
+         Init_Projection_Matrix (Projection_Matrix);
          Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                    Projection_Matrix_ID, Colour_Location);
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
@@ -725,7 +755,7 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
+   procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
                                     Near : GL.Types.Single := -100.0;
                                     Far  : GL.Types.Single := 100.0) is
       use GL.Types;
@@ -744,7 +774,7 @@ package body GA_Draw is
       when anError :  others =>
          Put_Line ("An exception occurred in GA_Draw.Set_Projection_Matrix.");
          raise;
-   end Set_Projection_Matrix;
+   end Init_Projection_Matrix;
 
    --  ------------------------------------------------------------------------
 

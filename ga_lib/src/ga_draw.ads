@@ -68,9 +68,9 @@ package GA_Draw is
    procedure Set_Draw_Mode (Mode : Draw_Mode);
    procedure Set_Ol_Colour (Ol_Colour : Color);
    procedure Set_Point_Size (Point_Size : Float);
-   procedure Set_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
-                                    Near : GL.Types.Single := -100.0;
-                                    Far  : GL.Types.Single := 100.0);
+   procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
+                                     Near : GL.Types.Single := -100.0;
+                                     Far  : GL.Types.Single := 100.0);
 private
    type Colour_Palet is record
       Foreground_Colour : Color := (1.0, 0.0, 1.0, 1.0);

@@ -66,7 +66,7 @@ package body C3GA_Draw is
                         Colour : GL.Types.Colors.Color;
                         Scale : float := 1.0) is
       use Multivector_Analyze;
-       P_Scale : Float;
+      P_Scale : Float;
    begin
       case Analysis.M_Type.Blade_Subclass is
          when Line_Subclass =>
@@ -149,7 +149,7 @@ package body C3GA_Draw is
          case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>
                   Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
-                   Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+                  Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
             when Free_Blade => null;
                   Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
