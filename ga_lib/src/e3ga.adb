@@ -798,6 +798,20 @@ package body E3GA is
    --      end Grade_Use;
 
    --  ------------------------------------------------------------------------
+   --  Based on c3ga.h scalar inverse
+
+--     function Inverse (S : Float) return Float is
+--        S2  : constant Float := S * S;
+--        Inv : Float := S;
+--     begin
+--        --  scalar inverse doesn't include this test
+--        if S2 /= 0.0 then
+--           Inv := 1.0 / S2;
+--        end if;
+--        return S * Inv;
+--     end Inverse;
+
+   --  ------------------------------------------------------------------------
    --  Based on e3ga.h rotor inverse
    --     function Inverse (aRotor : Rotor) return Rotor is
    --        use Blade_List_Package;

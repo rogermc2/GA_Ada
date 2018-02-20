@@ -129,8 +129,10 @@ package body Multivector_Analyze_C3GA is
       use Multivectors;
       Grade         : Unsigned_Integer :=
         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+      --  Attitude is a free N-vector
       Attitude      : Multivector := Negate (Left_Contraction (C3GA.ni, MV));
-      Location      : Multivector;
+      MV_Location   : Multivector;
+      Location      : C3GA.Normalized_Point;
       Blade_Factors : Multivectors.Multivector_List;
       Scale         : Float;
       Weight        : Float;
@@ -139,15 +141,15 @@ package body Multivector_Analyze_C3GA is
       if theAnalysis.M_Flags.Dual then
          Grade := 5 - Grade;
       end if;
-
-      Location := Left_Contraction (Left_Contraction (Multivector (Probe), MV),
+        --  MV_Location is a normalized dual sphere
+      MV_Location := Left_Contraction (Left_Contraction (Multivector (Probe), MV),
                                     General_Inverse (MV));
       GA_Utilities.Print_Multivector
         ("Multivector_Analyze_C3GA.Analyze_Flat C3GA.ni  ", C3GA.ni);
        GA_Utilities.Print_Multivector
-        ("Multivector_Analyze_C3GA.Analyze_Flat Location 1  ", Location);
-      Location := Geometric_Product (Location,
-                                     -1.0 / Scalar_Product (C3GA.ni, Location));
+        ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1  ", MV_Location);
+      MV_Location := Geometric_Product (MV_Location,
+                      General_Inverse (-Inner_Product (C3GA.ni, MV_Location, Blade.Hestenes_Inner_Product)));
       if Grade = 1 then
          Weight := Scalar_Product (MV, C3GA.no);
       else
