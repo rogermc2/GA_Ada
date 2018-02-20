@@ -383,6 +383,7 @@ package body GA_Draw is
       use Maths;
       use C3GA;
       use Multivectors;
+      Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
@@ -398,34 +399,33 @@ package body GA_Draw is
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
       Pos                  : Single := -Scale;
    begin
+      GL.Objects.Programs.Use_Program (Render_Program);
+      Vertex_Array.Initialize_Id;
+      Vertex_Array.Bind;
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
+
       MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
       --  rotate e3 to line direction
       aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
         (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
       GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+
       for Index in 1 .. Num_Points loop
          Vertices (Index) := (0.0, 0.0, Pos);
          Pos := Pos + Step * Scale;
       end loop;
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
       Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                 Projection_Matrix_ID, Colour_Location);
-      Put_Line ("C3GA_Draw.Draw_Line Load_Vertex_Buffer");
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-      Put_Line ("C3GA_Draw.Draw_Line Set Colour");
       GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-      Put_Line ("C3GA_Draw.Draw_Line setting  MV_Matrix");
       GL.Uniforms.Set_Single (MV_Matrix_ID, MV_Matrix);
-      Put_Line ("C3GA_Draw.Draw_Line Set_Projection_Matrix");
       Init_Projection_Matrix (Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
-      Put_Line ("C3GA_Draw.Draw_Line calling Draw_Arrays ");
       GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
                                             First => 0,
                                             Count => Num_Points * 3);
