@@ -812,19 +812,12 @@ package body C3GA is
 
    function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle is
       use Multivectors;
-      use Blade_List_Package;
       OP        : Multivector;
-      Blades    : constant Blade_List := Get_Blade_List (OP);
-      Curs      : Cursor;
       theCircle : Circle;
    begin
       OP := Outer_Product (Multivector (P1), Outer_Product (Multivector (P2),
                            Multivector (P3)));
-      Curs := Blades.First;
-      while Has_Element (Curs) loop
-         Add_Blade (theCircle, Element (Curs));
-         Next (Curs);
-      end loop;
+      Multivectors.Update (theCircle, Get_Blade_List (OP));
       return theCircle;
    end Set_Circle;
 
@@ -862,18 +855,11 @@ package body C3GA is
 
    function Set_Dual_Plane (P1 : Normalized_Point; Dir : Multivectors.Vector) return Dual_Plane is
       use Multivectors;
-      use Blade_List_Package;
-      LC          : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
-      Blades      : constant Blade_List := Get_Blade_List (LC);
-      Curs        : Cursor := Blades.First;
-      theD_Plane  : Dual_Plane;
+      LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
+      D_Plane  : Dual_Plane;
    begin
-
-      while Has_Element (Curs) loop
-         Add_Blade (theD_Plane, Element (Curs));
-         Next (Curs);
-      end loop;
-      return theD_Plane;
+      Multivectors.Update (D_Plane, Get_Blade_List (LC));
+      return D_Plane;
    end Set_Dual_Plane;
 
    --  ------------------------------------------------------------------------
@@ -896,16 +882,10 @@ package body C3GA is
 
    function Set_Line (P1, P2 : Normalized_Point) return Line is
       use Multivectors;
-      use Blade_List_Package;
       UR      : constant Multivector := Unit_R (Outer_Product (P1, Outer_Product (P2, ni)));
-      Blades  : constant Blade_List := Get_Blade_List (UR);
-      Curs    : Cursor := Blades.First;
       theLine : Line;
    begin
-      while Has_Element (Curs) loop
-         Add_Blade (theLine, Element (Curs));
-         Next (Curs);
-      end loop;
+      Multivectors.Update (theLine, Get_Blade_List (UR));
       return theLine;
    end Set_Line;
 
