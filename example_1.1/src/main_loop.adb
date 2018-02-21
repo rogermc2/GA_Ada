@@ -34,6 +34,7 @@ with Utilities;
 with C3GA;
 with C3GA_Draw;
 with GA_Draw;
+with GA_Utilities;
 with GL_Util;
 with E2GA;
 with E2GA_Draw;
@@ -110,6 +111,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
    begin
+
+      GA_Utilities.Print_Multivector
+        ("Main_Loop.Display L1  ", Points.L1);
+      GA_Utilities.Print_Multivector
+        ("Main_Loop.Display L2  ", Points.L2);
+      GA_Utilities.Print_Multivector
+        ("Main_Loop.Display aLine  ", aLine);
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));

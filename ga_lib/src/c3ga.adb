@@ -6,6 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Blade;
 with Blade_Types; use Blade_Types;
 with GA_Base_Types;
+with GA_Utilities;
 with Multivectors;
 with Multivector_Type_Base;
 
@@ -885,6 +886,8 @@ package body C3GA is
       UR      : constant Multivector := Unit_R (Outer_Product (P1, Outer_Product (P2, ni)));
       theLine : Line;
    begin
+      GA_Utilities.Print_Multivector ("C3GA.Set_Line P2 ^ ni ", Outer_Product (P2, ni));
+      GA_Utilities.Print_Multivector ("C3GA.Set_Line P1 ^ P2 ^ ni ", Outer_Product (P1, Outer_Product (P2, ni)));
       Multivectors.Update (theLine, Get_Blade_List (UR));
       return theLine;
    end Set_Line;

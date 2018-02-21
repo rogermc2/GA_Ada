@@ -141,15 +141,18 @@ package body Multivector_Analyze_C3GA is
       if theAnalysis.M_Flags.Dual then
          Grade := 5 - Grade;
       end if;
+      GA_Utilities.Print_Multivector
+        ("Multivector_Analyze_C3GA.Analyze_Flat Probe  ", Probe);
         --  MV_Location is a normalized dual sphere
-      MV_Location := Left_Contraction (Left_Contraction (Multivector (Probe), MV),
-                                    General_Inverse (MV));
+      MV_Location := Left_Contraction (Left_Contraction (Probe, MV),
+                                       General_Inverse (MV));
       GA_Utilities.Print_Multivector
         ("Multivector_Analyze_C3GA.Analyze_Flat C3GA.ni  ", C3GA.ni);
        GA_Utilities.Print_Multivector
         ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1  ", MV_Location);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat SCP  " & Float'Image (Scalar_Product (C3GA.ni, MV_Location)));
       MV_Location := Geometric_Product (MV_Location,
-                      General_Inverse (-Inner_Product (C3GA.ni, MV_Location, Blade.Hestenes_Inner_Product)));
+                      -1.0 / Scalar_Product (C3GA.ni, MV_Location));
       if Grade = 1 then
          Weight := Scalar_Product (MV, C3GA.no);
       else
