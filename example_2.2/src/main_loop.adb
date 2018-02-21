@@ -59,20 +59,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
 
-   --  rotor g_modelRotor(_rotor(1.0f))
-   Model_Rotor     : Multivectors.Rotor;
-   Rotate_Model    : boolean := False;
+   Prev_Mouse_Pos    : E3GA.Vector_Coords_3D := (0.0, 0.0, 0.0);
+   Rotate_Model      : Boolean := False;
    Rotate_Model_Out_Of_Plane  : boolean := False;
-   Pick            : GL_Util.GL_Pick;
+   Init_Model_Needed : Boolean := True;
+   Model_Name        : Ada.Strings.Unbounded.Unbounded_String :=
+     Ada.Strings.Unbounded.To_Unbounded_String ("Sphere");
+   Model_Rotor          : Multivectors.Rotor;
 
---      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
---                          theText         : String;
---                          Render_Program  : GL.Objects.Programs.Program;
---                          Text_X, Text_Y  : GL.Types.Single;
---                          Text_Scale      : GL.Types.Single);
---     procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
---                                      Projection_Matrix_ID, Texture_ID, Text_Dimesions_ID,
---                                      Colour_ID : out GL.Uniforms.Uniform);
+   Polygons_2D       : Multivectors.Vector;
+   Vertices_2D       : Multivectors.Vector;
+--
+   Prev_Statistics_Model_Name : Ada.Strings.Unbounded.Unbounded_String :=
+     Ada.Strings.Unbounded.To_Unbounded_String ("");
 
    --  -------------------------------------------------------------------------
 
@@ -89,19 +88,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GA_Maths;
       use GA_Maths.Float_Functions;
 
-      Scale               : constant float := 40.0;
-      Scale_S             : constant single := single (Scale);
-      Position_X          : integer := 0;
-      Position_Y          : single := 160.0;
-      --        Label             : Silo.Label_Data;
-      Label_Position      : GL.Types.Singles.Vector2 := (0.0, 0.0);
-      Point_Position      : C3GA.Normalized_Point;
-
-      --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       Pick                : GL_Util.GL_Pick;
-      Translation_Matrix  : GL.Types.Singles.Matrix4;
+--        Translation_Matrix  : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
@@ -111,22 +101,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (White);
 
-      GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-      Model_View_Matrix := Maths.Scaling_Matrix (Scale_S) * Model_View_Matrix;
-      Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-
-      --  The projection matrix and final MVP matrix is set up in the draw routines
---        C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aLine, Red);
---        for count in 1 .. Points.Num_Points loop
---           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
---                                   Label_Position);
---           Silo.Push (Label);
---           Point_Position := Points.Point_Data (count);
---           C3GA_Utilities.Print_Vector ("Display, Point_Position", Point_Position);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
---                           Multivectors.Multivector (Point_Position), Red);
---        end loop;
+      if Init_Model_Needed then
+         Graphic_Data.Get_GLUT_Model_2D (Model_Name, Model_Rotor);
+         Init_Model_Needed := False;
+      end if;
 
    exception
       when anError :  others =>
@@ -136,48 +114,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
---     procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
---                          theText          : String;
---                          Render_Program   : GL.Objects.Programs.Program;
---                          Text_X, Text_Y   : GL.Types.Single;
---                          Text_Scale       : GL.Types.Single) is
---        Text_Dimesions_ID       : GL.Uniforms.Uniform;
---        Text_Proj_Matrix_ID     : GL.Uniforms.Uniform;
---        Text_Texture_ID         : GL.Uniforms.Uniform;
---        Text_Colour_ID          : GL.Uniforms.Uniform;
---        Text_Projection_Matrix  : GL.Types.Singles.Matrix4;
---        Text_Colour             : constant Colors.Color := Black;
---     begin
---        Text_Shader_Locations (Render_Program, Text_Proj_Matrix_ID,
---                               Text_Texture_ID, Text_Dimesions_ID, Text_Colour_ID);
---        Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
---                                           Single (Window_Width), 0.1, -100.0,
---                                           Text_Projection_Matrix);
---        Text_Management.Render_Text (Render_Program, theText, Text_X, Text_Y,
---                                     Text_Scale, Text_Colour, Text_Texture_ID,
---                                     Text_Proj_Matrix_ID, Text_Dimesions_ID,
---                                     Text_Colour_ID, Text_Projection_Matrix);
---     exception
---        when anError :  others =>
---           Put_Line ("An exception occurred in Main_Loop.Draw_Text.");
---           raise;
---     end Draw_Text;
-
-   --  ------------------------------------------------------------------------
-
    procedure Setup_Graphic (Window : in out Glfw.Windows.Window;
                             Render_Graphic_Program : out GL.Objects.Programs.Program) is
---                              Render_Text_Program    : out GL.Objects.Programs.Program) is
       use Glfw.Input;
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
---        Font_File : string := "../fonts/Helvetica.ttc";
    begin
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
---        GL.Toggles.Enable (GL.Toggles.Lighting);
---        GL.Toggles.Enable (GL.Toggles.Light0);
-      --        GL.Toggles.Enable (GL.Toggles.Normalize);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
       --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the
       --  maximum width.
@@ -191,11 +134,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
 
---        Render_Text_Program := Program_Loader.Program_From
---          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
---           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
---
---        Text_Management.Setup (Font_File);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
