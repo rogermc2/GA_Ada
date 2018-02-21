@@ -21,7 +21,8 @@ package Graphic_Data is
 
    procedure Get_GLUT_Model_2D (Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor);
-   procedure Solid_Cube (Size : GL.Types.Single);
-   procedure Solid_Teapot (Size : GL.Types.Single);
+   procedure Solid_Cube (Size : Float);
+   procedure Solid_Sphere (Radius : Float; Slices, Stacks : Integer);
+   procedure Solid_Teapot (Size : Float);
 
 end Graphic_Data;

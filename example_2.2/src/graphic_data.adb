@@ -14,10 +14,10 @@ with GLUT_API;
 with Multivectors;
 
 package body Graphic_Data is
+   use GL.Types;
 
    procedure Get_GLUT_Model_2D (Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor) is
-      use GL.Types;
       use GL.Types.Singles;
       Screen_Width : Float := 1600.0;
       Render_Program       : GL.Objects.Programs.Program;
@@ -124,16 +124,23 @@ package body Graphic_Data is
 
    --  -------------------------------------------------------------------------
 
-   procedure Solid_Cube (Size : GL.Types.Single) is
+   procedure Solid_Cube (Size : Float) is
    begin
-      GLUT_API.GLUT_Cube (GL.Types.Double (Size));
+      GLUT_API.GLUT_Solid_Cube (Double (Size));
    end Solid_Cube;
 
    --  -------------------------------------------------------------------------
 
-   procedure Solid_Teapot (Size : GL.Types.Single) is
+   procedure Solid_Sphere (Radius : Float; Slices, Stacks : Integer) is
    begin
-      GLUT_API.GLUT_Solid_Teapot (GL.Types.Double (Size));
+      GLUT_API.GLUT_Solid_Sphere (Double (Radius), Int (Slices), Int (Stacks));
+   end Solid_Sphere;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Teapot (Size : Float) is
+   begin
+      GLUT_API.GLUT_Solid_Teapot (Double (Size));
    end Solid_Teapot;
 
 end Graphic_Data;
