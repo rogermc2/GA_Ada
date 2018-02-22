@@ -75,9 +75,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  -------------------------------------------------------------------------
 
-   procedure Display (Window                 : in out Glfw.Windows.Window;
-                      Render_Graphic_Program : GL.Objects.Programs.Program) is
---                        Render_Text_Program    : GL.Objects.Programs.Program) is
+   procedure Display (Window         : in out Glfw.Windows.Window;
+                      Render_Program : GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
@@ -102,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Utilities.Clear_Background_Colour_And_Depth (White);
 
       if Init_Model_Needed then
-         Graphic_Data.Get_GLUT_Model_2D (Model_Name, Model_Rotor);
+         Graphic_Data.Get_GLUT_Model_2D (Render_Program, Model_Name, Model_Rotor);
          Init_Model_Needed := False;
       end if;
 
@@ -115,7 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Graphic (Window : in out Glfw.Windows.Window;
-                            Render_Graphic_Program : out GL.Objects.Programs.Program) is
+                            Render_Program : out GL.Objects.Programs.Program) is
       use Glfw.Input;
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -130,9 +129,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Model_Rotor := Multivectors.New_Rotor;
 
-      Render_Graphic_Program := Program_Loader.Program_From
+      Render_Program := Program_Loader.Program_From
         ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
 
    exception
       when anError :  others =>
@@ -142,38 +141,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ----------------------------------------------------------------------------
 
-   procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
-                                    Projection_Matrix_ID, Texture_ID,
-                                    Text_Dimesions_ID, Colour_ID : out GL.Uniforms.Uniform) is
-   begin
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "mvp_matrix");
-      Texture_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "text_sampler");
-      Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "dimensions");
-      Colour_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Text_Program, "text_colour");
-   end Text_Shader_Locations;
-
-   --  -------------------------------------------------------------------------
-
    use Glfw.Input;
-   Render_Graphic_Program : GL.Objects.Programs.Program;
---     Render_Text_Program : GL.Objects.Programs.Program;
+   Render_Program : GL.Objects.Programs.Program;
    Running : Boolean := True;
    Key_Now : Button_State;
 begin
    Utilities.Clear_Background_Colour_And_Depth (White);
    Main_Window.Set_Input_Toggle (Sticky_Keys, True);
    Glfw.Input.Poll_Events;
-   Setup_Graphic (Main_Window, Render_Graphic_Program);
---     Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
+   Setup_Graphic (Main_Window, Render_Program);
    while Running loop
       --  Swap_Buffers first to display background colour on start up.
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-      Display (Main_Window, Render_Graphic_Program);
---        Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
+      Display (Main_Window, Render_Program);
       Glfw.Input.Poll_Events;
       Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
       if not Key_Pressed and Key_Now = Glfw.Input.Pressed then

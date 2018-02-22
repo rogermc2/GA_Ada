@@ -1,6 +1,7 @@
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
+with GL.Objects.Programs;
 with GL.Types;
 
 with Multivectors;
@@ -19,7 +20,8 @@ package Graphic_Data is
       To_Unbounded_String ("tetrahedron"),
       To_Unbounded_String ("icosahedron"));
 
-   procedure Get_GLUT_Model_2D (Model_Name : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Get_GLUT_Model_2D (Render_Program : GL.Objects.Programs.Program;
+                                Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor);
    procedure Solid_Cube (Size : Float);
    procedure Solid_Sphere (Radius : Float; Slices, Stacks : Integer);

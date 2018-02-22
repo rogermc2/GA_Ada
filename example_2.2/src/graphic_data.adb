@@ -18,11 +18,11 @@ with Multivectors;
 package body Graphic_Data is
    use GL.Types;
 
-   procedure Get_GLUT_Model_2D (Model_Name : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Get_GLUT_Model_2D (Render_Program : GL.Objects.Programs.Program;
+                                Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor) is
       use GL.Types.Singles;
       Screen_Width : Float := 1600.0;
-      Render_Program       : GL.Objects.Programs.Program;
       MV_Matrix_ID         : GL.Uniforms.Uniform;
       Projection_Matrix_ID : GL.Uniforms.Uniform;
       Colour_Location      : GL.Uniforms.Uniform;
