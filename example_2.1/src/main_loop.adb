@@ -126,7 +126,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Entry_Width * Scale_S / 2.0,
          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix);
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
 
       while A < Two_Pi - 0.1 loop
@@ -218,7 +218,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix );
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
                                         Colour_Location);
