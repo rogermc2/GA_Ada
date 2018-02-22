@@ -715,6 +715,11 @@ package body GA_Draw is
         (Render_Program, "Proj_Matrix");
       Colour_Location := GL.Objects.Programs.Uniform_Location
         (Render_Program, "vector_colour");
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in GA_Draw.Graphic_Shader_Locations.");
+         raise;
    end Graphic_Shader_Locations;
 
    --  -------------------------------------------------------------------------
