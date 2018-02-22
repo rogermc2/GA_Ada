@@ -1,4 +1,6 @@
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 with GL.Culling;
 with GL.Objects.Programs;
 with GL.Rasterization;
@@ -66,6 +68,8 @@ package body Graphic_Data is
          Solid_Teapot (1.0);
       elsif Model_Name = "cube" then
          Solid_Cube (1.0);
+      elsif Model_Name = "sphere" then
+         Solid_Sphere (1.0, 16, 8);
       end if;
       --  	else if (modelName == "sphere")
       --  		glutSolidSphere(1.0, 16, 8);
@@ -120,6 +124,12 @@ package body Graphic_Data is
       --  		printf("Model: %s, #polygons: %d, #vertices: %d\n", modelName.c_str(), g_polygons2D.size(), g_vertices2D.size());
       --  		g_prevStatisticsModelName = modelName;
       --          }
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Graphic_Data.Get_GLUT_Model_2D.");
+         raise;
+
    end Get_GLUT_Model_2D;
 
    --  -------------------------------------------------------------------------
