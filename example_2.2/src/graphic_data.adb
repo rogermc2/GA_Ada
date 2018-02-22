@@ -2,6 +2,7 @@
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Attributes;
 with GL.Culling;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
@@ -29,17 +30,18 @@ package body Graphic_Data is
                                 Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor) is
       use GL.Types.Singles;
-      Screen_Width : Float := 1600.0;
-      MV_Matrix_ID         : GL.Uniforms.Uniform;
-      Projection_Matrix_ID : GL.Uniforms.Uniform;
-      Colour_Location      : GL.Uniforms.Uniform;
-      Model_View_Matrix    : GL.Types.Singles.Matrix4 :=
+      Screen_Width          : constant Float := 1600.0;
+      MV_Matrix_ID          : GL.Uniforms.Uniform;
+      Projection_Matrix_ID  : GL.Uniforms.Uniform;
+      Colour_Location       : GL.Uniforms.Uniform;
+      Model_View_Matrix     : GL.Types.Singles.Matrix4 :=
         GL.Types.Singles.Identity4;
-      Translation_Matrix   : Singles.Matrix4;
-      Projection_Matrix    : Singles.Matrix4;
+      Translation_Matrix    : Singles.Matrix4;
+      Projection_Matrix     : Singles.Matrix4;
       Feedback_Buffer       : GL.Objects.Buffers.Buffer;
       Feedback_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Colour               : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+      Colour                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+      Index                 : Integer := 0;
    begin
       --  DONT cull faces (we will do this ourselves!)
       GL.Toggles.Disable (GL.Toggles.Cull_Face);
@@ -58,6 +60,8 @@ package body Graphic_Data is
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                         Projection_Matrix_ID, Colour_Location);
+      GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       --   buffer for OpenGL feedback, format will be:
       --   GL_POLYGON_TOKEN
@@ -76,6 +80,7 @@ package body Graphic_Data is
       Feedback_Buffer.Initialize_Id;
       Feedback_Array_Object.Bind;
       GL.Objects.Buffers.Transform_Feedback_Buffer.Bind (Feedback_Buffer);
+--        GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       if Model_Name = "teapot" then
          Solid_Teapot (1.0);
@@ -96,40 +101,40 @@ package body Graphic_Data is
       elsif Model_Name =  "icosahedron" then
          Solid_Icosahedron;
       end if;
-      --
+
+--        GL.Attributes.Disable_Vertex_Attrib_Array (0);
       --  	int nbFeedback = glRenderMode(GL_RENDER);
       --
       --  	// parse the buffer:
       --  	g_polygons2D.clear();
       --  	g_vertices2D.clear();
-      --
-      --  	int idx = 0;
-      --  	while (idx < nbFeedback)
-      --          {
-      --  		// check for polygon:
-      --  		if (buffer[idx] != GL_POLYGON_TOKEN)
-      --              {
-      --  			fprintf(stderr, "Error parsing the feedback buffer!");
-      --  			break;
-      --              }
-      --  		idx++;
-      --
-      --  		// number of vertices (3)
-      --  		int n = (int)buffer[idx];
-      --  		idx++;
-      --  		std::vector<int> vtxIdx(n);
-      --
-      --  		// get vertices:
-      --  		// Maybe todo later: don't duplicate identical vertices  . . .
-      --  		for (int i = 0; i < n; i++)
-      --              {
-      --  			vtxIdx[i] = (int)g_vertices2D.size();
-      --  			g_vertices2D.push_back(_vector(buffer[idx] * e1 + buffer[idx+1] * e2));
-      --  			idx += 2;
-      --              }
-      --  		g_polygons2D.push_back(vtxIdx);
-      --          }
-      --
+
+      	while (idx < nbFeedback)
+              {
+      		// check for polygon:
+      		if (buffer[idx] != GL_POLYGON_TOKEN)
+                  {
+      			fprintf(stderr, "Error parsing the feedback buffer!");
+      			break;
+                  }
+      		idx++;
+
+      		// number of vertices (3)
+      		int n = (int)buffer[idx];
+      		idx++;
+      		std::vector<int> vtxIdx(n);
+
+      		// get vertices:
+      		// Maybe todo later: don't duplicate identical vertices  . . .
+      		for (int i = 0; i < n; i++)
+                  {
+      			vtxIdx[i] = (int)g_vertices2D.size();
+      			g_vertices2D.push_back(_vector(buffer[idx] * e1 + buffer[idx+1] * e2));
+      			idx += 2;
+                  }
+      		g_polygons2D.push_back(vtxIdx);
+              }
+
       --  	if (g_prevStatisticsModelName != modelName)
       --          {
       --  		printf("Model: %s, #polygons: %d, #vertices: %d\n", modelName.c_str(), g_polygons2D.size(), g_vertices2D.size());

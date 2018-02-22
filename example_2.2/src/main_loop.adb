@@ -90,11 +90,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width          : Glfw.Size;
       Window_Height         : Glfw.Size;
       Pick                  : GL_Util.GL_Pick;
---        Translation_Matrix  : GL.Types.Singles.Matrix4;
-      Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Vertex_Buffer         : GL.Objects.Buffers.Buffer;
       Vertex_Array_Object   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-
+      BV                    : Multivectors.Bivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -113,6 +111,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Graphic_Data.Get_GLUT_Model_2D (Render_Program, Model_Name, Model_Rotor);
          Init_Model_Needed := False;
       end if;
+
+      --  DONT cull faces (we will do this ourselves!)
+      GL.Toggles.Disable (GL.Toggles.Cull_Face);
+      --  fill all polygons (otherwise they get turned into LINES
+      GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
 
    exception
       when anError :  others =>
