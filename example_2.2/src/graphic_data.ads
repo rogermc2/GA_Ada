@@ -24,7 +24,14 @@ package Graphic_Data is
                                 Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor);
    procedure Solid_Cube (Size : Float);
+   procedure Solid_Cone (Base, Height : Float; Slices, Stacks : Integer);
+   procedure Solid_Dodecahedron;
+   procedure Solid_Icosahedron;
+   procedure Solid_Octahedron;
    procedure Solid_Sphere (Radius : Float; Slices, Stacks : Integer);
    procedure Solid_Teapot (Size : Float);
+   procedure Solid_Tetrahedron;
+   procedure Solid_Torus (Inner_Radius, Outer_Radius : Float;
+                          Sides, Rings : Integer);
 
 end Graphic_Data;

@@ -1,8 +1,11 @@
 
+with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
+with GL.Objects.Buffers;
 with GL.Objects.Programs;
+with GL.Objects.Vertex_Arrays;
 with GL.Rasterization;
 with GL.Toggles;
 with GL.Types.Colors;
@@ -18,6 +21,10 @@ with Multivectors;
 package body Graphic_Data is
    use GL.Types;
 
+   package Buffer_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Float);
+   type Buffer_List is new Buffer_Package.List with null record;
+
    procedure Get_GLUT_Model_2D (Render_Program : GL.Objects.Programs.Program;
                                 Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor) is
@@ -30,12 +37,14 @@ package body Graphic_Data is
         GL.Types.Singles.Identity4;
       Translation_Matrix   : Singles.Matrix4;
       Projection_Matrix    : Singles.Matrix4;
+      Feedback_Buffer       : GL.Objects.Buffers.Buffer;
+      Feedback_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Colour               : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
    begin
       --  DONT cull faces (we will do this ourselves!)
       GL.Toggles.Disable (GL.Toggles.Cull_Face);
       --  fill all polygons (otherwise they get turned into LINES
---        GL.Rasterization.Set_Polygon_Mode (GL.Culling.Front_And_Back, GL.Rasterization.Fill);
+      GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
 
       --  setup projection & transform for the model:
       --        glFrustum (-(float)g_viewportWidth / screenWidth, (float)g_viewportWidth / screenWidth,
@@ -48,7 +57,7 @@ package body Graphic_Data is
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
-                                Projection_Matrix_ID, Colour_Location);
+                                        Projection_Matrix_ID, Colour_Location);
 
       --   buffer for OpenGL feedback, format will be:
       --   GL_POLYGON_TOKEN
@@ -64,27 +73,29 @@ package body Graphic_Data is
       --  	glRenderMode(GL_FEEDBACK);
 
       --  render model
+      Feedback_Buffer.Initialize_Id;
+      Feedback_Array_Object.Bind;
+      GL.Objects.Buffers.Transform_Feedback_Buffer.Bind (Feedback_Buffer);
+
       if Model_Name = "teapot" then
          Solid_Teapot (1.0);
       elsif Model_Name = "cube" then
          Solid_Cube (1.0);
       elsif Model_Name = "sphere" then
          Solid_Sphere (1.0, 16, 8);
+      elsif Model_Name =  "cone" then
+         Solid_Cone (1.0, 2.0, 16, 8);
+      elsif Model_Name =  "torus" then
+         Solid_Torus (0.5, 1.0, 8, 16);
+      elsif Model_Name =  "dodecahedron" then
+         Solid_Dodecahedron;
+      elsif Model_Name =  "octahedron" then
+         Solid_Octahedron;
+      elsif Model_Name =  "tetrahedron" then
+         Solid_Tetrahedron;
+      elsif Model_Name =  "icosahedron" then
+         Solid_Icosahedron;
       end if;
-      --  	else if (modelName == "sphere")
-      --  		glutSolidSphere(1.0, 16, 8);
-      --  	else if (modelName == "cone")
-      --  		glutSolidCone(1.0, 2.0, 16, 8);
-      --  	else if (modelName == "torus")
-      --  		glutSolidTorus(0.5, 1.0, 8, 16);
-      --  	else if (modelName == "dodecahedron")
-      --  		glutSolidDodecahedron();
-      --  	else if (modelName == "octahedron")
-      --  		glutSolidOctahedron();
-      --  	else if (modelName == "tetrahedron")
-      --  		glutSolidTetrahedron();
-      --  	else if (modelName == "icosahedron")
-      --  		glutSolidIcosahedron();
       --
       --  	int nbFeedback = glRenderMode(GL_RENDER);
       --
@@ -141,6 +152,35 @@ package body Graphic_Data is
 
    --  -------------------------------------------------------------------------
 
+   procedure Solid_Cone (Base, Height : Float; Slices, Stacks : Integer) is
+   begin
+      GLUT_API.GLUT_Solid_Cone (Double (Base), Double (Height),
+                                Int (Slices), Int (Stacks));
+   end Solid_Cone;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Dodecahedron is
+   begin
+      GLUT_API.GLUT_Solid_Dodecahedron;
+   end Solid_Dodecahedron;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Icosahedron is
+   begin
+      GLUT_API.GLUT_Solid_Icosahedron;
+   end Solid_Icosahedron;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Octahedron is
+   begin
+      GLUT_API.GLUT_Solid_Octahedron;
+   end Solid_Octahedron;
+
+   --  -------------------------------------------------------------------------
+
    procedure Solid_Sphere (Radius : Float; Slices, Stacks : Integer) is
    begin
       GLUT_API.GLUT_Solid_Sphere (Double (Radius), Int (Slices), Int (Stacks));
@@ -152,5 +192,23 @@ package body Graphic_Data is
    begin
       GLUT_API.GLUT_Solid_Teapot (Double (Size));
    end Solid_Teapot;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Tetrahedron is
+   begin
+      GLUT_API.GLUT_Solid_Tetrahedron;
+   end Solid_Tetrahedron;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Solid_Torus (Inner_Radius, Outer_Radius : Float;
+                          Sides, Rings : Integer) is
+   begin
+      GLUT_API.GLUT_Solid_Torus (Double (Inner_Radius), Double (Outer_Radius),
+                                Int (Sides), Int (Rings));
+   end Solid_Torus;
+
+   --  -------------------------------------------------------------------------
 
 end Graphic_Data;
