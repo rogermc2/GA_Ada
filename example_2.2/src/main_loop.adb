@@ -87,18 +87,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GA_Maths;
       use GA_Maths.Float_Functions;
 
-      Window_Width        : Glfw.Size;
-      Window_Height       : Glfw.Size;
-      Pick                : GL_Util.GL_Pick;
+      Window_Width          : Glfw.Size;
+      Window_Height         : Glfw.Size;
+      Pick                  : GL_Util.GL_Pick;
 --        Translation_Matrix  : GL.Types.Singles.Matrix4;
-      Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Vertex_Buffer       : GL.Objects.Buffers.Buffer;
+      Model_View_Matrix     : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Vertex_Buffer         : GL.Objects.Buffers.Buffer;
+      Vertex_Array_Object   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (White);
+
+      GL.Objects.Programs.Use_Program (Render_Program);
+
+      Vertex_Buffer.Initialize_Id;
+      Vertex_Array_Object.Initialize_Id;
+      Vertex_Array_Object.Bind;
+
+      Array_Buffer.Bind (Vertex_Buffer);
 
       if Init_Model_Needed then
          Graphic_Data.Get_GLUT_Model_2D (Render_Program, Model_Name, Model_Rotor);
