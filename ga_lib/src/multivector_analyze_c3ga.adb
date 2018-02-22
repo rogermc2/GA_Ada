@@ -148,7 +148,7 @@ package body Multivector_Analyze_C3GA is
                                        General_Inverse (MV));
       GA_Utilities.Print_Multivector
         ("Multivector_Analyze_C3GA.Analyze_Flat C3GA.ni  ", C3GA.ni);
-       GA_Utilities.Print_Multivector
+      GA_Utilities.Print_Multivector
         ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1  ", MV_Location);
       Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat SCP  " & Float'Image (Scalar_Product (C3GA.ni, MV_Location)));
       MV_Location := Geometric_Product (MV_Location,
@@ -258,7 +258,7 @@ package body Multivector_Analyze_C3GA is
          theAnalysis.M_Type.Blade_Class := Round_Blade;
          if Grade = 1 then
             MV_X := Dual (MV_X);
-           theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
+            theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
          end if;
 
          LC_NI_MV := Left_Contraction (C3GA.ni, MV_X);

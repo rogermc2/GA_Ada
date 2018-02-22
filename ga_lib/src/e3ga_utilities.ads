@@ -11,7 +11,7 @@ package E3GA_Utilities is
    function exp (BV : Bivector) return Rotor;
    --  special log() for 3D rotors
    function log (R : Rotor) return Bivector;
-    procedure Print_Rotor (Name : String; R : Rotor);
+   procedure Print_Rotor (Name : String; R : Rotor);
 --     procedure Print_Vector (Name : String; aVector : E2GA.Vector);
 --     procedure Print_Vector (Name : String; aVector : E3GA.Vector);
    procedure Rotor_To_Matrix (R : Rotor; M : out GA_Maths.GA_Matrix3);
