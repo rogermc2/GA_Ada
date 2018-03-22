@@ -347,7 +347,7 @@ package body Multivectors is
    begin
       while Has_Element (Curs) loop
          thisBlade := Element (Curs);
-         Max_Mag := Maximum (Weight (thisBlade), Max_Mag);
+         Max_Mag :=  Float'Max (Weight (thisBlade), Max_Mag);
          Next (Curs);
       end loop;
 
@@ -1409,7 +1409,7 @@ package body Multivectors is
    begin
       while Has_Element (Blade_Cursor) loop
          High_Bit := Highest_One_Bit (Bitmap (Element (Blade_Cursor)));
-         Max_Dim := Maximum (Max_Dim, High_Bit);
+         Max_Dim := Integer'Max (Max_Dim, High_Bit);
          Next (Blade_Cursor);
       end loop;
       return Max_Dim + 1;
@@ -1428,7 +1428,7 @@ package body Multivectors is
       while Has_Element (Blade_Cursor) loop
          --  Grade_Count = bit count
          Grade_Count := Integer (Blade.Grade (Element (Blade_Cursor)));
-         Max_Grade_Count := Maximum (Max_Grade_Count, Grade_Count);
+         Max_Grade_Count := Integer'Max (Max_Grade_Count, Grade_Count);
          Next (Blade_Cursor);
       end loop;
       Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));

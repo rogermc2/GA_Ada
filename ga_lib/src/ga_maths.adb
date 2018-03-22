@@ -47,58 +47,6 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Maximum (I1, I2 : Integer) return Integer is
-      Max : Integer;
-   begin
-      if I1 > I2 then
-         Max := I1;
-      else
-         Max := I2;
-      end if;
-      return Max;
-   end Maximum;
-
-   --  ------------------------------------------------------------------------
-
-   function Maximum (I1, I2 : Float) return Float is
-      Max : Float;
-   begin
-      if I1 > I2 then
-         Max := I1;
-      else
-         Max := I2;
-      end if;
-      return Max;
-   end Maximum;
-
-   --  ------------------------------------------------------------------------
-
-   function Minimum (I1, I2 : Integer) return Integer is
-      Min : Integer;
-   begin
-      if I1 < I2 then
-         Min := I1;
-      else
-         Min := I2;
-      end if;
-      return Min;
-   end Minimum;
-
-   --  ------------------------------------------------------------------------
-
-   function Minimum (I1, I2 : Float) return Float is
-      Min : Float;
-   begin
-      if I1 < I2 then
-         Min := I1;
-      else
-         Min := I2;
-      end if;
-      return Min;
-   end Minimum;
-
-   --  ------------------------------------------------------------------------
-
    function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_Integer) return Natural is
       use Interfaces;
       Num : Unsigned_32 := Unsigned_32 (Bitmap);
