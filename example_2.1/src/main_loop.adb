@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_Y        : single := 100.0;
 
       A                 : float := 0.0;
-      BV                : Multivectors.Bivector;
+      BV                : Bivector;
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
       V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
@@ -126,7 +126,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Entry_Width * Scale_S / 2.0,
          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix);
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
 
       while A < Two_Pi - 0.1 loop
@@ -218,7 +218,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix );
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
                                         Colour_Location);
@@ -290,12 +290,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Font_File : string := "../fonts/Helvetica.ttc";
    begin
       Render_Graphic_Program := Program_Loader.Program_From
-        ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/vertex_shader.glsl", Vertex_Shader),
+         Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/fragment_shader.glsl", Fragment_Shader)));
 
       Render_Text_Program := Program_Loader.Program_From
-        ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/text_vertex_shader.glsl", Vertex_Shader),
+         Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
 
       Text_Management.Setup (Font_File);
       GA_Draw.Set_Point_Size (0.005);

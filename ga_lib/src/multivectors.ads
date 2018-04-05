@@ -49,8 +49,8 @@ package Multivectors is
    function Basis_Vector (Index : C3_Base) return Vector;
    function Blades (MV : Multivector) return Blade_List;
 --     function C3_Multivector return Multivector;
-   function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
-                        Value : out Float) return Boolean;
+   function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer)
+                        return Float;
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;

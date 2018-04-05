@@ -85,7 +85,7 @@ package body Multivectors is
       Blades_2  : constant Blade_List := MV2.Blades;
       Blades_3  : Blade_List;
       Curs      : Cursor := Blades_1.First;
-      MV3       : Multivector;
+      MV3       : Multivector := MV1;
    begin
       while Has_Element (Curs) loop
          Blades_3.Append (Element (Curs));
@@ -97,6 +97,7 @@ package body Multivectors is
          Next (Curs);
       end loop;
       MV3.Blades := Blades_3;
+      MV3.Sorted := False;
       --  Simplify should do the adding?
       Simplify (MV3);
       return MV3;
@@ -212,6 +213,11 @@ package body Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : E2_Base; Value : Float) is
    begin
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Add_Blade 1");
+         raise;
    end Add_Blade;
 
    --  -------------------------------------------------------------------------
@@ -219,6 +225,11 @@ package body Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float) is
    begin
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Add_Blade 2");
+         raise;
    end Add_Blade;
 
    --  -------------------------------------------------------------------------
@@ -226,6 +237,11 @@ package body Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float) is
    begin
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Add_Blade 2");
+         raise;
    end Add_Blade;
 
    --  -------------------------------------------------------------------------
@@ -295,6 +311,11 @@ package body Multivectors is
    begin
       MV.Blades.Append (New_Basis_Blade (Index));
       return MV;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Basis_Vector.");
+         raise;
    end Basis_Vector;
 
    --  -------------------------------------------------------------------------
@@ -315,24 +336,28 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer;
-                       Value : out Float) return Boolean is
+   function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return Float is
       use Blade_List_Package;
       use GA_Maths;
       Blades  : constant Blade_List := Get_Blade_List (MV);
       Curs    : Cursor := Blades.First;
       Found   : Boolean := False;
+      Value   : Float := 0.0;
    begin
-      Value := 0.0;
       while Has_Element (Curs) and not Found loop
          Found := Blade.Bitmap (Element (Curs)) = BM;
-         if found then
+         if Found then
             Value :=  Blade.Weight (Element (Curs));
          else
             Next (Curs);
          end if;
       end loop;
-      return Found;
+      return Value;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Component");
+         raise;
    end Component;
 
    --  -------------------------------------------------------------------------
@@ -1166,40 +1191,63 @@ package body Multivectors is
    end Norm_R2;
 
    --  ------------------------------------------------------------------------
+
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Ada.Containers;
       use Blade_List_Package;
-      B1        : Blade.Basis_Blade;
-      B2        : Blade.Basis_Blade;
-      List_1    : Blade_List := MV1.Blades;
-      Cursor_1  : Cursor := List_1.First;
-      OP_Blades : Blade_List;
-      Blade_OP  : Blade.Basis_Blade;
-      OP        : Multivector;
       Sorted    : Boolean;
-   begin
-      while Has_Element (Cursor_1) loop
-         B1 := Element (Cursor_1);
-         declare
-            List_2   : Blade_List := MV2.Blades;
-            Cursor_2 : Cursor := List_2.First;
-         begin
-            while Has_Element (Cursor_2) loop
-               B2 := Element (Cursor_2);
-               Blade_OP := Outer_Product (B1, B2);
-               if Weight (Blade_OP) /= 0.0 then
-                  OP_Blades.Append (Blade_OP);
-               end if;
-               Next (Cursor_2);
-            end loop;
-         end;
-         Next (Cursor_1);
-      end loop;
 
-      Simplify (OP_Blades, Sorted);
-      OP.Blades := OP_Blades;
-      OP.Sorted := Sorted;
-      return OP;
+      function  Product (List_1, List_2 : Blade_List) return Blade_List is
+            Cursor_1  : Cursor := List_1.First;
+            Blade_OP  : Blade.Basis_Blade;
+            B1        : Blade.Basis_Blade;
+            B2        : Blade.Basis_Blade;
+            OP_Blades : Blade_List;
+      begin
+            while Has_Element (Cursor_1) loop
+                B1 := Element (Cursor_1);
+                declare
+                    Cursor_2 : Cursor := List_2.First;
+                begin
+                    while Has_Element (Cursor_2) loop
+                        B2 := Element (Cursor_2);
+                        Blade_OP := Outer_Product (B1, B2);
+                        if Weight (Blade_OP) /= 0.0 then
+                            OP_Blades.Append (Blade_OP);
+                        end if;
+                        Next (Cursor_2);
+                    end loop;
+                end;
+                Next (Cursor_1);
+            end loop;
+
+            Simplify (OP_Blades, Sorted);
+            return OP_Blades;
+      end Product;
+
+   begin
+      if MV1.Type_Of_MV = MV_Vector and then MV1.Type_Of_MV = MV_Vector then
+            declare
+                OP     : Bivector;
+            begin
+                OP.Blades := Product (MV1.Blades, MV2.Blades);
+                OP.Sorted := Sorted;
+                return OP;
+            end;
+      else
+            declare
+                OP     : Multivector;
+            begin
+                OP.Blades := Product (MV1.Blades, MV2.Blades);
+                OP.Sorted := Sorted;
+                return OP;
+            end;
+      end if;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Multivector.Outer_Product.");
+         raise;
    end Outer_Product;
 
    --  -------------------------------------------------------------------------

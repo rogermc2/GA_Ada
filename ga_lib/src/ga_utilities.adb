@@ -43,7 +43,7 @@ package body GA_Utilities is
             Bit_Pos := 2 ** Power_of_2;
             --  add a blade to e for each possible grade
             if (Blade.Bitmap (Largest_Basis_Blade (MV)) and Bit_Pos) /= 0 then
-                Blades.Append (Blade.New_Basis_Blade (Bit_Pos, 1.0));
+               Blades.Append (Blade.New_Basis_Blade (Bit_Pos, 1.0));
             end if;
          end loop;
 

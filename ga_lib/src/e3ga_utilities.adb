@@ -100,7 +100,8 @@ package body E3GA_Utilities is
    --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
    --                                = bx        + i by  (with respect to a)
    --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (From, To : Multivectors.Vector) return Multivectors.Rotor is
+   function Rotor_Vector_To_Vector (From, To : Multivectors.Vector)
+                                    return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
       use Multivectors;
       S      : float;
@@ -140,6 +141,11 @@ package body E3GA_Utilities is
       Simplify (Result);
 
       return Result;
+
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
+         raise;
    end Rotor_Vector_To_Vector;
 
    --  ----------------------------------------------------------------------------

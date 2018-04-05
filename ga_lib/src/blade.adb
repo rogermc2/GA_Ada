@@ -256,6 +256,10 @@ package body Blade is
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
       return (Index'Enum_Rep, Weight);
+   exception
+      when anError :  others =>
+         Put_Line ("An exception occurred in Blade.New_Basis_Blade");
+         raise;
    end New_Basis_Blade;
 
    --  ------------------------------------------------------------------------
