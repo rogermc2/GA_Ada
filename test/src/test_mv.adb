@@ -3,29 +3,30 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
 with GA_Maths;
 with GA_Utilities;
 
-with Multivector; use Multivector;
+with Multivectors; use Multivectors;
 with Multivector_Type;
 
 procedure Test_MV is
-   use Blade.Names_Package;
-   no_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_no);
-   e1_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_e1);
-   e2_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_e2);
-   e3_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_e3);
-   ni_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.C3_ni);
+--     use Blade.Names_Package;
+   no_bv   : Multivector := Basis_Vector (Blade_Types.C3_no);
+   e1_bv   : Multivector := Basis_Vector (Blade_Types.C3_e1);
+   e2_bv   : Multivector := Basis_Vector (Blade_Types.C3_e2);
+   e3_bv   : Multivector := Basis_Vector (Blade_Types.C3_e3);
+   ni_bv   : Multivector := Basis_Vector (Blade_Types.C3_ni);
    BV_Names     : Blade.Basis_Vector_Names;
 
-   MV           : Multivector.Multivector;
-   MV1          : Multivector.Multivector;
-   MV12         : Multivector.Multivector;
-   MV1p2        : Multivector.Multivector;
-   MV13         : Multivector.Multivector;
-   Op23         : Multivector.Multivector;
-   Op23_1       : Multivector.Multivector;
-   Add_1_Op23_1 : Multivector.Multivector;
+   MV           : Multivector;
+   MV1          : Multivector;
+   MV12         : Multivector;
+   MV1p2        : Multivector;
+   MV13         : Multivector;
+   Op23         : Multivector;
+   Op23_1       : Multivector;
+   Add_1_Op23_1 : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin

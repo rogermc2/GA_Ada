@@ -588,7 +588,7 @@ package body C3GA is
 --           return 0.0;
 --        else
 --           Grade_Size := MV_Grade_Size (Integer(GU and GU_32));
---           --              MV2 := Multivector.Get_Basis_Vector (Blade.Base'Enum_Val (Grade_Size));
+--           --              MV2 := Multivectors.Get_Basis_Vector (Blade.Base'Enum_Val (Grade_Size));
 --           return 0.0;
 --        end if;
 --     end NO_E1_E2_E3_NI;
