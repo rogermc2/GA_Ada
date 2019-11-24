@@ -602,7 +602,7 @@ package body C3GA is
         Get_Blade (Multivector (NP), C3_Base'Enum_Rep (E));
    begin
       return Blade.Weight (theBlade);
-   end ;
+   end NP_Element;
 
    --  -------------------------------------------------------------------------
 

@@ -242,7 +242,7 @@ package body E2GA is
         use GA_Maths;
         BM_E12   : constant Unsigned_Integer :=
                      Unsigned_Integer (E2_Base'Enum_Rep (E2_e1)) or
-                     Unsigned_Integer (E2_Base'Enum_Rep (E2_e2));
+          Unsigned_Integer (E2_Base'Enum_Rep (E2_e2));
     begin
         return Component (BV, BM_E12);
 
