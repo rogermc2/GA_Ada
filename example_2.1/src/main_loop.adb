@@ -290,12 +290,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Font_File : string := "../fonts/Helvetica.ttc";
    begin
       Render_Graphic_Program := Program_Loader.Program_From
-        ((Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/vertex_shader.glsl", Vertex_Shader),
-         Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
 
       Render_Text_Program := Program_Loader.Program_From
-        ((Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/text_vertex_shader.glsl", Vertex_Shader),
-         Src ("/Education/Geometric Algebra/GA_Ada/example_2.1/src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
+        ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
 
       Text_Management.Setup (Font_File);
       GA_Draw.Set_Point_Size (0.005);
