@@ -60,9 +60,9 @@ package Multivectors is
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
-   function General_Inverse (MV : Multivector) return Multivector;
-   function General_Inverse (MV : Multivector;
-                             Met : Metric.Metric_Record) return Multivector;
+   function General_Inverse (MV : Multivector; Inv : out Multivector) return Boolean;
+   function General_Inverse (MV : Multivector; Met : Metric.Metric_Record;
+                             Inv : out Multivector) return Boolean;
    --  Get_Basis_Vector returns multivector of the required base.
    function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
                        return Blade.Basis_Blade;
@@ -101,7 +101,7 @@ package Multivectors is
    function Norm_R2 (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
-   function Rotor_Inverse (R : Rotor) return Rotor;
+   function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;

@@ -50,11 +50,13 @@ begin
    MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
    GA_Utilities.Print_Multivector ("MV_A", MV_A);
 
-   Put_Line ("Test_MV calling General_Inverse.");
-   MV_AI_1 := General_Inverse (MV_A, Met);
-   GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
-   MV_Info := Multivector_Type.Init (MV_AI_1);
-   GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
+   if General_Inverse (MV_A, Met, MV_AI_1) then
+        GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
+        MV_Info := Multivector_Type.Init (MV_AI_1);
+        GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
+   else
+        Put_Line ("Multivector MV_A is not invertable.");
+   end if;
 
    exception
       when anError :  others =>
