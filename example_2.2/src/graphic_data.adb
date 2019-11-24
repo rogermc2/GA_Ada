@@ -11,6 +11,7 @@ with GL.Rasterization;
 with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
+with GL_Enums_Feedback;
 with GL_Util;
 
 with Maths;
@@ -22,13 +23,36 @@ with Multivectors;
 package body Graphic_Data is
    use GL.Types;
 
+   type Feedback is record
+      Token     : GL_Enums_Feedback.Feed_Back_Token;
+      Vertex_1X : Float;
+      Vertex_1Y : Float;
+      Vertex_1Z : Float;
+      Vertex_2X : Float;
+      Vertex_2Y : Float;
+      Vertex_2Z : Float;
+      Vertex_3X : Float;
+      Vertex_3Y : Float;
+      Vertex_3Z : Float;
+   end record;
+
+   --  Buffer for OpenGL feedback
    package Buffer_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Float);
+     (Element_Type => Feedback);
    type Buffer_List is new Buffer_Package.List with null record;
+
+   package Indices_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Integer);
+   type Indices_List is new Indices_Package.List with null record;
+
+   package Vertices_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Multivectors.Vector);
+   type Vertices_List is new Vertices_Package.List with null record;
 
    procedure Get_GLUT_Model_2D (Render_Program : GL.Objects.Programs.Program;
                                 Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor) is
+      use GL_Enums_Feedback;
       use GL.Types.Singles;
       Screen_Width          : constant Float := 1600.0;
       MV_Matrix_ID          : GL.Uniforms.Uniform;
@@ -40,7 +64,10 @@ package body Graphic_Data is
       Projection_Matrix     : Singles.Matrix4;
       Feedback_Buffer       : GL.Objects.Buffers.Buffer;
       Feedback_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Indices               : Indices_List;
       Colour                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+      Num_Vertices          : Integer;
+      G_Vertices_2D         : Vertices_List;
       Index                 : Integer := 0;
    begin
       --  DONT cull faces (we will do this ourselves!)
@@ -76,12 +103,13 @@ package body Graphic_Data is
       --  	glFeedbackBuffer((GLsizei)buffer.size(), GL_2D, &(buffer[0]));
       --  	glRenderMode(GL_FEEDBACK);
 
-      --  render model
       Feedback_Buffer.Initialize_Id;
       Feedback_Array_Object.Bind;
       GL.Objects.Buffers.Transform_Feedback_Buffer.Bind (Feedback_Buffer);
---        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      --        GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
+      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+      --  Render model
       if Model_Name = "teapot" then
          Solid_Teapot (1.0);
       elsif Model_Name = "cube" then
@@ -101,39 +129,38 @@ package body Graphic_Data is
       elsif Model_Name =  "icosahedron" then
          Solid_Icosahedron;
       end if;
+      GL.Objects.Programs.End_Transform_Feedback;
 
---        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      --        GL.Attributes.Disable_Vertex_Attrib_Array (0);
       --  	int nbFeedback = glRenderMode(GL_RENDER);
       --
-      --  	// parse the buffer:
+      --  	// parse the feedback buffer:
       --  	g_polygons2D.clear();
       --  	g_vertices2D.clear();
 
-      	while (idx < nbFeedback)
-              {
-      		// check for polygon:
-      		if (buffer[idx] != GL_POLYGON_TOKEN)
-                  {
-      			fprintf(stderr, "Error parsing the feedback buffer!");
-      			break;
-                  }
-      		idx++;
+      while idx < nbFeedback loop
+         --  check for polygon:
+         if buffer (idx) /= Polygon_Token then
+            raise GLUT_Read_Exception with
+              "Graphic_Data.Get_GLUT_Model_2D Error parsing the feedback buffer!";
+         else
+            idx := idx + 1;
+            --  number of vertices (3)
+            Num_Vertices := (int)buffer[idx];
+            idx := idx + 1;
+            --  std::vector<int> vtxIdx(n);
 
-      		// number of vertices (3)
-      		int n = (int)buffer[idx];
-      		idx++;
-      		std::vector<int> vtxIdx(n);
-
-      		// get vertices:
-      		// Maybe todo later: don't duplicate identical vertices  . . .
-      		for (int i = 0; i < n; i++)
-                  {
-      			vtxIdx[i] = (int)g_vertices2D.size();
-      			g_vertices2D.push_back(_vector(buffer[idx] * e1 + buffer[idx+1] * e2));
-      			idx += 2;
-                  }
-      		g_polygons2D.push_back(vtxIdx);
-              }
+            --  Get vertices:
+            --  Maybe todo later: don't duplicate identical vertices  . . .
+            for index in 1 .. Num_Vertices loop
+               --  vtxIdx[i] = (int)g_vertices2D.size();
+               Indices.Append (g_vertices2D.size)
+               g_vertices2D.push_back(_vector(buffer[idx] * e1 + buffer[idx+1] * e2));
+               idx := idx + 2;
+            end loop;
+               g_polygons2D.push_back(vtxIdx);
+         end if;
+      end loop;
 
       --  	if (g_prevStatisticsModelName != modelName)
       --          {
@@ -211,7 +238,7 @@ package body Graphic_Data is
                           Sides, Rings : Integer) is
    begin
       GLUT_API.GLUT_Solid_Torus (Double (Inner_Radius), Double (Outer_Radius),
-                                Int (Sides), Int (Rings));
+                                 Int (Sides), Int (Rings));
    end Solid_Torus;
 
    --  -------------------------------------------------------------------------

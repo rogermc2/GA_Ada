@@ -3,28 +3,29 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
 with GA_Utilities;
 with GA_Maths;
 
-with Multivector; use Multivector;
+with Multivectors; use Multivectors;
 with Multivector_Type;
 
 procedure Test_E2MV is
    use Blade.Names_Package;
-   e1_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.E2_e1);
-   e2_bv   : Multivector.Multivector := Get_Basis_Vector (Blade.E2_e2);
-   BV_Names     : Blade.Basis_Vector_Names;
+   e1_bv    : Multivector := Basis_Vector (Blade_Types.E2_e1);
+   e2_bv    : Multivector := Basis_Vector (Blade_Types.E2_e2);
+   BV_Names : Blade.Basis_Vector_Names;
 
-   MV           : Multivector.Multivector;
-   MV1          : Multivector.Multivector;
-   MV11         : Multivector.Multivector;
-   MV12         : Multivector.Multivector;
-   MV1p2        : Multivector.Multivector;
-   MV1m2        : Multivector.Multivector;
-   MV_Inv       : Multivector.Multivector;
-   MV_GInv       : Multivector.Multivector;
-   MV_VInv       : Multivector.Multivector;
-   MV_Info      : Multivector_Type.MV_Type_Record;
+   MV       : Multivector;
+   MV1      : Multivector;
+   MV11     : Multivector;
+   MV12     : Multivector;
+   MV1p2    : Multivector;
+   MV1m2    : Multivector;
+   MV_Inv   : Multivector;
+   MV_GInv  : Multivector;
+   MV_VInv  : Multivector;
+   MV_Info  : Multivector_Type.MV_Type_Record;
 
 begin
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));

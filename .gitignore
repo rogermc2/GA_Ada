@@ -14,10 +14,9 @@ bin
 *.cgpr
 *.stderr
 *.stdout
+*copy.gpr
 bivectors
 circle
-test_mv
-test_e2mv
 removal
 
 
