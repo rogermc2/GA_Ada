@@ -45,8 +45,8 @@ package body Multivector_Analyze_C3GA is
         begin
             Put_Line ("Multivector_Analyze_C3GA.Analyze Multivector Type detected.");
             GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
-            Put_Line ("Multivector_Analyze_C3GA.Classify OP_Nix_Val, IP_Nix_Val." &
-                        Float'Image (OP_Nix_Val) & "  " & Float'Image (IP_Nix_Val) );
+            Put_Line ("Multivector_Analyze_C3GA.Classify OP_Nix_Val: " &
+                        Float'Image (OP_Nix_Val) & ", IP_Nix_Val: " & Float'Image (IP_Nix_Val) );
             if not OP_Nix and not IP_Nix then
                 Put_Line ("Multivector_Analyze_C3GA.Classify Free.");
                 Analyze_Free (Analysis, MV_X);
@@ -275,12 +275,13 @@ package body Multivector_Analyze_C3GA is
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
             Invertible := General_Inverse (LC_NI_MV, LC_NI_MV_Inverse);
             if Invertible then
-                Location :=
-                  Geometric_Product (MV_X, LC_NI_MV_Inverse);
-                Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
+                Location := Geometric_Product (MV_X, LC_NI_MV_Inverse);
+                Location := Geometric_Product
+                  (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
 
                 NI_X2 := Scalar_Product (LC_NI_MV, LC_NI_MV);
-                Radius_Sq := Scalar_Part (Geometric_Product (MV_X, 1.0 / NI_X2 * Grade_Inversion (MV_X)));
+                Radius_Sq := Scalar_Part
+                  (Geometric_Product (MV_X, 1.0 / NI_X2 * Grade_Inversion (MV_X)));
                 Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
                 theAnalysis.M_Points (1) := Location;
@@ -294,7 +295,8 @@ package body Multivector_Analyze_C3GA is
                     theAnalysis.M_Vectors (3) := Basis_Vector (Blade_Types.E3_e3);
                 when 2 =>
                     theAnalysis.M_Type.Blade_Subclass := Point_Pair_Subclass;
-                    theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (C3GA.no, Attitude));
+                    theAnalysis.M_Vectors (1) :=
+                      Unit_E (Left_Contraction (C3GA.no, Attitude));
                 when 3 =>
                     theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
                     Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scale);
