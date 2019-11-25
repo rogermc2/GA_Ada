@@ -134,7 +134,7 @@ package body Multivector_Analyze_C3GA is
       MV_Inverse    : Multivector;
       MV_Inverible  : Boolean;
       MV_Location   : Multivector;
-      Location      : E3GA.Vector_Coords_3D;
+      Location      : C3GA.Normalized_Point;
       Blade_Factors : Multivectors.Multivector_List;
       Scale         : Float;
       Weight        : Float;
