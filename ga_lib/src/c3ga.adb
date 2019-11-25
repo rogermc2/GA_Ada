@@ -928,11 +928,23 @@ package body C3GA is
 
       if (GU and GU_1) /= 0 then
          theVector.Coordinates (1) := Multivectors.Component (MV, Index + 1);
-         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 2);
-         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 3);
+         theVector.Coordinates (2) := Multivectors.Component (MV, Index + 2);
+         theVector.Coordinates (3) := Multivectors.Component (MV, Index + 3);
       end if;
       return theVector;
    end To_VectorE3GA;
+
+   --  -------------------------------------------------------------------------
+
+   function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA is
+      use GA_Maths;
+      theVector : Vector_E3GA;
+   begin
+      theVector.Coordinates (1) := Multivectors.Component (NP, 1);
+      theVector.Coordinates (2) := Multivectors.Component (NP, 2);
+      theVector.Coordinates (3) := Multivectors.Component (NP, 3);
+      return theVector;
+   end NP_To_VectorE3GA;
 
    --  -------------------------------------------------------------------------
 
@@ -1091,6 +1103,13 @@ package body C3GA is
    --        NP.Inf := 0.0;
    --        return NP;
    --     end US_Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.Vector is
+   begin
+      return Vec.Coordinates;
+   end Vector_To_E3GA;
 
    --  -------------------------------------------------------------------------
 

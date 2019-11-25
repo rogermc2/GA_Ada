@@ -138,9 +138,11 @@ package C3GA is
 
    --  Underscore constructors
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA;
+   function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA;
 --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
 --     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
 --     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
+    function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.Vector;
 
 private
 
@@ -150,7 +152,7 @@ private
 
    --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
    type Vector_E3GA is record
-      Coordinates : E3GA.Vector_Coords_3D := (0.0, 0.0, 0.0);   --  m_c[3]
+      Coordinates : E3GA.Vector := (0.0, 0.0, 0.0);   --  m_c[3]
    end record;
 
 --     type Circle is record   --  m_c[10]
