@@ -6,6 +6,7 @@ with Multivector_Type;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
+   use Multivectors;
 
    Flag_Invalid          : constant boolean := false;
    Flag_Valid            : constant boolean := true;
@@ -67,7 +68,7 @@ package Multivector_Analyze is
 --        Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of Multivectors.Vector;
+   type Point_Array is array (1 .. Number_Of_Points) of Multivector (MV_Normalized_Point);
    type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
    type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
 

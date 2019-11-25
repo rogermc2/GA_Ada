@@ -165,7 +165,7 @@ package body Multivector_Analyze_C3GA is
 
          GA_Utilities.Print_Multivector
            ("Multivector_Analyze_C3GA.Analyze_Flat Location 2  ", Location);
-         theAnalysis.M_Points (1) := To_Vector (Location);
+         theAnalysis.M_Points (1) := Location;
          theAnalysis.M_Scalors (1) := Weight;
          GA_Utilities.Print_Multivector
            ("Multivector_Analyze_C3GA.Analyze_Flat M_Points (1)  ",
@@ -248,13 +248,13 @@ package body Multivector_Analyze_C3GA is
       MV_X             : Multivector := MV;
       Grade            : constant Unsigned_Integer :=
                            Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
-      Blade_Factors    : Multivectors.Multivector_List;
+      Blade_Factors    : Multivector_List;
       LC_NI_MV         : Multivector;
       LC_NI_MV_Inverse : Multivector;
       Invertible       : Boolean;
       Attitude         : Multivector;
       Location         : Multivector;
-      Point_Location   : Multivectors.Vector;
+      Point_Location   : Multivector (MV_Normalized_Point);
       NI_X2            : Float;
       Radius_Sq        : Float;
       Weight           : Float;
@@ -293,7 +293,7 @@ package body Multivector_Analyze_C3GA is
             GA_Utilities.Print_Multivector
               ("Multivector_Analyze_C3GA.Analyze_Round M_Points (1)", theAnalysis.M_Points (1));
             New_Line;
-            theAnalysis.M_Points (1) := Location;
+            theAnalysis.M_Points (1) := Point_Location;
             theAnalysis.M_Scalors (1) := Weight;
             case Grade is
                when 1 =>

@@ -379,7 +379,7 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         aPoint : Multivectors.Vector;
+                         aPoint : Multivectors.Multivector;
                          Direction : Multivectors.Vector;
                          Weight : Float; Colour : GL.Types.Colors.Color) is
 
@@ -551,7 +551,7 @@ package body GA_Draw is
     --  Based on draw.cpp drawTriVector
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
-                              Position : Multivectors.Vector; Colour : GL.Types.Colors.Color;
+                              Position : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
                               Scale : float;
                               Method : Trivector_Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;
