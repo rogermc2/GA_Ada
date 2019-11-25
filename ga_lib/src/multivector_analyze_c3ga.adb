@@ -280,7 +280,7 @@ package body Multivector_Analyze_C3GA is
             Location := Geometric_Product (MV_X, LC_NI_MV_Inverse);
             Location := Geometric_Product
               (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
-            Point_Location := C3GA.Set_Normalized_Point (E3GA.Vector_Coords_3D (Location);
+            Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
 
             NI_X2 := Scalar_Product (LC_NI_MV, LC_NI_MV);
             Radius_Sq := Scalar_Part
