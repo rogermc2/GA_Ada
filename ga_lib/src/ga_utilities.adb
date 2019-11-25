@@ -110,6 +110,7 @@ package body GA_Utilities is
    begin
       New_Line;
       Put_Line (Name);
+      Put_Line ("MV Type: " & Multivectors.MV_Type'Image (MV.Type_Of_MV));
       Put_Line ("MV Size: " & Ada.Containers.Count_Type'Image (theBlades.Length));
       Put_Line ("Grade Use Bitmap: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
       Put_Line ("Multivector Blades, Bitmap and Weight:");

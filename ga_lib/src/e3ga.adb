@@ -196,7 +196,7 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "+" (W : float; R : Multivectors.Rotor) return Multivectors.Rotor is
+   function "+" (W : float; R : Rotor) return Rotor is
       Sum       : Rotor := R;
    begin
       Update_Scalar_Part (Sum, Scalar_Part (R) + W);
@@ -718,11 +718,20 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
-   --        Coords : MV_Coordinate_Array := MV.Coordinates;
-   --     begin
-   --        return Coords;
-   --     end Get_Coords;
+   function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
+      use Multivectors.Blade_List_Package;
+      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (MV);
+      Curs   : Cursor := Blades.First;
+      Coords : E3GA.MV_Coordinate_Array := (others => 0.0);
+      Index  : Integer := 0;
+   begin
+      while Has_Element (Curs) loop
+         Index := Index + 1;
+         Coords (Index) := Blade.Weight (Element (Curs));
+         Next (Curs);
+      end loop;
+      return Coords;
+   end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
