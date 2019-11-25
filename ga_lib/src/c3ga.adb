@@ -8,6 +8,7 @@ with Blade_Types; use Blade_Types;
 with GA_Base_Types;
 with GA_Utilities;
 with Multivectors;
+with Multivector_Type;
 with Multivector_Type_Base;
 
 package body C3GA is
@@ -912,6 +913,26 @@ package body C3GA is
       Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
       return Normalized_Point (NP);
    end Set_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
+   function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA is
+      use GA_Maths;
+      theVector : Vector_E3GA;
+      GU        : Grade_Usage := Multivectors.Grade_Use (MV);
+      Index     : Unsigned_Integer := 0;
+   begin
+      if (GU and GU_0) /= 0 then
+         Index := Index + 1;
+      end if;
+
+      if (GU and GU_1) /= 0 then
+         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 1);
+         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 2);
+         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 3);
+      end if;
+      return theVector;
+   end To_VectorE3GA;
 
    --  -------------------------------------------------------------------------
 

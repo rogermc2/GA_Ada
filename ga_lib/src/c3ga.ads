@@ -136,7 +136,8 @@ package C3GA is
 --     function Outer_Product (MV1, MV2 : Multivectors.Multivector) return Multivectors.Multivector;
 --     function Unit_R (L : Line) return Line;
 
-   --  Underscore functions
+   --  Underscore constructors
+   function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA;
 --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
 --     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
 --     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
