@@ -1,5 +1,6 @@
 
 with C3GA;
+with E3GA;
 with GA_Maths;
 with Multivectors;
 with Multivector_Type;
@@ -68,7 +69,7 @@ package Multivector_Analyze is
 --        Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of Multivector (MV_Normalized_Point);
+   type Point_Array is array (1 .. Number_Of_Points) of E3GA.Vector_Coords_3D;
    type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
    type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
 

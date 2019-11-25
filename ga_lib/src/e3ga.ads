@@ -8,7 +8,7 @@ with Multivectors ; use Multivectors;
 package E3GA is
 
    type Array_19F is array (1 .. 19) of float;
-   subtype Vector_Coords_3D is GA_Maths.Coords_Continuous_Array (1 .. 3);
+   subtype Vector_Coords_3D is GA_Maths.Coords_Continuous_Array (1 .. 3);  --  m_c[3] coordinate storage
 
    --  types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_E3_T, MVT_Scalar,
