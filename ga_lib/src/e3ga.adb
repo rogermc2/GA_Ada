@@ -572,23 +572,9 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function Get_Coords (V : Vector) return Array_3D is
-   --      begin
-   --          return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
-   --      end Get_Coords;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coords (V : Multivectors.Vector) return Array_3D is
-      use Multivectors.Blade_List_Package;
-      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
-      Curs   : Cursor := Blades.First;
-      Result : Array_3D;
+   function Get_Coords (V : Vector) return Array_3D is
    begin
-      Result (1) := Blade.Weight (Blades.First_Element);
-      Result (2) := Blade.Weight (Element (Next (Curs)));
-      Result (3) := Blade.Weight (Blades.Last_Element);
-      return Result;
+      return (V (1), V (2), V (3));
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
