@@ -936,6 +936,14 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function To_VectorE3GA (Vec : E3GA.Vector) return Vector_E3GA is
+        Coords  : GA_Maths.Array_3D := E3GA.Get_Coords (Vec);
+   begin
+          return Set_Coords (Coords (1), Coords (2), Coords (3));
+   end To_VectorE3GA;
+
+   --  -------------------------------------------------------------------------
+
    function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA is
       use GA_Maths;
       theVector : Vector_E3GA;

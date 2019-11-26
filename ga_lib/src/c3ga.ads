@@ -138,6 +138,7 @@ package C3GA is
 
    --  Underscore constructors
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA;
+   function To_VectorE3GA (Vec : E3GA.Vector) return Vector_E3GA;
    function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA;
 --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
 --     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
