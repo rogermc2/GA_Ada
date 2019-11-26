@@ -48,12 +48,12 @@ package GA_Draw is
                         Weight : Float; Colour : GL.Types.Colors.Color);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix : GL.Types.Singles.Matrix4;
-                             Base : Multivectors.Vector; Colour : GL.Types.Colors.Color;
+                             Base : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color;
                              Scale : float := 1.0; V : Multivectors.Vector;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Position : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
+                             Position : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color;
                              Scale : float;
                              Method : Trivector_Method_Type := Draw_TV_Sphere);
 

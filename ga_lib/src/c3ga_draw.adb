@@ -66,13 +66,15 @@ package body C3GA_Draw is
                         Colour : GL.Types.Colors.Color;
                         Scale : float := 1.0) is
       use Multivector_Analyze;
-      P_Scale : Float;
+      Point_Pos  : C3GA.Vector_E3GA :=
+                      C3GA.To_VectorE3GA (Analysis.M_Points (1));
+      P_Scale    : Float;
    begin
       case Analysis.M_Type.Blade_Subclass is
          when Line_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Line.");
             GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
-                               Analysis.M_Points (1), Analysis.M_Vectors (1),
+                               Point_Pos, Analysis.M_Vectors (1),
                                Analysis.M_Scalors (1), Colour);
          when Plane_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Plane.");
@@ -80,8 +82,7 @@ package body C3GA_Draw is
             Put_Line ("C3GA_Draw.Draw_Flat Point.");
             P_Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Analysis.M_Points (1), Colour, 1.0 * P_Scale);
-
+                                    Point_Pos, Colour, 1.0 * P_Scale);
          when others => null;
       end case;
 
@@ -102,7 +103,7 @@ package body C3GA_Draw is
    begin
 
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                              Multivectors.Multivector (L), Colour, 1.0 * Scale);
+                              C3GA.To_VectorE3GA (L), Colour, 1.0 * Scale);
 
    exception
       when anError :  others =>
@@ -118,14 +119,10 @@ package body C3GA_Draw is
                          Colour : GL.Types.Colors.Color) is
       use GL.Types;
       Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
---        Pos   : E3GA.Vector;
    begin
---        E3GA.Set_Coords (Pos, Position.Coordinates (2), Position.Coordinates (3),
---                         Position.Coordinates (4));
 --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
-
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                              Multivectors.Multivector (Position), Colour, 1.0 * Scale);
+                              C3GA.To_VectorE3GA (Position), Colour, 1.0 * Scale);
 
    exception
       when anError :  others =>
