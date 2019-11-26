@@ -25,6 +25,7 @@ with GA_Utilities;
 with Blade;
 with Blade_Types;
 with C3GA;
+with E3GA;
 with E3GA_Utilities;
 with Geosphere;
 with GL_Util;
@@ -379,8 +380,7 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         aPoint : Multivectors.Multivector;
-                         Direction : Multivectors.Vector;
+                         aPoint : C3GA.Vector_E3GA;  Direction : Multivectors.Vector;
                          Weight : Float; Colour : GL.Types.Colors.Color) is
 
         use GL.Objects.Buffers;
@@ -399,13 +399,15 @@ package body GA_Draw is
         Num_Points           : constant Int := Int (2.0 * Scale / Step);
         aRotor               : Rotor;
         MV_Matrix            : Matrix4 := Model_View_Matrix;
+        Point_Pos            : constant E3GA.Vector := Vector_To_E3GA (aPoint);
         Translate            : constant Vector3 :=
-                                 (Single (e1 (aPoint)), Single (e2 (aPoint)), Single (e3 (aPoint)));
+                                 (Single (Point_Pos (1)), Single (Point_Pos (2)),
+                                  Single (Point_Pos (3)));
         Vertices             : Singles.Vector3_Array (1 .. Num_Points);
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Pos                  : Single := - Scale;
     begin
-        GA_Utilities.Print_Multivector ("C3GA_Draw.Draw_Line aPoint", aPoint);
+        --          GA_Utilities.Print_Multivector ("C3GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Initial MV_Matrix", MV_Matrix);
         Utilities.Print_Vector ("C3GA_Draw.Draw_Line Translate", Translate);
         GL.Objects.Programs.Use_Program (Render_Program);

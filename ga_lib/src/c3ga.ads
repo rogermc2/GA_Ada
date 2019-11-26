@@ -47,7 +47,6 @@ package C3GA is
    Grade_4 : constant GA_Maths.Unsigned_Integer := 16;
    Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
 
-   function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point;
    function Coord (S : Multivectors.Scalar) return float;
 --     function Init (MV : Multivectors.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
@@ -130,6 +129,7 @@ package C3GA is
    function Set_Line (P1, P2 : Normalized_Point) return Line;
    function Set_Normalized_Point (E1, E2, E3 : Float; Inf : float := 1.0)
                                   return Normalized_Point;
+   function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point;
    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
                                   Inf : float := 1.0)
                                   return Normalized_Point;

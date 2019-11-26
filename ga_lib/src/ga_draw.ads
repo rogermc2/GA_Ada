@@ -5,6 +5,7 @@ with GL.Types.Colors; use GL.Types.Colors;
 with GL.Objects.Programs;
 with GL.Uniforms;
 
+with C3GA;
 with GA_Maths;
 with Geosphere;
 with Multivectors;
@@ -43,8 +44,7 @@ package GA_Draw is
                             Method : Bivector_Method_Type := Draw_Bivector_Circle);
    procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        aPoint : Multivectors.Multivector;
-                        Direction : Multivectors.Vector;
+                        aPoint : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
                         Weight : Float; Colour : GL.Types.Colors.Color);
    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix : GL.Types.Singles.Matrix4;
