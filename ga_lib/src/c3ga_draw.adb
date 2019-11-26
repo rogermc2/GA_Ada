@@ -69,6 +69,7 @@ package body C3GA_Draw is
       Point_Pos  : C3GA.Vector_E3GA :=
                       C3GA.To_VectorE3GA (Analysis.M_Points (1));
       P_Scale    : Float;
+      V          : Multivectors.Vector;
    begin
       case Analysis.M_Type.Blade_Subclass is
          when Line_Subclass =>
@@ -82,7 +83,7 @@ package body C3GA_Draw is
             Put_Line ("C3GA_Draw.Draw_Flat Point.");
             P_Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos, Colour, 1.0 * P_Scale);
+                                    Point_Pos, Colour, 1.0 * P_Scale, V);
          when others => null;
       end case;
 
@@ -100,10 +101,11 @@ package body C3GA_Draw is
                         Colour : GL.Types.Colors.Color) is
       use GL.Types;
       Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+      V     : Multivectors.Vector;
    begin
 
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                              C3GA.To_VectorE3GA (L), Colour, 1.0 * Scale);
+                              C3GA.To_VectorE3GA (L), Colour, 1.0 * Scale, V);
 
    exception
       when anError :  others =>
@@ -119,10 +121,11 @@ package body C3GA_Draw is
                          Colour : GL.Types.Colors.Color) is
       use GL.Types;
       Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+      V     : Multivectors.Vector;
    begin
 --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
       GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                              C3GA.To_VectorE3GA (Position), Colour, 1.0 * Scale);
+                              C3GA.To_VectorE3GA (Position), Colour, 1.0 * Scale, V);
 
    exception
       when anError :  others =>

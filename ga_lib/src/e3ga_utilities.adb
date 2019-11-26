@@ -17,7 +17,7 @@ package body E3GA_Utilities is
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
       use E3GA;
       use Multivectors;
-      V          : Vector :=
+      V          : Multivectors.Vector :=
         Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := E3GA.e1_e2 (V);
       Half_Angle : float;

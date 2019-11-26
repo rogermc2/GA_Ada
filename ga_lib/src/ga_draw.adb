@@ -551,62 +551,62 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
     --  Based on draw.cpp drawTriVector
-    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                              Position : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
-                              Scale : float;
-                              Method : Trivector_Method_Type := Draw_TV_Sphere) is
-        use GL.Types.Singles;
-        Scale_S             : Single := Single (Abs (Scale));
-        Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
-        Normal              : Single;  -- s
-        Translation_Matrix  : Matrix4 := Identity4;
-        Scaling_Matrix      : Matrix4 := Identity4;
-        MV_Matrix           : Matrix4;
-    begin
-        --  scaleSign = (scale < 0.0f) ? -1.0f : 1.0f;
-        --  adjust scale for sphere
-        Scale_S := Abs (Maths.Cube_Root
-                        (Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi))));
-        --  main part of draw.cpp drawTriVector
-        --  s = (scale < 0.0f) ? -1.0f : 1.0f, f;
-        if Multivectors.Norm_E2 (Position) >= 0.0 then
-            Translation_Matrix :=
-              Maths.Translation_Matrix ((Single (C3GA.e1 (Position)),
-                                        Single (C3GA.e2 (Position)),
-                                        Single (C3GA.e3 (Position))));
-        end if;
-        Utilities.Print_Matrix ("GA_Draw.Draw_Trivector Translation_Matrix", Translation_Matrix);
-
-        Scaling_Matrix := Maths.Scaling_Matrix (Scale_S);
-        MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
-
-        case Method is
-            when DRAW_TV_SPHERE =>
-                --  g_drawState.drawSphere
-                --  (((g_drawState.getDrawMode() & OD_ORIENTATION) ?
-                --     s * 0.1f : 0.0f));
-                if Get_Draw_Mode = OD_Orientation then
-                    Normal := 0.1;
-                else
-                    Normal := 0.0;
-                end if;
-                --  g_drawState.drawSphere (s)
-                Draw_Sphere (Render_Program, MV_Matrix, Normal, Colour);
-            when others => null;
-        end case;
-
-    exception
-        when anError :  others =>
-            Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
-            raise;
-    end Draw_Trivector;
+--      procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+--                                Model_View_Matrix : GL.Types.Singles.Matrix4;
+--                                Position : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
+--                                Scale : float;
+--                                Method : Trivector_Method_Type := Draw_TV_Sphere) is
+--          use GL.Types.Singles;
+--          Scale_S             : Single := Single (Abs (Scale));
+--          Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
+--          Normal              : Single;  -- s
+--          Translation_Matrix  : Matrix4 := Identity4;
+--          Scaling_Matrix      : Matrix4 := Identity4;
+--          MV_Matrix           : Matrix4;
+--      begin
+--          --  scaleSign = (scale < 0.0f) ? -1.0f : 1.0f;
+--          --  adjust scale for sphere
+--          Scale_S := Abs (Maths.Cube_Root
+--                          (Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi))));
+--          --  main part of draw.cpp drawTriVector
+--          --  s = (scale < 0.0f) ? -1.0f : 1.0f, f;
+--          if Multivectors.Norm_E2 (Position) >= 0.0 then
+--              Translation_Matrix :=
+--                Maths.Translation_Matrix ((Single (C3GA.e1 (Position)),
+--                                          Single (C3GA.e2 (Position)),
+--                                          Single (C3GA.e3 (Position))));
+--          end if;
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Trivector Translation_Matrix", Translation_Matrix);
+--
+--          Scaling_Matrix := Maths.Scaling_Matrix (Scale_S);
+--          MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
+--
+--          case Method is
+--              when DRAW_TV_SPHERE =>
+--                  --  g_drawState.drawSphere
+--                  --  (((g_drawState.getDrawMode() & OD_ORIENTATION) ?
+--                  --     s * 0.1f : 0.0f));
+--                  if Get_Draw_Mode = OD_Orientation then
+--                      Normal := 0.1;
+--                  else
+--                      Normal := 0.0;
+--                  end if;
+--                  --  g_drawState.drawSphere (s)
+--                  Draw_Sphere (Render_Program, MV_Matrix, Normal, Colour);
+--              when others => null;
+--          end case;
+--
+--      exception
+--          when anError :  others =>
+--              Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
+--              raise;
+--      end Draw_Trivector;
 
     --  ------------------------------------------------------------------------
 
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Translation_Matrix : GL.Types.Singles.Matrix4;
-                              Base : Multivectors.Vector; Colour : GL.Types.Colors.Color;
+                              Base : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color;
                               Scale : float := 1.0; V : Multivectors.Vector;
                               Method : Trivector_Method_Type := Draw_TV_Sphere) is
     begin
