@@ -629,10 +629,10 @@ package body Multivectors is
       GP        : Multivector;
    begin
       if Is_Empty (List (Blades_1)) then
-         Put_Line ("Multivector.Geometric_Product, MV1 is null.");
+         raise MV_Exception with "Multivector.Geometric_Product, MV1 is null.";
       end if;
       if Is_Empty (List (Blades_2)) then
-         Put_Line ("Multivector.Geometric_Product, MV2 is null.");
+         raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
 
       while Has_Element (Curs_1) loop
