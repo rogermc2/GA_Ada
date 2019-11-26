@@ -57,6 +57,7 @@ package Multivectors is
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
+   function From_Vector (V : Vector) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;

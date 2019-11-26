@@ -478,7 +478,7 @@ package body Geosphere is
 --              Put_Line (" vertice: "&  Integer'Image (Vertex_Indicies (index)));
             Vertex_1 := Sphere.Vertices.Element (Vertex_Indicies (index));
             Vertex_2 := Sphere.Vertices.Element (Vertex_Indicies (index_2));
-            V1 := Unit_e (Vertex_1 + Vertex_2);
+            V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
             Refined := Add_Vertex (Sphere, V1, New_Indices (index));
          end loop;
       end if;
