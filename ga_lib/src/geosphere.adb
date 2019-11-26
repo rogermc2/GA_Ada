@@ -428,7 +428,7 @@ package body Geosphere is
 
       --  Implement for (i = 0; i < sphere->nbPrimitives; i++)
       --                 gsDraw(sphere, i, normal);
-      Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix);
+--        Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix);
 --        Utilities.Print_Matrix ("Geosphere.GS_Draw Proj_Matrix", Proj_Matrix);
 --        Utilities.Print_Matrix ("Geosphere.GS_Draw MVP Matrix", Proj_Matrix * Model_View_Matrix);
       Iterate (Sphere.Faces, Draw'Access);

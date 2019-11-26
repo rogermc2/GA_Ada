@@ -49,7 +49,7 @@ package body GL_Util is
         use Multivectors;
         use GL;
         use GL.Types.Singles;
-        IR        : Rotor;
+        IR        : Rotor := New_Rotor;
         E_Rot     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
         VC        : Vector3;
