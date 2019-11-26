@@ -602,7 +602,7 @@ package body Multivectors is
          end loop;
          Simplify (New_MV);
          if Is_Empty (New_MV.Blades) then
-            Put_Line ("Geometric_Product, scalar product MV is null.");
+            raise MV_Exception with "Geometric_Product, scalar product MV is null.";
          end if;
       end if;
       return New_MV;
