@@ -104,11 +104,11 @@ package body GA_Draw is
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
         Projection_Matrix    : GL.Types.Singles.Matrix4;
---          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
---          Cords                : Array_3D := (0.0, 0.0, 0.0);
---          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
---          O2                   : Multivectors.Vector := Ortho_2;
+        --          Cords                : Array_3D := (0.0, 0.0, 0.0);
+        --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
+        --          O2                   : Multivectors.Vector := Ortho_2;
         MVP_Matrix           : Matrix4 := Singles.Identity4;
         Scaled               : GL.Types.Single;
         Normed_E2            : Float;
@@ -159,7 +159,7 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                             Base,Ortho_1, Ortho_2 : Multivectors.Vector;
+                             Base, Ortho_1, Ortho_2 : Multivectors.Vector;
                              Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                              Method : Bivector_Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
@@ -170,11 +170,11 @@ package body GA_Draw is
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
         Projection_Matrix    : GL.Types.Singles.Matrix4;
---          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
         Translate            : Vector3 :=  (0.0, 0.0, 0.0);
---          O2                   : Multivectors.Vector := Ortho_2;
---          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+        --          O2                   : Multivectors.Vector := Ortho_2;
+        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
         MVP_Matrix           : Matrix4 := Singles.Identity4;
         Scaled               : GL.Types.Single;
         E2_Norm              : Float;
@@ -189,7 +189,7 @@ package body GA_Draw is
         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
---          MVP_Matrix := Model_View_Matrix;
+        --          MVP_Matrix := Model_View_Matrix;
         Translate := (Single (C3GA.e1 (Base)),
                       Single (C3GA.e2 (Base)),
                       Single (C3GA.e3 (Base)));
@@ -271,12 +271,12 @@ package body GA_Draw is
 
         procedure Draw_Part (Part : Circle_Part) is
         --           Normal : Multivector.Vector;
---              Norm_Z : float;
+        --              Norm_Z : float;
         begin
---              Case Part is
---              when Back_Part | Outline_Part => Norm_Z := 1.0;
---              when Front_Part => Norm_Z := -1.0;
---              end case;
+            --              Case Part is
+            --              when Back_Part | Outline_Part => Norm_Z := 1.0;
+            --              when Front_Part => Norm_Z := -1.0;
+            --              end case;
             --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
             --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
@@ -376,7 +376,7 @@ package body GA_Draw is
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
                          Colour : GL.Types.Colors.Color) is
---                           Weight : Float; Colour : GL.Types.Colors.Color) is
+    --                           Weight : Float; Colour : GL.Types.Colors.Color) is
 
         use GL.Objects.Buffers;
         use GL.Types.Singles;
@@ -420,7 +420,7 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
         MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
---          Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
+        --          Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
         --  rotate e3 to line direction
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
@@ -451,14 +451,14 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
---                           Tail              : Multivectors.Vector;
+                         --                           Tail              : Multivectors.Vector;
                          Direction         : Multivectors.Vector;
                          Colour            : GL.Types.Colors.Color) is
---                           Scale             : float) is
+    --                           Scale             : float) is
 
         use GL.Objects.Buffers;
---          use GL.Toggles;
---          use GL.Types.Colors;
+        --          use GL.Toggles;
+        --          use GL.Types.Colors;
         use GL.Types.Singles;
 
         MV_Matrix_ID         : GL.Uniforms.Uniform;
@@ -501,6 +501,98 @@ package body GA_Draw is
     end Draw_Line;
 
     --  ------------------------------------------------------------------------
+
+    procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
+                                   Model_View_Matrix : GL.Types.Singles.Matrix4;
+                                   VC                : C3GA.Vector_E3GA;
+                                   Scale             : Float;
+                                   Colour            : GL.Types.Colors.Color :=
+                                     (0.0, 0.0, 0.0, 0.0)) is
+
+        use GL.Objects.Buffers;
+        --          use GL.Toggles;
+        --          use GL.Types.Colors;
+--          use GL.Types.Singles;
+
+        MV_Matrix_ID         : GL.Uniforms.Uniform;
+        Projection_Matrix_ID : GL.Uniforms.Uniform;
+        Colour_Location      : GL.Uniforms.Uniform;
+        Projection_Matrix    : GL.Types.Singles.Matrix4;
+        Scale_Matrix         : GL.Types.Singles.Matrix4;
+        Scale_Sign           : GL.Types.Single;
+        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
+        Polygon              : Ints.Vector4_Array (1 .. 6);
+        Vertices             : Singles.Vector3_Array (1 .. 8) := (others => (others => 0.0));
+        Vertex_Vectors       : Ints.Vector3_Array (1 .. 8);
+        Vertex_Index         : Int := 0;
+        Vertex_Vec           : Ints.Vector3;
+        Vertex               : Singles.Vector3;
+        Coords               : constant GA_Maths.Array_3D := C3GA.Get_Coords (VC);
+    begin
+        if Scale >= 0.0 then
+          Scale_Sign := 1.0;
+        else
+           Scale_Sign := -1.0;
+        end if;
+        if G_Draw_State.M_Draw_Mode = OD_Orientation then
+            Scale_Matrix := Maths.Scaling_Matrix (Scale_Sign);
+        end if;
+        Vertex_Vectors := ((-1, -1, -1),  --  -
+                           (0, -1, -1),   --  0
+                           (0, 1, -1),    --  0 + 1
+                           (1, -1, -1),   --  1
+                           (2, -1, -1),   --  2
+                           (0, 2, -1),    --  0 + 2
+                           (0, 1, 2),     --  0 + 1 + 2
+                           (1, 2, -1));   --  1 + 2
+        Polygon := ((0, 1, 5, 4),
+                    (0, 4, 7, 3),
+                    (4, 5, 6, 7),
+                    (1, 2, 6, 5),
+                    (6, 2, 3, 7),
+                    (0, 3, 2, 1));
+
+        for Row in Int range 1 .. 8 loop
+            Vertex_Vec := Vertex_Vectors (Row);
+            Vertex := (0.0, 0.0, 0.0);
+            for Count in GL.Index_Homogeneous range GL.X .. GL.Z loop
+                Vertex_Index := Vertex_Vec (Count);
+                if Vertex_Index >= 0 then
+                    Vertex (GL.X) := Vertex (GL.X) + Single (Coords (1));
+                    Vertex (GL.Y) := Vertex (GL.Y) + Single (Coords (2));
+                    Vertex (GL.Z) := Vertex (GL.Z) + Single (Coords (3));
+                    Vertices (Row) := Vertex;
+                end if;
+            end loop;
+        end loop;
+
+        Vertex_Buffer.Initialize_Id;
+        Array_Buffer.Bind (Vertex_Buffer);
+        Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
+                                  Projection_Matrix_ID, Colour_Location);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+
+        Init_Projection_Matrix (Projection_Matrix);
+        GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
+        GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+        GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                              First => 0,
+                                              Count => 1 * 3);
+        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+    exception
+        when  others =>
+            Put_Line ("An exception occurred in GA_Draw.Draw_Parallelepiped.");
+            raise;
+    end Draw_Parallelepiped;
+
+    --  ------------------------------------------------------------------------
+
     --  Based on draw.cpp DrawState::drawSphere(e3ga::mv::Float normal)
     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                            MV_Matrix : GL.Types.Singles.Matrix4;
@@ -601,16 +693,16 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                              Base : C3GA.Vector_E3GA; Scale : float := 1.0;
---                                VC : C3GA.Vector_E3GA;
---                                Colour : GL.Types.Colors.Color;
+                              Base   : C3GA.Vector_E3GA; Scale : float := 1.0;
+                              VC     : C3GA.Vector_E3GA;
+                              Colour : GL.Types.Colors.Color;
                               Method : Trivector_Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;
         use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
         Scale_Sign        : Float;
         P_Scale           : Float;
         Normal            : Single;
---          Z_Max             : constant Float := 4.0 * GA_Maths.PI;
+        --          Z_Max             : constant Float := 4.0 * GA_Maths.PI;
         Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
         Model_View_Matrix : Matrix4 := Singles.Identity4;
     begin
@@ -647,7 +739,7 @@ package body GA_Draw is
         when Draw_TV_Curly_Tail =>
             null;
         when Draw_TV_Parellelepiped | Draw_TV_Parellelepiped_No_Vectors =>
-            null;
+            Draw_Parallelepiped (Render_Program, Model_View_Matrix, VC, Scale, Colour);
         end case;
 
     exception
@@ -775,10 +867,10 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
 
---      procedure Set_Background_Colour (Back_Colour : Color) is
---      begin
---          Palet.Background_Colour := Back_Colour;
---      end Set_Background_Colour;
+    --      procedure Set_Background_Colour (Back_Colour : Color) is
+    --      begin
+    --          Palet.Background_Colour := Back_Colour;
+    --      end Set_Background_Colour;
 
     --  ------------------------------------------------------------------------
 

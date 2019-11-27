@@ -54,8 +54,8 @@ package GA_Draw is
     --                           Scale             : float) is
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              --                               VC : C3GA.Vector_E3GA;
-                              --                               Colour : GL.Types.Colors.Color;
+                              VC : C3GA.Vector_E3GA;
+                              Colour : GL.Types.Colors.Color;
                               Method : Trivector_Method_Type := Draw_TV_Sphere);
     function Get_Draw_Mode return Draw_Mode;
     function Get_Line_Length return Float;
