@@ -1,27 +1,27 @@
 
-with Interfaces;
+--  with Interfaces;
 
-with Ada.Text_IO; use Ada.Text_IO;
+--  with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
 with Blade_Types; use Blade_Types;
 with GA_Base_Types;
 with GA_Utilities;
-with Multivectors;
-with Multivector_Type;
-with Multivector_Type_Base;
+--  with Multivectors;
+--  with Multivector_Type;
+--  with Multivector_Type_Base;
 
 package body C3GA is
 
-   MV_Space_Dimension  : constant Integer := 5;
-   MV_Metric_Euclidean : constant Boolean := False;
-
-   type Basis_Name is (NOb, E1b, E2b, E3b, NIb);
-   type Grade_Name is (G0, G1, G2, G3, G4, G5);
+--     MV_Space_Dimension  : constant Integer := 5;
+--     MV_Metric_Euclidean : constant Boolean := False;
+--
+--     type Basis_Name is (NOb, E1b, E2b, E3b, NIb);
+--     type Grade_Name is (G0, G1, G2, G3, G4, G5);
 
    --  This array can be used to lookup the number of coordinates for
    --  a grade part of a general multivector
-   MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
+--     MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
    --  This array can be used to lookup the number of coordinates
    --  based on a grade usage bitmap
 --     MV_Size       : constant array (1 .. 64) of Integer :=
@@ -32,15 +32,15 @@ package body C3GA is
    --  This array contains the order of basis elements in the general multivector
    --  Use it to answer : 'at what index do I find basis element (x)
    --  (x = basis vector bitmap)?
-   MV_Basis_Element_Index_By_Bitmap : constant array (1 .. 32) of Integer :=
-     (0, 1, 2, 6, 3, 7, 9, 24, 4, 8, 11, 23, 10, 22, 25, 30,
-      5, 15, 12, 20, 13, 21, 18, 29, 14, 19, 17, 28, 16, 27, 26, 31);
+--     MV_Basis_Element_Index_By_Bitmap : constant array (1 .. 32) of Integer :=
+--       (0, 1, 2, 6, 3, 7, 9, 24, 4, 8, 11, 23, 10, 22, 25, 30,
+--        5, 15, 12, 20, 13, 21, 18, 29, 14, 19, 17, 28, 16, 27, 26, 31);
 
-   no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
-   e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
-   e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
-   e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
-   ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
+--     no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
+--     e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
+--     e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
+--     e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
+--     ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
 
    --     no_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.no);
    --     e1_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.e1);
@@ -54,46 +54,46 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function "+" (V1 : Vector; V2 : Vector) return Vector is
-   begin
-      return (V1 (1) + V2 (1), V1 (2) + V2 (2), V1 (3) + V2 (3),
-              V1 (4) + V2 (4), V1 (5) + V2 (5));
-   end  "+";
+--     function "+" (V1 : Vector; V2 : Vector) return Vector is
+--     begin
+--        return (V1 (1) + V2 (1), V1 (2) + V2 (2), V1 (3) + V2 (3),
+--                V1 (4) + V2 (4), V1 (5) + V2 (5));
+--     end  "+";
 
    --  -------------------------------------------------------------------------
 
-   function "*" (F : Float; V : Vector) return Vector is
-   begin
-      return (F * V (1), F * V (2), F * V (3), F * V (4), F * V (5));
-   end  "*";
+--     function "*" (F : Float; V : Vector) return Vector is
+--     begin
+--        return (F * V (1), F * V (2), F * V (3), F * V (4), F * V (5));
+--     end  "*";
 
    --  -------------------------------------------------------------------------
 
-   function "*" (L : Line; S : Float) return Line is
-      use Multivectors;
-      use Multivectors.Blade_List_Package;
-      Blades   : Blade_List := Get_Blade_List (L);
-      Curs     : Cursor := Blades.First;
-      aBlade   : Blade.Basis_Blade;
-      New_List : Blade_List;
-      theLine  : Multivector;
-   begin
-      while Has_Element (Curs) loop
-         aBlade := Element (Curs);
-         Blade.Update_Blade (aBlade, S * Blade.Weight (aBlade));
-         Add_Blade (theLine, aBlade);
-         Next (Curs);
-      end loop;
-      Update (theLine, New_List);
-      return Line (theLine);
-   end  "*";
+--     function "*" (L : Line; S : Float) return Line is
+--        use Multivectors;
+--        use Multivectors.Blade_List_Package;
+--        Blades   : constant Blade_List := Get_Blade_List (L);
+--        Curs     : Cursor := Blades.First;
+--        aBlade   : Blade.Basis_Blade;
+--        New_List : Blade_List;
+--        theLine  : Multivector;
+--     begin
+--        while Has_Element (Curs) loop
+--           aBlade := Element (Curs);
+--           Blade.Update_Blade (aBlade, S * Blade.Weight (aBlade));
+--           Add_Blade (theLine, aBlade);
+--           Next (Curs);
+--        end loop;
+--        Update (theLine, New_List);
+--        return Line (theLine);
+--     end  "*";
 
    --  -------------------------------------------------------------------------
 
-   function "*" (S : Float; L : Line) return Line is
-   begin
-      return L * S;
-   end  "*";
+--     function "*" (S : Float; L : Line) return Line is
+--     begin
+--        return L * S;
+--     end  "*";
 
    --  -------------------------------------------------------------------------
 
@@ -135,7 +135,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1 return Multivectors.Multivector is
-      use Blade;
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
@@ -146,7 +145,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1 (MV : Multivectors.Multivector) return float is
-      use Blade;
    begin
       return Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e1));
    end e1;
@@ -154,7 +152,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e2 return Multivectors.Multivector is
-      use Blade;
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
@@ -165,7 +162,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e2 (MV : Multivectors.Multivector) return float is
-      use Blade;
    begin
       return Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e2));
    end e2;
@@ -173,7 +169,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e3 return Multivectors.Multivector is
-      use Blade;
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
@@ -184,7 +179,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
    begin
       return Multivectors.Component (MV, C3_Base'Enum_Rep (C3_e3));
    end e3;
@@ -192,7 +186,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2 (MV : Multivectors.Multivector) return float is
-      use Blade;
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer := Unsigned_Integer (C3_Base'Enum_Rep (C3_e1))
         or Unsigned_Integer (C3_Base'Enum_Rep (C3_e2));
@@ -203,7 +196,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
       use GA_Maths;
       BM_E13   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
@@ -215,7 +207,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e2_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
       use GA_Maths;
       BM_E23   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
@@ -226,7 +217,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2_e3 (MV : Multivectors.Multivector) return float is
-      use Blade;
       use GA_Maths;
       BM   : constant Unsigned_Integer :=
         Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
@@ -312,7 +302,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Element (C : Circle; E : C3_Base) return float is
-      use Blade_Types;
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
         Get_Blade (Multivector (C), C3_Base'Enum_Rep (E));
@@ -323,7 +312,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Line_Element (L : Line; E : C3_Base) return float is
-      use Blade_Types;
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
         Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
@@ -399,8 +387,7 @@ package body C3GA is
    function Get_Coords (NP : Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
       use Multivectors.Blade_List_Package;
-      NP_MV  : Multivectors.Multivector;
-      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (NP_MV);
+      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (NP);
       Curs   : Cursor := Blades.First;
       Coords : GA_Maths.Coords_Continuous_Array (1 .. 4);
       Index  : Integer := 0;
@@ -416,7 +403,6 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function ni return Multivectors.Multivector is
-      use Blade;
       use Multivectors;
       Basis   : Multivectors.Vector;
    begin
@@ -427,7 +413,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function no return Normalized_Point is
-      use Blade;
       use Multivectors;
       Basis  : Normalized_Point;
    begin
@@ -597,7 +582,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NP_Element (NP : Normalized_Point; E : C3_Base) return float is
-      use Blade_Types;
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
         Get_Blade (Multivector (NP), C3_Base'Enum_Rep (E));
@@ -636,6 +620,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NOb (NP : Normalized_Point) return Float is
+   pragma Unreferenced (NP);
    begin
       return 1.0;
    end NOb;
@@ -643,7 +628,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Sphere_Element (S : Sphere; E : C3_Base) return float is
-      use Blade_Types;
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
         Get_Blade (Multivector (S), C3_Base'Enum_Rep (E));
@@ -789,7 +773,6 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function Probe (Pr : C3_Base) return Normalized_Point is
-      use Blade;
       NP  : Multivectors.Multivector;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
@@ -919,7 +902,7 @@ package body C3GA is
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA is
       use GA_Maths;
       theVector : Vector_E3GA;
-      GU        : Grade_Usage := Multivectors.Grade_Use (MV);
+      GU        : constant Grade_Usage := Multivectors.Grade_Use (MV);
       Index     : Unsigned_Integer := 0;
    begin
       if (GU and GU_0) /= 0 then
@@ -937,7 +920,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function To_VectorE3GA (Vec : E3GA.Vector) return Vector_E3GA is
-        Coords  : GA_Maths.Array_3D := E3GA.Get_Coords (Vec);
+        Coords  : constant GA_Maths.Array_3D := E3GA.Get_Coords (Vec);
    begin
           return Set_Coords (Coords (1), Coords (2), Coords (3));
    end To_VectorE3GA;
@@ -945,7 +928,6 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA is
-      use GA_Maths;
       theVector : Vector_E3GA;
    begin
       theVector.Coordinates (1) := Multivectors.Component (NP, 1);

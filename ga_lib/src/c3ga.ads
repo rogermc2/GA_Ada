@@ -1,7 +1,7 @@
 
 with GA_Maths;
 
-with Blade;
+--  with Blade;
 with Blade_Types;
 with E3GA;
 with Multivectors;
@@ -114,6 +114,8 @@ package C3GA is
 --     function Outer_Product (L1, L2 : Line) return Line;
 --     function Norm_E (MV : Multivectors.Multivector) return Scalar;
    function Norm_E2 (V : Vector_E3GA) return Float;
+   function Norm_R (MV : Multivectors.Multivector) return Float;
+   function Norm_R2 (MV : Multivectors.Multivector) return Float;
    function Probe (Pr : Blade_Types.C3_Base) return Normalized_Point;
 
    function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle;
