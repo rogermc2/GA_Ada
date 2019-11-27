@@ -1,44 +1,43 @@
 
 --  Based on libgasandbox.draw.h and draw.cpp
 
-with Ada.Containers.Vectors;
+--  with Ada.Containers.Vectors;
 with Ada.Numerics;
 with Ada.Numerics.Elementary_Functions;
-with Ada.Exceptions; use Ada.Exceptions;
+--  with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL;
 with GL.Attributes;
 with GL.Culling;
-with GL.Immediate;
+--  with GL.Immediate;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
 with GL.Types; use GL.Types;
-with GL.Types.Colors;
 with GL.Window;
 with Utilities;
 
 with Maths;
 with GA_Maths;
-with GA_Utilities;
+--  with GA_Utilities;
 
-with Blade;
+--  with Blade;
 with Blade_Types;
-with C3GA;
+--  with C3GA;
 with E3GA;
 with E3GA_Utilities;
-with Geosphere;
+--  with Geosphere;
 with GL_Util;
 
 package body GA_Draw is
 
     Palet          : Colour_Palet;
+    pragma Unreferenced (Palet);
     G_Draw_State   : Draw_State;
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
-                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                           Scale             : float);
+                           Model_View_Matrix : GL.Types.Singles.Matrix4);
 
     --  ------------------------------------------------------------------------
 
@@ -47,9 +46,7 @@ package body GA_Draw is
                          Scale             : Float) is
 
         use GL.Objects.Buffers;
-        use GL.Types.Singles;
         use GA_Maths.Float_Functions;
-
         MV_Matrix_ID         : GL.Uniforms.Uniform;
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
@@ -86,7 +83,7 @@ package body GA_Draw is
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Base.");
             raise;
     end Draw_Base;
@@ -107,11 +104,11 @@ package body GA_Draw is
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
         Projection_Matrix    : GL.Types.Singles.Matrix4;
-        Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
-        Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
-        Cords                : Array_3D := (0.0, 0.0, 0.0);
-        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
-        O2                   : Multivectors.Vector := Ortho_2;
+--          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
+--          Cords                : Array_3D := (0.0, 0.0, 0.0);
+--          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
+--          O2                   : Multivectors.Vector := Ortho_2;
         MVP_Matrix           : Matrix4 := Singles.Identity4;
         Scaled               : GL.Types.Single;
         Normed_E2            : Float;
@@ -146,7 +143,7 @@ package body GA_Draw is
             case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, MVP_Matrix, Scale);
+                Draw_Circle (Render_Program, MVP_Matrix);
             when others => null;
             end case;
         else
@@ -154,7 +151,7 @@ package body GA_Draw is
         end if;
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
             raise;
     end Draw_Bivector;
@@ -162,8 +159,7 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                             Translation_Matrix : GL.Types.Singles.Matrix4;
-                             Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
+                             Base,Ortho_1, Ortho_2 : Multivectors.Vector;
                              Colour : GL.Types.Colors.Color; Scale  : float := 1.0;
                              Method : Bivector_Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
@@ -174,11 +170,11 @@ package body GA_Draw is
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
         Projection_Matrix    : GL.Types.Singles.Matrix4;
-        Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
-        Scale_S              : GL.Types.Single := GL.Types.Single (Scale);
+--          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
         Translate            : Vector3 :=  (0.0, 0.0, 0.0);
-        O2                   : Multivectors.Vector := Ortho_2;
-        Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+--          O2                   : Multivectors.Vector := Ortho_2;
+--          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
         MVP_Matrix           : Matrix4 := Singles.Identity4;
         Scaled               : GL.Types.Single;
         E2_Norm              : Float;
@@ -193,7 +189,7 @@ package body GA_Draw is
         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
 
-        MVP_Matrix := Model_View_Matrix;
+--          MVP_Matrix := Model_View_Matrix;
         Translate := (Single (C3GA.e1 (Base)),
                       Single (C3GA.e2 (Base)),
                       Single (C3GA.e3 (Base)));
@@ -215,11 +211,11 @@ package body GA_Draw is
         Case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, Model_View_Matrix, Scale);
+                Draw_Circle (Render_Program, MVP_Matrix);
             when others => null;
         end case;
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
             raise;
     end Draw_Bivector;
@@ -248,7 +244,7 @@ package body GA_Draw is
     --          --                Get_Coord_2 (Base), Get_Coord_3 (Base)) * MVP_Matrix;
     --          --          end if;
     --      exception
-    --          when anError :  others =>
+    --          when  others =>
     --              Put_Line ("An exception occurred in Draw_Object.Draw_Multivector.");
     --              raise;
     --      end Draw_Multivector;
@@ -256,11 +252,9 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
-                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                           Scale             : float) is
+                           Model_View_Matrix : GL.Types.Singles.Matrix4) is
         use GA_Maths;
         use GL.Objects.Buffers;
-        use GL.Types.Singles;
         use GA_Maths.Float_Functions;
 
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
@@ -277,12 +271,12 @@ package body GA_Draw is
 
         procedure Draw_Part (Part : Circle_Part) is
         --           Normal : Multivector.Vector;
-            Norm_Z : float;
+--              Norm_Z : float;
         begin
-            Case Part is
-            when Back_Part | Outline_Part => Norm_Z := 1.0;
-            when Front_Part => Norm_Z := -1.0;
-            end case;
+--              Case Part is
+--              when Back_Part | Outline_Part => Norm_Z := 1.0;
+--              when Front_Part => Norm_Z := -1.0;
+--              end case;
             --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
             --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
@@ -321,7 +315,7 @@ package body GA_Draw is
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Circle.");
             raise;
     end Draw_Circle;
@@ -333,7 +327,6 @@ package body GA_Draw is
                          Scale             : Float) is
 
         use GL.Objects.Buffers;
-        use GL.Types.Singles;
         use GA_Maths.Float_Functions;
 
         MV_Matrix_ID         : GL.Uniforms.Uniform;
@@ -372,7 +365,7 @@ package body GA_Draw is
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Cone.");
             raise;
     end Draw_Cone;
@@ -381,11 +374,11 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         aPoint : C3GA.Vector_E3GA;  Direction : Multivectors.Vector;
-                         Weight : Float; Colour : GL.Types.Colors.Color) is
+                         aPoint : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
+                         Colour : GL.Types.Colors.Color) is
+--                           Weight : Float; Colour : GL.Types.Colors.Color) is
 
         use GL.Objects.Buffers;
-        use GL.Types;
         use GL.Types.Singles;
         use Maths;
         use C3GA;
@@ -427,7 +420,7 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
         MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
-        Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
+--          Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
         --  rotate e3 to line direction
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
@@ -449,7 +442,7 @@ package body GA_Draw is
         end if;
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in C3GA_Draw.Draw_Line.");
             raise;
     end Draw_Line;
@@ -458,13 +451,14 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         Tail, Direction   : Multivectors.Vector;
-                         Colour            : GL.Types.Colors.Color;
-                         Scale             : float) is
+--                           Tail              : Multivectors.Vector;
+                         Direction         : Multivectors.Vector;
+                         Colour            : GL.Types.Colors.Color) is
+--                           Scale             : float) is
 
         use GL.Objects.Buffers;
-        use GL.Toggles;
-        use GL.Types.Colors;
+--          use GL.Toggles;
+--          use GL.Types.Colors;
         use GL.Types.Singles;
 
         MV_Matrix_ID         : GL.Uniforms.Uniform;
@@ -501,7 +495,7 @@ package body GA_Draw is
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
             raise;
     end Draw_Line;
@@ -530,7 +524,7 @@ package body GA_Draw is
                                Normal, Colour);
         end if;
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
             raise;
     end Draw_Sphere;
@@ -546,7 +540,7 @@ package body GA_Draw is
     --           Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
     --        end if;
     --     exception
-    --        when anError :  others =>
+    --        when  others =>
     --           Put_Line ("An exception occurred in GA_Draw.Draw_Line.");
     --           raise;
     --     end Draw_Sphere;
@@ -599,7 +593,7 @@ package body GA_Draw is
     --          end case;
     --
     --      exception
-    --          when anError :  others =>
+    --          when  others =>
     --              Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
     --              raise;
     --      end Draw_Trivector;
@@ -607,16 +601,16 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-                              Translation_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              VC : C3GA.Vector_E3GA;
+--                                VC : C3GA.Vector_E3GA;
+--                                Colour : GL.Types.Colors.Color;
                               Method : Trivector_Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;
         use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
         Scale_Sign        : Float;
         P_Scale           : Float;
         Normal            : Single;
-        Z_Max             : constant Float := 4.0 * GA_Maths.PI;
+--          Z_Max             : constant Float := 4.0 * GA_Maths.PI;
         Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
         Model_View_Matrix : Matrix4 := Singles.Identity4;
     begin
@@ -636,7 +630,7 @@ package body GA_Draw is
         if C3GA.Norm_e2 (Base) /= 0.0 then
             Model_View_Matrix := Maths.Translation_Matrix
               ((Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)))) *
-                Maths.Scaling_Matrix (Single (Scale)) * Model_View_Matrix;
+                Maths.Scaling_Matrix (Single (P_Scale)) * Model_View_Matrix;
         end if;
 
         case Method is
@@ -654,11 +648,10 @@ package body GA_Draw is
             null;
         when Draw_TV_Parellelepiped | Draw_TV_Parellelepiped_No_Vectors =>
             null;
-        when others => null;
         end case;
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
             raise;
     end Draw_Trivector;
@@ -671,12 +664,8 @@ package body GA_Draw is
                            Colour          : GL.Types.Colors.Color;
                            Scale           : float) is
         use GL.Culling;
-        use GL.Objects.Buffers;
         use GL.Toggles;
-        use GL.Types.Colors;
         use GL.Types.Singles;
-        use GA_Maths;
-        use GA_Maths.Float_Functions;
         use Multivectors;
 
         Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -688,8 +677,8 @@ package body GA_Draw is
         GL_Tail              : Vector3;
         GL_Dir               : Vector3;
         aRotor               : Rotor;
-        Saved_Cull_Face      : Face_Selector := Cull_Face;
-        Saved_Front_Face     : GL.Types.Orientation := GL.Culling.Front_Face;
+        Saved_Cull_Face      : constant Face_Selector := Cull_Face;
+        Saved_Front_Face     : constant GL.Types.Orientation := GL.Culling.Front_Face;
     begin
         GL_Tail := GL_Util.To_GL (Tail);
         GL_Dir := GL_Util.To_GL (Direction);
@@ -707,8 +696,8 @@ package body GA_Draw is
             if Norm_e2 (Tail) /= 0.0 then
                 Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
             end if;
-            Draw_Line (Render_Program, Model_View_Matrix, Tail,
-                       Direction, Colour, Scale);
+
+            Draw_Line (Render_Program, Model_View_Matrix, Direction, Colour);
 
             --  Setup translation matrix for arrow head
             --  rotate e3 to vector direction
@@ -739,7 +728,7 @@ package body GA_Draw is
         end if;
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Vector.");
             raise;
     end Draw_Vector;
@@ -772,7 +761,7 @@ package body GA_Draw is
           (Render_Program, "vector_colour");
 
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Graphic_Shader_Locations.");
             raise;
     end Graphic_Shader_Locations;
@@ -786,10 +775,10 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_Background_Colour (Back_Colour : Color) is
-    begin
-        Palet.Background_Colour := Back_Colour;
-    end Set_Background_Colour;
+--      procedure Set_Background_Colour (Back_Colour : Color) is
+--      begin
+--          Palet.Background_Colour := Back_Colour;
+--      end Set_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
@@ -824,7 +813,6 @@ package body GA_Draw is
     procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
                                       Near : GL.Types.Single := -100.0;
                                       Far  : GL.Types.Single := 100.0) is
-        use GL.Types;
         VP_X      : Int;
         VP_Y      : Int;
         VP_Height : Int;
@@ -837,7 +825,7 @@ package body GA_Draw is
                                            Single (VP_X), Single (VP_X + VP_Width),
                                            Near, Far, Proj_Matrix);
     exception
-        when anError :  others =>
+        when  others =>
             Put_Line ("An exception occurred in GA_Draw.Set_Projection_Matrix.");
             raise;
     end Init_Projection_Matrix;
