@@ -1,31 +1,29 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Strings.Unbounded;
+--  with Ada.Exceptions; use Ada.Exceptions;
+--  with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Attributes;
-with GL.Buffers;
-with GL.Culling;
-with GL.Immediate;
-with GL.Objects.Buffers;
+--  with GL.Attributes;
+--  with GL.Buffers;
+--  with GL.Culling;
+--  with GL.Immediate;
+--  with GL.Objects.Buffers;
 with GL.Objects.Programs;
-with GL.Objects.Vertex_Arrays;
-with GL.Objects.Shaders.Lists;
-with GL.Raster;
+--  with GL.Objects.Vertex_Arrays;
+with GL.Objects.Shaders;
+--  with GL.Raster;
 with GL.Rasterization;
-with GL.Text;
+--  with GL.Text;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
-with GL.Uniforms;
+--  with GL.Uniforms;
 
 with Glfw;
 with Glfw.Input;
 with Glfw.Input.Keys;
-with Glfw.Input.Mouse;
 with GL.Window;
 with Glfw.Windows.Context;
-with Glfw.Windows.Hints;
 
 with Maths;
 with Program_Loader;
@@ -35,34 +33,31 @@ with C3GA;
 with C3GA_Draw;
 with GA_Draw;
 with GL_Util;
-with E2GA;
-with E2GA_Draw;
-with E3GA;
-with E3GA_Utilities;
-with GA_Maths;
+--  with E3GA;
+with GA_Utilities;
 with Multivectors;
 
-with Silo;
-with Text_Management;
+--  with Silo;
+--  with Text_Management;
 
 with Points;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-    subtype tVec4f is Singles.Vector4;
+--      subtype tVec4f is Singles.Vector4;
 
-    Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
+--      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
     Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
-    Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
-    Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
-    Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
+--      Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
+--      Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
+--      Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
 
     --  rotor g_modelRotor(_rotor(1.0f))
     Model_Rotor     : Multivectors.Rotor;
-    Rotate_Model    : boolean := False;
-    Rotate_Model_Out_Of_Plane  : boolean := False;
-    Pick            : GL_Util.GL_Pick;
+--      Rotate_Model    : boolean := False;
+--      Rotate_Model_Out_Of_Plane  : boolean := False;
+--      Pick            : GL_Util.GL_Pick;
 
     --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
     --                          theText         : String;
@@ -78,38 +73,38 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Display (Window                 : in out Glfw.Windows.Window;
                        Render_Graphic_Program : GL.Objects.Programs.Program) is
     --                        Render_Text_Program    : GL.Objects.Programs.Program) is
-        use GL.Objects.Buffers;
-        use GL.Types.Colors;
+--          use GL.Objects.Buffers;
+--          use GL.Types.Colors;
         use GL.Types.Singles;     --  for matrix multiplication
 
-        use Maths.Single_Math_Functions;
+--          use Maths.Single_Math_Functions;
 
-        use E2GA;
-        use GA_Maths;
-        use GA_Maths.Float_Functions;
+--          use E2GA;
+--          use GA_Maths;
+--          use GA_Maths.Float_Functions;
 
         Scale             : constant float := 40.0;
         Scale_S           : constant single := single (Scale);
-        Position_X        : integer := 0;
-        Position_Y        : single := 160.0;
+--          Position_X        : integer := 0;
+--          Position_Y        : single := 160.0;
         --        Label             : Silo.Label_Data;
-        Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
+--          Label_Position    : GL.Types.Singles.Vector2 := (0.0, 0.0);
 
         --        E11               : constant float := E3GA.Get_Coord_1 (E3GA.e1);
         --        E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
         --        E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
         --        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
-        V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
-        V2                : Multivectors.Vector;
+--          V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
+--          V2                : Multivectors.Vector;
 
         Point_Position      : C3GA.Normalized_Point;
         --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
         Window_Width        : Glfw.Size;
         Window_Height       : Glfw.Size;
-        Pick                : GL_Util.GL_Pick;
+--          Pick                : GL_Util.GL_Pick;
         Translation_Matrix  : GL.Types.Singles.Matrix4;
         Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-        Vertex_Buffer       : GL.Objects.Buffers.Buffer;
+--          Vertex_Buffer       : GL.Objects.Buffers.Buffer;
 
     begin
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -131,14 +126,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                 --                                   Label_Position);
                 --           Silo.Push (Label);
                 Point_Position := Points.Normalized_Points (count);
-                --           C3GA_Utilities.Print_Vector ("Display, Point_Position", Point_Position);
+                GA_Utilities.Print_Multivector ("Display, Point_Position", Point_Position);
                 C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Point_Position, Red);
             end loop;
         else
             Put_Line ("Main_Loop.Display, Model_Rotor is not invertable.");
         end if;
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in Main_Loop.Display.");
             raise;
     end Display;
@@ -174,11 +169,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Setup_Graphic (Window : in out Glfw.Windows.Window;
-                             Render_Graphic_Program : out GL.Objects.Programs.Program) is
-    --                              Render_Text_Program    : out GL.Objects.Programs.Program) is
-        use Glfw.Input;
-        use GL.Objects.Buffers;
+    procedure Setup_Graphic (Render_Graphic_Program : out GL.Objects.Programs.Program) is
+    --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
+--          use GL.Objects.Buffers;
         use GL.Objects.Shaders;
         use Program_Loader;
         --        Font_File : string := "../fonts/Helvetica.ttc";
@@ -204,26 +197,26 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --
         --        Text_Management.Setup (Font_File);
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");
             raise;
     end Setup_Graphic;
 
     --  ----------------------------------------------------------------------------
 
-    procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
-                                     Projection_Matrix_ID, Texture_ID,
-                                     Text_Dimesions_ID, Colour_ID : out GL.Uniforms.Uniform) is
-    begin
-        Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "mvp_matrix");
-        Texture_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "text_sampler");
-        Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "dimensions");
-        Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "text_colour");
-    end Text_Shader_Locations;
+--      procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
+--                                       Projection_Matrix_ID, Texture_ID,
+--                                       Text_Dimesions_ID, Colour_ID : out GL.Uniforms.Uniform) is
+--      begin
+--          Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+--            (Render_Text_Program, "mvp_matrix");
+--          Texture_ID := GL.Objects.Programs.Uniform_Location
+--            (Render_Text_Program, "text_sampler");
+--          Text_Dimesions_ID := GL.Objects.Programs.Uniform_Location
+--            (Render_Text_Program, "dimensions");
+--          Colour_ID := GL.Objects.Programs.Uniform_Location
+--            (Render_Text_Program, "text_colour");
+--      end Text_Shader_Locations;
 
     --  -------------------------------------------------------------------------
 
@@ -236,7 +229,7 @@ begin
     Utilities.Clear_Background_Colour_And_Depth (White);
     Main_Window.Set_Input_Toggle (Sticky_Keys, True);
     Glfw.Input.Poll_Events;
-    Setup_Graphic (Main_Window, Render_Graphic_Program);
+    Setup_Graphic (Render_Graphic_Program);
     --     Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
     while Running loop
         --  Swap_Buffers first to display background colour on start up.

@@ -9,7 +9,7 @@ project Example_1_1_Project is
    for Main use ("circle.adb");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnatyclux");
+      for Default_Switches ("ada") use ("-gnatwkmru", "-gnatyclux");
    end Compiler;
 
 end Example_1_1_Project;

@@ -13,8 +13,9 @@ with Initialize;
 with Main_Loop;
 
 procedure Circle is
-    Main_Window : Glfw.Windows.Window;
-    Window_Title : String := "GA for Computer Scientists Example 1.1 An Example in Geometric Algebra";
+    Main_Window  : Glfw.Windows.Window;
+    Window_Title : constant String :=
+                    "GA for Computer Scientists Example 1.1 An Example in Geometric Algebra";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);
