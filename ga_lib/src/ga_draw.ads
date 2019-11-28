@@ -48,9 +48,9 @@ package GA_Draw is
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              VC : C3GA.Vector_E3GA;
+                              V : C3GA.Vector_E3GA;
                               Colour : GL.Types.Colors.Color;
-                              Method            : Trivector_Method_Type := Draw_TV_Sphere);
+                              Method  : Trivector_Method_Type := Draw_TV_Sphere);
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                            MV_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction : Multivectors.Vector;

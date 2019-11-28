@@ -504,7 +504,7 @@ package body GA_Draw is
 
     procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
                                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                                   VC                : C3GA.Vector_E3GA;
+                                   V_Coords          : GA_Maths.Array_3D;
                                    Scale             : Float;
                                    Colour            : GL.Types.Colors.Color :=
                                      (0.0, 0.0, 0.0, 0.0)) is
@@ -528,20 +528,19 @@ package body GA_Draw is
                                  (others => (others => 0.0));
         GL_Vertices          : Vector3_Array (1 .. 4) :=
                                  (others => (others => 0.0));
-        Vertex_Buffer_Data : Maths.Vector6_Array (1 .. 6);
+--          Vertex_Buffer_Data : Maths.Vector6_Array (1 .. 6);
 --          Quad_Element_Array : Int_Array (1 .. 6);
 
         Vertex               : Vector3;
         Vertex_Vectors       : Ints.Vector3_Array (1 .. 8);
         Vertex_Index         : Int := 0;
         Vertex_Vec           : Ints.Vector3;
-        Normal               : Ints.Vector3;
         Normals_Vec          : Vector3_Array (1 .. 6) :=
                                  (others => (others => 0.0));
         V1                   : E3GA.Vector;
         V2                   : E3GA.Vector;
         V3                   : E3GA.Vector;
-        VC_Coords            : constant GA_Maths.Array_3D := C3GA.Get_Coords (VC);
+        Stride               : constant Int := 0;
     begin
         if Scale >= 0.0 then
           Scale_Sign := 1.0;
@@ -573,9 +572,9 @@ package body GA_Draw is
             for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
                 Vertex_Index := Vertex_Vectors (Row) (Col);
                 if Vertex_Index >= 0 then
-                    Vertex (GL.X) := Vertex (GL.X) + Single (VC_Coords (1));
-                    Vertex (GL.Y) := Vertex (GL.Y) + Single (VC_Coords (2));
-                    Vertex (GL.Z) := Vertex (GL.Z) + Single (VC_Coords (3));
+                    Vertex (GL.X) := Vertex (GL.X) + Single (V_Coords (1));
+                    Vertex (GL.Y) := Vertex (GL.Y) + Single (V_Coords (2));
+                    Vertex (GL.Z) := Vertex (GL.Z) + Single (V_Coords (3));
                     Vertices (Row) := Vertex;
                 end if;
             end loop;
@@ -609,7 +608,7 @@ package body GA_Draw is
 
         Element_Buffer.Initialize_Id;
         Element_Array_Buffer.Bind (Element_Buffer);
-        Utilities.Load_Element_Buffer (Polygon);
+--          Utilities.Load_Element_Buffer (Element_Array_Buffer, Polygon, Static_Draw);
 
         Init_Projection_Matrix (Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
@@ -735,11 +734,13 @@ package body GA_Draw is
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base   : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              VC     : C3GA.Vector_E3GA;
+                              V      : C3GA.Vector_E3GA;
                               Colour : GL.Types.Colors.Color;
                               Method : Trivector_Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;
         use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
+        use GA_Maths;
+        VC                : constant Array_3D := C3GA.Get_Coords (V);
         Scale_Sign        : Float;
         P_Scale           : Float;
         Normal            : Single;
@@ -755,6 +756,10 @@ package body GA_Draw is
 
         if Method = Draw_TV_Parellelepiped or
           Method = Draw_TV_Parellelepiped_No_Vectors then
+            if VC = (0.0, 0.0, 0.0) then
+                Draw_Trivector (Render_Program, Model_View_Matrix,
+                                Base, Scale, V, Colour, Draw_TV_Sphere) ;
+            end if;
             P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
         else
             P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);

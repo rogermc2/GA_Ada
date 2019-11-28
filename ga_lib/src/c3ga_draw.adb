@@ -107,7 +107,7 @@ package body C3GA_Draw is
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.M_Points (1));
         Scale       : Float;
-        V          : C3GA.Vector_E3GA;
+        V           : C3GA.Vector_E3GA;
     begin
         case Analysis.M_Type.Blade_Subclass is
             when Line_Subclass =>
