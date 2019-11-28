@@ -1,7 +1,4 @@
 
-with Ada.Strings.Unbounded;
-
-with Blade;
 with GA_Maths; use GA_Maths;
 with Multivectors ; use Multivectors;
 
@@ -49,13 +46,13 @@ package E3GA is
 --     function "*" (Weight : float; V : Vector) return Vector;
 
 --     function "*" (Weight : float; BV : Bivector) return Bivector;
---     function "*" (R1, R2 : Rotor) return Rotor;
+   function "*" (R1, R2 : Rotor) return Rotor;
 --     function "*" (R : Rotor; V : Vector) return Rotor;
 --     function "*" (V : Vector; R : Rotor) return Rotor;
---     function "/" (R : Rotor; S : float) return Rotor;
+   function "/" (R : Rotor; S : float) return Rotor;
 --     function "+" (W : float; BV : BiVector) return Rotor;
---     function "+" (W : float; R : Rotor) return Rotor;
---     function "-" (W : float; R : Rotor) return Rotor;
+   function "+" (W : float; R : Rotor) return Rotor;
+   function "-" (W : float; R : Rotor) return Rotor;
 
 --     function e1 (V : E2GA.Vector) return float;
 --     function e2 (V : E2GA.Vector) return float;
@@ -83,7 +80,7 @@ package E3GA is
 
 --     function Apply_Outermorphism (OM : Outermorphism; BV : Bivector) return Bivector;
 --     function Apply_Outermorphism (OM : Outermorphism; V : Vector) return Vector;
---     function Dot_Product (R1, R2 : Rotor) return float;
+   function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dot_Product (V1, V2 : Vector) return float;
 --      function Get_Coord (S : Scalar) return float;
 --     function Get_Coords (BV : Bivector) return Array_3D;
@@ -115,7 +112,7 @@ package E3GA is
 --     function Magnitude (V : Vector) return float;
 --     function MV_String (MV : Multivector; Text : String := "")
 --                         return Ada.Strings.Unbounded.Unbounded_String;
---     function Outer_Product (V1, V2 : Vector) return Bivector;
+   function Outer_Product (V1, V2 : Vector) return Vector;
 
 --     function Norm_E2 (BV : Bivector) return Scalar;
 --     function Norm_E2 (V : Vector) return Scalar;
@@ -123,7 +120,7 @@ package E3GA is
 --     function Norm_E2 (R : Rotor) return Scalar;
 --     function Norm_E2 (TV : Trivector) return Scalar;
 --      procedure Set_Coords (V : out Vector; C1, C2, C3 : float);
---      procedure Set_Coords (MV : out Multivector; C1, C2, C3 : float);
+    procedure Set_Coords (MV : out Multivector; C1, C2, C3 : float);
 --     function Scalar_Product (V1, V2 : Vector) return Scalar;
 --     procedure Set_Bivector (BV : out Bivector; C1, C2, C3 : float);
 --     procedure Set_Rotor (X : out Rotor; C_Scalar, C2, C3, C4 : float);
