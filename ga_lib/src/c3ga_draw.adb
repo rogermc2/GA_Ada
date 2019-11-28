@@ -110,7 +110,7 @@ package body C3GA_Draw is
                          Colour : GL.Types.Colors.Color;
                          Scale : float := 1.0) is
         use Multivector_Analyze;
-        Point_Pos  : C3GA.Vector_E3GA :=
+        Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.M_Points (1));
         P_Scale    : Float;
         V          : C3GA.Vector_E3GA;
@@ -120,14 +120,15 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Flat Line.");
                 GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
                                    Point_Pos, Analysis.M_Vectors (1),
-                                   Analysis.M_Scalors (1));
+                                   Colour);
+--                                     Analysis.M_Scalors (1));
             when Plane_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             when Point_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
                 P_Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, P_Scale, V);
+                                        Point_Pos, Scale, V, Colour);
             when others => null;
         end case;
 
@@ -143,12 +144,11 @@ package body C3GA_Draw is
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          L : Multivectors.Vector;
                          Colour : GL.Types.Colors.Color) is
-        use GL.Types;
-        Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
         V     : C3GA.Vector_E3GA;
     begin
         GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                C3GA.To_VectorE3GA (L), Scale, V);
+                                C3GA.To_VectorE3GA (L), Scale, V, Colour);
 
     exception
         when others =>
@@ -162,8 +162,7 @@ package body C3GA_Draw is
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Position : C3GA.Normalized_Point;
                           Colour : GL.Types.Colors.Color) is
-        use GL.Types;
-        Scale : Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
         V     : C3GA.Vector_E3GA;
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
@@ -193,13 +192,13 @@ package body C3GA_Draw is
             when Point_Pair_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, P_Scale, V);
+                                        Point_Pos, P_Scale, V, Colour);
             when Circle_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Round Circle.");
             when Sphere_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Round Sphere.");
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, P_Scale, V);
+                                        Point_Pos, P_Scale, V, Colour);
             when others => null;
         end case;
 

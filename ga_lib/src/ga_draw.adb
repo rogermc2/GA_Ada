@@ -537,14 +537,14 @@ package body GA_Draw is
         if G_Draw_State.M_Draw_Mode = OD_Orientation then
             Scale_Matrix := Maths.Scaling_Matrix (Scale_Sign);
         end if;
-        Vertex_Vectors := ((-1, -1, -1),  --  -
-                           (0, -1, -1),   --  0
-                           (0, 1, -1),    --  0 + 1
-                           (1, -1, -1),   --  1
-                           (2, -1, -1),   --  2
-                           (0, 2, -1),    --  0 + 2
-                           (0, 1, 2),     --  0 + 1 + 2
-                           (1, 2, -1));   --  1 + 2
+        Vertex_Vectors := ((-1, -1, -1),  --  LBF  -
+                           (0, -1, -1),   --  CBF  0
+                           (0, 1, -1),    --  CTF  0 + 1
+                           (1, -1, -1),   --  RBF  1
+                           (2, -1, -1),   --  RRBF 2
+                           (0, 2, -1),    --  CTTF 0 + 2
+                           (0, 1, 2),     --  CTRR 0 + 1 + 2
+                           (1, 2, -1));   --  RTTF 1 + 2
         Polygon := ((0, 1, 5, 4),
                     (0, 4, 7, 3),
                     (4, 5, 6, 7),
@@ -693,6 +693,7 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                              Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base   : C3GA.Vector_E3GA; Scale : float := 1.0;
                               VC     : C3GA.Vector_E3GA;
                               Colour : GL.Types.Colors.Color;
