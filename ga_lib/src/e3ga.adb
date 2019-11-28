@@ -1,52 +1,48 @@
 
-with Interfaces;
-with Ada.Text_IO; use Ada.Text_IO;
-
 with Blade;
 with Blade_Types;
 
 package body E3GA is
-   use GA_Maths;
 
-   type Array_BM8 is array (GA_Maths.Bit_Map range 1 .. 8) of integer;
+--     type Array_BM8 is array (GA_Maths.Bit_Map range 1 .. 8) of integer;
 
-   MV_Space_Dim          : constant Integer := 3;
-   MV_Metric_Euclidean   : constant Boolean := True; -- The space's metric is Euclidean
+--     MV_Space_Dim          : constant Integer := 3;
+--     MV_Metric_Euclidean   : constant Boolean := True; -- The space's metric is Euclidean
    --  MV_Grade_Size can be used to lookup the number of coordinates for
    --  a grade part of a general multivector
-   MV_Grade_Size         : constant Array_I4 := (1, 3, 3, 1);
+--     MV_Grade_Size         : constant Array_I4 := (1, 3, 3, 1);
    --  MV_Size can be used to lookup the number of coordinates based on a grade usage bitmap
-   MV_Size               : constant array (1 .. 16) of integer :=
-     (0, 1, 3, 4, 3, 4, 6, 7, 1, 2, 4, 5, 4, 5, 7, 8);
-   MV_Basis_Vector_Names : constant array (1 .. 3) of string (1 .. 2) :=
-     ("e1", "e2", "e3");
+--     MV_Size               : constant array (1 .. 16) of integer :=
+--       (0, 1, 3, 4, 3, 4, 6, 7, 1, 2, 4, 5, 4, 5, 7, 8);
+--     MV_Basis_Vector_Names : constant array (1 .. 3) of string (1 .. 2) :=
+--       ("e1", "e2", "e3");
    --  MV_Basis_Elements contains the order of basis elements in the general multivector
-   MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
-     ((-1, 0, 0, 0),
-      (0, -1, 0, 0),
-      (1, -1, 0, 0),
-      (2, -1, 0, 0),
-      (0, 1, -1, 0),
-      (1, 2, -1, 0),
-      (0, 2, -1, 0),
-      (0, 1, 2, -1));
+--     MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
+--       ((-1, 0, 0, 0),
+--        (0, -1, 0, 0),
+--        (1, -1, 0, 0),
+--        (2, -1, 0, 0),
+--        (0, 1, -1, 0),
+--        (1, 2, -1, 0),
+--        (0, 2, -1, 0),
+--        (0, 1, 2, -1));
    --  This array contains the 'sign' (even/odd permutation of the canonical order)
    --  of basis elements in the general multivector.
    --  This answers 'what is the permutation of the coordinate at index [x]'?
-   MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
-     (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
+--     MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
+--       (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
    --  This answers 'what is the permutation of the coordinate at bitmap [x]'?
-   MV_Basis_Element_Sign_By_Bitmap : constant Array_F8 :=
-     (1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0);
+--     MV_Basis_Element_Sign_By_Bitmap : constant Array_F8 :=
+--       (1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0);
    --  This answers 'at what index is the basis element [x] (x = basis vector bitmap)'?
-   MV_Basis_Element_Index_By_Bitmap : constant Array_BM8 :=
-     (0, 1, 2, 4, 3, 6, 5, 7);
+--     MV_Basis_Element_Index_By_Bitmap : constant Array_BM8 :=
+--       (0, 1, 2, 4, 3, 6, 5, 7);
    --  This answers 'at what index is the basis element [x] (x = basis vector bitmap)'?
-   MV_Basis_Element_Bitmap_By_Index : constant Array_I8 :=
-     (0, 1, 2, 4, 3, 6, 5, 7);
+--     MV_Basis_Element_Bitmap_By_Index : constant Array_I8 :=
+--       (0, 1, 2, 4, 3, 6, 5, 7);
    --  This answers 'at what is the grade of basis element bitmap [x]'?
-   MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
-     (0, 1, 1, 2, 1, 2, 2, 3);
+--     MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
+--       (0, 1, 1, 2, 1, 2, 2, 3);
 
    --     e1_basis : Array_3D := (1.0, 0.0, 0.0);
    --     e2_basis : Array_3D := (0.0, 1.0, 0.0);
@@ -86,14 +82,10 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function "-" (V1, V2 : Vector) return Vector is
-   --        theVector : Vector;
-   --      begin
-   --         theVector.Coordinates (1) := V1.Coordinates (1) - V2.Coordinates (1);
-   --         theVector.Coordinates (2) := V1.Coordinates (2) - V2.Coordinates (2);
-   --         theVector.Coordinates (3) := V1.Coordinates (3) - V2.Coordinates (3);
-   --          return theVector;
-   --      end "-";
+       function "-" (VL, VR : Vector) return Vector is
+       begin
+          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
+       end "-";
 
    --  ------------------------------------------------------------------------
 
@@ -119,8 +111,8 @@ package body E3GA is
       use Blade_List_Package;
       use Blade;
       use Blade_Types;
-      R1_Blades  : Blade_List := Get_Blade_List (R1);
-      R2_Blades  : Blade_List := Get_Blade_List (R2);
+      R1_Blades  : constant Blade_List := Get_Blade_List (R1);
+      R2_Blades  : constant  Blade_List := Get_Blade_List (R2);
       Curs_1     : Cursor := R1_Blades.First;
       Curs_2     : Cursor := R2_Blades.First;
       Blade_1    : Basis_Blade;
@@ -169,7 +161,7 @@ package body E3GA is
    function "/" (R : Rotor; S : float) return Multivectors.Rotor is
       use Blade_List_Package;
       use Blade;
-      Blades    : Blade_List := Get_Blade_List (R);
+      Blades    : constant Blade_List := Get_Blade_List (R);
       Curs      : Cursor := Blades.First;
       aBlade    : Basis_Blade;
       New_Blade : Basis_Blade;
@@ -294,8 +286,8 @@ package body E3GA is
    function Dot_Product (R1, R2 : Rotor) return Float is
       use Blade_List_Package;
       use Blade;
-      R1_Blades : Blade_List := Get_Blade_List (R1);
-      R2_Blades : Blade_List := Get_Blade_List (R2);
+      R1_Blades : constant Blade_List := Get_Blade_List (R1);
+      R2_Blades : constant Blade_List := Get_Blade_List (R2);
       R1_Curs   : Cursor := R1_Blades.First;
       R2_Curs   : Cursor := R2_Blades.First;
       Product   : Float := Scalar_Part (R1) * Scalar_Part (R2);
@@ -375,7 +367,6 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function e1 return Multivectors.Vector is
-      use Blade;
       Basis   : Multivectors.Vector;
    begin
       Multivectors.Add_Blade (Basis, Blade_Types.E3_e1, 1.0);
@@ -706,7 +697,7 @@ package body E3GA is
 
    function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
       use Multivectors.Blade_List_Package;
-      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (MV);
+      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (MV);
       Curs   : Cursor := Blades.First;
       Coords : E3GA.MV_Coordinate_Array := (others => 0.0);
       Index  : Integer := 0;
@@ -732,7 +723,7 @@ package body E3GA is
    begin
       Result (1) := Scalar_Part (R);
       while Has_Element (Curs) loop
-         BM := Unsigned_Integer (Bitmap (Element (Curs)));
+         BM := Bitmap (Element (Curs));
          if (BM and E3_Base'Enum_Rep (E3_e1)) /= 0 then
             Result (2) := Blade.Weight (Element (Curs));
          end if;
@@ -1081,19 +1072,12 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function Outer_Product (V1, V2 : Vector) return Bivector is
-   --          use Float_Array_Package;
-   --          use GA_Maths;
-   --          Result : Bivector;
-   --      begin
-   --          Set_Bivector (Result, V1.Coordinates (1) * V2.Coordinates (2) -
-   --                            V1.Coordinates (2) * V2.Coordinates (1),
-   --                                V1.Coordinates (2) * V2.Coordinates (3) -
-   --                            V1.Coordinates (3) * V2.Coordinates (2),
-   --                                V1.Coordinates (3) * V2.Coordinates (1) -
-   --                            V1.Coordinates (1) * V2.Coordinates (3));
-   --          return Result;
-   --      end Outer_Product;
+       function Outer_Product (V1, V2 : Vector) return Vector is
+       begin
+           return (V1 (1) * V2 (2) - V1 (2) * V2 (1),
+                   V1 (2) * V2(3) - V1 (3) * V2 (2),
+                   V1 (3) * V2 (1) - V1 (1) * V2 (3));
+       end Outer_Product;
 
    --  ------------------------------------------------------------------------
 

@@ -512,22 +512,36 @@ package body GA_Draw is
         use GL.Objects.Buffers;
         --          use GL.Toggles;
         --          use GL.Types.Colors;
---          use GL.Types.Singles;
+        use Singles;
+        use E3GA;
 
         MV_Matrix_ID         : GL.Uniforms.Uniform;
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
-        Projection_Matrix    : GL.Types.Singles.Matrix4;
-        Scale_Matrix         : GL.Types.Singles.Matrix4;
+        Projection_Matrix    : Matrix4;
+        Scale_Matrix         : Matrix4;
         Scale_Sign           : GL.Types.Single;
+        Element_Buffer       : GL.Objects.Buffers.Buffer;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Polygon              : Ints.Vector4_Array (1 .. 6);
-        Vertices             : Singles.Vector3_Array (1 .. 8) := (others => (others => 0.0));
+        Vertices             : Vector3_Array (1 .. 8) :=
+                                 (others => (others => 0.0));
+        GL_Vertices          : Vector3_Array (1 .. 4) :=
+                                 (others => (others => 0.0));
+        Vertex_Buffer_Data : Maths.Vector6_Array (1 .. 6);
+--          Quad_Element_Array : Int_Array (1 .. 6);
+
+        Vertex               : Vector3;
         Vertex_Vectors       : Ints.Vector3_Array (1 .. 8);
         Vertex_Index         : Int := 0;
         Vertex_Vec           : Ints.Vector3;
-        Vertex               : Singles.Vector3;
-        Coords               : constant GA_Maths.Array_3D := C3GA.Get_Coords (VC);
+        Normal               : Ints.Vector3;
+        Normals_Vec          : Vector3_Array (1 .. 6) :=
+                                 (others => (others => 0.0));
+        V1                   : E3GA.Vector;
+        V2                   : E3GA.Vector;
+        V3                   : E3GA.Vector;
+        VC_Coords            : constant GA_Maths.Array_3D := C3GA.Get_Coords (VC);
     begin
         if Scale >= 0.0 then
           Scale_Sign := 1.0;
@@ -537,14 +551,15 @@ package body GA_Draw is
         if G_Draw_State.M_Draw_Mode = OD_Orientation then
             Scale_Matrix := Maths.Scaling_Matrix (Scale_Sign);
         end if;
-        Vertex_Vectors := ((-1, -1, -1),  --  LBF  -
-                           (0, -1, -1),   --  CBF  0
-                           (0, 1, -1),    --  CTF  0 + 1
-                           (1, -1, -1),   --  RBF  1
-                           (2, -1, -1),   --  RRBF 2
-                           (0, 2, -1),    --  CTTF 0 + 2
-                           (0, 1, 2),     --  CTRR 0 + 1 + 2
-                           (1, 2, -1));   --  RTTF 1 + 2
+
+        Vertex_Vectors := ((-1, -1, -1),  --  -
+                           (0, -1, -1),   --  0
+                           (0, 1, -1),    --  0 + 1
+                           (1, -1, -1),   --  1
+                           (2, -1, -1),   --  2
+                           (0, 2, -1),    --  0 + 2
+                           (0, 1, 2),     --  0 + 1 + 2
+                           (1, 2, -1));   --  1 + 2
         Polygon := ((0, 1, 5, 4),
                     (0, 4, 7, 3),
                     (4, 5, 6, 7),
@@ -555,15 +570,35 @@ package body GA_Draw is
         for Row in Int range 1 .. 8 loop
             Vertex_Vec := Vertex_Vectors (Row);
             Vertex := (0.0, 0.0, 0.0);
-            for Count in GL.Index_Homogeneous range GL.X .. GL.Z loop
-                Vertex_Index := Vertex_Vec (Count);
+            for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
+                Vertex_Index := Vertex_Vectors (Row) (Col);
                 if Vertex_Index >= 0 then
-                    Vertex (GL.X) := Vertex (GL.X) + Single (Coords (1));
-                    Vertex (GL.Y) := Vertex (GL.Y) + Single (Coords (2));
-                    Vertex (GL.Z) := Vertex (GL.Z) + Single (Coords (3));
+                    Vertex (GL.X) := Vertex (GL.X) + Single (VC_Coords (1));
+                    Vertex (GL.Y) := Vertex (GL.Y) + Single (VC_Coords (2));
+                    Vertex (GL.Z) := Vertex (GL.Z) + Single (VC_Coords (3));
                     Vertices (Row) := Vertex;
                 end if;
             end loop;
+        end loop;
+
+        for Index in Normals_Vec'Range loop
+            V1 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.X)));
+            V2 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.Y)));
+            V3 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.W)));
+            Normals_Vec (Index) :=
+              (Scale_Sign * GL_Util.To_GL (Outer_Product ((V2 - V1), (V3 - V1))));
+
+            if Scale >= 0.0 then
+                for GL_Index in Int range 1 .. 3 loop
+                    GL_Vertices (GL_Index) :=
+                      Vertices (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                end loop;
+            else
+                for GL_Index in reverse Int range  3 .. 1 loop
+                    GL_Vertices (GL_Index) :=
+                      Vertices (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                end loop;
+            end if;
         end loop;
 
         Vertex_Buffer.Initialize_Id;
@@ -572,13 +607,18 @@ package body GA_Draw is
                                   Projection_Matrix_ID, Colour_Location);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
+        Element_Buffer.Initialize_Id;
+        Element_Array_Buffer.Bind (Element_Buffer);
+        Utilities.Load_Element_Buffer (Polygon);
+
         Init_Projection_Matrix (Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-        GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+        GL.Uniforms.Set_Single (MV_Matrix_ID, Scale_Matrix * Model_View_Matrix);
         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, Stride, 3);  --  normal
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
                                               First => 0,
