@@ -15,6 +15,13 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
+   function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
+   begin
+        return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
+   end From_GL;
+
+    --  -------------------------------------------------------------------------
+
 --      procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
 --          A       : constant GL.Types.Single := 0.3;
 --          D       : constant GL.Types.Single := 0.7;

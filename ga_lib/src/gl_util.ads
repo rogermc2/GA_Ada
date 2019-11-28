@@ -22,6 +22,7 @@ package GL_Util is
         Pick_Window_Size : Int := 4;
     end record;
 
+    function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector;
     --     procedure GL_Color_3fm (R, G, B : GL.Types.Single);
     procedure Load_Pick_Matrix;
     procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
