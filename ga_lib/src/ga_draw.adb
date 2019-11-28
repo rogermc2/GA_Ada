@@ -705,7 +705,7 @@ package body GA_Draw is
         Normal            : Single;
         --          Z_Max             : constant Float := 4.0 * GA_Maths.PI;
         Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
-        Model_View_Matrix : Matrix4 := Singles.Identity4;
+        MV_Matrix         : Matrix4 := Model_View_Matrix;
     begin
         if Scale >= 0.0 then
             Scale_Sign := 1.0;
@@ -721,9 +721,9 @@ package body GA_Draw is
         end if;
 
         if C3GA.Norm_e2 (Base) /= 0.0 then
-            Model_View_Matrix := Maths.Translation_Matrix
+            MV_Matrix := Maths.Translation_Matrix
               ((Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)))) *
-                Maths.Scaling_Matrix (Single (P_Scale)) * Model_View_Matrix;
+                Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
         end if;
 
         case Method is
@@ -755,7 +755,7 @@ package body GA_Draw is
                            MV_Matrix       : GL.Types.Singles.Matrix4;
                            Tail, Direction : Multivectors.Vector;
                            Colour          : GL.Types.Colors.Color;
-                           Scale           : float) is
+                           Scale           : float := 1.0) is
         use GL.Culling;
         use GL.Toggles;
         use GL.Types.Singles;

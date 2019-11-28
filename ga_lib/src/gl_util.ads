@@ -2,8 +2,6 @@
 with GL.Types; use GL.Types;
 
 with GA_Maths;
-with E2GA;
-with E3GA;
 with Multivectors;
 
 package GL_Util is

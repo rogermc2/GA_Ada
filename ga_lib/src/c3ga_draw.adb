@@ -16,29 +16,26 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color;
-                         Scale : float := 1.0);
+                         Colour : GL.Types.Colors.Color);
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color;
-                         Scale : float := 1.0);
+                         Colour : GL.Types.Colors.Color);
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Colour : GL.Types.Colors.Color; Scale : float := 1.0);
+                          Colour : GL.Types.Colors.Color);
 
     --  -------------------------------------------------------------------------
 
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    MV : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
-                    Scale : float := 1.0) is
+                    MV : Multivectors.Multivector; Colour : GL.Types.Colors.Color) is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
         NO          : constant Multivectors.Multivector := C3GA.no;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, NO);
-        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
 
     exception
         when others =>
@@ -50,15 +47,14 @@ package body C3GA_Draw is
 
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    aVector : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color;
-                    Scale : float := 1.0) is
+                    aVector : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color) is
         use Multivectors;
         Vec_3D  : constant Vector := New_Vector (C3GA.Get_Coord_1 (aVector),
                                         C3GA.Get_Coord_2 (aVector), 0.0);
         Tail    : constant Vector := New_Vector (0.0, 0.0, 0.0);
     begin
         GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
-                             Tail, Vec_3D, Colour, Scale);
+                             Tail, Vec_3D, Colour);
 
     exception
         when others =>
@@ -71,8 +67,7 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color;
-                         Scale : float := 1.0) is
+                         Colour : GL.Types.Colors.Color) is
         use Multivector_Analyze;
 --          MV_Info : Multivector_Type.MV_Type_Record := Analyzed_MV.M_MV_Type;
     begin
@@ -82,12 +77,12 @@ package body C3GA_Draw is
             case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
-                Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+                Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
             when Free_Blade => null;
                 Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Round.");
-                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Colour, Scale);
+                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
             when others =>
@@ -107,12 +102,11 @@ package body C3GA_Draw is
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color;
-                         Scale : float := 1.0) is
+                         Colour : GL.Types.Colors.Color) is
         use Multivector_Analyze;
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.M_Points (1));
-        P_Scale    : Float;
+        Scale       : Float;
         V          : C3GA.Vector_E3GA;
     begin
         case Analysis.M_Type.Blade_Subclass is
@@ -126,7 +120,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             when Point_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
-                P_Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+                Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                         Point_Pos, Scale, V, Colour);
             when others => null;
@@ -180,7 +174,7 @@ package body C3GA_Draw is
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Colour : GL.Types.Colors.Color; Scale : float := 1.0) is
+                          Colour : GL.Types.Colors.Color) is
         use Multivector_Analyze;
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.M_Points (1));

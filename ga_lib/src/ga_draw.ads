@@ -25,11 +25,6 @@ package GA_Draw is
 
     type Draw_State is private;
 
-    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
-                           MV_Matrix : GL.Types.Singles.Matrix4;
-                           Tail, Direction : Multivectors.Vector;
-                           Colour : Color; Scale : float);
-
     --  Draw_Bivector draws a bivector at Base (:= null for origin).
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
@@ -44,20 +39,22 @@ package GA_Draw is
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
---                           Weight : Float;
                          Colour : GL.Types.Colors.Color);
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         --                           Tail              : Multivectors.Vector;
+                         --     Tail              : Multivectors.Vector;
                          Direction         : Multivectors.Vector;
                          Colour            : GL.Types.Colors.Color);
-    --                           Scale             : float) is
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
                               VC : C3GA.Vector_E3GA;
                               Colour : GL.Types.Colors.Color;
-                              Method : Trivector_Method_Type := Draw_TV_Sphere);
+                              Method            : Trivector_Method_Type := Draw_TV_Sphere);
+    procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
+                           MV_Matrix : GL.Types.Singles.Matrix4;
+                           Tail, Direction : Multivectors.Vector;
+                           Colour : Color; Scale : float := 1.0);
     function Get_Draw_Mode return Draw_Mode;
     function Get_Line_Length return Float;
     procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
