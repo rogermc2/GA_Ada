@@ -37,12 +37,10 @@ package E3GA is
    Grade_2 : constant integer := 4;
    Grade_3 : constant integer := 8;
 
-   --  ------------------------------------------------------------------------
-
 --     function "=" (V1, V2 : Vector) return Boolean;
 --     function "+" (V1, V2 : Vector) return Vector;
 --     function "-" (V : Vector) return Vector;
---     function "-" (V1, V2 : Vector) return Vector;
+   function "-" (VL, VR : Vector) return Vector;
 --     function "*" (Weight : float; V : Vector) return Vector;
 
 --     function "*" (Weight : float; BV : Bivector) return Bivector;

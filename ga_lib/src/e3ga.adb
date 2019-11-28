@@ -82,14 +82,10 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function "-" (V1, V2 : Vector) return Vector is
-   --        theVector : Vector;
-   --      begin
-   --         theVector.Coordinates (1) := V1.Coordinates (1) - V2.Coordinates (1);
-   --         theVector.Coordinates (2) := V1.Coordinates (2) - V2.Coordinates (2);
-   --         theVector.Coordinates (3) := V1.Coordinates (3) - V2.Coordinates (3);
-   --          return theVector;
-   --      end "-";
+       function "-" (VL, VR : Vector) return Vector is
+       begin
+          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
+       end "-";
 
    --  ------------------------------------------------------------------------
 
