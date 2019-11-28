@@ -1,37 +1,30 @@
 
 with Interfaces;
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL;
 with GL.Window;
-with Utilities;
+--  with Utilities;
 
 with Blade;
 with Blade_Types;
 with E3GA_Utilities;
-with GA_Maths;
-with GA_Utilities;
 
 package body GL_Util is
-    use GL.Types;
-
-    procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
-                           Width, Height : GL.Types.Size);
 
     --  ------------------------------------------------------------------
 
-    procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
-        A       : constant GL.Types.Single := 0.3;
-        D       : constant GL.Types.Single := 0.7;
-        Ambient : constant array (1 .. 4) of GL.Types.Single
-          := (A * R, A * G, A * B, 1.0);
-        Dif     : constant array (1 .. 4) of GL.Types.Single
-          := (D * R, D * G, D * B, 1.0);
-    begin
-        null;
-    end GL_Color_3fm;
+--      procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
+--          A       : constant GL.Types.Single := 0.3;
+--          D       : constant GL.Types.Single := 0.7;
+--          Ambient : constant array (1 .. 4) of GL.Types.Single
+--            := (A * R, A * G, A * B, 1.0);
+--          Dif     : constant array (1 .. 4) of GL.Types.Single
+--            := (D * R, D * G, D * B, 1.0);
+--      begin
+--          null;
+--      end GL_Color_3fm;
 
     --  ------------------------------------------------------------------
     --  Load_Pick_Matrix
@@ -81,7 +74,7 @@ package body GL_Util is
         return R_Invertible;
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GL_Util.Rotor_GL_Multiply.");
             raise;
     end Rotor_GL_Multiply;
@@ -115,7 +108,7 @@ package body GL_Util is
         return GL_Matrix;
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GL_Util.Rotor_To_GL_Matrix.");
             raise;
     end Rotor_To_GL_Matrix;
@@ -124,12 +117,11 @@ package body GL_Util is
 
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Doubles.Vector3 is
         use Interfaces;
-        use GL.Types;
         use Multivectors.Blade_List_Package;
         use Blade;
         use Blade_Types;
         use GA_Maths;
-        Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
+        Blades  :constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
         Value   : Double;
@@ -154,7 +146,7 @@ package body GL_Util is
         return (Val_X, Val_Y, Val_Z);
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GL_Util.To_GL Double.");
             raise;
     end To_GL;
@@ -163,11 +155,10 @@ package body GL_Util is
 
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Singles.Vector3 is
         use Interfaces;
-        use GL.Types;
         use Multivectors.Blade_List_Package;
         use Blade;
         use Blade_Types;
-        Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
+        Blades  : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
         Value   : Single;
@@ -192,10 +183,17 @@ package body GL_Util is
         return (Val_X, Val_Y, Val_Z);
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GL_Util.To_GL Single.");
             raise;
     end To_GL;
+
+    --  -------------------------------------------------------------------------
+
+   function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
+   begin
+        return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
+   end To_GL;
 
     --  -------------------------------------------------------------------------
 
@@ -204,15 +202,14 @@ package body GL_Util is
                                     Projection_Matrix : GL.Types.Singles.Matrix4;
                                     Coords : out GL.Types.Singles.Vector2) is
         use GL;
-        use GL.Types;
         use GL.Types.Singles;
         VP_X          : Int;
         VP_Y          : Int;
         Window_Width  : Size;
         Window_Height : Size;
-        PT1 : Vector4 := (Single (Pt_World (1)), Single (Pt_World (2)),
+        PT1           : constant Vector4 := (Single (Pt_World (1)), Single (Pt_World (2)),
                           Single (Pt_World (3)), 1.0);
-        PT2 : Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
+        PT2           : constant Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
     begin
         --   PT1 := Projection_Matrix * PT2;
         GL.Window.Get_Viewport (VP_X, VP_Y, Window_Width, Window_Height);
@@ -220,7 +217,7 @@ package body GL_Util is
         Coords (Y) := Single (VP_Y) + (1.0 + PT2 (Y) / PT2 (W)) * Single (Window_Height) / 2.0;
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exception occurred in GL_Util.Viewport_Coordinates.");
             raise;
     end Viewport_Coordinates;
