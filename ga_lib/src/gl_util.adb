@@ -9,7 +9,6 @@ with GL.Window;
 
 with Blade;
 with Blade_Types;
-with E3GA;
 with E3GA_Utilities;
 
 package body GL_Util is

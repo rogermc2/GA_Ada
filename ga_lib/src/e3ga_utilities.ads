@@ -1,9 +1,6 @@
 
-with E3GA;
 with GA_Maths;
 with Multivectors; use Multivectors;
-with Multivector_Analyze;
-with Multivector_Type;
 
 package E3GA_Utilities is
 

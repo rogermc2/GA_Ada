@@ -1,29 +1,23 @@
 
-with Interfaces;
-
-with Ada.Containers;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
 with Blade_Types;
+with E3GA;
 with GA_Utilities;
-with Multivector_Type_Base;
 
 package body E3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
-      use E3GA;
-      use Multivectors;
-      V          : Multivectors.Vector :=
-        Inner_Product (BV, BV, Blade.Left_Contraction);
+        V          :  constant Multivectors.Vector :=
+                       Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := E3GA.e1_e2 (V);
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
-      Sum        : Bivector;
       Result     : Rotor;
    begin
       if X2 > 0.0 then
@@ -45,7 +39,6 @@ package body E3GA_Utilities is
    --  special log() for 3D rotors
    function log (R : Multivectors.Rotor) return Multivectors.Bivector is
       use E3GA;
-      use Multivectors;
       R2       : float;
       R1       : float;
       BV       : Bivector;
@@ -73,7 +66,6 @@ package body E3GA_Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_Rotor (Name : String; R : Multivectors.Rotor) is
-      Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       GA_Utilities.Print_Multivector (Name, R);
    end Print_Rotor;
@@ -81,7 +73,7 @@ package body E3GA_Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Rotor_To_Matrix (R : Multivectors.Rotor;  M : out GA_Maths.GA_Matrix3) is
-      Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
+      Rot : constant GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       M (1, 1) := 1.0 - 2.0 * (Rot (3) * Rot (3) + Rot (4) * Rot (4));
       M (2, 1) := 2.0 * (Rot (2) * Rot (3) + Rot (4) * Rot (1));
@@ -103,7 +95,6 @@ package body E3GA_Utilities is
    function Rotor_Vector_To_Vector (From, To : Multivectors.Vector)
                                     return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
-      use Multivectors;
       S      : float;
       w0     : Vector;
       w1     : Vector;
@@ -143,7 +134,7 @@ package body E3GA_Utilities is
       return Result;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
          raise;
    end Rotor_Vector_To_Vector;
