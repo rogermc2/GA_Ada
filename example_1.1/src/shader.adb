@@ -37,10 +37,38 @@ package body Shader is
     --  -------------------------------------------------------------------------
 
     procedure Set_Model_Matrix (Model_Matrix : Singles.Matrix4;
-                               Render_Uniforms : Uniform_IDs) is
+                                Render_Uniforms : Uniform_IDs) is
     begin
         GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Model_Matrix);
     end Set_Model_Matrix;
 
+   --  -------------------------------------------------------------------------
+
+    procedure Set_Projection_Matrix (Projection_Matrix : Singles.Matrix4;
+                                     Render_Uniforms   : Uniform_IDs) is
+    begin
+      GL.Uniforms.Set_Single
+        (Render_Uniforms.Projection_Matrix_ID, Projection_Matrix);
+    end Set_Projection_Matrix;
+
     --  -------------------------------------------------------------------------
+
+    procedure Set_Model_View_Matrix (MV_Matrix  : Singles.Matrix4;
+                                     Render_Uniforms : Uniform_IDs) is
+    begin
+      GL.Uniforms.Set_Single
+        (Render_Uniforms.Model_View_Matrix_ID, MV_Matrix);
+    end Set_Model_View_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+    procedure Set_Light_Position_Matrix (Light_Position_Matrix : Singles.Matrix4;
+                                         Render_Uniforms       : Uniform_IDs) is
+    begin
+      GL.Uniforms.Set_Single
+        (Render_Uniforms.Light_Position_Matrix_ID, Light_Position_Matrix);
+    end Set_Light_Position_Matrix;
+
+    --  -------------------------------------------------------------------------
+
 end Shader;

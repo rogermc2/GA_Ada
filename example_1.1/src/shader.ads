@@ -17,11 +17,17 @@ package Shader is
       Light_Position_Matrix_ID : GL.Uniforms.Uniform := 0;
    end record;
 
-   procedure Init (Render_Program : in out GL.Objects.Programs.Program;
+   procedure Init (Render_Program  : in out GL.Objects.Programs.Program;
                    Render_Uniforms : out Uniform_IDs);
-   procedure Set_Model_Matrix (Model_Matrix : Singles.Matrix4;
+   procedure Set_Light_Position_Matrix (Light_Position_Matrix : Singles.Matrix4;
+                                        Render_Uniforms       : Uniform_IDs);
+   procedure Set_Model_Matrix (Model_Matrix    : Singles.Matrix4;
                                Render_Uniforms : Uniform_IDs);
-   procedure Set_View_Matrix (View_Matrix : Singles.Matrix4;
+   procedure Set_Model_View_Matrix (MV_Matrix       : Singles.Matrix4;
+                                    Render_Uniforms : Uniform_IDs);
+   procedure Set_Projection_Matrix (Projection_Matrix : Singles.Matrix4;
+                                    Render_Uniforms   : Uniform_IDs);
+   procedure Set_View_Matrix (View_Matrix     : Singles.Matrix4;
                               Render_Uniforms : Uniform_IDs);
 
 end Shader;
