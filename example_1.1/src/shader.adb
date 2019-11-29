@@ -24,6 +24,9 @@ package body Shader is
           Uniform_Location (Render_Program, "mv_matrix");
         Render_Uniforms.Light_Position_Matrix_ID :=
           Uniform_Location (Render_Program, "light_position");
+
+        GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_Matrix_ID,
+                                4.0, 4.0, 4.0);
     end Init;
 
     --  -------------------------------------------------------------------------

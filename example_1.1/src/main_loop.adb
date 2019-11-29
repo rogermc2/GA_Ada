@@ -10,7 +10,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 --  with GL.Objects.Buffers;
 with GL.Objects.Programs;
 --  with GL.Objects.Vertex_Arrays;
-with GL.Objects.Shaders;
 --  with GL.Raster;
 with GL.Rasterization;
 --  with GL.Text;
@@ -26,10 +25,7 @@ with GL.Window;
 with Glfw.Windows.Context;
 
 with Maths;
-with Program_Loader;
 with Utilities;
-
-with GL.Uniforms;
 
 with C3GA;
 with C3GA_Draw;
@@ -39,6 +35,7 @@ with GL_Util;
 with GA_Utilities;
 with Multivectors;
 
+with Shader;
 --  with Silo;
 --  with Text_Management;
 
@@ -55,16 +52,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
 
+    Render_Uniforms : Shader.Uniform_IDs;
     --  rotor g_modelRotor(_rotor(1.0f))
     Model_Rotor     : Multivectors.Rotor;
 --      Rotate_Model    : boolean := False;
 --      Rotate_Model_Out_Of_Plane  : boolean := False;
 --      Pick            : GL_Util.GL_Pick;
-
-   Light_Position_ID  : GL.Uniforms.Uniform;
-   MV_Matrix_ID       : GL.Uniforms.Uniform;
-   Model_Matrix_ID    : GL.Uniforms.Uniform;
-   View_Matrix_ID     : GL.Uniforms.Uniform;
 
     --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
     --                          theText         : String;
@@ -179,8 +172,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Setup_Graphic (Render_Program : out GL.Objects.Programs.Program) is
     --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
 --          use GL.Objects.Buffers;
-        use GL.Objects.Shaders;
-        use Program_Loader;
         --        Font_File : string := "../fonts/Helvetica.ttc";
     begin
         GL.Toggles.Enable (GL.Toggles.Cull_Face);
@@ -193,22 +184,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --        GA_Draw.Set_Point_Size (0.005);
 
         Model_Rotor := Multivectors.New_Rotor;
+        Shader.Init (Render_Program, Render_Uniforms);
 
-
-      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MV_Matrix");
-      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Model_Matrix");
-      View_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "View_Matrix");
-
-        --        Render_Text_Program := Program_Loader.Program_From
+--        Render_Text_Program := Program_Loader.Program_From
         --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
         --           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
         --
         --        Text_Management.Setup (Font_File);
-
-      GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
 
     exception
         when others =>
