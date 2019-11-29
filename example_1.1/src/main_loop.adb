@@ -29,6 +29,8 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with GL.Uniforms;
+
 with C3GA;
 with C3GA_Draw;
 with GA_Draw;
@@ -58,6 +60,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --      Rotate_Model    : boolean := False;
 --      Rotate_Model_Out_Of_Plane  : boolean := False;
 --      Pick            : GL_Util.GL_Pick;
+
+   Light_Position_ID  : GL.Uniforms.Uniform;
+   MV_Matrix_ID       : GL.Uniforms.Uniform;
+   Model_Matrix_ID    : GL.Uniforms.Uniform;
+   View_Matrix_ID     : GL.Uniforms.Uniform;
 
     --      procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
     --                          theText         : String;
@@ -169,7 +176,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Setup_Graphic (Render_Graphic_Program : out GL.Objects.Programs.Program) is
+    procedure Setup_Graphic (Render_Program : out GL.Objects.Programs.Program) is
     --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
 --          use GL.Objects.Buffers;
         use GL.Objects.Shaders;
@@ -187,15 +194,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Model_Rotor := Multivectors.New_Rotor;
 
-        Render_Graphic_Program := Program_Loader.Program_From
-          ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+
+      MV_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "MV_Matrix");
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "Model_Matrix");
+      View_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "View_Matrix");
 
         --        Render_Text_Program := Program_Loader.Program_From
         --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
         --           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
         --
         --        Text_Management.Setup (Font_File);
+
+      GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
+
     exception
         when others =>
             Put_Line ("An exception occurred in Main_Loop.Setup_Graphic.");

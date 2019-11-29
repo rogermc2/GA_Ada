@@ -521,21 +521,17 @@ package body GA_Draw is
         Projection_Matrix    : Matrix4;
         Scale_Matrix         : Matrix4;
         Scale_Sign           : GL.Types.Single;
-        Element_Buffer       : GL.Objects.Buffers.Buffer;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
+        Normals_Buffer       : GL.Objects.Buffers.Buffer;
         Polygon              : Ints.Vector4_Array (1 .. 6);
         Vertices             : Vector3_Array (1 .. 8) :=
                                  (others => (others => 0.0));
         GL_Vertices          : Vector3_Array (1 .. 4) :=
                                  (others => (others => 0.0));
---          Vertex_Buffer_Data : Maths.Vector6_Array (1 .. 6);
---          Quad_Element_Array : Int_Array (1 .. 6);
-
         Vertex               : Vector3;
         Vertex_Vectors       : Ints.Vector3_Array (1 .. 8);
         Vertex_Index         : Int := 0;
-        Vertex_Vec           : Ints.Vector3;
-        Normals_Vec          : Vector3_Array (1 .. 6) :=
+        GL_Normals           : Vector3_Array (1 .. 6) :=
                                  (others => (others => 0.0));
         V1                   : E3GA.Vector;
         V2                   : E3GA.Vector;
@@ -567,7 +563,6 @@ package body GA_Draw is
                     (0, 3, 2, 1));
 
         for Row in Int range 1 .. 8 loop
-            Vertex_Vec := Vertex_Vectors (Row);
             Vertex := (0.0, 0.0, 0.0);
             for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
                 Vertex_Index := Vertex_Vectors (Row) (Col);
@@ -580,11 +575,11 @@ package body GA_Draw is
             end loop;
         end loop;
 
-        for Index in Normals_Vec'Range loop
+        for Index in GL_Normals'Range loop
             V1 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.X)));
             V2 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.Y)));
             V3 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.W)));
-            Normals_Vec (Index) :=
+            GL_Normals (Index) :=
               (Scale_Sign * GL_Util.To_GL (Outer_Product ((V2 - V1), (V3 - V1))));
 
             if Scale >= 0.0 then
@@ -604,11 +599,11 @@ package body GA_Draw is
         Array_Buffer.Bind (Vertex_Buffer);
         Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
                                   Projection_Matrix_ID, Colour_Location);
-        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Vertices, Static_Draw);
 
-        Element_Buffer.Initialize_Id;
-        Element_Array_Buffer.Bind (Element_Buffer);
---          Utilities.Load_Element_Buffer (Element_Array_Buffer, Polygon, Static_Draw);
+        Normals_Buffer.Initialize_Id;
+        Array_Buffer.Bind (Normals_Buffer);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
 
         Init_Projection_Matrix (Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
@@ -617,12 +612,13 @@ package body GA_Draw is
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, Stride, 3);  --  normal
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, Stride, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
                                               First => 0,
                                               Count => 1 * 3);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        GL.Attributes.Disable_Vertex_Attrib_Array (1);
 
     exception
         when  others =>
