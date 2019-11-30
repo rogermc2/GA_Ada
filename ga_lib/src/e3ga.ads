@@ -134,7 +134,7 @@ package E3GA is
    --  Unit_e normalizes rotor R
 --     function Unit_e (R : Rotor) return Rotor;
    --  Unit_e normalizes Vector X
---     function Unit_e (X : Vector) return Vector;
+   function Unit_E (X : Vector) return Vector;
 
 private
 --     type Scalar is record
