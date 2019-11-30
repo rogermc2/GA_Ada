@@ -506,6 +506,7 @@ package body GA_Draw is
                                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                                    V_Coords          : GA_Maths.Array_3D;
                                    Scale             : Float;
+                                   Method            : Trivector_Method_Type;
                                    Colour            : GL.Types.Colors.Color :=
                                      (0.0, 0.0, 0.0, 0.0)) is
 
@@ -604,6 +605,15 @@ package body GA_Draw is
         Normals_Buffer.Initialize_Id;
         Array_Buffer.Bind (Normals_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
+
+        if Method = Draw_TV_Parellelepiped then
+            Draw_Vector (Render_Program => Render_Program,
+                         MV_Matrix      => Model_View_Matrix,
+                         Tail           => Vertices (1),
+                         Direction      => V_Coords,
+                         Colour         => Colour,
+                         Scale          => Scale);
+        end if;
 
         Init_Projection_Matrix (Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
