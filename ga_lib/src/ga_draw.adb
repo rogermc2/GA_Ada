@@ -24,7 +24,6 @@ with GA_Maths;
 
 --  with Blade;
 with Blade_Types;
---  with C3GA;
 with E3GA;
 with E3GA_Utilities;
 --  with Geosphere;
@@ -451,11 +450,8 @@ package body GA_Draw is
 
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         --                           Tail              : Multivectors.Vector;
-                         Direction         : Multivectors.Vector;
-                         Colour            : GL.Types.Colors.Color) is
-    --                           Scale             : float) is
-
+                         aPoint, Direction : C3GA.Vector_E3GA;
+                         Weight : GL.Types.Single; Colour : GL.Types.Colors.Color) is
         use GL.Objects.Buffers;
         --          use GL.Toggles;
         --          use GL.Types.Colors;
@@ -504,7 +500,7 @@ package body GA_Draw is
 
     procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
                                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                                   V_Coords          : GA_Maths.Array_3D;
+                                   V_Coords          : C3GA.Vector_E3GA;
                                    Scale             : Float;
                                    Method            : Trivector_Method_Type;
                                    Colour            : GL.Types.Colors.Color :=
@@ -516,6 +512,8 @@ package body GA_Draw is
         use Singles;
         use E3GA;
 
+        E3_V_Coords          : constant E3GA.Vector :=
+                                 C3GA.Vector_To_E3GA (V_Coords);
         MV_Matrix_ID         : GL.Uniforms.Uniform;
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
@@ -568,9 +566,9 @@ package body GA_Draw is
             for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
                 Vertex_Index := Vertex_Vectors (Row) (Col);
                 if Vertex_Index >= 0 then
-                    Vertex (GL.X) := Vertex (GL.X) + Single (V_Coords (1));
-                    Vertex (GL.Y) := Vertex (GL.Y) + Single (V_Coords (2));
-                    Vertex (GL.Z) := Vertex (GL.Z) + Single (V_Coords (3));
+                    Vertex (GL.X) := Vertex (GL.X) + Single (E3_V_Coords (1));
+                    Vertex (GL.Y) := Vertex (GL.Y) + Single (E3_V_Coords (2));
+                    Vertex (GL.Z) := Vertex (GL.Z) + Single (E3_V_Coords (3));
                     Vertices (Row) := Vertex;
                 end if;
             end loop;
@@ -609,7 +607,7 @@ package body GA_Draw is
         if Method = Draw_TV_Parellelepiped then
             Draw_Vector (Render_Program => Render_Program,
                          MV_Matrix      => Model_View_Matrix,
-                         Tail           => Vertices (1),
+                         Tail           => GL_Util.From_GL (Vertices (1)),
                          Direction      => V_Coords,
                          Colour         => Colour,
                          Scale          => Scale);
@@ -790,8 +788,13 @@ package body GA_Draw is
             null;
         when Draw_TV_Curly_Tail =>
             null;
-        when Draw_TV_Parellelepiped | Draw_TV_Parellelepiped_No_Vectors =>
-            Draw_Parallelepiped (Render_Program, Model_View_Matrix, VC, Scale, Colour);
+        when Draw_TV_Parellelepiped =>
+            Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
+                                 Draw_TV_Parellelepiped, Colour);
+
+        when Draw_TV_Parellelepiped_No_Vectors =>
+            Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
+                                 Draw_TV_Parellelepiped_No_Vectors, Colour);
         end case;
 
     exception
@@ -804,7 +807,7 @@ package body GA_Draw is
 
     procedure Draw_Vector (Render_Program  : GL.Objects.Programs.Program;
                            MV_Matrix       : GL.Types.Singles.Matrix4;
-                           Tail, Direction : Multivectors.Vector;
+                           Tail, Direction : C3GA.Vector_E3GA;
                            Colour          : GL.Types.Colors.Color;
                            Scale           : float := 1.0) is
         use GL.Culling;
@@ -837,16 +840,16 @@ package body GA_Draw is
             GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
             Model_View_Matrix := MV_Matrix;
 
-            if Norm_e2 (Tail) /= 0.0 then
+            if Maths.Norm (GL_Tail) /= 0.0 then
                 Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
             end if;
 
-            Draw_Line (Render_Program, Model_View_Matrix, Direction, Colour);
+            Draw_Line (Render_Program, Model_View_Matrix, Tail, Direction, 1.0, Colour);
 
             --  Setup translation matrix for arrow head
             --  rotate e3 to vector direction
             aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-              (Basis_Vector (Blade_Types.E3_e3),  To_Vector (Unit_e (Direction)));
+              (Basis_Vector (Blade_Types.E3_e3), E3GA.Unit_E (Direction));
             Model_View_Matrix := Identity4;
             if GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix) then
                 Model_View_Matrix := MV_Matrix * Model_View_Matrix;

@@ -38,13 +38,10 @@ package GA_Draw is
                              Method : Bivector_Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         aPoint : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
-                         Colour : GL.Types.Colors.Color);
-    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         --     Tail              : Multivectors.Vector;
-                         Direction         : Multivectors.Vector;
-                         Colour            : GL.Types.Colors.Color);
+                         aPoint, Direction : C3GA.Vector_E3GA;
+                         Weight : GL.Types.Singles;
+                         Colour : GL.Types.Colors.Color;
+                         Method  : Trivector_Method_Type);
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
@@ -53,7 +50,7 @@ package GA_Draw is
                               Method  : Trivector_Method_Type := Draw_TV_Sphere);
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                            MV_Matrix : GL.Types.Singles.Matrix4;
-                           Tail, Direction : Multivectors.Vector;
+                           Tail, Direction : C3GA.Vector_E3GA;
                            Colour : Color; Scale : float := 1.0);
     function Get_Draw_Mode return Draw_Mode;
     function Get_Line_Length return Float;
