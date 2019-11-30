@@ -15,23 +15,31 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-   function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
-   begin
+    function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
+    begin
         return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
-   end From_GL;
+    end From_GL;
 
     --  -------------------------------------------------------------------------
 
---      procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
---          A       : constant GL.Types.Single := 0.3;
---          D       : constant GL.Types.Single := 0.7;
---          Ambient : constant array (1 .. 4) of GL.Types.Single
---            := (A * R, A * G, A * B, 1.0);
---          Dif     : constant array (1 .. 4) of GL.Types.Single
---            := (D * R, D * G, D * B, 1.0);
---      begin
---          null;
---      end GL_Color_3fm;
+    function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
+    begin
+        return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
+                                Float (V3 (GL.Y)));
+    end From_GL;
+
+    --  -------------------------------------------------------------------------
+
+    --      procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
+    --          A       : constant GL.Types.Single := 0.3;
+    --          D       : constant GL.Types.Single := 0.7;
+    --          Ambient : constant array (1 .. 4) of GL.Types.Single
+    --            := (A * R, A * G, A * B, 1.0);
+    --          Dif     : constant array (1 .. 4) of GL.Types.Single
+    --            := (D * R, D * G, D * B, 1.0);
+    --      begin
+    --          null;
+    --      end GL_Color_3fm;
 
     --  ------------------------------------------------------------------
     --  Load_Pick_Matrix
@@ -44,7 +52,7 @@ package body GL_Util is
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
     function Rotor_GL_Multiply (R : Multivectors.Rotor;
                                 GL_Matrix : in out GL.Types.Singles.Matrix4)
-                               return Boolean is
+                                return Boolean is
         use E3GA;
         use Multivectors;
         use GL;
@@ -128,7 +136,7 @@ package body GL_Util is
         use Blade;
         use Blade_Types;
         use GA_Maths;
-        Blades  :constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
+        Blades  : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
         Value   : Double;
@@ -197,17 +205,17 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
-   begin
+    function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
+    begin
         return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
-   end To_GL;
+    end To_GL;
 
     --  -------------------------------------------------------------------------
 
-   function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3 is
-   begin
+    function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3 is
+    begin
         return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
-   end To_GL;
+    end To_GL;
 
     --  ---------------------------------------------------------------------
     procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
@@ -221,7 +229,7 @@ package body GL_Util is
         Window_Width  : Size;
         Window_Height : Size;
         PT1           : constant Vector4 := (Single (Pt_World (1)), Single (Pt_World (2)),
-                          Single (Pt_World (3)), 1.0);
+                                             Single (Pt_World (3)), 1.0);
         PT2           : constant Vector4 := Projection_Matrix * Model_View_Matrix * PT1;
     begin
         --   PT1 := Projection_Matrix * PT2;

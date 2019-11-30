@@ -1,8 +1,9 @@
 
 with GL.Types; use GL.Types;
 
-with GA_Maths;
+with C3GA;
 with E3GA;
+with GA_Maths;
 with Multivectors;
 
 package GL_Util is
@@ -23,6 +24,7 @@ package GL_Util is
     end record;
 
     function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector;
+    function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA;
     --     procedure GL_Color_3fm (R, G, B : GL.Types.Single);
     procedure Load_Pick_Matrix;
     procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
