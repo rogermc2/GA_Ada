@@ -7,7 +7,6 @@ with Multivector_Type;
 with Multivector_Type_Base;
 
 package Multivector_Analyze is
-   use Multivectors;
 
    Flag_Invalid          : constant boolean := false;
    Flag_Valid            : constant boolean := true;

@@ -1,14 +1,12 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E3GA_Utilities;
-with Multivectors;
 with Multivector_Analyze_E2GA;
 with Multivector_Analyze_C3GA;
 
 package body Multivector_Analyze is
 
-   Default_Epsilon_Value : float := 10.0 ** (-5);
+   Default_Epsilon_Value : constant float := 10.0 ** (-5);
 
    --  --------------------------------------------------------------------------
 
@@ -61,7 +59,6 @@ package body Multivector_Analyze is
    --  --------------------------------------------------------------------------
 
    function isBlade (A : MV_Analysis) return Boolean is
-      use Multivector_Type;
    begin
 --        return A.M_Type.Multivector_Kind
       return A.M_Type.Blade_Class /= Non_Blade;
@@ -115,7 +112,6 @@ package body Multivector_Analyze is
 
    procedure Print_Analysis (Name : String; Analysis : MV_Analysis) is
       use Multivector_Type;
-      use Multivector_Type_Base;
    begin
       Put_Line (Name);
       Put_Line ("Valid Flag    " & boolean'Image (Analysis.M_Flags.Valid));
@@ -133,7 +129,7 @@ package body Multivector_Analyze is
       New_Line;
 
    exception
-      when anError :  others =>
+      when  others =>
          Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis.");
          raise;
    end Print_Analysis;
