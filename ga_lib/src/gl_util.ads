@@ -34,6 +34,7 @@ package GL_Util is
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Doubles.Vector3;
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Singles.Vector3;
     function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3;
+    function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3;
     procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
                                     Model_View_Matrix,
                                     Projection_Matrix : GL.Types.Singles.Matrix4;
