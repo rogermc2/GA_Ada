@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -14,7 +13,6 @@ package body Multivector_Analyze_E2GA is
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
       use Multivectors;
-      use Multivector_Analyze;
       use Multivector_Type;
       use Multivector_Type_Base;
       use Blade_List_Package;
@@ -22,8 +20,8 @@ package body Multivector_Analyze_E2GA is
       MV_X      : Multivectors.Multivector := MV;
       Norm_MV_X : Float;
       Blades    : constant Blade_List := Get_Blade_List (MV_X);
-      aBlade    : Blade.Basis_Blade;
-      Curs      : Cursor := Blades.First;
+--        aBlade    : Blade.Basis_Blade;
+      Curs      : constant Cursor := Blades.First;
       MV_Info   : Multivector_Type.MV_Type_Record;
       Analysis  : MV_Analysis;
    begin
@@ -46,7 +44,7 @@ package body Multivector_Analyze_E2GA is
       if Zero (MV_Info) then
          Put_Line ("Multivector_Analyze_E2GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
-         Analysis.M_Scalors (1) := 0.0;
+         Analysis.Scalors (1) := 0.0;
 
       --  Check for Versor
       elsif MV_Kind (MV_Info) = Versor_MV then
@@ -60,7 +58,6 @@ package body Multivector_Analyze_E2GA is
             Analysis.M_Vectors (2) := E2GA.e2;
          else
             declare
-               use E2GA;
             begin
                Analysis.M_Vectors (2) := -E2GA.e2;
             end;
@@ -68,9 +65,9 @@ package body Multivector_Analyze_E2GA is
 
          Analysis.M_Vectors (2) := E2GA.e1;
          --           Analysis.M_Scalors (1) := E2GA.Get_Coord (Norm_E2 (MV_X));
-         Analysis.M_Scalors (1) := Norm_MV_X;
-         Analysis.M_Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
-             (Float (Norm_E2 (MV_X)), Blade.Weight (Element (Curs)));
+         Analysis.Scalors (1) := Norm_MV_X;
+         Analysis.Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
+             (Norm_E2 (MV_X), Blade.Weight (Element (Curs)));
 --               (E2GA.Get_Coord (E2GA.Norm_E2 (MV_X)), MV_X.Coordinates (1));
 
       --  Check for Blade
@@ -88,12 +85,11 @@ package body Multivector_Analyze_E2GA is
             when others =>
                Analysis.M_Type.Blade_Subclass := Unspecified_Subclass;
          end case;
-         Analysis.M_Scalors (1) := Norm_MV_X;
+         Analysis.Scalors (1) := Norm_MV_X;
 
          if Analysis.M_Type.Blade_Subclass = Vector_Subclass then
             Put_Line ("Multivector_Analyze_E2GA.Analyze Vector_Type.");
             declare
-               use E2GA;
                Xn  : Vector;
             begin
                Xn := E2GA.Unit_E (MV_X);
@@ -105,7 +101,6 @@ package body Multivector_Analyze_E2GA is
             Put_Line ("Multivector_Analyze_E2GA.Analyze Bivector_Type.");
             Analysis.M_Vectors (1) := E2GA.e1;
             declare
-               use E2GA;
             begin
 --        BV.Coordinates (1) := MV.Coordinates (4);
                if Blade.Weight (Element (Curs)) < 0.0 then
@@ -118,9 +113,10 @@ package body Multivector_Analyze_E2GA is
       else
          Put_Line ("Multivector_Analyze_E2GA.Analyze Multivector Type.");
       end if;
+      theAnalysis := Analysis;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Analyze_E2GA.Analyze.");
          raise;
    end Analyze;

@@ -825,8 +825,11 @@ package body GA_Draw is
         Colour_Location      : GL.Uniforms.Uniform;
         Model_View_Matrix    : Matrix4;
         Projection_Matrix    : Matrix4;
+        Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
         GL_Tail              : Vector3;
         GL_Dir               : Vector3;
+        MV_Dir               : constant Multivectors.Vector :=
+                                 New_Vector (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
         aRotor               : Rotor;
         Saved_Cull_Face      : constant Face_Selector := Cull_Face;
         Saved_Front_Face     : constant GL.Types.Orientation := GL.Culling.Front_Face;
@@ -853,12 +856,12 @@ package body GA_Draw is
             --  Setup translation matrix for arrow head
             --  rotate e3 to vector direction
             aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-              (Basis_Vector (Blade_Types.E3_e3), E3GA.Unit_E (Direction));
+              (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
             Model_View_Matrix := Identity4;
             if GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix) then
                 Model_View_Matrix := MV_Matrix * Model_View_Matrix;
 
-                if Norm_e2 (Tail) /= 0.0 then
+                if C3GA.Norm_e2 (Tail) /= 0.0 then
                     Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
                 end if;
                 --  Translate to head of vector

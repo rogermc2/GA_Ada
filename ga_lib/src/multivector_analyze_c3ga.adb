@@ -1,8 +1,10 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Blade;
+with GL.Types;
+with Maths;
+
+--  with Blade;
 with Blade_Types;
 with E3GA;
 with GA_Maths;
@@ -27,7 +29,7 @@ package body Multivector_Analyze_C3GA is
                       Probe    : C3GA.Normalized_Point;
                       Flags    : Flag_Type := (Flag_Invalid, false);
                       Epsilon  : float := Default_Epsilon) is
-      use Multivector_Analyze;
+--        use Multivector_Analyze;
       use Multivector_Type;
       use GA_Maths;
 
@@ -85,7 +87,7 @@ package body Multivector_Analyze_C3GA is
       if Zero (Analysis.M_MV_Type) then
          Put_Line ("Multivector_Analyze_C3GA.Analyze Zero_Blade.");
          Analysis.M_Type.Blade_Class := Zero_Blade;
-         Analysis.M_Scalors (1) := 0.0;
+         Analysis.Scalors (1) := 0.0;
 
       elsif MV_Kind (Analysis.M_MV_Type) = Versor_MV then
          Put_Line ("Multivector_Analyze_C3GA.Analyze Versor_Object 2.");
@@ -99,20 +101,20 @@ package body Multivector_Analyze_C3GA is
                Analysis.M_Type.Blade_Class := Scalar_Blade;
                Analysis.M_Type.Blade_Subclass := Scalar_Subclass;
                Analysis.M_Type.M_Grade := 1;
-               Analysis.M_Scalors (1) := Multivectors.Scalar_Part (MV_X);
+               Analysis.Scalors (1) := Multivectors.Scalar_Part (MV_X);
 
             when 5 =>  --  Grade 5 Pseudo scalar
                Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 6.");
                Analysis.M_Type.Blade_Class := Pseudo_Scalar_Blade;
                Analysis.M_Type.Blade_Subclass := Pseudo_Scalar_Subclass;
                Analysis.M_Type.M_Grade := 6;
-               Analysis.M_Scalors (1) := C3GA.NO_E1_E2_E3_NI (MV_X);
+               Analysis.Scalors (1) := C3GA.NO_E1_E2_E3_NI (MV_X);
             when others => Classify;
          end case;
       end if;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze.");
          raise;
    end Analyze;
@@ -127,7 +129,7 @@ package body Multivector_Analyze_C3GA is
       Grade         : Unsigned_Integer :=
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       --  Attitude is a free N-vector
-      Attitude      : Multivector := Negate (Left_Contraction (C3GA.ni, MV));
+      Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV));
       MV_Inverse    : Multivector;
       MV_Inverible  : Boolean;
       MV_Location   : Multivector;
@@ -153,8 +155,8 @@ package body Multivector_Analyze_C3GA is
          end if;
 
          Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
-         theAnalysis.M_Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Location));
-         theAnalysis.M_Scalors (1) := Weight;
+         theAnalysis.Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Location));
+         theAnalysis.Scalors (1) := Weight;
          case Grade is
             when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
             when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
@@ -179,7 +181,7 @@ package body Multivector_Analyze_C3GA is
          Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, multivector MV is not invertible.");
       end if;
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze_Flat.");
          raise;
    end Analyze_Flat;
@@ -192,13 +194,13 @@ package body Multivector_Analyze_C3GA is
       Grade         : constant GA_Maths.Unsigned_Integer :=
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       Weight        : constant Float := Norm_E (MV);
-      Attitude      : Multivector := MV;
+--        Attitude      : constant Multivector := MV;
       Blade_Factors : Multivectors.Multivector_List;
       Scale         : Float;
    begin
       theAnalysis.M_Type.Blade_Class := Free_Blade;
-      theAnalysis.M_Points (1) := (0.0, 0.0, 0.0);
-      theAnalysis.M_Scalors (1) := Weight;
+      theAnalysis.Points (1) := (0.0, 0.0, 0.0);
+      theAnalysis.Scalors (1) := Weight;
       case Grade is
          when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
          when 2 =>  --  F Vector
@@ -225,6 +227,7 @@ package body Multivector_Analyze_C3GA is
 
    procedure Analyze_Round (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector) is
+      use Maths.Single_Math_Functions;
       use GA_Maths;
       use Multivectors;
       MV_X             : Multivector := MV;
@@ -238,6 +241,7 @@ package body Multivector_Analyze_C3GA is
       Location         : Multivector;
       Point_Location   : C3GA.Normalized_Point;
       NI_X2            : Float;
+      Radius           : Float;
       Radius_Sq        : Float;
       Weight           : Float;
       Scale            : Float;
@@ -245,7 +249,7 @@ package body Multivector_Analyze_C3GA is
       if Grade = 0 then
          theAnalysis.M_Type.Blade_Class := Scalar_Blade;
          theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
-         theAnalysis.M_Scalors (1) := Scalar_Part (MV_X);  --  signed weight
+         theAnalysis.Scalors (1) := Scalar_Part (MV_X);  --  signed weight
       else
          theAnalysis.M_Type.Blade_Class := Round_Blade;
          if Grade = 1 then
@@ -268,6 +272,10 @@ package body Multivector_Analyze_C3GA is
             NI_X2 := Scalar_Product (LC_NI_MV, LC_NI_MV);
             Radius_Sq := Scalar_Part
               (Geometric_Product (MV_X, 1.0 / NI_X2 * Grade_Inversion (MV_X)));
+            if Radius_Sq < 0.0 then
+              Radius_Sq := -Radius_Sq;
+            end if;
+            Radius := Float (Sqrt (GL.Types.Single (Abs (Radius_Sq))));
             Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
         --  Format of round
@@ -275,9 +283,10 @@ package body Multivector_Analyze_C3GA is
 	--  m_sc[0] = signed radius
 	--  m_sc[1] = signed weight
 	--  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude
-            theAnalysis.M_Points (1) :=
+            theAnalysis.Points (1) :=
               C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
-            theAnalysis.M_Scalors (1) := Weight;
+            theAnalysis.Scalors (1) := Radius;
+            theAnalysis.Scalors (2) := Weight;
 
             case Grade is
                when 1 =>
@@ -311,7 +320,7 @@ package body Multivector_Analyze_C3GA is
       end if;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze_Round.");
          raise;
    end Analyze_Round;
@@ -326,7 +335,7 @@ package body Multivector_Analyze_C3GA is
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       LC_NI_MV      : Multivector;
       LC_NI_MV_Inv  : Multivector;
-      Attitude      : Multivector :=
+      Attitude      : constant Multivector :=
                         Negate (Outer_Product (LC_NI_MV, C3GA.ni));
       Blade_Factors : Multivectors.Multivector_List;
       Location      : Multivector;
@@ -344,8 +353,8 @@ package body Multivector_Analyze_C3GA is
          Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
          Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
-         theAnalysis.M_Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
-         theAnalysis.M_Scalors (1) := Weight;
+         theAnalysis.Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
+         theAnalysis.Scalors (1) := Weight;
          case Grade is
             when 1 =>
                theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;

@@ -1103,4 +1103,11 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+    function Unit_E (X : C3GA.Vector_E3GA) return GA_Maths.Coords_Continuous_Array is
+    begin
+        return E3GA.Unit_E (Vector_To_E3GA (X));
+    end Unit_E;
+
+    --  ------------------------------------------------------------------------
+
 end C3GA;

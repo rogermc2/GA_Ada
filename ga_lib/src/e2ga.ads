@@ -1,13 +1,9 @@
 
-with Ada.Strings.Unbounded;
-
-with Blade;
 with GA_Maths;
 with Multivectors; use Multivectors;
 with Multivector_Type_Base;
 
 package E2GA is
-   use Blade.Names_Package;
 --     e1_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e1);
 --     e2_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e2);
 

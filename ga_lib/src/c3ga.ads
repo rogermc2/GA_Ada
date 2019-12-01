@@ -146,6 +146,7 @@ package C3GA is
 --     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
 --     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
     function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.Vector;
+    function Unit_E (X : C3GA.Vector_E3GA) return GA_Maths.Coords_Continuous_Array;
 
 private
 

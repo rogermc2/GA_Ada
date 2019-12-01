@@ -1,49 +1,46 @@
 
-with Interfaces;
-
 with Ada.Exceptions; use Ada.Exceptions;
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
 with Blade_Types;
-with GA_Maths;
-with Multivector_Type_Base;
 
 package body E2GA is
 
-   type Basis_Name is (E1b, E2b);
+--     type Basis_Name is (E1b, E2b);
    --     type E2_Base is (e1_b, e2_b);
 
-   type Array_BM4 is array (GA_Maths.Bit_Map range 1 .. 4) of integer;
-   type Array_F4 is array (1 .. 4) of float;
-   type float_3 is digits 3;
+--     type Array_BM4 is array (GA_Maths.Bit_Map range 1 .. 4) of integer;
+--     type Array_F4 is array (1 .. 4) of float;
+--     type float_3 is digits 3;
 
-   MV_Space_Dimension                : constant integer := 2;
-   MV_Metric_Euclidean               : constant boolean := True;
+--     MV_Space_Dimension                : constant integer := 2;
+--     MV_Metric_Euclidean               : constant boolean := True;
    --  MV_Size is a lookup table for the number of coordinates based on a grade usage bitmap
-   MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
+--     MV_Size                           : constant array (0 .. 7) of integer := (0, 1, 2, 3, 1, 2, 3, 4);
    --  MV_Grade_Size is a lookup table for the number of coordinates
    --  in the grade part of a general multivector
-   MV_Grade_Size                     : constant GA_Maths.Grade_Array :=
-     (1, 2, 1);
-   MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
-     ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
-   MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
-   MV_Basis_Element_Sign_By_Bit_Map  : constant Array_BM4 := (1, 1, 1, 1);
+--     MV_Grade_Size                     : constant GA_Maths.Grade_Array :=
+--       (1, 2, 1);
+--     MV_Basis_Elements                 : array (0 .. 3, 1 .. 3) of integer :=
+--       ((-1, -1, -1), (0, -1, -1), (1, -1, -1), (0, 1, -1));
+--     MV_Basis_Element_Sign_By_Index    : constant Array_F4 := (1.0, 1.0, 1.0, 1.0);
+--     MV_Basis_Element_Sign_By_Bit_Map  : constant Array_BM4 := (1, 1, 1, 1);
    --  MV_Basis_Element_Index_By_Bit_Map contains the order of basis elements in the general multivector
    --  Use it to answer: 'at what index do I find basis element [x] (x = basis vector bitmap)?'
-   MV_Basis_Element_Index_By_Bit_Map : constant Array_BM4 := (0, 1, 2, 3);
+--     MV_Basis_Element_Index_By_Bit_Map : constant Array_BM4 := (0, 1, 2, 3);
    --  MV_Basis_Element_Bit_Map_By_Index contains the indices of basis elements in the general multivector
    --  Use it to answer: 'what basis element do I find at index [x]'?
-   MV_Basis_Element_Bit_Map_By_Index : constant GA_Maths.Array_I4 := (0, 1, 2, 3);
-   MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
+--     MV_Basis_Element_Bit_Map_By_Index : constant GA_Maths.Array_I4 := (0, 1, 2, 3);
+--     MV_Basis_Element_Grade_By_Bit_Map : constant Array_BM4 := (0, 1, 1, 2);
    --     MV_Basis_Vector_Names             : constant array (1 .. 2) of string (1 .. 2) := ("e1", "e2");
    MV_Basis_Vector_Names             : Blade.Basis_Vector_Names;
 
    --     e1_basis : Vector_Coords := (1.0, 0.0);
    --     e2_basis : Vector_Coords := (0.0, 1.0);
-   e1_basis : Bivector;
-   e2_basis : Bivector;
+--     e1_basis : Bivector;
+--     e2_basis : Bivector;
 
    --  -------------------------------------------------------------------------
 
@@ -108,7 +105,7 @@ package body E2GA is
    --     function Bivector_String (BV : Bivector; Text : String := "") return String is
    function Bivector_String (BV : Multivectors.Bivector) return String is
       use Ada.Strings.Unbounded;
-      MV : Multivectors.Multivector := BV;
+      MV : constant Multivectors.Multivector := BV;
    begin
       return To_String (Multivectors.Multivector_String
                         (MV, MV_Basis_Vector_Names));
@@ -188,7 +185,7 @@ package body E2GA is
       return Basis;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E2GA.e1.");
          raise;
    end e1;
@@ -201,7 +198,7 @@ package body E2GA is
       return Component (MV, E2_Base'Enum_Rep (E2_e1));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E2GA.e1.");
          raise;
    end e1;
@@ -209,14 +206,13 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function e2 return Multivectors.Vector is
-      use Multivectors.Blade_List_Package;
       use Blade_Types;
       Basis : Multivectors.Vector;
    begin
       Multivectors.Add_Blade (Basis, E2_e2, 1.0);
       return Basis;
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E2GA.e1.");
          raise;
    end e2;
@@ -229,7 +225,7 @@ package body E2GA is
       return Component (MV, E2_Base'Enum_Rep (E2_e2));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E2GA.e2.");
          raise;
    end e2;
@@ -237,7 +233,6 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function e1_e2 (BV : Multivectors.Bivector) return float is
-      use Blade;
       use Blade_Types;
       use GA_Maths;
       BM_E12   : constant Unsigned_Integer :=
@@ -247,7 +242,7 @@ package body E2GA is
       return Component (BV, BM_E12);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in E2GA.e1_e2.");
          raise;
    end e1_e2;
@@ -348,8 +343,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coord_1 (V : Multivectors.Vector) return float is
-      use Multivectors.Blade_List_Package;
-      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.First_Element);
    end Get_Coord_1;
@@ -357,8 +351,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coord_2 (V : Multivectors.Vector) return float is
-      use Multivectors.Blade_List_Package;
-      Blades : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.Last_Element);
    end Get_Coord_2;
@@ -377,9 +370,8 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coords (V : Multivectors.Vector) return GA_Maths.Array_F2 is
-      use Multivectors.Blade_List_Package;
       use Blade;
-      Blades   : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades   : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return (Weight (Blades.First_Element), Weight (Blades.Last_Element));
    end Get_Coords;
@@ -924,10 +916,9 @@ package body E2GA is
    --  -------------------------------------------------------------------------
 
    function Unit_E (V : Multivectors.Vector) return Multivectors.Vector is
-      use Multivectors.Blade_List_Package;
       use Blade;
       use Blade_Types;
-      Blades  : Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades   : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
       C1       : constant float := Weight (Blades.First_Element);
       C2       : constant float := Weight (Blades.Last_Element);
       e2s      : constant float :=  C1 * C1 + C2 * C2;
