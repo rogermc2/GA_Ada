@@ -18,6 +18,7 @@ package GA_Draw is
                                   Draw_Bivector_Parallelogram_No_Vectors,
                                   Draw_Bivector_Cross, Draw_Bivector_Curly_Tail,
                                   Draw_Bivector_Swirl, Draw_Bivector_Circle_Outline);
+
     type Trivector_Method_Type is (Draw_TV_Sphere, Draw_TV_Cross, Draw_TV_Curly_Tail,
                                    Draw_TV_Parellelepiped,
                                    Draw_TV_Parellelepiped_No_Vectors);
@@ -39,9 +40,8 @@ package GA_Draw is
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint, Direction : C3GA.Vector_E3GA;
-                         Weight : GL.Types.Singles;
-                         Colour : GL.Types.Colors.Color;
-                         Method  : Trivector_Method_Type);
+                         Weight : GL.Types.Single;
+                         Colour : GL.Types.Colors.Color);
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;

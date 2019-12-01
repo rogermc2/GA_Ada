@@ -73,7 +73,6 @@ package Multivector_Analyze is
    type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
 
    type MV_Analysis is record
-      --
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
       M_MV_Type        : Multivector_Type.MV_Type_Record;
@@ -83,7 +82,7 @@ package Multivector_Analyze is
       Pseudo_Scalar    : Boolean := False;
       Versor_Kind      : Versor_Subclass_Type := Not_A_Versor;
       --  Each analyzed multivector is decomposed into
-      --  (analysis dependent) points, vectors and scalars.
+      --  (analysis dependent) points, scalars and vectors.
       Points           : Point_Array;   --  E3GA.Vector array
       Scalors          : Scalar_Array;  --  Float array
       M_Vectors        : Vector_Array;  --  Multivectors.Vector array

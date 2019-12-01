@@ -461,6 +461,9 @@ package body GA_Draw is
         Projection_Matrix_ID : GL.Uniforms.Uniform;
         Colour_Location      : GL.Uniforms.Uniform;
         Projection_Matrix    : GL.Types.Singles.Matrix4;
+        Scale                : constant GL.Types.Singles.Matrix4 :=
+                                 Maths.Scaling_Matrix (Weight);
+        Translation          : GL.Types.Singles.Matrix4;
         GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
         Dir_e1               : constant Single := GL_Dir (GL.X);
         Dir_e2               : constant Single := GL_Dir (GL.Y);
@@ -477,9 +480,10 @@ package body GA_Draw is
                                   Projection_Matrix_ID, Colour_Location);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
+        Translation := Maths.Translation_Matrix (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
         Init_Projection_Matrix (Projection_Matrix);
         GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-        GL.Uniforms.Set_Single (MV_Matrix_ID, Model_View_Matrix);
+        GL.Uniforms.Set_Single (MV_Matrix_ID, Translation * Scale * Model_View_Matrix);
         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
