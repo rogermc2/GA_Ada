@@ -123,8 +123,8 @@ package body Multivector_Analyze is
       Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
       Put_Line ("Versor_Kind   " & Versor_Subclass_Type'Image (Analysis.Versor_Kind));
       Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
-      Put_Line ("Points  array length  " & integer'Image (Analysis.M_Points'Length));
-      Put_Line ("Scalars array length  " & integer'Image (Analysis.M_Scalors'Length));
+      Put_Line ("Points  array length  " & integer'Image (Analysis.Points'Length));
+      Put_Line ("Scalars array length  " & integer'Image (Analysis.Scalors'Length));
       Put_Line ("Vectors array length  " & integer'Image (Analysis.M_Vectors'Length));
       New_Line;
 
