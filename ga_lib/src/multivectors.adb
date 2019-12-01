@@ -1,11 +1,9 @@
 --  Derived from ga_ref_impl Multivector.java
 
+with Interfaces;
+
+with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
-
-with Maths;
-with Utilities;
-
-with GA_Utilities;
 
 package body Multivectors is
 
@@ -104,7 +102,7 @@ package body Multivectors is
       return MV3;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.+");
          raise;
    end "+";
@@ -133,7 +131,7 @@ package body Multivectors is
       return Neg_MV;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.-");
          raise;
    end "-";
@@ -141,12 +139,12 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function "-" (MV1, MV2 : Multivector) return Multivector is
-      Neg_MV2   : Multivector := -MV2;
+      Neg_MV2   : constant Multivector := -MV2;
    begin
       return MV1 + Neg_MV2;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.- 2");
          raise;
    end "-";
@@ -155,7 +153,7 @@ package body Multivectors is
 
    function "*" (Scale : float; MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades   : Blade_List := Get_Blade_List (MV);
+      Blades   : constant Blade_List := Get_Blade_List (MV);
       Curs     : Cursor := Blades.First;
       aBlade   : Basis_Blade;
       New_MV   : Multivector := MV;
@@ -184,7 +182,7 @@ package body Multivectors is
 
    function "/" (MV : Multivector; Scale : float) return Multivector is
       use Blade_List_Package;
-      Blades   : Blade_List := Get_Blade_List (MV);
+      Blades   : constant Blade_List := Get_Blade_List (MV);
       Curs     : Cursor := Blades.First;
       aBlade   : Basis_Blade;
       New_MV   : Multivector := MV;
@@ -216,7 +214,7 @@ package body Multivectors is
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Add_Blade 1");
          raise;
    end Add_Blade;
@@ -228,7 +226,7 @@ package body Multivectors is
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Add_Blade 2");
          raise;
    end Add_Blade;
@@ -240,7 +238,7 @@ package body Multivectors is
       MV.Blades.Append (Blade.New_Basis_Blade (Index, Value));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Add_Blade 2");
          raise;
    end Add_Blade;
@@ -249,14 +247,13 @@ package body Multivectors is
 
    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
                             BB, GP : Blade.Basis_Blade) is
-      use Blade;
       BMB  : constant Integer := Integer (Bitmap (BB)) + 1;
       BMGP : constant Integer := Integer (Bitmap (GP)) + 1;
    begin
       M (BMGP, BMB) :=  M (BMGP, BMB) + Weight (GP);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Add_To_Matrix 1");
          Put_Line ("BMB, BMGP: " & Integer'Image (BMB) &  Integer'Image (BMGP));
          raise;
@@ -264,21 +261,21 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   procedure Add_To_Matrix (M       : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
-                            Blades  : Blade_List) is
-      use Blade_List_Package;
-      Curs    : Cursor := Blades.First;
-   begin
-      while Has_Element (Curs) loop
-         Add_To_Matrix (M, BB, Element (Curs));
-         Next (Curs);
-      end loop;
-
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
-         raise;
-   end Add_To_Matrix;
+--     procedure Add_To_Matrix (M       : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
+--                              Blades  : Blade_List) is
+--        use Blade_List_Package;
+--        Curs    : Cursor := Blades.First;
+--     begin
+--        while Has_Element (Curs) loop
+--           Add_To_Matrix (M, BB, Element (Curs));
+--           Next (Curs);
+--        end loop;
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
+--           raise;
+--     end Add_To_Matrix;
 
    --  -------------------------------------------------------------------------
 
@@ -314,7 +311,7 @@ package body Multivectors is
       return MV;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Basis_Vector.");
          raise;
    end Basis_Vector;
@@ -356,7 +353,7 @@ package body Multivectors is
       return Value;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Component");
          raise;
    end Component;
@@ -439,7 +436,7 @@ package body Multivectors is
    function Cosine_Series (MV : Multivector; Order : Integer)
                             return Multivector is
       use GA_Maths;
-      Scaled    : Multivector := MV;
+      Scaled    : constant Multivector := MV;
       Scaled_GP : Multivector;
       Temp      : Multivector := Scaled;
       Sign      : Integer := -1;
@@ -467,7 +464,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Dual (MV : Multivector) return Multivector is
-      use Blade_List_Package;
       use GA_Maths;
       Index   : constant Unsigned_Integer := 2 ** Space_Dimension (MV) - 1;
       Dual_MV : Multivector;
@@ -483,7 +479,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Dual (MV : Multivector; Dim : Integer) return Multivector is
-      use Blade_List_Package;
       use GA_Maths;
       Index   : constant Unsigned_Integer := 2 ** Dim - 1;
       Dual_MV : Multivector;
@@ -496,45 +491,44 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
    --  Possibly imprecise
-   function Exp_Series (MV : Multivector; Order : Integer)
-                         return Multivector is
-      Scaled    : Multivector;
-      Scaled_GP : Multivector;
-      Temp      : Multivector := New_Multivector (1.0);
-      Sign      : Integer := -1;
-      Scale     : Integer := 1;
-      Max       : Float := Norm_E (MV);
-      Result    : Multivector := Temp;
-   begin
-      if Max > 1.0 then
-         Scale := 2;
-      end if;
-      while Max > 1.0 loop
-         Max := Max / 2.0;
-         Scale := 2 * Scale;
-      end loop;
-      Scaled := Geometric_Product (MV, 1.0 / Float (Scale));
-
-      --  Taylor approximation
-      for Count in 1 .. Order loop
-         Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
-         Temp := Geometric_Product (Temp, Scaled_GP);
-         Result := Result + Temp;
-      end loop;
-
-      --  Undo scaling
-      while Scale > 1 loop
-         Result := Geometric_Product (Result, Result);
-         Scale := Scale / 2;
-      end loop;
-      return Result;
-   end Exp_Series;
+--     function Exp_Series (MV : Multivector; Order : Integer)
+--                           return Multivector is
+--        Scaled    : Multivector;
+--        Scaled_GP : Multivector;
+--        Temp      : Multivector := New_Multivector (1.0);
+--        Sign      : constant Integer := -1;
+--        Scale     : Integer := 1;
+--        Max       : Float := Norm_E (MV);
+--        Result    : Multivector := Temp;
+--     begin
+--        if Max > 1.0 then
+--           Scale := 2;
+--        end if;
+--        while Max > 1.0 loop
+--           Max := Max / 2.0;
+--           Scale := 2 * Scale;
+--        end loop;
+--        Scaled := Geometric_Product (MV, 1.0 / Float (Scale));
+--
+--        --  Taylor approximation
+--        for Count in 1 .. Order loop
+--           Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
+--           Temp := Geometric_Product (Temp, Scaled_GP);
+--           Result := Result + Temp;
+--        end loop;
+--
+--        --  Undo scaling
+--        while Scale > 1 loop
+--           Result := Geometric_Product (Result, Result);
+--           Scale := Scale / 2;
+--        end loop;
+--        return Result;
+--     end Exp_Series;
 
    --  -------------------------------------------------------------------------
 
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector is
       use Blade_List_Package;
-      use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
       Curs      : Cursor := Blades.First;
@@ -552,7 +546,7 @@ package body Multivectors is
       end loop;
 
       declare
-         Keep : array (0 .. Max_Grade + 1) of Boolean
+         Keep : constant array (0 .. Max_Grade + 1) of Boolean
            := (others => True);
       begin
          while Has_Element (Curs) loop
@@ -588,7 +582,6 @@ package body Multivectors is
 
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
       use Blade_List_Package;
-      use Blade;
       use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       Curs      : Cursor := Blades.First;
@@ -619,7 +612,6 @@ package body Multivectors is
 
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
       use Blade_List_Package;
-      use GA_Maths;
       Blades_1  : constant Blade_List := MV1.Blades;
       Blades_2  : constant Blade_List := MV2.Blades;
       Curs_1    : Cursor := Blades_1.First;
@@ -658,13 +650,8 @@ package body Multivectors is
 
    function General_Inverse (MV  : Multivector;
                              Inv : out Multivector) return Boolean is
-      use Interfaces;
       use Blade_List_Package;
-      use Blade;
       use GA_Maths;
-      use GA_Maths.Float_Array_Package;
-      use GA_Maths.Float_Functions;
-      use Metric;
       Dim        : constant Integer :=  Space_Dimension (MV);
       Max_G      : constant Integer := 2 ** (Dim + 1);
       Blades     : constant Blade_List := MV.Blades;
@@ -692,7 +679,7 @@ package body Multivectors is
       return Matrix_To_MV_Invert (Mat, BBs, Inv);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.General_Inverse");
          raise;
    end General_Inverse;
@@ -701,11 +688,8 @@ package body Multivectors is
 
    function General_Inverse (MV  : Multivector;  Met : Metric.Metric_Record;
                              Inv : out Multivector) return Boolean is
-      use Interfaces;
       use Blade_List_Package;
-      use Blade;
       use GA_Maths;
-      use GA_Maths.Float_Array_Package;
       use Metric;
       Dim        : constant Integer :=  Space_Dimension (MV);
       Max_G      : constant Integer := 2 ** (Dim + 1);
@@ -734,7 +718,7 @@ package body Multivectors is
       return  Matrix_To_MV_Invert (Mat, BBs, Inv);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.General_Inverse Metric");
          raise;
    end General_Inverse;
@@ -770,12 +754,10 @@ package body Multivectors is
    function Get_Blade (MV    : Multivector; theBlade : out Multivector;
                        Index : GA_Maths.Unsigned_Integer) return Boolean is
       use Blade_List_Package;
-      use Blade;
       use GA_Maths;
-      Blades   : Blade_List := MV.Blades;
+      Blades   : constant Blade_List := MV.Blades;
       Curs     : Cursor := Blades.First;
       Found    : Boolean := False;
-
    begin
       while Has_Element (Curs) and not Found loop
          Found := Bitmap (Element (Curs)) = Index;
@@ -815,16 +797,11 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Grade_Inversion (MV : Multivector) return Multivector is
-      use GA_Maths;
-      use Interfaces;
       use Blade_List_Package;
       Blades        : constant Blade_List := MV.Blades;
       Inversion     : Blade_List;
       thisBlade     : Blade.Basis_Blade;
       Cursor_B      : Cursor := Blades.First;
-      GU            : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
-      Largest_Part  : Multivector;
-      Max_Norm      : Float := 0.0;
    begin
       while Has_Element (Cursor_B) loop
          thisBlade := Element (Cursor_B);
@@ -849,7 +826,7 @@ package body Multivectors is
       while Has_Element (Cursor_B) loop
          BB := Element (Cursor_B);
          GU_Bitmap := GU_Bitmap or
-           Shift_Left (1, Integer (Blade.Grade (BB)));
+           Shift_Left (1, Blade.Grade (BB));
          Next (Cursor_B);
       end loop;
       return Unsigned_Integer (GU_Bitmap);
@@ -859,12 +836,11 @@ package body Multivectors is
 
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                             return Multivector is
-      use Ada.Containers;
       use Blade_List_Package;
       B1       : Blade.Basis_Blade;
       B2       : Blade.Basis_Blade;
-      List_1   : Blade_List := MV1.Blades;
-      List_2   : Blade_List := MV2.Blades;
+      List_1   : constant Blade_List := MV1.Blades;
+      List_2   : constant Blade_List := MV2.Blades;
       Cursor_1 : Cursor := List_1.First;
       Cursor_2 : Cursor;
       IP       : Blade.Basis_Blade;
@@ -894,7 +870,7 @@ package body Multivectors is
                                  BBs    : in out Basis_Blade_Array;
                                  Inv_MV : out Multivector) return Boolean is
       use GA_Maths.Float_Array_Package;
-      Dim           : Integer := Mat'Last - Mat'First + 1;
+      Dim           : constant Integer := Mat'Last - Mat'First + 1;
       Inv_Mat       : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
       Value         : Float;
       Blades        : Blade_List;
@@ -914,7 +890,7 @@ package body Multivectors is
       return Invertable;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Matrix_To_MV_Invert");
          raise;
    end Matrix_To_MV_Invert;
@@ -931,7 +907,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean is
-      S : Float := Norm_E2 (MV);
+      S : constant Float := Norm_E2 (MV);
    begin
       return S < Epsilon * Epsilon;
    end Is_Null;
@@ -942,7 +918,7 @@ package body Multivectors is
       use Ada.Containers;
       use Blade_List_Package;
       use GA_Maths;
-      Blades : Blade_List := MV.Blades;
+      Blades : constant Blade_List := MV.Blades;
       Result : Boolean := Is_Null (MV);
    begin
       if not Result and then Blades.Length = 1 then
@@ -954,8 +930,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade is
-      use GA_Maths;
-      use Interfaces;
       use Blade_List_Package;
       theMV          : Multivector := MV;
       Blades         : constant Blade_List := theMV.Blades;
@@ -987,7 +961,7 @@ package body Multivectors is
                                  return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade_List_Package;
-      Blades        : Blade_List := MV.Blades;
+      Blades        : constant Blade_List := MV.Blades;
       Blade_Cursor  : Cursor := Blades.First;
       thisBlade     : Blade.Basis_Blade;
       Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
@@ -998,7 +972,7 @@ package body Multivectors is
          Blade_UBS := Blade.Blade_String (thisBlade, BV_Names);
          if Length (Blade_UBS) > 0 then
             declare
-               Blade_String : String := To_String (Blade_UBS);
+               Blade_String : constant String := To_String (Blade_UBS);
             begin
                New_Line;
                if Blade_Cursor = Blades.First then
@@ -1019,7 +993,7 @@ package body Multivectors is
       return theString;
 
    exception
-      when anError :  others =>
+      when anError : others =>
          Put_Line ("An exception occurred in Multivector.Multivector_String.");
          Put_Line (Exception_Information (anError));
          raise;
@@ -1050,7 +1024,7 @@ package body Multivectors is
 
    function Negate (MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades : Blade_List := MV.Blades;
+      Blades : constant Blade_List := MV.Blades;
       Curs   : Cursor := Blades.First;
       aBlade : Blade.Basis_Blade;
       Neg    : Multivector;
@@ -1067,7 +1041,6 @@ package body Multivectors is
    --  -----------------------------------------------------------
 
    function New_Bivector (V1, V2 : Vector) return Bivector is
-      BV : Bivector;
    begin
       return Bivector (Outer_Product (V1, V2));
    end New_Bivector;
@@ -1145,9 +1118,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function New_Vector (e1, e2 : Float) return Vector is
-      use Blade;
       V       : Vector;
-      Blades  : Blade_List := Get_Blade_List (V);
    begin
       Add_Blade (V, New_Basis_Blade (E2_e1, e1));
       Add_Blade (V, New_Basis_Blade (E2_e2, e2));
@@ -1157,9 +1128,7 @@ package body Multivectors is
    --  ------------------------------------------------------------------------
 
    function New_Vector (e1, e2, e3 : Float) return Vector is
-      use Blade;
       V       : Vector;
-      Blades  : Blade_List := Get_Blade_List (V);
    begin
       Add_Blade (V, New_Basis_Blade (E3_e1, e1));
       Add_Blade (V, New_Basis_Blade (E3_e2, e2));
@@ -1184,7 +1153,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Norm_E2 (MV : Multivector) return Float is
-      use GA_Maths.Float_Functions;
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
@@ -1196,7 +1164,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Norm_R (MV : Multivector) return Float is
-      use Multivectors;
       use GA_Maths.Float_Functions;
    begin
       return Sqrt (Abs (Scalar_Part (Dot (MV, MV))));
@@ -1205,7 +1172,6 @@ package body Multivectors is
    --  ------------------------------------------------------------------------
 
    function Norm_R2 (MV : Multivector) return Float is
-      use Multivectors;
    begin
       return Scalar_Part (Dot (MV, MV));
    end Norm_R2;
@@ -1213,7 +1179,6 @@ package body Multivectors is
    --  ------------------------------------------------------------------------
 
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
-      use Ada.Containers;
       use Blade_List_Package;
       Sorted    : Boolean;
 
@@ -1265,7 +1230,7 @@ package body Multivectors is
       end if;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Outer_Product.");
          raise;
    end Outer_Product;
@@ -1274,7 +1239,7 @@ package body Multivectors is
 
    function Reverse_MV (MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades     : Blade_List := MV.Blades;
+      Blades     : constant Blade_List := MV.Blades;
       B_Cursor   : Cursor := Blades.First;
       Rev_Blades : Blade_List;
       Rev_MV     : Multivector;
@@ -1301,7 +1266,7 @@ package body Multivectors is
       MV         : Multivector;
       Blades     : constant Blade_List := MV.Blades;
       Curs       : Cursor := Blades.First;
-      Invertible : Boolean := General_Inverse (R, MV);
+      Invertible : constant Boolean := General_Inverse (R, MV);
    begin
       if Invertible then
          while Has_Element (Curs) loop
@@ -1318,7 +1283,7 @@ package body Multivectors is
       use Blade_List_Package;
       use GA_Maths;
       BB       : Blade.Basis_Blade;
-      Blades   : Blade_List := MV.Blades;
+      Blades   : constant Blade_List := MV.Blades;
       B_Cursor : Cursor := Blades.First;
       Sum      : Float := 0.0;
    begin
@@ -1342,7 +1307,6 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    procedure Simplify (MV : in out Multivector) is
-      use Blade_List_Package;
       Blades : Blade_List := MV.Blades;
       Sorted : Boolean;
    begin
@@ -1439,7 +1403,7 @@ package body Multivectors is
 
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector is
       use GA_Maths;
-      Scaled    : Multivector := MV;
+      Scaled    : constant Multivector := MV;
       Scaled_GP : Multivector;
       Temp      : Multivector := Scaled;
       Sign      : Integer := -1;
@@ -1461,8 +1425,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function MV_Size (MV : Multivector) return Natural is
-      use Blade_List_Package;
-      Blades  : Blade_List := MV.Blades;
+      Blades  : constant Blade_List := MV.Blades;
    begin
       return Natural (Blades.Length);
    end MV_Size;
@@ -1472,7 +1435,7 @@ package body Multivectors is
    function Space_Dimension (MV : Multivector) return Integer is
       use Blade_List_Package;
       use GA_Maths;
-      Blades       : Blade_List := MV.Blades;
+      Blades       : constant Blade_List := MV.Blades;
       Blade_Cursor : Cursor := Blades.First;
       High_Bit     : Integer;
       Max_Dim      : Integer := 0;
@@ -1492,12 +1455,12 @@ package body Multivectors is
       use GA_Maths;
       Max_Grade_Count : Integer := 0;
       Grade_Count     : Integer := 0;
-      Blades          : Blade_List := MV.Blades;
+      Blades          : constant Blade_List := MV.Blades;
       Blade_Cursor    : Cursor := Blades.First;
    begin
       while Has_Element (Blade_Cursor) loop
          --  Grade_Count = bit count
-         Grade_Count := Integer (Blade.Grade (Element (Blade_Cursor)));
+         Grade_Count := Blade.Grade (Element (Blade_Cursor));
          Max_Grade_Count := Maximum (Max_Grade_Count, Grade_Count);
          Next (Blade_Cursor);
       end loop;
@@ -1542,7 +1505,7 @@ package body Multivectors is
       return Unit_R (MV);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Unit_E.");
          raise;
    end Unit_E;
@@ -1551,7 +1514,7 @@ package body Multivectors is
 
    function Unit_R (MV : Multivector) return Multivector is
       use GA_Maths.Float_Functions;
-      theNorm  : Float := Scalar_Product (MV, Reverse_MV (MV));
+      theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if theNorm = 0.0 then
          Put_Line ("Multivector.Unit_R encountered a null multivector");
@@ -1561,7 +1524,7 @@ package body Multivectors is
       return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Unit_R.");
          raise;
    end Unit_R;
@@ -1578,9 +1541,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float) is
-      use Blade_List_Package;
-      use Blade;
-      Blades    : Blade_List := Get_Blade_List (MV);
+      Blades    : constant Blade_List := Get_Blade_List (MV);
    begin
       MV.Blades.Replace_Element (Blades.First, New_Scalar_Blade (Value));
    end Update_Scalar_Part;
@@ -1599,7 +1560,7 @@ package body Multivectors is
       return Rev / S_Product;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector.Versor_Inverse.");
          raise;
    end Versor_Inverse;

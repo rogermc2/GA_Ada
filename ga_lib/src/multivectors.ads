@@ -1,8 +1,5 @@
 
-with Interfaces;
-
 with Ada.Containers.Doubly_Linked_Lists;
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
 with Blade;
