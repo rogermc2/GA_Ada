@@ -1,22 +1,13 @@
 
---  with Ada.Exceptions; use Ada.Exceptions;
 --  with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with GL.Attributes;
---  with GL.Buffers;
---  with GL.Culling;
---  with GL.Immediate;
---  with GL.Objects.Buffers;
 with GL.Objects.Programs;
---  with GL.Objects.Vertex_Arrays;
---  with GL.Raster;
 with GL.Rasterization;
 --  with GL.Text;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
---  with GL.Uniforms;
 
 with Glfw;
 with Glfw.Input;
@@ -31,7 +22,6 @@ with C3GA;
 with C3GA_Draw;
 with GA_Draw;
 with GL_Util;
---  with E3GA;
 with GA_Utilities;
 with Multivectors;
 
@@ -52,7 +42,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
 
-    Render_Uniforms : Shader.Uniform_IDs;
+    Render_Uniforms : Shader.Shader_Uniforms;
     --  rotor g_modelRotor(_rotor(1.0f))
     Model_Rotor     : Multivectors.Rotor;
 --      Rotate_Model    : boolean := False;
@@ -184,7 +174,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --        GA_Draw.Set_Point_Size (0.005);
 
         Model_Rotor := Multivectors.New_Rotor;
+        Put_Line ("Main_Loop.Setup_Graphic Shader.Init.");
         Shader.Init (Render_Program, Render_Uniforms);
+        Put_Line ("Main_Loop.Setup_Graphic OK.");
 
 --        Render_Text_Program := Program_Loader.Program_From
         --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
