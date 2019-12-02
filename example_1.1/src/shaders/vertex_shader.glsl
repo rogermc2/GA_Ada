@@ -2,7 +2,9 @@
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_normal;
+layout(location = 2) in vec4 vertex_colour;
 
+out vec4 v_colour;
 out vec3 Position_Worldspace;
 out vec3 Camera_Normal;
 out vec3 Eye_Direction;
@@ -15,8 +17,9 @@ uniform mat4 projection_matrix;
 uniform vec3 light_position;
 
 void main()
-  {
-   gl_Position = projection_matrix * mv_matrix * vec4(vertex_position, 1);
+    {
+      v_colour = vertex_colour;
+      gl_Position = projection_matrix * mv_matrix * vec4(vertex_position, 1);
       Position_Worldspace = (model_matrix * vec4(vertex_position, 1)).xyz;
       
       // Vector that goes from the vertex to the camera, in camera space.
@@ -27,7 +30,7 @@ void main()
       vec3 LightPosition = (view_matrix * vec4(light_position, 1)).xyz;
       Light_Direction = Light_Direction + Eye_Direction;
 
-   Camera_Normal = (view_matrix * model_matrix * vec4(vertex_normal, 0)).xyz;
-    // Only correct if Model_Matrix does not scale the model !
-    // Use its inverse transpose if not.
-  }
+       Camera_Normal = (view_matrix * model_matrix * vec4(vertex_normal, 0)).xyz;
+        // Only correct if Model_Matrix does not scale the model !
+        // Use its inverse transpose if not.
+    }
