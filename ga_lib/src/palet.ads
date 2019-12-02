@@ -13,32 +13,29 @@ package Palet is
     type Draw_State is private;
     type Colour_Palet is private;
 
-    function Background_Colour return Color;
-    function Background_Red return Single;
-    function Background_Green return Single;
-    function Background_Blue return Single;
-    function Colour_Null return Boolean;
-    function Colour_Null (Palet_Type : Colour_Palet) return Boolean;
-    function Foreground_Alpha return Single;
-    function Foreground_Alpha (Palet_Type : Colour_Palet) return Single;
-    function Foreground_Blue return Single;
-    function Foreground_Colour return Color;
-    function Foreground_Green return Single;
-    function Foreground_Red return Single;
+    function Background_Colour (Palet_Data : Colour_Palet) return Color;
+    function Background_Red (Palet_Data : Colour_Palet) return Single;
+    function Background_Green (Palet_Data : Colour_Palet) return Single;
+    function Background_Blue (Palet_Data : Colour_Palet) return Single;
+    function Colour_Null (Palet_Data : Colour_Palet) return Boolean;
+    function Foreground_Alpha (Palet_Data : Colour_Palet) return Single;
+    function Foreground_Blue (Palet_Data : Colour_Palet) return Single;
+    function Foreground_Colour (Palet_Data : Colour_Palet) return Color;
+    function Foreground_Green (Palet_Data  : Colour_Palet) return Single;
+    function Foreground_Red (Palet_Data : Colour_Palet) return Single;
     function Get_Draw_Mode return Draw_Mode;
     function Line_Length return Float;
-    function Ol_Colour return Color;
+    function Ol_Colour (Palet_Data : Colour_Palet) return Color;
     function Point_Size return Float;
 
-    procedure Set_Background_Alpa (Alpa : Float);
-    procedure Set_Background_Colour (Back_Colour : Color);
-    procedure Set_Foreground_Alpa (Alpa : Float);
-    procedure Set_Foreground_Colour (Fore_Colour : Color);
-   procedure Set_Foreground_Colour (Palet_Type  : in out Colour_Palet;
-                                    Fore_Colour : Color);
-    procedure Set_Ol_Alpa (Alpa : Float);
-    procedure Set_Ol_Colour;
-    procedure Set_Ol_Colour (Ol_Colour : Color);
+    procedure Set_Background_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
+    procedure Set_Background_Colour (Palet_Data : in out Colour_Palet; Back_Colour : Color);
+    procedure Set_Foreground_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
+    procedure Set_Foreground_Colour (Palet_Data : in out Colour_Palet;
+                                     Fore_Colour : Color);
+    procedure Set_Ol_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
+    procedure Set_Ol_Colour (Palet_Data : Colour_Palet);
+    procedure Set_Ol_Colour (Palet_Data : in out Colour_Palet; Ol_Colour : Color);
     procedure Set_Point_Size (Point_Size : Float);
 
 private

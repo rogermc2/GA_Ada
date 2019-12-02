@@ -312,8 +312,8 @@ package body GA_Draw is
          Draw_Part (Front_Part);
       end if;
 
-      if Palet.Colour_Null (Palet_Type) then
-         Palet.Set_Ol_Colour;
+      if not Palet.Colour_Null (Palet_Type) then
+         Palet.Set_Ol_Colour (Palet_Type);
       end if;
       Draw_Part (Outline_Part);
       GL.Attributes.Disable_Vertex_Attrib_Array (0);

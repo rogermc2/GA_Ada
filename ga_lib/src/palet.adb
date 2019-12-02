@@ -1,33 +1,34 @@
 
+with Shader_Manager;
+
 package body Palet is
 
    G_Draw_State   : Draw_State;
-   G_Palet        : Colour_Palet;
 
-   function Background_Colour return Color is
+   function Background_Colour (Palet_Data : Colour_Palet) return Color is
    begin
-      return G_Palet.Background_Colour;
+      return Palet_Data.Background_Colour;
    end Background_Colour;
 
    --  ------------------------------------------------------------------------
 
-   function Background_Red return Single is
+   function Background_Red (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Background_Colour (R);
+      return Palet_Data.Background_Colour (R);
    end Background_Red;
 
    --  ------------------------------------------------------------------------
 
-   function Background_Green return Single is
+   function Background_Green (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Background_Colour (G);
+      return Palet_Data.Background_Colour (G);
    end Background_Green;
 
    --  ------------------------------------------------------------------------
 
-   function Background_Blue return Single is
+   function Background_Blue (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Background_Colour (B);
+      return Palet_Data.Background_Colour (B);
    end Background_Blue;
 
    --  ------------------------------------------------------------------------
@@ -39,58 +40,44 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   function Colour_Null return Boolean is
+   function Colour_Null (Palet_Data : Colour_Palet) return Boolean is
    begin
-      return G_Palet.Colour_Defined;
+      return Palet_Data.Colour_Defined;
    end Colour_Null;
 
    --  ------------------------------------------------------------------------
 
-   function Colour_Null (Palet_Type : Colour_Palet) return Boolean is
+   function Foreground_Colour (Palet_Data : Colour_Palet) return Color is
    begin
-      return Palet_Type.Colour_Defined;
-   end Colour_Null;
-
-   --  ------------------------------------------------------------------------
-
-   function Foreground_Colour return Color is
-   begin
-      return G_Palet.Foreground_Colour;
+      return Palet_Data.Foreground_Colour;
    end Foreground_Colour;
 
    --  ------------------------------------------------------------------------
 
-   function Foreground_Alpha return Single is
+   function Foreground_Alpha (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Foreground_Colour (A);
+      return Palet_Data.Foreground_Colour (A);
    end Foreground_Alpha;
 
    --  ------------------------------------------------------------------------
 
-   function Foreground_Alpha (Palet_Type : Colour_Palet) return Single is
+   function Foreground_Blue (Palet_Data : Colour_Palet) return Single is
    begin
-      return Palet_Type.Foreground_Colour (A);
-   end Foreground_Alpha;
-
-   --  ------------------------------------------------------------------------
-
-   function Foreground_Blue return Single is
-   begin
-      return G_Palet.Background_Colour (B);
+      return Palet_Data.Background_Colour (B);
    end Foreground_Blue;
 
    --  ------------------------------------------------------------------------
 
-   function Foreground_Green return Single is
+   function Foreground_Green (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Background_Colour (G);
+      return Palet_Data.Background_Colour (G);
    end Foreground_Green;
 
    --  ------------------------------------------------------------------------
 
-   function Foreground_Red return Single is
+   function Foreground_Red (Palet_Data : Colour_Palet) return Single is
    begin
-      return G_Palet.Background_Colour (R);
+      return Palet_Data.Background_Colour (R);
    end Foreground_Red;
 
    --  ------------------------------------------------------------------------
@@ -109,9 +96,9 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   function Ol_Colour return Color is
+   function Ol_Colour (Palet_Data : Colour_Palet) return Color is
    begin
-      return G_Palet.Ol_Colour;
+      return Palet_Data.Ol_Colour;
    end Ol_Colour;
 
    --  ------------------------------------------------------------------------
@@ -123,62 +110,75 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Background_Alpa (Alpa : Float) is
+   procedure Set_Background_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float) is
    begin
-      G_Palet.Background_Colour (A) := GL.Types.Single (Alpa);
+      Palet_Data.Background_Colour (A) := GL.Types.Single (Alpa);
    end Set_Background_Alpa;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Background_Colour (Back_Colour : Color) is
+   procedure Set_Background_Colour (Palet_Data : in out Colour_Palet; Back_Colour : Color) is
    begin
-      G_Palet.Colour_Defined := True;
-      G_Palet.Background_Colour := Back_Colour;
+      Palet_Data.Colour_Defined := True;
+      Palet_Data.Background_Colour := Back_Colour;
    end Set_Background_Colour;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Foreground_Alpa (Alpa : Float) is
+   procedure Set_Foreground_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float) is
    begin
-      G_Palet.Foreground_Colour (A) := GL.Types.Single (Alpa);
+      Palet_Data.Foreground_Colour (A) := GL.Types.Single (Alpa);
    end Set_Foreground_Alpa;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Foreground_Colour (Fore_Colour : Color) is
-   begin
-      G_Palet.Colour_Defined := True;
-      G_Palet.Foreground_Colour := Fore_Colour;
-   end Set_Foreground_Colour;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Foreground_Colour (Palet_Type  : in out Colour_Palet;
+   procedure Set_Foreground_Colour (Palet_Data  : in out Colour_Palet;
                                     Fore_Colour : Color) is
    begin
-      Palet_Type.Colour_Defined := True;
-      Palet_Type.Foreground_Colour := Fore_Colour;
+      Palet_Data.Colour_Defined := True;
+      Palet_Data.Foreground_Colour := Fore_Colour;
    end Set_Foreground_Colour;
 
    --  ------------------------------------------------------------------------
-   procedure Set_Ol_Alpa (Alpa : Float) is
+
+   procedure Set_Ol_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float) is
    begin
-      G_Palet.Ol_Colour (A) := GL.Types.Single (Alpa);
+      Palet_Data.Ol_Colour (A) := GL.Types.Single (Alpa);
    end Set_Ol_Alpa;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Ol_Colour (Ol_Colour : Color) is
+   procedure Set_Ol_Colour (Palet_Data : in out Colour_Palet; Ol_Colour : Color) is
    begin
-      G_Palet.Colour_Defined := True;
-      G_Palet.Ol_Colour := Ol_Colour;
+      Palet_Data.Colour_Defined := True;
+      Palet_Data.Ol_Colour := Ol_Colour;
    end Set_Ol_Colour;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Ol_Colour is
+   procedure Set_Ol_Colour (Palet_Data : Colour_Palet) is
+      Colour         : constant Color := Ol_Colour (Palet_Data);
+      Ambient_Colour : constant Color
+        :=
+          (Single (G_Draw_State.Ambient) * Colour (R),
+           Single (G_Draw_State.Ambient) * Colour (G),
+           Single (G_Draw_State.Ambient) * Colour (B),
+           Single (G_Draw_State.Ambient) * Colour (A));
+      Diffuse_Colour : constant Color
+        :=
+          (Single (G_Draw_State.Diffuse) * Colour (R),
+           Single (G_Draw_State.Diffuse) * Colour (G),
+           Single (G_Draw_State.Diffuse) * Colour (B),
+           Single (G_Draw_State.Diffuse) * Colour (A));
    begin
-      G_Palet.Ol_Colour := Ol_Colour;
+      Shader_Manager.Set_Ambient_Colour ((Ambient_Colour (R),
+                                         Ambient_Colour (G),
+                                         Ambient_Colour (B),
+                                         Ambient_Colour (A)));
+      Shader_Manager.Set_Diffuse_Colour ((Diffuse_Colour (R),
+                                         Diffuse_Colour (G),
+                                         Diffuse_Colour (B),
+                                         Diffuse_Colour (A)));
    end Set_Ol_Colour;
 
    --  ------------------------------------------------------------------------
