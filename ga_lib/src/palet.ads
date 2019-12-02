@@ -18,10 +18,13 @@ package Palet is
     function Background_Green return Single;
     function Background_Blue return Single;
     function Colour_Null return Boolean;
-    function Foreground_Colour return Color;
-    function Foreground_Red return Single;
-    function Foreground_Green return Single;
+    function Colour_Null (Palet_Type : Colour_Palet) return Boolean;
+    function Foreground_Alpha return Single;
+    function Foreground_Alpha (Palet_Type : Colour_Palet) return Single;
     function Foreground_Blue return Single;
+    function Foreground_Colour return Color;
+    function Foreground_Green return Single;
+    function Foreground_Red return Single;
     function Get_Draw_Mode return Draw_Mode;
     function Line_Length return Float;
     function Ol_Colour return Color;

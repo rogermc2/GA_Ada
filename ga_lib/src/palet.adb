@@ -46,6 +46,13 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
+    function Colour_Null (Palet_Type : Colour_Palet) return Boolean is
+    begin
+        return Palet_Type.Colour_Defined;
+    end Colour_Null;
+
+    --  ------------------------------------------------------------------------
+
     function Foreground_Colour return Color is
     begin
         return Palet.Foreground_Colour;
@@ -53,10 +60,24 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
-    function Foreground_Red return Single is
+    function Foreground_Alpha return Single is
     begin
-        return Palet.Background_Colour (R);
-    end Foreground_Red;
+        return Palet.Foreground_Colour (A);
+    end Foreground_Alpha;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Alpha (Palet_Type : Colour_Palet) return Single is
+    begin
+        return Palet_Type.Foreground_Colour (A);
+    end Foreground_Alpha;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Blue return Single is
+    begin
+        return Palet.Background_Colour (B);
+    end Foreground_Blue;
 
     --  ------------------------------------------------------------------------
 
@@ -67,10 +88,10 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
-    function Foreground_Blue return Single is
+    function Foreground_Red return Single is
     begin
-        return Palet.Background_Colour (B);
-    end Foreground_Blue;
+        return Palet.Background_Colour (R);
+    end Foreground_Red;
 
     --  ------------------------------------------------------------------------
 

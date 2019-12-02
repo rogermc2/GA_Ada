@@ -12,6 +12,7 @@ with GL.Attributes;
 with GL.Culling;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
+with GL.Rasterization;
 with GL.Toggles;
 with GL.Window;
 with Utilities;
@@ -251,25 +252,32 @@ package body GA_Draw is
         Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Fan                  : Singles.Vector3_Array (1 .. Num_Steps);
+        Normal               : Singles.Vector3_Array (1 .. Num_Steps) :=
+                                 (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
-        --           Normal : Multivector.Vector;
-        --              Norm_Z : float;
+            use Palet;
+            Norm_Z : Single;
         begin
-            --              Case Part is
-            --              when Back_Part | Outline_Part => Norm_Z := 1.0;
-            --              when Front_Part => Norm_Z := -1.0;
-            --              end case;
+            case Part is
+            when Back_Part | Outline_Part =>
+                Norm_Z := 1.0;
+            when Front_Part =>
+                Norm_Z := -1.0;
+            end case;
             --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
             --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
             Fan (1) := (0.0, 0.0, 0.0);
+            Normal (1) := (0.0, 0.0, Norm_Z);
             for Count in 2 .. Num_Steps loop
                 Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
+                Normal (Count) := (0.0, 0.0, Norm_Z);
                 Angle := Angle + Rotor_Step;
             end loop;
 
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             GL.Objects.Programs.Use_Program (Render_Program);
             Init_Projection_Matrix (Projection_Matrix);
@@ -278,7 +286,14 @@ package body GA_Draw is
 
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+            GL.Attributes.Enable_Vertex_Attrib_Array (1);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+
             if Part = Back_Part or Part = Front_Part then
+                if Part = Back_Part and then
+                  Get_Draw_Mode = Palet.OD_Orientation then
+                    GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+                end if;
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
                                                       First => 0,
                                                       Count => Num_Steps);
@@ -291,8 +306,15 @@ package body GA_Draw is
     begin
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Draw_Part (Back_Part);
-        Draw_Part (Front_Part);
+        if ((Method = Draw_Bivector_Circle) and Palet.Colour_Null (Palet_Type)) or
+          Palet.Foreground_Alpha (Palet_Type) > 0.0 then
+            Draw_Part (Back_Part);
+            Draw_Part (Front_Part);
+        end if;
+
+        if Palet.Colour_Null (Palet_Type) then
+            Palet.Set_Ol_Colour;
+        end if;
         Draw_Part (Outline_Part);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
