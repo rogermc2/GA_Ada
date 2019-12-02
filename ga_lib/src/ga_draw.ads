@@ -56,10 +56,7 @@ package GA_Draw is
 --                                          MV_Matrix_ID, Projection_Matrix_ID,
 --                                          Colour_Location : out GL.Uniforms.Uniform);
     function Point_Size return Float;
-    procedure Set_Foreground_Colour (Fore_Colour : Color);
-    --     procedure Set_Background_Colour (Back_Colour : Color);
     procedure Set_Draw_Mode (Mode : Draw_Mode);
-    procedure Set_Ol_Colour (Ol_Colour : Color);
     procedure Set_Point_Size (Point_Size : Float);
     procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
                                       Near : GL.Types.Single := -100.0;
