@@ -26,12 +26,13 @@ with E3GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Shader_Manager;
-with Palet;
 
 package body GA_Draw is
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
-                           Model_View_Matrix : GL.Types.Singles.Matrix4);
+                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+                           Palet_Type : Palet.Colour_Palet;
+                           Method : Bivector_Method_Type);
 
     --  ------------------------------------------------------------------------
 
@@ -63,8 +64,6 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
         Init_Projection_Matrix (Projection_Matrix);
-        --        Graphic_Shader_Locations (Render_Program, MV_Matrix_ID,
-        --                                  Projection_Matrix_ID, Colour_Location);
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
@@ -90,8 +89,8 @@ package body GA_Draw is
     procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
                              Translation_Matrix       : GL.Types.Singles.Matrix4;
                              Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Colour                   : GL.Types.Colors.Color; Scale  : float := 1.0;
-                             Method                   : Bivector_Method_Type := Draw_Bivector_Circle) is
+                             Scale  : float := 1.0; Palet_Type : Palet.Colour_Palet;
+                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
         use GL.Types.Singles;
         Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -113,7 +112,7 @@ package body GA_Draw is
 
         Init_Projection_Matrix (Projection_Matrix);
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
-        Shader_Manager.Set_Ambient_Colour ((Colour (R), Colour (G), Colour (B), 1.0));
+        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
 
         if  Method /= Draw_Bivector_Parallelogram and then
           Method /= Draw_Bivector_Parallelogram_No_Vectors then
@@ -133,7 +132,7 @@ package body GA_Draw is
             case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, MVP_Matrix);
+                Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
             when others => null;
             end case;
         else
@@ -150,8 +149,8 @@ package body GA_Draw is
 
     procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Colour                 : GL.Types.Colors.Color; Scale  : float := 1.0;
-                             Method                 : Bivector_Method_Type := Draw_Bivector_Circle) is
+                             Scale  : float := 1.0; Palet_Type : Palet.Colour_Palet;
+                             Method : Bivector_Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
         use GL.Types.Singles;
 
@@ -172,7 +171,7 @@ package body GA_Draw is
 
         Init_Projection_Matrix (Projection_Matrix);
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
-        Shader_Manager.Set_Ambient_Colour ((Colour (R), Colour (G), Colour (B), 1.0));
+        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
 
         --          MVP_Matrix := Model_View_Matrix;
         Translate := (Single (C3GA.e1 (Base)),
@@ -196,7 +195,7 @@ package body GA_Draw is
         Case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, MVP_Matrix);
+                Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
             when others => null;
         end case;
     exception
@@ -237,7 +236,9 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
-                           Model_View_Matrix : GL.Types.Singles.Matrix4) is
+                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+                           Palet_Type : Palet.Colour_Palet;
+                           Method : Bivector_Method_Type) is
         use GA_Maths;
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;

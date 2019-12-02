@@ -8,6 +8,7 @@ with GL.Types; use GL.Types;
 with C3GA;
 --  with GA_Maths;
 with Multivectors;
+with Palet;
 
 package GA_Draw is
 
@@ -25,11 +26,11 @@ package GA_Draw is
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                              Translation_Matrix : GL.Types.Singles.Matrix4;
                              Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Colour : GL.Types.Colors.Color; Scale : float := 1.0;
+                             Scale : float := 1.0; Palet_Type : Palet.Colour_Palet;
                              Method : Bivector_Method_Type := Draw_Bivector_Circle);
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Colour : GL.Types.Colors.Color; Scale : float := 1.0;
+                             Scale : float := 1.0; Palet_Type : Palet.Colour_Palet;
                              Method : Bivector_Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;

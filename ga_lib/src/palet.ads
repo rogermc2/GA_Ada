@@ -17,6 +17,7 @@ package Palet is
     function Background_Red return Single;
     function Background_Green return Single;
     function Background_Blue return Single;
+    function Colour_Null return Boolean;
     function Foreground_Colour return Color;
     function Foreground_Red return Single;
     function Foreground_Green return Single;
@@ -37,6 +38,7 @@ package Palet is
 
 private
     type Colour_Palet is record
+        Colour_Defined    : Boolean := False;
         Foreground_Colour : Color := (1.0, 0.0, 0.0, 1.0);
         Background_Colour : Color := (0.0, 1.0, 0.0, 1.0);
         Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);

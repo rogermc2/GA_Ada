@@ -31,10 +31,18 @@ package body Palet is
     end Background_Blue;
 
     --  ------------------------------------------------------------------------
+
     function Current_Sphere return Geosphere.Geosphere is
     begin
         return G_Draw_State.M_Sphere;
     end Current_Sphere;
+
+    --  ------------------------------------------------------------------------
+
+    function Colour_Null return Boolean is
+    begin
+        return Palet.Colour_Defined;
+    end Colour_Null;
 
     --  ------------------------------------------------------------------------
 
@@ -103,6 +111,7 @@ package body Palet is
 
     procedure Set_Background_Colour (Back_Colour : Color) is
     begin
+        Palet.Colour_Defined := True;
         Palet.Background_Colour := Back_Colour;
     end Set_Background_Colour;
 
@@ -117,6 +126,7 @@ package body Palet is
 
     procedure Set_Foreground_Colour (Fore_Colour : Color) is
     begin
+        Palet.Colour_Defined := True;
         Palet.Foreground_Colour := Fore_Colour;
     end Set_Foreground_Colour;
 
@@ -131,6 +141,7 @@ package body Palet is
 
     procedure Set_Ol_Colour (Ol_Colour : Color) is
     begin
+        Palet.Colour_Defined := True;
         Palet.Ol_Colour := Ol_Colour;
     end Set_Ol_Colour;
 
