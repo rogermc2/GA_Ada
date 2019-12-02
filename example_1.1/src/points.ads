@@ -19,6 +19,8 @@ package Points is
                      Set_Coords (0.865897, 0.629159, -1.438985),
                      Set_Coords (2.846445, -1.112365, -0.366769));
 
+   type Colour_Data is new Singles.Vector4_Array (1 .. Int (Num_Points));
+
    Line_Point_Index   : Int := 1;
    Circle_Point_Index : Int := 3;
    Plane_Point_Index  : Int := 6;
@@ -34,5 +36,8 @@ package Points is
    P1 : constant Normalized_Point := Set_Normalized_Point (Point_Data (6));
 
    Normalized_Points : constant Normalized_Points_Array (1 .. Num_Points) :=
-                    (L1, L2, C1, C2, C3, P1);
+                         (L1, L2, C1, C2, C3, P1);
+
+   function Set_Draw_Colour (Colour : Singles.Vector4) return Colour_Data;
+
 end Points;
