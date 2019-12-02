@@ -9,6 +9,7 @@ with GA_Draw;
 with GA_Maths;
 with Multivector_Analyze;
 --  with Multivector_Type;
+with Palet;
 
 package body C3GA_Draw is
 
@@ -123,7 +124,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             when Point_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
-                Scale := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+                Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                         Point_Pos, Scale, V, Colour);
             when others => null;
@@ -141,7 +142,7 @@ package body C3GA_Draw is
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          L : Multivectors.Vector;
                          Colour : GL.Types.Colors.Color) is
-        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
         V     : C3GA.Vector_E3GA;
     begin
         GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
@@ -159,7 +160,7 @@ package body C3GA_Draw is
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Position : C3GA.Normalized_Point;
                           Colour : GL.Types.Colors.Color) is
-        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * GA_Draw.Point_Size ** 3;
+        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
         V     : C3GA.Vector_E3GA;
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
@@ -184,7 +185,7 @@ package body C3GA_Draw is
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
         P_Scale    : constant Float :=
-                       4.0 / 3.0 * GA_Maths.PI * (GA_Draw.Point_Size ** 3);
+                       4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
         V          : C3GA.Vector_E3GA;
     begin
         case Analysis.M_Type.Blade_Subclass is

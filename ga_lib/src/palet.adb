@@ -11,6 +11,26 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
+    function Background_Red return Single is
+    begin
+        return Palet.Background_Colour (R);
+    end Background_Red;
+
+    --  ------------------------------------------------------------------------
+
+    function Background_Green return Single is
+    begin
+        return Palet.Background_Colour (G);
+    end Background_Green;
+
+    --  ------------------------------------------------------------------------
+
+    function Background_Blue return Single is
+    begin
+        return Palet.Background_Colour (B);
+    end Background_Blue;
+
+    --  ------------------------------------------------------------------------
     function Current_Sphere return Geosphere.Geosphere is
     begin
         return G_Draw_State.M_Sphere;
@@ -22,6 +42,27 @@ package body Palet is
     begin
         return Palet.Foreground_Colour;
     end Foreground_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Red return Single is
+    begin
+        return Palet.Background_Colour (R);
+    end Foreground_Red;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Green return Single is
+    begin
+        return Palet.Background_Colour (G);
+    end Foreground_Green;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Blue return Single is
+    begin
+        return Palet.Background_Colour (B);
+    end Foreground_Blue;
 
     --  ------------------------------------------------------------------------
 
@@ -53,6 +94,13 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
+    procedure Set_Background_Alpa (Alpa : Float) is
+    begin
+        Palet.Background_Colour (A) := GL.Types.Single (Alpa);
+    end Set_Background_Alpa;
+
+    --  ------------------------------------------------------------------------
+
     procedure Set_Background_Colour (Back_Colour : Color) is
     begin
         Palet.Background_Colour := Back_Colour;
@@ -60,10 +108,24 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
+    procedure Set_Foreground_Alpa (Alpa : Float) is
+    begin
+        Palet.Foreground_Colour (A) := GL.Types.Single (Alpa);
+    end Set_Foreground_Alpa;
+
+    --  ------------------------------------------------------------------------
+
     procedure Set_Foreground_Colour (Fore_Colour : Color) is
     begin
         Palet.Foreground_Colour := Fore_Colour;
     end Set_Foreground_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Set_Ol_Alpa (Alpa : Float) is
+    begin
+        Palet.Ol_Colour (A) := GL.Types.Single (Alpa);
+    end Set_Ol_Alpa;
 
     --  ------------------------------------------------------------------------
 
