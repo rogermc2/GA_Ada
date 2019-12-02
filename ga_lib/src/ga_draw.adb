@@ -632,8 +632,7 @@ package body GA_Draw is
     --  Based on draw.cpp DrawState::drawSphere(e3ga::mv::Float normal)
     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
                            MV_Matrix      : GL.Types.Singles.Matrix4;
-                           Normal         : GL.Types.Single;
-                           Colour         : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0)) is
+                           Normal         : GL.Types.Single) is
         use Geosphere;
         --        Sphere : Geosphere.Geosphere;
     begin
@@ -641,15 +640,14 @@ package body GA_Draw is
             Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
             Geosphere.New_Sphere_List (G_Draw_State.M_Sphere);
             --  gsDraw(m_sphere, 0.0f);
-            Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
-                               0.0, Colour);
+            Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere);
         end if;
 
         if Normal = 0.0 then
-            Draw_Sphere_List (Render_Program, MV_Matrix, Colour);
+            Draw_Sphere_List (Render_Program, MV_Matrix);
         else
             Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
-                               Normal, Colour);
+                               Normal);
         end if;
     exception
         when others =>
@@ -770,6 +768,7 @@ package body GA_Draw is
 
         case Method is
             when Draw_TV_Sphere =>
+                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
                 if Get_Draw_Mode = OD_Orientation then
                     Normal := 0.1;
                 else
@@ -782,10 +781,12 @@ package body GA_Draw is
             when Draw_TV_Curly_Tail =>
                 null;
             when Draw_TV_Parellelepiped =>
+                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
                 Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
                                      Draw_TV_Parellelepiped, Colour);
 
             when Draw_TV_Parellelepiped_No_Vectors =>
+                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
                 Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
                                      Draw_TV_Parellelepiped_No_Vectors, Colour);
         end case;

@@ -173,13 +173,12 @@ package body Geosphere is
 
    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
                                MV_Matrix : GL.Types.Singles.Matrix4;
-                               Colour : GL.Types.Colors.Color;
                                Normal : GL.Types.Single := 0.0) is
       use Sphere_List_Package;
       Curs : Cursor := Sphere_List.First;
    begin
       while Has_Element (Curs) loop
-         GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal, Colour);
+         GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal);
          Next (Curs);
       end loop;
    end Draw_Sphere_List;
@@ -322,11 +321,9 @@ package body Geosphere is
    --  gsDraw(geosphere * sphere, mv::Float normal /*= 0.0*/)
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
                       MV_Matrix : GL.Types.Singles.Matrix4;
-                      Sphere : Geosphere; Normal : GL.Types.Single := 0.0;
-                      Colour : GL.Types.Colors.Color) is
+                      Sphere : Geosphere; Normal : GL.Types.Single := 0.0) is
       use GL.Objects.Buffers;
       use GL.Types;
-      use GL.Types.Colors;
       use GL.Types.Singles;
 
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -405,11 +402,11 @@ package body Geosphere is
       GL.Objects.Programs.Use_Program (Render_Program);
       Model_View_Matrix := Maths.Scaling_Matrix (0.5) * MV_Matrix;
       GA_Draw.Init_Projection_Matrix (Proj_Matrix);
-      Proj_Matrix := Maths.Translation_Matrix ((1.0, -1.0, 0.0)) *
-        Proj_Matrix;
-      Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+--        Proj_Matrix := Maths.Translation_Matrix ((1.0, -1.0, 0.0)) *
+--          Proj_Matrix;
+      Shader_Manager.Set_Model_View_Matrix
+          ( Maths.Translation_Matrix ((1.0, -1.0, 0.0)) * Model_View_Matrix);
       Shader_Manager.Set_Projection_Matrix (Proj_Matrix);
-      Shader_Manager.Set_Ambient_Colour ((Colour (R), Colour (G), Colour (B), 1.0));
 
 --        GL.Toggles.Disable (GL.Toggles.Cull_Face);
 --        Draw (Sphere.Faces.First_Element);
