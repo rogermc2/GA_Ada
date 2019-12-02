@@ -13,7 +13,6 @@ with GL.Culling;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
-with GL.Types; use GL.Types;
 with GL.Window;
 with Utilities;
 
@@ -29,8 +28,6 @@ with Shader_Manager;
 
 package body GA_Draw is
 
-    Palet          : Colour_Palet;
-    pragma Unreferenced (Palet);
     G_Draw_State   : Draw_State;
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
@@ -939,31 +936,10 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
 
-    --      procedure Set_Background_Colour (Back_Colour : Color) is
-    --      begin
-    --          Palet.Background_Colour := Back_Colour;
-    --      end Set_Background_Colour;
-
-    --  ------------------------------------------------------------------------
-
     procedure Set_Draw_Mode (Mode : Draw_Mode) is
     begin
         G_Draw_State.M_Draw_Mode := Mode;
     end Set_Draw_Mode;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Set_Foreground_Colour (Fore_Colour : Color) is
-    begin
-        Palet.Foreground_Colour := Fore_Colour;
-    end Set_Foreground_Colour;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Set_Ol_Colour (Ol_Colour : Color) is
-    begin
-        Palet.Ol_Colour := Ol_Colour;
-    end Set_Ol_Colour;
 
     --  ------------------------------------------------------------------------
 

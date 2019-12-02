@@ -173,9 +173,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --        GA_Draw.Set_Point_Size (0.005);
 
         Model_Rotor := Multivectors.New_Rotor;
-        Put_Line ("Main_Loop.Setup_Graphic Shader.Init.");
         Shader_Manager.Init (Render_Program);
-        Put_Line ("Main_Loop.Setup_Graphic OK.");
 
 --        Render_Text_Program := Program_Loader.Program_From
         --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),

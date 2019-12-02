@@ -3,6 +3,7 @@
 
 with GL.Types.Colors; use GL.Types.Colors;
 with GL.Objects.Programs;
+with GL.Types; use GL.Types;
 
 with C3GA;
 --  with GA_Maths;
@@ -10,8 +11,6 @@ with Geosphere;
 with Multivectors;
 
 package GA_Draw is
-    use  GL.Types;
-    type Colour_Palet is private;
 
     type Bivector_Method_Type is (Draw_Bivector_Circle, Draw_Bivector_Parallelogram,
                                   Draw_Bivector_Parallelogram_No_Vectors,
@@ -66,11 +65,6 @@ package GA_Draw is
                                       Near : GL.Types.Single := -100.0;
                                       Far  : GL.Types.Single := 100.0);
 private
-    type Colour_Palet is record
-        Foreground_Colour : Color := (1.0, 0.0, 0.0, 1.0);
-        Background_Colour : Color := (0.0, 1.0, 0.0, 1.0);
-        Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);
-    end record;
 
     type Draw_State is record
         Ambient      : Float := 1.0;
