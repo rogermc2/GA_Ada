@@ -3,7 +3,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 --  with Maths;
 
---  with Blade;
 --  with E3GA_Utilities;
 --  with E3GA;
 with GA_Draw;
@@ -199,6 +198,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Round Sphere.");
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                         Point_Pos, P_Scale, V, Colour, Method);
+                Put_Line ("C3GA_Draw.Draw_Round Sphere Draw_Trivector returned.");
             when others => null;
         end case;
 

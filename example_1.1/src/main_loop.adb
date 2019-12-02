@@ -42,7 +42,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
 
-    Render_Uniforms : Shader_Manager.Shader_Uniforms;
     --  rotor g_modelRotor(_rotor(1.0f))
     Model_Rotor     : Multivectors.Rotor;
 --      Rotate_Model    : boolean := False;
@@ -175,7 +174,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Model_Rotor := Multivectors.New_Rotor;
         Put_Line ("Main_Loop.Setup_Graphic Shader.Init.");
-        Shader_Manager.Init (Render_Program, Render_Uniforms);
+        Shader_Manager.Init (Render_Program);
         Put_Line ("Main_Loop.Setup_Graphic OK.");
 
 --        Render_Text_Program := Program_Loader.Program_From
