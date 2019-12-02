@@ -6,8 +6,9 @@ with Program_Loader;
 
 package body Shader_Manager is
 
-   procedure Init (Render_Program  : in out GL.Objects.Programs.Program;
-                   Render_Uniforms : out Shader_Uniforms) is
+   Render_Uniforms : Shader_Uniforms;
+
+   procedure Init (Render_Program  : in out GL.Objects.Programs.Program) is
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
       use GL.Types.Singles;
@@ -49,16 +50,14 @@ package body Shader_Manager is
 
   --  -------------------------------------------------------------------------
 
-   procedure Set_Ambient_Colour (Render_Uniforms : Shader_Uniforms;
-                                 Ambient_Colour  : Singles.Vector4) is
+   procedure Set_Ambient_Colour (Ambient_Colour : Singles.Vector4) is
    begin
       GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Ambient_Colour);
    end Set_Ambient_Colour;
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Diffuse_Colour (Render_Uniforms : Shader_Uniforms;
-                                 Diffuse_Colour  : Singles.Vector4) is
+   procedure Set_Diffuse_Colour (Diffuse_Colour : Singles.Vector4) is
    begin
       GL.Uniforms.Set_Single
         (Render_Uniforms.Light_Position_ID, Diffuse_Colour);
@@ -66,16 +65,14 @@ package body Shader_Manager is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_View_Matrix (Render_Uniforms : Shader_Uniforms;
-                              View_Matrix     : Singles.Matrix4) is
+   procedure Set_View_Matrix (View_Matrix  : Singles.Matrix4) is
    begin
       GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, View_Matrix);
    end Set_View_Matrix;
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Light_Position_Vector (Render_Uniforms : Shader_Uniforms;
-                                        Light_Position  : Singles.Vector3) is
+   procedure Set_Light_Position_Vector (Light_Position : Singles.Vector3) is
    begin
       GL.Uniforms.Set_Single
         (Render_Uniforms.Light_Position_ID, Light_Position);
@@ -83,16 +80,14 @@ package body Shader_Manager is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Model_Matrix (Render_Uniforms : Shader_Uniforms;
-                               Model_Matrix    : Singles.Matrix4) is
+   procedure Set_Model_Matrix (Model_Matrix : Singles.Matrix4) is
    begin
       GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Model_Matrix);
    end Set_Model_Matrix;
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Model_View_Matrix (Render_Uniforms   : Shader_Uniforms;
-                                    Model_View_Matrix : Singles.Matrix4) is
+   procedure Set_Model_View_Matrix (Model_View_Matrix : Singles.Matrix4) is
    begin
       GL.Uniforms.Set_Single
         (Render_Uniforms.Model_View_Matrix_ID, Model_View_Matrix);
@@ -100,8 +95,7 @@ package body Shader_Manager is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Projection_Matrix (Render_Uniforms   : Shader_Uniforms;
-                                    Projection_Matrix : Singles.Matrix4) is
+   procedure Set_Projection_Matrix (Projection_Matrix : Singles.Matrix4) is
    begin
       GL.Uniforms.Set_Single
         (Render_Uniforms.Projection_Matrix_ID, Projection_Matrix);

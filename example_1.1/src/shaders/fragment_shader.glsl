@@ -14,12 +14,15 @@ out vec3 color;
 uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 Light_Position_Worldspace;
+uniform vec4 Ambient_Colour;
+uniform vec4 Diffuse_Colour;
 
 void main()
 {
     // Light emission properties
     // You probably want to put them as uniforms
-    vec3 LightColor = vec3(1,1,1);
+//    vec3 LightColor = vec3(1,1,1);
+    vec3 LightColor = vec3(Ambient_Colour + Diffuse_Colour);
     float LightPower = 50.0f;
     
     // Distance to the light
