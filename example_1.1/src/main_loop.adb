@@ -36,6 +36,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
    Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
+   Red_Colour     : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
    --      Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    --      Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
    --      Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
@@ -93,7 +94,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Pick                : GL_Util.GL_Pick;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      Palet_Type          : Palet.Colour_Palet;
+      Palet_Data          : Palet.Colour_Palet;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -109,7 +110,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --        Set_Coords (V1, E11, E12);
          --           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
          --                       Cos (A) * E21 - Sin (A) * E22);
-         Palet.Set_Foreground_Colour (Palet_Type, Red);
+         Palet.Set_Foreground_Colour (Palet_Data, Red);
+         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
+         Shader_Manager.Set_Drawing_Colour (Red_Colour);
+
          for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
@@ -118,7 +122,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Point_Position := Points.Normalized_Points (count);
             GA_Utilities.Print_Multivector ("Display, Point_Position", Point_Position);
             C3GA_Draw.Draw (Render_Graphic_Program,
-                            Model_View_Matrix, Point_Position, Palet_Type);
+                            Model_View_Matrix, Point_Position, Palet_Data);
          end loop;
       else
          Put_Line ("Main_Loop.Display, Model_Rotor is not invertable.");

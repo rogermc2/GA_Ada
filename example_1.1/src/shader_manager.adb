@@ -6,6 +6,7 @@ with Program_Loader;
 
 package body Shader_Manager is
 
+   Black           : constant GL.Types.Singles.Vector4 := (0.0, 0.0, 0.0, 0.0);
    Render_Uniforms : Shader_Uniforms;
 
    procedure Init (Render_Program  : in out GL.Objects.Programs.Program) is
@@ -34,6 +35,8 @@ package body Shader_Manager is
         Uniform_Location (Render_Program, "Ambient_Colour");
       Render_Uniforms.Diffuse_Colour_ID :=
         Uniform_Location (Render_Program, "Diffuse_Colour");
+      Render_Uniforms.Drawing_Colour_ID :=
+        Uniform_Location (Render_Program, "Drawing_Colour");
 
       Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
@@ -41,6 +44,10 @@ package body Shader_Manager is
       GL.Uniforms.Set_Single (Render_Uniforms.Model_View_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.Projection_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
+
+      GL.Uniforms.Set_Single (Render_Uniforms.Ambient_Colour_ID, Black);
+      GL.Uniforms.Set_Single (Render_Uniforms.Diffuse_Colour_ID, Black);
+      GL.Uniforms.Set_Single (Render_Uniforms.Drawing_Colour_ID, Black);
 
    exception
       when others =>
@@ -52,7 +59,7 @@ package body Shader_Manager is
 
    procedure Set_Ambient_Colour (Ambient_Colour : Singles.Vector4) is
    begin
-      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Ambient_Colour);
+      GL.Uniforms.Set_Single (Render_Uniforms.Ambient_Colour_ID, Ambient_Colour);
    end Set_Ambient_Colour;
 
    --  -------------------------------------------------------------------------
@@ -60,8 +67,16 @@ package body Shader_Manager is
    procedure Set_Diffuse_Colour (Diffuse_Colour : Singles.Vector4) is
    begin
       GL.Uniforms.Set_Single
-        (Render_Uniforms.Light_Position_ID, Diffuse_Colour);
+        (Render_Uniforms.Diffuse_Colour_ID, Diffuse_Colour);
    end Set_Diffuse_Colour;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Drawing_Colour (Drawing_Colour : Singles.Vector4) is
+   begin
+      GL.Uniforms.Set_Single
+        (Render_Uniforms.Drawing_Colour_ID, Drawing_Colour);
+   end Set_Drawing_Colour;
 
    --  -------------------------------------------------------------------------
 

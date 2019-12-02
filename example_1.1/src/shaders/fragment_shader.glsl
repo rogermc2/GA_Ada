@@ -2,7 +2,6 @@
 
 //  Based on OGL_Turorials Tutorial 08_basic_shading
 // Interpolated values from the vertex shaders
-in vec4 v_colour;
 in vec3 Position_Worldspace;
 in vec3 Camera_Normal;
 in vec3 Eye_Direction;
@@ -17,13 +16,14 @@ uniform mat4 MV;
 uniform vec3 Light_Position_Worldspace;
 uniform vec4 Ambient_Colour;
 uniform vec4 Diffuse_Colour;
+uniform vec4 Drawing_Colour;
 
 void main()
 {
     // Light emission properties
     // You probably want to put them as uniforms
 //    vec3 LightColor = vec3(1,1,1);
-    vec3 LightColor = (v_colour + Ambient_Colour + Diffuse_Colour).xyz;
+    vec3 LightColor = (Drawing_Colour + Ambient_Colour + Diffuse_Colour).xyz;
     float LightPower = 50.0f;
     
     // Distance to the light
