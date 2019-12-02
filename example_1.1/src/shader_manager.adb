@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Objects.Shaders;
 with Program_Loader;
 
-package body Shader is
+package body Shader_Manager is
 
    procedure Init (Render_Program  : in out GL.Objects.Programs.Program;
                    Render_Uniforms : out Shader_Uniforms) is
@@ -29,18 +29,40 @@ package body Shader is
       Render_Uniforms.Light_Position_ID :=
         Uniform_Location (Render_Program, "light_position");
 
+      Render_Uniforms.Ambient_Colour_ID :=
+        Uniform_Location (Render_Program, "Ambient_Colour");
+      Render_Uniforms.Diffuse_Colour_ID :=
+        Uniform_Location (Render_Program, "Diffuse_Colour");
+
       Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
-      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.Model_View_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.Projection_Matrix_ID, Identity4);
+      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Shader.Init.");
+         Put_Line ("An exception occurred in Shader_Manager.Init.");
          raise;
    end Init;
+
+  --  -------------------------------------------------------------------------
+
+   procedure Set_Ambient_Colour (Render_Uniforms : Shader_Uniforms;
+                                 Ambient_Colour  : Singles.Vector4) is
+   begin
+      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Ambient_Colour);
+   end Set_Ambient_Colour;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Diffuse_Colour (Render_Uniforms : Shader_Uniforms;
+                                 Diffuse_Colour  : Singles.Vector4) is
+   begin
+      GL.Uniforms.Set_Single
+        (Render_Uniforms.Light_Position_ID, Diffuse_Colour);
+   end Set_Diffuse_Colour;
 
    --  -------------------------------------------------------------------------
 
@@ -87,4 +109,4 @@ package body Shader is
 
    --  -------------------------------------------------------------------------
 
-end Shader;
+end Shader_Manager;
