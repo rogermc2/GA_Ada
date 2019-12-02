@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --        Set_Coords (V1, E11, E12);
          --           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
          --                       Cos (A) * E21 - Sin (A) * E22);
-         Palet.Set_Foreground_Colour (Red);
+         Palet.Set_Foreground_Colour (Palet_Type, Red);
          for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);

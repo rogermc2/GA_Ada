@@ -34,6 +34,8 @@ package Palet is
     procedure Set_Background_Colour (Back_Colour : Color);
     procedure Set_Foreground_Alpa (Alpa : Float);
     procedure Set_Foreground_Colour (Fore_Colour : Color);
+   procedure Set_Foreground_Colour (Palet_Type  : in out Colour_Palet;
+                                    Fore_Colour : Color);
     procedure Set_Ol_Alpa (Alpa : Float);
     procedure Set_Ol_Colour;
     procedure Set_Ol_Colour (Ol_Colour : Color);
