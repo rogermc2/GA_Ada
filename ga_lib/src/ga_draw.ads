@@ -3,7 +3,6 @@
 
 with GL.Types.Colors; use GL.Types.Colors;
 with GL.Objects.Programs;
-with GL.Uniforms;
 
 with C3GA;
 --  with GA_Maths;
@@ -54,9 +53,9 @@ package GA_Draw is
                            Colour : Color; Scale : float := 1.0);
     function Get_Draw_Mode return Draw_Mode;
     function Get_Line_Length return Float;
-    procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
-                                        MV_Matrix_ID, Projection_Matrix_ID,
-                                        Colour_Location : out GL.Uniforms.Uniform);
+--      procedure Graphic_Shader_Locations (Render_Program : GL.Objects.Programs.Program;
+--                                          MV_Matrix_ID, Projection_Matrix_ID,
+--                                          Colour_Location : out GL.Uniforms.Uniform);
     function Point_Size return Float;
     procedure Set_Foreground_Colour (Fore_Colour : Color);
     --     procedure Set_Background_Colour (Back_Colour : Color);
@@ -68,14 +67,14 @@ package GA_Draw is
                                       Far  : GL.Types.Single := 100.0);
 private
     type Colour_Palet is record
-        Foreground_Colour : Color := (1.0, 0.0, 1.0, 1.0);
+        Foreground_Colour : Color := (1.0, 0.0, 0.0, 1.0);
         Background_Colour : Color := (0.0, 1.0, 0.0, 1.0);
         Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);
     end record;
 
     type Draw_State is record
-        Ambient      : Float := 0.2;
-        Diffuse      : Float := 1.0;
+        Ambient      : Float := 1.0;
+        Diffuse      : Float := 0.0;
         Point_Size   : Float := 0.2;
         Line_Length  : Float := 6.0;
         Plane_Size   : Float := 6.0;
