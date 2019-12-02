@@ -1,11 +1,20 @@
 
 package body Palet is
+
+    G_Draw_State   : Draw_State;
     Palet          : Colour_Palet;
 
     function Background_Colour return Color is
     begin
         return Palet.Background_Colour;
     end Background_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    function Current_Sphere return Geosphere.Geosphere is
+    begin
+        return G_Draw_State.M_Sphere;
+    end Current_Sphere;
 
     --  ------------------------------------------------------------------------
 
@@ -16,10 +25,31 @@ package body Palet is
 
     --  ------------------------------------------------------------------------
 
+    function Get_Draw_Mode return Draw_Mode is
+    begin
+        return G_Draw_State.M_Draw_Mode;
+    end Get_Draw_Mode;
+
+    --  ------------------------------------------------------------------------
+
+    function Line_Length return Float is
+    begin
+        return G_Draw_State.Line_Length;
+    end Line_Length;
+
+    --  ------------------------------------------------------------------------
+
     function Ol_Colour return Color is
     begin
         return Palet.Ol_Colour;
     end Ol_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    function Point_Size return Float is
+    begin
+        return G_Draw_State.Point_Size;
+    end Point_Size;
 
     --  ------------------------------------------------------------------------
 
@@ -43,4 +73,19 @@ package body Palet is
     end Set_Ol_Colour;
 
     --  ------------------------------------------------------------------------
+
+    procedure Set_Ol_Colour is
+    begin
+        Palet.Ol_Colour := Ol_Colour;
+    end Set_Ol_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Set_Point_Size (Point_Size : Float) is
+    begin
+        G_Draw_State.Point_Size := Point_Size;
+    end Set_Point_Size;
+
+    --  ------------------------------------------------------------------------
+
 end Palet;

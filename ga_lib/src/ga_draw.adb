@@ -23,12 +23,12 @@ with GA_Maths;
 with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
+with Geosphere;
 with GL_Util;
 with Shader_Manager;
+with Palet;
 
 package body GA_Draw is
-
-    G_Draw_State   : Draw_State;
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                            Model_View_Matrix : GL.Types.Singles.Matrix4);
@@ -487,6 +487,7 @@ package body GA_Draw is
         --          use GL.Types.Colors;
         use Singles;
         use E3GA;
+        use Palet;
         E3_V_Coords          : constant E3GA.Vector :=
                                  C3GA.Vector_To_E3GA (V_Coords);
         Projection_Matrix    : Matrix4;
@@ -528,7 +529,7 @@ package body GA_Draw is
         else
             Scale_Sign := -1.0;
         end if;
-        if G_Draw_State.M_Draw_Mode = OD_Orientation then
+        if Palet.Get_Draw_Mode = OD_Orientation then
             Scale_Matrix := Maths.Scaling_Matrix (Scale_Sign);
         end if;
 
@@ -631,19 +632,19 @@ package body GA_Draw is
                            MV_Matrix      : GL.Types.Singles.Matrix4;
                            Normal         : GL.Types.Single) is
         use Geosphere;
-        --        Sphere : Geosphere.Geosphere;
+        Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
     begin
-        if Sphere_State_Null (G_Draw_State.M_Sphere) then
-            Geosphere.GS_Compute (G_Draw_State.M_Sphere, 4);
-            Geosphere.New_Sphere_List (G_Draw_State.M_Sphere);
+        if Sphere_State_Null (Sphere) then
+            Geosphere.GS_Compute (Sphere, 4);
+            Geosphere.New_Sphere_List (Sphere);
             --  gsDraw(m_sphere, 0.0f);
-            Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere);
+            Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);
         end if;
 
         if Normal = 0.0 then
             Draw_Sphere_List (Render_Program, MV_Matrix);
         else
-            Geosphere.GS_Draw (Render_Program, MV_Matrix, G_Draw_State.M_Sphere,
+            Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere,
                                Normal);
         end if;
     exception
@@ -732,6 +733,7 @@ package body GA_Draw is
         use GL.Types.Singles;
         use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
         use GA_Maths;
+        use Palet;
         VC                : constant Array_3D := C3GA.Get_Coords (V);
         Scale_Sign        : Float;
         P_Scale           : Float;
@@ -874,20 +876,6 @@ package body GA_Draw is
 
     --  -----------------------------------------------------------------------
 
-    function Get_Draw_Mode return Draw_Mode is
-    begin
-        return G_Draw_State.M_Draw_Mode;
-    end Get_Draw_Mode;
-
-    --  ------------------------------------------------------------------------
-
-    function Get_Line_Length return Float is
-    begin
-        return G_Draw_State.Line_Length;
-    end Get_Line_Length;
-
-    --  ------------------------------------------------------------------------
-
     --     procedure Graphic_Shader_Locations (Render_Program  : GL.Objects.Programs.Program;
     --                                         MV_Matrix_ID, Projection_Matrix_ID,
     --                                         Colour_Location : out GL.Uniforms.Uniform) is
@@ -926,27 +914,6 @@ package body GA_Draw is
             Put_Line ("An exception occurred in GA_Draw.Set_Projection_Matrix.");
             raise;
     end Init_Projection_Matrix;
-
-    --  ------------------------------------------------------------------------
-
-    function Point_Size return Float is
-    begin
-        return G_Draw_State.Point_Size;
-    end Point_Size;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Set_Draw_Mode (Mode : Draw_Mode) is
-    begin
-        G_Draw_State.M_Draw_Mode := Mode;
-    end Set_Draw_Mode;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Set_Point_Size (Point_Size : Float) is
-    begin
-        G_Draw_State.Point_Size := Point_Size;
-    end Set_Point_Size;
 
     --  ------------------------------------------------------------------------
 
