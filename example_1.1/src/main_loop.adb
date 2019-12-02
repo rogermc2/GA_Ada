@@ -35,8 +35,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --      subtype tVec4f is Singles.Vector4;
 
    --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
-   Red            : constant Colors.Color := (1.0, 0.0, 0.0, 1.0);
-   Red_Colour     : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
+   Red           : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
    --      Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
    --      Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
    --      Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
@@ -110,9 +109,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --        Set_Coords (V1, E11, E12);
          --           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
          --                       Cos (A) * E21 - Sin (A) * E22);
-         Palet.Set_Foreground_Colour (Palet_Data, Red);
          GL.Objects.Programs.Use_Program (Render_Graphic_Program);
-         Shader_Manager.Set_Drawing_Colour (Red_Colour);
+         Shader_Manager.Set_Drawing_Colour (Red);
 
          for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
