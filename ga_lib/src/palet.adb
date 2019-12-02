@@ -2,6 +2,27 @@
 package body Palet is
     Palet          : Colour_Palet;
 
+    function Background_Colour return Color is
+    begin
+        return Palet.Background_Colour;
+    end Background_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    function Foreground_Colour return Color is
+    begin
+        return Palet.Foreground_Colour;
+    end Foreground_Colour;
+
+    --  ------------------------------------------------------------------------
+
+    function Ol_Colour return Color is
+    begin
+        return Palet.Ol_Colour;
+    end Ol_Colour;
+
+    --  ------------------------------------------------------------------------
+
     procedure Set_Background_Colour (Back_Colour : Color) is
     begin
         Palet.Background_Colour := Back_Colour;
@@ -22,5 +43,4 @@ package body Palet is
     end Set_Ol_Colour;
 
     --  ------------------------------------------------------------------------
-
 end Palet;

@@ -7,6 +7,10 @@ package Palet is
     use  GL.Types;
     type Colour_Palet is private;
 
+    function Background_Colour return Color;
+    function Foreground_Colour return Color;
+    function Ol_Colour return Color;
+
     procedure Set_Background_Colour (Back_Colour : Color);
     procedure Set_Foreground_Colour (Fore_Colour : Color);
     procedure Set_Ol_Colour (Ol_Colour : Color);
