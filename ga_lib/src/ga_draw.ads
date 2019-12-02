@@ -1,7 +1,6 @@
 
 --  Based on libgasandbox.draw.h
 
-with GL.Types.Colors; use GL.Types.Colors;
 with GL.Objects.Programs;
 with GL.Types; use GL.Types;
 
@@ -30,23 +29,23 @@ package GA_Draw is
                              Method : Bivector_Method_Type := Draw_Bivector_Circle);
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Scale : float := 1.0; Palet_Type : Palet.Colour_Palet;
+                             Scale                  : float := 1.0;
+                             Palet_Type             : Palet.Colour_Palet;
                              Method : Bivector_Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint, Direction : C3GA.Vector_E3GA;
-                         Weight : GL.Types.Single;
-                         Colour : GL.Types.Colors.Color);
+                         Weight : GL.Types.Single);
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
                               V : C3GA.Vector_E3GA;
-                              Colour : GL.Types.Colors.Color;
+                              Palet_Type : Palet.Colour_Palet;
                               Method  : Trivector_Method_Type := Draw_TV_Sphere);
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                            MV_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction : C3GA.Vector_E3GA;
-                           Colour : Color; Scale : float := 1.0);
+                           Scale : float := 1.0);
     procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
                                       Near : GL.Types.Single := -100.0;
                                       Far  : GL.Types.Single := 100.0);

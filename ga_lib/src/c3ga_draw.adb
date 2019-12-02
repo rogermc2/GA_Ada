@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Toggles;
+
 --  with Maths;
 
 --  with E3GA_Utilities;
@@ -9,22 +11,21 @@ with GA_Draw;
 with GA_Maths;
 with Multivector_Analyze;
 --  with Multivector_Type;
-with Palet;
 
 package body C3GA_Draw is
 
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color);
+                         Palet_Type : Palet.Colour_Palet);
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color);
+                         Palet_Type : Palet.Colour_Palet);
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Colour : GL.Types.Colors.Color;
+                          Palet_Type : Palet.Colour_Palet;
                           Method : GA_Draw.Trivector_Method_Type :=
                             GA_Draw.Draw_TV_Sphere);
 
@@ -32,12 +33,13 @@ package body C3GA_Draw is
 
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
-                    MV : Multivectors.Multivector; Colour : GL.Types.Colors.Color) is
+                    MV                : Multivectors.Multivector;
+                    Palet_Type : Palet.Colour_Palet) is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
         NO          : constant Multivectors.Multivector := C3GA.no;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, NO);
-        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
+        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 
     exception
         when others =>
@@ -69,7 +71,7 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color) is
+                         Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
 --          MV_Info : Multivector_Type.MV_Type_Record := Analyzed_MV.M_MV_Type;
     begin
@@ -79,12 +81,14 @@ package body C3GA_Draw is
             case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
-                Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
+               Draw_Flat (Render_Program, Model_View_Matrix,
+                          Analyzed_MV, Palet_Type);
             when Free_Blade => null;
                 Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Round.");
-                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Colour);
+               Draw_Round (Render_Program, Model_View_Matrix,
+                           Analyzed_MV, Palet_Type);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
             when others =>
@@ -104,7 +108,7 @@ package body C3GA_Draw is
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
-                         Colour : GL.Types.Colors.Color) is
+                         Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
@@ -118,15 +122,14 @@ package body C3GA_Draw is
             when Line_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Line.");
                 GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
-                                   Point_Pos, Direction, Weight, Colour);
---                                     Analysis.M_Scalors (1));
+                                   Point_Pos, Direction, Weight);
             when Plane_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             when Point_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
                 Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, Scale, V, Colour);
+                                        Point_Pos, Scale, V, Palet_Type);
             when others => null;
         end case;
 
@@ -138,34 +141,34 @@ package body C3GA_Draw is
 
     --  -------------------------------------------------------------------------
     --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
-    procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         L : Multivectors.Vector;
-                         Colour : GL.Types.Colors.Color) is
-        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-        V     : C3GA.Vector_E3GA;
-    begin
-        GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                C3GA.To_VectorE3GA (L), Scale, V, Colour);
-
-    exception
-        when others =>
-            Put_Line ("An exception occurred in C3GA_Draw.Draw_Line.");
-            raise;
-    end Draw_Line;
+--      procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
+--                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+--                           L : Multivectors.Vector;
+--                           Colour : GL.Types.Colors.Color) is
+--          Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
+--          V     : C3GA.Vector_E3GA;
+--      begin
+--          GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
+--                                  C3GA.To_VectorE3GA (L), Scale, V, Colour);
+--
+--      exception
+--          when others =>
+--              Put_Line ("An exception occurred in C3GA_Draw.Draw_Line.");
+--              raise;
+--      end Draw_Line;
 
     --  -------------------------------------------------------------------------
     --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
     procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Position : C3GA.Normalized_Point;
-                          Colour : GL.Types.Colors.Color) is
+                          Palet_Type : Palet.Colour_Palet) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
         V     : C3GA.Vector_E3GA;
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
         GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                C3GA.To_VectorE3GA (Position), Scale, V, Colour);
+                                C3GA.To_VectorE3GA (Position), Scale, V, Palet_Type);
 
     exception
         when others =>
@@ -178,9 +181,10 @@ package body C3GA_Draw is
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Colour : GL.Types.Colors.Color;
+                          Palet_Type : Palet.Colour_Palet;
                           Method : GA_Draw.Trivector_Method_Type :=
                             GA_Draw.Draw_TV_Sphere) is
+      use GL.Toggles;
         use Multivector_Analyze;
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
@@ -188,24 +192,25 @@ package body C3GA_Draw is
                        4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
         V          : C3GA.Vector_E3GA;
     begin
-        case Analysis.M_Type.Blade_Subclass is
-            when Point_Pair_Subclass =>
-                Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
-                GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, P_Scale, V, Colour, Method);
-            when Circle_Subclass =>
-                Put_Line ("C3GA_Draw.Draw_Round Circle.");
-            when Sphere_Subclass =>
-                Put_Line ("C3GA_Draw.Draw_Round Sphere.");
-                GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, P_Scale, V, Colour, Method);
-            when others => null;
-        end case;
+      case Analysis.M_Type.Blade_Subclass is
+         when Point_Pair_Subclass =>
+            Disable (Lighting);
+            Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
+            GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
+                                    Point_Pos, P_Scale, V, Palet_Type, Method);
+         when Circle_Subclass =>
+            Put_Line ("C3GA_Draw.Draw_Round Circle.");
+         when Sphere_Subclass =>
+            Put_Line ("C3GA_Draw.Draw_Round Sphere.");
+            GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
+                                    Point_Pos, P_Scale, V, Palet_Type, Method);
+         when others => null;
+      end case;
 
     exception
-        when others =>
-            Put_Line ("An exception occurred in C3GA_Draw.Draw_Round.");
-            raise;
+      when others =>
+         Put_Line ("An exception occurred in C3GA_Draw.Draw_Round.");
+         raise;
     end Draw_Round;
 
     --  -------------------------------------------------------------------------
