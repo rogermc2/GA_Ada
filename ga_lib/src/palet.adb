@@ -40,13 +40,6 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   function Colour_Null (Palet_Data : Colour_Palet) return Boolean is
-   begin
-      return Palet_Data.Colour_Defined;
-   end Colour_Null;
-
-   --  ------------------------------------------------------------------------
-
    function Foreground_Colour (Palet_Data : Colour_Palet) return Color is
    begin
       return Palet_Data.Foreground_Colour;
@@ -117,11 +110,56 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Background_Colour (Palet_Data : in out Colour_Palet; Back_Colour : Color) is
+   procedure Set_Background_Colour (Palet_Data  : in out Colour_Palet;
+                                    Back_Colour : Color) is
    begin
-      Palet_Data.Colour_Defined := True;
       Palet_Data.Background_Colour := Back_Colour;
    end Set_Background_Colour;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Background_Colour (Palet_Data : Colour_Palet) is
+      Colour         : constant Color := Background_Colour (Palet_Data);
+      A_State        : constant Single := Single (G_Draw_State.Ambient);
+      D_State        : constant Single := Single (G_Draw_State.Diffuse);
+      Ambient_Colour : constant Color :=
+                         (A_State * Colour (R), A_State * Colour (G),
+                          A_State * Colour (B), A_State * Colour (A));
+      Diffuse_Colour : constant Color :=
+                         (D_State * Colour (R), D_State * Colour (G),
+                          D_State * Colour (B), D_State * Colour (A));
+   begin
+      Shader_Manager.Set_Ambient_Colour
+        ((Ambient_Colour (R), Ambient_Colour (G), Ambient_Colour (B),
+         Ambient_Colour (A)));
+      Shader_Manager.Set_Diffuse_Colour
+        ((Diffuse_Colour (R), Diffuse_Colour (G),Diffuse_Colour (B),
+         Diffuse_Colour (A)));
+   end Set_Background_Colour;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Draw_Mode_Off (Mode : Draw_Mode_Type) is
+   begin
+      case Mode is
+         when OD_Shade => G_Draw_State.M_Draw_Mode.Shade := False;
+         when OD_Wireframe => G_Draw_State.M_Draw_Mode.Wireframe := False;
+         when OD_Magnitude => G_Draw_State.M_Draw_Mode.Magnitude := False;
+         when OD_Orientation => G_Draw_State.M_Draw_Mode.Orientation := False;
+      end case;
+   end Set_Draw_Mode_Off;
+
+      --  ------------------------------------------------------------------------
+
+   procedure Set_Draw_Mode_On (Mode : Draw_Mode_Type) is
+   begin
+      case Mode is
+         when OD_Shade => G_Draw_State.M_Draw_Mode.Shade := True;
+         when OD_Wireframe => G_Draw_State.M_Draw_Mode.Wireframe := True;
+         when OD_Magnitude => G_Draw_State.M_Draw_Mode.Magnitude := True;
+         when OD_Orientation => G_Draw_State.M_Draw_Mode.Orientation := True;
+      end case;
+   end Set_Draw_Mode_On;
 
    --  ------------------------------------------------------------------------
 
@@ -132,10 +170,30 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
+   procedure Set_Foreground_Colour (Palet_Data : Colour_Palet) is
+      Colour         : constant Color := Foreground_Colour (Palet_Data);
+      A_State        : constant Single := Single (G_Draw_State.Ambient);
+      D_State        : constant Single := Single (G_Draw_State.Diffuse);
+      Ambient_Colour : constant Color :=
+                         (A_State * Colour (R), A_State * Colour (G),
+                          A_State * Colour (B), A_State * Colour (A));
+      Diffuse_Colour : constant Color :=
+                         (D_State * Colour (R), D_State * Colour (G),
+                          D_State * Colour (B), D_State * Colour (A));
+   begin
+      Shader_Manager.Set_Ambient_Colour
+        ((Ambient_Colour (R),Ambient_Colour (G), Ambient_Colour (B),
+         Ambient_Colour (A)));
+      Shader_Manager.Set_Diffuse_Colour
+        ((Diffuse_Colour (R), Diffuse_Colour (G), Diffuse_Colour (B),
+         Diffuse_Colour (A)));
+   end Set_Foreground_Colour;
+
+   --  ------------------------------------------------------------------------
+
    procedure Set_Foreground_Colour (Palet_Data  : in out Colour_Palet;
                                     Fore_Colour : Color) is
    begin
-      Palet_Data.Colour_Defined := True;
       Palet_Data.Foreground_Colour := Fore_Colour;
    end Set_Foreground_Colour;
 
@@ -150,7 +208,6 @@ package body Palet is
 
    procedure Set_Ol_Colour (Palet_Data : in out Colour_Palet; Ol_Colour : Color) is
    begin
-      Palet_Data.Colour_Defined := True;
       Palet_Data.Ol_Colour := Ol_Colour;
    end Set_Ol_Colour;
 
@@ -158,27 +215,21 @@ package body Palet is
 
    procedure Set_Ol_Colour (Palet_Data : Colour_Palet) is
       Colour         : constant Color := Ol_Colour (Palet_Data);
-      Ambient_Colour : constant Color
-        :=
-          (Single (G_Draw_State.Ambient) * Colour (R),
-           Single (G_Draw_State.Ambient) * Colour (G),
-           Single (G_Draw_State.Ambient) * Colour (B),
-           Single (G_Draw_State.Ambient) * Colour (A));
-      Diffuse_Colour : constant Color
-        :=
-          (Single (G_Draw_State.Diffuse) * Colour (R),
-           Single (G_Draw_State.Diffuse) * Colour (G),
-           Single (G_Draw_State.Diffuse) * Colour (B),
-           Single (G_Draw_State.Diffuse) * Colour (A));
+      A_State        : constant Single := Single (G_Draw_State.Ambient);
+      D_State        : constant Single := Single (G_Draw_State.Diffuse);
+      Ambient_Colour : constant Color :=
+                         (A_State * Colour (R), A_State * Colour (G), A_State * Colour (B),
+                          A_State * Colour (A));
+      Diffuse_Colour : constant Color :=
+                         (D_State * Colour (R), D_State * Colour (G),
+                          D_State * Colour (B), D_State * Colour (A));
    begin
-      Shader_Manager.Set_Ambient_Colour ((Ambient_Colour (R),
-                                         Ambient_Colour (G),
-                                         Ambient_Colour (B),
-                                         Ambient_Colour (A)));
-      Shader_Manager.Set_Diffuse_Colour ((Diffuse_Colour (R),
-                                         Diffuse_Colour (G),
-                                         Diffuse_Colour (B),
-                                         Diffuse_Colour (A)));
+      Shader_Manager.Set_Ambient_Colour
+        ((Ambient_Colour (R), Ambient_Colour (G), Ambient_Colour (B),
+         Ambient_Colour (A)));
+      Shader_Manager.Set_Diffuse_Colour
+        ((Diffuse_Colour (R), Diffuse_Colour (G), Diffuse_Colour (B),
+         Diffuse_Colour (A)));
    end Set_Ol_Colour;
 
    --  ------------------------------------------------------------------------

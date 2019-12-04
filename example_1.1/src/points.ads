@@ -12,12 +12,12 @@ package Points is
    Num_Points : constant Integer := 6;
 
    Point_Data : Points_Array (1 .. Num_Points) :=
-                    (Set_Coords (-0.356756, -0.881980, 0.0),
-                     Set_Coords (-0.725786,  0.934177, -0.366154),
-                     Set_Coords (2.612482, 1.495455, -2.704073),
-                     Set_Coords (2.218644, 0.425753, -1.780935),
-                     Set_Coords (0.865897, 0.629159, -1.438985),
-                     Set_Coords (2.846445, -1.112365, -0.366769));
+                    (Set_Coords (-0.356756, -0.881980, 0.0),        -- L1
+                     Set_Coords (-0.725786,  0.934177, -0.366154),  -- L2
+                     Set_Coords (2.612482, 1.495455, -2.704073),    -- C1
+                     Set_Coords (2.218644, 0.425753, -1.780935),    -- C2
+                     Set_Coords (0.865897, 0.629159, -1.438985),    -- C3
+                     Set_Coords (2.846445, -1.112365, -0.366769));  -- P1
 
    type Colour_Data is new Singles.Vector4_Array (1 .. Int (Num_Points));
 

@@ -2,6 +2,7 @@
 --  with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Culling;
 with GL.Objects.Programs;
 with GL.Rasterization;
 --  with GL.Text;
@@ -65,6 +66,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --          use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
+      use GL.Toggles;
 
       --          use Maths.Single_Math_Functions;
 
@@ -88,21 +90,50 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Point_Position      : C3GA.Normalized_Point;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
+      Screen_Width        : constant GL.Types.Single := 1600.0;
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       --          Pick                : GL_Util.GL_Pick;
+      Frustum_Width       : GL.Types.Single;
+      Frustum_Height      : GL.Types.Single;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
+      Projection_Matrix   : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
       Palet_Data          : Palet.Colour_Palet;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
+      Frustum_Width := 2.0 *  Single (Window_Width) / Screen_Width;
+      Frustum_Height := 2.0 *  Single (Window_Height) / Screen_Width;
+      Projection_Matrix := Maths.Frustum_Matrix (Left   => -Frustum_Width / 2.0,
+                           Right  => Frustum_Width / 2.0,
+                           Bottom => -Frustum_Height / 2.0,
+                           Top    => Frustum_Height / 2.0,
+                           Near   => -5.0,
+                                                 Far    => 50.0);
       Utilities.Clear_Background_Colour_And_Depth (White);
+      Enable (Depth_Test);
+      GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+      Enable (Cull_Face);
+      Put_Line ("Main_Loop.Display, Cull_Face set.");
+      Enable (Lighting);
+      Put_Line ("Main_Loop.Display,  set.");
+      Enable (Light0);
+      Put_Line ("Main_Loop.Display, Light0 set.");
+      Enable (Normalize);
+      GL.Culling.Set_Cull_Face (GL.Culling.Back);
+      GL.Rasterization.Set_Line_Width (2.0);
+      Put_Line ("Main_Loop.Display, Line_Width set.");
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
+         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
+         Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
+         Palet.Set_Point_Size (0.05);
+
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-         Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
+         Model_View_Matrix := Maths.Scaling_Matrix
+           ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
 
          --  The final MVP matrix is set up in the draw routines
@@ -119,6 +150,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
             Point_Position := Points.Normalized_Points (count);
             GA_Utilities.Print_Multivector ("Display, Point_Position", Point_Position);
+            --  Point_Position (L1, L2, C1, C2, C3, P1)
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, Point_Position, Palet_Data);
          end loop;
@@ -167,13 +199,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --        Font_File : string := "../fonts/Helvetica.ttc";
    begin
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      --        GL.Toggles.Enable (GL.Toggles.Lighting);
-      --        GL.Toggles.Enable (GL.Toggles.Light0);
-      --        GL.Toggles.Enable (GL.Toggles.Normalize);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
-      GL.Rasterization.Set_Line_Width (1.0);
-      Palet.Set_Point_Size (0.05);
       --        GA_Draw.Set_Point_Size (0.005);
 
       Model_Rotor := Multivectors.New_Rotor;

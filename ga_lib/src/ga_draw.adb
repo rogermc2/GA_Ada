@@ -1,8 +1,6 @@
 
 --  Based on libgasandbox.draw.h and draw.cpp
 
---  with Ada.Containers.Vectors;
---  with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Numerics;
 with Ada.Numerics.Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
@@ -33,7 +31,8 @@ package body GA_Draw is
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Palet_Type        : Palet.Colour_Palet;
-                          Method            : Bivector_Method_Type);
+                          Weight            : GL.Types.Single;
+                          Method            : GA_Draw.Method_Type);
 
    --  ------------------------------------------------------------------------
 
@@ -90,8 +89,9 @@ package body GA_Draw is
    procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
                             Translation_Matrix       : GL.Types.Singles.Matrix4;
                             Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
-                            Scale                    : float := 1.0; Palet_Type : Palet.Colour_Palet;
-                            Method                   : Bivector_Method_Type := Draw_Bivector_Circle) is
+                            Palet_Type               : Palet.Colour_Palet;
+                            Scale                    : float := 1.0;
+                            Method                   : Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -133,7 +133,8 @@ package body GA_Draw is
          case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-               Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
+               Draw_Circle (Render_Program, MVP_Matrix, Palet_Type,
+                            Single (Scale), Method);
             when others => null;
          end case;
       else
@@ -150,8 +151,9 @@ package body GA_Draw is
 
    procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
                             Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                            Scale                  : float := 1.0; Palet_Type : Palet.Colour_Palet;
-                            Method                 : Bivector_Method_Type := Draw_Bivector_Circle) is
+                            Palet_Type             : Palet.Colour_Palet;
+                            Scale                  : float := 1.0;
+                            Method                 : Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
 
@@ -196,7 +198,8 @@ package body GA_Draw is
       Case Method is
          when Draw_Bivector_Circle |
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
+            Draw_Circle (Render_Program, MVP_Matrix, Palet_Type,
+                         Single (Scale), Method);
          when others => null;
       end case;
    exception
@@ -239,7 +242,8 @@ package body GA_Draw is
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Palet_Type        : Palet.Colour_Palet;
-                          Method            : Bivector_Method_Type) is
+                          Weight            : GL.Types.Single;
+                          Method            : GA_Draw.Method_Type) is
       use GA_Maths;
       use GL.Objects.Buffers;
       use GA_Maths.Float_Functions;
@@ -290,8 +294,7 @@ package body GA_Draw is
          GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
          if Part = Back_Part or Part = Front_Part then
-            if Part = Back_Part and then
-              Get_Draw_Mode = Palet.OD_Orientation then
+            if Part = Back_Part and then Get_Draw_Mode.Orientation then
                GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
             end if;
             GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
@@ -306,15 +309,13 @@ package body GA_Draw is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      if ((Method = Draw_Bivector_Circle) and Palet.Colour_Null (Palet_Type)) or
+      if Method = Draw_Bivector_Circle or
         Palet.Foreground_Alpha (Palet_Type) > 0.0 then
          Draw_Part (Back_Part);
          Draw_Part (Front_Part);
       end if;
 
-      if not Palet.Colour_Null (Palet_Type) then
-         Palet.Set_Ol_Colour (Palet_Type);
-      end if;
+      Palet.Set_Ol_Colour (Palet_Type);
       Draw_Part (Outline_Part);
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
@@ -451,10 +452,12 @@ package body GA_Draw is
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                         aPoint, Direction : C3GA.Vector_E3GA;
-                        Weight            : GL.Types.Single) is
+                        Weight            : GL.Types.Single;
+                        Method            : GA_Draw.Method_Type) is
       use GL.Objects.Buffers;
       use GL.Toggles;
       use GL.Types.Singles;
+      use  Multivectors;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
       Scale                : constant GL.Types.Singles.Matrix4 :=
                                Maths.Scaling_Matrix (Weight);
@@ -463,6 +466,12 @@ package body GA_Draw is
       Dir_e1               : constant Single := GL_Dir (GL.X);
       Dir_e2               : constant Single := GL_Dir (GL.Y);
       Dir_e3               : constant Single := GL_Dir (GL.Z);
+      Dir_Coords           : constant GA_Maths.Array_3D :=
+                               C3GA.Get_Coords (Direction);
+      MV_Dir               : constant Multivectors.Vector := New_Vector
+        (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
+      MV_Matrix            : GL.Types.Singles.Matrix4 := Model_View_Matrix;
+      aRotor               : Rotor;
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
       Vertices             : constant Singles.Vector3_Array (1 .. 2) :=
                                ((0.0, 0.0, 0.0),
@@ -476,19 +485,27 @@ package body GA_Draw is
       GL.Objects.Programs.Use_Program (Render_Program);
       Translation := Maths.Translation_Matrix
         (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
-      Init_Projection_Matrix (Projection_Matrix);
-      Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
-      Shader_Manager.Set_Model_View_Matrix
-        (Translation * Scale * Model_View_Matrix);
-      Shader_Manager.Set_Projection_Matrix ( Projection_Matrix);
+      --  rotate e3 to vector direction
+      aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
+        (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
+      if GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix) then
+         MV_Matrix := MV_Matrix * Model_View_Matrix;
+         Init_Projection_Matrix (Projection_Matrix);
+         Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+         Shader_Manager.Set_Model_View_Matrix
+           (Translation * Scale * MV_Matrix);
+         Shader_Manager.Set_Projection_Matrix ( Projection_Matrix);
 
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
-                                            First => 0,
-                                            Count => 1 * 3);
-      GL.Attributes.Disable_Vertex_Attrib_Array (0);
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                               First => 0,
+                                               Count => 1 * 3);
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      else
+         Put_Line ("GA_Draw.Draw_Line, aRotor is not invertible.");
+      end if;
 
    exception
       when  others =>
@@ -502,8 +519,7 @@ package body GA_Draw is
                                   Model_View_Matrix : GL.Types.Singles.Matrix4;
                                   V_Coords          : C3GA.Vector_E3GA;
                                   Scale             : Float;
-                                  Method            : Trivector_Method_Type) is
-
+                                  Method            : Method_Type) is
       use GL.Objects.Buffers;
       --          use GL.Toggles;
       --          use GL.Types.Colors;
@@ -551,7 +567,7 @@ package body GA_Draw is
       else
          Scale_Sign := -1.0;
       end if;
-      if Palet.Get_Draw_Mode = OD_Orientation then
+      if Palet.Get_Draw_Mode.Orientation then
          Scale_Matrix := Maths.Scaling_Matrix (Scale_Sign);
       end if;
 
@@ -602,7 +618,7 @@ package body GA_Draw is
                       Tail           => GL_Util.From_GL (Vertices (1)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode = OD_Shade then
+         if Get_Draw_Mode.Shade then
             GL.Toggles.Enable (GL.Toggles.Lighting);
          end if;
          Draw_Vector (Render_Program => Render_Program,
@@ -610,7 +626,7 @@ package body GA_Draw is
                       Tail           => GL_Util.From_GL (Vertices (2)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode = OD_Shade then
+         if Get_Draw_Mode.Shade then
             GL.Toggles.Enable (GL.Toggles.Lighting);
          end if;
          Draw_Vector (Render_Program => Render_Program,
@@ -618,7 +634,7 @@ package body GA_Draw is
                       Tail           => GL_Util.From_GL (Vertices (3)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode = OD_Shade then
+         if Get_Draw_Mode.Shade then
             GL.Toggles.Enable (GL.Toggles.Lighting);
          end if;
       end if;
@@ -748,11 +764,10 @@ package body GA_Draw is
                              Base              : C3GA.Vector_E3GA; Scale : float := 1.0;
                              V                 : C3GA.Vector_E3GA;
                              Palet_Type        : Palet.Colour_Palet;
-                             Method            : Trivector_Method_Type := Draw_TV_Sphere) is
+                             Method            : Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
       use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
       use GA_Maths;
-      use Palet;
       VC                : constant Array_3D := C3GA.Get_Coords (V);
       Scale_Sign        : Float;
       P_Scale           : Float;
@@ -786,7 +801,7 @@ package body GA_Draw is
       case Method is
          when Draw_TV_Sphere =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
-            if Get_Draw_Mode = OD_Orientation then
+            if Palet.Get_Draw_Mode.Orientation then
                Normal := 0.1;
             else
                Normal := 0.0;
@@ -806,6 +821,7 @@ package body GA_Draw is
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
             Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
                                  Draw_TV_Parellelepiped_No_Vectors);
+          when others => null;
       end case;
 
    exception
@@ -828,7 +844,8 @@ package body GA_Draw is
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Model_View_Matrix    : Matrix4;
       Projection_Matrix    : Matrix4;
-      Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
+      Dir_Coords           : constant GA_Maths.Array_3D :=
+                               C3GA.Get_Coords (Direction);
       GL_Tail              : Vector3;
       GL_Dir               : Vector3;
       MV_Dir               : constant Multivectors.Vector :=
@@ -859,9 +876,8 @@ package body GA_Draw is
          --  rotate e3 to vector direction
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-         Model_View_Matrix := Identity4;
          if GL_Util.Rotor_GL_Multiply (aRotor, Model_View_Matrix) then
-            Model_View_Matrix := MV_Matrix * Model_View_Matrix;
+            Model_View_Matrix := MV_Matrix;
 
             if C3GA.Norm_e2 (Tail) /= 0.0 then
                Model_View_Matrix := Maths.Translation_Matrix (GL_Tail) * Model_View_Matrix;
