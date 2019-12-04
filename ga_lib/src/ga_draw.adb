@@ -31,7 +31,6 @@ package body GA_Draw is
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Palet_Type        : Palet.Colour_Palet;
-                          Weight            : GL.Types.Single;
                           Method            : GA_Draw.Method_Type);
 
    --  ------------------------------------------------------------------------
@@ -133,8 +132,7 @@ package body GA_Draw is
          case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-               Draw_Circle (Render_Program, MVP_Matrix, Palet_Type,
-                            Single (Scale), Method);
+               Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
             when others => null;
          end case;
       else
@@ -198,8 +196,7 @@ package body GA_Draw is
       Case Method is
          when Draw_Bivector_Circle |
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Palet_Type,
-                         Single (Scale), Method);
+            Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
          when others => null;
       end case;
    exception
@@ -242,7 +239,6 @@ package body GA_Draw is
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Palet_Type        : Palet.Colour_Palet;
-                          Weight            : GL.Types.Single;
                           Method            : GA_Draw.Method_Type) is
       use GA_Maths;
       use GL.Objects.Buffers;
@@ -451,16 +447,12 @@ package body GA_Draw is
 
    procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                        aPoint, Direction : C3GA.Vector_E3GA;
-                        Weight            : GL.Types.Single;
-                        Method            : GA_Draw.Method_Type) is
+                        aPoint, Direction : C3GA.Vector_E3GA) is
       use GL.Objects.Buffers;
       use GL.Toggles;
       use GL.Types.Singles;
       use  Multivectors;
       Projection_Matrix    : GL.Types.Singles.Matrix4;
-      Scale                : constant GL.Types.Singles.Matrix4 :=
-                               Maths.Scaling_Matrix (Weight);
       Translation          : GL.Types.Singles.Matrix4;
       GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       Dir_e1               : constant Single := GL_Dir (GL.X);
@@ -492,9 +484,8 @@ package body GA_Draw is
          MV_Matrix := MV_Matrix * Model_View_Matrix;
          Init_Projection_Matrix (Projection_Matrix);
          Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
-         Shader_Manager.Set_Model_View_Matrix
-           (Translation * Scale * MV_Matrix);
-         Shader_Manager.Set_Projection_Matrix ( Projection_Matrix);
+         Shader_Manager.Set_Model_View_Matrix (Translation * MV_Matrix);
+         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
          GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -870,7 +861,7 @@ package body GA_Draw is
          end if;
 
          Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-         Draw_Line (Render_Program, Model_View_Matrix, Tail, Direction, 1.0);
+         Draw_Line (Render_Program, Model_View_Matrix, Tail, Direction);
 
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
