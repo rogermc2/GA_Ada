@@ -76,8 +76,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GA_Maths;
       --          use GA_Maths.Float_Functions;
 
-      Scale             : constant float := 40.0;
-      Scale_S           : constant single := single (Scale);
       --          Position_X        : integer := 0;
       --          Position_Y        : single := 160.0;
       --        Label             : Silo.Label_Data;
@@ -96,8 +94,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       --          Pick                : GL_Util.GL_Pick;
-      Frustum_Width       : GL.Types.Single;
-      Frustum_Height      : GL.Types.Single;
+      Width               : GL.Types.Single;
+      Height              : GL.Types.Single;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
       Projection_Matrix   : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -106,14 +104,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      Frustum_Width := 2.0 *  Single (Window_Width) / Screen_Width;
-      Frustum_Height := 2.0 *  Single (Window_Height) / Screen_Width;
-      Projection_Matrix := Maths.Frustum_Matrix (Left   => -Frustum_Width / 2.0,
-                                                 Right  => Frustum_Width / 2.0,
-                                                 Bottom => -Frustum_Height / 2.0,
-                                                 Top    => Frustum_Height / 2.0,
-                                                 Near   => -5.0,
-                                                 Far    => 50.0);
+      Width := 2.0 * Single (Window_Width) / Screen_Width;
+      Height := 2.0 * Single (Window_Height) / Screen_Width;
+      Projection_Matrix := Maths.Perspective_Matrix (Top => Height / 2.0,
+                                                     Bottom => -Height / 2.0,
+                                                     Left   => -Width / 2.0,
+                                                     Right  => Width / 2.0,
+                                                     Near   => -5.0,
+                                                     Far    => 50.0);
       Utilities.Clear_Background_Colour_And_Depth (White);
       Enable (Depth_Test);
       GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
