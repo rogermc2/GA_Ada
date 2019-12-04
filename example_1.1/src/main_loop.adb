@@ -4,6 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
 with GL.Objects.Programs;
+with GL.Objects.Vertex_Arrays;
 with GL.Rasterization;
 --  with GL.Text;
 with GL.Toggles;
@@ -43,8 +44,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
 
+   Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    --  rotor g_modelRotor(_rotor(1.0f))
-   Model_Rotor     : Multivectors.Rotor;
+   Model_Rotor              : Multivectors.Rotor;
    --      Rotate_Model    : boolean := False;
    --      Rotate_Model_Out_Of_Plane  : boolean := False;
    --      Pick            : GL_Util.GL_Pick;
@@ -107,21 +109,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Frustum_Width := 2.0 *  Single (Window_Width) / Screen_Width;
       Frustum_Height := 2.0 *  Single (Window_Height) / Screen_Width;
       Projection_Matrix := Maths.Frustum_Matrix (Left   => -Frustum_Width / 2.0,
-                           Right  => Frustum_Width / 2.0,
-                           Bottom => -Frustum_Height / 2.0,
-                           Top    => Frustum_Height / 2.0,
-                           Near   => -5.0,
+                                                 Right  => Frustum_Width / 2.0,
+                                                 Bottom => -Frustum_Height / 2.0,
+                                                 Top    => Frustum_Height / 2.0,
+                                                 Near   => -5.0,
                                                  Far    => 50.0);
       Utilities.Clear_Background_Colour_And_Depth (White);
       Enable (Depth_Test);
       GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       Enable (Cull_Face);
       Put_Line ("Main_Loop.Display, Cull_Face set.");
---        Enable (Light0);
---        Put_Line ("Main_Loop.Display, Light0 set.");
---        Enable (Lighting);
---        Put_Line ("Main_Loop.Display, Lighting set.");
---        Enable (Normalize);
+      --        Enable (Light0);
+      --        Put_Line ("Main_Loop.Display, Light0 set.");
+      --        Enable (Lighting);
+      --        Put_Line ("Main_Loop.Display, Lighting set.");
+      --        Enable (Normalize);
       GL.Culling.Set_Cull_Face (GL.Culling.Back);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
       --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
@@ -134,9 +136,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Palet.Set_Point_Size (0.05);  --  orig 0.005
 
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-         Model_View_Matrix := Maths.Scaling_Matrix
-           ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
+--           Model_View_Matrix := Maths.Scaling_Matrix
+--             ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
 
          --  The final MVP matrix is set up in the draw routines
          --        Set_Coords (V1, E11, E12);
@@ -151,7 +154,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             --           Silo.Push (Label);
 
             Point_Position := Points.Normalized_Points (count);
-            GA_Utilities.Print_Multivector ("Display, Point_Position", Point_Position);
+            GA_Utilities.Print_Multivector ("Display, Point_Position:", Point_Position);
             --  Point_Position (L1, L2, C1, C2, C3, P1)
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, Point_Position, Palet_Data);
@@ -202,6 +205,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --        Font_File : string := "../fonts/Helvetica.ttc";
    begin
 
+      Vertices_Array_Object.Initialize_Id;
+      Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
 

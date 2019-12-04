@@ -1,9 +1,7 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Text_IO; use Ada.Text_IO;
---  with Ada.Numerics;
 
-with Maths;
 with Utilities;
 
 with GL.Attributes;
@@ -12,10 +10,7 @@ with GL.Objects.Vertex_Arrays;
 --  with GL.Toggles;
 
 with C3GA;
-with GA_Draw;
 with GL_Util;
-
-with Shader_Manager;
 
 package body Geosphere is
 
@@ -326,16 +321,13 @@ package body Geosphere is
       use GL.Types;
       use GL.Types.Singles;
 
-      Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Model_View_Matrix    : Singles.Matrix4 := Singles.Identity4;
-      Proj_Matrix          : GL.Types.Singles.Matrix4;
-
       --  gsDraw(geosphere * sphere, int f, mv::Float normal = 0.0)
       --  geosphere * sphere, int f is Face_Vectors.Cursor
       procedure Draw (C : Face_Vectors.Cursor) is
-         Face_Index   : constant Integer := Face_Vectors.To_Index (C);
-         thisFace     : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
-         Vertex_Buffer   : GL.Objects.Buffers.Buffer;
+         Face_Index    : constant Integer := Face_Vectors.To_Index (C);
+         thisFace      : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
+         Vertex_Buffer : GL.Objects.Buffers.Buffer;
+         Num_Vertices  : constant Int := 3;
 
          procedure Draw (Face_Index : Integer) is
             thisFace : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
@@ -343,7 +335,7 @@ package body Geosphere is
             null;
          end Draw;
 
-         Vertices : Singles.Vector3_Array (1 .. 3);
+         Vertices : Singles.Vector3_Array (1 .. Num_Vertices);
          Lines    : Singles.Vector3_Array (1 .. 6);
          V1       : Singles.Vector3;
          V1_MV    : Multivectors.Vector;
@@ -361,9 +353,9 @@ package body Geosphere is
             Get_Vertices (Sphere, thisFace, Vertices);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
---              Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
---              Utilities.Print_GL_Array3 ("Number of vertices: " &
---                          GL.Types.Int'Image (Num_Vertices), Vertices);
+            Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
+            Utilities.Print_GL_Array3 ("Number of vertices: " &
+                        GL.Types.Int'Image (Num_Vertices), Vertices);
 
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -396,26 +388,8 @@ package body Geosphere is
       end Draw;
 
    begin
-      Vertex_Array_Object.Initialize_Id;
-      Vertex_Array_Object.Bind;
-
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Model_View_Matrix := Maths.Scaling_Matrix (0.5) * MV_Matrix;
-      GA_Draw.Init_Projection_Matrix (Proj_Matrix);
---        Proj_Matrix := Maths.Translation_Matrix ((1.0, -1.0, 0.0)) *
---          Proj_Matrix;
-      Shader_Manager.Set_Model_View_Matrix
-          ( Maths.Translation_Matrix ((1.0, -1.0, 0.0)) * Model_View_Matrix);
-      Shader_Manager.Set_Projection_Matrix (Proj_Matrix);
-
---        GL.Toggles.Disable (GL.Toggles.Cull_Face);
---        Draw (Sphere.Faces.First_Element);
-
       --  Implement for (i = 0; i < sphere->nbPrimitives; i++)
-      --                 gsDraw(sphere, i, normal);
---        Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix);
---        Utilities.Print_Matrix ("Geosphere.GS_Draw Proj_Matrix", Proj_Matrix);
---        Utilities.Print_Matrix ("Geosphere.GS_Draw MVP Matrix", Proj_Matrix * Model_View_Matrix);
+      --                 gsDraw(sphere, i, normal);;
       Iterate (Sphere.Faces, Draw'Access);
 
    exception

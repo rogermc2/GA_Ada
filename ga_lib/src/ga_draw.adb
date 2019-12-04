@@ -661,6 +661,7 @@ package body GA_Draw is
       Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
    begin
       if Sphere_State_Null (Sphere) then
+         Put_Line ("GA_Draw.Draw_Sphere Sphere_State_Null.");
          Geosphere.GS_Compute (Sphere, 4);
          Geosphere.New_Sphere_List (Sphere);
          --  gsDraw(m_sphere, 0.0f);
@@ -669,9 +670,11 @@ package body GA_Draw is
 
       if Normal = 0.0 then
          Draw_Sphere_List (Render_Program, MV_Matrix);
+         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List.");
       else
          Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere,
                             Normal);
+         Put_Line ("GA_Draw.Draw_Sphere call GS_Draw.");
       end if;
    exception
       when others =>
@@ -789,6 +792,7 @@ package body GA_Draw is
              Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
       end if;
 
+      Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
       case Method is
          when Draw_TV_Sphere =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
@@ -800,19 +804,21 @@ package body GA_Draw is
             --  g_drawState.drawSphere (s)
             Draw_Sphere (Render_Program, Model_View_Matrix, Normal);
          when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
             null;
          when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
             null;
          when Draw_TV_Parellelepiped =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
             Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
                                  Draw_TV_Parellelepiped);
-
          when Draw_TV_Parellelepiped_No_Vectors =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
             Draw_Parallelepiped (Render_Program, Model_View_Matrix, V, Scale,
                                  Draw_TV_Parellelepiped_No_Vectors);
           when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
       end case;
 
    exception

@@ -200,13 +200,15 @@ package body C3GA_Draw is
             Disable (Lighting);
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos, P_Scale, V, Palet_Type, Method);
+                                    Point_Pos, P_Scale, V, Palet_Type,
+                                    GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
-            GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos, P_Scale, V, Palet_Type, Method);
+            GA_Draw.Draw_Trivector
+              (Render_Program, Model_View_Matrix,
+               Point_Pos, P_Scale, V, Palet_Type, GA_Draw.Draw_TV_Sphere);
          when others => null;
       end case;
 
