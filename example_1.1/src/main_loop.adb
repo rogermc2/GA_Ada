@@ -117,11 +117,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       Enable (Cull_Face);
       Put_Line ("Main_Loop.Display, Cull_Face set.");
-      --        Enable (Light0);
-      --        Put_Line ("Main_Loop.Display, Light0 set.");
-      --        Enable (Lighting);
-      --        Put_Line ("Main_Loop.Display, Lighting set.");
-      --        Enable (Normalize);
       GL.Culling.Set_Cull_Face (GL.Culling.Back);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
       --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
@@ -134,15 +129,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Palet.Set_Point_Size (0.05);  --  orig 0.005
 
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
---           Model_View_Matrix := Maths.Scaling_Matrix
---             ((Scale_S, Scale_S, Scale_S)) * Model_View_Matrix;
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
 
-         --  The final MVP matrix is set up in the draw routines
-         --        Set_Coords (V1, E11, E12);
-         --           Set_Coords (V2, Cos (A) * E11 - Sin (A) * E21,
-         --                       Cos (A) * E21 - Sin (A) * E22);
          GL.Objects.Programs.Use_Program (Render_Graphic_Program);
          Shader_Manager.Set_Drawing_Colour (Red);
 
