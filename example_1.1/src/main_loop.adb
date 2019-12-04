@@ -117,19 +117,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       Enable (Cull_Face);
       Put_Line ("Main_Loop.Display, Cull_Face set.");
-      Enable (Lighting);
-      Put_Line ("Main_Loop.Display,  set.");
-      Enable (Light0);
-      Put_Line ("Main_Loop.Display, Light0 set.");
-      Enable (Normalize);
+--        Enable (Light0);
+--        Put_Line ("Main_Loop.Display, Light0 set.");
+--        Enable (Lighting);
+--        Put_Line ("Main_Loop.Display, Lighting set.");
+--        Enable (Normalize);
       GL.Culling.Set_Cull_Face (GL.Culling.Back);
-      GL.Rasterization.Set_Line_Width (2.0);
+      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
+      --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
+      GL.Rasterization.Set_Line_Width (1.0);
       Put_Line ("Main_Loop.Display, Line_Width set.");
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.05);
+         Palet.Set_Point_Size (0.05);  --  orig 0.005
 
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
          Model_View_Matrix := Maths.Scaling_Matrix
@@ -199,8 +201,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --        Font_File : string := "../fonts/Helvetica.ttc";
    begin
-      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum. Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
-      --        GA_Draw.Set_Point_Size (0.005);
 
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
