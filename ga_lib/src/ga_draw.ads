@@ -45,8 +45,8 @@ package GA_Draw is
                            MV_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction : C3GA.Vector_E3GA;
                            Scale : float := 1.0);
-    procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
-                                      Near : GL.Types.Single := -100.0;
-                                      Far  : GL.Types.Single := 100.0);
+--      procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
+--                                        Near : GL.Types.Single := -100.0;
+--                                        Far  : GL.Types.Single := 100.0);
 
 end GA_Draw;
