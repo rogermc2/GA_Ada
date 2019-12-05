@@ -329,11 +329,11 @@ package body Geosphere is
          Vertex_Buffer : GL.Objects.Buffers.Buffer;
          Num_Vertices  : constant Int := 3;
 
-         procedure Draw (Face_Index : Integer) is
+         procedure Draw_Child (Face_Index : Integer) is
             thisFace : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
          begin
-            null;
-         end Draw;
+               null;
+         end Draw_Child;
 
          Vertices : Singles.Vector3_Array (1 .. Num_Vertices);
          Lines    : Singles.Vector3_Array (1 .. 6);
@@ -343,7 +343,7 @@ package body Geosphere is
          if thisFace.Child (1) > 0 then
             Put_Line ("Geosphere.GS_Draw has child");
             for index in 1 .. 4 loop
-               Draw (thisFace.Child (index));
+               Draw_Child (thisFace.Child (index));
             end loop;
          else  --  no children
             --  Draw this face's triangle
@@ -381,7 +381,7 @@ package body Geosphere is
 
                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
                                                      First => 0,
-                                                     Count => 2);
+                                                     Count => 3);
                GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;

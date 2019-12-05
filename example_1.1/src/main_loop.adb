@@ -89,17 +89,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Point_Position      : C3GA.Normalized_Point;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
---        Screen_Width        : constant GL.Types.Single := 1600.0;
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       --          Pick                : GL_Util.GL_Pick;
---        Width               : GL.Types.Single;
---        Height              : GL.Types.Single;
-      Translation_Matrix  : GL.Types.Singles.Matrix4;
-      Projection_Matrix   : GL.Types.Singles.Matrix4;
-      Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Width               : GL.Types.Single;
+      Height              : GL.Types.Single;
+      Translation_Matrix  : Matrix4;
+      Projection_Matrix   : Matrix4;
+      Model_View_Matrix   : Matrix4 := Identity4;
       View_Angle          : constant Maths.Degree := 60.0;
-      View_Matrix         : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      View_Matrix         : GL.Types.Singles.Matrix4 := Identity4;
       Camera_Position     : constant GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
       Half_Pi             : constant Single := 0.5 * Ada.Numerics.Pi;
       Horizontal_Angle    : constant Single := Ada.Numerics.Pi;
@@ -119,26 +118,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      --        Width := 2.0 * Single (Window_Width) / Screen_Width;
-      --        Height := 2.0 * Single (Window_Height) / Screen_Width;
---        Maths.Init_Perspective_Transform (View_Angle, Single (Window_Width),
---                                          Single (Window_Height), 5.0, -50.0,
---                                          Projection_Matrix);
-      Projection_Matrix := Maths.Perspective_Matrix (Top    => 1.0,
-                                                     Bottom => -1.0,
-                                                     Left   => -1.0,
-                                                     Right  => 1.0,
-                                                     Near   => 1.0,
-                                                     Far    => 100.0);
-      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
+      Width := Single (Window_Width);
+      Height := Single (Window_Height);
       Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
-      --        Projection_Matrix := Maths.Perspective_Matrix (Top    => Height / 2.0,
-      --                                                       Bottom => -Height / 2.0,
-      --                                                       Left   => -Width / 2.0,
-      --                                                       Right  => Width / 2.0,
-      --                                                       Near   => -50.0,
-      --                                                       Far    => 50.0);
 
+      Projection_Matrix := Maths.Perspective_Matrix (View_Angle => View_Angle,
+                                                     Aspect     => Width / Height,
+                                                     Near       => -1.0,
+                                                     Far        => 500.0);
+      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
@@ -159,10 +147,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.05);  --  orig 0.005
+         Palet.Set_Point_Size (0.5);  --  orig 0.005
          Shader_Manager.Set_Drawing_Colour (Red);
 
-         for count in 1 .. Points.Num_Points loop
+         for count in 1 .. 1 loop
+--           for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);
@@ -269,6 +258,7 @@ begin
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Display (Main_Window, Render_Graphic_Program);
       --        Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
+--        Delay (2.0);
       Glfw.Input.Poll_Events;
       Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
       if not Key_Pressed and Key_Now = Glfw.Input.Pressed then
