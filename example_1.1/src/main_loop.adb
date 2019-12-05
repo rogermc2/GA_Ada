@@ -106,33 +106,35 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Width := 2.0 * Single (Window_Width) / Screen_Width;
       Height := 2.0 * Single (Window_Height) / Screen_Width;
-      Projection_Matrix := Maths.Perspective_Matrix (Top => Height / 2.0,
+      Projection_Matrix := Maths.Perspective_Matrix (Top    => Height / 2.0,
                                                      Bottom => -Height / 2.0,
                                                      Left   => -Width / 2.0,
                                                      Right  => Width / 2.0,
                                                      Near   => -5.0,
                                                      Far    => 50.0);
+
+      GL.Objects.Programs.Use_Program (Render_Graphic_Program);
+      Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
+
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+
+      Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+      Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+      --  View and model matrices initilized to identity by shader iitialization.
+
       Utilities.Clear_Background_Colour_And_Depth (White);
+
       Enable (Depth_Test);
       GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
       Enable (Cull_Face);
-      Put_Line ("Main_Loop.Display, Cull_Face set.");
       GL.Culling.Set_Cull_Face (GL.Culling.Back);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
       --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
       GL.Rasterization.Set_Line_Width (1.0);
-      Put_Line ("Main_Loop.Display, Line_Width set.");
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
-         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
          Palet.Set_Point_Size (0.05);  --  orig 0.005
-
-         Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-
-         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
          Shader_Manager.Set_Drawing_Colour (Red);
 
          for count in 1 .. Points.Num_Points loop
@@ -191,7 +193,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --        Font_File : string := "../fonts/Helvetica.ttc";
    begin
-
       Vertices_Array_Object.Initialize_Id;
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
