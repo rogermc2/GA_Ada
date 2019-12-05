@@ -8,7 +8,7 @@ in vec3 Eye_Direction;
 in vec3 Light_Direction;
 
 // Ouput data
-out vec3 color;
+out vec3 colour;
 
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
@@ -20,14 +20,9 @@ uniform vec4 Drawing_Colour;
 
 void main()
 {
-    // Light emission properties
-    // You probably want to put them as uniforms
-//    vec3 LightColor = vec3(1,1,1);
-    vec3 LightColor = (Drawing_Colour + Ambient_Colour + Diffuse_Colour).xyz;
     float LightPower = 50.0f;
-    
     // Distance to the light
-    float distance = length( Light_Position_Worldspace - Position_Worldspace );
+    float distance = length(Light_Position_Worldspace - Position_Worldspace);
     
     // Normal of the computed fragment, in camera space
     vec3 norm = normalize(Camera_Normal);
@@ -40,15 +35,7 @@ void main()
     //  - light is behind the triangle -> 0
     float cosTheta = clamp(dot(norm, light_dir), 0, 1);
     
-    // Eye vector (towards the camera)
-    vec3 Eye_Dir = normalize(Eye_Direction);
-    // Direction in which the triangle reflects the light
-    vec3 Refl = reflect(-light_dir, norm);
-    // Cosine of the angle between the Eye vector and the Reflect vector,
-    // clamped to 0
-    //  - Looking into the reflection -> 1
-    //  - Looking elsewhere -> < 1
-    float cosAlpha = clamp( dot(Eye_Dir, Refl), 0,1 );
-    
-    color = LightColor * LightPower * cosTheta / (distance*distance);
+    vec3 LightColour = (Drawing_Colour + Ambient_Colour + Diffuse_Colour * LightPower * cosTheta / (distance*distance)).xyz;
+    colour = LightColour;
+    colour = vec3(1.0, 0.0, 0.0);
 }

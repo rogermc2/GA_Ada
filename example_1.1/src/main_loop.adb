@@ -1,5 +1,6 @@
 
 --  with Ada.Strings.Unbounded;
+with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
@@ -69,9 +70,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
       use GL.Toggles;
-
-      --          use Maths.Single_Math_Functions;
-
+      use Maths.Single_Math_Functions;
       --          use E2GA;
       --          use GA_Maths;
       --          use GA_Maths.Float_Functions;
@@ -90,37 +89,63 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Point_Position      : C3GA.Normalized_Point;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
-      Screen_Width        : constant GL.Types.Single := 1600.0;
+--        Screen_Width        : constant GL.Types.Single := 1600.0;
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
       --          Pick                : GL_Util.GL_Pick;
-      Width               : GL.Types.Single;
-      Height              : GL.Types.Single;
+--        Width               : GL.Types.Single;
+--        Height              : GL.Types.Single;
       Translation_Matrix  : GL.Types.Singles.Matrix4;
       Projection_Matrix   : GL.Types.Singles.Matrix4;
       Model_View_Matrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      View_Angle          : constant Maths.Degree := 60.0;
+      View_Matrix         : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Camera_Position     : constant GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
+      Half_Pi             : constant Single := 0.5 * Ada.Numerics.Pi;
+      Horizontal_Angle    : constant Single := Ada.Numerics.Pi;
+      Vertical_Angle      : constant Single := 0.0;
+      Direction           : Vector3;
+      Right               : Vector3;
+      Up                  : Vector3;
       Palet_Data          : Palet.Colour_Palet;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+      Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
+                    Sin (Vertical_Angle),
+                    Cos (Vertical_Angle) * Cos (Horizontal_Angle));
+      Right := (Sin (Horizontal_Angle - Half_Pi), 0.0,
+                Cos (Horizontal_Angle - Half_Pi));
+      Up := Singles.Cross_Product (Right, Direction);
+
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      Width := 2.0 * Single (Window_Width) / Screen_Width;
-      Height := 2.0 * Single (Window_Height) / Screen_Width;
-      Projection_Matrix := Maths.Perspective_Matrix (Top    => Height / 2.0,
-                                                     Bottom => -Height / 2.0,
-                                                     Left   => -Width / 2.0,
-                                                     Right  => Width / 2.0,
-                                                     Near   => -5.0,
-                                                     Far    => 50.0);
+      --        Width := 2.0 * Single (Window_Width) / Screen_Width;
+      --        Height := 2.0 * Single (Window_Height) / Screen_Width;
+--        Maths.Init_Perspective_Transform (View_Angle, Single (Window_Width),
+--                                          Single (Window_Height), 5.0, -50.0,
+--                                          Projection_Matrix);
+      Projection_Matrix := Maths.Perspective_Matrix (Top    => 1.0,
+                                                     Bottom => -1.0,
+                                                     Left   => -1.0,
+                                                     Right  => 1.0,
+                                                     Near   => 1.0,
+                                                     Far    => 100.0);
+      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
+      Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
+      --        Projection_Matrix := Maths.Perspective_Matrix (Top    => Height / 2.0,
+      --                                                       Bottom => -Height / 2.0,
+      --                                                       Left   => -Width / 2.0,
+      --                                                       Right  => Width / 2.0,
+      --                                                       Near   => -50.0,
+      --                                                       Far    => 50.0);
 
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 14.0));
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
       Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-      --  View and model matrices initilized to identity by shader iitialization.
+      --  View and model matrices initilized to identity by shader initialization.
 
       Utilities.Clear_Background_Colour_And_Depth (White);
 

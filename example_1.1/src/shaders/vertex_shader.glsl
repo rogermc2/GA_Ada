@@ -16,9 +16,7 @@ uniform vec3 light_position;
 
 void main()
     {
-      gl_Position = projection_matrix * mv_matrix * vec4(vertex_position, 1);
       Position_Worldspace = (model_matrix * vec4(vertex_position, 1)).xyz;
-      
       // Vector that goes from the vertex to the camera, in camera space.
       // In camera space, the camera is at the origin (0,0,0).
       vec3 Vertex_Position_Camera_Space = (view_matrix * model_matrix * vec4(vertex_position,1)).xyz;
@@ -30,4 +28,6 @@ void main()
        Camera_Normal = (view_matrix * model_matrix * vec4(vertex_normal, 0)).xyz;
         // Only correct if Model_Matrix does not scale the model !
         // Use its inverse transpose if not.
+        gl_Position = projection_matrix * mv_matrix * vec4(vertex_position, 1);
+        gl_Position = projection_matrix * vec4(vertex_position, 1);
     }
