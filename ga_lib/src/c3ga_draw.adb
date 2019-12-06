@@ -99,6 +99,8 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_C3GA Others.");
                 null;
             end case;
+        else
+            Put_Line ("C3GA_Draw.Draw_C3GA only processes conformal models.");
         end if;
 
     exception
@@ -167,7 +169,7 @@ package body C3GA_Draw is
                           Position : C3GA.Normalized_Point;
                           Palet_Type : Palet.Colour_Palet) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-        V     : C3GA.Vector_E3GA;
+        V     : C3GA.Vector_E3GA;   --  coords initialized to (0.0, 0.0, 0.0)
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
         GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
@@ -193,7 +195,7 @@ package body C3GA_Draw is
                        C3GA.To_VectorE3GA (Analysis.Points (1));
         P_Scale    : constant Float :=
                        4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
-        V          : C3GA.Vector_E3GA;
+        V          : C3GA.Vector_E3GA;   --  coords initialized to (0.0, 0.0, 0.0)
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>

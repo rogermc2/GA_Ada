@@ -173,6 +173,7 @@ package body Geosphere is
       Curs : Cursor := Sphere_List.First;
    begin
       while Has_Element (Curs) loop
+         Put_Line ("Geosphere.Draw_Sphere_List.");
          GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal);
          Next (Curs);
       end loop;
@@ -332,6 +333,7 @@ package body Geosphere is
          procedure Draw_Child (Face_Index : Integer) is
             thisFace : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
          begin
+               Put_Line ("Geosphere.GS_Draw.Draw_Child");
                null;
          end Draw_Child;
 
@@ -340,6 +342,7 @@ package body Geosphere is
          V1       : Singles.Vector3;
          V1_MV    : Multivectors.Vector;
       begin
+         GL.Objects.Programs.Use_Program (Render_Program);
          if thisFace.Child (1) > 0 then
             Put_Line ("Geosphere.GS_Draw has child");
             for index in 1 .. 4 loop
@@ -366,6 +369,7 @@ package body Geosphere is
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
             if Normal /= 0.0 then
+               Put_Line ("Geosphere.GS_Draw setting lines");
                --  Draw three lines
                for index in 1 .. 3 loop
                   V1_MV := Unit_E (Get_Vertex (Sphere, index));

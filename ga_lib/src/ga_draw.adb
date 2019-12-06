@@ -40,8 +40,6 @@ package body GA_Draw is
 
       use GL.Objects.Buffers;
       use GA_Maths.Float_Functions;
-      --        MV_Matrix_ID         : GL.Uniforms.Uniform;
-      --        Colour_Location      : GL.Uniforms.Uniform;
       S_Scale              : constant Single := Single (5.0 / Scale);
       Z                    : float := 0.0;
       Num_Steps            : constant int := 32;
@@ -633,7 +631,7 @@ package body GA_Draw is
       Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
    begin
       if Sphere_State_Null (Sphere) then
-         Put_Line ("GA_Draw.Draw_Sphere Sphere_State_Null.");
+         Put_Line ("GA_Draw.Draw_Sphere Sphere_State_Null so Compute new sphere.");
          Geosphere.GS_Compute (Sphere, 4);
          Geosphere.New_Sphere_List (Sphere);
          --  gsDraw(m_sphere, 0.0f);
@@ -641,13 +639,14 @@ package body GA_Draw is
       end if;
 
       if Normal = 0.0 then
+         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List for Normal = 0.0.");
          Draw_Sphere_List (Render_Program, MV_Matrix);
-         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List.");
       else
+         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List for Normal not 0.0.");
          Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere,
                             Normal);
-         Put_Line ("GA_Draw.Draw_Sphere call GS_Draw.");
       end if;
+
    exception
       when others =>
          Put_Line ("An exception occurred in GA_Draw.Draw_Sphere.");
@@ -749,7 +748,9 @@ package body GA_Draw is
 
       if Method = Draw_TV_Parellelepiped or
         Method = Draw_TV_Parellelepiped_No_Vectors then
+        Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
          if VC = (0.0, 0.0, 0.0) then
+            Put_Line ("GA_Draw.Draw_Trivector, VC = 0, so Draw_Trivector");
             Draw_Trivector (Render_Program, Model_View_Matrix,
                             Base, Scale, V, Palet_Type, Draw_TV_Sphere) ;
          end if;
@@ -759,9 +760,12 @@ package body GA_Draw is
       end if;
 
       if C3GA.Norm_e2 (Base) /= 0.0 then
+        Put_Line ("GA_Draw.Draw_Trivector C3GA.Norm_e2 (Base) /= 0.0");
          MV_Matrix := Maths.Translation_Matrix
            ((Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)))) *
              Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
+        GL.Objects.Programs.Use_Program (Render_Program);
+        Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
       end if;
 
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));

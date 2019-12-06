@@ -126,7 +126,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                                      Aspect     => Width / Height,
                                                      Near       => -1.0,
                                                      Far        => 500.0);
-      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
+      Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
