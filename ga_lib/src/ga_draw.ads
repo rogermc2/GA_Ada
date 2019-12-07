@@ -42,7 +42,7 @@ package GA_Draw is
                               Palet_Type : Palet.Colour_Palet;
                               Method  : Method_Type := Draw_TV_Sphere);
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
-                           MV_Matrix : GL.Types.Singles.Matrix4;
+                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction : C3GA.Vector_E3GA;
                            Scale : float := 1.0);
 --      procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
