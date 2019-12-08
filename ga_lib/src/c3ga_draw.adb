@@ -196,8 +196,10 @@ package body C3GA_Draw is
                        4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
         M_Vectors  : constant Vector_Array := Analysis.M_Vectors;
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
+        M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
+        M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
         Scalar     : constant Scalar_Array := Analysis.Scalors;
-        VC         :Vector_E3GA;  --  Initialized to zeroes
+        VC         : Vector_E3GA;  --  Initialized to zeroes
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
@@ -216,12 +218,12 @@ package body C3GA_Draw is
             GA_Draw.Draw_Bivector (Render_Program => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Point_Pos,
-                                   Normal            => C3GA.To_VectorE3GA (M_Vectors (3)),
-                                   Ortho_1           => C3GA.To_VectorE3GA (M_Vectors (1)),
-                                   Ortho_2           => Point_Pos,
+                                   Normal            => M_Vec3,
+                                   Ortho_1           => M_Vec1,
+                                   Ortho_2           => M_Vec2,
                                    Palet_Type        => Palet_Type,
-                                   Scale             => P_Scale,
-                                   Method            => GA_Draw.Draw_TV_Sphere);
+                                   Scale             => Scalar (1),
+                                   Method            => Method);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
             GA_Draw.Draw_Trivector
