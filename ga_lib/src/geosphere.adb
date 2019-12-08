@@ -461,9 +461,9 @@ package body Geosphere is
          end loop;
          Sphere.Faces.Replace_Element (Face_index, this_Face);
 
---           for index in Int4_range loop
---              Dump := Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
---           end loop;
+         for index in Int4_range loop
+            Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
+         end loop;
       end if;
 
    exception
