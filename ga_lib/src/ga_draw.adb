@@ -79,7 +79,8 @@ package body GA_Draw is
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
-                            Translation_Matrix       : GL.Types.Singles.Matrix4;
+                            Translation_Matrix       : GL.Types.Singles.Matrix4 :=
+                              GL.Types.Singles.Identity4;
                             Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                             Palet_Type               : Palet.Colour_Palet;
                             Scale                    : float := 1.0;
@@ -738,6 +739,7 @@ package body GA_Draw is
       P_Scale           : Float;
       Normal            : Single;
       Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+      Translation       :Singles.Vector3;
       MV_Matrix         : Matrix4 := Model_View_Matrix;
    begin
       if Scale >= 0.0 then
@@ -761,12 +763,12 @@ package body GA_Draw is
 
       if C3GA.Norm_e2 (Base) /= 0.0 then
         Put_Line ("GA_Draw.Draw_Trivector C3GA.Norm_e2 (Base) /= 0.0");
-         MV_Matrix := Maths.Translation_Matrix
-           ((Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)))) *
-             Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
-        GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
+        Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+        MV_Matrix :=  Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
+      MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
+      GL.Objects.Programs.Use_Program (Render_Program);
+      Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
       case Method is
