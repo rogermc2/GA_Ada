@@ -141,60 +141,60 @@ package body GA_Draw is
 
    --  ----------------------------------------------------------------------
 
-   procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
-                            Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                            Palet_Type             : Palet.Colour_Palet;
-                            Scale                  : float := 1.0;
-                            Method                 : Method_Type := Draw_Bivector_Circle) is
-      use GA_Maths;
-      use GL.Types.Singles;
-
-      Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
-      Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
-      Translate            : Vector3 :=  (0.0, 0.0, 0.0);
-      --          O2                   : Multivectors.Vector := Ortho_2;
-      --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-      MVP_Matrix           : Matrix4 := Singles.Identity4;
-      Scaled               : GL.Types.Single;
-      E2_Norm              : Float;
-   begin
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Vertex_Array_Object.Initialize_Id;
-      Vertex_Array_Object.Bind;
-
-      Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
-
-      --          MVP_Matrix := Model_View_Matrix;
-      Translate := (Single (C3GA.e1 (Base)),
-                    Single (C3GA.e2 (Base)),
-                    Single (C3GA.e3 (Base)));
-      E2_Norm := Multivectors.Norm_E2 (Base);
-      if  E2_Norm /= 0.0  then
-         MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
-      end if;
-
-      if  Method = Draw_Bivector_Parallelogram and then
-        Method = Draw_Bivector_Parallelogram_No_Vectors then
-         MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
-      else
-         E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (pi / E2_Norm));
-         MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
-           * MVP_Matrix;
-      end if;
-
-      Case Method is
-         when Draw_Bivector_Circle |
-              Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
-         when others => null;
-      end case;
-   exception
-      when  others =>
-         Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
-         raise;
-   end Draw_Bivector;
+--     procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
+--                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
+--                              Palet_Type             : Palet.Colour_Palet;
+--                              Scale                  : float := 1.0;
+--                              Method                 : Method_Type := Draw_Bivector_Circle) is
+--        use GA_Maths;
+--        use GL.Types.Singles;
+--
+--        Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+--        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+--        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
+--        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
+--        --          O2                   : Multivectors.Vector := Ortho_2;
+--        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+--        MVP_Matrix           : Matrix4 := Singles.Identity4;
+--        Scaled               : GL.Types.Single;
+--        E2_Norm              : Float;
+--     begin
+--        GL.Objects.Programs.Use_Program (Render_Program);
+--        Vertex_Array_Object.Initialize_Id;
+--        Vertex_Array_Object.Bind;
+--
+--        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+--
+--        --          MVP_Matrix := Model_View_Matrix;
+--        Translate := (Single (C3GA.e1 (Base)),
+--                      Single (C3GA.e2 (Base)),
+--                      Single (C3GA.e3 (Base)));
+--        E2_Norm := Multivectors.Norm_E2 (Base);
+--        if  E2_Norm /= 0.0  then
+--           MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
+--        end if;
+--
+--        if  Method = Draw_Bivector_Parallelogram and then
+--          Method = Draw_Bivector_Parallelogram_No_Vectors then
+--           MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
+--        else
+--           E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
+--           Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (pi / E2_Norm));
+--           MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
+--             * MVP_Matrix;
+--        end if;
+--
+--        Case Method is
+--           when Draw_Bivector_Circle |
+--                Draw_Bivector_Circle_Outline =>
+--              Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
+--           when others => null;
+--        end case;
+--     exception
+--        when  others =>
+--           Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
+--           raise;
+--     end Draw_Bivector;
 
    --  ----------------------------------------------------------------------
 

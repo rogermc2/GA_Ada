@@ -27,11 +27,11 @@ package GA_Draw is
                              Palet_Type               : Palet.Colour_Palet;
                              Scale : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle);
-    procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                             Base, Ortho_1, Ortho_2 : Multivectors.Vector;
-                             Palet_Type             : Palet.Colour_Palet;
-                             Scale                    : float := 1.0;
-                             Method : Method_Type := Draw_Bivector_Circle);
+--      procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
+--                               Base, Ortho_1, Ortho_2 : Multivectors.Vector;
+--                               Palet_Type             : Palet.Colour_Palet;
+--                               Scale                    : float := 1.0;
+--                               Method : Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint, Direction : C3GA.Vector_E3GA);
