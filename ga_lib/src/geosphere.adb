@@ -1,5 +1,6 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
+with  Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Utilities;
@@ -7,10 +8,11 @@ with Utilities;
 with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
---  with GL.Toggles;
 
 with C3GA;
 with GL_Util;
+
+with Shader_Manager;
 
 package body Geosphere is
 
@@ -23,8 +25,7 @@ package body Geosphere is
 
    Sphere_List : Sphere_DL_List;
 
---     function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
---                           return Boolean;
+   procedure Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer);
 
    --  -------------------------------------------------------------------------
 
@@ -35,33 +36,33 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
---     function Add_Vertex (Sphere : in out Geosphere; Pos : Vector;
---                          New_Index : out Integer) return Boolean is
---        use Ada.Numerics;
---        Vertices : constant V_Vector := Sphere.Vertices;
---        V        : Vector;
---        Index    : Integer := 0;
---        Found    : Boolean := False;
---     begin
---        --  first check if vertex already exists
---        New_Index := 0;
---        while index <= Sphere.Vertices.Last_Index and not Found loop
---           Index := Index + 1;
---           V :=  Pos - Vertices.Element (index);
---           --  first check if vertex already exists
---           Found := Norm_E2 (V) > e ** (-10);
---        end loop;
---
---        if not Found then  --  reate new vertex
---           Sphere.Vertices.Append (Pos);
---        end if;
---        return Found;
---
---     exception
---        when others =>
---           Put_Line ("An exception occurred in Geosphere.Add_Vertex.");
---           raise;
---     end Add_Vertex;
+   function Add_Vertex (Sphere : in out Geosphere; Pos : Vector;
+                        New_Index : out Integer) return Boolean is
+      use Ada.Numerics;
+      Vertices : constant V_Vector := Sphere.Vertices;
+      V        : Vector;
+      Index    : Integer := 0;
+      Found    : Boolean := False;
+   begin
+      --  first check if vertex already exists
+      New_Index := 0;
+      while index <= Sphere.Vertices.Last_Index and not Found loop
+         Index := Index + 1;
+         V :=  Pos - Vertices.Element (index);
+         --  first check if vertex already exists
+         Found := Norm_E2 (V) > e ** (-10);
+      end loop;
+
+      if not Found then  --  reate new vertex
+         Sphere.Vertices.Append (Pos);
+      end if;
+      return Found;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Geosphere.Add_Vertex.");
+         raise;
+   end Add_Vertex;
 
    --  -------------------------------------------------------------------------
 
@@ -181,22 +182,22 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
---     procedure Create_Face (Sphere : in out Geosphere; V1, V2, V3 : Integer) is
---        New_Face : Geosphere_Face;
---     begin
---        New_Face := Sphere.Faces.Last_Element;
---        New_Face.Vertex_Indices (1) := V1;
---        New_Face.Vertex_Indices (2) := V2;
---        New_Face.Vertex_Indices (3) := V3;
---        New_Face.Depth := New_Face.Depth + 1;
---        --  New_Face.Child is set to (0, 0, 0) by default
---        Sphere.Faces.Append (New_Face);
---
---     exception
---        when others =>
---           Put_Line ("An exception occurred in Geosphere.Create_Face.");
---           raise;
---     end Create_Face;
+   procedure Create_Face (Sphere : in out Geosphere; V1, V2, V3 : Integer) is
+      New_Face : Geosphere_Face;
+   begin
+      New_Face := Sphere.Faces.Last_Element;
+      New_Face.Vertex_Indices (1) := V1;
+      New_Face.Vertex_Indices (2) := V2;
+      New_Face.Vertex_Indices (3) := V3;
+      New_Face.Depth := New_Face.Depth + 1;
+      --  New_Face.Child is set to (0, 0, 0) by default
+      Sphere.Faces.Append (New_Face);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Geosphere.Create_Face.");
+         raise;
+   end Create_Face;
 
    --  -------------------------------------------------------------------------
 
@@ -260,7 +261,6 @@ package body Geosphere is
       Num_Vertices  : constant Integer := 6;
       --        S_Faces       : constant F_Vector := Sphere.Faces;
       New_Face      : Geosphere_Face;
---        Refinded      : Boolean := False;
       Faces         : constant Indices_Array (1 .. Num_Faces)
         := ((6, 1, 3),
             (4, 3, 1),
@@ -297,9 +297,9 @@ package body Geosphere is
          Sphere.Vertices.Append (Vertices (vertex));
       end loop;
 
---        for face_index in 1 .. Num_Faces loop
---           Refinded := Refine_Face (Sphere, face_index, Depth);
---        end loop;
+      for face_index in 1 .. Num_Faces loop
+         Refine_Face (Sphere, face_index, Depth);
+      end loop;
       Sphere.Depth := Depth;
 
       Compute_Neighbours (Sphere);
@@ -316,7 +316,7 @@ package body Geosphere is
    --  Based on geosphere.cpp
    --  gsDraw(geosphere * sphere, mv::Float normal /*= 0.0*/)
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
-                      MV_Matrix : GL.Types.Singles.Matrix4;
+                      Model_View_Matrix : GL.Types.Singles.Matrix4;
                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0) is
       use GL.Objects.Buffers;
       use GL.Types;
@@ -330,12 +330,11 @@ package body Geosphere is
          Vertex_Buffer : GL.Objects.Buffers.Buffer;
          Num_Vertices  : constant Int := 3;
 
-         procedure Draw_Child (Face_Index : Integer) is
-            thisFace : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
-         begin
-               Put_Line ("Geosphere.GS_Draw.Draw_Child");
-               null;
-         end Draw_Child;
+--           procedure Draw_Child (Child : Integer) is
+--           begin
+--                 Put_Line ("Geosphere.GS_Draw.Draw_Child");
+--                 GS_Draw (Render_Program, Model_View_Matrix, Child, Normal);
+--           end Draw_Child;
 
          Vertices : Singles.Vector3_Array (1 .. Num_Vertices);
          Lines    : Singles.Vector3_Array (1 .. 6);
@@ -345,27 +344,31 @@ package body Geosphere is
          GL.Objects.Programs.Use_Program (Render_Program);
          if thisFace.Child (1) > 0 then
             Put_Line ("Geosphere.GS_Draw has child");
-            for index in 1 .. 4 loop
-               Draw_Child (thisFace.Child (index));
-            end loop;
+--              for index in 1 .. 4 loop
+--                 Draw_Child (thisFace.Child (index));
+--              end loop;
          else  --  no children
             --  Draw this face's triangle
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
 
             Get_Vertices (Sphere, thisFace, Vertices);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+--              Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
             Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
             Utilities.Print_GL_Array3 ("Number of vertices: " &
                         GL.Types.Int'Image (Num_Vertices), Vertices);
+            Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+--               Shader_Manager.Set_Model_View_Matrix (Identity4);
+--               Shader_Manager.Set_Model_View_Matrix
+--                    (Maths.Translation_Matrix ((0.0, 0.0, -14.0)) * Identity4);
+--              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
+--              GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
-            GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
-            GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
-                                                  First => 0,
-                                                  Count => 3);
+--              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
+--                                                    First => 0,
+--                                                    Count => 3);
+            GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
             if Normal /= 0.0 then
@@ -412,65 +415,62 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
---     function Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer)
---                           return Boolean is
---        Faces           : constant F_Vector := Sphere.Faces;
---        this_Face       : Geosphere_Face:= Faces.Element (Face_index);
---        Vertex_Indicies : constant V_Array := this_Face.Vertex_Indices;
---        New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
---        index_2         : Integer;
---        Vertex_1        : Vector;
---        Vertex_2        : Vector;
---        V1              : Vector;
---        Index           : Integer := 0;
---        Refined         : Boolean := False;
---        Dump            : Boolean;
---     begin
---        if Depth > 0 then  --   create 3 vertices
---           while index < 3 and not Refined loop
---              index := index + 1;
---
---              if index < 3 then
---                 index_2 := Index + 1;
---              else
---                 index_2 := 1;
---              end if;
---  --              Put_Line ("Face_index: "&  Integer'Image (Face_index));
---  --              Put ("Geosphere.Refine_Face index: " &  Integer'Image (index));
---  --              Put_Line (" vertice: "&  Integer'Image (Vertex_Indicies (index)));
---              Vertex_1 := Sphere.Vertices.Element (Vertex_Indicies (index));
---              Vertex_2 := Sphere.Vertices.Element (Vertex_Indicies (index_2));
---              V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
---              Refined := Add_Vertex (Sphere, V1, New_Indices (index));
---           end loop;
---        end if;
---
---        if not Refined then
---           Create_Face (Sphere, this_Face.Vertex_Indices (1),
---                        New_Indices (1), New_Indices (3));
---           Create_Face (Sphere, New_Indices (1),
---                        this_Face.Vertex_Indices (2), New_Indices (2));
---           Create_Face (Sphere, New_Indices (1),
---                        New_Indices (2), New_Indices (3));
---           Create_Face (Sphere, New_Indices (2),
---                        this_Face.Vertex_Indices (3), New_Indices (3));
---
+   procedure Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer) is
+      Faces           : constant F_Vector := Sphere.Faces;
+      this_Face       : Geosphere_Face:= Faces.Element (Face_index);
+      Vertex_Indicies : constant V_Array := this_Face.Vertex_Indices;
+      New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
+      index_2         : Integer;
+      Vertex_1        : Vector;
+      Vertex_2        : Vector;
+      V1              : Vector;
+      Index           : Integer := 0;
+      Refined         : Boolean := False;
+   begin
+      if Depth > 0 then  --   create 3 vertices
+         while index < 3 and not Refined loop
+            index := index + 1;
+
+            if index < 3 then
+               index_2 := Index + 1;
+            else
+               index_2 := 1;
+            end if;
+--              Put_Line ("Face_index: "&  Integer'Image (Face_index));
+--              Put ("Geosphere.Refine_Face index: " &  Integer'Image (index));
+--              Put_Line (" vertice: "&  Integer'Image (Vertex_Indicies (index)));
+            Vertex_1 := Sphere.Vertices.Element (Vertex_Indicies (index));
+            Vertex_2 := Sphere.Vertices.Element (Vertex_Indicies (index_2));
+            V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
+            Refined := Add_Vertex (Sphere, V1, New_Indices (index));
+         end loop;
+      end if;
+
+      if not Refined then
+         Create_Face (Sphere, this_Face.Vertex_Indices (1),
+                      New_Indices (1), New_Indices (3));
+         Create_Face (Sphere, New_Indices (1),
+                      this_Face.Vertex_Indices (2), New_Indices (2));
+         Create_Face (Sphere, New_Indices (1),
+                      New_Indices (2), New_Indices (3));
+         Create_Face (Sphere, New_Indices (2),
+                      this_Face.Vertex_Indices (3), New_Indices (3));
+
+         for index in Int4_range loop
+            this_Face.Child (Index) := Sphere.Faces.Last_Index + Index;
+         end loop;
+         Sphere.Faces.Replace_Element (Face_index, this_Face);
+
 --           for index in Int4_range loop
---              this_Face.Child (Index) := Sphere.Faces.Last_Index + Index;
+--              Dump := Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
 --           end loop;
---           Sphere.Faces.Replace_Element (Face_index, this_Face);
---
---  --           for index in Int4_range loop
---  --              Dump := Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
---  --           end loop;
---        end if;
---        return Refined;
---
---     exception
---        when others =>
---           Put_Line ("An exception occurred in Geosphere.Refine_Face.");
---           raise;
---     end Refine_Face;
+      end if;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Geosphere.Refine_Face.");
+         raise;
+   end Refine_Face;
 
    --  -------------------------------------------------------------------------
 

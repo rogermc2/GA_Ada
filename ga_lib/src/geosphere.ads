@@ -3,7 +3,6 @@ with Ada.Containers.Vectors;
 
 with GL.Objects.Programs;
 with GL.Types;
-with GL.Types.Colors;
 
 with Multivectors;
 
@@ -25,7 +24,7 @@ package Geosphere is
                                Normal : GL.Types.Single := 0.0);
    procedure GS_Compute (Sphere : in out Geosphere; Depth : integer);
    procedure GS_Draw (Render_Program : GL.Objects.Programs.Program;
-                      MV_Matrix : GL.Types.Singles.Matrix4;
+                      Model_View_Matrix : GL.Types.Singles.Matrix4;
                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0);
    procedure New_Sphere_List (Sphere : Geosphere);
    function Sphere_State_Null (Sphere : Geosphere) return Boolean;
@@ -41,7 +40,7 @@ private
 
    type Geosphere_Face is record
       Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
-      Child             : Child_Array := (0, 0, 0, 0);
+      Child             : Child_Array := (-1, -1, -1, -1);
       Plane             : Multivectors.Bivector;
       D                 : float;
       Depth             : integer;
