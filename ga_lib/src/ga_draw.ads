@@ -22,9 +22,8 @@ package GA_Draw is
     --  Draw_Bivector draws a bivector at Base (:= null for origin).
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                             Translation_Matrix : GL.Types.Singles.Matrix4 :=
-                               GL.Types.Singles.Identity4;
-                             Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
+                             Model_View_Matrix : GL.Types.Singles.Matrix4;
+                             Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                              Palet_Type               : Palet.Colour_Palet;
                              Scale : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle);

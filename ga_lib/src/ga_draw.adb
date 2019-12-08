@@ -79,9 +79,8 @@ package body GA_Draw is
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
-                            Translation_Matrix       : GL.Types.Singles.Matrix4 :=
-                              GL.Types.Singles.Identity4;
-                            Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
+                            Model_View_Matrix       : GL.Types.Singles.Matrix4 ;
+                            Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
                             Palet_Type               : Palet.Colour_Palet;
                             Scale                    : float := 1.0;
                             Method                   : Method_Type := Draw_Bivector_Circle) is
@@ -89,13 +88,13 @@ package body GA_Draw is
       use GL.Types.Singles;
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
-      Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
       --          Cords                : Array_3D := (0.0, 0.0, 0.0);
       --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       --          O2                   : Multivectors.Vector := Ortho_2;
-      MVP_Matrix           : Matrix4 := Singles.Identity4;
+      Translation_Vector   : Vector3 :=  (0.0, 0.0, 0.0);
+      MV_Matrix            : Matrix4 := Model_View_Matrix;
       Scaled               : GL.Types.Single;
-      Normed_E2            : Float;
+      E2_Norm              : Float := Multivectors.Norm_E2 (Base);
       RT                   : Multivectors.Rotor;
       OK                   : Boolean := True;
    begin
@@ -103,27 +102,31 @@ package body GA_Draw is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
 
-      if  Method /= Draw_Bivector_Parallelogram and then
-        Method /= Draw_Bivector_Parallelogram_No_Vectors then
-         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix (Scale_S);
-         --  Rotate e3 to normal direction
-         RT := E3GA_Utilities.Rotor_Vector_To_Vector
-           (Multivectors.Basis_Vector (Blade_Types.E3_e3), Normal);
-         OK := GL_Util.Rotor_GL_Multiply (RT, MVP_Matrix);
-      else
-         Normed_E2 := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
-         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / Normed_E2));
-         MVP_Matrix := Translation_Matrix * Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
-           * MVP_Matrix;
-      end if;
+        if Method /= Draw_Bivector_Parallelogram and then
+          Method /= Draw_Bivector_Parallelogram_No_Vectors then
+            if E2_Norm > 0.0 then
+                Translation_Vector := (Single (C3GA.e1 (Base)),
+                                       Single (C3GA.e2 (Base)),
+                                       Single (C3GA.e3 (Base)));
+                MV_Matrix := Maths.Translation_Matrix (Translation_Vector) * MV_Matrix;
+            end if;
+            --  Rotate e3 to normal direction
+            RT := E3GA_Utilities.Rotor_Vector_To_Vector
+              (Multivectors.Basis_Vector (Blade_Types.E3_e3), Normal);
+            OK := GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
+        else
+            E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
+            Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
+            MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
+        end if;
 
       if OK then
          case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-               Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
+               Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
             when others => null;
          end case;
       else
