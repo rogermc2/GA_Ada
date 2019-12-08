@@ -123,6 +123,19 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
+   function "-" (L, R : Vector_E3GA) return Vector_E3GA is
+        L_Coords : constant E3GA.Vector := L.Coordinates;
+        R_Coords : constant E3GA.Vector := R.Coordinates;
+        Result   : Vector_E3GA;
+   begin
+      Result.Coordinates (1) := L_Coords (1) - R_Coords (1);
+      Result.Coordinates (2) := L_Coords (2) - R_Coords (2);
+      Result.Coordinates (3) := L_Coords (3) - R_Coords (3);
+      return Result;
+   end "-";
+
+   --  -------------------------------------------------------------------------
+
    function "*" (L : float; R : Vector_E3GA) return Vector_E3GA is
         R_Coords : constant E3GA.Vector := R.Coordinates;
         Result   : Vector_E3GA;

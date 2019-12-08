@@ -83,14 +83,14 @@ package body C3GA_Draw is
             case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
-               Draw_Flat (Render_Program, Model_View_Matrix,
-                          Analyzed_MV, Palet_Type);
+               --  Draw_Flat doesn't use method
+               Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
             when Free_Blade => null;
                Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
-               Draw_Round (Render_Program, Model_View_Matrix,
-                           Analyzed_MV, Palet_Type, Method);
+               --  Draw_Round uses method
+               Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
             when others =>
@@ -124,6 +124,7 @@ package body C3GA_Draw is
         case Analysis.M_Type.Blade_Subclass is
             when Line_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Line.");
+                --  Draw_Line doesn't use method
                 GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
                                    Point_Pos, Direction);
             when Plane_Subclass =>
@@ -188,26 +189,44 @@ package body C3GA_Draw is
                           Method : GA_Draw.Method_Type :=
                             GA_Draw.Draw_Bivector_Circle) is
         use Multivector_Analyze;
-        Point_Pos  : constant C3GA.Vector_E3GA :=
-                       C3GA.To_VectorE3GA (Analysis.Points (1));
+        use C3GA;
+        Point_Pos  : constant Vector_E3GA :=
+                       To_VectorE3GA (Analysis.Points (1));
         P_Scale    : constant Float :=
                        4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
-        V          : C3GA.Vector_E3GA;   --  coords initialized to (0.0, 0.0, 0.0)
+        M_Vectors  : constant Vector_Array := Analysis.M_Vectors;
+        M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
+        Scalar     : constant Scalar_Array := Analysis.Scalors;
+        VC         :Vector_E3GA;  --  Initialized to zeroes
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
 --              Disable (Lighting);
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos, P_Scale, V, Palet_Type,
+                                    Point_Pos + Scalar (1) * M_Vec1,
+                                    P_Scale, VC, Palet_Type,
+                                    GA_Draw.Draw_TV_Sphere);
+            GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
+                                    Point_Pos - Scalar (1) * M_Vec1,
+                                    P_Scale, VC, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
+            GA_Draw.Draw_Bivector (Render_Program => Render_Program,
+                                   Model_View_Matrix => Model_View_Matrix,
+                                   Base              => Point_Pos,
+                                   Normal            => C3GA.To_VectorE3GA (M_Vectors (3)),
+                                   Ortho_1           => C3GA.To_VectorE3GA (M_Vectors (1)),
+                                   Ortho_2           => Point_Pos,
+                                   Palet_Type        => Palet_Type,
+                                   Scale             => P_Scale,
+                                   Method            => GA_Draw.Draw_TV_Sphere);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
             GA_Draw.Draw_Trivector
               (Render_Program, Model_View_Matrix,
-               Point_Pos, P_Scale, V, Palet_Type, GA_Draw.Draw_TV_Sphere);
+               Point_Pos, P_Scale, VC, Palet_Type, GA_Draw.Draw_TV_Sphere);
          when others => null;
       end case;
 
