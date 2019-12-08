@@ -1,8 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Toggles;
-
 --  with Maths;
 
 --  with E3GA_Utilities;
@@ -84,13 +82,13 @@ package body C3GA_Draw is
         if Analyzed_MV.M_Type.Model_Kind = Conformal_Model then
             case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>
-                Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
+               Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
                Draw_Flat (Render_Program, Model_View_Matrix,
                           Analyzed_MV, Palet_Type);
             when Free_Blade => null;
-                Put_Line ("C3GA_Draw.Draw_C3GA Free.");
+               Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
-                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
+               Put_Line ("C3GA_Draw.Draw_C3GA Round.");
                Draw_Round (Render_Program, Model_View_Matrix,
                            Analyzed_MV, Palet_Type, Method);
             when Tangent_Blade =>
@@ -189,7 +187,6 @@ package body C3GA_Draw is
                           Palet_Type : Palet.Colour_Palet;
                           Method : GA_Draw.Method_Type :=
                             GA_Draw.Draw_Bivector_Circle) is
-      use GL.Toggles;
         use Multivector_Analyze;
         Point_Pos  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
@@ -199,7 +196,7 @@ package body C3GA_Draw is
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
-            Disable (Lighting);
+--              Disable (Lighting);
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos, P_Scale, V, Palet_Type,

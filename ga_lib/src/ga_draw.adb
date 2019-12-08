@@ -767,8 +767,6 @@ package body GA_Draw is
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
       case Method is
