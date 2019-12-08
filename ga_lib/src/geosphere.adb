@@ -329,6 +329,7 @@ package body Geosphere is
          thisFace      : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
          Vertex_Buffer : GL.Objects.Buffers.Buffer;
          Num_Vertices  : constant Int := 3;
+         Stride        : constant Int := GL.Types.Singles.Vector3'Size / 8;
 
 --           procedure Draw_Child (Child : Integer) is
 --           begin
@@ -353,21 +354,18 @@ package body Geosphere is
             Array_Buffer.Bind (Vertex_Buffer);
 
             Get_Vertices (Sphere, thisFace, Vertices);
---              Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-            Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
-            Utilities.Print_GL_Array3 ("Number of vertices: " &
-                        GL.Types.Int'Image (Num_Vertices), Vertices);
+--              Put_Line ("Geosphere.GS_Draw face index " & Integer'Image (Face_Index));
+--              Utilities.Print_GL_Array3 ("Number of vertices: " &
+--                          GL.Types.Int'Image (Num_Vertices), Vertices);
             Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
---               Shader_Manager.Set_Model_View_Matrix (Identity4);
---               Shader_Manager.Set_Model_View_Matrix
---                    (Maths.Translation_Matrix ((0.0, 0.0, -14.0)) * Identity4);
---              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
---              GL.Attributes.Enable_Vertex_Attrib_Array (0);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
+            GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
---              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
---                                                    First => 0,
---                                                    Count => 3);
+            GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
+                                                  First => 0,
+                                                  Count => 3);
             GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
@@ -383,7 +381,7 @@ package body Geosphere is
                end loop;
 
                Utilities.Load_Vertex_Buffer (Array_Buffer, Lines, Static_Draw);
-               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
+               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
                GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
