@@ -21,6 +21,7 @@ with GA_Maths;
 with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
+with Multivectors;
 with Geosphere;
 with GL_Util;
 with Shader_Manager;
@@ -80,7 +81,7 @@ package body GA_Draw is
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
                             Model_View_Matrix       : GL.Types.Singles.Matrix4 ;
-                            Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
+                            Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3GA;
                             Palet_Type               : Palet.Colour_Palet;
                             Scale                    : float := 1.0;
                             Method                   : Method_Type := Draw_Bivector_Circle) is
@@ -91,10 +92,20 @@ package body GA_Draw is
       --          Cords                : Array_3D := (0.0, 0.0, 0.0);
       --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       --          O2                   : Multivectors.Vector := Ortho_2;
+      Base_Coords          : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+      Normal_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Normal);
+      Ortho_1_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_1);
+      Ortho_2_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_2);
       Translation_Vector   : Vector3 :=  (0.0, 0.0, 0.0);
+      MV_Normal            : constant Multivectors.Vector := Multivectors.New_Vector
+        (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
+      MV_Ortho_1           : constant Multivectors.Vector := Multivectors.New_Vector
+        (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
+      MV_Ortho_2           : constant Multivectors.Vector := Multivectors.New_Vector
+        (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
       MV_Matrix            : Matrix4 := Model_View_Matrix;
       Scaled               : GL.Types.Single;
-      E2_Norm              : Float := Multivectors.Norm_E2 (Base);
+      E2_Norm              : Float := C3GA.Norm_E2 (Base);
       RT                   : Multivectors.Rotor;
       OK                   : Boolean := True;
    begin
@@ -107,17 +118,17 @@ package body GA_Draw is
         if Method /= Draw_Bivector_Parallelogram and then
           Method /= Draw_Bivector_Parallelogram_No_Vectors then
             if E2_Norm > 0.0 then
-                Translation_Vector := (Single (C3GA.e1 (Base)),
-                                       Single (C3GA.e2 (Base)),
-                                       Single (C3GA.e3 (Base)));
+                Translation_Vector := (Single (Base_Coords (1)), Single (Base_Coords (2)),
+                Single (Base_Coords (3)));
                 MV_Matrix := Maths.Translation_Matrix (Translation_Vector) * MV_Matrix;
             end if;
             --  Rotate e3 to normal direction
             RT := E3GA_Utilities.Rotor_Vector_To_Vector
-              (Multivectors.Basis_Vector (Blade_Types.E3_e3), Normal);
+              (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
             OK := GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
         else
-            E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
+            E2_Norm := C3GA.Norm_E2 (C3GA.To_VectorE3GA
+                                     ((Multivectors.Outer_Product (MV_Ortho_1, MV_Ortho_2))));
             Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
             MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
         end if;
@@ -647,8 +658,7 @@ package body GA_Draw is
          Draw_Sphere_List (Render_Program, MV_Matrix);
       else
          Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List for Normal not 0.0.");
-         Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere,
-                            Normal);
+         Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, Normal);
       end if;
 
    exception
@@ -742,7 +752,7 @@ package body GA_Draw is
       P_Scale           : Float;
       Normal            : Single;
       Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
-      Translation       :Singles.Vector3;
+      Translation       : Singles.Vector3;
       MV_Matrix         : Matrix4 := Model_View_Matrix;
    begin
       if Scale >= 0.0 then
@@ -769,9 +779,8 @@ package body GA_Draw is
         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
+
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
       case Method is

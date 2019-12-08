@@ -5,8 +5,6 @@ with GL.Objects.Programs;
 with GL.Types; use GL.Types;
 
 with C3GA;
---  with GA_Maths;
-with Multivectors;
 with Palet;
 
 package GA_Draw is
@@ -23,7 +21,7 @@ package GA_Draw is
     --  The bivector is specified by Normal, Factor1, Factor1 and Scale.
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                             Base, Normal, Ortho_1, Ortho_2 : Multivectors.Vector;
+                             Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3GA;
                              Palet_Type               : Palet.Colour_Palet;
                              Scale : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle);
