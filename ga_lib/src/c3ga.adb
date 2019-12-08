@@ -110,22 +110,42 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point is
-      use Multivectors;
-      use Blade;
-      NP      : Normalized_Point;
+   function "+" (L, R : Vector_E3GA) return Vector_E3GA is
+        L_Coords : constant E3GA.Vector := L.Coordinates;
+        R_Coords : constant E3GA.Vector := R.Coordinates;
+        Result   : Vector_E3GA;
    begin
-      --  thePoint.Origin of a Normalized_Point is a constant 1.0
-      Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
-      Add_Blade (NP, New_Basis_Blade (C3_e1, V.Coordinates (1)));
-      Add_Blade (NP, New_Basis_Blade (C3_e2, V.Coordinates (2)));
-      Add_Blade (NP, New_Basis_Blade (C3_e3, V.Coordinates (3)));
-      Add_Blade (NP, New_Basis_Blade (C3_ni,
-                 0.5 * Norm_E2 (V) * GA_Base_Types.NI));
-      return NP;
-   end Set_Normalized_Point;
+      Result.Coordinates (1) := L_Coords (1) + R_Coords (1);
+      Result.Coordinates (2) := L_Coords (2) + R_Coords (2);
+      Result.Coordinates (3) := L_Coords (3) + R_Coords (3);
+      return Result;
+   end "+";
 
-   --  ------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+
+   function "*" (L : float; R : Vector_E3GA) return Vector_E3GA is
+        R_Coords : constant E3GA.Vector := R.Coordinates;
+        Result   : Vector_E3GA;
+   begin
+      Result.Coordinates (1) := L * R_Coords (1);
+      Result.Coordinates (2) := L * R_Coords (2);
+      Result.Coordinates (3) := L * R_Coords (3);
+      return Result;
+   end "*";
+
+   --  -------------------------------------------------------------------------
+
+   function "*" (L : Vector_E3GA; R : float) return Vector_E3GA is
+        L_Coords : constant E3GA.Vector := L.Coordinates;
+        Result   : Vector_E3GA;
+   begin
+      Result.Coordinates (1) := R * L_Coords (1);
+      Result.Coordinates (2) := R * L_Coords (2);
+      Result.Coordinates (3) := R * L_Coords (3);
+      return Result;
+   end "*";
+
+   --  -------------------------------------------------------------------------
 
    function Coord (S : Multivectors.Scalar) return float is
    begin
@@ -865,6 +885,22 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
+   function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point is
+      use Multivectors;
+      use Blade;
+      NP      : Normalized_Point;
+   begin
+      --  thePoint.Origin of a Normalized_Point is a constant 1.0
+      Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
+      Add_Blade (NP, New_Basis_Blade (C3_e1, V.Coordinates (1)));
+      Add_Blade (NP, New_Basis_Blade (C3_e2, V.Coordinates (2)));
+      Add_Blade (NP, New_Basis_Blade (C3_e3, V.Coordinates (3)));
+      Add_Blade (NP, New_Basis_Blade (C3_ni,
+                 0.5 * Norm_E2 (V) * GA_Base_Types.NI));
+      return NP;
+   end Set_Normalized_Point;
+
+   --  ------------------------------------------------------------------------
    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;

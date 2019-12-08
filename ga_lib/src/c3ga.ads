@@ -47,6 +47,9 @@ package C3GA is
    Grade_4 : constant GA_Maths.Unsigned_Integer := 16;
    Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
 
+   function "+" (L, R : Vector_E3GA) return Vector_E3GA;
+   function "*" (L : float; R : Vector_E3GA) return Vector_E3GA;
+   function "*" (L : Vector_E3GA; R : float) return Vector_E3GA;
    function Coord (S : Multivectors.Scalar) return float;
 --     function Init (MV : Multivectors.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
