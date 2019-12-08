@@ -764,7 +764,7 @@ package body GA_Draw is
       if C3GA.Norm_e2 (Base) /= 0.0 then
         Put_Line ("GA_Draw.Draw_Trivector C3GA.Norm_e2 (Base) /= 0.0");
         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
-        MV_Matrix :=  Maths.Translation_Matrix (Translation) * MV_Matrix;
+        MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -815,38 +815,48 @@ package body GA_Draw is
       use GL.Toggles;
       use GL.Types.Singles;
       use Multivectors;
+      use C3GA;
+      use Maths.Single_Math_Functions;
 
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       MV_Matrix            : Matrix4 := Model_View_Matrix;
       Dir_Coords           : constant GA_Maths.Array_3D :=
                                C3GA.Get_Coords (Direction);
-      GL_Tail              : Vector3;
-      GL_Dir               : Vector3;
+      GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
+      GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       MV_Dir               : constant Multivectors.Vector :=
                                New_Vector (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
       aRotor               : Rotor;
       Saved_Cull_Face      : constant Face_Selector := Cull_Face;
       Saved_Front_Face     : constant GL.Types.Orientation := GL.Culling.Front_Face;
    begin
-      GL_Tail := GL_Util.To_GL (Tail);
-      GL_Dir := GL_Util.To_GL (Direction);
       if Scale /= 0.0 then
          Vertex_Array_Object.Initialize_Id;
          Vertex_Array_Object.Bind;
 
          GL.Objects.Programs.Use_Program (Render_Program);
 
-         if Maths.Norm (GL_Tail) /= 0.0 then
+         if C3GA.Norm_e2 (Tail) /= 0.0 then
             MV_Matrix := Maths.Translation_Matrix (GL_Tail) * MV_Matrix;
          end if;
+         MV_Matrix := Maths.Scaling_Matrix (Single (Scale)) * MV_Matrix;
 
          Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-         Draw_Line (Render_Program, Model_View_Matrix, Tail, Direction);
+         Draw_Line (Render_Program, Model_View_Matrix,
+                    Set_Coords (0.0, 0.0, 0.0),
+                    Set_Coords (0.98 * Get_Coord_1 (Direction),
+                    0.98 * Get_Coord_2 (Direction), 0.98 * Get_Coord_3 (Direction)));
 
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
+         MV_Matrix := Maths.Translation_Matrix (GL_Dir) * MV_Matrix;
          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
            (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
+         if Scale > 1.2 then
+            MV_Matrix := Maths.Scaling_Matrix (Single (1.2 / Scale)) * MV_Matrix;
+            MV_Matrix := Maths.Scaling_Matrix (1.1 / Sqrt (Single (Scale))) * MV_Matrix;
+         end if;
+
          if GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix) then
             MV_Matrix := Model_View_Matrix;
 
