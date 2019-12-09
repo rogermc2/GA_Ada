@@ -167,18 +167,21 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
-                               MV_Matrix : GL.Types.Singles.Matrix4;
-                               Normal : GL.Types.Single := 0.0) is
-      use Sphere_List_Package;
-      Curs : Cursor := Sphere_List.First;
-   begin
-      while Has_Element (Curs) loop
-         Put_Line ("Geosphere.Draw_Sphere_List.");
-         GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal);
-         Next (Curs);
-      end loop;
-   end Draw_Sphere_List;
+    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
+                                MV_Matrix : GL.Types.Singles.Matrix4;
+                                Normal : GL.Types.Single := 0.0) is
+        use Sphere_List_Package;
+        Curs : Cursor := Sphere_List.First;
+    begin
+        if Sphere_List.Is_Empty then
+            Put_Line ("Geosphere.Draw_Sphere_List, Sphere_List is empty.");
+        else
+            while Has_Element (Curs) loop
+                GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal);
+                Next (Curs);
+            end loop;
+        end if;
+    end Draw_Sphere_List;
 
    --  -------------------------------------------------------------------------
 
