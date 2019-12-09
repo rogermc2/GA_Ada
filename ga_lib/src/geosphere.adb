@@ -332,7 +332,7 @@ package body Geosphere is
          thisFace      : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
          Vertex_Buffer : GL.Objects.Buffers.Buffer;
          Num_Vertices  : constant Int := 3;
-         Stride        : constant Int := GL.Types.Singles.Vector3'Size / 8;
+         Stride        : constant Int := 3;
 
 --           procedure Draw_Child (Child : Integer) is
 --           begin
@@ -369,7 +369,7 @@ package body Geosphere is
             GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Triangles,
                                                   First => 0,
                                                   Count => 3);
-            GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
+--              GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
             if Normal /= 0.0 then
