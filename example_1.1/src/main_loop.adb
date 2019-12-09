@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Translation_Matrix  : Matrix4;
       Projection_Matrix   : Matrix4;
       Model_View_Matrix   : Matrix4 := Identity4;
-      View_Angle          : constant Maths.Degree := 60.0;
+      View_Angle          : constant Maths.Degree := 50.0;
       View_Matrix         : GL.Types.Singles.Matrix4 := Identity4;
       Camera_Position     : constant GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
       Half_Pi             : constant Single := 0.5 * Ada.Numerics.Pi;
@@ -122,17 +122,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Height := Single (Window_Height);
       Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
 
-      Projection_Matrix := Maths.Perspective_Matrix (View_Angle => View_Angle,
-                                                     Aspect     => Width / Height,
-                                                     Near       => -1.0,
-                                                     Far        => 500.0);
+      Maths.Init_Perspective_Transform
+          (View_Angle, Width, Height, 0.1, 1000.0, Projection_Matrix);
       Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 14.0));
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -3.0));  --  -14
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-      Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+      Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
       --  View and model matrices initilized to identity by shader initialization.
 
       Utilities.Clear_Background_Colour_And_Depth (White);
@@ -211,6 +209,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
+        GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
 
       --        Render_Text_Program := Program_Loader.Program_From
       --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),

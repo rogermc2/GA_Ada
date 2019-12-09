@@ -902,26 +902,4 @@ package body GA_Draw is
 
    --  -----------------------------------------------------------------------
 
-  --     procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
---                                       Near        : GL.Types.Single := -100.0;
---                                       Far         : GL.Types.Single := 100.0) is
---        VP_X      : Int;
---        VP_Y      : Int;
---        VP_Height : Int;
---        VP_Width  : Int;
---     begin
---        GL.Window.Get_Viewport (VP_X, VP_Y, VP_Width, VP_Height);
---        --  Init_Orthographic_Transform
---        --  (Top, Bottom, Left, Right, Z_Near, Z_Far, Proj_Matrixles.Matrix4)
---        Maths.Init_Orthographic_Transform (Single (VP_Y), Single (VP_Y + VP_Height),
---                                           Single (VP_X), Single (VP_X + VP_Width),
---                                           Near, Far, Proj_Matrix);
---     exception
---        when  others =>
---           Put_Line ("An exception occurred in GA_Draw.Init_Projection_Matrix.");
---           raise;
---     end Init_Projection_Matrix;
-
-   --  ------------------------------------------------------------------------
-
 end GA_Draw;
