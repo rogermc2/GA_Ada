@@ -18,7 +18,6 @@ void main()
     {
     vec4 position = vec4(vertex_position, 1);
     vec4 normal = vec4(vertex_normal, 0);
-    gl_PointSize = 40.0;
     Position_Worldspace = (model_matrix * position).xyz;
       // Vector that goes from the vertex to the camera, in camera space.
       // In camera space, the camera is at the origin (0,0,0).

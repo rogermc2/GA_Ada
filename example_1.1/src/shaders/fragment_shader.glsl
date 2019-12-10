@@ -37,5 +37,4 @@ void main()
     
     vec3 LightColour = (Drawing_Colour + Ambient_Colour + Diffuse_Colour * LightPower * cosTheta / (distance*distance)).xyz;
     colour = LightColour;
-    colour = vec3(1.0, 0.0, 0.0);
 }

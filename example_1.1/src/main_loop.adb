@@ -38,9 +38,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --      subtype tVec4f is Singles.Vector4;
 
    --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
-   Red           : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
-   --      Green          : constant Colors.Color := (0.0, 1.0, 0.0, 1.0);
-   --      Blue           : constant Colors.Color := (0.0, 0.0, 1.0, 1.0);
+   Red            : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
+   Green          : constant GL.Types.Singles.Vector4  := (0.0, 0.5, 0.0, 1.0);
+   Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
    --      Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
@@ -123,12 +123,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
 
       Maths.Init_Perspective_Transform
-          (View_Angle, Width, Height, 0.1, 1000.0, Projection_Matrix);
+          (View_Angle, Width, Height, 0.1, 100.0, Projection_Matrix);
       Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -3.0));  --  -14
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
       --  View and model matrices initilized to identity by shader initialization.
@@ -145,11 +145,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.5);  --  orig 0.005
+         Palet.Set_Point_Size (0.3);  --  orig 0.005
          Shader_Manager.Set_Drawing_Colour (Red);
 
-         for count in 1 .. 1 loop
---           for count in 1 .. Points.Num_Points loop
+         Shader_Manager.Set_Ambient_Colour (Green);
+         Shader_Manager.Set_Diffuse_Colour (BLue);
+--           for count in 1 .. 1 loop
+         for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);
@@ -209,7 +211,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
-        GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
+--          GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
 
       --        Render_Text_Program := Program_Loader.Program_From
       --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
