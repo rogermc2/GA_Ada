@@ -16,7 +16,6 @@ with Utilities;
 
 with Maths;
 with GA_Maths;
---  with GA_Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -439,7 +438,6 @@ package body GA_Draw is
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                         aPoint, Direction : C3GA.Vector_E3GA) is
       use GL.Objects.Buffers;
-      use GL.Toggles;
       use GL.Types.Singles;
       use  Multivectors;
       Translation          : GL.Types.Singles.Matrix4;
@@ -458,7 +456,6 @@ package body GA_Draw is
                                ((0.0, 0.0, 0.0),
                                 (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
    begin
-      Disable (Lighting);
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
@@ -500,11 +497,8 @@ package body GA_Draw is
                                   Scale             : Float;
                                   Method            : Method_Type) is
       use GL.Objects.Buffers;
-      --          use GL.Toggles;
-      --          use GL.Types.Colors;
       use Singles;
       use E3GA;
-      use Palet;
       E3_V_Coords          : constant E3GA.Vector :=
                                C3GA.Vector_To_E3GA (V_Coords);
       Scale_Matrix         : Matrix4;
@@ -596,25 +590,16 @@ package body GA_Draw is
                       Tail           => GL_Util.From_GL (Vertices (1)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode.Shade then
-            GL.Toggles.Enable (GL.Toggles.Lighting);
-         end if;
          Draw_Vector (Render_Program => Render_Program,
                       Model_View_Matrix => Model_View_Matrix,
                       Tail           => GL_Util.From_GL (Vertices (2)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode.Shade then
-            GL.Toggles.Enable (GL.Toggles.Lighting);
-         end if;
          Draw_Vector (Render_Program => Render_Program,
                       Model_View_Matrix => Model_View_Matrix,
                       Tail           => GL_Util.From_GL (Vertices (3)),
                       Direction      => V_Coords,
                       Scale          => Scale);
-         if Get_Draw_Mode.Shade then
-            GL.Toggles.Enable (GL.Toggles.Lighting);
-         end if;
       end if;
 
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -777,11 +762,13 @@ package body GA_Draw is
       if C3GA.Norm_e2 (Base) /= 0.0 then
         Put_Line ("GA_Draw.Draw_Trivector C3GA.Norm_e2 (Base) /= 0.0");
         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+        Utilities.Print_Vector ("GA_Draw.Draw_Trivector Translation", Translation);
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
+      Put_Line ("GA_Draw.Draw_Trivector P_Scale: " & Float'Image (P_Scale));
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
       case Method is
          when Draw_TV_Sphere =>

@@ -2,9 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 --  with Maths;
-
 --  with E3GA_Utilities;
---  with E3GA;
 with GA_Maths;
 with Multivector_Analyze;
 --  with Multivector_Type;
@@ -39,6 +37,13 @@ package body C3GA_Draw is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
+        Put_Line ("C3GA_Draw.Draw MV, Analyzed_MV.Points, " &
+        Integer'Image (Multivector_Analyze.Number_Of_Points) & " points:");
+        for index in 1 .. Multivector_Analyze.Number_Of_Points loop
+            Put_Line (Float'Image (Analyzed_MV.Points (index) (1)) & "  " &
+            Float'Image (Analyzed_MV.Points (index) (2)) & "  " &
+            Float'Image (Analyzed_MV.Points (index) (3)));
+        end loop;
         Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
 
     exception
@@ -203,7 +208,6 @@ package body C3GA_Draw is
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
---              Disable (Lighting);
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos + Scalar (1) * M_Vec1,
