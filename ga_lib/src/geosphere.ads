@@ -40,7 +40,7 @@ private
 
    type Geosphere_Face is record
       Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
-      Child             : Child_Array := (-1, -1, -1, -1);
+      Child             : Child_Array := (0, 0, 0, 0);
       Plane             : Multivectors.Bivector;
       D                 : float;
       Depth             : integer;
