@@ -252,11 +252,11 @@ package body Geosphere is
         begin
             Vertex_Indices := thisFace.Vertex_Indices;
             Indice_Index := Indice_Index + 1;
-            Indices (Indice_Index) := UInt (Vertex_Indices (1));
+            Indices (Indice_Index) := UInt (Vertex_Indices (1) - 1);
             Indice_Index := Indice_Index + 1;
-            Indices (Indice_Index) := UInt (Vertex_Indices (2));
+            Indices (Indice_Index) := UInt (Vertex_Indices (2) - 1);
             Indice_Index := Indice_Index + 1;
-            Indices (Indice_Index) := UInt (Vertex_Indices (3));
+            Indices (Indice_Index) := UInt (Vertex_Indices (3) - 1);
         end Add_Index;
 
     begin
@@ -291,26 +291,6 @@ package body Geosphere is
             Put_Line ("An exception occurred in Geosphere.Get_Vertices.");
             raise;
     end Get_Vertices;
-
-    --  -------------------------------------------------------------------------
-
---      procedure Get_Vertices (Sphere : Geosphere; aFace : Geosphere_Face;
---                              Vertices : in out GL.Types.Singles.Vector3_Array) is
---          use GL.Types;
---          Indices      : constant V_Array := aFace.Vertex_Indices;
---          Vertex_Index : Positive;
---      begin
---          for index in Positive range 1 .. 3 loop
---              Vertex_Index := Indices (index);
---              Vertices (Int (index)) :=
---                GL_Util.To_GL (Sphere.Vertices.Element (Vertex_Index));
---          end loop;
---
---      exception
---          when others =>
---              Put_Line ("An exception occurred in Geosphere.Get_Vertices.");
---              raise;
---      end Get_Vertices;
 
     --  -------------------------------------------------------------------------
 
@@ -377,12 +357,6 @@ package body Geosphere is
         use GL.Objects.Buffers;
         use GL.Types;
         use GL.Types.Singles;
-
-        --  gsDraw(geosphere * sphere, int f, mv::Float normal = 0.0)
-        --  geosphere * sphere, int f is Face_Vectors.Cursor
-        --        procedure Draw (C : Face_Vectors.Cursor) is
-        --           Face_Index     : constant Integer := Face_Vectors.To_Index (C);
-        --           thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
         Vertex_Buffer  : GL.Objects.Buffers.Buffer;
         Indices_Buffer : GL.Objects.Buffers.Buffer;
         Stride         : constant Int := 3;
@@ -410,7 +384,6 @@ package body Geosphere is
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
 
-        --              Get_Vertices (Sphere, thisFace, Vertices);
         Get_Vertices (Sphere, Vertices);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
@@ -453,15 +426,8 @@ package body Geosphere is
                                                   Count => 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end if;
-        --           end if;
-        --        end Draw;
 
-        --     begin
-        --  Implement for (i = 0; i < sphere->nbPrimitives; i++)
-        --                 gsDraw(sphere, i, normal);
-        --        Iterate (Sphere.Faces, Draw'Access);
-
-    exception
+       exception
         when others =>
             Put_Line ("An exception occurred in Geosphere.GS_Draw.");
             raise;
