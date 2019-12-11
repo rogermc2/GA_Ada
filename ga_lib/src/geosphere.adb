@@ -400,7 +400,7 @@ package body Geosphere is
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
         GL.Objects.Buffers.Draw_Elements (Mode => GL.Types.Triangles,
-                                          Count => 8,
+                                          Count => Int (3 * Num_Faces),
                                           Index_Type => UInt_Type,
                                           Element_Offset => 0);
         --              GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
