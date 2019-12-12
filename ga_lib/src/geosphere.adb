@@ -207,7 +207,7 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
-                        return GL.Types.Singles.Vector3 is
+                         return GL.Types.Singles.Vector3 is
         use GL.Types;
         theVertex    : Singles.Vector3;
         GA_Vector    : constant Multivectors.Vector :=
@@ -227,8 +227,8 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
-                        return Multivectors.Vector is
-        GA_Vector    : constant Multivectors.Vector :=
+                         return Multivectors.Vector is
+        GA_Vector : constant Multivectors.Vector :=
                          Sphere.Vertices.Element (Vertex_Index);
     begin
         return GA_Vector;
@@ -270,8 +270,37 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
+    procedure Get_Normals (Sphere : Geosphere;
+                           Normals : in out GL.Types.Singles.Vector3_Array) is
+        use GL.Types;
+        Normal_Index : Integer := 0;
+
+        procedure Process_Face (C : Face_Vectors.Cursor) is
+            Face_Index  : constant Integer := Face_Vectors.To_Index (C);
+            thisFace    : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
+            thisNormal  : constant V_Array := thisFace.Vertex_Indices;
+            aVertex     : GL.Types.Singles.Vector3;
+        begin
+            for index in GL.Index_Homogeneous'Range loop
+                aVertex := Get_Vertex (Sphere, thisNormal (Normal_Index));
+                Normal_Index := Normal_Index + 1;
+                Normals (Int (Normal_Index)) (index) := aVertex (index);
+            end loop;
+        end Process_Face;
+
+    begin
+        Iterate (Sphere.Faces, Process_Face'Access);
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Geosphere.Get_Normals.");
+            raise;
+    end Get_Normals;
+
+    --  -------------------------------------------------------------------------
+
     procedure Get_Vertices (Sphere : Geosphere;
-                           Vertices : in out GL.Types.Singles.Vector3_Array) is
+                            Vertices : in out GL.Types.Singles.Vector3_Array) is
         use GL.Types;
         Index : Int := 0;
 
@@ -295,7 +324,7 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
-        --        S_Faces       : constant F_Vector := Sphere.Faces;
+    --        S_Faces       : constant F_Vector := Sphere.Faces;
         New_Face      : Geosphere_Face;
         Faces         : constant Indices_Array (1 .. Num_Faces)
           := ((6, 1, 3),
@@ -427,7 +456,7 @@ package body Geosphere is
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end if;
 
-       exception
+    exception
         when others =>
             Put_Line ("An exception occurred in Geosphere.GS_Draw.");
             raise;

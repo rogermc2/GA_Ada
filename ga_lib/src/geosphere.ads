@@ -14,10 +14,6 @@ package Geosphere is
    type Geosphere_Face is private;
    type Indices is array (1 .. 3) of integer;
 
-   package Vertex_Vectors is new Ada.Containers.Vectors
-     (Element_Type => Vector, Index_Type => Positive);
-   type V_Vector is new Vertex_Vectors.Vector with null record;
-
    procedure Add_To_Sphere_List (Sphere : Geosphere);
    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
                                MV_Matrix : GL.Types.Singles.Matrix4;
@@ -48,6 +44,10 @@ private
       Contour_Intersect : Contour_Intersect_Array;
       Contour_Visited   : Contour_Visited_Array;
    end record;
+
+   package Vertex_Vectors is new Ada.Containers.Vectors
+     (Element_Type => Vector, Index_Type => Positive);
+   type V_Vector is new Vertex_Vectors.Vector with null record;
 
    package Face_Vectors is new Ada.Containers.Vectors
      (Element_Type => Geosphere_Face, Index_Type => Positive);
