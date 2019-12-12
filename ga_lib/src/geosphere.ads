@@ -11,7 +11,6 @@ package Geosphere is
    use Multivectors;
 
    type Geosphere is private;
-   type Geosphere_Face is private;
    type Indices is array (1 .. 3) of integer;
 
    procedure Add_To_Sphere_List (Sphere : Geosphere);
@@ -28,15 +27,19 @@ package Geosphere is
 private
    subtype Int3_Range is Integer range 1 .. 3;
    subtype Int4_Range is Integer range 1 .. 4;
-   type Child_Array is array (Int4_Range) of integer;
-   type Neighbour_Array is array  (Int3_Range)  of integer;
+
    type Contour_Intersect_Array is array  (Int3_Range)  of integer;
    type Contour_Visited_Array is array  (Int3_Range)  of integer;
+   type Neighbour_Array is array  (Int3_Range)  of integer;
    type V_Array is array  (Int3_Range) of integer;
+
+   type Geosphere_Face;
+   type Face_Ptr is access Geosphere_Face;
+   type Child_Array is array (Int4_Range) of Face_Ptr;
 
    type Geosphere_Face is record
       Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
-      Child             : Child_Array := (0, 0, 0, 0);
+      Child             : Child_Array := (null, null, null, null);
       Plane             : Multivectors.Bivector;
       D                 : float;
       Depth             : integer;
