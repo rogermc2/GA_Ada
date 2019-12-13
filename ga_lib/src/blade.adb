@@ -3,7 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Blade is
 
-   type Metric_Array is array (Integer range <>) of float;
+--     type Metric_Array is array (Integer range <>) of float;
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
@@ -25,14 +25,14 @@ package body Blade is
       return S * BB;
    end "*";
 
-  --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
+
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String is
-      use Ada.Strings.Unbounded;
       use Names_Package;
       BM        : Unsigned_Integer := aBlade.Bitmap;
       Index     : Natural := 1;
-      Scale     : GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
+      Scale     : constant GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
       Name      : Unbounded_String;
       Val       : Unbounded_String;
       theString : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("");
@@ -71,7 +71,7 @@ package body Blade is
       return theString;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.Blade_String.");
          raise;
    end Blade_String;
@@ -86,7 +86,6 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
-      use GA_Maths;
       A     : Unsigned_Integer := Map_A / 2;
       Swaps : Natural := 0;
    begin
@@ -105,7 +104,7 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade is
-      S_Blade : Basis_Blade := New_Scalar_Blade (Sc);
+      S_Blade : constant Basis_Blade := New_Scalar_Blade (Sc);
    begin
       return GP_OP (BB, S_Blade, False);
    end Geometric_Product;
@@ -125,7 +124,7 @@ package body Blade is
       BM         : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
       Row        : Integer range 1 .. 6 := 1;
       Col        : Integer range 1 .. 5 := 1;
-      Met_Matrix : GA_Maths.Float_Matrix := Metric.Matrix (Met);
+      Met_Matrix : constant GA_Maths.Float_Matrix := Metric.Matrix (Met);
    begin
       while BM /= 0 loop
          if (BM and 1) /= 0 then
@@ -142,7 +141,7 @@ package body Blade is
       return Result;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.Geometric_Product with Metric.");
          raise;
    end Geometric_Product;
@@ -177,7 +176,7 @@ package body Blade is
 
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
       W : constant float
-        := Float (Minus_1_Power (Integer (Grade (B))) * Integer (B.Weight));
+        := Float (Minus_1_Power (Grade (B)) * Integer (B.Weight));
    begin
       return New_Basis_Blade (B.Bitmap, W);
    end Grade_Inversion;
@@ -257,7 +256,7 @@ package body Blade is
    begin
       return (Index'Enum_Rep, Weight);
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.New_Basis_Blade");
          raise;
    end New_Basis_Blade;
@@ -329,7 +328,7 @@ package body Blade is
       BB.Weight := Weight;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.Update_Blade 1");
          raise;
    end Update_Blade;
@@ -340,7 +339,7 @@ package body Blade is
    begin
       BB.Bitmap := Bitmap;
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.Update_Blade 2");
          raise;
    end Update_Blade;
@@ -353,7 +352,7 @@ package body Blade is
       BB.Bitmap := Bitmap;
       BB.Weight := Weight;
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Blade.Update_Blade 3");
          raise;
    end Update_Blade;

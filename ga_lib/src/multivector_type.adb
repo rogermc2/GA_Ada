@@ -12,7 +12,7 @@ package body Multivector_Type is
       use Multivectors;
       Rec        : MV_Type_Record;
       Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
-      Index      : Integer := 1;
+      Index      : constant Integer := 1;
       GU_Bitmap  : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
       Versor_Inv : Multivectors.Multivector;
       Grade_Inv  : Multivectors.Multivector;
@@ -56,7 +56,7 @@ package body Multivector_Type is
       return Rec;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Type.Init.");
          raise;
 
@@ -104,7 +104,7 @@ package body Multivector_Type is
       Put_Line ("Number Of Grades   " & GA_Maths.Unsigned_Integer'Image (Info.Number_Of_Grades));
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Multivector_Type.Print_Multivector_Info.");
          raise;
 
