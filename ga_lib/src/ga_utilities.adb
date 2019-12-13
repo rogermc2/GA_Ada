@@ -1,12 +1,8 @@
 
-with Interfaces;
-
 with Ada.Containers;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
-with Multivectors;
-with Multivector_Type_Base;
 
 package body GA_Utilities is
 
@@ -24,7 +20,6 @@ package body GA_Utilities is
       Blades     : Blade_List;   --  e
       B_Cursor   : Cursor;
       Bit_Pos    : Unsigned_Integer;
-      Index      : Integer := 0;
       thisBlade  : Multivector;  --  Bc
       MV_2       : Multivector;
       Factors    : Multivectors.Multivector_List;
@@ -120,8 +115,10 @@ package body GA_Utilities is
                    "  " & float'Image (Blade.Weight (aBlade)));
          Next (Curs);
       end loop;
+      New_Line;
+
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector.");
          raise;
    end Print_Multivector;
@@ -138,7 +135,7 @@ package body GA_Utilities is
       Put_Line ("Grade use   " & GA_Maths.Unsigned_Integer'Image (Grade_Use (Info)));
       Put_Line ("Parity      " & Parity_Type'Image (Parity (Info)));
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_Info.");
          raise;
    end Print_Multivector_Info;
