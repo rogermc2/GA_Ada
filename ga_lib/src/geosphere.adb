@@ -410,23 +410,73 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
+    procedure GL_Draw (Model_View_Matrix : GL.Types.Singles.Matrix4;
+                       Sphere : Geosphere; Num_Faces : GL.Types.Int;
+                       Normal : GL.Types.Single) is
+        use GL.Objects.Buffers;
+        use GL.Types;
+        use GL.Types.Singles;
+        Lines          : Singles.Vector3_Array (1 .. 6);
+        V1             : Singles.Vector3;
+        V1_MV          : Multivectors.Vector;
+        Stride         : constant Int := 3;
+    begin
+        Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, GL.Types.Single_Type, Stride, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (1);
+
+        GL.Objects.Buffers.Draw_Elements (Mode => Triangles,
+                                          Count => 3 * Num_Faces,
+                                          Index_Type => UInt_Type,
+                                          Element_Offset => 0);
+        --              GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
+        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        GL.Attributes.Disable_Vertex_Attrib_Array (1);
+
+        if Normal /= 0.0 then
+            Put_Line ("Geosphere.GS_Draw setting lines");
+            --  Draw three lines
+            for index in 1 .. 3 loop
+                V1_MV := Unit_E (Get_Vertex (Sphere, index));
+                V1 := GL_Util.To_GL (V1_MV);
+                Lines (2 * Int (index - 1) + 1) := Get_Vertex (Sphere, index);
+                Lines (2 * Int (index - 1) + 2) :=
+                  Get_Vertex (Sphere, index) + V1 * Normal;
+            end loop;
+
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Lines, Static_Draw);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
+            GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+            GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
+                                                  First => 0,
+                                                  Count => 3);
+            GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        end if;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Geosphere.GL_Draw.");
+            raise;
+
+    end GL_Draw;
+
+    --  -------------------------------------------------------------------------
+
     procedure GS_Draw_Children (Model_View_Matrix : GL.Types.Singles.Matrix4;
                                 Sphere : Geosphere;
                                 thisFace : Geosphere_Face; Normal : GL.Types.Single) is
         procedure Draw_Child (thisChild : Geosphere_Face; Normal : GL.Types.Single) is
             use GL.Objects.Buffers;
             use GL.Types;
-            use GL.Types.Singles;
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Indices_Buffer : GL.Objects.Buffers.Buffer;
             Normals_Buffer : GL.Objects.Buffers.Buffer;
             Vertices       : Singles.Vector3_Array (1 .. Int (Length (Sphere.Vertices)));
             Normals        : Singles.Vector3_Array (1 .. Int (Length (Sphere.Faces)));
             Indices        : UInt_Array (1 .. 3);
-            Lines          : Singles.Vector3_Array (1 .. 6);
-            V1             : Singles.Vector3;
-            V1_MV          : Multivectors.Vector;
-            Stride         : constant Int := 3;
         begin
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
@@ -446,40 +496,7 @@ package body Geosphere is
             Get_Normals (Sphere, thisChild, Normals);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
 
-            Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
-            GL.Attributes.Enable_Vertex_Attrib_Array (0);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, GL.Types.Single_Type, Stride, 0);
-            GL.Attributes.Enable_Vertex_Attrib_Array (1);
-
-            GL.Objects.Buffers.Draw_Elements (Mode => GL.Types.Triangles,
-                                              Count => Int (3 * Num_Faces),
-                                              Index_Type => UInt_Type,
-                                              Element_Offset => 0);
-            --              GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
-            GL.Attributes.Disable_Vertex_Attrib_Array (0);
-            GL.Attributes.Disable_Vertex_Attrib_Array (1);
-
-            if Normal /= 0.0 then
-                Put_Line ("Geosphere.GS_Draw setting lines");
-                --  Draw three lines
-                for index in 1 .. 3 loop
-                    V1_MV := Unit_E (Get_Vertex (Sphere, index));
-                    V1 := GL_Util.To_GL (V1_MV);
-                    Lines (2 * Int (index - 1) + 1) := Get_Vertex (Sphere, index);
-                    Lines (2 * Int (index - 1) + 2) :=
-                      Get_Vertex (Sphere, index) + V1 * Normal;
-                end loop;
-
-                Utilities.Load_Vertex_Buffer (Array_Buffer, Lines, Static_Draw);
-                GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
-                GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
-                                                      First => 0,
-                                                      Count => 3);
-                GL.Attributes.Disable_Vertex_Attrib_Array (0);
-            end if;
+            GL_Draw (Model_View_Matrix, Sphere, 1, Normal);
         end Draw_Child;
     begin
         if thisFace.Child /= (null, null, null, null) then
