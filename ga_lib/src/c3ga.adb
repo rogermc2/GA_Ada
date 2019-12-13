@@ -1,6 +1,4 @@
 
---  with Interfaces;
-
 --  with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -379,29 +377,6 @@ package body C3GA is
    begin
       return Element (C, C3_e2_e3_ni);
    end E2_E3_NI;
-
-   --  -------------------------------------------------------------------------
-
---     function Get_Coord_1 (V : Vector_E3GA) return float is
---     begin
---        return V.Coordinates (1);
---     end Get_Coord_1;
-
-   --  ------------------------------------------------------------------------
-
---     function Get_Coord_2 (V : Vector_E3GA) return float is
---     begin
---        return V.Coordinates (2);
---     end Get_Coord_2;
-
-   --  ------------------------------------------------------------------------
-
---     function Get_Coord_3 (V : Vector_E3GA) return float is
---     begin
---        return V.Coordinates (3);
---     end Get_Coord_3;
-
-   --  ------------------------------------------------------------------------
 
    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
    begin
