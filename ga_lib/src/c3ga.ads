@@ -1,4 +1,6 @@
 
+with GL.Types;
+
 with GA_Maths;
 
 --  with Blade;
@@ -9,7 +11,10 @@ with Multivector_Type_Base;
 
 package C3GA is
 
-   type Vector_E3GA is private;
+--     type Vector_E3GA is private;
+
+   --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
+  subtype Vector_E3GA is GL.Types.Singles.Vector3;
 
    subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
@@ -47,11 +52,11 @@ package C3GA is
    Grade_4 : constant GA_Maths.Unsigned_Integer := 16;
    Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
 
-   function "+" (L, R : Vector_E3GA) return Vector_E3GA;
-   function "-" (L, R : Vector_E3GA) return Vector_E3GA;
-   function "*" (L : float; R : Vector_E3GA) return Vector_E3GA;
-   function "*" (L : Vector_E3GA; R : float) return Vector_E3GA;
-   function Coord (S : Multivectors.Scalar) return float;
+--     function "+" (L, R : Vector_E3GA) return Vector_E3GA;
+--     function "-" (L, R : Vector_E3GA) return Vector_E3GA;
+--     function "*" (L : float; R : Vector_E3GA) return Vector_E3GA;
+--     function "*" (L : Vector_E3GA; R : float) return Vector_E3GA;
+--     function Coord (S : Multivectors.Scalar) return float;
 --     function Init (MV : Multivectors.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
    function e1 return Multivectors.Multivector;
@@ -72,9 +77,9 @@ package C3GA is
 --     function E1_E2_E3 (C : Circle) return float;
    function E1_E3_NI (C : Circle) return float;
    function E2_E3_NI (C : Circle) return float;
-   function Get_Coord_1 (V : Vector_E3GA) return float;
-   function Get_Coord_2 (V : Vector_E3GA) return float;
-   function Get_Coord_3 (V : Vector_E3GA) return float;
+--     function Get_Coord_1 (V : Vector_E3GA) return float;
+--     function Get_Coord_2 (V : Vector_E3GA) return float;
+--     function Get_Coord_3 (V : Vector_E3GA) return float;
    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D;
 --     function Get_Coords (NP : Normalized_Point) return Vector;
    function Get_Coords (NP : Normalized_Point)
@@ -158,10 +163,9 @@ private
       Coordinates : GA_Maths.Scalar_Coords;  --  m_c[1]
    end record;
 
-   --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
-   type Vector_E3GA is record
-      Coordinates : E3GA.Vector := (0.0, 0.0, 0.0);   --  m_c[3]
-   end record;
+--     type Vector_E3GA is record
+--        Coordinates : E3GA.Vector := (0.0, 0.0, 0.0);   --  m_c[3]
+--     end record;
 
 --     type Circle is record   --  m_c[10]
 --        E1_E2_NI, E1_E2_E3, E2_E3_NI, E3_E1_NI, NO_E1_E2 : float := 0.0;

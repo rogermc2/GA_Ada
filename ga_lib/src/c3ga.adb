@@ -109,61 +109,61 @@ package body C3GA is
    --     end C3GA_Point;
 
    --  ------------------------------------------------------------------------
-
-   function "+" (L, R : Vector_E3GA) return Vector_E3GA is
-        L_Coords : constant E3GA.Vector := L.Coordinates;
-        R_Coords : constant E3GA.Vector := R.Coordinates;
-        Result   : Vector_E3GA;
-   begin
-      Result.Coordinates (1) := L_Coords (1) + R_Coords (1);
-      Result.Coordinates (2) := L_Coords (2) + R_Coords (2);
-      Result.Coordinates (3) := L_Coords (3) + R_Coords (3);
-      return Result;
-   end "+";
-
-   --  -------------------------------------------------------------------------
-
-   function "-" (L, R : Vector_E3GA) return Vector_E3GA is
-        L_Coords : constant E3GA.Vector := L.Coordinates;
-        R_Coords : constant E3GA.Vector := R.Coordinates;
-        Result   : Vector_E3GA;
-   begin
-      Result.Coordinates (1) := L_Coords (1) - R_Coords (1);
-      Result.Coordinates (2) := L_Coords (2) - R_Coords (2);
-      Result.Coordinates (3) := L_Coords (3) - R_Coords (3);
-      return Result;
-   end "-";
+--
+--     function "+" (L, R : Vector_E3GA) return Vector_E3GA is
+--          L_Coords : constant E3GA.Vector := L.Coordinates;
+--          R_Coords : constant E3GA.Vector := R.Coordinates;
+--          Result   : Vector_E3GA;
+--     begin
+--        Result.Coordinates (1) := L_Coords (1) + R_Coords (1);
+--        Result.Coordinates (2) := L_Coords (2) + R_Coords (2);
+--        Result.Coordinates (3) := L_Coords (3) + R_Coords (3);
+--        return Result;
+--     end "+";
 
    --  -------------------------------------------------------------------------
 
-   function "*" (L : float; R : Vector_E3GA) return Vector_E3GA is
-        R_Coords : constant E3GA.Vector := R.Coordinates;
-        Result   : Vector_E3GA;
-   begin
-      Result.Coordinates (1) := L * R_Coords (1);
-      Result.Coordinates (2) := L * R_Coords (2);
-      Result.Coordinates (3) := L * R_Coords (3);
-      return Result;
-   end "*";
+--     function "-" (L, R : Vector_E3GA) return Vector_E3GA is
+--          L_Coords : constant E3GA.Vector := L.Coordinates;
+--          R_Coords : constant E3GA.Vector := R.Coordinates;
+--          Result   : Vector_E3GA;
+--     begin
+--        Result.Coordinates (1) := L_Coords (1) - R_Coords (1);
+--        Result.Coordinates (2) := L_Coords (2) - R_Coords (2);
+--        Result.Coordinates (3) := L_Coords (3) - R_Coords (3);
+--        return Result;
+--     end "-";
 
    --  -------------------------------------------------------------------------
 
-   function "*" (L : Vector_E3GA; R : float) return Vector_E3GA is
-        L_Coords : constant E3GA.Vector := L.Coordinates;
-        Result   : Vector_E3GA;
-   begin
-      Result.Coordinates (1) := R * L_Coords (1);
-      Result.Coordinates (2) := R * L_Coords (2);
-      Result.Coordinates (3) := R * L_Coords (3);
-      return Result;
-   end "*";
+--     function "*" (L : float; R : Vector_E3GA) return Vector_E3GA is
+--          R_Coords : constant E3GA.Vector := R.Coordinates;
+--          Result   : Vector_E3GA;
+--     begin
+--        Result.Coordinates (1) := L * R_Coords (1);
+--        Result.Coordinates (2) := L * R_Coords (2);
+--        Result.Coordinates (3) := L * R_Coords (3);
+--        return Result;
+--     end "*";
 
    --  -------------------------------------------------------------------------
 
-   function Coord (S : Multivectors.Scalar) return float is
-   begin
-      return Multivectors.Scalar_Part (S);
-   end Coord;
+--     function "*" (L : Vector_E3GA; R : float) return Vector_E3GA is
+--          L_Coords : constant E3GA.Vector := L.Coordinates;
+--          Result   : Vector_E3GA;
+--     begin
+--        Result.Coordinates (1) := R * L_Coords (1);
+--        Result.Coordinates (2) := R * L_Coords (2);
+--        Result.Coordinates (3) := R * L_Coords (3);
+--        return Result;
+--     end "*";
+
+   --  -------------------------------------------------------------------------
+
+--     function Coord (S : Multivectors.Scalar) return float is
+--     begin
+--        return Multivectors.Scalar_Part (S);
+--     end Coord;
 
    --  -------------------------------------------------------------------------
 
@@ -382,30 +382,30 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Coord_1 (V : Vector_E3GA) return float is
-   begin
-      return V.Coordinates (1);
-   end Get_Coord_1;
+--     function Get_Coord_1 (V : Vector_E3GA) return float is
+--     begin
+--        return V.Coordinates (1);
+--     end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_2 (V : Vector_E3GA) return float is
-   begin
-      return V.Coordinates (2);
-   end Get_Coord_2;
+--     function Get_Coord_2 (V : Vector_E3GA) return float is
+--     begin
+--        return V.Coordinates (2);
+--     end Get_Coord_2;
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_3 (V : Vector_E3GA) return float is
-   begin
-      return V.Coordinates (3);
-   end Get_Coord_3;
+--     function Get_Coord_3 (V : Vector_E3GA) return float is
+--     begin
+--        return V.Coordinates (3);
+--     end Get_Coord_3;
 
    --  ------------------------------------------------------------------------
 
    function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
    begin
-      return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
+      return (Float (V (GL.X)), Float (V (GL.Y)), Float (V (GL.Z)));
    end Get_Coords;
 
    --  ------------------------------------------------------------------------
@@ -744,12 +744,11 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Norm_E2 (V : Vector_E3GA) return Float is
-      theNorm : Float;
+      use GL.Types;
+      theNorm : Single;
    begin
-      theNorm := V.Coordinates (1) * V.Coordinates (1) +
-        V.Coordinates (2) * V.Coordinates (2) +
-        V.Coordinates (3) * V.Coordinates (3);
-      return theNorm;
+      theNorm := V (GL.X) * V (GL.X) +  V (GL.Y) * V (GL.Y) +  V (GL.Z) * V (GL.Z);
+      return Float (theNorm);
    end Norm_E2;
 
    --  -------------------------------------------------------------------------
@@ -829,19 +828,17 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float) is
+      use GL.Types;
    begin
-      V.Coordinates (1) := C1;
-      V.Coordinates (2) := C2;
-      V.Coordinates (3) := C3;
+      V := (Single (C1), Single (C2), Single (C3));
    end Set_Coords;
 
    --  -------------------------------------------------------------------------
 
    function Set_Coords (C1, C2, C3 : float) return Vector_E3GA is
-      Vec : Vector_E3GA;
+      use GL.Types;
    begin
-      Vec.Coordinates :=  (C1, C2, C3);
-      return Vec;
+      return (Single (C1), Single (C2), Single (C3));
    end Set_Coords;
 
    --  -------------------------------------------------------------------------
@@ -905,9 +902,9 @@ package body C3GA is
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
-      Add_Blade (NP, New_Basis_Blade (C3_e1, V.Coordinates (1)));
-      Add_Blade (NP, New_Basis_Blade (C3_e2, V.Coordinates (2)));
-      Add_Blade (NP, New_Basis_Blade (C3_e3, V.Coordinates (3)));
+      Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
+      Add_Blade (NP, New_Basis_Blade (C3_e2, Float (V (GL.Y))));
+      Add_Blade (NP, New_Basis_Blade (C3_e3, Float (V (GL.Z))));
       Add_Blade (NP, New_Basis_Blade (C3_ni,
                  0.5 * Norm_E2 (V) * GA_Base_Types.NI));
       return NP;
@@ -949,6 +946,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA is
+      use GL.Types;
       use GA_Maths;
       theVector : Vector_E3GA;
       GU        : constant Grade_Usage := Multivectors.Grade_Use (MV);
@@ -959,9 +957,9 @@ package body C3GA is
       end if;
 
       if (GU and GU_1) /= 0 then
-         theVector.Coordinates (1) := Multivectors.Component (MV, Index + 1);
-         theVector.Coordinates (2) := Multivectors.Component (MV, Index + 2);
-         theVector.Coordinates (3) := Multivectors.Component (MV, Index + 3);
+         theVector (GL.X) := Single (Multivectors.Component (MV, Index + 1));
+         theVector (GL.Y) := Single (Multivectors.Component (MV, Index + 2));
+         theVector (GL.Z) := Single (Multivectors.Component (MV, Index + 3));
       end if;
       return theVector;
    end To_VectorE3GA;
@@ -977,11 +975,12 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA is
+      use GL.Types;
       theVector : Vector_E3GA;
    begin
-      theVector.Coordinates (1) := Multivectors.Component (NP, 1);
-      theVector.Coordinates (2) := Multivectors.Component (NP, 2);
-      theVector.Coordinates (3) := Multivectors.Component (NP, 3);
+         theVector (GL.X) := Single (Multivectors.Component (NP, 1));
+         theVector (GL.Y) := Single (Multivectors.Component (NP, 2));
+         theVector (GL.Z) := Single (Multivectors.Component (NP, 3));
       return theVector;
    end NP_To_VectorE3GA;
 
@@ -1147,7 +1146,7 @@ package body C3GA is
 
    function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.Vector is
    begin
-      return Vec.Coordinates;
+      return (Float (Vec (GL.X)), Float (Vec (GL.Y)), Float (Vec (GL.Z)));
    end Vector_To_E3GA;
 
    --  -------------------------------------------------------------------------
