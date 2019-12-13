@@ -124,7 +124,7 @@ package body C3GA_Draw is
         Direction  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
         Scale      : Float;
-        V          : C3GA.Vector_E3GA;
+        V          : constant C3GA.Vector_E3GA := C3GA.Set_Coords (0.0, 0.0, 0.0);
     begin
         case Analysis.M_Type.Blade_Subclass is
             when Line_Subclass =>
@@ -173,7 +173,7 @@ package body C3GA_Draw is
                           Position : C3GA.Normalized_Point;
                           Palet_Type : Palet.Colour_Palet) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-        V     : C3GA.Vector_E3GA;   --  coords initialized to (0.0, 0.0, 0.0)
+        V     : constant C3GA.Vector_E3GA := C3GA.Set_Coords (0.0, 0.0, 0.0);
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
         GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
@@ -193,6 +193,8 @@ package body C3GA_Draw is
                           Palet_Type : Palet.Colour_Palet;
                           Method : GA_Draw.Method_Type :=
                             GA_Draw.Draw_Bivector_Circle) is
+        use GL.Types;
+        use GL.Types.Singles;
         use Multivector_Analyze;
         use C3GA;
         Point_Pos  : constant Vector_E3GA :=
@@ -204,17 +206,17 @@ package body C3GA_Draw is
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
         Scalar     : constant Scalar_Array := Analysis.Scalors;
-        VC         : Vector_E3GA;  --  Initialized to zeroes
+        VC         : constant Vector_E3GA := C3GA.Set_Coords (0.0, 0.0, 0.0);
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos + Scalar (1) * M_Vec1,
+                                    Point_Pos + Single (Scalar (1)) * M_Vec1,
                                     P_Scale, VC, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos - Scalar (1) * M_Vec1,
+                                    Point_Pos - Single (Scalar (1)) * M_Vec1,
                                     P_Scale, VC, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>

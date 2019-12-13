@@ -205,13 +205,13 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
-        C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
-    begin
-
-        return (Single (C3_Coords (1)), Single (C3_Coords (2)),
-                Single (C3_Coords (3)));
-    end To_GL;
+--      function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
+--          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
+--      begin
+--
+--          return (Single (C3_Coords (1)), Single (C3_Coords (2)),
+--                  Single (C3_Coords (3)));
+--      end To_GL;
 
     --  -------------------------------------------------------------------------
 
