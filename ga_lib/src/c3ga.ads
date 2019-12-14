@@ -11,7 +11,8 @@ with Multivector_Type_Base;
 package C3GA is
 
    --  Vector_E3GA corresponds to c3ga.vectorE3GA coordinate storage float m_c[3]
-  subtype Vector_E3GA is GL.Types.Singles.Vector3;
+   subtype Vector_E3GA is GL.Types.Singles.Vector3;
+   subtype Vector_E3GA_Array is GL.Types.Singles.Vector3_Array;
 
    subtype MV_Type is Multivector_Type_Base.MV_Typebase;
 
@@ -124,7 +125,7 @@ package C3GA is
    function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle;
 --     procedure Set_Coords (P : out Multivectors.Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
-   function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
+--     function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
    function Set_Dual_Plane (P1 : Normalized_Point; Dir : Multivectors.Vector) return Dual_Plane;
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; NP : Normalized_Point);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NO_T);

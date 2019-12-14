@@ -1,7 +1,6 @@
 
 with GL.Types; use GL.Types;
 
-with C3GA;
 with GA_Maths;
 with Multivectors;
 
@@ -22,7 +21,7 @@ package GL_Util is
         Pick_Window_Size : Int := 4;
     end record;
 
-    function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA;
+--      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA;
     --     procedure GL_Color_3fm (R, G, B : GL.Types.Single);
     procedure Load_Pick_Matrix;
     procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;

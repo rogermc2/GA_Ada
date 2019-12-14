@@ -554,9 +554,9 @@ package body GA_Draw is
       end loop;
 
       for Index in GL_Normals'Range loop
-         V1 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.X)));
-         V2 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.Y)));
-         V3 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.W)));
+         V1 := Vertices (Polygon (Index) (GL.X));
+         V2 := Vertices (Polygon (Index) (GL.Y));
+         V3 := Vertices (Polygon (Index) (GL.W));
          GL_Normals (Index) :=
            (Scale_Sign * E3GA.Outer_Product ((V2 - V1), (V3 - V1)));
 
@@ -584,17 +584,17 @@ package body GA_Draw is
       if Method = Draw_TV_Parellelepiped then
          Draw_Vector (Render_Program => Render_Program,
                       Model_View_Matrix => Model_View_Matrix,
-                      Tail           => GL_Util.From_GL (Vertices (1)),
+                      Tail           => Vertices (1),
                       Direction      => V_Coords,
                       Scale          => Scale);
          Draw_Vector (Render_Program => Render_Program,
                       Model_View_Matrix => Model_View_Matrix,
-                      Tail           => GL_Util.From_GL (Vertices (2)),
+                      Tail           => Vertices (2),
                       Direction      => V_Coords,
                       Scale          => Scale);
          Draw_Vector (Render_Program => Render_Program,
                       Model_View_Matrix => Model_View_Matrix,
-                      Tail           => GL_Util.From_GL (Vertices (3)),
+                      Tail           => Vertices (3),
                       Direction      => V_Coords,
                       Scale          => Scale);
       end if;
@@ -811,7 +811,6 @@ package body GA_Draw is
       use GL.Toggles;
       use GL.Types.Singles;
       use Multivectors;
-      use C3GA;
       use Maths.Single_Math_Functions;
 
       Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -839,9 +838,9 @@ package body GA_Draw is
 
          Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
          Draw_Line (Render_Program, Model_View_Matrix,
-                    Set_Coords (0.0, 0.0, 0.0),
-                    Set_Coords (0.98 * Float (Direction (GL.X)),
-                    0.98 * Float (Direction (GL.Y)), 0.98 * Float (Direction (GL.Z))));
+                    (0.0, 0.0, 0.0), (0.98 * Direction (GL.X),
+                      0.98 * Direction (GL.Y),
+                      0.98 * Direction (GL.Z)));
 
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction

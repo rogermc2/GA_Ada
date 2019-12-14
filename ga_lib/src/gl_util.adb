@@ -23,11 +23,11 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
-    begin
-        return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
-                                Float (V3 (GL.Y)));
-    end From_GL;
+--      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
+--      begin
+--          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
+--                                  Float (V3 (GL.Y)));
+--      end From_GL;
 
     --  -------------------------------------------------------------------------
 

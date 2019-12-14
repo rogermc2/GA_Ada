@@ -7,19 +7,18 @@ with Multivectors;
 
 package Points is
    use C3GA;
-   type Points_Array is array (integer range <>) of Vector_E3GA;
-   type Normalized_Points_Array is array (integer range <>) of Normalized_Point;
-   Num_Points : constant Integer := 6;
+   type Normalized_Points_Array is array (int range <>) of Normalized_Point;
+   Num_Points : constant Int := 6;
 
-   Point_Data : Points_Array (1 .. Num_Points) :=
-                    (Set_Coords (-0.356756, -0.881980, 0.0),        -- L1
-                     Set_Coords (-0.725786,  0.934177, -0.366154),  -- L2
-                     Set_Coords (2.612482, 1.495455, -2.704073),    -- C1
-                     Set_Coords (2.218644, 0.425753, -1.780935),    -- C2
-                     Set_Coords (0.865897, 0.629159, -1.438985),    -- C3
-                     Set_Coords (2.846445, -1.112365, -0.366769));  -- P1
+   Point_Data : Vector_E3GA_Array (1 .. Num_Points) :=
+                    ((-0.356756, -0.881980, 0.0),        -- L1
+                     (-0.725786,  0.934177, -0.366154),  -- L2
+                     (2.612482, 1.495455, -2.704073),    -- C1
+                     (2.218644, 0.425753, -1.780935),    -- C2
+                     (0.865897, 0.629159, -1.438985),    -- C3
+                     (2.846445, -1.112365, -0.366769));  -- P1
 
-   type Colour_Data is new Singles.Vector4_Array (1 .. Int (Num_Points));
+   type Colour_Data is new Singles.Vector4_Array (1 .. Num_Points);
 
    Line_Point_Index   : Int := 1;
    Circle_Point_Index : Int := 3;

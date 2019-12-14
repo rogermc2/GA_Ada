@@ -810,11 +810,11 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Coords (C1, C2, C3 : float) return Vector_E3GA is
-      use GL.Types;
-   begin
-      return (Single (C1), Single (C2), Single (C3));
-   end Set_Coords;
+--     function Set_Coords (C1, C2, C3 : float) return Vector_E3GA is
+--        use GL.Types;
+--     begin
+--        return (Single (C1), Single (C2), Single (C3));
+--     end Set_Coords;
 
    --  -------------------------------------------------------------------------
 
@@ -943,8 +943,7 @@ package body C3GA is
 
    function To_VectorE3GA (Vec : E3GA.E3_Vector) return Vector_E3GA is
    begin
-        return Set_Coords (Float (Vec (GL.X)), Float (Vec (GL.Y)),
-                           Float (Vec (GL.Z)));
+        return Vec;
    end To_VectorE3GA;
 
    --  -------------------------------------------------------------------------
