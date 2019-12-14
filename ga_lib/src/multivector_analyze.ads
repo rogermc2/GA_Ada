@@ -9,12 +9,12 @@ with Multivector_Type_Base;
 
 package Multivector_Analyze is
 
-   Flag_Invalid          : constant boolean := false;
-   Flag_Valid            : constant boolean := true;
-   Number_Of_Points      : integer := 3;
-   Number_Of_Scalars     : integer := 3;
-   Number_Of_Vectors     : integer := 3;
-   Default_Epsilon       : constant float := 10.0 ** (-5);
+   Flag_Invalid    : constant boolean := false;
+   Flag_Valid      : constant boolean := true;
+   Max_Points      : constant integer := 3;
+   Max_Scalars     : constant integer := 3;
+   Max_Vectors     : constant integer := 3;
+   Default_Epsilon : constant float := 10.0 ** (-5);
 
    type Flag_Type is record
       Valid : boolean := Flag_Invalid;
@@ -70,9 +70,9 @@ package Multivector_Analyze is
 --        Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of E3GA.E3_Vector;
-   type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
-   type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
+   type Point_Array is array (1 .. Max_Points) of E3GA.E3_Vector;
+   type Scalar_Array is array (1 .. Max_Scalars) of float;
+   type Vector_Array is array (1 .. Max_Vectors) of Multivectors.Vector;
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);

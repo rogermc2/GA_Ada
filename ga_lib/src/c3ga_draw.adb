@@ -38,8 +38,8 @@ package body C3GA_Draw is
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
         Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points, " &
-        Integer'Image (Multivector_Analyze.Number_Of_Points) & " points:");
-        for index in 1 .. Multivector_Analyze.Number_Of_Points loop
+        Integer'Image (Multivector_Analyze.Max_Points) & " maximum points:");
+        for index in 1 .. Multivector_Analyze.Max_Points loop
             Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X)) & "  " &
             GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
             GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));

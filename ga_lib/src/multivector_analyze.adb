@@ -81,21 +81,21 @@ package body Multivector_Analyze is
 
    function Num_Points return integer is
    begin
-      return Number_Of_Points;
+      return Max_Points;
    end Num_Points;
 
    --  --------------------------------------------------------------------------
 
    function Num_Vectors return integer is
    begin
-      return Number_Of_Vectors;
+      return Max_Vectors;
    end Num_Vectors;
 
    --  --------------------------------------------------------------------------
 
    function Num_Scalars return integer is
    begin
-      return Number_Of_Scalars;
+      return Max_Scalars;
    end Num_Scalars;
 
    --  --------------------------------------------------------------------------
