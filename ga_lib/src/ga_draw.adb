@@ -763,10 +763,13 @@ package body GA_Draw is
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
+--        Utilities.Print_Matrix ("GA_Draw.Draw_Trivector MV_Matrix before scaling", MV_Matrix);
+
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
       Put_Line ("GA_Draw.Draw_Trivector P_Scale: " & Float'Image (P_Scale));
       Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
+      Utilities.Print_Matrix ("GA_Draw.Draw_Trivector MV_Matrix", MV_Matrix);
       case Method is
          when Draw_TV_Sphere =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
