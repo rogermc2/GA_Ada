@@ -8,14 +8,16 @@ out vec3 Camera_Normal;
 out vec3 Eye_Direction;
 out vec3 Light_Direction;
 
-uniform mat4 view_matrix;
-uniform mat4 model_matrix;
-uniform mat4 mv_matrix;
-uniform mat4 projection_matrix;
-uniform vec3 light_position;
+uniform mat4  view_matrix;
+uniform mat4  model_matrix;
+uniform mat4  mv_matrix;
+uniform mat4  projection_matrix;
+uniform vec3  light_position;
+uniform float point_size;
 
 void main()
     {
+    gl_PointSize = point_size;
     vec4 position = vec4(vertex_position, 1);
     vec4 normal = vec4(vertex_normal, 0);
     Position_Worldspace = (model_matrix * position).xyz;
