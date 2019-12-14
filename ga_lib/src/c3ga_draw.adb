@@ -40,9 +40,9 @@ package body C3GA_Draw is
         Put_Line ("C3GA_Draw.Draw MV, Analyzed_MV.Points, " &
         Integer'Image (Multivector_Analyze.Number_Of_Points) & " points:");
         for index in 1 .. Multivector_Analyze.Number_Of_Points loop
-            Put_Line (Float'Image (Analyzed_MV.Points (index) (1)) & "  " &
-            Float'Image (Analyzed_MV.Points (index) (2)) & "  " &
-            Float'Image (Analyzed_MV.Points (index) (3)));
+            Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X)) & "  " &
+            GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
+            GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
         end loop;
         Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
 

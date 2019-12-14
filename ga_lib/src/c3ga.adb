@@ -941,10 +941,10 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function To_VectorE3GA (Vec : E3GA.Vector) return Vector_E3GA is
-        Coords  : constant GA_Maths.Array_3D := E3GA.Get_Coords (Vec);
+   function To_VectorE3GA (Vec : E3GA.E3_Vector) return Vector_E3GA is
    begin
-          return Set_Coords (Coords (1), Coords (2), Coords (3));
+        return Set_Coords (Float (Vec (GL.X)), Float (Vec (GL.Y)),
+                           Float (Vec (GL.Z)));
    end To_VectorE3GA;
 
    --  -------------------------------------------------------------------------
@@ -1119,16 +1119,16 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.Vector is
+   function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.E3_Vector is
    begin
-      return (Float (Vec (GL.X)), Float (Vec (GL.Y)), Float (Vec (GL.Z)));
+      return Vec;
    end Vector_To_E3GA;
 
    --  -------------------------------------------------------------------------
 
-    function Unit_E (X : C3GA.Vector_E3GA) return GA_Maths.Coords_Continuous_Array is
+    function Unit_E (X : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
     begin
-        return E3GA.Unit_E (Vector_To_E3GA (X));
+        return E3GA.Unit_E (X);
     end Unit_E;
 
     --  ------------------------------------------------------------------------

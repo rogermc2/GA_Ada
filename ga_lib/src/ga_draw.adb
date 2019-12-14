@@ -498,8 +498,7 @@ package body GA_Draw is
                                   Method            : Method_Type) is
       use GL.Objects.Buffers;
       use Singles;
-      use E3GA;
-      E3_V_Coords          : constant E3GA.Vector :=
+      E3_V_Coords          : constant E3GA.E3_Vector :=
                                C3GA.Vector_To_E3GA (V_Coords);
       Scale_Matrix         : Matrix4;
       Scale_Sign           : GL.Types.Single;
@@ -529,9 +528,9 @@ package body GA_Draw is
       Vertex_Index         : Int := 0;
       GL_Normals           : Vector3_Array (1 .. 6) :=
                                (others => (others => 0.0));
-      V1                   : E3GA.Vector;
-      V2                   : E3GA.Vector;
-      V3                   : E3GA.Vector;
+      V1                   : E3GA.E3_Vector;
+      V2                   : E3GA.E3_Vector;
+      V3                   : E3GA.E3_Vector;
       Stride               : constant Int := 0;
    begin
       if Scale >= 0.0 then
@@ -548,9 +547,7 @@ package body GA_Draw is
          for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
             Vertex_Index := Vertex_Vectors (Row) (Col);
             if Vertex_Index >= 0 then
-               Vertex (GL.X) := Vertex (GL.X) + Single (E3_V_Coords (1));
-               Vertex (GL.Y) := Vertex (GL.Y) + Single (E3_V_Coords (2));
-               Vertex (GL.Z) := Vertex (GL.Z) + Single (E3_V_Coords (3));
+               Vertex := Vertex + E3_V_Coords;
                Vertices (Row) := Vertex;
             end if;
          end loop;
@@ -561,7 +558,7 @@ package body GA_Draw is
          V2 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.Y)));
          V3 := GL_Util.From_GL (Vertices (Polygon (Index) (GL.W)));
          GL_Normals (Index) :=
-           (Scale_Sign * GL_Util.To_GL (Outer_Product ((V2 - V1), (V3 - V1))));
+           (Scale_Sign * E3GA.Outer_Product ((V2 - V1), (V3 - V1)));
 
          if Scale >= 0.0 then
             for GL_Index in Int range 1 .. 3 loop

@@ -15,7 +15,6 @@ package E2GA is
    subtype Scalar is GL.Types.Single;
    subtype Rotor is GL.Types.Singles.Vector2;
 
---     type Scalar is private;
    --  Vector corresponds to e2ga.Vector coordinate storage float m_c[2]
 --     type Vector is private;
 
@@ -70,9 +69,6 @@ package E2GA is
    function e1_e2 (BV : Multivectors.Bivector) return float;
 --     function Get_Basis_Vector_Names return Blade.Basis_Vector_Names;
    function Get_Coord (BV : Bivector) return float;
---     function Get_Coord (S : Scalar) return float;
---     function Get_Coord_1 (R : Rotor) return float;
---     function Get_Coord_2 (R : Rotor) return float;
    function Get_Coord_1 (V : Multivectors.Vector) return float;
    function Get_Coord_2 (V : Multivectors.Vector) return float;
 --     function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array;
@@ -108,18 +104,5 @@ package E2GA is
    function Unit_E (V : Multivectors.Vector) return Multivectors.Vector;
 --     function Unit_E (MV : Multivector) return Vector;
 --     function Unit_E (BV : Bivector) return Vector;
-
-private
---     type Scalar is record
---        Coordinates : GA_Maths.Scalar_Coords := (others => 0.0);   --  m_c[1]
---     end record;
---
---     type Rotor is record
---        Coordinates : Rotor_Coords := (1.0, 0.0);   --  m_c[2]
---     end record;
-
---     type Vector is record
---        Coordinates : Vector_Coords := (0.0, 0.0);   --  m_c[2]
---     end record;
 
 end E2GA;

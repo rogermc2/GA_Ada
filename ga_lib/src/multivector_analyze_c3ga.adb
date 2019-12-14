@@ -80,8 +80,8 @@ package body Multivector_Analyze_C3GA is
 
       MV_Info := Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
---        Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info", MV_Info);
---        New_Line;
+      Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info", MV_Info);
+      New_Line;
 
       --  Check for zero blade
       if Zero (Analysis.M_MV_Type) then

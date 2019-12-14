@@ -9,16 +9,17 @@ with GL.Window;
 
 with Blade;
 with Blade_Types;
+with E3GA;
 with E3GA_Utilities;
 
 package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-    function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
-    begin
-        return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
-    end From_GL;
+--      function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
+--      begin
+--          return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
+--      end From_GL;
 
     --  -------------------------------------------------------------------------
 
@@ -215,10 +216,10 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
-    begin
-        return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
-    end To_GL;
+--      function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
+--      begin
+--          return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
+--      end To_GL;
 
     --  -------------------------------------------------------------------------
 
