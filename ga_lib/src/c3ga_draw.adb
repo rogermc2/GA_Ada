@@ -37,7 +37,7 @@ package body C3GA_Draw is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
-        Put_Line ("C3GA_Draw.Draw MV, Analyzed_MV.Points, " &
+        Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points, " &
         Integer'Image (Multivector_Analyze.Number_Of_Points) & " points:");
         for index in 1 .. Multivector_Analyze.Number_Of_Points loop
             Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X)) & "  " &
@@ -205,18 +205,18 @@ package body C3GA_Draw is
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
-        Scalar     : constant Scalar_Array := Analysis.Scalors;
+        Radius     : constant Single := Single (Analysis.Scalors (1));
         VC         : constant Vector_E3GA := (0.0, 0.0, 0.0);
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos + Single (Scalar (1)) * M_Vec1,
+                                    Point_Pos + Radius * M_Vec1,
                                     P_Scale, VC, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                    Point_Pos - Single (Scalar (1)) * M_Vec1,
+                                    Point_Pos - Radius * M_Vec1,
                                     P_Scale, VC, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
@@ -228,7 +228,7 @@ package body C3GA_Draw is
                                    Ortho_1           => M_Vec1,
                                    Ortho_2           => M_Vec2,
                                    Palet_Type        => Palet_Type,
-                                   Scale             => Scalar (1),
+                                   Scale             => Float (Radius),
                                    Method            => Method);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");

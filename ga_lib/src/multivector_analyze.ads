@@ -1,4 +1,5 @@
 
+with Blade_Types;
 with C3GA;
 with E3GA;
 with GA_Maths;
@@ -13,6 +14,7 @@ package Multivector_Analyze is
    Number_Of_Points      : integer := 3;
    Number_Of_Scalars     : integer := 3;
    Number_Of_Vectors     : integer := 3;
+   Default_Epsilon       : constant float := 10.0 ** (-5);
 
    type Flag_Type is record
       Valid : boolean := Flag_Invalid;
@@ -60,7 +62,7 @@ package Multivector_Analyze is
       Multivector_Kind : Multivector_Type_Base.Object_Type :=  --  m_type[1]
                            Multivector_Type_Base.MV_Object;
       Blade_Class      : Blade_Type := Non_Blade;              --  m_type[2]
-      --  m_type[3] = grade / class dependent
+                                     --  m_type[3] = grade / class dependent
       M_Grade          : GA_Maths.Grade_Usage;
 --        MV_Subtype       : M_Type_Type := Unspecified_Type;
       Blade_Subclass   : Blade_Subclass_Type := Unspecified_Subclass;  --  m_type[3]
@@ -83,18 +85,16 @@ package Multivector_Analyze is
       Versor_Kind      : Versor_Subclass_Type := Not_A_Versor;
       --  Each analyzed multivector is decomposed into
       --  (analysis dependent) points, scalars and vectors.
-      Points           : Point_Array;   --  E3GA.Vector array
-      Scalors          : Scalar_Array;  --  Float array
+      Points           : Point_Array := (others => (0.0, 0.0, 0.0));   --  E3GA.Vector array
+      Scalors          : Scalar_Array := (others => (0.0));  --  Float array
       M_Vectors        : Vector_Array;  --  Multivectors.Vector array
    end record;
 
-   function Default_Epsilon return float;  --  Must precede Analyze
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Probe : C3GA.Normalized_Point;
---                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
+                      Probe : C3GA.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

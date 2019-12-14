@@ -71,9 +71,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
       use GL.Toggles;
       use Maths.Single_Math_Functions;
-      --          use E2GA;
-      --          use GA_Maths;
-      --          use GA_Maths.Float_Functions;
 
       --          Position_X        : integer := 0;
       --          Position_Y        : single := 160.0;
@@ -124,7 +121,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Maths.Init_Perspective_Transform
           (View_Angle, Width, Height, 0.1, 100.0, Projection_Matrix);
-      Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
+--        Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
@@ -150,8 +147,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Shader_Manager.Set_Ambient_Colour (Green);
          Shader_Manager.Set_Diffuse_Colour (BLue);
---           for count in 1 .. 1 loop
-         for count in 1 .. Points.Num_Points loop
+         for count in Int range 1 .. 1 loop
+--           for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);

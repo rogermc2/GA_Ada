@@ -6,8 +6,6 @@ with Multivector_Analyze_C3GA;
 
 package body Multivector_Analyze is
 
-   Default_Epsilon_Value : constant float := 10.0 ** (-5);
-
    --  --------------------------------------------------------------------------
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
@@ -20,8 +18,7 @@ package body Multivector_Analyze is
    --  --------------------------------------------------------------------------
 
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Probe : C3GA.Normalized_Point;
---                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
+                      Probe : C3GA.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon) is
    begin
@@ -34,13 +31,6 @@ package body Multivector_Analyze is
    begin
       return  A.M_Type.Blade_Subclass;
    end Blade_Subclass;
-
-   --  --------------------------------------------------------------------------
-
-   function Default_Epsilon return float is
-   begin
-      return Default_Epsilon_Value;
-   end Default_Epsilon;
 
    --  --------------------------------------------------------------------------
 
