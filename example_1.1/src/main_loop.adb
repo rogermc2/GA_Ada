@@ -148,8 +148,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Shader_Manager.Set_Ambient_Colour (Green);
          Shader_Manager.Set_Diffuse_Colour (BLue);
-         for count in Int range 1 .. 1 loop
---           for count in 1 .. Points.Num_Points loop
+--           for count in Int range 1 .. 1 loop
+         for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);
