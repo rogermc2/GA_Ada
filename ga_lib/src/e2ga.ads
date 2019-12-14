@@ -1,4 +1,6 @@
 
+with GL.Types;
+
 with GA_Maths;
 with Multivectors; use Multivectors;
 with Multivector_Type_Base;
@@ -7,11 +9,13 @@ package E2GA is
 --     e1_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e1);
 --     e2_bv   : Multivector.Multivector := Multivector.Get_Basis_Vector (Blade.E2_e2);
 
-   subtype Rotor_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
-   subtype Vector_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
+--     subtype Rotor_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
+--     subtype Vector_Coords is GA_Maths.Coords_Continuous_Array (1 .. 2);
 
-   type Rotor is private;
-   type Scalar is private;
+   subtype Scalar is GL.Types.Single;
+   subtype Rotor is GL.Types.Singles.Vector2;
+
+--     type Scalar is private;
    --  Vector corresponds to e2ga.Vector coordinate storage float m_c[2]
 --     type Vector is private;
 
@@ -57,7 +61,7 @@ package E2GA is
 
    function Bivector_String (BV : Multivectors.Bivector) return String;
 --     function Dot_Product (V1, V2 : Vector) return float;
-   function Dot_Product (R1, R2 : Rotor) return float;
+--     function Dot_Product (R1, R2 : Rotor) return float;
 --     function Dual (MV : Multivector) return Multivector;
    function e1 return Multivectors.Vector;
    function e2 return Multivectors.Vector;
@@ -66,9 +70,9 @@ package E2GA is
    function e1_e2 (BV : Multivectors.Bivector) return float;
 --     function Get_Basis_Vector_Names return Blade.Basis_Vector_Names;
    function Get_Coord (BV : Bivector) return float;
-   function Get_Coord (S : Scalar) return float;
-   function Get_Coord_1 (R : Rotor) return float;
-   function Get_Coord_2 (R : Rotor) return float;
+--     function Get_Coord (S : Scalar) return float;
+--     function Get_Coord_1 (R : Rotor) return float;
+--     function Get_Coord_2 (R : Rotor) return float;
    function Get_Coord_1 (V : Multivectors.Vector) return float;
    function Get_Coord_2 (V : Multivectors.Vector) return float;
 --     function Get_Coords (MV : Multivector) return GA_Maths.Coords_Continuous_Array;
@@ -101,19 +105,18 @@ package E2GA is
 --     function Set_Bivector (V : Vector) return Bivector;
 --     function Set_Bivector (R : Rotor) return Bivector;
    function Set_Rotor (E1_E2 : float) return Rotor;
-   procedure Set_Scalar (S : out Scalar; Value : float);
    function Unit_E (V : Multivectors.Vector) return Multivectors.Vector;
 --     function Unit_E (MV : Multivector) return Vector;
 --     function Unit_E (BV : Bivector) return Vector;
 
 private
-   type Scalar is record
-      Coordinates : GA_Maths.Scalar_Coords := (others => 0.0);   --  m_c[1]
-   end record;
-
-   type Rotor is record
-      Coordinates : Rotor_Coords := (1.0, 0.0);   --  m_c[2]
-   end record;
+--     type Scalar is record
+--        Coordinates : GA_Maths.Scalar_Coords := (others => 0.0);   --  m_c[1]
+--     end record;
+--
+--     type Rotor is record
+--        Coordinates : Rotor_Coords := (1.0, 0.0);   --  m_c[2]
+--     end record;
 
 --     type Vector is record
 --        Coordinates : Vector_Coords := (0.0, 0.0);   --  m_c[2]

@@ -1,4 +1,6 @@
 
+with Maths;
+
 with Blade;
 with Blade_Types;
 
@@ -82,10 +84,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function "-" (VL, VR : Vector) return Vector is
-    begin
-        return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
-    end "-";
+--      function "-" (VL, VR : Vector) return Vector is
+--      begin
+--          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
+--      end "-";
 
     --  ------------------------------------------------------------------------
 
@@ -563,10 +565,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (V : Vector) return Array_3D is
-    begin
-        return (V (1), V (2), V (3));
-    end Get_Coords;
+--      function Get_Coords (V : Vector) return Array_3D is
+--      begin
+--          return (V (1), V (2), V (3));
+--      end Get_Coords;
 
     --  ------------------------------------------------------------------------
 
@@ -1072,11 +1074,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Outer_Product (V1, V2 : Vector) return Vector is
+    function Outer_Product (V1, V2 : E3_Vector) return E3_Vector is
+        use GL.Types;
     begin
-        return (V1 (1) * V2 (2) - V1 (2) * V2 (1),
-                V1 (2) * V2 (3) - V1 (3) * V2 (2),
-                V1 (3) * V2 (1) - V1 (1) * V2 (3));
+        return (V1 (GL.X) * V2 (GL.Y) - V1 (GL.Y) * V2 (GL.X),
+                V1 (GL.Y) * V2 (GL.Z) - V1 (GL.Z) * V2 (GL.Y),
+                V1 (GL.Z) * V2 (GL.X) - V1 (GL.X) * V2 (GL.Z));
     end Outer_Product;
 
     --  ------------------------------------------------------------------------
@@ -1221,12 +1224,14 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
     --  Unit_E normalizes vector X
-    function Unit_E (X : Vector) return Vector is
-        use GA_Maths.Float_Functions;
-        E2      : constant float := X (1) * X (1) + X (2) * X (2) + X (3) * X (3);
-        IE      : constant float := 1.0 / Sqrt (E2);
+    function Unit_E (X : E3_Vector) return E3_Vector is
+        use Gl.Types;
+        use Gl.Types.Singles;
+        use Maths.Single_Math_Functions;
+        E2 : constant Single := Dot_Product (X, X);
+        IE : constant Single := 1.0 / Sqrt (E2);
     begin
-        return (IE * X (1), IE * X (2), IE * X (3));
+        return (IE * X);
     end Unit_E;
 
     --  ------------------------------------------------------------------------

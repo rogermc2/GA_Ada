@@ -150,11 +150,11 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Dot_Product (R1, R2 : Rotor) return float is
-   begin
-      return R1.Coordinates (1) * R2.Coordinates (1) +
-        R1.Coordinates (2) * R2.Coordinates (2);
-   end Dot_Product;
+--     function Dot_Product (R1, R2 : Rotor) return float is
+--     begin
+--        return R1.Coordinates (1) * R2.Coordinates (1) +
+--          R1.Coordinates (2) * R2.Coordinates (2);
+--     end Dot_Product;
 
    --  ------------------------------------------------------------------------
 
@@ -307,10 +307,10 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord (S : Scalar) return float is
-   begin
-      return S.Coordinates (1);
-   end Get_Coord;
+--     function Get_Coord (S : Scalar) return float is
+--     begin
+--        return S.Coordinates (1);
+--     end Get_Coord;
 
    --  ------------------------------------------------------------------------
 
@@ -328,17 +328,17 @@ package body E2GA is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_1 (R : Rotor) return float is
-   begin
-      return R.Coordinates (1);
-   end Get_Coord_1;
+--     function Get_Coord_1 (R : Rotor) return float is
+--     begin
+--        return R.Coordinates (1);
+--     end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
-   function Get_Coord_2 (R : Rotor) return float is
-   begin
-      return R.Coordinates (2);
-   end Get_Coord_2;
+--     function Get_Coord_2 (R : Rotor) return float is
+--     begin
+--        return R.Coordinates (2);
+--     end Get_Coord_2;
 
    --  ------------------------------------------------------------------------
 
@@ -888,16 +888,9 @@ package body E2GA is
    function Set_Rotor (E1_E2 : float) return Rotor is
       theRotor : Rotor;
    begin
-      theRotor.Coordinates := (E1_E2, 0.0);
+      theRotor := (GL.Types.Single (E1_E2), 0.0);
       return theRotor;
    end Set_Rotor;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Scalar (S : out Scalar; Value : float) is
-   begin
-      S.Coordinates (1) := Value;
-   end Set_Scalar;
 
    --  ------------------------------------------------------------------------
 

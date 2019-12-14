@@ -1,11 +1,14 @@
 
+with GL.Types;
+
 with GA_Maths; use GA_Maths;
 with Multivectors ; use Multivectors;
 
 package E3GA is
 
    type Array_19F is array (1 .. 19) of float;
-   subtype Vector is GA_Maths.Coords_Continuous_Array (1 .. 3);  --  m_c[3] coordinate storage
+--     subtype Vector is GA_Maths.Coords_Continuous_Array (1 .. 3);  --  m_c[3] coordinate storage
+   subtype E3_Vector is GL.Types.Singles.Vector3;  --  m_c[3] coordinate storage
 
    --  types
    type G2_Type is (MVT_None, MVT_E1_T, MVT_E2_T, MVT_E3_T, MVT_Scalar,
@@ -40,7 +43,7 @@ package E3GA is
 --     function "=" (V1, V2 : Vector) return Boolean;
 --     function "+" (V1, V2 : Vector) return Vector;
 --     function "-" (V : Vector) return Vector;
-   function "-" (VL, VR : Vector) return Vector;
+--     function "-" (VL, VR : Vector) return Vector;
 --     function "*" (Weight : float; V : Vector) return Vector;
 
 --     function "*" (Weight : float; BV : Bivector) return Bivector;
@@ -87,7 +90,7 @@ package E3GA is
 --      function Get_Coord_1 (V : Vector) return float;
 --      function Get_Coord_2 (V : Vector) return float;
 --      function Get_Coord_3 (V : Vector) return float;
-   function Get_Coords (V : Vector) return Array_3D;
+--     function Get_Coords (V : Vector) return Array_3D;
 --     function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;
@@ -110,7 +113,7 @@ package E3GA is
 --     function Magnitude (V : Vector) return float;
 --     function MV_String (MV : Multivector; Text : String := "")
 --                         return Ada.Strings.Unbounded.Unbounded_String;
-   function Outer_Product (V1, V2 : Vector) return Vector;
+   function Outer_Product (V1, V2 : E3_Vector) return E3_Vector;
 
 --     function Norm_E2 (BV : Bivector) return Scalar;
 --     function Norm_E2 (V : Vector) return Scalar;
@@ -134,12 +137,9 @@ package E3GA is
    --  Unit_e normalizes rotor R
 --     function Unit_e (R : Rotor) return Rotor;
    --  Unit_e normalizes Vector X
-   function Unit_E (X : Vector) return Vector;
+   function Unit_E (X : E3_Vector) return E3_Vector;
 
 private
---     type Scalar is record
---        Coordinates : Scalar_Coords;  --  m_c[1]
---     end record;
 
    --  Vector corresponds to e3ga.vector coordinate storage float m_c[3]
 --     type Vector is record
