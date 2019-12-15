@@ -419,7 +419,7 @@ package body C3GA is
    end ni;
 
    --  -------------------------------------------------------------------------
-
+   --  no is based on C3GA set to no_t
    function no return Normalized_Point is
       use Multivectors;
       Basis  : Normalized_Point;
@@ -886,6 +886,7 @@ package body C3GA is
    end Set_Normalized_Point;
 
    --  ------------------------------------------------------------------------
+
    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
                                   return Normalized_Point is
       use Blade;

@@ -555,11 +555,11 @@ package body Geosphere is
                 Put_Line ("Geosphere.GS_Draw has child");
                 GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace, Normal);
             else  --  no children
-                Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix );
+--                  Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix );
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Get_Vertices (Sphere, Vertices);
-                Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
+--                  Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
                 Indices_Buffer.Initialize_Id;

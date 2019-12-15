@@ -1,5 +1,4 @@
 
-with Ada.Containers;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -65,6 +64,14 @@ package body GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
+   function Multivector_Size (MV : Multivectors.Multivector) return Integer is
+      use Multivectors;      theBlades : constant Blade_List := Blades (MV);
+   begin
+      return Integer (theBlades.Length);
+   end Multivector_Size;
+
+   --  -------------------------------------------------------------------------
+
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3) is
    begin
       Put_Line (Name & ":");
@@ -106,7 +113,7 @@ package body GA_Utilities is
       New_Line;
       Put_Line (Name);
       Put_Line ("MV Type: " & Multivectors.MV_Type'Image (MV.Type_Of_MV));
-      Put_Line ("MV Size: " & Ada.Containers.Count_Type'Image (theBlades.Length));
+      Put_Line ("MV Size: " & Integer'Image (Multivector_Size (MV)));
       Put_Line ("Grade Use Bitmap: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
       Put_Line ("Multivector Blades, Bitmap and Weight:");
       while Has_Element (Curs) loop

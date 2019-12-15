@@ -862,6 +862,11 @@ package body Multivectors is
 
       Simplify (MV);
       return MV;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Multivector.Inner_Product");
+         raise;
    end Inner_Product;
 
    --  -------------------------------------------------------------------------
@@ -1517,8 +1522,7 @@ package body Multivectors is
       theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if theNorm = 0.0 then
-         Put_Line ("Multivector.Unit_R encountered a null multivector");
-         raise MV_Exception;
+         raise MV_Exception with "Multivector.Unit_R encountered a null multivector";
       end if;
 
       return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
