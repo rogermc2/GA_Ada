@@ -275,8 +275,8 @@ package body Multivector_Analyze_C3GA is
             Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV);
-            Radius_Sq := Scalar_Part
-              (Geometric_Product (MV_X, 1.0 / NI_Xsq * Grade_Inversion (MV_X)));
+            Radius_Sq := 1.0 / NI_Xsq * Scalar_Part
+              (Geometric_Product (MV_X, Grade_Inversion (MV_X)));
             if Radius_Sq < 0.0 then
               Radius_Sq := -Radius_Sq;
             end if;
