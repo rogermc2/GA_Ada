@@ -91,6 +91,8 @@ package Multivector_Analyze is
       M_Vectors        : Vector_Array;  --  Multivectors.Vector array
    end record;
 
+   MVA_Exception : Exception;
+
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);

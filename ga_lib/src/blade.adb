@@ -223,6 +223,11 @@ package body Blade is
             end if;
       end case;
       return IP_Blade;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Blade.Inner_Product_Filter");
+         raise;
    end Inner_Product_Filter;
 
    --  ------------------------------------------------------------------------
@@ -255,6 +260,7 @@ package body Blade is
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
    begin
       return (Index'Enum_Rep, Weight);
+
    exception
       when others =>
          Put_Line ("An exception occurred in Blade.New_Basis_Blade");
