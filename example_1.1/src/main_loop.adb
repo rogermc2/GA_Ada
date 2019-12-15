@@ -142,8 +142,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.3);  --  orig 0.005
-         Shader_Manager.Set_Point_Size (1.0);
+         Palet.Set_Point_Size (0.28);  --  orig 0.005
          Shader_Manager.Set_Drawing_Colour (Red);
 
          Shader_Manager.Set_Ambient_Colour (Green);
