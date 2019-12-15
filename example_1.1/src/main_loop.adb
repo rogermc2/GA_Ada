@@ -142,13 +142,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.3);  --  orig 0.005
+         Palet.Set_Point_Size (0.28);  --  orig 0.005
          Shader_Manager.Set_Drawing_Colour (Red);
 
          Shader_Manager.Set_Ambient_Colour (Green);
          Shader_Manager.Set_Diffuse_Colour (BLue);
-         for count in Int range 1 .. 1 loop
---           for count in 1 .. Points.Num_Points loop
+--           for count in Int range 1 .. 1 loop
+         for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);
@@ -208,7 +208,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
---          GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
+      GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
 
       --        Render_Text_Program := Program_Loader.Program_From
       --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),

@@ -1,20 +1,16 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with Maths;
---  with E3GA_Utilities;
+with GA_Draw;
 with GA_Maths;
 with Multivector_Analyze;
---  with Multivector_Type;
 
 package body C3GA_Draw is
 
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Palet_Type : Palet.Colour_Palet;
-                         Method : GA_Draw.Method_Type :=
-                            GA_Draw.Draw_Bivector_Circle);
+                         Palet_Type : Palet.Colour_Palet);
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
@@ -22,18 +18,14 @@ package body C3GA_Draw is
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Palet_Type : Palet.Colour_Palet;
-                          Method : GA_Draw.Method_Type :=
-                            GA_Draw.Draw_Bivector_Circle);
+                          Palet_Type : Palet.Colour_Palet);
 
     --  -------------------------------------------------------------------------
 
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
                     MV                : Multivectors.Multivector;
-                    Palet_Type : Palet.Colour_Palet;
-                    Method : GA_Draw.Method_Type :=
-                            GA_Draw.Draw_Bivector_Circle) is
+                    Palet_Type : Palet.Colour_Palet) is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
@@ -44,7 +36,7 @@ package body C3GA_Draw is
             GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
             GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
         end loop;
-        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
+        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 
     exception
         when others =>
@@ -76,9 +68,7 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Palet_Type : Palet.Colour_Palet;
-                         Method : GA_Draw.Method_Type :=
-                            GA_Draw.Draw_Bivector_Circle) is
+                         Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
 --          MV_Info : Multivector_Type.MV_Type_Record := Analyzed_MV.M_MV_Type;
     begin
@@ -94,8 +84,8 @@ package body C3GA_Draw is
                Put_Line ("C3GA_Draw.Draw_C3GA Free.");
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
-               --  Draw_Round uses method
-               Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
+               --  Draw_Round doesn't method
+               Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
             when others =>
@@ -190,17 +180,13 @@ package body C3GA_Draw is
     procedure Draw_Round (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Palet_Type : Palet.Colour_Palet;
-                          Method : GA_Draw.Method_Type :=
-                            GA_Draw.Draw_Bivector_Circle) is
+                          Palet_Type : Palet.Colour_Palet) is
         use GL.Types;
         use GL.Types.Singles;
         use Multivector_Analyze;
         use C3GA;
-        Point_Pos  : constant Vector_E3GA :=
-                       To_VectorE3GA (Analysis.Points (1));
-        P_Scale    : constant Float :=
-                       4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
+        Point_Pos  : constant Vector_E3GA := Analysis.Points (1);
+        P_Scale    : Float;
         M_Vectors  : constant Vector_Array := Analysis.M_Vectors;
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
@@ -211,6 +197,8 @@ package body C3GA_Draw is
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
+            Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos + Radius * M_Vec1,
                                     P_Scale, VC, Palet_Type,
@@ -229,9 +217,10 @@ package body C3GA_Draw is
                                    Ortho_2           => M_Vec2,
                                    Palet_Type        => Palet_Type,
                                    Scale             => Float (Radius),
-                                   Method            => Method);
+                                   Method            => GA_Draw.Draw_Bivector_Circle_Outline);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * Float (Radius ** 3);
             GA_Draw.Draw_Trivector
               (Render_Program, Model_View_Matrix,
                Point_Pos, P_Scale, VC, Palet_Type, GA_Draw.Draw_TV_Sphere);

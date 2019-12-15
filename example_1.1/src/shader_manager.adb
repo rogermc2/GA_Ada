@@ -30,6 +30,8 @@ package body Shader_Manager is
         Uniform_Location (Render_Program, "mv_matrix");
       Render_Uniforms.Light_Position_ID :=
         Uniform_Location (Render_Program, "light_position");
+      Render_Uniforms.Point_Size_ID :=
+        Uniform_Location (Render_Program, "point_size");
 
       Render_Uniforms.Ambient_Colour_ID :=
         Uniform_Location (Render_Program, "Ambient_Colour");
@@ -42,7 +44,8 @@ package body Shader_Manager is
       GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
       GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Identity4);
       GL.Uniforms.Set_Single (Render_Uniforms.Model_View_Matrix_ID, Identity4);
-      GL.Uniforms.Set_Single (Render_Uniforms.Projection_Matrix_ID, Identity4);
+      GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
+      GL.Uniforms.Set_Single (Render_Uniforms.Point_Size_ID, 1.0);
       GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
 
       GL.Uniforms.Set_Single (Render_Uniforms.Ambient_Colour_ID, Black);
@@ -80,13 +83,6 @@ package body Shader_Manager is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_View_Matrix (View_Matrix  : Singles.Matrix4) is
-   begin
-      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, View_Matrix);
-   end Set_View_Matrix;
-
-   --  -------------------------------------------------------------------------
-
    procedure Set_Light_Position_Vector (Light_Position : Singles.Vector3) is
    begin
       GL.Uniforms.Set_Single
@@ -99,6 +95,20 @@ package body Shader_Manager is
    begin
       GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Model_Matrix);
    end Set_Model_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_Point_Size (Point_Size  : Single) is
+   begin
+      GL.Uniforms.Set_Single (Render_Uniforms.Point_Size_ID, Point_Size);
+   end Set_Point_Size;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Set_View_Matrix (View_Matrix  : Singles.Matrix4) is
+   begin
+      GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, View_Matrix);
+   end Set_View_Matrix;
 
    --  -------------------------------------------------------------------------
 

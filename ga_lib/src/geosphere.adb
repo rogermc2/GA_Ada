@@ -367,6 +367,7 @@ package body Geosphere is
     procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
     --        S_Faces       : constant F_Vector := Sphere.Faces;
         New_Face      : Geosphere_Face;
+        --  1 is subtracted from each index in Get_Indices
         Faces         : constant Indices_Array (1 .. Num_Faces)
           := ((6, 1, 3),
               (4, 3, 1),
@@ -374,7 +375,7 @@ package body Geosphere is
               (5, 4, 1),
               (2, 6, 3),
               (2, 3, 4),
-              (2, 4 , 5),
+              (2, 4, 5),
               (2, 5, 6));
         Vertices       : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
     begin
@@ -420,7 +421,7 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    procedure GL_Draw_Face (Render_Program : GL.Objects.Programs.Program;
+    procedure GL_Draw (Render_Program : GL.Objects.Programs.Program;
                             Model_View_Matrix : GL.Types.Singles.Matrix4;
                             Sphere : Geosphere; Normal : GL.Types.Single;
                             Vertex_Buffer, Normals_Buffer : GL.Objects.Buffers.Buffer) is
@@ -444,7 +445,7 @@ package body Geosphere is
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
 
         GL.Objects.Buffers.Draw_Elements (Mode => Triangles,
-                                          Count => 3,
+                                          Count => Int (Num_Faces) * 3,
                                           Index_Type => UInt_Type,
                                           Element_Offset => 0);
         --              GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
@@ -452,7 +453,7 @@ package body Geosphere is
         GL.Attributes.Disable_Vertex_Attrib_Array (1);
 
         if Normal /= 0.0 then
-            Put_Line ("Geosphere.GL_Draw_Face setting lines");
+            Put_Line ("Geosphere.GL_Draw setting lines");
             --  Draw three lines
             for index in 1 .. 3 loop
                 V1_MV := Unit_E (Get_Vertex (Sphere, index));
@@ -474,9 +475,9 @@ package body Geosphere is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Geosphere.GL_Draw_Face.");
+            Put_Line ("An exception occurred in Geosphere.GL_Draw.");
             raise;
-    end GL_Draw_Face;
+    end GL_Draw;
 
     --  -------------------------------------------------------------------------
 
@@ -512,8 +513,8 @@ package body Geosphere is
             Get_Normals (Sphere, thisChild, Normals);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
 
-            GL_Draw_Face (Render_Program, Model_View_Matrix, Sphere, Normal,
-                          Vertex_Buffer, Normals_Buffer );
+            GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal,
+                          Vertex_Buffer, Normals_Buffer);
         end Draw_Child;
     begin
         if thisFace.Child /= (null, null, null, null) then
@@ -575,9 +576,8 @@ package body Geosphere is
 --                  Utilities.Print_GL_Array3 ("Number of vertices: " &
 --                                               Integer'Image (Num_Vertices), Vertices);
 
-                GL_Draw_Face (Render_Program, Model_View_Matrix, Sphere, Normal,
-                              Vertex_Buffer, Normals_Buffer);
-
+                GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal,
+                         Vertex_Buffer, Normals_Buffer);
             end if;
         end Draw_Face;
 
