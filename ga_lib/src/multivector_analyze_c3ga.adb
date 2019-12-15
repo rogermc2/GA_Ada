@@ -129,7 +129,7 @@ package body Multivector_Analyze_C3GA is
         use GA_Maths;
         use Multivectors;
         Grade         : Unsigned_Integer :=
-                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
         --  Attitude is a free N-vector
         Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV));
         MV_Inverse    : Multivector;
@@ -194,7 +194,7 @@ package body Multivector_Analyze_C3GA is
                             MV          : Multivectors.Multivector) is
         use Multivectors;
         Grade         : constant GA_Maths.Unsigned_Integer :=
-                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
         Weight        : constant Float := Norm_E (MV);
         --        Attitude      : constant Multivector := MV;
         Blade_Factors : Multivectors.Multivector_List;
@@ -263,9 +263,15 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
             end if;
 
+            GA_Utilities.Print_Multivector
+           ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X);
+            GA_Utilities.Print_Multivector
+           ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
+            GA_Utilities.Print_Multivector
+           ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
             Invertible := General_Inverse (LC_NI_MV, LC_NI_MV_Inverse);
             if Invertible then
                 --  location is normalized dual sphere
@@ -365,7 +371,7 @@ package body Multivector_Analyze_C3GA is
         use GA_Maths;
         use Multivectors;
         Grade         : constant Unsigned_Integer :=
-                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
         LC_NI_MV      : Multivector;
         LC_NI_MV_Inv  : Multivector;
         Attitude      : constant Multivector :=
