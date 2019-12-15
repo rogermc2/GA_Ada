@@ -419,7 +419,7 @@ package body C3GA is
    end ni;
 
    --  -------------------------------------------------------------------------
-
+   --  no is based on C3GA set to no_t
    function no return Normalized_Point is
       use Multivectors;
       Basis  : Normalized_Point;
