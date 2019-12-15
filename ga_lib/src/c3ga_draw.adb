@@ -186,8 +186,7 @@ package body C3GA_Draw is
         use Multivector_Analyze;
         use C3GA;
         Point_Pos  : constant Vector_E3GA := Analysis.Points (1);
-        P_Scale    : constant Float :=
-                       4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
+        P_Scale    : Float;
         M_Vectors  : constant Vector_Array := Analysis.M_Vectors;
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
@@ -199,6 +198,7 @@ package body C3GA_Draw is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos + Radius * M_Vec1,
                                     P_Scale, VC, Palet_Type,
@@ -220,6 +220,7 @@ package body C3GA_Draw is
                                    Method            => GA_Draw.Draw_Bivector_Circle_Outline);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * Float (Radius ** 3);
             GA_Draw.Draw_Trivector
               (Render_Program, Model_View_Matrix,
                Point_Pos, P_Scale, VC, Palet_Type, GA_Draw.Draw_TV_Sphere);

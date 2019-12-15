@@ -375,6 +375,7 @@ package body Multivector_Analyze_C3GA is
 
          theAnalysis.Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
          theAnalysis.Scalors (1) := Weight;
+
          case Grade is
             when 1 =>
                theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
