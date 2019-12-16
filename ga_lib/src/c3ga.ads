@@ -57,12 +57,14 @@ package C3GA is
 --     function Coord (S : Multivectors.Scalar) return float;
 --     function Init (MV : Multivectors.Multivector; Epsilon : float:= 0.0) return MV_Type;
 
+   --  Basis Vectors
    function e1 return Multivectors.Multivector;
    function e2 return Multivectors.Multivector;
    function e3 return Multivectors.Multivector;
    function ni return Multivectors.Multivector;
    function no return Normalized_Point;
 
+   --  Component getters
    function e1 (MV :  Multivectors.Multivector) return float;
    function e2 (MV : Multivectors.Multivector) return float;
    function e3 (MV : Multivectors.Multivector) return float;
@@ -149,7 +151,6 @@ package C3GA is
 --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point;
 --     function US_Set_Normalized_Point (Point : Vector_E3GA) return Normalized_Point;
 --     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point;
-    function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.E3_Vector;
     function Unit_E (X : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3;
 
 private

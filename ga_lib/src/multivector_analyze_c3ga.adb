@@ -133,7 +133,7 @@ package body Multivector_Analyze_C3GA is
         --  Attitude is a free N-vector
         Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV));
         MV_Inverse    : Multivector;
-        MV_Inverible  : Boolean;
+        MV_Invertible : Boolean;
         MV_Location   : Multivector;
         Location      : C3GA.Normalized_Point;
         Blade_Factors : Multivectors.Multivector_List;
@@ -144,9 +144,9 @@ package body Multivector_Analyze_C3GA is
         if theAnalysis.M_Flags.Dual then
             Grade := 5 - Grade;
         end if;
-        MV_Inverible := General_Inverse (MV, MV_Inverse);
+        MV_Invertible := General_Inverse (MV, MV_Inverse);
         --  MV_Location is a normalized dual sphere
-        if MV_Inverible then
+        if MV_Invertible then
             MV_Location := Left_Contraction (Left_Contraction (Probe, MV), MV_Inverse);
             MV_Location := Geometric_Product (MV_Location,
                                               -1.0 / Scalar_Product (C3GA.ni, MV_Location));
@@ -157,7 +157,7 @@ package body Multivector_Analyze_C3GA is
             end if;
 
             Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
-            theAnalysis.Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Location));
+            theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
             theAnalysis.Scalors (1) := Weight;
             case Grade is
             when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
@@ -263,15 +263,14 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
             end if;
 
-            GA_Utilities.Print_Multivector
-           ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X);
             GA_Utilities.Print_Multivector
-           ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
+              ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
+
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
             GA_Utilities.Print_Multivector
-           ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
+              ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
             Invertible := General_Inverse (LC_NI_MV, LC_NI_MV_Inverse);
             if Invertible then
                 --  location is normalized dual sphere
@@ -280,6 +279,8 @@ package body Multivector_Analyze_C3GA is
                   (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
                 --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
                 Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
+                GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
 
                 NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV);
                 Radius_Sq := Scalar_Part
@@ -287,6 +288,7 @@ package body Multivector_Analyze_C3GA is
                 if Radius_Sq < 0.0 then
                     Radius_Sq := -Radius_Sq;
                 end if;
+
                 Radius := Float (Sqrt (GL.Types.Single (Abs (Radius_Sq))));
                 Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
@@ -295,8 +297,7 @@ package body Multivector_Analyze_C3GA is
                 --  m_sc[0] = signed radius
                 --  m_sc[1] = signed weight
                 --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude
-                theAnalysis.Points (1) :=
-                  C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
+                theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
                 theAnalysis.Scalors (1) := Radius;
                 theAnalysis.Scalors (2) := Weight;
                 New_Line;
@@ -392,7 +393,7 @@ package body Multivector_Analyze_C3GA is
             Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
             Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
 
-            theAnalysis.Points (1) := C3GA.Vector_To_E3GA (C3GA.NP_To_VectorE3GA (Point_Location));
+            theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
             theAnalysis.Scalors (1) := Weight;
 
             case Grade is

@@ -498,8 +498,7 @@ package body GA_Draw is
                                   Method            : Method_Type) is
       use GL.Objects.Buffers;
       use Singles;
-      E3_V_Coords          : constant E3GA.E3_Vector :=
-                               C3GA.Vector_To_E3GA (V_Coords);
+      E3_V_Coords          : constant E3GA.E3_Vector := V_Coords;
       Scale_Matrix         : Matrix4;
       Scale_Sign           : GL.Types.Single;
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
@@ -628,7 +627,6 @@ package body GA_Draw is
       Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
    begin
       if Sphere_State_Null (Sphere) then
-         Put_Line ("GA_Draw.Draw_Sphere Sphere_State_Null so Compute new sphere.");
          Geosphere.GS_Compute (Sphere, 4);
          Geosphere.New_Sphere_List (Sphere);
          --  gsDraw(m_sphere, 0.0f);
@@ -636,10 +634,8 @@ package body GA_Draw is
       end if;
 
       if Normal = 0.0 then
-         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List for Normal = 0.0.");
          Draw_Sphere_List (Render_Program, MV_Matrix);
       else
-         Put_Line ("GA_Draw.Draw_Sphere Draw_Sphere_List for Normal not 0.0.");
          Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, Normal);
       end if;
 
@@ -757,9 +753,7 @@ package body GA_Draw is
       end if;
 
       if C3GA.Norm_e2 (Base) /= 0.0 then
-        Put_Line ("GA_Draw.Draw_Trivector C3GA.Norm_e2 (Base) /= 0.0");
         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
-        Utilities.Print_Vector ("GA_Draw.Draw_Trivector Translation", Translation);
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
@@ -767,9 +761,6 @@ package body GA_Draw is
 
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
-      Put_Line ("GA_Draw.Draw_Trivector P_Scale: " & Float'Image (P_Scale));
-      Put_Line ("GA_Draw.Draw_Trivector Method: " & Method_Type'Image (Method));
-      Utilities.Print_Matrix ("GA_Draw.Draw_Trivector MV_Matrix", MV_Matrix);
       case Method is
          when Draw_TV_Sphere =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");

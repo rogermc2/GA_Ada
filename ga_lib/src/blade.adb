@@ -110,7 +110,7 @@ package body Blade is
    end Geometric_Product;
 
    --  ------------------------------------------------------------------------
-
+   --  Geometric_Product computes the geometric product of two basis blades.
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade is
    begin
       return GP_OP (BA, BB, False);
@@ -203,7 +203,6 @@ package body Blade is
                null;
             else  --  Grade_1 <= Grade_2 and Grade (BB) = Grade_2 - Grade_1
                IP_Blade := BB;
---                 Print_Blade ("Inner_Product_Filter LC result", IP_Blade);
             end if;
          when Right_Contraction =>
             if (Grade_1 < Grade_2) or (Grade (BB) /= Grade_1 - Grade_2) then

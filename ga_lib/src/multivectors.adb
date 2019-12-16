@@ -1029,18 +1029,18 @@ package body Multivectors is
 
    function Negate (MV : Multivector) return Multivector is
       use Blade_List_Package;
-      Blades : constant Blade_List := MV.Blades;
-      Curs   : Cursor := Blades.First;
-      aBlade : Blade.Basis_Blade;
-      Neg    : Multivector;
+      Blades     : constant Blade_List := MV.Blades;
+      Curs       : Cursor := Blades.First;
+      aBlade     : Blade.Basis_Blade;
+      Negated_MV : Multivector;
    begin
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          Blade.Update_Blade (aBlade, -Weight (aBlade));
-         Neg.Blades.Append (aBlade);
+         Negated_MV.Blades.Append (aBlade);
          Next (Curs);
       end loop;
-      return Neg;
+      return Negated_MV;
    end Negate;
 
    --  -----------------------------------------------------------

@@ -1119,13 +1119,6 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Vector_To_E3GA (Vec : C3GA.Vector_E3GA) return E3GA.E3_Vector is
-   begin
-      return Vec;
-   end Vector_To_E3GA;
-
-   --  -------------------------------------------------------------------------
-
     function Unit_E (X : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
     begin
         return E3GA.Unit_E (X);
