@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -234,7 +234,7 @@ package body Multivector_Analyze_C3GA is
         use Multivectors;
         MV_X             : Multivector := MV;
         Grade            : constant Unsigned_Integer :=
-                             Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
+                             Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
         Blade_Factors    : Multivector_List;
         LC               : Multivector;
         LC_NI_MV         : Multivector;
@@ -264,13 +264,13 @@ package body Multivector_Analyze_C3GA is
             end if;
 
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X);
-            GA_Utilities.Print_Multivector
-              ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
-
+--              GA_Utilities.Print_Multivector
+--                ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
-            GA_Utilities.Print_Multivector
-              ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
+--              GA_Utilities.Print_Multivector
+--                ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
+
             Invertible := General_Inverse (LC_NI_MV, LC_NI_MV_Inverse);
             if Invertible then
                 --  location is normalized dual sphere
@@ -279,8 +279,8 @@ package body Multivector_Analyze_C3GA is
                   (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
                 --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
                 Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
-                GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
+--                  GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
 
                 NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV);
                 Radius_Sq := Scalar_Part
@@ -300,13 +300,13 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
                 theAnalysis.Scalors (1) := Radius;
                 theAnalysis.Scalors (2) := Weight;
-                New_Line;
-                Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
-                                        theAnalysis.Points (1));
-                Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
-                            Float'Image (theAnalysis.Scalors (1)) &
-                            Float'Image (theAnalysis.Scalors (2)));
-                New_Line;
+--                  New_Line;
+--                  Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
+--                                          theAnalysis.Points (1));
+--                  Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
+--                              Float'Image (theAnalysis.Scalors (1)) &
+--                              Float'Image (theAnalysis.Scalors (2)));
+--                  New_Line;
 
                 case Grade is
                 when 1 =>
@@ -317,13 +317,13 @@ package body Multivector_Analyze_C3GA is
                     theAnalysis.M_Vectors (3) := Basis_Vector (Blade_Types.E3_e3);
                 when 2 =>
                     theAnalysis.M_Type.Blade_Subclass := Point_Pair_Subclass;
-                    GA_Utilities.Print_Multivector
-                      ("Multivector_Analyze_C3GA.Analyze_Round C3GA.no", C3GA.no);
-                    GA_Utilities.Print_Multivector
-                      ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
-                    GA_Utilities.Print_Multivector
-                      ("Multivector_Analyze_C3GA.Analyze_Round Left_Contraction",
-                       Left_Contraction (C3GA.no, Attitude));
+--                      GA_Utilities.Print_Multivector
+--                        ("Multivector_Analyze_C3GA.Analyze_Round C3GA.no", C3GA.no);
+--                      GA_Utilities.Print_Multivector
+--                        ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
+--                      GA_Utilities.Print_Multivector
+--                        ("Multivector_Analyze_C3GA.Analyze_Round Left_Contraction",
+--                         Left_Contraction (C3GA.no, Attitude));
                     LC := (Left_Contraction (C3GA.no, Attitude));
                     if GA_Utilities.Multivector_Size (LC) > 0 then
                         theAnalysis.M_Vectors (1) := Unit_E (LC);
