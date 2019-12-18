@@ -1171,14 +1171,14 @@ package body Multivectors is
    function Norm_R (MV : Multivector) return Float is
       use GA_Maths.Float_Functions;
    begin
-      return Sqrt (Abs (Scalar_Part (Dot (MV, MV))));
+      return Sqrt (Abs (Scalar_Product (MV, Reverse_MV (MV))));
    end Norm_R;
 
    --  ------------------------------------------------------------------------
 
    function Norm_R2 (MV : Multivector) return Float is
    begin
-      return Scalar_Part (Dot (MV, MV));
+      return Scalar_Product (MV, Reverse_MV (MV));
    end Norm_R2;
 
    --  ------------------------------------------------------------------------
