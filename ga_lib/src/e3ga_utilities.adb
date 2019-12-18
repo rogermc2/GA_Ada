@@ -99,22 +99,22 @@ package body E3GA_Utilities is
       w0     : Vector;
       w1     : Vector;
       w2     : Vector;
-      N2     : Float;
+      Nsq    : Float;
       R      : Rotor;
       Result : Rotor;
    begin
       if  Scalar_Product (From, To) < -0.9 then
          w0 := Left_Contraction (From, Outer_Product (From, To));
-         N2 := Norm_E2 (w0);
-         if N2 = 0.0 then
+         Nsq := Norm_Esq (w0);
+         if Nsq = 0.0 then
             w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e1)));
             w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e2)));
-            if Norm_E2 (w1) > Norm_E2 (w2) then
+            if Norm_Esq (w1) > Norm_Esq (w2) then
                Result := Outer_Product (From, Unit_e (w1));
             else
                Result := Outer_Product (From, Unit_e (w2));
             end if;
-         else  --  N2 /= 0.0
+         else  --  Nsq /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
             S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To, From))));
             R := (1.0 - Geometric_Product (To, From)) / S;

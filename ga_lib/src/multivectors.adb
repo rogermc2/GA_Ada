@@ -912,7 +912,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean is
-      S : constant Float := Norm_E2 (MV);
+      S : constant Float := Norm_Esq (MV);
    begin
       return S < Epsilon * Epsilon;
    end Is_Null;
@@ -1157,14 +1157,14 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_E2 (MV : Multivector) return Float is
+   function Norm_Esq (MV : Multivector) return Float is
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
          S := 0.0;
       end if;
       return S;
-   end Norm_E2;
+   end Norm_Esq;
 
    --  -------------------------------------------------------------------------
 
@@ -1176,10 +1176,10 @@ package body Multivectors is
 
    --  ------------------------------------------------------------------------
 
-   function Norm_R2 (MV : Multivector) return Float is
+   function Norm_Rsq (MV : Multivector) return Float is
    begin
       return Scalar_Product (MV, Reverse_MV (MV));
-   end Norm_R2;
+   end Norm_Rsq;
 
    --  ------------------------------------------------------------------------
 

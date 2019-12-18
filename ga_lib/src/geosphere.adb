@@ -54,7 +54,7 @@ package body Geosphere is
             Index := Index + 1;
             V :=  Pos - Vertices.Element (index);
             --  first check if vertex already exists
-            Found := Norm_E2 (V) > e ** (-10);
+            Found := Norm_Esq (V) > e ** (-10);
         end loop;
 
         if not Found then  --  reate new vertex
