@@ -3,7 +3,6 @@
 
 with Blade;
 with Blade_Types; use Blade_Types;
-with GA_Base_Types;
 with GA_Utilities;
 --  with Multivectors;
 --  with Multivector_Type;
@@ -869,6 +868,9 @@ package body C3GA is
    end Set_Line;
 
    --  ------------------------------------------------------------------------
+   --  c3ga_util.h
+   --  inline normalizedPoint c3gaPoint (const vectorE3GA &l)
+   --  return _normalizedPoint (l + no + 0.5f * norm_e2 (l) * ni);  no = ni = 1.0
 
    function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point is
       use Multivectors;
@@ -880,8 +882,7 @@ package body C3GA is
       Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
       Add_Blade (NP, New_Basis_Blade (C3_e2, Float (V (GL.Y))));
       Add_Blade (NP, New_Basis_Blade (C3_e3, Float (V (GL.Z))));
-      Add_Blade (NP, New_Basis_Blade (C3_ni,
-                 0.5 * Norm_E2 (V) * GA_Base_Types.NI));
+      Add_Blade (NP, New_Basis_Blade (C3_ni, 0.5 * Norm_E2 (V)));
       return NP;
    end Set_Normalized_Point;
 
