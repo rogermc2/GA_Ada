@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
---  with Utilities;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -47,17 +47,17 @@ package body Multivector_Analyze_C3GA is
             Xsq        : constant Boolean := Abs (X2_Val) > Epsilon;
         begin
             --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
-            if not OP_NiX and not IP_NiX then  --  OP_NiX and IP_NiX approx 0.0
+            if (not OP_NiX) and (not IP_NiX) then  --  OP_NiX and IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Free.");
                 Analyze_Free (Analysis, MV_X);
-            elsif not OP_NiX and IP_NiX then
+            elsif (not OP_NiX) and IP_NiX then
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
                 Analyze_Flat (Analysis, MV_X, Probe);
-            elsif OP_Nix and not IP_NiX then
+            elsif OP_Nix and (not IP_NiX) then
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
                 Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
                 Analyze_Flat (Analysis, Dual (MV_X), Probe);
-            elsif OP_NiX and IP_NiX and not Xsq then
+            elsif OP_NiX and IP_NiX and (not Xsq) then
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
                 Analyze_Tangent (Analysis, MV_X);
             elsif OP_NiX and IP_NiX and Xsq then
@@ -129,7 +129,7 @@ package body Multivector_Analyze_C3GA is
         use GA_Maths;
         use Multivectors;
         Grade         : Unsigned_Integer :=
-                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
+                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
         --  Attitude is a free N-vector
         Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV));
         MV_Inverse    : Multivector;
@@ -194,7 +194,7 @@ package body Multivector_Analyze_C3GA is
                             MV          : Multivectors.Multivector) is
         use Multivectors;
         Grade         : constant GA_Maths.Unsigned_Integer :=
-                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
+                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
         Weight        : constant Float := Norm_E (MV);
         --        Attitude      : constant Multivector := MV;
         Blade_Factors : Multivectors.Multivector_List;
@@ -300,13 +300,13 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
                 theAnalysis.Scalors (1) := Radius;
                 theAnalysis.Scalors (2) := Weight;
---                  New_Line;
---                  Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
---                                          theAnalysis.Points (1));
---                  Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
---                              Float'Image (theAnalysis.Scalors (1)) &
---                              Float'Image (theAnalysis.Scalors (2)));
---                  New_Line;
+                New_Line;
+                Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
+                                        theAnalysis.Points (1));
+                Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
+                            Float'Image (theAnalysis.Scalors (1)) &
+                            Float'Image (theAnalysis.Scalors (2)));
+                New_Line;
 
                 case Grade is
                 when 1 =>
@@ -372,7 +372,7 @@ package body Multivector_Analyze_C3GA is
         use GA_Maths;
         use Multivectors;
         Grade         : constant Unsigned_Integer :=
-                          Multivector_Type.Grade_Use (theAnalysis.M_MV_Type);
+                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
         LC_NI_MV      : Multivector;
         LC_NI_MV_Inv  : Multivector;
         Attitude      : constant Multivector :=
