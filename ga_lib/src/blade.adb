@@ -154,12 +154,12 @@ package body Blade is
    begin
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          null;  --  return zero blade
-      else
+      else  --  compute geometric product
          --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
          --  else xor > 0 so Outer product part of MV
-         OP_Blade.Bitmap := BA.Bitmap xor BB.Bitmap;
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
-         OP_Blade.Weight := Sign * BA.Weight * BB.Weight;
+         OP_Blade := New_Basis_Blade
+              (BA.Bitmap xor BB.Bitmap, Sign * BA.Weight * BB.Weight);
       end if;
 
       return OP_Blade;
