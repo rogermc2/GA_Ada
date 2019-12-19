@@ -34,7 +34,7 @@ package body Multivector_Analyze_E2GA is
          Analysis.M_Flags.Dual := True;
          MV_X := Multivectors.Dual (MV_X);
       end if;
-      Norm_MV_X := Norm_E2 (MV_X);
+      Norm_MV_X := Norm_Esq (MV_X);
 
       MV_Info:= Multivector_Type.Init (MV_X);
       Analysis.M_MV_Type := MV_Info;
@@ -67,7 +67,7 @@ package body Multivector_Analyze_E2GA is
          --           Analysis.M_Scalors (1) := E2GA.Get_Coord (Norm_E2 (MV_X));
          Analysis.Scalors (1) := Norm_MV_X;
          Analysis.Scalors (2) := 2.0 * GA_Maths.Float_Functions.Arctan
-             (Norm_E2 (MV_X), Blade.Weight (Element (Curs)));
+             (Norm_Esq (MV_X), Blade.Weight (Element (Curs)));
 --               (E2GA.Get_Coord (E2GA.Norm_E2 (MV_X)), MV_X.Coordinates (1));
 
       --  Check for Blade

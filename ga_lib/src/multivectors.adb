@@ -735,7 +735,6 @@ package body Multivectors is
    function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
                         return Blade.Basis_Blade is
       use Blade_List_Package;
-      use GA_Maths;
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
       Curs      : Cursor := Blades.First;
@@ -1175,7 +1174,7 @@ package body Multivectors is
    end Norm_R;
 
    --  ------------------------------------------------------------------------
-
+   --  Based on Geometric Algebrs for Computer Science section 3.1.3
    function Norm_Rsq (MV : Multivector) return Float is
    begin
       return Scalar_Product (MV, Reverse_MV (MV));

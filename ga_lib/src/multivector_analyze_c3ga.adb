@@ -46,6 +46,8 @@ package body Multivector_Analyze_C3GA is
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
             Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
         begin
+            Put_Line ("Multivector_Analyze_C3GA.Classify, Xsq_Val" &
+                       Float'Image (Xsq_Val));
             --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
             GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
             Put_Line ("Norm_E (OP (C3GA.ni, MV_X))" &
