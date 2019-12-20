@@ -7,6 +7,7 @@ with Maths;
 with Utilities;
 
 with Blade_Types;
+with C3GA;
 with E3GA;
 with GA_Maths;
 with GA_Utilities;
@@ -16,7 +17,7 @@ package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
-                            Probe       : C3GA.Normalized_Point);
+                            Probe       : Multivectors.Normalized_Point);
     procedure Analyze_Free (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector);
     procedure Analyze_Round (theAnalysis : in out MV_Analysis;
@@ -27,7 +28,7 @@ package body Multivector_Analyze_C3GA is
     --  -------------------------------------------------------------------------
 
     procedure Analyze (Analysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                       Probe    : C3GA.Normalized_Point;
+                       Probe    : Multivectors.Normalized_Point;
                        Flags    : Flag_Type := (Flag_Invalid, false);
                        Epsilon  : float := Default_Epsilon) is
         use Multivector_Type;
@@ -41,7 +42,7 @@ package body Multivector_Analyze_C3GA is
             --  C3GA.ni weight = 1.0
             OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
             IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-            Xsq_Val    : constant Float := Norm_Rsq (MV_X);
+            Xsq_Val    : constant Float := Norm_Esq (MV_X);
             OP_NiX     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
             Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
@@ -130,7 +131,7 @@ package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
-                            Probe       : C3GA.Normalized_Point) is
+                            Probe       : Multivectors.Normalized_Point) is
         use GA_Maths;
         use Multivectors;
         Grade         : Unsigned_Integer :=
@@ -140,7 +141,7 @@ package body Multivector_Analyze_C3GA is
         MV_Inverse    : Multivector;
         MV_Invertible : Boolean;
         MV_Location   : Multivector;
-        Location      : C3GA.Normalized_Point;
+        Location      : Multivectors.Normalized_Point;
         Blade_Factors : Multivectors.Multivector_List;
         Scale         : Float;
         Weight        : Float;
@@ -158,7 +159,7 @@ package body Multivector_Analyze_C3GA is
             if Grade = 1 then
                 Weight := Scalar_Product (MV, C3GA.no);
             else
-                Weight := Abs (Norm_R (MV));
+                Weight := Abs (Norm_Esq (MV));
             end if;
 
             Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
@@ -247,7 +248,7 @@ package body Multivector_Analyze_C3GA is
         Invertible       : Boolean;
         Attitude         : Multivector;
         Location         : Multivector;
-        Point_Location   : C3GA.Normalized_Point;
+        Point_Location   : Multivectors.Normalized_Point;
         NI_Xsq           : Float;
         Radius           : Float;
         Radius_Sq        : Float;
@@ -295,7 +296,7 @@ package body Multivector_Analyze_C3GA is
                 end if;
 
                 Radius := Float (Sqrt (GL.Types.Single (Abs (Radius_Sq))));
-                Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
+                Weight := Norm_E (Left_Contraction (C3GA.no, Attitude));
 
                 --  Format of round
                 --  m_pt[0] = location
@@ -376,17 +377,17 @@ package body Multivector_Analyze_C3GA is
                                MV          : Multivectors.Multivector) is
         use GA_Maths;
         use Multivectors;
-        Grade         : constant Unsigned_Integer :=
-                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
-        LC_NI_MV      : Multivector;
-        LC_NI_MV_Inv  : Multivector;
-        Attitude      : constant Multivector :=
-                          Negate (Outer_Product (LC_NI_MV, C3GA.ni));
-        Blade_Factors : Multivectors.Multivector_List;
-        Location      : Multivector;
-        Point_Location : C3GA.Normalized_Point;
-        Scale         : Float;
-        Weight        : Float;
+        Grade          : constant Unsigned_Integer :=
+                           Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+        LC_NI_MV       : Multivector;
+        LC_NI_MV_Inv   : Multivector;
+        Attitude       : constant Multivector :=
+                           Negate (Outer_Product (LC_NI_MV, C3GA.ni));
+        Blade_Factors  : Multivectors.Multivector_List;
+        Location       : Multivector;
+        Point_Location : Multivectors.Normalized_Point;
+        Scale          : Float;
+        Weight         : Float;
     begin
         theAnalysis.M_Type.Blade_Class := Tangent_Blade;
 
@@ -396,7 +397,7 @@ package body Multivector_Analyze_C3GA is
               Geometric_Product (MV, LC_NI_MV_Inv);
             Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location));
             Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
-            Weight := Norm_R (Left_Contraction (C3GA.no, Attitude));
+            Weight := Norm_E (Left_Contraction (C3GA.no, Attitude));
 
             theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
             theAnalysis.Scalors (1) := Weight;

@@ -1,6 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with C3GA;
 with GA_Draw;
 with GA_Maths;
 with Multivector_Analyze;
@@ -160,7 +161,7 @@ package body C3GA_Draw is
     --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
     procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Position : C3GA.Normalized_Point;
+                          Position : Multivectors.Normalized_Point;
                           Palet_Type : Palet.Colour_Palet) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
         V     : constant C3GA.Vector_E3GA := (0.0, 0.0, 0.0);

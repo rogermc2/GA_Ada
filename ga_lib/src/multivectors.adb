@@ -5,6 +5,8 @@ with Interfaces;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GA_Utilities;
+
 package body Multivectors is
 
    type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
@@ -1144,21 +1146,17 @@ package body Multivectors is
 
    function Norm_E (MV : Multivector) return Float is
       use GA_Maths.Float_Functions;
-      S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
-      if S < 0.0 then
-         return 0.0;
-      else
-         S := Sqrt (S);
-      end if;
-      return S;
+      return Sqrt (Norm_Esq (MV));
    end Norm_E;
 
    --  -------------------------------------------------------------------------
-
+   --  Based on Geometric Algebrs for Computer Science section 3.1.3
    function Norm_Esq (MV : Multivector) return Float is
       S : Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
+      GA_Utilities.Print_Multivector ("Norm_Esq MV", MV);
+      GA_Utilities.Print_Multivector ("Norm_Esq Reverse MV", Reverse_MV (MV));
       if S < 0.0 then
          S := 0.0;
       end if;
@@ -1167,18 +1165,21 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Norm_R (MV : Multivector) return Float is
-      use GA_Maths.Float_Functions;
-   begin
-      return Sqrt (Abs (Scalar_Product (MV, Reverse_MV (MV))));
-   end Norm_R;
+--     function Norm_R (MV : Multivector) return Float is
+--        use GA_Maths.Float_Functions;
+--     begin
+--        return Sqrt (Norm_Rsq (MV));
+--     end Norm_R;
 
    --  ------------------------------------------------------------------------
    --  Based on Geometric Algebrs for Computer Science section 3.1.3
-   function Norm_Rsq (MV : Multivector) return Float is
-   begin
-      return Scalar_Product (MV, Reverse_MV (MV));
-   end Norm_Rsq;
+--     function Norm_Rsq (MV : Multivector) return Float is
+--     begin
+--        if S < 0.0 then
+--           S := 0.0;
+--        end if;
+--        return Abs (Scalar_Product (MV, Reverse_MV (MV)));
+--     end Norm_Rsq;
 
    --  ------------------------------------------------------------------------
 
@@ -1510,7 +1511,7 @@ package body Multivectors is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Multivector.Unit_E.");
+         Put_Line ("An exception occurred in Multivectors.Unit_E.");
          raise;
    end Unit_E;
 
@@ -1521,7 +1522,7 @@ package body Multivectors is
       theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
    begin
       if theNorm = 0.0 then
-         raise MV_Exception with "Multivector.Unit_R encountered a null multivector";
+         raise MV_Exception with "Multivectors.Unit_R encountered a null multivector";
       end if;
 
       return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));

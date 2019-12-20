@@ -21,7 +21,6 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
-with C3GA;
 with C3GA_Draw;
 with GL_Util;
 with GA_Utilities;
@@ -84,7 +83,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
       --          V2                : Multivectors.Vector;
 
-      Point_Position      : C3GA.Normalized_Point;
+      Point_Position      : Multivectors.Normalized_Point;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
@@ -104,6 +103,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Right               : Vector3;
       Up                  : Vector3;
       Palet_Data          : Palet.Colour_Palet;
+--        Test_MV             : Multivectors.Multivector (Multivectors.MV_Normalized_Point);
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
@@ -147,6 +147,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Shader_Manager.Set_Ambient_Colour (Green);
          Shader_Manager.Set_Diffuse_Colour (BLue);
+--           Test_MV := Multivectors.New_Vector;
+--           GA_Utilities.Print_Multivector ("Display, Test_MV:", Test_MV);
 --           for count in Int range 1 .. 1 loop
          for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
@@ -155,6 +157,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
             Point_Position := Points.Normalized_Points (count);
             GA_Utilities.Print_Multivector ("Display, Point_Position:", Point_Position);
+            Put_Line ("Norm sq Point_Position" & Float'Image (Multivectors.Norm_Esq (Point_Position)));
             --  Point_Position (L1, L2, C1, C2, C3, P1)
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, Point_Position, Palet_Data);

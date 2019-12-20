@@ -97,7 +97,7 @@ package Multivector_Analyze is
                      Flags : Flag_Type := (Flag_Invalid, False);
                      Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Probe : C3GA.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
+                      Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

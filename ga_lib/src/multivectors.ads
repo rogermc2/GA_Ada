@@ -19,6 +19,7 @@ package Multivectors is
    type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is private;
    type Multivector_List is private;
    subtype Bivector is Multivector (MV_Bivector);
+   subtype Normalized_Point is Multivector (MV_Normalized_Point);
    subtype Rotor is Multivector (MV_Rotor);
    subtype Scalar is Multivector (MV_Scalar);
    subtype Vector is Multivector (MV_Vector);
@@ -95,8 +96,8 @@ package Multivectors is
    function New_Vector (e1, e2, e3 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector) return Float;
-   function Norm_R (MV : Multivector) return Float;
-   function Norm_Rsq (MV : Multivector) return Float;
+--     function Norm_R (MV : Multivector) return Float;
+--     function Norm_Rsq (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
