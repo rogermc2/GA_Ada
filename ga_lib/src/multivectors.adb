@@ -792,6 +792,10 @@ package body Multivectors is
          end loop;
       end if;
 
+      if not OK then
+         theGrade := 0;
+      end if;
+
       return OK;
    end Grade;
 
