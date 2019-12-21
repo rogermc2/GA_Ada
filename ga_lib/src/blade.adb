@@ -323,6 +323,9 @@ package body Blade is
         := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
       Rev : constant Basis_Blade := (B.Bitmap, W);
    begin
+      Print_Blade ("Blade.Reverse_Blade, B", B);
+      Put_Line ("Blade.Reverse_Blade, G, W: " & Integer'Image (G) & "  " &
+                 Float'Image (W));
       return Rev;
    end Reverse_Blade;
 

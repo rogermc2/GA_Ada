@@ -1,6 +1,8 @@
 
 --  with Ada.Text_IO; use Ada.Text_IO;
 
+with Maths;
+
 with Blade;
 with Blade_Types; use Blade_Types;
 with GA_Utilities;
@@ -391,7 +393,7 @@ package body C3GA is
 
     ------------------------------------------------------------------------
 
-    function Get_Coords (NP : Normalized_Point)
+    function Get_Coords (NP : Multivectors.Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
         use Multivectors.Blade_List_Package;
         Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (NP);
@@ -419,9 +421,9 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
     --  no is based on C3GA set to no_t
-    function no return Normalized_Point is
+    function no return Multivectors.Normalized_Point is
         use Multivectors;
-        Basis  : Normalized_Point;
+        Basis  : Multivectors.Normalized_Point;
     begin
         Add_Blade (Basis, C3_no, 1.0);
         return Basis;
@@ -588,7 +590,7 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function NP_Element (NP : Normalized_Point; E : C3_Base) return float is
+    function NP_Element (NP : Multivectors.Normalized_Point; E : C3_Base) return float is
         use Multivectors;
         theBlade : constant Blade.Basis_Blade  :=
                      Get_Blade (Multivector (NP), C3_Base'Enum_Rep (E));
@@ -598,35 +600,35 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function E1b (NP : Normalized_Point) return float is
+    function E1b (NP : Multivectors.Normalized_Point) return float is
     begin
         return NP_Element (NP, C3_e1);
     end E1b;
 
     --  -------------------------------------------------------------------------
 
-    function E2b (NP : Normalized_Point) return float is
+    function E2b (NP : Multivectors.Normalized_Point) return float is
     begin
         return NP_Element (NP, C3_e2);
     end E2b;
 
     --  -------------------------------------------------------------------------
 
-    function E3b (NP : Normalized_Point) return float is
+    function E3b (NP : Multivectors.Normalized_Point) return float is
     begin
         return NP_Element (NP, C3_e3);
     end E3b;
 
     --  -------------------------------------------------------------------------
 
-    function NIb (NP : Normalized_Point) return Float is
+    function NIb (NP : Multivectors.Normalized_Point) return Float is
     begin
         return NP_Element (NP, C3_ni);
     end NIb;
 
     --  -------------------------------------------------------------------------
 
-    function NOb (NP : Normalized_Point) return Float is
+    function NOb (NP : Multivectors.Normalized_Point) return Float is
         pragma Unreferenced (NP);
     begin
         return 1.0;
@@ -679,6 +681,17 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
+   function C3GA_Point (V : Vector_E3GA) return C3GA_Normalized_Point is
+        Result : C3GA_Normalized_Point := (1.0, 0.0, 0.0, 0.0, 0.0);
+   begin
+        Result (2) := Float (V (GL.X));
+        Result (3) := Float (V (GL.Y));
+        Result (4) := Float (V (GL.Z));
+        Result (5) := -0.5 * Norm_E2 (V);
+        return Result;
+   end C3GA_Point;
+
+    --  -------------------------------------------------------------------------
     --        function Norm_E (MV : Multivector) return Scalar is
     --           use GA_Maths;
     --           GU  : Grade_Usage :=  Grade_Use (MV);
@@ -727,6 +740,15 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
+    function Norm_R (V : Vector_E3GA) return Float is
+        use GL.Types;
+        use Maths.Single_Math_Functions;
+    begin
+        return Float (Sqrt (Single (Norm_R2 (V))));
+    end Norm_R;
+
+    --  -------------------------------------------------------------------------
+
 --      function Norm_R (MV : Multivectors.Multivector) return Float is
 --          use GA_Maths.Float_Functions;
 --          use Multivectors;
@@ -744,6 +766,17 @@ package body C3GA is
 --      end Norm_R;
 
     --  ------------------------------------------------------------------------
+
+    function Norm_R2 (V : Vector_E3GA) return Float is
+        use GL.Types;
+        theNorm : Single;
+    begin
+        theNorm := V (GL.X) * V (GL.Z) +  V (GL.Y) * V (GL.Y) +  V (GL.Z) * V (GL.X);
+        theNorm := Abs (theNorm);
+        return Float (theNorm);
+    end Norm_R2;
+
+    --  -------------------------------------------------------------------------
 
 --      function Norm_Rsq (MV : Multivectors.Multivector) return Float is
 --          use GA_Maths;
@@ -825,17 +858,17 @@ package body C3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Probe (Pr : C3_Base) return Normalized_Point is
-        NP  : Multivectors.Multivector;
+    function Probe (Pr : C3_Base) return Multivectors.Normalized_Point is
+        NP  : Multivectors.Normalized_Point;
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
         Multivectors.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
-        return Normalized_Point (NP);
+        return NP;
     end Probe;
 
     --  ------------------------------------------------------------------------
 
-    function Set_Circle (P1, P2, P3 : Normalized_Point) return Circle is
+    function Set_Circle (P1, P2, P3 : Multivectors.Normalized_Point) return Circle is
         use Multivectors;
         OP        : Multivector;
         theCircle : Circle;
@@ -876,7 +909,8 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function Set_Dual_Plane (P1 : Normalized_Point; Dir : Multivectors.Vector) return Dual_Plane is
+    function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector)
+                             return Dual_Plane is
         use Multivectors;
         LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
         D_Plane  : Dual_Plane;
@@ -903,7 +937,7 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function Set_Line (P1, P2 : Normalized_Point) return Line is
+    function Set_Line (P1, P2 : Multivectors.Normalized_Point) return Line is
         use Multivectors;
         UR      : constant Multivector := Unit_R (Outer_Product (P1, Outer_Product (P2, ni)));
         theLine : Line;
@@ -919,52 +953,56 @@ package body C3GA is
     --  inline normalizedPoint c3gaPoint (const vectorE3GA &l)
     --  return _normalizedPoint (l + no + 0.5f * norm_e2 (l) * ni);  no = ni = 1.0
 
-    function Set_Normalized_Point (V : Vector_E3GA) return Normalized_Point is
+    function Set_Normalized_Point (V : Vector_E3GA) return Multivectors.Normalized_Point is
         use Multivectors;
         use Blade;
-        NP      : Normalized_Point;
+        NP  : Multivectors.Normalized_Point;
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
         Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
         Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
         Add_Blade (NP, New_Basis_Blade (C3_e2, Float (V (GL.Y))));
         Add_Blade (NP, New_Basis_Blade (C3_e3, Float (V (GL.Z))));
-        Add_Blade (NP, New_Basis_Blade (C3_ni, 0.5 * Norm_E2 (V)));
+        Add_Blade (NP, New_Basis_Blade (C3_ni, -0.5 * Norm_E2 (V)));
         return NP;
     end Set_Normalized_Point;
 
     --  ------------------------------------------------------------------------
 
-    function Set_Normalized_Point (E1, E2, E3 : float; Inf : float := 1.0)
-                                  return Normalized_Point is
+    function Set_Normalized_Point (E1, E2, E3 : float)
+                                   return Multivectors.Normalized_Point is
+        use GL.Types;
         use Blade;
         use Multivectors;
-        NP  : Multivector (MV_Normalized_Point);
+        NP  : Multivectors.Normalized_Point;
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
         Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, E1));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, E2));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, E3));
-        Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
-        return Normalized_Point (NP);
+        Add_Blade (NP, Blade.New_Basis_Blade
+                   (C3_ni,  -0.5 * Norm_R ((Single (E1), Single (E2), Single (E3)))));
+        return NP;
     end Set_Normalized_Point;
 
     --  -------------------------------------------------------------------------
 
-    function Set_Normalized_Point (Point : GA_Maths.Array_3D;
-                                   Inf : float := 1.0)
-                                  return Normalized_Point is
+    function Set_Normalized_Point (Point : GA_Maths.Array_3D)
+                                  return Multivectors.Normalized_Point is
+        use GL.Types;
         use Blade;
         use Multivectors;
-        NP : Multivector;
+        NP : Normalized_Point;
     begin
         Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e2, Point (2)));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e3, Point (3)));
-        Add_Blade (NP, Blade.New_Basis_Blade (C3_ni, Inf));
-        return Normalized_Point (NP);
+        Add_Blade (NP, Blade.New_Basis_Blade
+                   (C3_ni, -0.5 * Norm_R ((Single (Point (1)),
+                   Single (Point (2)), Single (Point (3))))));
+        return NP;
     end Set_Normalized_Point;
 
     --  -------------------------------------------------------------------------
@@ -997,7 +1035,7 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function NP_To_VectorE3GA (NP : Normalized_Point) return Vector_E3GA is
+    function NP_To_VectorE3GA (NP : Multivectors.Normalized_Point) return Vector_E3GA is
         use GL.Types;
         theVector : Vector_E3GA;
     begin

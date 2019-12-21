@@ -6,6 +6,7 @@ with E3GA;
 with Multivectors;
 
 package Points is
+    use Multivectors;
    use C3GA;
    type Normalized_Points_Array is array (int range <>) of Normalized_Point;
    Num_Points : constant Int := 6;
@@ -28,7 +29,7 @@ package Points is
    --  A Normalized_Point consists of five blades representing the vectors:
    --  no = 1.0, E1, E2, E3, ni = Inf
 
-   n  : constant Multivectors.Vector := E3GA.e2;  --  n is a direction vector
+   n  : constant Vector := E3GA.e2;  --  n is a direction vector
    L1 : constant Normalized_Point := Set_Normalized_Point (Point_Data (1));
    L2 : constant Normalized_Point := Set_Normalized_Point (Point_Data (2));
 
