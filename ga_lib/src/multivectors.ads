@@ -68,6 +68,7 @@ package Multivectors is
                        Index : GA_Maths.Unsigned_Integer) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade_List;
+   function Grade (MV : Multivector; theGrade : out Integer) return Boolean;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)

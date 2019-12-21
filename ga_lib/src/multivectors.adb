@@ -261,21 +261,21 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
---     procedure Add_To_Matrix (M       : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
---                              Blades  : Blade_List) is
---        use Blade_List_Package;
---        Curs    : Cursor := Blades.First;
---     begin
---        while Has_Element (Curs) loop
---           Add_To_Matrix (M, BB, Element (Curs));
---           Next (Curs);
---        end loop;
---
---     exception
---        when others =>
---           Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
---           raise;
---     end Add_To_Matrix;
+   --     procedure Add_To_Matrix (M       : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
+   --                              Blades  : Blade_List) is
+   --        use Blade_List_Package;
+   --        Curs    : Cursor := Blades.First;
+   --     begin
+   --        while Has_Element (Curs) loop
+   --           Add_To_Matrix (M, BB, Element (Curs));
+   --           Next (Curs);
+   --        end loop;
+   --
+   --     exception
+   --        when others =>
+   --           Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
+   --           raise;
+   --     end Add_To_Matrix;
 
    --  -------------------------------------------------------------------------
 
@@ -434,7 +434,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Cosine_Series (MV : Multivector; Order : Integer)
-                            return Multivector is
+                           return Multivector is
       use GA_Maths;
       Scaled    : constant Multivector := MV;
       Scaled_GP : Multivector;
@@ -491,39 +491,39 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
    --  Possibly imprecise
---     function Exp_Series (MV : Multivector; Order : Integer)
---                           return Multivector is
---        Scaled    : Multivector;
---        Scaled_GP : Multivector;
---        Temp      : Multivector := New_Multivector (1.0);
---        Sign      : constant Integer := -1;
---        Scale     : Integer := 1;
---        Max       : Float := Norm_E (MV);
---        Result    : Multivector := Temp;
---     begin
---        if Max > 1.0 then
---           Scale := 2;
---        end if;
---        while Max > 1.0 loop
---           Max := Max / 2.0;
---           Scale := 2 * Scale;
---        end loop;
---        Scaled := Geometric_Product (MV, 1.0 / Float (Scale));
---
---        --  Taylor approximation
---        for Count in 1 .. Order loop
---           Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
---           Temp := Geometric_Product (Temp, Scaled_GP);
---           Result := Result + Temp;
---        end loop;
---
---        --  Undo scaling
---        while Scale > 1 loop
---           Result := Geometric_Product (Result, Result);
---           Scale := Scale / 2;
---        end loop;
---        return Result;
---     end Exp_Series;
+   --     function Exp_Series (MV : Multivector; Order : Integer)
+   --                           return Multivector is
+   --        Scaled    : Multivector;
+   --        Scaled_GP : Multivector;
+   --        Temp      : Multivector := New_Multivector (1.0);
+   --        Sign      : constant Integer := -1;
+   --        Scale     : Integer := 1;
+   --        Max       : Float := Norm_E (MV);
+   --        Result    : Multivector := Temp;
+   --     begin
+   --        if Max > 1.0 then
+   --           Scale := 2;
+   --        end if;
+   --        while Max > 1.0 loop
+   --           Max := Max / 2.0;
+   --           Scale := 2 * Scale;
+   --        end loop;
+   --        Scaled := Geometric_Product (MV, 1.0 / Float (Scale));
+   --
+   --        --  Taylor approximation
+   --        for Count in 1 .. Order loop
+   --           Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
+   --           Temp := Geometric_Product (Temp, Scaled_GP);
+   --           Result := Result + Temp;
+   --        end loop;
+   --
+   --        --  Undo scaling
+   --        while Scale > 1 loop
+   --           Result := Geometric_Product (Result, Result);
+   --           Scale := Scale / 2;
+   --        end loop;
+   --        return Result;
+   --     end Exp_Series;
 
    --  -------------------------------------------------------------------------
 
@@ -733,7 +733,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
-                        return Blade.Basis_Blade is
+                       return Blade.Basis_Blade is
       use Blade_List_Package;
       Blades    : constant Blade_List := MV.Blades;
       thisBlade : Blade.Basis_Blade;
@@ -771,27 +771,29 @@ package body Multivectors is
    end Get_Blade;
 
    --  -------------------------------------------------------------------------
-   --  Grade returns the grade of a Multivector if homogeneous, -1 otherwise.
-   --  0 is return for null Multivectors.
-   --     function Grade (Blades : Blade_List) return Unsigned_Integer is
-   --        use Blade_List_Package;
-   --        thisBlade : GA_Maths.Basis_Blade;
-   --        Cursor_B  : Cursor := Blades.First;
-   --        theGrade  : Unsigned_Integer := 0; -- 0 .. 32
-   --        OK        : Boolean := True;
-   --     begin
-   --        while OK and Has_Element (Cursor_B) loop
-   --           thisBlade := Element (Cursor_B);
-   --           if Cursor_B = Blades.First then
-   --              theGrade := GA_Maths.Grade (GA_Maths.Bitmap (thisBlade));
-   --           elsif theGrade /= GA_Maths.Grade (GA_Maths.Bitmap (thisBlade)) then
-   --              OK := False;
-   --           end if;
-   --           Next (Cursor_B);
-   --        end loop;
-   --
-   --        return theGrade;
-   --     end Grade;
+   --  Grade returns the grade (bit count) of a Multivector if homogeneous.
+   --  0 is returned for null Multivectors.
+   function Grade (MV : Multivector; theGrade : out Integer)
+                   return Boolean is
+      use Blade_List_Package;
+      Blades    : constant Blade_List := MV.Blades;
+      Cursor_B  : Cursor := Blades.First;
+      thisBlade : Blade.Basis_Blade;
+      OK        : Boolean := not Blades.Is_Empty;
+   begin
+      if OK then
+         thisBlade := Element (Cursor_B);
+         theGrade := Blade.Grade (thisBlade);
+         Next (Cursor_B);
+         while OK and Has_Element (Cursor_B) loop
+            thisBlade := Element (Cursor_B);
+            OK := Blade.Grade (thisBlade) = theGrade;
+            Next (Cursor_B);
+         end loop;
+      end if;
+
+      return OK;
+   end Grade;
 
    --  -------------------------------------------------------------------------
 
@@ -834,7 +836,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
-                            return Multivector is
+                           return Multivector is
       use Blade_List_Package;
       B1       : Blade.Basis_Blade;
       B2       : Blade.Basis_Blade;
@@ -962,7 +964,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
-                                 return Ada.Strings.Unbounded.Unbounded_String is
+                                return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade_List_Package;
       Blades        : constant Blade_List := MV.Blades;
