@@ -85,6 +85,31 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   --  C3_Geometric_Product computes the geometric product of two basis blades.
+   function C3_Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade is
+      BA_Type : constant C3_Base := C3_Base'Enum_Val (BA.Bitmap);
+      BB_Type : constant C3_Base := C3_Base'Enum_Val (BB.Bitmap);
+      GP      : Basis_Blade;
+   begin
+      if BA_Type = C3_ni and BB_Type = C3_ni then
+         GP := GP_OP (BA, (BB.Bitmap, -BB.Weight), False);
+      else
+         GP := GP_OP (BA, BB, False);
+      end if;
+      return GP;
+   end C3_Geometric_Product;
+
+   --  ------------------------------------------------------------------------
+
+   function C3_Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
+                              return Basis_Blade is
+   begin
+      return Inner_Product_Filter (Grade (BA), Grade (BB),
+                                   C3_Geometric_Product (BA, BB), Cont);
+   end C3_Inner_Product;
+
+   --  ------------------------------------------------------------------------
+
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
       A     : Unsigned_Integer := Map_A / 2;
       Swaps : Natural := 0;

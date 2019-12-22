@@ -247,6 +247,19 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+--     procedure Add_Complex_Blade (MV     : in out Multivector; Index : C3_Base;
+--                                  Value : GA_Maths.Complex_Types.Complex) is
+--     begin
+--        MV.Blades.Append (Blade.New_Complex_Basis_Blade (Index, Value));
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Multivector.Add_Blade 2");
+--           raise;
+--     end Add_Complex_Blade;
+
+   --  -------------------------------------------------------------------------
+
    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
                             BB, GP : Blade.Basis_Blade) is
       BMB  : constant Integer := Integer (Bitmap (BB)) + 1;
@@ -462,6 +475,13 @@ package body Multivectors is
    begin
       return Inner_Product (MV1, MV2, Hestenes_Inner_Product);
    end Dot;
+
+   --  -------------------------------------------------------------------------
+
+   function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point is
+   begin
+      return Inner_Product (NP1, NP2, Hestenes_Inner_Product);
+   end Dot_C3;
 
    --  -------------------------------------------------------------------------
 
@@ -875,6 +895,43 @@ package body Multivectors is
          Put_Line ("An exception occurred in Multivector.Inner_Product");
          raise;
    end Inner_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Inner_Product_C3 (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
+                           return Normalized_Point is
+      use Blade_List_Package;
+      B1       : Blade.Basis_Blade;
+      B2       : Blade.Basis_Blade;
+      List_1   : constant Blade_List := NP1.Blades;
+      List_2   : constant Blade_List := NP2.Blades;
+      Cursor_1 : Cursor := List_1.First;
+      Cursor_2 : Cursor;
+      IP       : Blade.Basis_Blade;
+      MV       : Multivector;
+   begin
+      while Has_Element (Cursor_1) loop
+         B1 := Element (Cursor_1);
+         Cursor_2 := List_2.First;
+         while Has_Element (Cursor_2) loop
+            B2 := Element (Cursor_2);
+            IP := Blade.C3_Inner_Product (B1, B2, Cont);
+            if Blade.Weight (IP) /= 0.0 then
+               MV.Blades.Append (IP);
+            end if;
+            Next (Cursor_2);
+         end loop;
+         Next (Cursor_1);
+      end loop;
+
+      Simplify (MV);
+      return MV;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Multivector.Inner_Product_C3");
+         raise;
+   end Inner_Product_C3;
 
    --  -------------------------------------------------------------------------
 
@@ -1314,6 +1371,13 @@ package body Multivectors is
    begin
       return Scalar_Part (Inner_Product (MV1, MV2, Left_Contraction));
    end Scalar_Product;
+
+   --  -------------------------------------------------------------------------
+
+   function Scalar_Product_C3 (NP1, NP2 : Normalized_Point) return float is
+   begin
+      return Scalar_Part (Inner_Product_C3 (NP1, NP2, Left_Contraction));
+   end Scalar_Product_C3;
 
    --  -------------------------------------------------------------------------
 

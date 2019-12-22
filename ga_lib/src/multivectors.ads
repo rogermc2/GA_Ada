@@ -40,6 +40,8 @@ package Multivectors is
    procedure Add_Blade (MV : in out Multivector; Index : E2_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : E3_Base; Value : Float);
    procedure Add_Blade (MV : in out Multivector; Index : C3_Base; Value : Float);
+--     procedure Add_Complex_Blade (MV     : in out Multivector; Index : C3_Base;
+--                                  Value : GA_Maths.Complex_Types.Complex);
    procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector);
    function Basis_Vector (Index : BV_Base) return Vector;
    function Basis_Vector (Index : E2_Base) return Vector;
@@ -52,6 +54,7 @@ package Multivectors is
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
+   function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
@@ -74,6 +77,8 @@ package Multivectors is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
+   function Inner_Product_C3 (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
+                              return Normalized_Point;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -105,6 +110,7 @@ package Multivectors is
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
+   function Scalar_Product_C3 (NP1, NP2 : Normalized_Point) return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
