@@ -3,7 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Metric is
 
-   type Metric_Array is array (Integer range <>) of float;
+--     type Metric_Array is array (Integer range <>) of float;
 
    function Matrix (Met : Metric_Record) return GA_Maths.Float_Matrix is
    begin
@@ -13,7 +13,7 @@ package body Metric is
    --  --------------------------------------------------------------------
 
    function New_Metric (Dimension : Integer) return Metric_Matrix is
-      theMetric : Metric_Matrix (1 .. Dimension, 1 .. Dimension) :=
+      theMetric : constant Metric_Matrix (1 .. Dimension, 1 .. Dimension) :=
         (others => (others => 0.0));
    begin
       return theMetric;
@@ -64,7 +64,7 @@ package body Metric is
       return theMetric;
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in Metric.New_Metric 3");
          raise;
 
