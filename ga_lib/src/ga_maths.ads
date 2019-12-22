@@ -1,6 +1,8 @@
 
 with Interfaces;
 
+with Ada.Numerics.Generic_Complex_Elementary_Functions;
+with Ada.Numerics.Generic_Complex_Types;
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics.Generic_Real_Arrays;
 
@@ -9,6 +11,8 @@ with Ada.Numerics;
 package GA_Maths is
    package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
+   package Complex_Types is new Ada.Numerics.Generic_Complex_Types (Float);
+   package Complex_Functions is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
    subtype Float_Vector is Float_Array_Package.Real_Vector;
 
