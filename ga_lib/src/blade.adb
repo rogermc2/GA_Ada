@@ -282,6 +282,15 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
+   function New_Complex_Basis_Blade (Index  : C3_Base;
+                                     Weight : Complex_Types.Complex := (0.0, 1.0))
+                                     return Complex_Basis_Blade is
+   begin
+      return (Index'Enum_Rep, Weight);
+   end New_Complex_Basis_Blade;
+
+   --  ------------------------------------------------------------------------
+
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade is
       Blade : Basis_Blade;
    begin

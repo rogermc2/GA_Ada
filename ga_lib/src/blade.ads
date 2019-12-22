@@ -15,6 +15,7 @@ package Blade is
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type Basis_Blade is private;
+   type Complex_Basis_Blade is private;
 
    type Contraction_Type is (Left_Contraction, Right_Contraction,
                              Hestenes_Inner_Product,
@@ -41,6 +42,9 @@ package Blade is
    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
+   function New_Complex_Basis_Blade (Index  : C3_Base;
+                                     Weight : Complex_Types.Complex := (0.0, 1.0))
+                                     return Complex_Basis_Blade;
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade;
    function New_Zero_Blade return Basis_Blade;
 
@@ -57,6 +61,11 @@ private
    type Basis_Blade is record
       Bitmap : Unsigned_Integer := 0;
       Weight : Float := 0.0;
+   end record;
+
+   type Complex_Basis_Blade is record
+      Bitmap : Unsigned_Integer := 0;
+      Weight : Complex_Types.Complex := (0.0, 0.0);
    end record;
 
 end Blade;
