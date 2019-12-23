@@ -77,8 +77,8 @@ package Multivectors is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
-   function Inner_Product_C3 (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
-                              return Normalized_Point;
+   function Inner_Product_C3 (MV1, MV2 : Multivector; Cont : Contraction_Type)
+                              return Multivector;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -102,6 +102,7 @@ package Multivectors is
    function New_Vector (e1, e2, e3 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector) return Float;
+   function Norm_Esq_C3 (MV : Multivector) return Float;
 --     function Norm_R (MV : Multivector) return Float;
 --     function Norm_Rsq (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
@@ -110,7 +111,7 @@ package Multivectors is
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
-   function Scalar_Product_C3 (NP1, NP2 : Normalized_Point) return float;
+   function Scalar_Product_C3 (MV1, MV2 : Multivector) return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
