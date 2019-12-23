@@ -355,12 +355,8 @@ package body Blade is
       G   : constant Integer := Grade (B); -- Bit_Count (B.Bitmap)
       W   : constant float
         := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
-      Rev : constant Basis_Blade := (B.Bitmap, W);
    begin
-      Print_Blade ("Blade.Reverse_Blade, B", B);
-      Put_Line ("Blade.Reverse_Blade, G, W: " & Integer'Image (G) & "  " &
-                 Float'Image (W));
-      return Rev;
+      return (B.Bitmap, W);
    end Reverse_Blade;
 
    --  ------------------------------------------------------------------------
