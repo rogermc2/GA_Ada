@@ -953,7 +953,6 @@ package body C3GA is
 
    function Set_Normalized_Point (V : Vector_E3GA) return Multivectors.Normalized_Point is
 --        use GA_Maths.Complex_Types;
-      use GA_Maths.Float_Functions;
       use Multivectors;
       use Blade;
       NP  : Multivectors.Normalized_Point;
@@ -964,8 +963,8 @@ package body C3GA is
       Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
       Add_Blade (NP, New_Basis_Blade (C3_e2, Float (V (GL.Y))));
       Add_Blade (NP, New_Basis_Blade (C3_e3, Float (V (GL.Z))));
-      Add_Blade (NP, New_Basis_Blade (C3_ni, -Sqrt ((Norm_E2 (V) + 1.0))));
-      GA_Utilities.Print_Multivector ("C3GA.Set_Normalized_Point NP", NP);
+      Add_Blade (NP, New_Basis_Blade (C3_ni, 0.5 * (Norm_E2 (V))));
+--        GA_Utilities.Print_Multivector ("C3GA.Set_Normalized_Point NP", NP);
       return NP;
    end Set_Normalized_Point;
 
