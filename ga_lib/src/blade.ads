@@ -27,7 +27,7 @@ package Blade is
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
-   function C3_Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
+   function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
                               return Basis_Blade;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;

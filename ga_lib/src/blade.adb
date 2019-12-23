@@ -85,8 +85,8 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   --  C3_Geometric_Product computes the geometric product of two basis blades.
-   function C3_Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade is
+   --  Geometric_Product_NP computes the geometric product of two basis blades.
+   function Geometric_Product_NP (BA, BB : Basis_Blade) return Basis_Blade is
       BA_Type : constant C3_Base := C3_Base'Enum_Val (BA.Bitmap);
       BB_Type : constant C3_Base := C3_Base'Enum_Val (BB.Bitmap);
       GP      : Basis_Blade;
@@ -97,16 +97,16 @@ package body Blade is
          GP := GP_OP (BA, BB, False);
       end if;
       return GP;
-   end C3_Geometric_Product;
+   end Geometric_Product_NP;
 
    --  ------------------------------------------------------------------------
 
-   function C3_Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
+   function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
                               return Basis_Blade is
    begin
       return Inner_Product_Filter (Grade (BA), Grade (BB),
-                                   C3_Geometric_Product (BA, BB), Cont);
-   end C3_Inner_Product;
+                                   Geometric_Product_NP (BA, BB), Cont);
+   end Inner_Product_NP;
 
    --  ------------------------------------------------------------------------
 

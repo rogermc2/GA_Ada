@@ -898,40 +898,40 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Inner_Product_C3 (MV1, MV2 : Multivector; Cont : Contraction_Type)
-                              return Multivector is
+    function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
+                              return Normalized_Point is
         use Blade_List_Package;
         B1       : Blade.Basis_Blade;
         B2       : Blade.Basis_Blade;
-        List_1   : constant Blade_List := MV1.Blades;
-        List_2   : constant Blade_List := MV2.Blades;
+        List_1   : constant Blade_List := NP1.Blades;
+        List_2   : constant Blade_List := NP2.Blades;
         Cursor_1 : Cursor := List_1.First;
         Cursor_2 : Cursor;
         IP       : Blade.Basis_Blade;
-        MV       : Multivector;
+        NP       : Normalized_Point;
     begin
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                IP := Blade.C3_Inner_Product (B1, B2, Cont);
+                IP := Blade.Inner_Product_NP (B1, B2, Cont);
                 if Blade.Weight (IP) /= 0.0 then
-                    MV.Blades.Append (IP);
+                    NP.Blades.Append (IP);
                 end if;
                 Next (Cursor_2);
             end loop;
             Next (Cursor_1);
         end loop;
 
-        Simplify (MV);
-        return MV;
+        Simplify (NP);
+        return NP;
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Inner_Product_C3");
+            Put_Line ("An exception occurred in Multivector.Inner_Product_NP");
             raise;
-    end Inner_Product_C3;
+    end Inner_Product_NP;
 
     --  -------------------------------------------------------------------------
 
@@ -1226,10 +1226,10 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Norm_Esq_C3 (MV : Multivector) return Float is
+    function Norm_Esq_NP (NP : Normalized_Point) return Float is
         use GA_Maths;
         use Blade_List_Package;
-        RMV      : Multivector := Reverse_MV (MV);
+        RMV      : Multivector := Reverse_MV (NP);
         Blades   : constant Blade_List := RMV.Blades;
         R_Blades : Blade_List;
         Curs     : Cursor := Blades.First;
@@ -1246,14 +1246,14 @@ package body Multivectors is
         end loop;
         RMV.Blades := R_Blades;
 
-        S := Scalar_Product (MV, RMV);
-        GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_C3 MV", MV);
-        GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_C3 RMV", RMV);
+        S := Scalar_Product (NP, RMV);
+        GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP NP", NP);
+        GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP RMV", RMV);
         if S < 0.0 then
             S := 0.0;
         end if;
         return S;
-    end Norm_Esq_C3;
+    end Norm_Esq_NP;
 
     --  -------------------------------------------------------------------------
     --     function Norm_R (MV : Multivector) return Float is
@@ -1402,10 +1402,10 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Scalar_Product_C3 (MV1, MV2 : Multivector) return float is
+    function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float is
     begin
-        return Scalar_Part (Inner_Product_C3 (MV1, MV2, Left_Contraction));
-    end Scalar_Product_C3;
+        return Scalar_Part (Inner_Product_NP (NP1, NP2, Left_Contraction));
+    end Scalar_Product_NP;
 
     --  -------------------------------------------------------------------------
 

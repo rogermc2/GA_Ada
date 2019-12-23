@@ -42,7 +42,7 @@ package body Multivector_Analyze_C3GA is
             --  C3GA.ni weight = 1.0
             OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
             IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-            Xsq_Val    : constant Float := Norm_Esq_C3 (MV_X);
+            Xsq_Val    : constant Float := Norm_Esq_NP (MV_X);
             OP_NiX     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
             Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
