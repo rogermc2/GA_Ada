@@ -42,7 +42,7 @@ package body Multivector_Analyze_C3GA is
             --  C3GA.ni weight = 1.0
             OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
             IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-            Xsq_Val    : constant Float := Norm_Esq (MV_X);
+            Xsq_Val    : constant Float := Norm_Esq_C3 (MV_X);
             OP_NiX     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
             Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
@@ -51,7 +51,7 @@ package body Multivector_Analyze_C3GA is
                        Float'Image (Xsq_Val));
             --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
             GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
-            Put_Line ("Norm_E (OP (C3GA.ni, MV_X))" &
+            Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
                       Float'Image (Norm_E (Outer_Product (C3GA.ni, MV_X))));
             if (not OP_NiX) and (not IP_NiX) then  --  OP_NiX and IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Free.");
