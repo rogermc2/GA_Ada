@@ -51,6 +51,7 @@ package Multivectors is
 --     function C3_Multivector return Multivector;
    function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer)
                         return Float;
+   procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
@@ -60,6 +61,8 @@ package Multivectors is
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : Vector) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
+   function Geometric_Product (MV1, MV2 : Multivector; aMetric : Metric.Metric_Record)
+                               return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
    function General_Inverse (MV : Multivector; Inv : out Multivector) return Boolean;
