@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with C3GA;
@@ -73,8 +73,8 @@ package body Multivector_Analyze_C3GA is
         end Classify;
 
     begin
-        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV:", MV);
-        New_Line;
+--          GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV:", MV);
+--          New_Line;
         Analysis.M_Flags.Valid := True;
         Analysis.Epsilon := Epsilon;
         Analysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
@@ -87,8 +87,8 @@ package body Multivector_Analyze_C3GA is
 
         MV_Info := Init (MV_X);
         Analysis.M_MV_Type := MV_Info;
-        Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
-        New_Line;
+--          Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
+--          New_Line;
 
         --  Check for zero blade
         if Zero (Analysis.M_MV_Type) then
@@ -255,8 +255,8 @@ package body Multivector_Analyze_C3GA is
         Weight           : Float;
         Scale            : Float;
     begin
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
-                    Unsigned_Integer'Image (Grade));
+--          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
+--                      Unsigned_Integer'Image (Grade));
         if Grade = 0 then
             theAnalysis.M_Type.Blade_Class := Scalar_Blade;
             theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
@@ -306,13 +306,13 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
                 theAnalysis.Scalors (1) := Radius;
                 theAnalysis.Scalors (2) := Weight;
-                New_Line;
-                Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
-                                        theAnalysis.Points (1));
-                Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
-                            Float'Image (theAnalysis.Scalors (1)) &
-                            Float'Image (theAnalysis.Scalors (2)));
-                New_Line;
+--                  New_Line;
+--                  Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
+--                                          theAnalysis.Points (1));
+--                  Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
+--                              Float'Image (theAnalysis.Scalors (1)) &
+--                              Float'Image (theAnalysis.Scalors (2)));
+--                  New_Line;
 
                 case Grade is
                 when 1 =>
@@ -352,14 +352,14 @@ package body Multivector_Analyze_C3GA is
                     theAnalysis.M_Vectors (3) := Basis_Vector (Blade_Types.E3_e3);
                 when others => null;
                 end case;
-                Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
-                                theAnalysis);
-                GA_Utilities.Print_Multivector
-                  ("theAnalysis.M_Vectors (1)", theAnalysis.M_Vectors (1));
-                GA_Utilities.Print_Multivector
-                  ("theAnalysis.M_Vectors (2)", theAnalysis.M_Vectors (2));
-                GA_Utilities.Print_Multivector
-                  ("theAnalysis.M_Vectors (3)", theAnalysis.M_Vectors (3));
+--                  Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
+--                                  theAnalysis);
+--                  GA_Utilities.Print_Multivector
+--                    ("theAnalysis.M_Vectors (1)", theAnalysis.M_Vectors (1));
+--                  GA_Utilities.Print_Multivector
+--                    ("theAnalysis.M_Vectors (2)", theAnalysis.M_Vectors (2));
+--                  GA_Utilities.Print_Multivector
+--                    ("theAnalysis.M_Vectors (3)", theAnalysis.M_Vectors (3));
             else
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, LC_NI_MV is not inverttble.");
             end if;

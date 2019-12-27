@@ -1605,7 +1605,7 @@ package body Multivectors is
             Max_Grade_Count := Maximum (Max_Grade_Count, Grade_Count);
             Next (Blade_Cursor);
         end loop;
-        Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
+--          Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
         return Unsigned_Integer (Grade_Count);
     end Top_Grade_Index;
 

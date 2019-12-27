@@ -23,7 +23,7 @@ with Utilities;
 
 with C3GA_Draw;
 with GL_Util;
-with GA_Utilities;
+--  with GA_Utilities;
 with Multivectors;
 with Palet;
 
@@ -149,15 +149,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Diffuse_Colour (BLue);
 --           Test_MV := Multivectors.New_Vector;
 --           GA_Utilities.Print_Multivector ("Display, Test_MV:", Test_MV);
---           for count in Int range 1 .. 1 loop
-         for count in 1 .. Points.Num_Points loop
+         for count in Int range 1 .. 1 loop
+--           for count in 1 .. Points.Num_Points loop
             --           Label := Silo.Set_Data (Ada.Strings.Unbounded.To_Unbounded_String (Integer'Image (count)),
             --                                   Label_Position);
             --           Silo.Push (Label);
 
             Point_Position := Points.Normalized_Points (count);
-            GA_Utilities.Print_Multivector ("Display, Point_Position:", Point_Position);
-            Put_Line ("Norm sq Point_Position" & Float'Image (Multivectors.Norm_Esq (Point_Position)));
+--              GA_Utilities.Print_Multivector ("Display, Point_Position:", Point_Position);
+--              Put_Line ("Norm sq Point_Position" & Float'Image (Multivectors.Norm_Esq (Point_Position)));
             --  Point_Position (L1, L2, C1, C2, C3, P1)
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, Point_Position, Palet_Data);
