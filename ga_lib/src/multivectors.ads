@@ -57,16 +57,17 @@ package Multivectors is
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point;
    function Dual (MV : Multivector) return Multivector;
+   function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : Vector) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
-   function Geometric_Product (MV1, MV2 : Multivector; aMetric : Metric.Metric_Record)
+   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                                return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
    function General_Inverse (MV : Multivector; Inv : out Multivector) return Boolean;
-   function General_Inverse (MV : Multivector; Met : Metric.Metric_Record;
+   function General_Inverse (MV : Multivector; Met : Metric.Metric_Matrix;
                              Inv : out Multivector) return Boolean;
    --  Get_Basis_Vector returns multivector of the required base.
    function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
@@ -80,6 +81,8 @@ package Multivectors is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
                            return Multivector;
+    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
+                            Cont : Contraction_Type) return Multivector;
    function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
                               return Normalized_Point;
    function Is_Null (MV : Multivector) return Boolean;
@@ -114,6 +117,8 @@ package Multivectors is
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
+   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+                            return float;
    function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
@@ -125,10 +130,13 @@ package Multivectors is
    function To_Vector (MV : Multivector) return Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
+   function Unit_R (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector;
    procedure Update (MV : in out Multivector; Blades : Blade_List;
                      Sorted : Boolean := False);
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
    function Versor_Inverse (MV : Multivector) return Multivector;
+   function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Matrix)
+                            return Multivector;
 
 private
    type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is record

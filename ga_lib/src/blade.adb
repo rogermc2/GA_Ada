@@ -8,7 +8,7 @@ package body Blade is
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB : Basis_Blade; Cont : Contraction_Type)
-                                  return Basis_Blade;
+                                   return Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                          return Ada.Strings.Unbounded.Unbounded_String is
+                           return Ada.Strings.Unbounded.Unbounded_String is
         use Names_Package;
         BM        : Unsigned_Integer := aBlade.Bitmap;
         Index     : Natural := 1;
@@ -109,9 +109,12 @@ package body Blade is
         BB_Type : constant C3_Base := C3_Base'Enum_Val (BB.Bitmap);
         GP      : Basis_Blade;
     begin
-        if BA_Type = C3_ni and BB_Type = C3_ni then
+        if (BA_Type = C3_ni and then BB_Type = C3_no) or
+          (BA_Type = C3_no and then BB_Type = C3_ni) then
             GP := GP_OP (BA, (BB.Bitmap, -BB.Weight), False);
-        else
+            Print_Blade ("Blade Geometric_Product_NP GP ni no:", GP);
+        elsif (not (BA_Type = C3_no and then BB_Type = C3_no)) and then
+          (not (BA_Type = C3_ni and then BB_Type = C3_ni)) then
             GP := GP_OP (BA, BB, False);
         end if;
         return GP;
@@ -135,16 +138,16 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Geometric_Product (BA, BB : Basis_Blade;
-                                Met : Metric.Metric_Record) return Basis_Blade is
-        Result     : Basis_Blade := Geometric_Product (BA, BB);
+                                Met : Metric.Metric_Matrix) return Basis_Blade is
+        Result     : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
+        --  BM is the meet (bitmap of annihilated vectors)
         BM         : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
         Row        : Integer range 1 .. 6 := 1;
         Col        : Integer range 1 .. 5 := 1;
-        Met_Matrix : constant GA_Maths.Float_Matrix := Metric.Matrix (Met);
     begin
         while BM /= 0 loop
             if (BM and 1) /= 0 then
-                Result.Weight := Result.Weight * Met_Matrix (Row, Col);
+                Result.Weight := Result.Weight * Met (Row, Col);
             end if;
             if Col = 5 then
                 Row := Row + 1;
@@ -152,7 +155,7 @@ package body Blade is
             else
                 Col := Col + 1;
             end if;
-            BM := BM / 2;
+            BM := BM / 2;  --  shift right
         end loop;
         return Result;
 
@@ -200,7 +203,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                           return Basis_Blade is
+                            return Basis_Blade is
     begin
         return Inner_Product_Filter (Grade (BA), Grade (BB),
                                      Geometric_Product (BA, BB), Cont);
@@ -208,9 +211,18 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
+    function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
+                            Cont : Contraction_Type) return Basis_Blade is
+    begin
+        return Inner_Product_Filter (Grade (BA), Grade (BB),
+                                     Geometric_Product (BA, BB, Met), Cont);
+    end Inner_Product;
+
+    --  ------------------------------------------------------------------------
+
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB : Basis_Blade; Cont : Contraction_Type)
-                                  return Basis_Blade is
+                                   return Basis_Blade is
         IP_Blade : Basis_Blade;
     begin
         case Cont is
@@ -248,7 +260,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                              return Basis_Blade is
+                               return Basis_Blade is
     begin
         return Inner_Product_Filter (Grade (BA), Grade (BB),
                                      Geometric_Product_NP (BA, BB), Cont);
@@ -264,7 +276,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
-                             return Basis_Blade is
+                              return Basis_Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := Bitmap;
@@ -309,7 +321,7 @@ package body Blade is
 
     function New_Complex_Basis_Blade (Index  : C3_Base;
                                       Weight : Complex_Types.Complex := (0.0, 1.0))
-                                     return Complex_Basis_Blade is
+                                      return Complex_Basis_Blade is
     begin
         return (Index'Enum_Rep, Weight);
     end New_Complex_Basis_Blade;

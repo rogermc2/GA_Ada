@@ -21,22 +21,31 @@ package Blade is
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);
 
+    Metric_C3 : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
+                  (1 => (1  => 1.0, others => 0.0),
+                   2 => (2  => 1.0, others => 0.0),
+                   3 => (3  => 1.0, others => 0.0),
+                   4 => (5  => -1.0, others => 0.0),
+                   5 => (4  => -1.0, others => 0.0));
+
    function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
-   function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                              return Basis_Blade;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
-   function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record)
+   function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix)
                                return Basis_Blade;
    function Grade (BB : Basis_Blade) return Integer;
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
                            return Basis_Blade;
+   function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
+                           Cont : Contraction_Type) return Basis_Blade;
+   function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
+                              return Basis_Blade;
    function Minus_1_Power (Power : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
