@@ -64,7 +64,7 @@ package body Multivector_Type is
 
     --  -------------------------------------------------------------------------
 
-    function Init (MV : Multivectors.Multivector; aMetric : Metric.Metric_Record;
+    function Init (MV : Multivectors.Multivector; aMetric : Metric.Metric_Matrix;
                    Epsilon : Float := 0.0) return MV_Type_Record is
         use Interfaces;
         use GA_Maths;

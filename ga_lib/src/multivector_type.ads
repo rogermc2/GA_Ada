@@ -10,7 +10,7 @@ package Multivector_Type is
    type MV_Type_Record is private;
 
    function Init (MV : Multivectors.Multivector) return MV_Type_Record;
-   function Init (MV : Multivectors.Multivector; aMetric : Metric.Metric_Record;
+   function Init (MV : Multivectors.Multivector; aMetric : Metric.Metric_Matrix;
                  Epsilon : Float := 0.0) return MV_Type_Record;
 
    function MV_Kind (MV : MV_Type_Record) return MV_Type;
