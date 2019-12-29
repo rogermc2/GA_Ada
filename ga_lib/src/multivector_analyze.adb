@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Types;
+
 with Multivector_Analyze_E2GA;
 with Multivector_Analyze_C3GA;
 
@@ -101,6 +103,7 @@ package body Multivector_Analyze is
    --  --------------------------------------------------------------------------
 
    procedure Print_Analysis (Name : String; Analysis : MV_Analysis) is
+      use GL.Types;
       use Multivector_Type;
    begin
       Put_Line (Name);
@@ -113,10 +116,12 @@ package body Multivector_Analyze is
       Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
       Put_Line ("Versor_Kind   " & Versor_Subclass_Type'Image (Analysis.Versor_Kind));
       Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
-      Put_Line ("Points  array length  " & integer'Image (Analysis.Points'Length));
-      Put_Line ("Scalars array length  " & integer'Image (Analysis.Scalors'Length));
-      Put_Line ("Vectors array length  " & integer'Image (Analysis.M_Vectors'Length));
-      New_Line;
+      Put_Line ("Points  array:");
+      for index in Analysis.Points'Range loop
+            Put_Line (Single'Image (Analysis.Points (index) (GL.X)) & " " &
+                      Single'Image (Analysis.Points (index) (GL.Y)) & " " &
+                      Single'Image (Analysis.Points (index) (GL.Z)));
+      end loop;
 
    exception
       when  others =>

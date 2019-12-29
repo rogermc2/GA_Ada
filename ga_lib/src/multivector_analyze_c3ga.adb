@@ -7,7 +7,6 @@ with Maths;
 --  with Utilities;
 
 with Blade_Types;
-with C3GA;
 with E3GA;
 with GA_Maths;
 with GA_Utilities;
@@ -30,7 +29,7 @@ package body Multivector_Analyze_C3GA is
     --  -------------------------------------------------------------------------
 
     procedure Analyze (Analysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                       Probe    : Multivectors.Normalized_Point;
+                       Probe    : Multivectors.Normalized_Point := C3GA.no;
                        Flags    : Flag_Type := (Flag_Invalid, false);
                        Epsilon  : float := Default_Epsilon) is
         use Multivector_Type;
@@ -143,7 +142,7 @@ package body Multivector_Analyze_C3GA is
         Grade         : Unsigned_Integer :=
                           Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
         --  Attitude is a free N-vector
-        Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV));
+        Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV, Met));
         MV_Inverse    : Multivector;
         MV_Invertible : Boolean;
         MV_Location   : Multivector;
@@ -156,10 +155,16 @@ package body Multivector_Analyze_C3GA is
         if theAnalysis.M_Flags.Dual then
             Grade := 5 - Grade;
         end if;
-        MV_Invertible := General_Inverse (MV, MV_Inverse);
+        MV_Invertible := General_Inverse (MV, Met, MV_Inverse);
         --  MV_Location is a normalized dual sphere
         if MV_Invertible then
-            MV_Location := Left_Contraction (Left_Contraction (Probe, MV, Met), MV_Inverse, Met);
+            GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
+                                            MV_Inverse);
+            GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV)",
+                                            Left_Contraction (Probe, MV));
+            MV_Location := Left_Contraction (Left_Contraction (Probe, MV), MV_Inverse, Met);
+            GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
+                                            MV_Location);
             MV_Location := Geometric_Product (MV_Location,
                                               -1.0 / Scalar_Product (C3GA.ni, MV_Location, Met));
             if Grade = 1 then
