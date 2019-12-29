@@ -90,6 +90,8 @@ package Multivectors is
    function Is_Scalar (MV : Multivector) return Boolean;
    function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
+   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+                              return Multivector;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
    function MV_First (MV_List : Multivector_List) return Multivector;
@@ -107,10 +109,10 @@ package Multivectors is
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
+   function Norm_E (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
    function Norm_Esq (MV : Multivector) return Float;
+   function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
    function Norm_Esq_NP (NP : Normalized_Point) return Float;
---     function Norm_R (MV : Multivector) return Float;
---     function Norm_Rsq (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
