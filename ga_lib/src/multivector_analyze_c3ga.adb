@@ -178,15 +178,19 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.Scalors (1) := Weight;
             case Grade is
             when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
+                Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Scalar_Subclass.");
             when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
+                Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
             when 3 =>  --  Line
                 theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
                 theAnalysis.M_Vectors (1) :=
                   To_Vector (Unit_E (Left_Contraction (C3GA.no, MV)));
+                Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
             when 4 =>  --  Plane
                 theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
                 Blade_Factors := GA_Utilities.Factorize_Blade
                   (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude))), Scale);
+                Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
 
                 theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
                 theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);

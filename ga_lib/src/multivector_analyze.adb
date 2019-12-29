@@ -112,10 +112,12 @@ package body Multivector_Analyze is
       Print_Multivector_Info (Name & " M_MV_Type data", Analysis.M_MV_Type);
       Put_Line ("Model Type    " &
                   Model_Type'Image (Analysis.M_Type.Model_Kind));
+      Put_Line ("Multivector_Kind " &
+                  Multivector_Type_Base.Object_Type'Image (Analysis.M_Type.Multivector_Kind));
       Put_Line ("Epsilon      " & Float'Image (Analysis.Epsilon));
       Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
       Put_Line ("Versor_Kind   " & Versor_Subclass_Type'Image (Analysis.Versor_Kind));
-      Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
+      Put_Line ("Blade_Subclass " & Blade_Subclass_Type'Image (Analysis.M_Type.Blade_Subclass));
       Put_Line ("Points  array:");
       for index in Analysis.Points'Range loop
             Put_Line (Single'Image (Analysis.Points (index) (GL.X)) & " " &
