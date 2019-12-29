@@ -11,12 +11,14 @@ with C3GA;
 with E3GA;
 with GA_Maths;
 with GA_Utilities;
+with Metric;
 with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
+                            Met         : Metric.Metric_Matrix;
                             Probe       : Multivectors.Normalized_Point);
     procedure Analyze_Free (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector);
@@ -40,35 +42,38 @@ package body Multivector_Analyze_C3GA is
         procedure Classify is
             use Multivectors;
             --  C3GA.ni weight = 1.0
-            OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X));
-            IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X));
-            Xsq_Val    : constant Float := Norm_Esq_NP (MV_X);
+            OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Metric.Metric_C3);
+            IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Metric.Metric_C3);
+            Xsq_Val    : constant Float := Norm_Esq (MV_X, Metric.Metric_C3);
+--              Xsq_Val    : constant Float := Norm_Esq_NP (MV_X);
             OP_NiX     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
             Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
         begin
-            Put_Line ("Multivector_Analyze_C3GA.Classify, Xsq_Val" &
-                       Float'Image (Xsq_Val));
+            Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
+                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
             --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
-            GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
-            Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
-                      Float'Image (Norm_E (Outer_Product (C3GA.ni, MV_X))));
+--              GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
+--              Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
+--                        Float'Image (Norm_E (Outer_Product (C3GA.ni, MV_X))));
             if (not OP_NiX) and (not IP_NiX) then  --  OP_NiX and IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Free.");
                 Analyze_Free (Analysis, MV_X);
-            elsif (not OP_NiX) and IP_NiX then
+            elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
-                Analyze_Flat (Analysis, MV_X, Probe);
-            elsif OP_Nix and (not IP_NiX) then
+                Analyze_Flat (Analysis, MV_X, Metric.Metric_C3, Probe);
+            elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
                 Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
-                Analyze_Flat (Analysis, Dual (MV_X), Probe);
-            elsif OP_NiX and IP_NiX and (not Xsq) then
-                Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
-                Analyze_Tangent (Analysis, MV_X);
-            elsif OP_NiX and IP_NiX and Xsq then
-                Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Round.");
-                Analyze_Round (Analysis, MV_X);
+                Analyze_Flat (Analysis, Dual (MV_X), Metric.Metric_C3, Probe);
+            elsif OP_NiX and IP_NiX then
+                if not Xsq then
+                    Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
+                    Analyze_Tangent (Analysis, MV_X);
+                else
+                    Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Round.");
+                    Analyze_Round (Analysis, MV_X);
+                end if;
             end if;
         end Classify;
 
@@ -131,6 +136,7 @@ package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
+                            Met         : Metric.Metric_Matrix;
                             Probe       : Multivectors.Normalized_Point) is
         use GA_Maths;
         use Multivectors;
@@ -153,13 +159,13 @@ package body Multivector_Analyze_C3GA is
         MV_Invertible := General_Inverse (MV, MV_Inverse);
         --  MV_Location is a normalized dual sphere
         if MV_Invertible then
-            MV_Location := Left_Contraction (Left_Contraction (Probe, MV), MV_Inverse);
+            MV_Location := Left_Contraction (Left_Contraction (Probe, MV, Met), MV_Inverse, Met);
             MV_Location := Geometric_Product (MV_Location,
-                                              -1.0 / Scalar_Product (C3GA.ni, MV_Location));
+                                              -1.0 / Scalar_Product (C3GA.ni, MV_Location, Met));
             if Grade = 1 then
-                Weight := Scalar_Product (MV, C3GA.no);
+                Weight := Scalar_Product (MV, C3GA.no, Met);
             else
-                Weight := Abs (Norm_Esq (MV));
+                Weight := Abs (Norm_Esq (MV, Met));
             end if;
 
             Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
