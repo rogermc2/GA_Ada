@@ -167,7 +167,7 @@ package body Multivector_Analyze_C3GA is
                                             MV_Location);
             MV_Location := Geometric_Product (MV_Location,
                                               -1.0 / Scalar_Product (C3GA.ni, MV_Location, Met));
-            if Grade = 1 then
+            if Grade = 0 then
                 Weight := Scalar_Product (MV, C3GA.no, Met);
             else
                 Weight := Abs (Norm_Esq (MV, Met));
@@ -176,10 +176,13 @@ package body Multivector_Analyze_C3GA is
             Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
             theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
             theAnalysis.Scalors (1) := Weight;
+            --  Grade indications are taken from Geometric Algebra and its Application to Computer Graphics
+            --  by Hildenbrand, Fontijne, Perwass and Dorst, Eurographics 2004.
+            --  "the representation of a point is simply a sphere of radius zero".
             case Grade is
-            when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
+            when 0 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Scalar_Subclass.");
-            when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
+            when 1 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
             when 3 =>  --  Line
                 theAnalysis.M_Type.Blade_Subclass := Line_Subclass;

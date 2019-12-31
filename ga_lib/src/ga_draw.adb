@@ -725,7 +725,7 @@ package body GA_Draw is
       use GL.Types.Singles;
       use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
       use GA_Maths;
-      VC                : constant Array_3D := C3GA.Get_Coords (V);
+      V_Coords          : constant Array_3D := C3GA.Get_Coords (V);
       Scale_Sign        : Float;
       P_Scale           : Float;
       Normal            : Single;
@@ -742,9 +742,9 @@ package body GA_Draw is
       if Method = Draw_TV_Parellelepiped or
         Method = Draw_TV_Parellelepiped_No_Vectors then
         Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
-         if VC = (0.0, 0.0, 0.0) then
+         if V_Coords = (0.0, 0.0, 0.0) then
             Put_Line ("GA_Draw.Draw_Trivector, VC = 0, so Draw_Trivector");
-            Draw_Trivector (Render_Program, MV_Matrix, Base, Scale, V,
+            Draw_Trivector (Render_Program, MV_Matrix, Base, Scale, (0.0, 0.0, 0.0),
                             Palet_Type, Draw_TV_Sphere) ;
          end if;
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
