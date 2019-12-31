@@ -367,9 +367,9 @@ package body Geosphere is
 
     procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
     --        S_Faces       : constant F_Vector := Sphere.Faces;
-        New_Face      : Geosphere_Face;
+        New_Face : Geosphere_Face;
         --  1 is subtracted from each index in Get_Indices
-        Faces         : constant Indices_Array (1 .. Num_Faces)
+        Indices  : constant Indices_Array (1 .. Num_Faces)
           := ((6, 1, 3),
               (4, 3, 1),
               (6, 5, 1),
@@ -378,7 +378,7 @@ package body Geosphere is
               (2, 3, 4),
               (2, 4, 5),
               (2, 5, 6));
-        Vertices       : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
+        Vertices  : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
     begin
         Vertices (1) := New_Vector (0.0, -1.0, 0.0);
         Vertices (2) := New_Vector (0.0, 1.0, 0.0);
@@ -393,7 +393,7 @@ package body Geosphere is
         --        Sphere.Num_Vertices := Num_Vertices;
 
         for face in 1 .. Num_Faces loop
-            New_Face.Indices := Indices_Vector (Faces (face));
+            New_Face.Indices := Indices_Vector (Indices (face));
             --              for index in Int4_range loop
             --                  New_Face.Child (index) := 0;
             --              end loop;
