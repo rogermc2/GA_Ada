@@ -247,7 +247,8 @@ package body Geosphere is
 
         procedure Add_Index (C : Face_Vectors.Cursor) is
             Face_Index     : constant Integer := Face_Vectors.To_Index (C);
-            thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);         Vertex_Indices : V_Array;
+            thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
+            Vertex_Indices : Indices_Vector;
         begin
             Vertex_Indices := thisFace.Vertex_Indices;
             Indice_Index := Indice_Index + 1;
@@ -309,7 +310,7 @@ package body Geosphere is
         use GL.Types;
         Normal_Index : Integer := 0;
 
-        thisNormal  : constant V_Array := Face.Vertex_Indices;
+        thisNormal  : constant Indices_Vector := Face.Vertex_Indices;
         aVertex     : GL.Types.Singles.Vector3;
     begin
         Normal_Index := Normal_Index + 1;
@@ -392,7 +393,7 @@ package body Geosphere is
         --        Sphere.Num_Vertices := Num_Vertices;
 
         for face in 1 .. Num_Faces loop
-            New_Face.Vertex_Indices := V_Array (Faces (face));
+            New_Face.Vertex_Indices := Indices_Vector (Faces (face));
             --              for index in Int4_range loop
             --                  New_Face.Child (index) := 0;
             --              end loop;
@@ -603,7 +604,7 @@ package body Geosphere is
     procedure Refine_Face (Sphere : in out Geosphere; Face_index, Depth : Integer) is
         Faces           : constant F_Vector := Sphere.Faces;
         this_Face       : Geosphere_Face := Faces.Element (Face_index);
-        Vertex_Indicies : constant V_Array := this_Face.Vertex_Indices;
+        Vertex_Indicies : constant Indices_Vector := this_Face.Vertex_Indices;
         New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
         index_2         : Integer;
         Vertex_1        : Vector;

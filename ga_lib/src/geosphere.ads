@@ -31,14 +31,14 @@ private
    type Contour_Intersect_Array is array  (Int3_Range)  of integer;
    type Contour_Visited_Array is array  (Int3_Range)  of integer;
    type Neighbour_Array is array  (Int3_Range)  of integer;
-   type V_Array is array  (Int3_Range) of integer;
+   type Indices_Vector is array  (Int3_Range) of integer;
 
    type Geosphere_Face;
    type Face_Ptr is access Geosphere_Face;
    type Child_Array is array (Int4_Range) of Face_Ptr;
 
    type Geosphere_Face is record
-      Vertex_Indices    : V_Array;  --  Three indices into Vertices vector
+      Vertex_Indices    : Indices_Vector;  --  Three indices into Vertices vector
       Child             : Child_Array := (null, null, null, null);
       Plane             : Multivectors.Bivector;
       D                 : float;
