@@ -177,6 +177,7 @@ package body Geosphere is
       Face.Child (Child_Index).Vertex_Indices (1) := V1;
       Face.Child (Child_Index).Vertex_Indices (2) := V2;
       Face.Child (Child_Index).Vertex_Indices (3) := V3;
+      Face.Child (Child_Index).Depth := Face.Depth + 1;
 
    exception
       when others =>
@@ -205,7 +206,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
-                         return GL.Types.Singles.Vector3 is
+                        return GL.Types.Singles.Vector3 is
       use GL.Types;
       theVertex    : Singles.Vector3;
       GA_Vector    : constant Multivectors.Vector :=
@@ -225,7 +226,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
-                         return Multivectors.Vector is
+                        return Multivectors.Vector is
       GA_Vector : constant Multivectors.Vector :=
                     Sphere.Vertices.Element (Vertex_Index);
    begin
@@ -609,6 +610,7 @@ package body Geosphere is
       V1              : Vector;
       Index           : Integer := 0;
    begin
+      --  Refine_Face is recursive
       if Depth > 0 then  --   create 3 new vertices
          while index < 3 loop
             index := index + 1;
@@ -627,21 +629,21 @@ package body Geosphere is
             V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
             Add_Vertex (Sphere, V1, New_Indices (index));
          end loop;
+
+         --  allocate four new faces
+         Create_Child (this_Face, 1, this_Face.Vertex_Indices (1),
+                       New_Indices (1), New_Indices (3));
+         Create_Child (this_Face, 2, New_Indices (1),
+                       this_Face.Vertex_Indices (2), New_Indices (2));
+         Create_Child (this_Face, 3, New_Indices (1),
+                       New_Indices (2), New_Indices (3));
+         Create_Child (this_Face, 4, New_Indices (2),
+                       this_Face.Vertex_Indices (3), New_Indices (3));
+
+         for index in Int4_range loop
+            Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
+         end loop;
       end if;
-
-      --  allocate four new faces
-      Create_Child (this_Face, 1, this_Face.Vertex_Indices (1),
-                    New_Indices (1), New_Indices (3));
-      Create_Child (this_Face, 2, New_Indices (1),
-                    this_Face.Vertex_Indices (2), New_Indices (2));
-      Create_Child (this_Face, 3, New_Indices (1),
-                    New_Indices (2), New_Indices (3));
-      Create_Child (this_Face, 4, New_Indices (2),
-                    this_Face.Vertex_Indices (3), New_Indices (3));
-
-      for index in Int4_range loop
-         Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
-      end loop;
 
    exception
       when others =>
