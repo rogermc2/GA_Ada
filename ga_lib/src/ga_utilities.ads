@@ -9,6 +9,7 @@ package GA_Utilities is
    function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                              return Multivectors.Multivector_List;
    function Multivector_Size (MV : Multivectors.Multivector) return Integer;
+   procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array);
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3);
    procedure Print_Matrix (Name : String; aMatrix : Real_Matrix);
    procedure Print_Multivector (Name : String; MV : Multivectors.Multivector);

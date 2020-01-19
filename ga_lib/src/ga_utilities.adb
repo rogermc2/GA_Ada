@@ -72,6 +72,17 @@ package body GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
+    procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array) is
+    begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put_Line (Integer'Image (anArray (Index)));
+      end loop;
+      New_Line;
+    end Print_Integer_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3) is
    begin
       Put_Line (Name & ":");
