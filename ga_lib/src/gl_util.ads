@@ -26,6 +26,7 @@ package GL_Util is
     procedure Load_Pick_Matrix;
     procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
                            Width, Height : GL.Types.Size);
+    procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array);
     function Rotor_To_GL_Matrix (R : Multivectors.Rotor) return  GL.Types.Singles.Matrix4;
     function Rotor_GL_Multiply (R : Multivectors.Rotor;
                                 GL_Matrix : in out GL.Types.Singles.Matrix4)

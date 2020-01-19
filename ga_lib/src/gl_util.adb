@@ -5,7 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL;
 with GL.Window;
---  with Utilities;
+with Utilities;
 
 with Blade;
 with Blade_Types;
@@ -50,6 +50,18 @@ package body GL_Util is
     end Load_Pick_Matrix;
 
     --  ------------------------------------------------------------------
+
+   procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Utilities.Print_Vector ("", anArray (Index));
+      end loop;
+      New_Line;
+   end Print_GL_Int3_Array;
+
+   --  ------------------------------------------------------------------------
+
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
     function Rotor_GL_Multiply (R : Multivectors.Rotor;
                                 GL_Matrix : in out GL.Types.Singles.Matrix4)
