@@ -40,6 +40,7 @@ package GA_Maths is
 
    type Basis_Array is array (Basis_Index) of integer;
    type Grade_Array is array (Grade_Index) of integer;
+   type Integer_Array is array (Integer range <>) of Integer;
    type Array_I2 is array (1 .. 2) of integer;
    type Array_I3 is array (1 .. 3) of integer;
    type Array_I4 is array (1 .. 4) of integer;
