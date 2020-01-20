@@ -519,10 +519,13 @@ package body Geosphere is
                   Vertex_Buffer, Normals_Buffer);
       end Draw_Child;
    begin
-      if thisFace.Child /= (null, null, null, null) then
+--        if thisFace.Child /= (null, null, null, null) then
+      if thisFace.Child /= (-1, -1, -1, -1) then
          for index in 1 .. 4 loop
-            if thisFace.Child (index) /= null then
-               Draw_Child (thisFace.Child (index).all, Normal);
+--              if thisFace.Child (index) /= null then
+            if thisFace.Child (index) /= -1 then
+               Draw_Child (Sphere.Faces.Element (thisFace.Child (index)), Normal);
+--                 Draw_Child (thisFace.Child (index).all, Normal);
             end if;
          end loop;
       end if;
@@ -553,7 +556,8 @@ package body Geosphere is
          Normals        : Singles.Vector3_Array (1 .. Int (Length (Sphere.Faces)));
          Indices        : UInt_Array (1 .. Int (3 * Int (Length (Sphere.Faces))));
       begin
-         if thisFace.Child /= (null, null, null, null) then
+--           if thisFace.Child /= (null, null, null, null) then
+         if thisFace.Child /= (-1, -1, -1, -1) then
             Put_Line ("Geosphere.GS_Draw has child");
             GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace, Normal);
          else  --  no children
