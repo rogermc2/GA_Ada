@@ -171,20 +171,20 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   procedure Create_Child (Face        : in out Geosphere_Face;
-                           Child_Index : integer; V1, V2, V3 : Integer) is
-   begin
-      Face.Child (Child_Index) := new Geosphere_Face;
-      Face.Child (Child_Index).Indices (1) := V1;
-      Face.Child (Child_Index).Indices (2) := V2;
-      Face.Child (Child_Index).Indices (3) := V3;
-      Face.Child (Child_Index).Depth := Face.Depth + 1;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Geosphere.Create_Child.");
-         raise;
-   end Create_Child;
+--     procedure Create_Child (Face        : in out Geosphere_Face;
+--                             Child_Index : integer; V1, V2, V3 : Integer) is
+--     begin
+--        Face.Child (Child_Index) := new Geosphere_Face;
+--        Face.Child (Child_Index).Indices (1) := V1;
+--        Face.Child (Child_Index).Indices (2) := V2;
+--        Face.Child (Child_Index).Indices (3) := V3;
+--        Face.Child (Child_Index).Depth := Face.Depth + 1;
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Geosphere.Create_Child.");
+--           raise;
+--     end Create_Child;
 
    --  -------------------------------------------------------------------------
 
@@ -594,6 +594,24 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
+   procedure New_Face (Sphere     : in out Geosphere;
+                       V1, V2, V3, Depth : Integer) is
+      theFace : Geosphere_Face;
+   begin
+      theFace.Indices (1) := V1;
+      theFace.Indices (2) := V2;
+      theFace.Indices (3) := V3;
+      theFace.Depth := Depth + 1;
+      Sphere.Faces.Append (theFace);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Geosphere.New_Face.");
+         raise;
+   end New_Face;
+
+   --  -------------------------------------------------------------------------
+
    procedure New_Sphere_List (Sphere : Geosphere) is
    begin
       Sphere_List.Clear;
@@ -646,14 +664,14 @@ package body Geosphere is
          end loop;
 
          --  allocate four new faces
-         Create_Child (this_Face, 1, this_Face.Indices (1),
-                       New_Indices (1), New_Indices (3));
-         Create_Child (this_Face, 2, New_Indices (1),
-                       this_Face.Indices (2), New_Indices (2));
-         Create_Child (this_Face, 3, New_Indices (1),
-                       New_Indices (2), New_Indices (3));
-         Create_Child (this_Face, 4, New_Indices (2),
-                       this_Face.Indices (3), New_Indices (3));
+         New_Face (Sphere, this_Face.Indices(1), New_Indices (1),
+                   New_Indices (3), this_Face.Depth);
+         New_Face (Sphere, New_Indices (1), this_Face.Indices (2),
+                   New_Indices (2), this_Face.Depth);
+         New_Face (Sphere, New_Indices (1), New_Indices (2), New_Indices (3),
+                   this_Face.Depth);
+         New_Face (Sphere, New_Indices (2), this_Face.Indices (3),
+                   New_Indices (3), this_Face.Depth);
 
          Put_Line ("Geosphere.Refine_Face Last_Index: " &
             Integer'Image (Sphere.Faces.Last_Index));
