@@ -9,6 +9,7 @@ with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 
+with GA_Utilities;
 with C3GA;
 with GL_Util;
 
@@ -51,9 +52,9 @@ package body Geosphere is
       --  first check if vertex already exists
       New_Index := 0;
       while index <= Sphere.Vertices.Last_Index and not Found loop
-         Index := Index + 1;
          V :=  Pos - Vertices.Element (index);
          Found := Norm_Esq (V) > e ** (-10);
+         Index := Index + 1;
       end loop;
 
       if not Found then  --  create new vertex
@@ -89,17 +90,17 @@ package body Geosphere is
          begin
             while Index_2 < 3 loop
                Index_2 := Index_2 + 1;   --  j
-               if Face_1.Vertex_Indices (Index_1) = Face_2.Vertex_Indices (Index_2) then
+               if Face_1.Indices (Index_1) = Face_2.Indices (Index_2) then
                   Index_11 :=  (Index_1 + 1) mod 3 + 1;  --  e + 1 mod 3
                   Index_21 :=  (Index_2 + 1) mod 3 + 1;  --  i + 1 mod 3
                   Index_22 :=  (Index_2 + 2) mod 3 + 1;  --  i + 2 mod 3
-                  if Face_1.Vertex_Indices (Index_11) = Face_2.Vertex_Indices (Index_21) then
+                  if Face_1.Indices (Index_11) = Face_2.Indices (Index_21) then
                      --  face[f].neighbour[e] = i;
                      --  face[i].neighbour[j] = f;
                      Face_1.Neighbour (Index_1) := Face2_Index;
                      Face_2.Neighbour (Index_2) := Face1_Index;
                      Num := Num + 1;
-                  elsif Face_1.Vertex_Indices (Index_11) = Face_2.Vertex_Indices (Index_22) then
+                  elsif Face_1.Indices (Index_11) = Face_2.Indices (Index_22) then
                      --  face[f].neighbour[e] = i
                      --  face[i].neighbour[(j-1+3)%3] = f;
                      Face_1.Neighbour (Index_1) := Face2_Index;
@@ -119,7 +120,7 @@ package body Geosphere is
 
          --  -------------------------------------------------------------------
 
-      begin
+      begin  --  Find_Relation
          while Index_1 < 3 loop
             Index_1 := Index_1 + 1;  --  e
             if Face_1.Neighbour (Index_1) > 0 then
@@ -174,9 +175,9 @@ package body Geosphere is
                            Child_Index : integer; V1, V2, V3 : Integer) is
    begin
       Face.Child (Child_Index) := new Geosphere_Face;
-      Face.Child (Child_Index).Vertex_Indices (1) := V1;
-      Face.Child (Child_Index).Vertex_Indices (2) := V2;
-      Face.Child (Child_Index).Vertex_Indices (3) := V3;
+      Face.Child (Child_Index).Indices (1) := V1;
+      Face.Child (Child_Index).Indices (2) := V2;
+      Face.Child (Child_Index).Indices (3) := V3;
       Face.Child (Child_Index).Depth := Face.Depth + 1;
 
    exception
@@ -205,7 +206,7 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
+   function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
                         return GL.Types.Singles.Vector3 is
       use GL.Types;
       theVertex    : Singles.Vector3;
@@ -225,11 +226,12 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Vertex (Sphere : Geosphere; Vertex_Index : Positive)
+   function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
                         return Multivectors.Vector is
       GA_Vector : constant Multivectors.Vector :=
                     Sphere.Vertices.Element (Vertex_Index);
    begin
+      Put_Line ("Geosphere.Get_Vertex Vertex_Index 2." & Natural'Image (Vertex_Index));
       return GA_Vector;
 
    exception
@@ -247,9 +249,10 @@ package body Geosphere is
 
       procedure Add_Index (C : Face_Vectors.Cursor) is
          Face_Index     : constant Integer := Face_Vectors.To_Index (C);
-         thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);         Vertex_Indices : V_Array;
+         thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
+         Vertex_Indices : Indices_Vector;
       begin
-         Vertex_Indices := thisFace.Vertex_Indices;
+         Vertex_Indices := thisFace.Indices;
          Indice_Index := Indice_Index + 1;
          Indices (Indice_Index) := UInt (Vertex_Indices (1));
          Indice_Index := Indice_Index + 1;
@@ -309,7 +312,7 @@ package body Geosphere is
       use GL.Types;
       Normal_Index : Integer := 0;
 
-      thisNormal  : constant V_Array := Face.Vertex_Indices;
+      thisNormal  : constant Indices_Vector := Face.Indices;
       aVertex     : GL.Types.Singles.Vector3;
    begin
       Normal_Index := Normal_Index + 1;
@@ -330,7 +333,7 @@ package body Geosphere is
       Index : Int := 0;
 
       procedure Add_Vertex (C : Vertex_Vectors.Cursor) is
-         Vertex_Index     : constant Integer := Vertex_Vectors.To_Index (C);
+         Vertex_Index     : constant Natural := Vertex_Vectors.To_Index (C);
          thisVertex       : constant Vector := Sphere.Vertices.Element (Vertex_Index);
       begin
          Index := Index + 1;
@@ -353,7 +356,7 @@ package body Geosphere is
    begin
       for index in Int3_Range loop
          Vertices (GL.Types.Int (index)) :=
-           Get_Vertex (Sphere, Face.Vertex_Indices (index));
+           Get_Vertex (Sphere, Face.Indices (index));
       end loop;
 
    exception
@@ -427,7 +430,7 @@ package body Geosphere is
    procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
       --        S_Faces       : constant F_Vector := Sphere.Faces;
       New_Face       : Geosphere_Face;
-      Faces          : constant Indices_Array (1 .. Num_Faces)
+      Face_Indices   : constant Indices_Array (1 .. Num_Faces)
         := ((5, 0, 2),
             (3, 2, 0),
             (5, 4, 0),
@@ -436,7 +439,7 @@ package body Geosphere is
             (2, 3, 4),
             (1, 3, 4),
             (1, 4, 5));
-      Vertices       : Vertices_Array (1 .. Num_Vertices);  --  array of V_Vector
+      Vertices       : Vertices_Array (0 .. Num_Vertices);
    begin
       Vertices (1) := New_Vector (0.0, -1.0, 0.0);
       Vertices (2) := New_Vector (0.0, 1.0, 0.0);
@@ -451,7 +454,7 @@ package body Geosphere is
       --        Sphere.Num_Vertices := Num_Vertices;
 
       for face in 1 .. Num_Faces loop
-         New_Face.Vertex_Indices := V_Array (Faces (face));
+         New_Face.Indices := Indices_Vector (Face_Indices (face));
          --              for index in Int4_range loop
          --                  New_Face.Child (index) := 0;
          --              end loop;
@@ -459,6 +462,7 @@ package body Geosphere is
          Sphere.Faces.Append (New_Face);
       end loop;
 
+      Sphere.Vertices.Clear;
       for vertex in 1 .. Num_Vertices loop
          Sphere.Vertices.Append (Vertices (vertex));
       end loop;
@@ -501,7 +505,7 @@ package body Geosphere is
          Indices_Buffer.Initialize_Id;
          Element_Array_Buffer.Bind (Indices_Buffer);
          for index in 1 .. 3 loop
-            Indices (Int (index)) := UInt (thisFace.Vertex_Indices (index));
+            Indices (Int (index)) := UInt (thisFace.Indices (index));
          end loop;
          Utilities.Load_Element_Buffer
            (Element_Array_Buffer, Indices, Static_Draw);
@@ -601,8 +605,9 @@ package body Geosphere is
    procedure Refine_Face (Sphere : in out Geosphere; Face_index,
                           Depth  : Integer) is
       Faces           : constant F_Vector := Sphere.Faces;
-      this_Face       : Geosphere_Face := Faces.Element (Face_index);
-      Vertex_Indicies : constant V_Array := this_Face.Vertex_Indices;
+      this_Face       : Geosphere_Face;
+      Vertex_Indicies : Indices_Vector;
+      Vertices        : constant V_Vector := Sphere.Vertices;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
       Vertex_1        : Vector;
@@ -611,36 +616,51 @@ package body Geosphere is
       Index           : Integer := 0;
    begin
       --  Refine_Face is recursive
+     Put_Line ("Geosphere.Refine_Face Vertices entered, Face_index: " &
+     Integer'Image (Face_index));
+     this_Face := Faces.Element (Face_index);
+     Vertex_Indicies := this_Face.Indices;
+     GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face Vertex_Indicies",
+                                       (Vertex_Indicies));
+     Put_Line ("Geosphere.Refine_Face Vertices length, first, last index: " &
+                 Ada.Containers.Count_Type'Image (Vertices.Length) &
+                 Integer'Image (Vertices.First_Index) &
+                 Integer'Image (Vertices.Last_Index));
       if Depth > 0 then  --   create 3 new vertices
          while index < 3 loop
             index := index + 1;
-
             if index < 3 then
                index_2 := Index + 1;
             else
                index_2 := 1;
             end if;
-            --              Put_Line ("Face_index: "&  Integer'Image (Face_index));
-            --              Put ("Geosphere.Refine_Face index: " &  Integer'Image (index));
-            --              Put_Line (" vertice: "&  Integer'Image (Vertex_Indicies (index)));
-            Vertex_1 := Sphere.Vertices.Element (Vertex_Indicies (index));
-            Vertex_2 := Sphere.Vertices.Element (Vertex_Indicies (index_2));
+--                          Put_Line ("Geosphere.Refine_Face index, index_2: " &  Integer'Image (index)
+--                           &  Integer'Image (index_2));
+--                          Put_Line ("vertex index: "&  Integer'Image (Vertex_Indicies (index)));
+--                          Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
+            Vertex_1 := Vertices.Element (Vertex_Indicies (index));
+            Vertex_2 := Vertices.Element (Vertex_Indicies (index_2));
             --  V1 is the normal to the plane defined by Vertex_1 and Vertex_2
             V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
             Add_Vertex (Sphere, V1, New_Indices (index));
          end loop;
 
          --  allocate four new faces
-         Create_Child (this_Face, 1, this_Face.Vertex_Indices (1),
+         Create_Child (this_Face, 1, this_Face.Indices (1),
                        New_Indices (1), New_Indices (3));
          Create_Child (this_Face, 2, New_Indices (1),
-                       this_Face.Vertex_Indices (2), New_Indices (2));
+                       this_Face.Indices (2), New_Indices (2));
          Create_Child (this_Face, 3, New_Indices (1),
                        New_Indices (2), New_Indices (3));
          Create_Child (this_Face, 4, New_Indices (2),
-                       this_Face.Vertex_Indices (3), New_Indices (3));
+                       this_Face.Indices (3), New_Indices (3));
 
-         for index in Int4_range loop
+         Put_Line ("Geosphere.Refine_Face Last_Index: " &
+            Integer'Image (Sphere.Faces.Last_Index));
+
+         for index in Integer range 0 .. 3 loop
+            Put_Line ("Geosphere.Refine_Face recursion index: " &
+                        Integer'Image (index));
             Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
          end loop;
       end if;
