@@ -77,42 +77,38 @@ package body Geosphere is
       procedure Find_Relation (Face_Cursor_1 : Face_Vectors.Cursor) is
          Face1_Index : constant Integer := Face_Vectors.To_Index (Face_Cursor_1);  --  f
          Face_1      : Geosphere_Face := Sphere.Faces.Element (Face1_Index);
-         Index_1 : Integer;
          Num         : Integer := 0;
 
          --  -------------------------------------------------------------------
 
-         procedure Find_Neighbours (Face_Cursor_2 : Face_Vectors.Cursor) is
-            Face2_Index : constant Integer := Face_Vectors.To_Index (Face_Cursor_2);  --  i
-            Face_2      : Geosphere_Face := Sphere.Faces.Element (Face2_Index);
-            Index_2     : Integer := 0;  --  j
+         procedure Find_Neighbours (Index_I, Index_E : Integer) is
+            Face_2      : Geosphere_Face := Sphere.Faces.Element (Index_I);
             Index_11    : Integer;
             Index_21    : Integer;
             Index_22    : Integer;
          begin
-            while Index_2 < 3 loop
-               Index_2 := Index_2 + 1;   --  j
-               if Face_1.Indices (Index_1) = Face_2.Indices (Index_2) then
-                  Index_11 :=  (Index_1 + 1) mod 3 + 1;  --  e + 1 mod 3
-                  Index_21 :=  (Index_2 + 1) mod 3 + 1;  --  i + 1 mod 3
-                  Index_22 :=  (Index_2 + 2) mod 3 + 1;  --  i + 2 mod 3
+            for Index_J in 1 .. 3 loop --  j
+               if Face_1.Indices (Index_E) = Face_2.Indices (Index_J) then
+                  Index_11 :=  (Index_E + 1) mod 3 + 1;  --  e + 1 mod 3
+                  Index_21 :=  (Index_I + 1) mod 3 + 1;  --  i + 1 mod 3
+                  Index_22 :=  (Index_I + 2) mod 3 + 1;  --  i + 2 mod 3
                   if Face_1.Indices (Index_11) = Face_2.Indices (Index_21) then
                      --  face[f].neighbour[e] = i;
                      --  face[i].neighbour[j] = f;
-                     Face_1.Neighbour (Index_1) := Face2_Index;
-                     Face_2.Neighbour (Index_2) := Face1_Index;
+                     Face_1.Neighbour (Index_E) := Index_I;
+                     Face_2.Neighbour (Index_J) := Face1_Index;
                      Num := Num + 1;
                   elsif Face_1.Indices (Index_11) = Face_2.Indices (Index_22) then
                      --  face[f].neighbour[e] = i
                      --  face[i].neighbour[(j-1+3)%3] = f;
-                     Face_1.Neighbour (Index_1) := Face2_Index;
-                     Face_2.Neighbour (Index_2) := Index_22;
+                     Face_1.Neighbour (Index_E) := Index_I;
+                     Face_2.Neighbour (Index_J) := Index_22;
                      Num := Num + 1;
                   end if;
                end if;
             end loop;
 
-            Sphere.Faces.Replace_Element (Face2_Index, Face_2);
+            Sphere.Faces.Replace_Element (Index_I, Face_2);
          exception
             when others =>
                Put_Line ("An exception occurred in Geosphere.Find_Neighbours.");
@@ -127,8 +123,9 @@ package body Geosphere is
             if Face_1.Neighbour (Index_E) >= 0 then
                Num := Num + 1;
             else
-               Index_1 := Index_E;
-               Iterate (Sphere.Faces, Find_Neighbours'Access);
+               for Index_I in Face1_Index + 1 .. Sphere.Faces.Last_Index loop
+                  Find_Neighbours (Index_I, Index_E);
+               end loop;
             end if;
          end loop;
          Sphere.Faces.Replace_Element (Face1_Index, Face_1);
