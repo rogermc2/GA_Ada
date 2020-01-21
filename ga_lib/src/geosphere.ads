@@ -48,9 +48,9 @@ private
       Plane             : Multivectors.Bivector;
       D                 : float := 0.0;
       Depth             : integer := 0;
-      Neighbour         : Neighbour_Array := (0, 0, 0);
-      Contour_Intersect : Contour_Intersect_Array := (0, 0, 0);
-      Contour_Visited   : Contour_Visited_Array := (0, 0, 0);
+      Neighbour         : Neighbour_Array := (-1, -1, -1);
+      Contour_Intersect : Contour_Intersect_Array := (-1, -1, -1);
+      Contour_Visited   : Contour_Visited_Array := (-1, -1, -1);
    end record;
 
    package Vertex_Vectors is new Ada.Containers.Vectors

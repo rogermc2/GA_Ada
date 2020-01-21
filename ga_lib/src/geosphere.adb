@@ -74,16 +74,16 @@ package body Geosphere is
 
    procedure Compute_Neighbours (Sphere : in out Geosphere) is
 
-      procedure Find_Relation (C1 : Face_Vectors.Cursor) is
-         Face1_Index : constant Integer := Face_Vectors.To_Index (C1);  --  f
+      procedure Find_Relation (Face_Cursor_1 : Face_Vectors.Cursor) is
+         Face1_Index : constant Integer := Face_Vectors.To_Index (Face_Cursor_1);  --  f
          Face_1      : Geosphere_Face := Sphere.Faces.Element (Face1_Index);
+         Index_1 : Integer;
          Num         : Integer := 0;
-         Index_1     : Integer := 0;  --  e
 
          --  -------------------------------------------------------------------
 
-         procedure Find_Neighbours (C2 : Face_Vectors.Cursor) is
-            Face2_Index : constant Integer := Face_Vectors.To_Index (C2);  --  i
+         procedure Find_Neighbours (Face_Cursor_2 : Face_Vectors.Cursor) is
+            Face2_Index : constant Integer := Face_Vectors.To_Index (Face_Cursor_2);  --  i
             Face_2      : Geosphere_Face := Sphere.Faces.Element (Face2_Index);
             Index_2     : Integer := 0;  --  j
             Index_11    : Integer;
@@ -123,11 +123,11 @@ package body Geosphere is
          --  -------------------------------------------------------------------
 
       begin  --  Find_Relation
-         while Index_1 < 3 loop
-            Index_1 := Index_1 + 1;  --  e
-            if Face_1.Neighbour (Index_1) > 0 then
+         for Index_E in 0 .. 2 loop  --  e
+            if Face_1.Neighbour (Index_E) >= 0 then
                Num := Num + 1;
             else
+               Index_1 := Index_E;
                Iterate (Sphere.Faces, Find_Neighbours'Access);
             end if;
          end loop;
@@ -153,9 +153,7 @@ package body Geosphere is
          Face_Index : constant Integer := Face_Vectors.To_Index (C);
          aFace      : Geosphere_Face := Sphere.Faces.Element (Face_Index);
       begin
-         for index in Int3_Range loop
-            aFace.Neighbour (index) := 0;
-         end loop;
+         aFace.Neighbour := (-1, -1, -1);
          Sphere.Faces.Replace_Element (Face_Index, aFace);
       end Reset_Relation;
 
@@ -476,8 +474,8 @@ package body Geosphere is
       for face_index in 1 .. Num_Faces loop
          Refine_Face (Sphere, face_index, Depth);
       end loop;
-      Sphere.Depth := Depth;
 
+      Sphere.Depth := Depth;
       Compute_Neighbours (Sphere);
       Sphere.isNull := False;
 
@@ -562,9 +560,7 @@ package body Geosphere is
          Normals        : Singles.Vector3_Array (1 .. Int (Length (Sphere.Faces)));
          Indices        : UInt_Array (1 .. Int (3 * Int (Length (Sphere.Faces))));
       begin
---           if thisFace.Child /= (null, null, null, null) then
          if thisFace.Child /= (-1, -1, -1, -1) then
-            Put_Line ("Geosphere.GS_Draw has child");
             GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace, Normal);
          else  --  no children
             --                  Utilities.Print_Matrix ("Geosphere.GS_Draw Model_View_Matrix", Model_View_Matrix );
