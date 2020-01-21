@@ -123,7 +123,7 @@ package body Geosphere is
          --  -------------------------------------------------------------------
 
       begin  --  Find_Relation
-         for Index_E in 0 .. 2 loop  --  e
+         for Index_E in 1 .. 3 loop  --  e
             if Face_1.Neighbour (Index_E) >= 0 then
                Num := Num + 1;
             else
