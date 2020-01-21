@@ -42,7 +42,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Vector;
-                         New_Index : out Integer) is
+                         V_Index : out Integer) is
       use Ada.Numerics;
       Vertices : constant V_Vector := Sphere.Vertices;
       V        : Vector;
@@ -50,16 +50,18 @@ package body Geosphere is
       Found    : Boolean := False;
    begin
       --  first check if vertex already exists
-      New_Index := 0;
-      while index <= Sphere.Vertices.Last_Index and not Found loop
-         V :=  Pos - Vertices.Element (index);
-         Found := Norm_Esq (V) > e ** (-10);
+      while Index <= Sphere.Vertices.Last_Index and not Found loop
+         V :=  Pos - Vertices.Element (Index);
+         Found := Norm_Esq (V) < e ** (-10);
+         if Found then
+            V_Index := Index;
+         end if;
          Index := Index + 1;
       end loop;
 
-      if not Found then  --  create new vertex
-         Index := Index + 1;
+      if not Found then
          Sphere.Vertices.Append (Pos);
+         V_Index := Sphere.Vertices.Last_Index;
       end if;
 
    exception
@@ -628,10 +630,9 @@ package body Geosphere is
      Integer'Image (Face_index));
      this_Face := Faces.Element (Face_index);
      Vertex_Indicies := this_Face.Indices;
-     GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face Vertex_Indicies",
-                                       (Vertex_Indicies));
-     Put_Line ("Geosphere.Refine_Face Vertices length, first, last index: " &
-                 Ada.Containers.Count_Type'Image (Vertices.Length) &
+     GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face this_Face.Indices",
+                                       (this_Face.Indices));
+     Put_Line ("Geosphere.Refine_Face Vertices first, last index: " &
                  Integer'Image (Vertices.First_Index) &
                  Integer'Image (Vertices.Last_Index));
       if Depth > 0 then  --   create 3 new vertices
