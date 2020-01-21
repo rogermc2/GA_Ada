@@ -14,6 +14,8 @@ package Geosphere is
    type Geosphere is private;
    type Indices is array (1 .. 3) of integer;
 
+   Geosphere_Exception : Exception;
+
    procedure Add_To_Sphere_List (Sphere : Geosphere);
    procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
                                MV_Matrix : GL.Types.Singles.Matrix4;

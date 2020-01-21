@@ -625,9 +625,10 @@ package body GA_Draw is
                           Normal         : GL.Types.Single) is
       use Geosphere;
       Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
+      Depth  : constant Integer := 2;  --  orig 4
    begin
       if Sphere_State_Null (Sphere) then
-         Geosphere.GS_Compute (Sphere, 4);
+         Geosphere.GS_Compute (Sphere, Depth);
          Geosphere.New_Sphere_List (Sphere);
          --  gsDraw(m_sphere, 0.0f);
          Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);

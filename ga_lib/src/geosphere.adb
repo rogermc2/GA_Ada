@@ -615,9 +615,12 @@ package body Geosphere is
    procedure Refine_Face (Sphere : in out Geosphere; Face_index,
                           Depth  : Integer) is
       Faces           : constant F_Vector := Sphere.Faces;
+      Num_Faces       : constant Integer := Integer (Faces.Length);
       this_Face       : Geosphere_Face;
       Vertex_Indicies : Indices_Vector;
       Vertices        : constant V_Vector := Sphere.Vertices;
+      MV              : Multivector;
+      MV_Norm         : Float;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
       Vertex_1        : Vector;
@@ -626,32 +629,43 @@ package body Geosphere is
       Index           : Integer := 0;
    begin
       --  Refine_Face is recursive
-     Put_Line ("Geosphere.Refine_Face Vertices entered, Face_index: " &
+     New_Line;
+     Put_Line ("Geosphere.Refine_Face entered, Face_index: " &
      Integer'Image (Face_index));
      this_Face := Faces.Element (Face_index);
      Vertex_Indicies := this_Face.Indices;
-     GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face this_Face.Indices",
-                                       (this_Face.Indices));
-     Put_Line ("Geosphere.Refine_Face Vertices first, last index: " &
+--       GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face this_Face.Indices",
+--                                         (this_Face.Indices));
+     Put_Line ("Geosphere.Refine_Face Vertices first, last index, depth: " &
                  Integer'Image (Vertices.First_Index) &
-                 Integer'Image (Vertices.Last_Index));
+                 Integer'Image (Vertices.Last_Index) &
+                 Integer'Image (Depth));
       if Depth > 0 then  --   create 3 new vertices
          while index < 3 loop
             index := index + 1;
-            if index < 3 then
-               index_2 := Index + 1;
-            else
-               index_2 := 1;
-            end if;
---                          Put_Line ("Geosphere.Refine_Face index, index_2: " &  Integer'Image (index)
---                           &  Integer'Image (index_2));
---                          Put_Line ("vertex index: "&  Integer'Image (Vertex_Indicies (index)));
---                          Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
+            index_2 := (Index + 1) mod 3 + 1;
+--              Put_Line ("Geosphere.Refine_Face index, index_2: " &  Integer'Image (index)
+--                        &  Integer'Image (index_2));
+--              Put_Line ("vertex index: "&  Integer'Image (Vertex_Indicies (index)));
+--              Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
             Vertex_1 := Vertices.Element (Vertex_Indicies (index));
             Vertex_2 := Vertices.Element (Vertex_Indicies (index_2));
+            if Vertex_1 = -Vertex_2 then
+               index_2 := (Index + 2) mod 3 + 1;
+               Vertex_2 := Vertices.Element (Vertex_Indicies (index_2));
+            end if;
             --  V1 is the normal to the plane defined by Vertex_1 and Vertex_2
-            V1 := To_Vector (Unit_e (From_Vector (Vertex_1 + Vertex_2)));
-            Add_Vertex (Sphere, V1, New_Indices (index));
+            MV := From_Vector (Vertex_1 + Vertex_2);
+            MV_Norm := Scalar_Product (MV, Reverse_MV (MV));
+            if MV_Norm > 0.0 then
+               V1 := To_Vector (Unit_E (MV));
+               Add_Vertex (Sphere, V1, New_Indices (index));
+            else
+               GA_Utilities.Print_Multivector ("Vertex_1", Vertex_1);
+               GA_Utilities.Print_Multivector ("Vertex_2", Vertex_2);
+               raise Geosphere_Exception with
+                 "Geosphere.Refine_Face encountered a null multivector";
+            end if;
          end loop;
 
          --  allocate four new faces
@@ -667,10 +681,11 @@ package body Geosphere is
          Put_Line ("Geosphere.Refine_Face Last_Index: " &
             Integer'Image (Sphere.Faces.Last_Index));
 
+--           for index in Integer range 0 .. 3 loop
          for index in Integer range 0 .. 3 loop
             Put_Line ("Geosphere.Refine_Face recursion index: " &
                         Integer'Image (index));
-            Refine_Face (Sphere, Sphere.Faces.Last_Index + Index, Depth - 1);
+            Refine_Face (Sphere, Num_Faces + Index, Depth - 1);
          end loop;
       end if;
 
