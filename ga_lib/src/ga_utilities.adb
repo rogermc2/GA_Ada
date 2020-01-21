@@ -74,11 +74,14 @@ package body GA_Utilities is
 
     procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array) is
     begin
-      Put_Line (Name & ": ");
-      for Index in anArray'First .. anArray'Last loop
-         Put_Line (Integer'Image (anArray (Index)));
-      end loop;
-      New_Line;
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Put (Integer'Image (anArray (Index)) & " ");
+            if Index mod 3 = 0 then
+                New_Line;
+            end if;
+        end loop;
+        New_Line;
     end Print_Integer_Array;
 
    --  ------------------------------------------------------------------------
