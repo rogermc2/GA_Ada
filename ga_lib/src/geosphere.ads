@@ -36,11 +36,13 @@ private
 
    type Geosphere_Face;
    type Face_Ptr is access Geosphere_Face;
-   type Child_Array is array (Int4_Range) of Face_Ptr;
+--     type Child_Array is array (Int4_Range) of Face_Ptr;
+   type Child_Array is array (Int4_Range) of Integer;
 
    type Geosphere_Face is record
       Indices           : Indices_Vector;  --  Three indices into Vertices vector
-      Child             : Child_Array := (null, null, null, null);
+      Child             : Child_Array := (-1, -1, -1, -1);
+--        Child             : Child_Array := (null, null, null, null);
       Plane             : Multivectors.Bivector;
       D                 : float := 0.0;
       Depth             : integer := 0;
