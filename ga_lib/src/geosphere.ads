@@ -51,7 +51,7 @@ private
 
    package Vertex_Vectors is new Ada.Containers.Vectors
      (Element_Type => Multivectors.Vector, Index_Type => Natural);
-   type V_Vector is new Vertex_Vectors.Vector with null record;
+   type MV_Vector is new Vertex_Vectors.Vector with null record;
 
    package Face_Vectors is new Ada.Containers.Vectors
      (Element_Type => Geosphere_Face, Index_Type => Positive);
@@ -62,7 +62,7 @@ private
       --        Num_Faces       : integer;
       --        Num_Primitives  : integer;  --  Always = Num_Faces
       Depth      : integer := 0;
-      Vertices   : V_Vector;
+      Vertices   : MV_Vector;
       Faces      : F_Vector;
       isNull     : Boolean := True;
    end record;

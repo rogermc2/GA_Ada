@@ -22,7 +22,7 @@ package body Geosphere is
    type Sphere_DL_List is new Sphere_List_Package.List with null record;
 
    type Indices_Array is array (Integer range <>) of Indices;
-   type Vertices_Array is array (Integer range <>) of Vector;
+   type Vertices_Array is array (Integer range <>) of Multivectors.Vector;
 
    Num_Faces     : constant Positive := 8;
    Num_Vertices  : constant Positive := 6;
@@ -41,18 +41,18 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Vector;
+   procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Multivectors.Vector;
                          V_Index   : out Integer) is
       use Ada.Numerics;
-      Vertices : constant V_Vector := Sphere.Vertices;
-      V        : Vector;
+      Vertices : constant MV_Vector := Sphere.Vertices;
+      MV       : Multivectors.Vector;
       Index    : Integer := 0;
       Found    : Boolean := False;
    begin
       --  first check if vertex already exists
       while Index <= Sphere.Vertices.Last_Index and not Found loop
-         V :=  Pos - Vertices.Element (Index);
-         Found := Norm_Esq (V) < e ** (-10);
+         MV :=  Pos - Vertices.Element (Index);
+         Found := Norm_Esq (MV) < e ** (-10);
          if Found then
             V_Index := Index;
          end if;
@@ -364,7 +364,8 @@ package body Geosphere is
 
       procedure Add_Vertex (C : Vertex_Vectors.Cursor) is
          Vertex_Index     : constant Natural := Vertex_Vectors.To_Index (C);
-         thisVertex       : constant Vector := Sphere.Vertices.Element (Vertex_Index);
+         thisVertex       : constant Multivectors.Vector :=
+                              Sphere.Vertices.Element (Vertex_Index);
       begin
          Index := Index + 1;
          Vertices (Index) := GL_Util.To_GL (thisVertex);
@@ -471,7 +472,7 @@ package body Geosphere is
             (1, 4, 5));
       Vertices       : Vertices_Array (1 .. Num_Vertices);
    begin
-      Vertices (1) := New_Vector (0.0, -1.0, 0.0);
+      Vertices (1) := Multivectors.New_Vector (0.0, -1.0, 0.0);
       Vertices (2) := New_Vector (0.0, 1.0, 0.0);
       Vertices (3) := New_Vector (0.707, 0.0, 0.707);
       Vertices (4) := New_Vector (0.707, 0.0, -0.707);
@@ -644,14 +645,14 @@ package body Geosphere is
       Num_Faces       : constant Integer := Integer (Faces.Length);
       this_Face       : Geosphere_Face;
       Vertex_Indicies : Indices_Vector;
-      Vertices        : constant V_Vector := Sphere.Vertices;
+      Vertices        : constant MV_Vector := Sphere.Vertices;
       MV              : Multivector;
       MV_Norm         : Float;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
-      Vertex_1        : Vector;
-      Vertex_2        : Vector;
-      V1              : Vector;
+      Vertex_1        : Multivectors.Vector;
+      Vertex_2        : Multivectors.Vector;
+      V1              : Multivectors.Vector;
       Index           : Natural := 0;
    begin
       --  Refine_Face is recursive
