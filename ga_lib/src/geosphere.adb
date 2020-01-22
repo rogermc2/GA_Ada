@@ -90,9 +90,9 @@ package body Geosphere is
          begin
             --  For each vertex j of Face_I find neighbours for face Face_I and
             --  neighbour E of Face_F
-            Put_Line ("Geosphere.Find_Neighbours find matching vertices of Face "  &
-                       Integer'Image (Index_F) & " vertex "&
-                       Integer'Image (Vertex_E));
+--              Put_Line ("Geosphere.Find_Neighbours find matching vertices of Face "  &
+--                         Integer'Image (Index_F) & " vertex "&
+--                         Integer'Image (Vertex_E));
 
             for Vertex_J in 1 .. 3 loop --  j
                if Face_I.Indices (Vertex_J) = FE_Index then
@@ -106,10 +106,12 @@ package body Geosphere is
                   Vertex_J2 :=  (Vertex_J + 2) mod 3 + 1;  --  i + 2 mod 3
                   if Face_F.Indices (Vertex_E1) = Face_I.Indices (Vertex_J1) then
                      --  next vertices also match
+                     Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J1 found." );
                      Face_F.Neighbour (Vertex_E) := Index_I;
                      Face_I.Neighbour (Vertex_J) := Index_F;
                      Num := Num + 1;
                   elsif Face_F.Indices (Vertex_E1) = Face_I.Indices (Vertex_J2) then
+                     Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J2 found." );
                      --  next vertex of face[f] matches preceding vertex of face[i]
                      Face_F.Neighbour (Vertex_E) := Index_I;
                      Face_I.Neighbour (Vertex_J2) := Index_F;
@@ -489,9 +491,9 @@ package body Geosphere is
          --              end loop;
          New_Face.Depth := 0;
          Sphere.Faces.Append (New_Face);
-         Put_Line ("Geosphere.GS_Compute Faces.First and last Index" &
-                     Integer'Image (Sphere.Faces.First_Index) &
-                     Integer'Image (Sphere.Faces.Last_Index));
+--           Put_Line ("Geosphere.GS_Compute Faces.First and last Index" &
+--                       Integer'Image (Sphere.Faces.First_Index) &
+--                       Integer'Image (Sphere.Faces.Last_Index));
       end loop;
 
       Sphere.Vertices.Clear;
@@ -650,7 +652,7 @@ package body Geosphere is
       Vertex_1        : Vector;
       Vertex_2        : Vector;
       V1              : Vector;
-      Index           : Integer := 0;
+      Index           : Natural := 0;
    begin
       --  Refine_Face is recursive
       New_Line;
