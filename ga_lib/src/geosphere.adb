@@ -469,7 +469,7 @@ package body Geosphere is
             (2, 3, 4),
             (1, 3, 4),
             (1, 4, 5));
-      Vertices       : Vertices_Array (0 .. Num_Vertices);
+      Vertices       : Vertices_Array (1 .. Num_Vertices);
    begin
       Vertices (1) := New_Vector (0.0, -1.0, 0.0);
       Vertices (2) := New_Vector (0.0, 1.0, 0.0);
@@ -497,8 +497,8 @@ package body Geosphere is
       end loop;
 
       Sphere.Vertices.Clear;
-      for vertex in 1 .. Num_Vertices loop
-         Sphere.Vertices.Append (Vertices (vertex));
+      for vertex_index in 1 .. Num_Vertices loop
+         Sphere.Vertices.Append (Vertices (vertex_index));
       end loop;
 
       for face_index in 1 .. Num_Faces loop
