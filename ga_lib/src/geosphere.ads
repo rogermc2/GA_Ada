@@ -36,15 +36,11 @@ private
    subtype Neighbour_Array is GA_Maths.Integer_Array (Int3_Range);
    subtype Indices_Vector is GA_Maths.Integer_Array (Int3_Range);
 
-   type Geosphere_Face;
-   type Face_Ptr is access Geosphere_Face;
---     type Child_Array is array (Int4_Range) of Face_Ptr;
    type Child_Array is array (Int4_Range) of Integer;
 
    type Geosphere_Face is record
       Indices           : Indices_Vector;  --  Three indices into Vertices vector
       Child             : Child_Array := (-1, -1, -1, -1);
---        Child             : Child_Array := (null, null, null, null);
       Plane             : Multivectors.Bivector;
       D                 : float := 0.0;
       Depth             : integer := 0;
@@ -58,7 +54,7 @@ private
    type V_Vector is new Vertex_Vectors.Vector with null record;
 
    package Face_Vectors is new Ada.Containers.Vectors
-     (Element_Type => Geosphere_Face, Index_Type => Natural);
+     (Element_Type => Geosphere_Face, Index_Type => Positive);
    type F_Vector is new Face_Vectors.Vector with null record;
 
    type Geosphere is record
