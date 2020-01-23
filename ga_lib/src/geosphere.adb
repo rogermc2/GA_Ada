@@ -124,6 +124,8 @@ package body Geosphere is
 --                              Integer'Image (Vertex_E) & Integer'Image (Vertex_J));
                end if;
             end loop;
+            Put_Line ("Geosphere.Find_Neighbours num vertices found." &
+                     Integer'Image (Num));
 
             Sphere.Faces.Replace_Element (Index_I, Face_I);
 
@@ -551,10 +553,8 @@ package body Geosphere is
                   Vertex_Buffer, Normals_Buffer);
       end Draw_Child;
    begin
-      --        if thisFace.Child /= (null, null, null, null) then
       if thisFace.Child /= (-1, -1, -1, -1) then
          for index in 1 .. 4 loop
-            --              if thisFace.Child (index) /= null then
             if thisFace.Child (index) /= -1 then
                Draw_Child (Sphere.Faces.Element (thisFace.Child (index)), Normal);
                --                 Draw_Child (thisFace.Child (index).all, Normal);
