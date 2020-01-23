@@ -478,7 +478,6 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
-      --        S_Faces       : constant F_Vector := Sphere.Faces;
       New_Face       : Geosphere_Face;
       Face_Indices   : constant Indices_Array (1 .. Num_Faces)
         := ((5, 0, 2),
@@ -705,7 +704,7 @@ package body Geosphere is
          for index in Integer range 0 .. 3 loop
 --              Put_Line ("Geosphere.Refine_Face recursion index: " &
 --                          Integer'Image (index));
-            Refine_Face (Sphere, Num_Faces + Index, Depth - 1);
+            Refine_Face (Sphere, Num_Faces + index, Depth - 1);
          end loop;
       end if;
 
