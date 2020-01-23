@@ -92,9 +92,9 @@ package body Geosphere is
          begin
             --  For each vertex j of Face_I find neighbours for face Face_I and
             --  neighbour E of Face_F
---              Put_Line ("Geosphere.Find_Neighbours find matching vertices of Face "  &
---                         Integer'Image (Index_F) & " vertex "&
---                         Integer'Image (Vertex_E));
+            Put_Line ("Geosphere.Find_Neighbours find matching vertices of Face "  &
+                       Integer'Image (Index_F) & " vertex "&
+                       Integer'Image (Vertex_E));
 
             for Vertex_J in 1 .. 3 loop --  j
                if Face_I.Indices (Vertex_J) = FE_Index then
@@ -124,9 +124,8 @@ package body Geosphere is
 --                              Integer'Image (Vertex_E) & Integer'Image (Vertex_J));
                end if;
             end loop;
-            Put_Line ("Geosphere.Find_Neighbours num vertices found." &
-                     Integer'Image (Num));
-
+--              Put_Line ("Geosphere.Find_Neighbours num vertices found." &
+--                       Integer'Image (Num));
             Sphere.Faces.Replace_Element (Index_I, Face_I);
 
          exception
