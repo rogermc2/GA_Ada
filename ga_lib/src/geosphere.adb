@@ -9,7 +9,7 @@ with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 
-with GA_Utilities;
+--  with GA_Utilities;
 with C3GA;
 with GL_Util;
 
@@ -467,7 +467,7 @@ package body Geosphere is
             (5, 4, 0),
             (4, 3, 0),
             (1, 5, 2),
-            (2, 3, 4),
+            (1, 2, 3),
             (1, 3, 4),
             (1, 4, 5));
       Vertices       : Vertices_Array (1 .. Num_Vertices);
@@ -646,14 +646,11 @@ package body Geosphere is
       this_Face       : Geosphere_Face;
       Vertex_Indicies : Indices_Vector;
       Vertices        : constant MV_Vector := Sphere.Vertices;
-      MV              : Multivector;
-      MV_Norm         : Float;
       New_Indices     : array (Int3_Range) of integer := (0, 0, 0);
       index_2         : Integer;
       Vertex_1        : Multivectors.Vector;
       Vertex_2        : Multivectors.Vector;
       V1              : Multivectors.Vector;
-      Index           : Natural := 0;
    begin
       --  Refine_Face is recursive
       New_Line;
@@ -668,8 +665,7 @@ package body Geosphere is
                   Integer'Image (Vertices.Last_Index) &
                   Integer'Image (Depth));
       if Depth > 0 then  --   create 3 new vertices
-         while index < 3 loop
-            index := index + 1;
+         for index in Int3_Range loop
             index_2 := (Index + 1) mod 3 + 1;
             --              Put_Line ("Geosphere.Refine_Face index, index_2: " &  Integer'Image (index)
             --                        &  Integer'Image (index_2));
@@ -677,22 +673,8 @@ package body Geosphere is
             --              Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
             Vertex_1 := Vertices.Element (Vertex_Indicies (index));
             Vertex_2 := Vertices.Element (Vertex_Indicies (index_2));
-            if Vertex_1 = -Vertex_2 then
-               index_2 := (Index + 2) mod 3 + 1;
-               Vertex_2 := Vertices.Element (Vertex_Indicies (index_2));
-            end if;
-            --  V1 is the normal to the plane defined by Vertex_1 and Vertex_2
-            MV := From_Vector (Vertex_1 + Vertex_2);
-            MV_Norm := Scalar_Product (MV, Reverse_MV (MV));
-            if MV_Norm > 0.0 then
-               V1 := To_Vector (Unit_E (MV));
-               Add_Vertex (Sphere, V1, New_Indices (index));
-            else
-               GA_Utilities.Print_Multivector ("Vertex_1", Vertex_1);
-               GA_Utilities.Print_Multivector ("Vertex_2", Vertex_2);
-               raise Geosphere_Exception with
-                 "Geosphere.Refine_Face encountered a null multivector";
-            end if;
+            V1 := To_Vector (Unit_E (From_Vector (Vertex_1 + Vertex_2)));
+            Add_Vertex (Sphere, V1, New_Indices (index));
          end loop;
 
          --  allocate four new faces
