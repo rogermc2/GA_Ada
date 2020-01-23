@@ -82,11 +82,13 @@ package body Geosphere is
          --  -------------------------------------------------------------------
          --  Find_Neighbours finds the neighbour faces of vertex E of Face I
          procedure Find_Neighbours (Index_I, Vertex_E : Integer) is
-            Face_I    : Geosphere_Face := Sphere.Faces.Element (Index_I);
-            FE_Index  : constant Integer := Face_F.Indices (Vertex_E);
-            Vertex_E1 : Integer;
-            Vertex_J1 : Integer;
-            Vertex_J2 : Integer;
+            Face_I         : Geosphere_Face := Sphere.Faces.Element (Index_I);
+            FE_Index       : constant Integer := Face_F.Indices (Vertex_E);
+            --  e + 1 mod 3:
+            Next_FE_Index  : constant Integer :=
+                               Face_F.Indices ((Vertex_E mod 3) + 1);
+            Vertex_J1      : Integer;
+            Vertex_J2      : Integer;
          begin
             --  For each vertex j of Face_I find neighbours for face Face_I and
             --  neighbour E of Face_F
@@ -97,20 +99,20 @@ package body Geosphere is
             for Vertex_J in 1 .. 3 loop --  j
                if Face_I.Indices (Vertex_J) = FE_Index then
                   --    same vertices found
-                  Put_Line ("Geosphere.Find_Neighbours matching vertices E and J found: "  &
-                           Integer'Image (Vertex_E) &
-                           Integer'Image (Vertex_J) &
-                           Integer'Image (Face_F.Indices (Vertex_E)));
-                  Vertex_E1 :=  (Vertex_E + 1) mod 3 + 1;  --  e + 1 mod 3
-                  Vertex_J1 :=  (Vertex_J + 1) mod 3 + 1;  --  i + 1 mod 3
-                  Vertex_J2 :=  (Vertex_J + 2) mod 3 + 1;  --  i + 2 mod 3
-                  if Face_F.Indices (Vertex_E1) = Face_I.Indices (Vertex_J1) then
+                  Put_Line ("Geosphere.Find_Neighbours matching vertices E and J found, E:"  &
+                           Integer'Image (Vertex_E) & "  J:" &
+                           Integer'Image (Vertex_J) & " vertex E:" &
+                           Integer'Image (Face_F.Indices (Vertex_E)) & " vertex J:" &
+                           Integer'Image (Face_F.Indices (Vertex_J)));
+                  Vertex_J1 :=  (Vertex_J mod 3) + 1;  --  i + 1 mod 3
+                  Vertex_J2 :=  ((Vertex_J + 1) mod 3) + 1;  --  i + 2 mod 3
+                  if  Face_I.Indices (Vertex_J1) = Next_FE_Index then
                      --  next vertices also match
                      Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J1 found." );
                      Face_F.Neighbour (Vertex_E) := Index_I;
                      Face_I.Neighbour (Vertex_J) := Index_F;
                      Num := Num + 1;
-                  elsif Face_F.Indices (Vertex_E1) = Face_I.Indices (Vertex_J2) then
+                  elsif Face_I.Indices (Vertex_J2) = Next_FE_Index then
                      Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J2 found." );
                      --  next vertex of face[f] matches preceding vertex of face[i]
                      Face_F.Neighbour (Vertex_E) := Index_I;
@@ -141,15 +143,17 @@ package body Geosphere is
             if Face_F.Neighbour (Index_E) >= 0 then
               Put_Line ("Geosphere.Find_Relation, has relation: Face "  &
                              Integer'Image (Index_F) & " vertex " &
-                             Integer'Image (Index_E));
-               Num := Num + 1;
+                          Integer'Image (Index_E));
+              Put_Line ("Geosphere.Find_Relation, neighbour index "  &
+                             Integer'Image (Face_F.Neighbour (Index_E)));
+              Num := Num + 1;
             else
                Put_Line ("Geosphere.Find_Relation Find_Neighbours of Face "  &
                            Integer'Image (Index_F) & " vertex " &
                            Integer'Image (Index_E));
                for Index_I in Index_F + 1 .. Sphere.Faces.Last_Index loop
-                  Put_Line ("Geosphere.Find_Relation check Face "  &
-                            Integer'Image (Index_I));
+--                    Put_Line ("Geosphere.Find_Relation check Face "  &
+--                              Integer'Image (Index_I));
                   Find_Neighbours (Index_I, Index_E);
                end loop;
             end if;
@@ -197,7 +201,7 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
-   procedure Create_Child (Sphere                       : in out Geosphere; Face_Index : Natural;
+   procedure Create_Child (Sphere : in out Geosphere; Face_Index : Natural;
                            Child_Num, V1, V2, V3, Depth : Integer) is
       Parent_Face : Geosphere_Face := Sphere.Faces.Element (Face_Index);
       newFace     : Geosphere_Face;
@@ -643,19 +647,20 @@ package body Geosphere is
       Index_2         : Natural;
       Vertex_1        : Multivectors.Vector;
       Vertex_2        : Multivectors.Vector;
-      V1              : Multivectors.Vector;
+      New_Vertex      : Multivectors.Vector;  --  V1
    begin
       --  Refine_Face is recursive
-      New_Line;
-      Put_Line ("Geosphere.Refine_Face entered, Face_index: " &
-                  Integer'Image (Face_index));
+--        New_Line;
+--        Put_Line ("Geosphere.Refine_Face entered, Face_index: " &
+--                    Integer'Image (Face_index));
       --       GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face this_Face.Indices",
       --                                         (this_Face.Indices));
-      Put_Line ("Geosphere.Refine_Face Vertices first, last index, depth: " &
-                  Integer'Image (Vertices.First_Index) &
-                  Integer'Image (Vertices.Last_Index) &
-                  Integer'Image (Depth));
-      if Depth > 0 then  --   create 3 new vertices
+--        Put_Line ("Geosphere.Refine_Face Vertices first, last index, depth: " &
+--                    Integer'Image (Vertices.First_Index) &
+--                    Integer'Image (Vertices.Last_Index) &
+--                    Integer'Image (Depth));
+      if Depth > 0 then
+         --   create 3 new vertices
          for index in Int3_Range loop
             Index_2 := (index + 1) mod 3 + 1;
             --              Put_Line ("Geosphere.Refine_Face index, index_2: " &  Integer'Image (index)
@@ -664,8 +669,8 @@ package body Geosphere is
             --              Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
             Vertex_1 := Vertices.Element (Vertex_Indicies (index));
             Vertex_2 := Vertices.Element (Vertex_Indicies (Index_2));
-            V1 := To_Vector (Unit_E (From_Vector (Vertex_1 + Vertex_2)));
-            Add_Vertex (Sphere, V1, New_Indices (index));
+            New_Vertex := To_Vector (Unit_E (From_Vector (Vertex_1 + Vertex_2)));
+            Add_Vertex (Sphere, New_Vertex, New_Indices (index));
          end loop;
 
          --  allocate four new faces
@@ -678,13 +683,12 @@ package body Geosphere is
          Create_Child (Sphere, Face_index, 4, New_Indices (2), this_Face.Indices (3),
                        New_Indices (3), this_Face.Depth);
 
-         Put_Line ("Geosphere.Refine_Face Last_Index: " &
-                     Integer'Image (Sphere.Faces.Last_Index));
+--           Put_Line ("Geosphere.Refine_Face Last_Index: " &
+--                       Integer'Image (Sphere.Faces.Last_Index));
 
-         --           for index in Integer range 0 .. 3 loop
          for index in Integer range 0 .. 3 loop
-            Put_Line ("Geosphere.Refine_Face recursion index: " &
-                        Integer'Image (index));
+--              Put_Line ("Geosphere.Refine_Face recursion index: " &
+--                          Integer'Image (index));
             Refine_Face (Sphere, Num_Faces + Index, Depth - 1);
          end loop;
       end if;
