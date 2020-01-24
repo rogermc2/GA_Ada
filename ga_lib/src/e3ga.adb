@@ -716,7 +716,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (Vec : Vector) return E3_Vector is
+    function Get_Coords (Vec : Multivectors.Vector) return E3_Vector is
         use Blade.Blade_List_Package;
         Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (Vec);
         Curs   : Cursor := Blades.First;

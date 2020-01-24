@@ -90,7 +90,7 @@ package E3GA is
 --      function Get_Coord_1 (V : Vector) return float;
 --      function Get_Coord_2 (V : Vector) return float;
 --      function Get_Coord_3 (V : Vector) return float;
-   function Get_Coords (Vec : Vector) return E3_Vector;
+   function Get_Coords (Vec : Multivectors.Vector) return E3_Vector;
 --     function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;
