@@ -27,7 +27,6 @@ package body Multivectors is
     function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean;
---      procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
 
     --  -------------------------------------------------------------------------
@@ -35,7 +34,7 @@ package body Multivectors is
     function "+" (MV : Multivector; S : Float) return Multivector is
         MV1 : Multivector := MV;
     begin
-        MV1.Blades.Append (New_Scalar_Blade (S));
+        MV1.Blades.Append (Blade.New_Scalar_Blade (S));
         Simplify (MV1);
         return MV1;
     end  "+";
@@ -49,24 +48,8 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function "-" (MV : Multivector; S : Float) return Multivector is
-        MV1 : Multivector := MV;
-    begin
-        MV1.Blades.Append (New_Scalar_Blade (-S));
-        Simplify (MV1);
-        return MV1;
-    end  "-";
-
-    --  ------------------------------------------------------------------------
-
-    function  "-" (S : Float; MV : Multivector) return Multivector is
-    begin
-        return  MV - S;
-    end  "-";
-
-    --  ------------------------------------------------------------------------
-
     function "+" (MV1, MV2 : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades_1  : constant Blade_List := MV1.Blades;
         Blades_2  : constant Blade_List := MV2.Blades;
@@ -85,9 +68,9 @@ package body Multivectors is
             Blades_3.Append (Element (Curs));
             Next (Curs);
         end loop;
+
         MV3.Blades := Blades_3;
-        MV3.Sorted := False;
-        --  Simplify should do the adding?
+        --  Simplify does the adding
         Simplify (MV3);
         return MV3;
 
@@ -98,8 +81,27 @@ package body Multivectors is
     end "+";
 
     --  -------------------------------------------------------------------------
+
+    function "-" (MV : Multivector; S : Float) return Multivector is
+        MV1 : Multivector := MV;
+    begin
+        MV1.Blades.Append (Blade.New_Scalar_Blade (-S));
+        Simplify (MV1);
+        return MV1;
+    end  "-";
+
+    --  ------------------------------------------------------------------------
+
+    function  "-" (S : Float; MV : Multivector) return Multivector is
+    begin
+        return  MV - S;
+    end  "-";
+
+    --  ------------------------------------------------------------------------
+
     --  Return negative value of a  multivector
     function "-" (MV : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         MV_Blades  : constant Blade_List := MV.Blades;
         MV_Curs    : Cursor := MV_Blades.First;
@@ -142,6 +144,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function "*" (Scale : float; MV : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades   : constant Blade_List := Get_Blade_List (MV);
         Curs     : Cursor := Blades.First;
@@ -171,6 +174,7 @@ package body Multivectors is
     --  ------------------------------------------------------------------------
 
     function "/" (MV : Multivector; Scale : float) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades   : constant Blade_List := Get_Blade_List (MV);
         Curs     : Cursor := Blades.First;
@@ -250,6 +254,7 @@ package body Multivectors is
 
     procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
                              BB, GP : Blade.Basis_Blade) is
+        use Blade;
         BMB  : constant Integer := Integer (Bitmap (BB)) + 1;
         BMGP : constant Integer := Integer (Bitmap (GP)) + 1;
     begin
@@ -292,7 +297,7 @@ package body Multivectors is
     function Basis_Vector (Index : BV_Base) return Vector is
         MV : Vector;
     begin
-        MV.Blades.Append (New_Basis_Blade (Index));
+        MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
     end Basis_Vector;
 
@@ -301,7 +306,7 @@ package body Multivectors is
     function Basis_Vector (Index : E2_Base) return Vector is
         MV : Vector;
     begin
-        MV.Blades.Append (New_Basis_Blade (Index));
+        MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
     end Basis_Vector;
 
@@ -310,7 +315,7 @@ package body Multivectors is
     function Basis_Vector (Index : E3_Base) return Vector is
         MV : Vector;
     begin
-        MV.Blades.Append (New_Basis_Blade (Index));
+        MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
 
     exception
@@ -324,13 +329,13 @@ package body Multivectors is
     function Basis_Vector (Index : C3_Base) return Vector is
         MV : Vector;
     begin
-        MV.Blades.Append (New_Basis_Blade (Index));
+        MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
     end Basis_Vector;
 
     --  -------------------------------------------------------------------------
 
-    function Blades (MV : Multivector) return Blade_List is
+    function Blades (MV : Multivector) return Blade.Blade_List is
     begin
         return MV.Blades;
     end Blades;
@@ -338,6 +343,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return Float is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades  : constant Blade_List := Get_Blade_List (MV);
@@ -364,6 +370,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     procedure Compress (MV : in out Multivector; Epsilon : Float) is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades    : Blade_List := MV.Blades;
@@ -462,14 +469,14 @@ package body Multivectors is
 
     function Dot (MV1, MV2 : Multivector) return Multivector is
     begin
-        return Inner_Product (MV1, MV2, Hestenes_Inner_Product);
+        return Inner_Product (MV1, MV2, Blade.Hestenes_Inner_Product);
     end Dot;
 
     --  -------------------------------------------------------------------------
 
     function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point is
     begin
-        return Inner_Product (NP1, NP2, Hestenes_Inner_Product);
+        return Inner_Product (NP1, NP2, Blade.Hestenes_Inner_Product);
     end Dot_C3;
 
     --  -------------------------------------------------------------------------
@@ -483,7 +490,7 @@ package body Multivectors is
         Put_Line ("Multivectors.Dual Index" & Unsigned_Integer'Image (Index));
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
         Dual_MV := Versor_Inverse (Dual_MV);
-        Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
+        Dual_MV := Inner_Product (MV, Dual_MV, Blade.Left_Contraction);
         return Dual_MV;
     end Dual;
 
@@ -498,7 +505,7 @@ package body Multivectors is
         Put_Line ("Multivectors.Dual Index" & Unsigned_Integer'Image (Index));
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
         Dual_MV := Versor_Inverse (Dual_MV);
-        Dual_MV := Inner_Product (MV, Dual_MV, Met, Left_Contraction);
+        Dual_MV := Inner_Product (MV, Dual_MV, Met, Blade.Left_Contraction);
         return Dual_MV;
     end Dual;
 
@@ -511,7 +518,7 @@ package body Multivectors is
     begin
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
         Dual_MV := Versor_Inverse (Dual_MV);
-        Dual_MV := Inner_Product (MV, Dual_MV, Left_Contraction);
+        Dual_MV := Inner_Product (MV, Dual_MV, Blade.Left_Contraction);
         return Dual_MV;
     end Dual;
 
@@ -554,6 +561,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Extract_Grade (MV : Multivector; Index : integer) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades    : constant Blade_List := MV.Blades;
         thisBlade : Blade.Basis_Blade;
@@ -592,6 +600,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function From_Vector (V : Vector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades : constant Blade_List := V.Blades;
         Curs   : Cursor := Blades.First;
@@ -607,8 +616,8 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Geometric_Product (MV : Multivector; Sc : Float) return Multivector is
+        use Blade;
         use Blade_List_Package;
-        use GA_Maths;
         Blades    : constant Blade_List := MV.Blades;
         Curs      : Cursor := Blades.First;
         New_MV    : Multivector;
@@ -640,6 +649,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades_1  : constant Blade_List := MV1.Blades;
         Blades_2  : constant Blade_List := MV2.Blades;
@@ -679,6 +689,7 @@ package body Multivectors is
 
     function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                             return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades_1  : constant Blade_List := MV1.Blades;
         Blades_2  : constant Blade_List := MV2.Blades;
@@ -718,6 +729,7 @@ package body Multivectors is
 
     function General_Inverse (MV  : Multivector;
                               Inv : out Multivector) return Boolean is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Dim        : constant Integer :=  Space_Dimension (MV);
@@ -756,6 +768,7 @@ package body Multivectors is
 
     function General_Inverse (MV  : Multivector;  Met : Metric.Metric_Matrix;
                               Inv : out Multivector) return Boolean is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Dim        : constant Integer :=  Space_Dimension (MV);
@@ -792,7 +805,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Get_Blade_List (MV : Multivector) return Blade_List is
+    function Get_Blade_List (MV : Multivector) return Blade.Blade_List is
     begin
         return MV.Blades;
     end Get_Blade_List;
@@ -801,6 +814,7 @@ package body Multivectors is
 
     function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
                     return Blade.Basis_Blade is
+        use Blade;
         use Blade_List_Package;
         Blades    : constant Blade_List := MV.Blades;
         thisBlade : Blade.Basis_Blade;
@@ -819,6 +833,7 @@ package body Multivectors is
 
     function Get_Blade (MV    : Multivector; theBlade : out Multivector;
                         Index : GA_Maths.Unsigned_Integer) return Boolean is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades   : constant Blade_List := MV.Blades;
@@ -841,7 +856,8 @@ package body Multivectors is
     --  Grade returns the grade (bit count) of a Multivector if homogeneous.
     --  0 is returned for null Multivectors.
     function Grade (MV : Multivector; theGrade : out Integer)
-                return Boolean is
+                    return Boolean is
+        use Blade;
         use Blade_List_Package;
         Blades    : constant Blade_List := MV.Blades;
         Cursor_B  : Cursor := Blades.First;
@@ -869,6 +885,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Grade_Inversion (MV : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades        : constant Blade_List := MV.Blades;
         Inversion     : Blade_List;
@@ -889,6 +906,7 @@ package body Multivectors is
     function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
         use GA_Maths;
         use Interfaces;
+        use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         BB         : Blade.Basis_Blade;
@@ -906,11 +924,12 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Inner_Product (MV1, MV2 : Multivector; Cont : Contraction_Type)
-                        return Multivector is
+    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
+                            return Multivector is
+        use Blade;
         use Blade_List_Package;
-        B1       : Blade.Basis_Blade;
-        B2       : Blade.Basis_Blade;
+        B1       : Basis_Blade;
+        B2       : Basis_Blade;
         List_1   : constant Blade_List := MV1.Blades;
         List_2   : constant Blade_List := MV2.Blades;
         Cursor_1 : Cursor := List_1.First;
@@ -944,7 +963,8 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
-                            Cont : Contraction_Type) return Multivector is
+                            Cont : Blade.Contraction_Type) return Multivector is
+        use Blade;
         use Blade_List_Package;
         B1       : Blade.Basis_Blade;
         B2       : Blade.Basis_Blade;
@@ -980,8 +1000,9 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Contraction_Type)
+    function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
                            return Normalized_Point is
+        use Blade;
         use Blade_List_Package;
         B1       : Blade.Basis_Blade;
         B2       : Blade.Basis_Blade;
@@ -1025,7 +1046,7 @@ package body Multivectors is
         Dim           : constant Integer := Mat'Last - Mat'First + 1;
         Inv_Mat       : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
         Value         : Float;
-        Blades        : Blade_List;
+        Blades        : Blade.Blade_List;
         Invertable    : constant Boolean := Determinant (Mat) /= 0.0;
     begin
         if Invertable then
@@ -1033,7 +1054,7 @@ package body Multivectors is
             for Index in Inv_Mat'Range loop
                 Value := Inv_Mat (Index, 1);
                 if Value /= 0.0 then
-                    Update_Blade (BBs (Index), Value);
+                    Blade.Update_Blade (BBs (Index), Value);
                     Blades.Append (BBs (Index));
                 end if;
             end loop;
@@ -1068,6 +1089,7 @@ package body Multivectors is
 
     function Is_Scalar (MV : Multivector) return Boolean is
         use Ada.Containers;
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades : constant Blade_List := MV.Blades;
@@ -1082,6 +1104,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade is
+        use Blade;
         use Blade_List_Package;
         theMV          : Multivector := MV;
         Blades         : constant Blade_List := theMV.Blades;
@@ -1104,7 +1127,7 @@ package body Multivectors is
 
     function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
     begin
-        return  Inner_Product (MV1, MV2, Left_Contraction);
+        return  Inner_Product (MV1, MV2, Blade.Left_Contraction);
     end Left_Contraction;
 
     --  -------------------------------------------------------------------------
@@ -1112,7 +1135,7 @@ package body Multivectors is
     function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                            return Multivector is
     begin
-        return  Inner_Product (MV1, MV2, Met, Left_Contraction);
+        return  Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
     end Left_Contraction;
 
     --  -------------------------------------------------------------------------
@@ -1120,6 +1143,7 @@ package body Multivectors is
     function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                              return Ada.Strings.Unbounded.Unbounded_String is
         use Ada.Strings.Unbounded;
+        use Blade;
         use Blade_List_Package;
         Blades        : constant Blade_List := MV.Blades;
         Blade_Cursor  : Cursor := Blades.First;
@@ -1183,6 +1207,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Negate (MV : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         Curs       : Cursor := Blades.First;
@@ -1208,6 +1233,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector is
+        use Blade;
         BV : Bivector;
     begin
         BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
@@ -1222,13 +1248,13 @@ package body Multivectors is
     function New_Multivector (Scalar_Weight : Float) return Multivector is
         MV : Multivector;
     begin
-        MV.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+        MV.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         return  MV;
     end New_Multivector;
 
     --  -------------------------------------------------------------------------
 
-    function New_Multivector (aBlade : Basis_Blade) return Multivector is
+    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector is
         MV : Multivector;
     begin
         MV.Blades.Append (aBlade);
@@ -1247,13 +1273,14 @@ package body Multivectors is
     function New_Rotor (Scalar_Weight : Float) return Rotor is
         R : Rotor;
     begin
-        R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
+        R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         return  R;
     end New_Rotor;
 
     --  -------------------------------------------------------------------------
 
     function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor is
+        use Blade;
         R : Rotor;
     begin
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
@@ -1266,6 +1293,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor is
+        use Blade;
         R : Rotor;
     begin
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
@@ -1278,6 +1306,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function New_Vector (e1, e2 : Float) return Vector is
+        use Blade;
         V       : Vector;
     begin
         Add_Blade (V, New_Basis_Blade (E2_e1, e1));
@@ -1288,6 +1317,7 @@ package body Multivectors is
     --  ------------------------------------------------------------------------
 
     function New_Vector (e1, e2, e3 : Float) return Vector is
+        use Blade;
         V       : Vector;
     begin
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
@@ -1365,6 +1395,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Outer_Product (MV1, MV2 : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
 
         function  Product (List_1, List_2 : Blade_List) return Blade_List is
@@ -1423,6 +1454,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Reverse_MV (MV : Multivector) return Multivector is
+        use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         B_Cursor   : Cursor := Blades.First;
@@ -1441,12 +1473,13 @@ package body Multivectors is
 
     function Right_Contraction (MV1, MV2 : Multivector) return Multivector is
     begin
-        return  Inner_Product (MV1, MV2, Right_Contraction);
+        return  Inner_Product (MV1, MV2, Blade.Right_Contraction);
     end Right_Contraction;
 
     --  -------------------------------------------------------------------------
 
     function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean is
+        use Blade;
         use Blade_List_Package;
         MV         : Multivector;
         Blades     : constant Blade_List := MV.Blades;
@@ -1465,6 +1498,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Scalar_Part (MV : Multivector) return Float is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         BB       : Blade.Basis_Blade;
@@ -1486,7 +1520,7 @@ package body Multivectors is
 
     function Scalar_Product (MV1, MV2 : Multivector) return float is
     begin
-        return Scalar_Part (Inner_Product (MV1, MV2, Left_Contraction));
+        return Scalar_Part (Inner_Product (MV1, MV2, Blade.Left_Contraction));
     end Scalar_Product;
 
     --  -------------------------------------------------------------------------
@@ -1494,22 +1528,22 @@ package body Multivectors is
     function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                          return float is
     begin
-        return Scalar_Part (Inner_Product (MV1, MV2, Met, Left_Contraction));
+        return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
     end Scalar_Product;
 
     --  -------------------------------------------------------------------------
 
     function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float is
     begin
-        return Scalar_Part (Inner_Product_NP (NP1, NP2, Left_Contraction));
+        return Scalar_Part (Inner_Product_NP (NP1, NP2, Blade.Left_Contraction));
     end Scalar_Product_NP;
 
     --  -------------------------------------------------------------------------
 
     procedure Simplify (MV : in out Multivector) is
-        Blades : Blade_List := MV.Blades;
+        Blades : Blade.Blade_List := MV.Blades;
     begin
-        Simplify (Blades);
+        Blade.Simplify (Blades);
         MV.Blades := Blades;
     end Simplify;
 
@@ -1624,7 +1658,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function MV_Size (MV : Multivector) return Natural is
-        Blades  : constant Blade_List := MV.Blades;
+        Blades  : constant Blade.Blade_List := MV.Blades;
     begin
         return Natural (Blades.Length);
     end MV_Size;
@@ -1632,6 +1666,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Space_Dimension (MV : Multivector) return Integer is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades       : constant Blade_List := MV.Blades;
@@ -1650,6 +1685,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer is
+        use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Max_Grade_Count : Integer := 0;
@@ -1670,6 +1706,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function To_Rotor (MV : Multivector) return Rotor is
+        use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         Curs       : Cursor := Blades.First;
@@ -1685,6 +1722,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function To_Vector (MV : Multivector) return Vector is
+        use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         Curs       : Cursor := Blades.First;
@@ -1746,7 +1784,7 @@ package body Multivectors is
     end Unit_R;
 
     --  -------------------------------------------------------------------------
-    procedure Update (MV     : in out Multivector; Blades : Blade_List;
+    procedure Update (MV     : in out Multivector; Blades : Blade.Blade_List;
                       Sorted : Boolean := False) is
     begin
         MV.Blades := Blades;
@@ -1756,9 +1794,9 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     procedure Update_Scalar_Part (MV : in out Multivector; Value : Float) is
-        Blades    : constant Blade_List := Get_Blade_List (MV);
+        Blades    : constant Blade.Blade_List := Get_Blade_List (MV);
     begin
-        MV.Blades.Replace_Element (Blades.First, New_Scalar_Blade (Value));
+        MV.Blades.Replace_Element (Blades.First, Blade.New_Scalar_Blade (Value));
     end Update_Scalar_Part;
 
     --  -------------------------------------------------------------------------
