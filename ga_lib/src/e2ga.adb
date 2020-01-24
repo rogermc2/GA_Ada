@@ -343,7 +343,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coord_1 (V : Multivectors.Vector) return float is
-      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.First_Element);
    end Get_Coord_1;
@@ -351,7 +351,7 @@ package body E2GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coord_2 (V : Multivectors.Vector) return float is
-      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return Blade.Weight (Blades.Last_Element);
    end Get_Coord_2;
@@ -371,7 +371,7 @@ package body E2GA is
 
    function Get_Coords (V : Multivectors.Vector) return GA_Maths.Array_F2 is
       use Blade;
-      Blades   : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades   : constant Blade.Blade_List := Multivectors.Get_Blade_List (V);
    begin
       return (Weight (Blades.First_Element), Weight (Blades.Last_Element));
    end Get_Coords;
@@ -911,7 +911,7 @@ package body E2GA is
    function Unit_E (V : Multivectors.Vector) return Multivectors.Vector is
       use Blade;
       use Blade_Types;
-      Blades   : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V);
+      Blades   : constant Blade_List := Multivectors.Get_Blade_List (V);
       C1       : constant float := Weight (Blades.First_Element);
       C2       : constant float := Weight (Blades.Last_Element);
       e2s      : constant float :=  C1 * C1 + C2 * C2;

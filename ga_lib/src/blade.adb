@@ -5,6 +5,13 @@ package body Blade is
 
     --     type Metric_Array is array (Integer range <>) of float;
 
+    function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
+    begin
+        return Bitmap (Left) < Bitmap (Right);
+    end "<";
+
+    --  -------------------------------------------------------------------------
+
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB : Basis_Blade; Cont : Contraction_Type)
@@ -372,6 +379,41 @@ package body Blade is
     end Reverse_Blade;
 
     --  ------------------------------------------------------------------------
+
+    procedure Simplify (Blades : in out Blade_List) is
+        use Blade_List_Package;
+        Current_Blade  : Blade.Basis_Blade;
+        Blade_B        : Blade.Basis_Blade;
+        Blade_Cursor   : Cursor;
+        Result         : Blade_List;
+    begin
+        if List (Blades) /= Empty_List then
+            Blade_Sort_Package.Sort (List (Blades));
+            Blade_Cursor := Blades.First;
+            Current_Blade := Element (Blade_Cursor);
+
+            while Has_Element (Blade_Cursor) loop
+                Blade_B := Element (Blade_Cursor);
+                if Bitmap (Blade_B) = Bitmap (Current_Blade) then
+                    Update_Blade (Current_Blade,
+                                  Weight (Current_Blade) + Weight (Blade_B));
+                else
+                    if Weight (Current_Blade) /= 0.0 then
+                        Result.Append (Current_Blade);
+                    end if;
+                    Current_Blade := Blade_B;
+                end if;
+                Next (Blade_Cursor);
+            end loop;
+
+            if Weight (Current_Blade) /= 0.0 then
+                Result.Append (Current_Blade);
+            end if;
+            Blades := Result;
+        end if;
+    end Simplify;
+
+    --  -------------------------------------------------------------------------
 
     procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
     begin

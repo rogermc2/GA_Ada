@@ -62,14 +62,16 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --     function "+" (V1, V2 : Vector) return Vector is
-    --        theVector : Vector;
-    --      begin
-    --         theVector.Coordinates (1) := V1.Coordinates (1) + V2.Coordinates (1);
-    --         theVector.Coordinates (2) := V1.Coordinates (2) + V2.Coordinates (2);
-    --         theVector.Coordinates (3) := V1.Coordinates (3) + V2.Coordinates (3);
-    --          return theVector;
-    --      end "+";
+       function "+" (V1, V2 : E3_Vector) return E3_Vector is
+          use GL;
+          use GL.Types;
+          Sum : E3_Vector;
+       begin
+           Sum (X) := V1 (X) + V2 (X);
+           Sum (Y) := V1 (Y) + V2 (Y);
+           Sum (Z) := V1 (Z) + V2 (Z);
+            return Sum;
+       end "+";
 
     --  ------------------------------------------------------------------------
 
@@ -84,10 +86,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
---      function "-" (VL, VR : Vector) return Vector is
---      begin
---          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
---      end "-";
+    --      function "-" (VL, VR : Vector) return Vector is
+    --      begin
+    --          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
+    --      end "-";
 
     --  ------------------------------------------------------------------------
 
@@ -110,7 +112,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function "*" (R1, R2 : Rotor) return Rotor is
-        use Blade_List_Package;
+        use Blade.Blade_List_Package;
         use Blade;
         use Blade_Types;
         R1_Blades  : constant Blade_List := Get_Blade_List (R1);
@@ -161,8 +163,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function "/" (R : Rotor; S : float) return Multivectors.Rotor is
-        use Blade_List_Package;
         use Blade;
+        use Blade_List_Package;
         Blades    : constant Blade_List := Get_Blade_List (R);
         Curs      : Cursor := Blades.First;
         aBlade    : Basis_Blade;
@@ -286,8 +288,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Dot_Product (R1, R2 : Rotor) return Float is
-        use Blade_List_Package;
         use Blade;
+        use Blade_List_Package;
         R1_Blades : constant Blade_List := Get_Blade_List (R1);
         R2_Blades : constant Blade_List := Get_Blade_List (R2);
         R1_Curs   : Cursor := R1_Blades.First;
@@ -565,10 +567,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
---      function Get_Coords (V : Vector) return Array_3D is
---      begin
---          return (V (1), V (2), V (3));
---      end Get_Coords;
+    --      function Get_Coords (V : Vector) return Array_3D is
+    --      begin
+    --          return (V (1), V (2), V (3));
+    --      end Get_Coords;
 
     --  ------------------------------------------------------------------------
 
@@ -697,9 +699,9 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
-        use Multivectors.Blade_List_Package;
-        Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (MV);
+    function Get_Coords (MV : Multivector) return MV_Coordinate_Array is
+        use Blade.Blade_List_Package;
+        Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (MV);
         Curs   : Cursor := Blades.First;
         Coords : E3GA.MV_Coordinate_Array := (others => 0.0);
         Index  : Integer := 0;
@@ -714,10 +716,28 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
+    function Get_Coords (Vec : Vector) return E3_Vector is
+        use Blade.Blade_List_Package;
+        Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (Vec);
+        Curs   : Cursor := Blades.First;
+        Coords : E3_Vector := (others => 0.0);
+        Index  : Integer := 0;
+    begin
+        while Has_Element (Curs) loop
+            Index := Index + 1;
+            Coords (GL.Index_Homogeneous'Enum_Val (Index)) :=
+              GL.Types.Single (Blade.Weight (Element (Curs)));
+            Next (Curs);
+        end loop;
+        return Coords;
+    end Get_Coords;
+
+    --  ------------------------------------------------------------------------
+
     function Get_Coords (R : Rotor) return Array_4D is
-        use Blade_List_Package;
         use Blade;
         use Blade_Types;
+        use Blade_List_Package;
         Blades  : constant Blade_List := Get_Blade_List (R);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_Integer;

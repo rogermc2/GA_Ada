@@ -41,7 +41,7 @@ package E3GA is
    Grade_3 : constant integer := 8;
 
 --     function "=" (V1, V2 : Vector) return Boolean;
---     function "+" (V1, V2 : Vector) return Vector;
+   function "+" (V1, V2 : E3_Vector) return E3_Vector;
 --     function "-" (V : Vector) return Vector;
 --     function "-" (VL, VR : Vector) return Vector;
 --     function "*" (Weight : float; V : Vector) return Vector;
@@ -90,7 +90,7 @@ package E3GA is
 --      function Get_Coord_1 (V : Vector) return float;
 --      function Get_Coord_2 (V : Vector) return float;
 --      function Get_Coord_3 (V : Vector) return float;
---     function Get_Coords (V : Vector) return Array_3D;
+   function Get_Coords (Vec : Vector) return E3_Vector;
 --     function Get_Coords (SMV : Syn_SMultivector) return Array_4D;
    function Get_Outermorphism (OM : Outermorphism) return Array_19F;
 --      function Get_Size (MV : Multivector) return Integer;

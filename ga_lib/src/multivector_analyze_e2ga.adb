@@ -12,6 +12,7 @@ package body Multivector_Analyze_E2GA is
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Flags : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon) is
+      use Blade;
       use Multivectors;
       use Multivector_Type;
       use Multivector_Type_Base;
