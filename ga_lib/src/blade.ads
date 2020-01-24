@@ -1,4 +1,5 @@
 
+with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;
 
@@ -10,12 +11,25 @@ package Blade is
 
    use Ada.Strings.Unbounded;
 
+   type Basis_Blade is record
+      Bitmap : Unsigned_Integer := 0;
+      Weight : Float := 0.0;
+   end record;
+
+   type Complex_Basis_Blade is private;
+
+   package Blade_List_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Basis_Blade);
+   type Blade_List is new Blade_List_Package.List with null record;
+
    package Names_Package is new
      Ada.Containers.Vectors (Natural, Unbounded_String);
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
-   type Basis_Blade is private;
-   type Complex_Basis_Blade is private;
+    function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
+
+    package Blade_Sort_Package is new
+      Blade_List_Package.Generic_Sorting ("<");
 
    type Contraction_Type is (Left_Contraction, Right_Contraction,
                              Hestenes_Inner_Product,
@@ -63,6 +77,7 @@ package Blade is
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
    procedure Print_Blade (Name : String; B : Basis_Blade);
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
+   procedure Simplify (Blades : in out Blade_List);
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;
@@ -70,11 +85,6 @@ package Blade is
    function Weight (BB : Basis_Blade) return Float;
 
 private
-   type Basis_Blade is record
-      Bitmap : Unsigned_Integer := 0;
-      Weight : Float := 0.0;
-   end record;
-
    type Complex_Basis_Blade is record
       Bitmap : Unsigned_Integer := 0;
       Weight : Complex_Types.Complex := (0.0, 0.0);

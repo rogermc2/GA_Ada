@@ -9,9 +9,6 @@ with Metric;
 
 package Multivectors is
    use Blade;
-   package Blade_List_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Blade.Basis_Blade);
-   type Blade_List is new Blade_List_Package.List with null record;
 
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
                     MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point, MV_Line,

@@ -11,11 +11,6 @@ package body Multivectors is
 
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
-    function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
-
-    package Blade_Sort_Package is new
-      Blade_List_Package.Generic_Sorting ("<");
-
     --     Basis : array (1 .. 5, 1 ..5) of float :=
     --       ((0.0, 0.0, 0.0, 0.0, -1.0),
     --        (0.0, 1.0, 0.0, 0.0, 0.0),
@@ -32,16 +27,8 @@ package body Multivectors is
     function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean;
-    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
+--      procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean);
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
-
-    --  -------------------------------------------------------------------------
-
-    function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
-        use GA_Maths;
-    begin
-        return Bitmap (Left) < Bitmap (Right);
-    end "<";
 
     --  -------------------------------------------------------------------------
 
@@ -87,11 +74,13 @@ package body Multivectors is
         Curs      : Cursor := Blades_1.First;
         MV3       : Multivector := MV1;
     begin
+        --  result.addAll(blades);
         while Has_Element (Curs) loop
             Blades_3.Append (Element (Curs));
             Next (Curs);
         end loop;
         Curs := Blades_2.First;
+        --  result.addAll(x.blades);
         while Has_Element (Curs) loop
             Blades_3.Append (Element (Curs));
             Next (Curs);
@@ -1377,14 +1366,13 @@ package body Multivectors is
 
     function Outer_Product (MV1, MV2 : Multivector) return Multivector is
         use Blade_List_Package;
-        Sorted    : Boolean;
 
         function  Product (List_1, List_2 : Blade_List) return Blade_List is
             Cursor_1  : Cursor := List_1.First;
             Blade_OP  : Blade.Basis_Blade;
             B1        : Blade.Basis_Blade;
             B2        : Blade.Basis_Blade;
-            OP_Blades : Blade_List;
+            Result    : Blade_List;
         begin
             while Has_Element (Cursor_1) loop
                 B1 := Element (Cursor_1);
@@ -1395,7 +1383,7 @@ package body Multivectors is
                         B2 := Element (Cursor_2);
                         Blade_OP := Outer_Product (B1, B2);
                         if Weight (Blade_OP) /= 0.0 then
-                            OP_Blades.Append (Blade_OP);
+                            Result.Append (Blade_OP);
                         end if;
                         Next (Cursor_2);
                     end loop;
@@ -1403,8 +1391,8 @@ package body Multivectors is
                 Next (Cursor_1);
             end loop;
 
-            Simplify (OP_Blades, Sorted);
-            return OP_Blades;
+            Simplify (Result);
+            return Result;
         end Product;
 
     begin
@@ -1413,7 +1401,7 @@ package body Multivectors is
                 OP     : Bivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
-                OP.Sorted := Sorted;
+--                  OP.Sorted := Sorted;
                 return OP;
             end;
         else
@@ -1421,7 +1409,7 @@ package body Multivectors is
                 OP     : Multivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
-                OP.Sorted := Sorted;
+--                  OP.Sorted := Sorted;
                 return OP;
             end;
         end if;
@@ -1520,62 +1508,61 @@ package body Multivectors is
 
     procedure Simplify (MV : in out Multivector) is
         Blades : Blade_List := MV.Blades;
-        Sorted : Boolean;
     begin
-        Simplify (Blades, Sorted);
+        Simplify (Blades);
         MV.Blades := Blades;
-        MV.Sorted := Sorted;
     end Simplify;
 
     --  -------------------------------------------------------------------------
 
-    procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean) is
-        use Blade_List_Package;
-        use GA_Maths;
-        Current_Blade  : Blade.Basis_Blade;
-        Previous_Blade : Blade.Basis_Blade;
-        Blade_Cursor   : Cursor;
-        Prev_Curs      : Cursor;
-        Has_Previous   : Boolean := False;
-    begin
-        if List (Blades) /= Empty_List then
-            Blade_Sort_Package.Sort (List (Blades));
-            Reverse_Elements (Blades);
-            Blade_Cursor := Blades.First;
-            Prev_Curs := No_Element;
-            while Has_Element (Blade_Cursor) loop
-                Current_Blade := Element (Blade_Cursor);
-                if Weight (Current_Blade) = 0.0 then
-                    Blades.Delete (Blade_Cursor);
-                    Has_Previous := False;
-                    --  Delete sets Blade_Cursor to No_Element
-                    Blade_Cursor := Prev_Curs;
-                elsif Has_Previous and then
-                  Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
-                    Update_Blade (Previous_Blade,
-                                  Weight (Previous_Blade) + Weight (Current_Blade));
-                    Blades.Replace_Element (Prev_Curs, Previous_Blade);
-                    Blades.Delete (Blade_Cursor);
-                    Blade_Cursor := Prev_Curs;
-                else
-                    Previous_Blade := Current_Blade;
-                    Has_Previous := True;
-                    Prev_Curs := Blade_Cursor;
-                end if;
-                Next (Blade_Cursor);
-            end loop;
-
-            Blade_Cursor := Blades.First;
-            while Has_Element (Blade_Cursor) loop
-                if Weight (Element (Blade_Cursor)) = 0.0 then
-                    Blades.Delete (Blade_Cursor);
-                else
-                    Next (Blade_Cursor);
-                end if;
-            end loop;
-        end if;
-        Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
-    end Simplify;
+--      procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean) is
+--          use Blade_List_Package;
+--          use GA_Maths;
+--          Current_Blade  : Blade.Basis_Blade;
+--          Previous_Blade : Blade.Basis_Blade;
+--          Blade_Cursor   : Cursor;
+--          Prev_Curs      : Cursor;
+--          Has_Previous   : Boolean := False;
+--          Result         : Blade_List;
+--      begin
+--          if List (Blades) /= Empty_List then
+--              Blade_Sort_Package.Sort (List (Blades));
+--              Reverse_Elements (Blades);
+--              Blade_Cursor := Blades.First;
+--              Prev_Curs := No_Element;
+--              while Has_Element (Blade_Cursor) loop
+--                  Current_Blade := Element (Blade_Cursor);
+--                  if Weight (Current_Blade) = 0.0 then
+--                      Blades.Delete (Blade_Cursor);
+--                      Has_Previous := False;
+--                      --  Delete sets Blade_Cursor to No_Element
+--                      Blade_Cursor := Prev_Curs;
+--                  elsif Has_Previous and then
+--                    Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
+--                      Update_Blade (Previous_Blade,
+--                                    Weight (Previous_Blade) + Weight (Current_Blade));
+--                      Blades.Replace_Element (Prev_Curs, Previous_Blade);
+--                      Blades.Delete (Blade_Cursor);
+--                      Blade_Cursor := Prev_Curs;
+--                  else
+--                      Previous_Blade := Current_Blade;
+--                      Has_Previous := True;
+--                      Prev_Curs := Blade_Cursor;
+--                  end if;
+--                  Next (Blade_Cursor);
+--              end loop;
+--
+--              Blade_Cursor := Blades.First;
+--              while Has_Element (Blade_Cursor) loop
+--                  if Weight (Element (Blade_Cursor)) = 0.0 then
+--                      Blades.Delete (Blade_Cursor);
+--                  else
+--                      Next (Blade_Cursor);
+--                  end if;
+--              end loop;
+--          end if;
+--          Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
+--      end Simplify;
 
     --  -------------------------------------------------------------------------
 
