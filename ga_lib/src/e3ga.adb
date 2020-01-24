@@ -110,7 +110,7 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function "*" (R1, R2 : Rotor) return Rotor is
-        use Blade_List_Package;
+        use Blade.Blade_List_Package;
         use Blade;
         use Blade_Types;
         R1_Blades  : constant Blade_List := Get_Blade_List (R1);
@@ -161,8 +161,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function "/" (R : Rotor; S : float) return Multivectors.Rotor is
-        use Blade_List_Package;
         use Blade;
+        use Blade_List_Package;
         Blades    : constant Blade_List := Get_Blade_List (R);
         Curs      : Cursor := Blades.First;
         aBlade    : Basis_Blade;
@@ -286,8 +286,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Dot_Product (R1, R2 : Rotor) return Float is
-        use Blade_List_Package;
         use Blade;
+        use Blade_List_Package;
         R1_Blades : constant Blade_List := Get_Blade_List (R1);
         R2_Blades : constant Blade_List := Get_Blade_List (R2);
         R1_Curs   : Cursor := R1_Blades.First;
@@ -698,8 +698,8 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
-        use Multivectors.Blade_List_Package;
-        Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (MV);
+        use Blade.Blade_List_Package;
+        Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (MV);
         Curs   : Cursor := Blades.First;
         Coords : E3GA.MV_Coordinate_Array := (others => 0.0);
         Index  : Integer := 0;
@@ -715,9 +715,9 @@ package body E3GA is
     --  ------------------------------------------------------------------------
 
     function Get_Coords (R : Rotor) return Array_4D is
-        use Blade_List_Package;
         use Blade;
         use Blade_Types;
+        use Blade_List_Package;
         Blades  : constant Blade_List := Get_Blade_List (R);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_Integer;

@@ -10,6 +10,7 @@ package body GA_Utilities is
    function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                              return Multivectors.Multivector_List is
       use GA_Maths;
+      use Blade;
       use Multivectors;
       use Blade_List_Package;
       Dim        : constant Integer := Space_Dimension (MV);
@@ -65,7 +66,7 @@ package body GA_Utilities is
    --  -------------------------------------------------------------------------
 
    function Multivector_Size (MV : Multivectors.Multivector) return Integer is
-      use Multivectors;      theBlades : constant Blade_List := Blades (MV);
+      theBlades : constant Blade.Blade_List := Multivectors.Blades (MV);
    begin
       return Integer (theBlades.Length);
    end Multivector_Size;
@@ -118,6 +119,7 @@ package body GA_Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_Multivector (Name : String; MV : Multivectors.Multivector) is
+      use Blade;
       use Multivectors;
       use Blade_List_Package;
       theBlades : constant Blade_List := Blades (MV);
@@ -160,6 +162,30 @@ package body GA_Utilities is
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_Info.");
          raise;
    end Print_Multivector_Info;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Vertex (Name : String; Vertex : Multivectors.Vector) is
+      use Blade;
+      use Multivectors;
+      use Blade_List_Package;
+      theBlades : constant Blade_List := Blades (Vertex);
+      aBlade    : Blade.Basis_Blade;
+      Curs      : Cursor := theBlades.First;
+   begin
+      Put (Name & ":  ");
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         Put (float'Image (Blade.Weight (aBlade)) & " ");
+         Next (Curs);
+      end loop;
+      New_Line;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Vertex.");
+         raise;
+   end Print_Vertex;
 
    --  ------------------------------------------------------------------------
 

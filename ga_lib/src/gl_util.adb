@@ -145,11 +145,11 @@ package body GL_Util is
 
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Doubles.Vector3 is
         use Interfaces;
-        use Multivectors.Blade_List_Package;
+        use Blade.Blade_List_Package;
         use Blade;
         use Blade_Types;
         use GA_Maths;
-        Blades  : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
+        Blades  : constant Blade.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
         Value   : Double;
@@ -183,10 +183,10 @@ package body GL_Util is
 
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Singles.Vector3 is
         use Interfaces;
-        use Multivectors.Blade_List_Package;
+        use Blade.Blade_List_Package;
         use Blade;
         use Blade_Types;
-        Blades  : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (V3);
+        Blades  : constant Blade.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
         Value   : Single;

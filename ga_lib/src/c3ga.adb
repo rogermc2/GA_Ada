@@ -395,8 +395,8 @@ package body C3GA is
 
    function Get_Coords (NP : Multivectors.Normalized_Point)
                          return GA_Maths.Coords_Continuous_Array is
-      use Multivectors.Blade_List_Package;
-      Blades : constant Multivectors.Blade_List := Multivectors.Get_Blade_List (NP);
+      use Blade.Blade_List_Package;
+      Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (NP);
       Curs   : Cursor := Blades.First;
       Coords : GA_Maths.Coords_Continuous_Array (1 .. 4);
       Index  : Integer := 0;
