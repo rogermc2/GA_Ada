@@ -2,7 +2,7 @@
 with GL.Types;
 
 with GA_Maths; use GA_Maths;
-with Multivectors ; use Multivectors;
+with Multivectors; use Multivectors;
 
 package E3GA is
 
