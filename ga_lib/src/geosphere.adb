@@ -686,7 +686,7 @@ package body Geosphere is
             --              Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
             Vertex_1 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (index)));
             Vertex_2 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (Index_2)));
-            New_Vertex := Vertex_1 + Vertex_2;
+            New_Vertex := E3GA.Unit_E (Vertex_1 + Vertex_2);
             Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_1", Vertex_1);
             Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_2", Vertex_2);
             Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_1 + Vertex_2", (Vertex_1 + Vertex_2));
