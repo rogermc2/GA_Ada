@@ -62,14 +62,16 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --     function "+" (V1, V2 : Vector) return Vector is
-    --        theVector : Vector;
-    --      begin
-    --         theVector.Coordinates (1) := V1.Coordinates (1) + V2.Coordinates (1);
-    --         theVector.Coordinates (2) := V1.Coordinates (2) + V2.Coordinates (2);
-    --         theVector.Coordinates (3) := V1.Coordinates (3) + V2.Coordinates (3);
-    --          return theVector;
-    --      end "+";
+       function "+" (V1, V2 : E3_Vector) return E3_Vector is
+          use GL;
+          use GL.Types;
+          Sum : E3_Vector;
+       begin
+           Sum (X) := V1 (X) + V2 (X);
+           Sum (Y) := V1 (Y) + V2 (Y);
+           Sum (Z) := V1 (Z) + V2 (Z);
+            return Sum;
+       end "+";
 
     --  ------------------------------------------------------------------------
 
@@ -84,10 +86,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
---      function "-" (VL, VR : Vector) return Vector is
---      begin
---          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
---      end "-";
+    --      function "-" (VL, VR : Vector) return Vector is
+    --      begin
+    --          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
+    --      end "-";
 
     --  ------------------------------------------------------------------------
 
@@ -565,10 +567,10 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
---      function Get_Coords (V : Vector) return Array_3D is
---      begin
---          return (V (1), V (2), V (3));
---      end Get_Coords;
+    --      function Get_Coords (V : Vector) return Array_3D is
+    --      begin
+    --          return (V (1), V (2), V (3));
+    --      end Get_Coords;
 
     --  ------------------------------------------------------------------------
 
@@ -697,7 +699,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
+    function Get_Coords (MV : Multivector) return MV_Coordinate_Array is
         use Blade.Blade_List_Package;
         Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (MV);
         Curs   : Cursor := Blades.First;
@@ -707,6 +709,24 @@ package body E3GA is
         while Has_Element (Curs) loop
             Index := Index + 1;
             Coords (Index) := Blade.Weight (Element (Curs));
+            Next (Curs);
+        end loop;
+        return Coords;
+    end Get_Coords;
+
+    --  ------------------------------------------------------------------------
+
+    function Get_Coords (Vec : Vector) return E3_Vector is
+        use Blade.Blade_List_Package;
+        Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (Vec);
+        Curs   : Cursor := Blades.First;
+        Coords : E3_Vector := (others => 0.0);
+        Index  : Integer := 0;
+    begin
+        while Has_Element (Curs) loop
+            Index := Index + 1;
+            Coords (GL.Index_Homogeneous'Enum_Val (Index)) :=
+              GL.Types.Single (Blade.Weight (Element (Curs)));
             Next (Curs);
         end loop;
         return Coords;

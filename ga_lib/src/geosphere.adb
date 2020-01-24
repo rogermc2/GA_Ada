@@ -11,6 +11,7 @@ with GL.Objects.Vertex_Arrays;
 
 --  with GA_Utilities;
 with C3GA;
+with E3GA;
 with GL_Util;
 
 with Shader_Manager;
@@ -651,16 +652,17 @@ package body Geosphere is
 
    procedure Refine_Face (Sphere : in out Geosphere; Face_index,
                           Depth  : Natural) is
+      use E3GA;
       Faces           : constant F_Vector := Sphere.Faces;
       Num_Faces       : constant Positive := Positive (Faces.Length);
       this_Face       : constant Geosphere_Face := Faces.Element (Face_index);
       Vertex_Indicies : constant Indices_Vector := this_Face.Indices;
       Vertices        : constant MV_Vector := Sphere.Vertices;
-      New_Indices     : array (Int3_Range) of Natural := (0, 0, 0);
+      New_Indices     : Indices_Vector := (0, 0, 0);
       Index_2         : Natural;
-      Vertex_1        : Multivectors.Vector;
-      Vertex_2        : Multivectors.Vector;
-      New_Vertex      : Multivectors.Vector;  --  V1
+      Vertex_1        : E3_Vector;
+      Vertex_2        : E3_Vector;
+      New_Vertex      : E3_Vector;  --  V1
    begin
       --  Refine_Face is recursive
 --        New_Line;
@@ -683,10 +685,17 @@ package body Geosphere is
             --                        &  Integer'Image (index_2));
             --              Put_Line ("vertex index: "&  Integer'Image (Vertex_Indicies (index)));
             --              Put_Line ("vertex index 2: "&  Integer'Image (Vertex_Indicies (index_2)));
-            Vertex_1 := Vertices.Element (Vertex_Indicies (index));
-            Vertex_2 := Vertices.Element (Vertex_Indicies (Index_2));
-            New_Vertex := To_Vector (Unit_E (From_Vector (Vertex_1 + Vertex_2)));
-            Add_Vertex (Sphere, New_Vertex, New_Indices (index));
+            Vertex_1 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (index)));
+            Vertex_2 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (Index_2)));
+            New_Vertex := Vertex_1 + Vertex_2;
+            Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_1", Vertex_1);
+            Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_2", Vertex_2);
+            Utilities.Print_Vector ("Geosphere.Refine_Face, Vertex_1 + Vertex_2", (Vertex_1 + Vertex_2));
+            Utilities.Print_Vector ("Geosphere.Refine_Face, New_Vertex", New_Vertex);
+            New_Line;
+            Add_Vertex (Sphere,
+                        New_Vector (Float (New_Vertex (GL.X)), Float (New_Vertex (GL.Y)),
+                          Float (New_Vertex (GL.Z))), New_Indices (index));
          end loop;
 
          --  allocate four new faces
