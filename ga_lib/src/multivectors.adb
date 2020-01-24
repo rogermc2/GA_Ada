@@ -27,6 +27,7 @@ package body Multivectors is
     function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean;
+    procedure Simplify (Blades : in out Blade.Blade_List);
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
 
     --  -------------------------------------------------------------------------
@@ -1549,54 +1550,55 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
---      procedure Simplify (Blades : in out Blade_List; Sorted : out Boolean) is
---          use Blade_List_Package;
---          use GA_Maths;
---          Current_Blade  : Blade.Basis_Blade;
---          Previous_Blade : Blade.Basis_Blade;
---          Blade_Cursor   : Cursor;
---          Prev_Curs      : Cursor;
---          Has_Previous   : Boolean := False;
---          Result         : Blade_List;
---      begin
---          if List (Blades) /= Empty_List then
---              Blade_Sort_Package.Sort (List (Blades));
+    procedure Simplify (Blades : in out Blade.Blade_List) is
+        use Blade;
+        use Blade_List_Package;
+        use GA_Maths;
+        Current_Blade  : Blade.Basis_Blade;
+        Previous_Blade : Blade.Basis_Blade;
+        Blade_Cursor   : Cursor;
+        Prev_Curs      : Cursor;
+        Has_Previous   : Boolean := False;
+    begin
+        if List (Blades) /= Empty_List then
+            Blade_Sort_Package.Sort (List (Blades));
 --              Reverse_Elements (Blades);
---              Blade_Cursor := Blades.First;
---              Prev_Curs := No_Element;
---              while Has_Element (Blade_Cursor) loop
---                  Current_Blade := Element (Blade_Cursor);
---                  if Weight (Current_Blade) = 0.0 then
---                      Blades.Delete (Blade_Cursor);
---                      Has_Previous := False;
---                      --  Delete sets Blade_Cursor to No_Element
---                      Blade_Cursor := Prev_Curs;
---                  elsif Has_Previous and then
---                    Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
---                      Update_Blade (Previous_Blade,
---                                    Weight (Previous_Blade) + Weight (Current_Blade));
---                      Blades.Replace_Element (Prev_Curs, Previous_Blade);
---                      Blades.Delete (Blade_Cursor);
---                      Blade_Cursor := Prev_Curs;
---                  else
---                      Previous_Blade := Current_Blade;
---                      Has_Previous := True;
---                      Prev_Curs := Blade_Cursor;
---                  end if;
---                  Next (Blade_Cursor);
---              end loop;
---
---              Blade_Cursor := Blades.First;
---              while Has_Element (Blade_Cursor) loop
---                  if Weight (Element (Blade_Cursor)) = 0.0 then
---                      Blades.Delete (Blade_Cursor);
---                  else
---                      Next (Blade_Cursor);
---                  end if;
---              end loop;
---          end if;
---          Sorted := Blade_Sort_Package.Is_Sorted (List (Blades));
---      end Simplify;
+            Blade_Cursor := Blades.First;
+            Prev_Curs := No_Element;
+
+            while Has_Element (Blade_Cursor) loop
+                Current_Blade := Element (Blade_Cursor);
+                if Weight (Current_Blade) = 0.0 then
+                    Blades.Delete (Blade_Cursor);
+                    Has_Previous := False;
+                    --  Delete sets Blade_Cursor to No_Element
+                    Prev_Curs := No_Element;
+                elsif Has_Previous and then
+                  Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
+                    Update_Blade (Previous_Blade,
+                                  Weight (Previous_Blade) + Weight (Current_Blade));
+                    Blades.Replace_Element (Prev_Curs, Previous_Blade);
+                    Blades.Delete (Blade_Cursor);
+                    Blade_Cursor := Prev_Curs;
+                else
+                    Previous_Blade := Current_Blade;
+                    Has_Previous := True;
+                    Prev_Curs := Blade_Cursor;
+                end if;
+                Next (Blade_Cursor);
+            end loop;
+
+            Blade_Cursor := Blades.First;
+            while Has_Element (Blade_Cursor) loop
+                if Weight (Element (Blade_Cursor)) = 0.0 then
+                    Blades.Delete (Blade_Cursor);
+                else
+                    Next (Blade_Cursor);
+                end if;
+            end loop;
+        end if;
+
+    end Simplify;
 
     --  -------------------------------------------------------------------------
 
