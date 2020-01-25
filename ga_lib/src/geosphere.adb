@@ -628,7 +628,7 @@ package body Geosphere is
    --  -------------------------------------------------------------------------
 
    procedure New_Face (Sphere : in out Geosphere; V1, V2, V3, Depth : Integer) is
-      newFace     : Geosphere_Face;
+      newFace : Geosphere_Face;
    begin
       newFace.Indices (1) := V1;
       newFace.Indices (2) := V2;
@@ -654,10 +654,12 @@ package body Geosphere is
 
    procedure Refine_Face (Sphere : in out Geosphere; Face_index,
                           Depth  : Natural) is
+      use Face_Vectors;
       use E3GA;
       Faces           : constant F_Vector := Sphere.Faces;
       Num_Faces       : constant Positive := Positive (Faces.Length);
-      this_Face       : constant Geosphere_Face := Faces.Element (Face_index);
+      this_Face       : Geosphere_Face := Faces.Element (Face_index);
+      Face_Cursor     : constant Cursor := Sphere.Faces.To_Cursor (Face_index);
       Vertex_Indicies : constant Indices_Vector := this_Face.Indices;
       Vertices        : constant MV_Vector := Sphere.Vertices;
       New_Indices     : Indices_Vector := (0, 0, 0);  -- v[3]
@@ -699,7 +701,12 @@ package body Geosphere is
          New_Face (Sphere, New_Indices (2), this_Face.Indices (3),
                    New_Indices (3), this_Face.Depth);
 
-         for index in Integer range 0 .. 3 loop
+         for index in Integer range 1 .. 4 loop
+            this_Face.Child (index) := Num_Faces + index;
+         end loop;
+
+         Sphere.Faces.Replace_Element (Face_Cursor, this_Face);
+         for index in Integer range 1 .. 4 loop
 --              Put_Line ("Geosphere.Refine_Face recursion index: " &
 --                          Integer'Image (index));
             Refine_Face (Sphere, Num_Faces + index, Depth - 1);
