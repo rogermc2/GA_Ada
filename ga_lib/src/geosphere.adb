@@ -519,6 +519,13 @@ package body Geosphere is
       end loop;
 
       Sphere.Depth := Depth;
+      Put_Line ("Geosphere.GS_Compute Face indices:");
+      for face in Integer range 1 .. Integer (Sphere.Faces.Length) loop
+         New_Face := Sphere.Faces.Element (face);
+         Put_Line (Integer'Image (face) & Integer'Image (New_Face.Indices (1)) &
+                    Integer'Image (New_Face.Indices (2)) &
+                    Integer'Image (New_Face.Indices (3)));
+      end loop;
       Compute_Neighbours (Sphere);
       Sphere.isNull := False;
 
