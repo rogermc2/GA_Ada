@@ -9,7 +9,7 @@ with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 
---  with GA_Utilities;
+with GA_Utilities;
 with C3GA;
 with E3GA;
 with GL_Util;
@@ -214,27 +214,6 @@ package body Geosphere is
          Put_Line ("An exception occurred in Geosphere.Compute_Neighbours.");
          raise;
    end Compute_Neighbours;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Create_Child (Sphere : in out Geosphere; Face_Index : Natural;
-                           Child_Num, V1, V2, V3, Depth : Integer) is
-      Parent_Face : Geosphere_Face := Sphere.Faces.Element (Face_Index);
-      newFace     : Geosphere_Face;
-   begin
-      newFace.Indices (1) := V1;
-      newFace.Indices (2) := V2;
-      newFace.Indices (3) := V3;
-      newFace.Depth := Depth + 1;
-      Sphere.Faces.Append (newFace);
-      Parent_Face.Child (Child_Num) := Sphere.Faces.Last_Index;
-      Sphere.Faces.Replace_Element (Face_Index, Parent_Face);
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Geosphere.Create_Child.");
-         raise;
-   end Create_Child;
 
    --  -------------------------------------------------------------------------
 
@@ -648,6 +627,23 @@ package body Geosphere is
 
    --  -------------------------------------------------------------------------
 
+   procedure New_Face (Sphere : in out Geosphere; V1, V2, V3, Depth : Integer) is
+      newFace     : Geosphere_Face;
+   begin
+      newFace.Indices (1) := V1;
+      newFace.Indices (2) := V2;
+      newFace.Indices (3) := V3;
+      newFace.Depth := Depth + 1;
+      Sphere.Faces.Append (newFace);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Geosphere.New_Face.");
+         raise;
+   end New_Face;
+
+   --  -------------------------------------------------------------------------
+
    procedure New_Sphere_List (Sphere : Geosphere) is
    begin
       Sphere_List.Clear;
@@ -664,7 +660,7 @@ package body Geosphere is
       this_Face       : constant Geosphere_Face := Faces.Element (Face_index);
       Vertex_Indicies : constant Indices_Vector := this_Face.Indices;
       Vertices        : constant MV_Vector := Sphere.Vertices;
-      New_Indices     : Indices_Vector := (0, 0, 0);
+      New_Indices     : Indices_Vector := (0, 0, 0);  -- v[3]
       Index_2         : Natural;
       Vertex_1        : E3_Vector;
       Vertex_2        : E3_Vector;
@@ -676,10 +672,6 @@ package body Geosphere is
                  Integer'Image (Face_index));
       --       GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face this_Face.Indices",
       --                                         (this_Face.Indices));
---        Put_Line ("Geosphere.Refine_Face Vertices first, last index, depth: " &
---                    Integer'Image (Vertices.First_Index) &
---                    Integer'Image (Vertices.Last_Index) &
---                    Integer'Image (Depth));
       if Depth > 0 then
          --   create 3 new vertices
          for index in Int3_Range loop
@@ -695,18 +687,17 @@ package body Geosphere is
                           Float (New_Vertex (GL.Z))), New_Indices (index));
          end loop;
 
+         GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face New_Indices",
+                                           New_Indices);
          --  allocate four new faces
-         Create_Child (Sphere, Face_index, 1, this_Face.Indices (1), New_Indices (1),
-                       New_Indices (3), this_Face.Depth);
-         Create_Child (Sphere, Face_index, 2, New_Indices (1), this_Face.Indices (2),
-                       New_Indices (2), this_Face.Depth);
-         Create_Child (Sphere, Face_index, 3, New_Indices (1), New_Indices (2), New_Indices (3),
-                       this_Face.Depth);
-         Create_Child (Sphere, Face_index, 4, New_Indices (2), this_Face.Indices (3),
-                       New_Indices (3), this_Face.Depth);
-
---           Put_Line ("Geosphere.Refine_Face Last_Index: " &
---                       Integer'Image (Sphere.Faces.Last_Index));
+         New_Face (Sphere, this_Face.Indices (1), New_Indices (1),
+                   New_Indices (3), this_Face.Depth);
+         New_Face (Sphere, New_Indices (1), this_Face.Indices (2),
+                   New_Indices (2), this_Face.Depth);
+         New_Face (Sphere, New_Indices (1), New_Indices (2), New_Indices (3),
+                   this_Face.Depth);
+         New_Face (Sphere, New_Indices (2), this_Face.Indices (3),
+                   New_Indices (3), this_Face.Depth);
 
          for index in Integer range 0 .. 3 loop
 --              Put_Line ("Geosphere.Refine_Face recursion index: " &
