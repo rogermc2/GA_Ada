@@ -1,16 +1,14 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
---  with  Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Utilities;
 
 with GL.Attributes;
 with GL.Objects.Buffers;
-with GL.Objects.Vertex_Arrays;
+--  with GL.Objects.Vertex_Arrays;
 
 with GA_Utilities;
-with C3GA;
 with E3GA;
 with GL_Util;
 
@@ -44,7 +42,6 @@ package body Geosphere is
 
     procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Multivectors.Vector;
                           V_Index   : out Integer) is
---          use Ada.Numerics;
         Vertices : constant MV_Vector := Sphere.Vertices;
         MV       : Multivectors.Vector;
         Index    : Integer := 0;
@@ -195,7 +192,7 @@ package body Geosphere is
                 end if;
                 Put_Line (Integer'Image (Num) & " neighbours of face "  &
                             Integer'Image (Index_FF));
-                raise Geosphere_Exception;
+--                  raise Geosphere_Exception;
             end if;
         end Find_Relation;
 
@@ -254,18 +251,20 @@ package body Geosphere is
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
                         return GL.Types.Singles.Vector3 is
         use GL.Types;
-        theVertex    : Singles.Vector3;
-        GA_Vector    : constant Multivectors.Vector :=
-                         Sphere.Vertices.Element (Vertex_Index);
+        theVertex : Singles.Vector3;
+        GA_Vector : constant Multivectors.Vector :=
+                      Sphere.Vertices.Element (Vertex_Index);
     begin
-        theVertex (GL.X) := Single (C3GA.e1 (GA_Vector));
-        theVertex (GL.Y) := Single (C3GA.e2 (GA_Vector));
-        theVertex (GL.Z) := Single (C3GA.e3 (GA_Vector));
+        GA_Utilities.Print_Multivector ("Get_Vertex GA_Vector.", GA_Vector);
+        theVertex (GL.X) := Single (E3GA.e1 (GA_Vector));
+        theVertex (GL.Y) := Single (E3GA.e2 (GA_Vector));
+        theVertex (GL.Z) := Single (E3GA.e3 (GA_Vector));
+        Utilities.Print_Vector ("Geosphere.Get_Vertex theVertex.", theVertex);
         return theVertex;
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Geosphere.Get_Vertices 1.");
+            Put_Line ("An exception occurred in Geosphere.Get_Vertex.");
             raise;
     end Get_Vertex;
 
@@ -276,12 +275,12 @@ package body Geosphere is
         GA_Vector : constant Multivectors.Vector :=
                       Sphere.Vertices.Element (Vertex_Index);
     begin
-        Put_Line ("Geosphere.Get_Vertex Vertex_Index 2." & Natural'Image (Vertex_Index));
+        Put_Line ("Geosphere.Get_Vertex 2 Vertex_Index." & Natural'Image (Vertex_Index));
         return GA_Vector;
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Geosphere.Get_Vertices 2.");
+            Put_Line ("An exception occurred in Geosphere.Get_Vertex 2.");
             raise;
     end Get_Vertex;
 
@@ -400,6 +399,7 @@ package body Geosphere is
     procedure Get_Vertices (Sphere   : Geosphere; Face : Geosphere_Face;
                             Vertices : in out GL.Types.Singles.Vector3_Array) is
     begin
+        GA_Utilities.Print_Integer_Array ("Geosphere.Get_Vertices Face.Indices", Face.Indices);
         for index in Int3_Range loop
             Vertices (GL.Types.Int (index)) :=
               Get_Vertex (Sphere, Face.Indices (index));
@@ -407,7 +407,7 @@ package body Geosphere is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Geosphere.Add_Vertices.");
+            Put_Line ("An exception occurred in Geosphere.Get_Vertices.");
             raise;
     end Get_Vertices;
 
@@ -415,7 +415,7 @@ package body Geosphere is
 
     procedure GL_Draw (Render_Program                : GL.Objects.Programs.Program;
                        Model_View_Matrix             : GL.Types.Singles.Matrix4;
-                       Sphere                        : Geosphere; Normal    : GL.Types.Single;
+                       Sphere                        : Geosphere; Normal : GL.Types.Single;
                        Vertex_Buffer, Normals_Buffer : GL.Objects.Buffers.Buffer) is
         use GL.Objects.Buffers;
         use GL.Types;
@@ -459,9 +459,9 @@ package body Geosphere is
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
-            GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
-                                                  First => 0,
-                                                  Count => 3);
+--              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
+--                                                    First => 0,
+--                                                    Count => 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end if;
 
@@ -555,6 +555,7 @@ package body Geosphere is
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
             Get_Vertices (Sphere, thisChild, Vertices);
+--              Utilities.Print_GL_Array3 ("Draw_Child, thisChild, Vertices", Vertices);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
             Indices_Buffer.Initialize_Id;
@@ -578,7 +579,6 @@ package body Geosphere is
             for index in 1 .. 4 loop
                 if thisFace.Child (index) /= -1 then
                     Draw_Child (Sphere.Faces.Element (thisFace.Child (index)), Normal);
-                    --                 Draw_Child (thisFace.Child (index).all, Normal);
                 end if;
             end loop;
         end if;
@@ -597,10 +597,10 @@ package body Geosphere is
                        Sphere            : Geosphere; Normal : GL.Types.Single := 0.0) is
         use Face_Vectors;
 
-        procedure Draw_Face (C : Cursor) is
+        procedure Draw_Face (Face_Cursor : Cursor) is
             use GL.Objects.Buffers;
             use GL.Types;
-            Face_Index     : constant Integer := Face_Vectors.To_Index (C);
+            Face_Index     : constant Integer := Face_Vectors.To_Index (Face_Cursor);
             thisFace       : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Indices_Buffer : GL.Objects.Buffers.Buffer;
@@ -616,12 +616,14 @@ package body Geosphere is
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Get_Vertices (Sphere, Vertices);
-                --                  Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
+--                  Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+                --  Vertex_Attrib_Array buffer attributes set in GL_Draw;
 
                 Indices_Buffer.Initialize_Id;
                 Element_Array_Buffer.Bind (Indices_Buffer);
                 Get_Indices (Sphere, Indices);
+--                  Utilities.Print_GL_Int_Array ("Geosphere.GS_Draw Indices", Indices);
                 Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
 
                 Normals_Buffer.Initialize_Id;
@@ -732,6 +734,8 @@ package body Geosphere is
             for index in Integer range 1 .. 4 loop
                 this_Face.Child (index) := Num_Faces + index;
             end loop;
+            GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face child indices",
+                                              GA_Maths.Integer_Array (this_Face.Child));
 
             Sphere.Faces.Replace_Element (Face_Cursor, this_Face);
             for index in Integer range 1 .. 4 loop

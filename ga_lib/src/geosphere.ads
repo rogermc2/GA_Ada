@@ -39,7 +39,7 @@ private
    type Child_Array is array (Int4_Range) of Integer;
 
    type Geosphere_Face is record
-      Indices           : Indices_Vector;  --  Three indices into Vertices vector
+      Indices           : Indices_Vector := (-1, -1, -1);  --  Three indices into Vertices vector
       Child             : Child_Array := (-1, -1, -1, -1);
       Plane             : Multivectors.Bivector;
       D                 : float := 0.0;
