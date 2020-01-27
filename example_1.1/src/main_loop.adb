@@ -121,7 +121,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Maths.Init_Perspective_Transform
           (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
---        Utilities.Print_Matrix ("Display, Projection_Matrix", Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Graphic_Program);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
