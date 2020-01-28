@@ -391,11 +391,12 @@ package body Blade is
             Blade_Sort_Package.Sort (List (Blades));
             Blade_Cursor := Blades.First;
             Current_Blade := Element (Blade_Cursor);
+            Next (Blade_Cursor);
 
             while Has_Element (Blade_Cursor) loop
                 Blade_B := Element (Blade_Cursor);
                 if Bitmap (Blade_B) = Bitmap (Current_Blade) then
-                    Update_Blade (Current_Blade,
+                    Current_Blade := New_Basis_Blade (Bitmap (Current_Blade),
                                   Weight (Current_Blade) + Weight (Blade_B));
                 else
                     if Weight (Current_Blade) /= 0.0 then

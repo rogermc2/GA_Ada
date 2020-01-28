@@ -77,7 +77,7 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.+");
+            Put_Line ("An exception occurred in Multivectors +.");
             raise;
     end "+";
 
