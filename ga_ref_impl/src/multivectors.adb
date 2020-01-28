@@ -104,20 +104,15 @@ package body Multivectors is
     function "-" (MV : Multivector) return Multivector is
         use Blade;
         use Blade_List_Package;
-        MV_Blades  : constant Blade_List := MV.Blades;
-        MV_Curs    : Cursor := MV_Blades.First;
         Neg_MV     : Multivector := MV;
         Neg_Blades : Blade_List := Neg_MV.Blades;
         Neg_Curs   : Cursor := Neg_Blades.First;
-        Blade_MV   : Blade.Basis_Blade;
         Blade_Neg  : Blade.Basis_Blade;
     begin
-        while Has_Element (MV_Curs) and Has_Element (Neg_Curs) loop
-            Blade_MV := Element (MV_Curs);
-            Blade_Neg := Blade_MV;
-            Blade.Update_Blade (Blade_Neg, - Weight (Blade_MV));
+        while Has_Element (Neg_Curs) loop
+            Blade_Neg := Element (Neg_Curs);
+            Blade_Neg := New_Basis_Blade (Bitmap (Blade_Neg), - Weight (Blade_Neg)) ;
             Neg_Blades.Replace_Element (Neg_Curs, Blade_Neg);
-            Next (MV_Curs);
             Next (Neg_Curs);
         end loop;
         Neg_MV.Blades := Neg_Blades;
@@ -125,7 +120,7 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.-");
+            Put_Line ("An exception occurred in Multivector - 1");
             raise;
     end "-";
 
@@ -138,7 +133,7 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.- 2");
+            Put_Line ("An exception occurred in Multivector - 2");
             raise;
     end "-";
 
