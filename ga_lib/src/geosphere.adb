@@ -2,6 +2,8 @@
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GNAT.OS_Lib;
+
 with Utilities;
 
 with GL.Attributes;
@@ -48,10 +50,19 @@ package body Geosphere is
         Found    : Boolean := False;
     begin
         --  first check if vertex already exists
-        while Index <= Sphere.Vertices.Last_Index and not Found loop
+        while not Found and then Index <= Sphere.Vertices.Last_Index loop
             MV :=  Pos - Vertices.Element (Index);
+--              GA_Utilities.Print_Multivector
+--                ("Geosphere.Add_Vertex Index " & Integer'Image (Index) & " Element ", Vertices.Element (Index));
+--              GA_Utilities.Print_Multivector
+--                ("Geosphere.Add_Vertex Index " & Integer'Image (Index) & " Pos ", Pos);
+--              GA_Utilities.Print_Multivector
+--                ("Geosphere.Add_Vertex Index " & Integer'Image (Index), MV);
             Found := Norm_Esq (MV) < 10.0 ** (-5);
             if Found then
+                GA_Utilities.Print_Vertex
+                  ("Geosphere.Add_Vertex vertex " & Integer'Image (Index) & " already exists",
+                   Vertices.Element (Index));
                 V_Index := Index;
             end if;
             Index := Index + 1;
@@ -60,6 +71,9 @@ package body Geosphere is
         if not Found then
             Sphere.Vertices.Append (Pos);
             V_Index := Sphere.Vertices.Last_Index;
+            GA_Utilities.Print_Vertex
+                  ("Geosphere.Add_Vertex addding vertex " & Integer'Image (V_Index),
+                   Sphere.Vertices.Element (V_Index));
         end if;
 
     exception
@@ -118,36 +132,37 @@ package body Geosphere is
 
                         if  Face_I.Indices (Vertex_J1) = Next_FE_Index then
                             --  next vertices also match
---                              Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J1 found, E1:"  &
---                                          Integer'Image (Index_FI_VE) & "  J1:" &
---                                          Integer'Image (Vertex_J1) & " vertex E1:" &
---                                          Integer'Image (Face_F.Indices (Index_FI_VE)) & " vertex J1:" &
---                                          Integer'Image (Face_F.Indices (Vertex_J1)));
+                            --                              Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J1 found, E1:"  &
+                            --                                          Integer'Image (Index_FI_VE) & "  J1:" &
+                            --                                          Integer'Image (Vertex_J1) & " vertex E1:" &
+                            --                                          Integer'Image (Face_F.Indices (Index_FI_VE)) & " vertex J1:" &
+                            --                                          Integer'Image (Face_F.Indices (Vertex_J1)));
                             Face_F.Neighbour (Index_FI_VE) := Index_FI;
                             Face_I.Neighbour (Vertex_J) := Index_FF;
                             Found := True;
                             Num := Num + 1;
                         elsif Face_I.Indices (Vertex_J2) = Next_FE_Index then
---                              Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J2 found, E1:"  &
---                                          Integer'Image (Index_FI_VE) & "  J2:" &
---                                          Integer'Image (Vertex_J2) & " vertex E1:" &
---                                          Integer'Image (Face_F.Indices (Index_FI_VE)) & " vertex J2:" &
---                                          Integer'Image (Face_F.Indices (Vertex_J2)));
+                            --                              Put_Line ("Geosphere.Find_Neighbours matching vertices E1 and J2 found, E1:"  &
+                            --                                          Integer'Image (Index_FI_VE) & "  J2:" &
+                            --                                          Integer'Image (Vertex_J2) & " vertex E1:" &
+                            --                                          Integer'Image (Face_F.Indices (Index_FI_VE)) & " vertex J2:" &
+                            --                                          Integer'Image (Face_F.Indices (Vertex_J2)));
                             --  next vertex of face[f] matches preceding vertex of face[i]
                             Face_F.Neighbour (Index_FI_VE) := Index_FI;
                             Face_I.Neighbour (Vertex_J2) := Index_FF;
                             Found := True;
                             Num := Num + 1;
                         end if;
-                        --                 else
-                        --                    Put_Line ("Geosphere.Find_Neighbours; no matching vertices E and J"  &
-                        --                              Integer'Image (Vertex_E) & Integer'Image (Vertex_J));
+--                      else
+--                          Put_Line ("Geosphere.Find_Neighbours; no matching vertices E and J"  &
+--                                      Integer'Image (Index_FI_VE) & Integer'Image (Vertex_J));
                     end if;
 
                     if Found then
-                       Put_Line ("Geosphere.Find_Relation,  Face "  &
-                                  Integer'Image (Index_FF) &  " has relation, neighbour face "  &
-                                  Integer'Image (Index_FI));
+                        Put_Line ("Geosphere.Find_Relation,  Face "  &
+                                    Integer'Image (Index_FF) &
+                                    " has relation, neighbour face "  &
+                                    Integer'Image (Index_FI));
                         New_Line;
                         Sphere.Faces.Replace_Element (Index_FI, Face_I);
                         Found := False;
@@ -192,7 +207,7 @@ package body Geosphere is
                 end if;
                 Put_Line (Integer'Image (Num) & " neighbours of face "  &
                             Integer'Image (Index_FF));
---                  raise Geosphere_Exception;
+                raise Geosphere_Exception;
             end if;
         end Find_Relation;
 
@@ -458,9 +473,9 @@ package body Geosphere is
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
---              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
---                                                    First => 0,
---                                                    Count => 3);
+            --              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
+            --                                                    First => 0,
+            --                                                    Count => 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end if;
 
@@ -512,7 +527,7 @@ package body Geosphere is
         for face_index in 1 .. Num_Faces loop
             Refine_Face (Sphere, face_index, Depth);
         end loop;
-
+--          Delay (5.0);
         Sphere.Depth := Depth;
         Put_Line ("Geosphere.GS_Compute Face indices:");
         for face in Integer range 1 .. Integer (Sphere.Faces.Length) loop
@@ -525,6 +540,7 @@ package body Geosphere is
         for index in 0 .. Integer (Sphere.Vertices.Length - 1) loop
             GA_Utilities.Print_Vertex (Integer'Image (index), Sphere.Vertices.Element (index));
         end loop;
+        GNAT.OS_Lib.OS_Exit (0);
 
         Compute_Neighbours (Sphere);
         Sphere.isNull := False;
@@ -616,14 +632,14 @@ package body Geosphere is
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Get_Vertices (Sphere, Vertices);
---                  Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
+                --                  Utilities.Print_GL_Array3 ("Geosphere.GS_Draw Vertices", Vertices);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
                 --  Vertex_Attrib_Array buffer attributes set in GL_Draw;
 
                 Indices_Buffer.Initialize_Id;
                 Element_Array_Buffer.Bind (Indices_Buffer);
                 Get_Indices (Sphere, Indices);
---                  Utilities.Print_GL_Int_Array ("Geosphere.GS_Draw Indices", Indices);
+                --                  Utilities.Print_GL_Int_Array ("Geosphere.GS_Draw Indices", Indices);
                 Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
 
                 Normals_Buffer.Initialize_Id;
@@ -701,7 +717,7 @@ package body Geosphere is
         --                                         (this_Face.Indices));
         if Depth > 0 then
             Put_Line ("Geosphere.Refine_Face, refining Face_index: " &
-                    Integer'Image (Face_index));
+                        Integer'Image (Face_index));
             --   create 3 new vertices
             for index in Int3_Range loop
                 Index_2 := index + 1;
