@@ -3,12 +3,12 @@
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Culling;
+--  with GL.Culling;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
-with GL.Rasterization;
+--  with GL.Rasterization;
 --  with GL.Text;
-with GL.Toggles;
+--  with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 
@@ -68,7 +68,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --          use GL.Types.Colors;
       use GL.Types.Singles;     --  for matrix multiplication
-      use GL.Toggles;
+--        use GL.Toggles;
       use Maths.Single_Math_Functions;
 
       --          Position_X        : integer := 0;
@@ -131,17 +131,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Utilities.Clear_Background_Colour_And_Depth (White);
 
-      Enable (Depth_Test);
-      GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
-      Enable (Cull_Face);
-      GL.Culling.Set_Cull_Face (GL.Culling.Back);
+--        Enable (Depth_Test);
+--        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+--        Enable (Cull_Face);
+--        GL.Culling.Set_Cull_Face (GL.Culling.Back);
       --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
       --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
-      GL.Rasterization.Set_Line_Width (1.0);
+--        GL.Rasterization.Set_Line_Width (1.0);
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
-         Palet.Set_Point_Size (0.28);  --  orig 0.005
          Shader_Manager.Set_Drawing_Colour (Red);
 
          Shader_Manager.Set_Ambient_Colour (Green);
@@ -210,7 +209,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
-      GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
+      Palet.Set_Point_Size (1.0);
 
       --        Render_Text_Program := Program_Loader.Program_From
       --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
@@ -258,7 +257,7 @@ begin
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Display (Main_Window, Render_Graphic_Program);
       --        Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
---        Delay (2.0);
+      Delay (0.2);
       Glfw.Input.Poll_Events;
       Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
       if not Key_Pressed and Key_Now = Glfw.Input.Pressed then

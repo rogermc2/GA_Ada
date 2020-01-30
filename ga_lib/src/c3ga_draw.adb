@@ -71,10 +71,7 @@ package body C3GA_Draw is
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
                          Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
---          MV_Info : Multivector_Type.MV_Type_Record := Analyzed_MV.M_MV_Type;
     begin
---          GA_Utilities.Print_Multivector_Info ("C3GA_Draw.Draw_C3GA", MV_Info);
---          New_Line;
         if Analyzed_MV.M_Type.Model_Kind = Conformal_Model then
             case Analyzed_MV.M_Type.Blade_Class is
             when Flat_Blade =>

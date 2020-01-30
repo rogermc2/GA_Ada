@@ -758,8 +758,6 @@ package body GA_Draw is
         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
---        Utilities.Print_Matrix ("GA_Draw.Draw_Trivector MV_Matrix before scaling", MV_Matrix);
-
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
       case Method is
