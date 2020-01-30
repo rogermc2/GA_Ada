@@ -127,8 +127,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             when Point_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
---                  Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-                Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size;
+                Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                         Point_Pos, Scale, V, Palet_Type);
             when others => null;
@@ -146,7 +145,7 @@ package body C3GA_Draw is
 --                           Model_View_Matrix : GL.Types.Singles.Matrix4;
 --                           L : Multivectors.Vector;
 --                           Colour : GL.Types.Colors.Color) is
---          Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size;
+--          Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
 --          V     : C3GA.Vector_E3GA;
 --      begin
 --          GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
@@ -164,8 +163,7 @@ package body C3GA_Draw is
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Position : Multivectors.Normalized_Point;
                           Palet_Type : Palet.Colour_Palet) is
---          Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size;
+        Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
         V     : constant C3GA.Vector_E3GA := (0.0, 0.0, 0.0);
     begin
         --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
@@ -201,8 +199,7 @@ package body C3GA_Draw is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
             Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
-            P_Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size;
---              P_Scale := 4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos + Radius * M_Vec1,
                                     P_Scale, VC, Palet_Type,
