@@ -107,7 +107,7 @@ package body Geosphere is
 
                         if  Face_I.Indices (Vertex_J1) = Next_FE_Index then
                             --  next vertices also match
-                              Face_F.Neighbour (Index_FI_VE) := Index_FI;
+                            Face_F.Neighbour (Index_FI_VE) := Index_FI;
                             Face_I.Neighbour (Vertex_J) := Index_FF;
                             Found := True;
                             Num := Num + 1;
@@ -209,7 +209,7 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
-                        return GL.Types.Singles.Vector3 is
+                         return GL.Types.Singles.Vector3 is
         use GL.Types;
         theVertex : Singles.Vector3;
         GA_Vector : constant Multivectors.Vector :=
@@ -229,7 +229,7 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
-                        return Multivectors.Vector is
+                         return Multivectors.Vector is
         GA_Vector : constant Multivectors.Vector :=
                       Sphere.Vertices.Element (Vertex_Index);
     begin
@@ -297,15 +297,11 @@ package body Geosphere is
 
     procedure Get_Normals (Sphere  : Geosphere; Face : Geosphere_Face;
                            Normals : in out GL.Types.Singles.Vector3_Array) is
-        use GL.Types;
-        Normal_Index : Integer := 0;
-
-        thisNormal  : constant Indices_Vector := Face.Indices;
-        aVertex     : GL.Types.Singles.Vector3;
+        Indices : constant Indices_Vector := Face.Indices;
     begin
-        Normal_Index := Normal_Index + 1;
-        aVertex := Get_Vertex (Sphere, thisNormal (1));
-        Normals (Int (Normal_Index)) := aVertex;
+        for index in 1 .. 3 loop
+            Normals (GL.Types.Int (index)) := Get_Vertex (Sphere, Indices (index));
+        end loop;
 
     exception
         when others =>
@@ -327,6 +323,10 @@ package body Geosphere is
         begin
             Index := Index + 1;
             Vertices (Index) := GL_Util.To_GL (thisVertex);
+        exception
+            when others =>
+                Put_Line ("An exception occurred in Geosphere.Get_Vertices.Add_Vertex.");
+                raise;
         end Add_Vertex;
 
     begin
@@ -379,7 +379,7 @@ package body Geosphere is
         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, GL.Types.Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
 
-                Element_Array_Buffer.Bind (Indices_Buffer);
+        Element_Array_Buffer.Bind (Indices_Buffer);
         --  Draw_Elements uses Count sequential elements from an enabled array
         --  starting at Element_Offset to construct a sequence of Mode geometric primitives.
         GL.Objects.Buffers.Draw_Elements (Mode           => Triangles,
@@ -478,38 +478,50 @@ package body Geosphere is
                                 Model_View_Matrix : GL.Types.Singles.Matrix4;
                                 Sphere            : Geosphere;
                                 thisFace          : Geosphere_Face; Normal : GL.Types.Single) is
+        use GL.Objects.Buffers;
+        use GL.Types;
+        Vertex_Buffer  : GL.Objects.Buffers.Buffer;
+        Indices_Buffer : GL.Objects.Buffers.Buffer;
+        Normals_Buffer : GL.Objects.Buffers.Buffer;
+        --  Each child (face) has three vertices
+        Vertices       : Singles.Vector3_Array (1 .. 3);
+        Normals        : Singles.Vector3_Array (1 .. 3);
+
         procedure Draw_Child (thisChild : Geosphere_Face; Normal : GL.Types.Single) is
-            use GL.Objects.Buffers;
-            use GL.Types;
-            Vertex_Buffer  : GL.Objects.Buffers.Buffer;
-            Indices_Buffer : GL.Objects.Buffers.Buffer;
-            Normals_Buffer : GL.Objects.Buffers.Buffer;
-            --  Each child (face) has three vertices
-            Vertices       : Singles.Vector3_Array (1 .. 3);
-            Normals        : Singles.Vector3_Array (1 .. 3);
-            Indices        : UInt_Array (1 .. 3);
         begin
+            Get_Vertices (Sphere, thisChild, Vertices);
+            Vertex_Buffer.Clear;
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
-            Get_Vertices (Sphere, thisChild, Vertices);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+            --  Vertex_Attrib_Array buffer attributes are set in GL_Draw;
 
+            Indices_Buffer.Clear;
             Indices_Buffer.Initialize_Id;
             Element_Array_Buffer.Bind (Indices_Buffer);
-            for index in 1 .. 3 loop
-                Indices (Int (index)) := UInt (thisFace.Indices (index));
-            end loop;
-            Utilities.Load_Element_Buffer
-              (Element_Array_Buffer, Indices, Static_Draw);
 
+            Utilities.Load_Element_Buffer (Element_Array_Buffer,
+                                           Get_Indices (thisChild), Static_Draw);
+            for index in Int3_Range loop
+                if thisChild.Indices (index) > Integer (Sphere.Vertices.Length) or
+                  thisChild.Indices (index) < 0 then
+                  raise Geosphere_Exception with
+                      "Geosphere.GS_Draw_Children vertex index out of range: " &
+                       Integer'Image (thisChild.Indices (index));
+                end if;
+            end loop;
+
+            Get_Normals (Sphere, thisFace, Normals);
+            Normals_Buffer.Clear;
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
-            Get_Normals (Sphere, thisChild, Normals);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
 
             GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal,
                      Vertex_Buffer, Normals_Buffer, Indices_Buffer, 3);
+--               Utilities.Print_GL_Array3 ("Geosphere.GS_Draw_Children.Draw_Child Normals", Normals);
         end Draw_Child;
+
     begin
         if thisFace.Child /= (-1, -1, -1, -1) then
             for index in 1 .. 4 loop
