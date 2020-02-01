@@ -252,7 +252,7 @@ begin
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Display (Main_Window, Render_Graphic_Program);
       --        Display (Main_Window, Render_Graphic_Program, Render_Text_Program);
-      Delay (0.2);
+--        Delay (0.2);
       Glfw.Input.Poll_Events;
       Key_Now := Main_Window.Key_State (Glfw.Input.Keys.Space);
       if not Key_Pressed and Key_Now = Glfw.Input.Pressed then

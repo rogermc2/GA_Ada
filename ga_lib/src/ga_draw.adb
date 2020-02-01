@@ -324,7 +324,6 @@ package body GA_Draw is
    procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                         Scale             : Float) is
-
       use GL.Objects.Buffers;
       use GA_Maths.Float_Functions;
       S_Scale              : constant Single := Single (5.0 / Scale);
