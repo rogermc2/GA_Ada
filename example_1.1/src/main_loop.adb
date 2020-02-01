@@ -3,12 +3,11 @@
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with GL.Culling;
+with GL.Culling;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
---  with GL.Rasterization;
 --  with GL.Text;
---  with GL.Toggles;
+with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 
@@ -131,13 +130,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Utilities.Clear_Background_Colour_And_Depth (White);
 
---        Enable (Depth_Test);
---        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
---        Enable (Cull_Face);
---        GL.Culling.Set_Cull_Face (GL.Culling.Back);
-      --  Line width > 1.0 fails. It may be clamped to an implementation-dependent maximum.
-      --  Call glGet with GL_ALIASED_LINE_WIDTH_RANGE to determine the maximum width.
---        GL.Rasterization.Set_Line_Width (1.0);
+      GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Culling.Set_Cull_Face (GL.Culling.Back);
 
       if GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix) then
          Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
