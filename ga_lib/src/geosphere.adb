@@ -100,7 +100,7 @@ package body Geosphere is
     end Add_Vertex;
 
     --  -------------------------------------------------------------------------
-
+    pragma Warnings (Off, "procedure ""Compute_Neighbours"" is not referenced");
     procedure Compute_Neighbours (Sphere : in out Geosphere) is
 
         procedure Find_Relation (Face_Cursor_F : Face_Vectors.Cursor) is
@@ -387,9 +387,8 @@ package body Geosphere is
     procedure GS_Compute (Sphere : in out Geosphere; Depth : Integer) is
         Num_Faces     : constant Positive := 8;
         Num_Vertices  : constant Positive := 6;
-
-        New_Face       : Geosphere_Face;
-        Face_Indices   : constant Indices_Array (1 .. Num_Faces)
+        New_Face      : Geosphere_Face;
+        Face_Indices  : constant Indices_Array (1 .. Num_Faces)
           := ((5, 0, 2),
               (3, 2, 0),
               (5, 4, 0),
@@ -423,14 +422,7 @@ package body Geosphere is
         for face_index in 1 .. Num_Faces loop
             Refine_Face (Sphere, face_index, Depth);
         end loop;
-
         Sphere.Depth := Depth;
-        for face in Integer range 1 .. Integer (Sphere.Faces.Length) loop
-            New_Face := Sphere.Faces.Element (face);
-        end loop;
-
-        Compute_Neighbours (Sphere);
---          Sphere.isNull := False;
 
     exception
         when others =>
@@ -558,10 +550,12 @@ package body Geosphere is
             for index in Integer range 1 .. 4 loop
                 this_Face.Child (index) := Num_Faces + index;
             end loop;
-
             Sphere.Faces.Replace_Element (Face_Cursor, this_Face);
+
             for index in Integer range 1 .. 4 loop
                 Refine_Face (Sphere, Num_Faces + index, Depth - 1);
+                Put_Line ("Geosphere.Refine_Face Num_Faces + index: " &
+                         Integer'Image (Num_Faces + index));
             end loop;
         end if;
 
