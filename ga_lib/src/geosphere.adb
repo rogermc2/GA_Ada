@@ -6,6 +6,7 @@ with Utilities;
 
 with GL.Attributes;
 with GL.Objects.Buffers;
+with GL.Objects.Vertex_Arrays;
 
 with E3GA;
 with GL_Util;
@@ -25,10 +26,11 @@ package body Geosphere is
     function Get_Indices (Face : Geosphere_Face) return GL.Types.UInt_Array;
     procedure Get_Vertices (Sphere   : Geosphere;
                             Vertices : in out GL.Types.Singles.Vector3_Array);
-    procedure GL_Draw (Render_Program                : GL.Objects.Programs.Program;
-                       Model_View_Matrix             : GL.Types.Singles.Matrix4;
-                       Sphere                        : Geosphere; Normal : GL.Types.Single;
-                       Vertex_Buffer, Indices_Buffer : GL.Objects.Buffers.Buffer;
+    procedure GL_Draw (Render_Program  : GL.Objects.Programs.Program;
+                       Model_View_Matrix : GL.Types.Singles.Matrix4;
+                       Sphere : Geosphere; Normal : GL.Types.Single;
+                       Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
+                       Indices_Buffer : GL.Objects.Buffers.Buffer;
                        Stride : GL.Types.Int; Num_Faces : GL.Types.Size);
     procedure Refine_Face (Sphere : in out Geosphere; Face_Index, Depth : Natural);
 
@@ -324,10 +326,11 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    procedure GL_Draw (Render_Program                : GL.Objects.Programs.Program;
-                       Model_View_Matrix             : GL.Types.Singles.Matrix4;
-                       Sphere                        : Geosphere; Normal : GL.Types.Single;
-                       Vertex_Buffer, Indices_Buffer : GL.Objects.Buffers.Buffer;
+    procedure GL_Draw (Render_Program : GL.Objects.Programs.Program;
+                       Model_View_Matrix : GL.Types.Singles.Matrix4;
+                       Sphere : Geosphere; Normal : GL.Types.Single;
+                       Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
+                       Indices_Buffer : GL.Objects.Buffers.Buffer;
                        Stride : GL.Types.Int; Num_Faces : GL.Types.Size) is
         use GL.Objects.Buffers;
         use GL.Types;
@@ -367,13 +370,13 @@ package body Geosphere is
                   Get_Vertex (Sphere, index) + V1 * Normal;
             end loop;
 
+            Vertex_Buffer.Clear;
             Utilities.Load_Vertex_Buffer (Array_Buffer, Lines, Static_Draw);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, 0, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
-            --              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
-            --                                                    First => 0,
-            --                                                    Count => 3);
+            GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => GL.Types.Lines,
+                                                  First => 0,
+                                                  Count => 3);
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end if;
 
@@ -482,7 +485,6 @@ package body Geosphere is
             thisFace           : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
             Indices_Buffer     : GL.Objects.Buffers.Buffer;
         begin
-
             if thisFace.Child /= (-1, -1, -1, -1) then
                 GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace,
                                   Vertex_Buffer, Normal);
