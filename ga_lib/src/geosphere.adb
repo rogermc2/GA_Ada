@@ -27,7 +27,7 @@ package body Geosphere is
     type Vertices_Array is array (Integer range <>) of Multivectors.Vector;
     Sphere_List   : Sphere_DL_List;
 
-    function Get_Indices (Face : Geosphere_Face) return GL.Types.UInt_Array;
+--      function Get_Indices (Face : Geosphere_Face) return GL.Types.UInt_Array;
     procedure Get_Vertices (Sphere   : Geosphere;
                             Vertices : in out GL.Types.Singles.Vector3_Array);
     procedure GL_Draw (Render_Program  : GL.Objects.Programs.Program;
@@ -43,7 +43,6 @@ package body Geosphere is
     procedure Add_Face_Indices (Sphere : Geosphere; aFace : Geosphere_Face;
                                 Indices : in out Indices_DL_List) is
         use GA_Maths;
-
     begin
         if aFace.Indices /= (-1, -1, -1) then
             for index in Int3_Range loop
@@ -223,35 +222,35 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    procedure Draw_Face (Render_Program    : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         Sphere : Geosphere; aFace : Geosphere_Face;
-                         Normal : GL.Types.Single;
-                         Vertex_Buffer, Indices_Buffer : in out GL.Objects.Buffers.Buffer) is
-        use GL.Objects.Buffers;
-        Vertices_Array_Length : constant Int := Int (Length (Sphere.Vertices));
-        Vertices              : Singles.Vector3_Array (1 .. Vertices_Array_Length);
-        Vertex_Data_Bytes     : constant Int := Vertices'Size / 8;
-    begin
-        Get_Vertices (Sphere, Vertices);
-
-        Array_Buffer.Bind (Vertex_Buffer);
-        Allocate (Array_Buffer, 2 * Long (Vertex_Data_Bytes), Static_Draw);
-
-        Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertices);
-        Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, Vertex_Data_Bytes, Vertices);
-
-        Indices_Buffer.Initialize_Id;
-        Element_Array_Buffer.Bind (Indices_Buffer);
-        Utilities.Load_Element_Buffer (Element_Array_Buffer, Get_Indices (aFace), Static_Draw);
-
-        GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal, Vertex_Buffer,
-                 Indices_Buffer, 0, 3);
-    exception
-        when others =>
-            Put_Line ("An exception occurred in Geosphere.Draw_Face.");
-            raise;
-    end Draw_Face;
+--      procedure Draw_Face (Render_Program    : GL.Objects.Programs.Program;
+--                           Model_View_Matrix : GL.Types.Singles.Matrix4;
+--                           Sphere : Geosphere; aFace : Geosphere_Face;
+--                           Normal : GL.Types.Single;
+--                           Vertex_Buffer, Indices_Buffer : in out GL.Objects.Buffers.Buffer) is
+--          use GL.Objects.Buffers;
+--          Vertices_Array_Length : constant Int := Int (Length (Sphere.Vertices));
+--          Vertices              : Singles.Vector3_Array (1 .. Vertices_Array_Length);
+--          Vertex_Data_Bytes     : constant Int := Vertices'Size / 8;
+--      begin
+--          Get_Vertices (Sphere, Vertices);
+--
+--          Array_Buffer.Bind (Vertex_Buffer);
+--          Allocate (Array_Buffer, 2 * Long (Vertex_Data_Bytes), Static_Draw);
+--
+--          Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertices);
+--          Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, Vertex_Data_Bytes, Vertices);
+--
+--          Indices_Buffer.Initialize_Id;
+--          Element_Array_Buffer.Bind (Indices_Buffer);
+--          Utilities.Load_Element_Buffer (Element_Array_Buffer, Get_Indices (aFace), Static_Draw);
+--
+--          GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal, Vertex_Buffer,
+--                   Indices_Buffer, 0, 3);
+--      exception
+--          when others =>
+--              Put_Line ("An exception occurred in Geosphere.Draw_Face.");
+--              raise;
+--      end Draw_Face;
 
     --  -------------------------------------------------------------------------
 
@@ -308,12 +307,33 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    function Get_Indices (Face : Geosphere_Face) return GL.Types.UInt_Array is
-        theIndices : GL.Types.UInt_Array (1 .. 3);
+--      function Get_Indices (Face : Geosphere_Face) return GL.Types.UInt_Array is
+--          theIndices : GL.Types.UInt_Array (1 .. 3);
+--      begin
+--          theIndices (1) := GL.Types.UInt (Face.Indices (1));
+--          theIndices (2) := GL.Types.UInt (Face.Indices (2));
+--          theIndices (3) := GL.Types.UInt (Face.Indices (3));
+--          return theIndices;
+--
+--      exception
+--          when others =>
+--              Put_Line ("An exception occurred in Geosphere.Get_Indices.");
+--              raise;
+--      end Get_Indices;
+
+    --  -------------------------------------------------------------------------
+
+    function Get_Indices (Indices_List : Indices_DL_List) return GL.Types.UInt_Array is
+        use Indices_List_Package;
+        Curs       : Cursor := Indices_List.First;
+        theIndices : GL.Types.UInt_Array (1 .. Int (Indices_List.Length));
+        Index      : Int := 0;
     begin
-        theIndices (1) := GL.Types.UInt (Face.Indices (1));
-        theIndices (2) := GL.Types.UInt (Face.Indices (2));
-        theIndices (3) := GL.Types.UInt (Face.Indices (3));
+        while Has_Element (Curs) loop
+            Index := Index + 1;
+            theIndices (Index) := Element  (Curs);
+            Next (Curs);
+        end loop;
         return theIndices;
 
     exception
@@ -469,29 +489,29 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    procedure GS_Draw_Children (Render_Program    : GL.Objects.Programs.Program;
-                                Model_View_Matrix : GL.Types.Singles.Matrix4;
-                                Sphere            : Geosphere;
-                                thisFace          : Geosphere_Face;
-                                Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
-                                Normal : GL.Types.Single) is
-        Indices_Buffer : GL.Objects.Buffers.Buffer;
-    begin
-        if thisFace.Child /= (-1, -1, -1, -1) then
-            for index in 1 .. 4 loop
-                if thisFace.Child (index) /= -1 then
-                    Draw_Face (Render_Program, Model_View_Matrix,
-                         Sphere, Sphere.Faces.Element (thisFace.Child (index)),
-                         Normal, Vertex_Buffer, Indices_Buffer);
-                end if;
-            end loop;
-        end if;
-
-    exception
-        when others =>
-            Put_Line ("An exception occurred in Geosphere.GS_Draw_Children.");
-            raise;
-    end GS_Draw_Children;
+--      procedure GS_Draw_Children (Render_Program    : GL.Objects.Programs.Program;
+--                                  Model_View_Matrix : GL.Types.Singles.Matrix4;
+--                                  Sphere            : Geosphere;
+--                                  thisFace          : Geosphere_Face;
+--                                  Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
+--                                  Normal : GL.Types.Single) is
+--          Indices_Buffer : GL.Objects.Buffers.Buffer;
+--      begin
+--          if thisFace.Child /= (-1, -1, -1, -1) then
+--              for index in 1 .. 4 loop
+--                  if thisFace.Child (index) /= -1 then
+--                      Draw_Face (Render_Program, Model_View_Matrix,
+--                           Sphere, Sphere.Faces.Element (thisFace.Child (index)),
+--                           Normal, Vertex_Buffer, Indices_Buffer);
+--                  end if;
+--              end loop;
+--          end if;
+--
+--      exception
+--          when others =>
+--              Put_Line ("An exception occurred in Geosphere.GS_Draw_Children.");
+--              raise;
+--      end GS_Draw_Children;
 
     --  -------------------------------------------------------------------------
     --  Based on geosphere.cpp
@@ -502,33 +522,52 @@ package body Geosphere is
                        Normal : GL.Types.Single := 0.0) is
         use GL.Objects.Buffers;
         use Face_Vectors;
-        Vertex_Buffer      : GL.Objects.Buffers.Buffer;
+        Indices_List       : Indices_DL_List;
         Vertices           : Singles.Vector3_Array (1 .. Int (Length (Sphere.Vertices)));
+        Vertex_Data_Bytes  : constant Int := Vertices'Size / 8;
+        Vertex_Buffer      : GL.Objects.Buffers.Buffer;
+        Indices_Buffer     : GL.Objects.Buffers.Buffer;
 
-        procedure Draw_Face (Face_Cursor : Cursor) is
+--          procedure Draw_Face (Face_Cursor : Cursor) is
+        procedure Build_Indices_List (Face_Cursor : Cursor) is
             Face_Index         : constant Integer := Face_Vectors.To_Index (Face_Cursor);
             thisFace           : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
-            Indices_Buffer     : GL.Objects.Buffers.Buffer;
         begin
-            if thisFace.Child /= (-1, -1, -1, -1) then
-                GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace,
-                                  Vertex_Buffer, Normal);
-            else  --  no children
-                Draw_Face (Render_Program , Model_View_Matrix,
-                           Sphere, thisFace, Normal, Vertex_Buffer, Indices_Buffer);
-            end if;
+            Add_Face_Indices (Sphere, thisFace, Indices_List);
+--              if thisFace.Child /= (-1, -1, -1, -1) then
+--                  GS_Draw_Children (Render_Program, Model_View_Matrix, Sphere, thisFace,
+--                                    Vertex_Buffer, Normal);
+--              else  --  no children
+--                  Draw_Face (Render_Program , Model_View_Matrix,
+--                             Sphere, thisFace, Normal, Vertex_Buffer, Indices_Buffer);
+--              end if;
 
         exception
             when others =>
-                Put_Line ("An exception occurred in Geosphere.GS_Draw.Draw_Face.");
+                Put_Line ("An exception occurred in Geosphere.GS_Draw.Build_Indices_List.");
                 raise;
-        end Draw_Face;
+        end Build_Indices_List;
 
     begin
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Get_Vertices (Sphere, Vertices);
-        Iterate (Sphere.Faces, Draw_Face'Access);
+--          Iterate (Sphere.Faces, Draw_Face'Access);
+        Iterate (Sphere.Faces, Build_Indices_List'Access);
+        Get_Vertices (Sphere, Vertices);
+
+        Array_Buffer.Bind (Vertex_Buffer);
+        Allocate (Array_Buffer, 2 * Long (Vertex_Data_Bytes), Static_Draw);
+
+        Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertices);
+        Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, Vertex_Data_Bytes, Vertices);
+
+        Indices_Buffer.Initialize_Id;
+        Element_Array_Buffer.Bind (Indices_Buffer);
+        Utilities.Load_Element_Buffer (Element_Array_Buffer, Get_Indices (Indices_List), Static_Draw);
+
+        GL_Draw (Render_Program, Model_View_Matrix, Sphere, Normal, Vertex_Buffer,
+                 Indices_Buffer, 0, GL.Types.Size (Indices_List.Length) / 3);
 
     exception
         when others =>
