@@ -25,7 +25,6 @@ package Geosphere is
                       Model_View_Matrix : GL.Types.Singles.Matrix4;
                       Sphere : Geosphere; Normal : GL.Types.Single := 0.0);
    procedure New_Sphere_List (Sphere : Geosphere);
-   function Sphere_State_Null (Sphere : Geosphere) return Boolean;
 
 private
    subtype Int3_Range is Integer range 1 .. 3;
@@ -61,7 +60,6 @@ private
       Depth      : integer := 0;
       Vertices   : MV_Vector;
       Faces      : F_Vector;
-      isNull     : Boolean := True;
    end record;
 
 end Geosphere;

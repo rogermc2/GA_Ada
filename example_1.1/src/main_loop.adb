@@ -21,6 +21,7 @@ with Maths;
 with Utilities;
 
 with C3GA_Draw;
+with Geosphere;
 with GL_Util;
 --  with GA_Utilities;
 with Multivectors;
@@ -199,12 +200,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
       --          use GL.Objects.Buffers;
       --        Font_File : string := "../fonts/Helvetica.ttc";
+      Sphere : Geosphere.Geosphere;
+      Depth  : constant integer := 3;
    begin
       Vertices_Array_Object.Initialize_Id;
       Vertices_Array_Object.Bind;
       Model_Rotor := Multivectors.New_Rotor;
       Shader_Manager.Init (Render_Program);
       Palet.Set_Point_Size (1.0);
+      Geosphere.GS_Compute (Sphere, Depth);
+      Palet.Set_Current_Sphere (Sphere);
 
       --        Render_Text_Program := Program_Loader.Program_From
       --          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),

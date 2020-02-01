@@ -430,7 +430,7 @@ package body Geosphere is
         end loop;
 
         Compute_Neighbours (Sphere);
-        Sphere.isNull := False;
+--          Sphere.isNull := False;
 
     exception
         when others =>
@@ -570,13 +570,6 @@ package body Geosphere is
             Put_Line ("An exception occurred in Geosphere.Refine_Face.");
             raise;
     end Refine_Face;
-
-    --  -------------------------------------------------------------------------
-
-    function Sphere_State_Null (Sphere : Geosphere) return Boolean is
-    begin
-        return Sphere.isNull;
-    end Sphere_State_Null;
 
     --  -------------------------------------------------------------------------
 

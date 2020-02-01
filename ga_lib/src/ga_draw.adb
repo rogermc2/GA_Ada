@@ -27,6 +27,8 @@ with Shader_Manager;
 
 package body GA_Draw is
 
+   Count : Integer := 0;
+
    procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Palet_Type        : Palet.Colour_Palet;
@@ -623,15 +625,14 @@ package body GA_Draw is
                           MV_Matrix      : GL.Types.Singles.Matrix4;
                           Normal         : GL.Types.Single) is
       use Geosphere;
-      Sphere : Geosphere.Geosphere := Palet.Current_Sphere;
-      Depth  : constant Integer := 3;  --  orig 4
+      Sphere : constant Geosphere.Geosphere := Palet.Current_Sphere;
    begin
-      if Sphere_State_Null (Sphere) then
-         Geosphere.GS_Compute (Sphere, Depth);
+        Count := Count + 1;
          Geosphere.New_Sphere_List (Sphere);
          --  gsDraw(m_sphere, 0.0f);
+         Put_Line ("GA_Draw.Draw_Sphere calling GS_Draw Count : " &
+                  Integer'Image (Count));
          Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);
-      end if;
 
       if Normal = 0.0 then
          Draw_Sphere_List (Render_Program, MV_Matrix);
