@@ -58,9 +58,6 @@ private
    type F_Vector is new Face_Vectors.Vector with null record;
 
    type Geosphere is record
-      --        Num_Vertices    : integer;
-      --        Num_Faces       : integer;
-      --        Num_Primitives  : integer;  --  Always = Num_Faces
       Depth      : integer := 0;
       Vertices   : MV_Vector;
       Faces      : F_Vector;

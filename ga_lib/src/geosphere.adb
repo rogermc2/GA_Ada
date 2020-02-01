@@ -14,6 +14,10 @@ with GL_Util;
 with Shader_Manager;
 
 package body Geosphere is
+    use GL.Types;
+   package Indices_List_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => GL.Types.UInt);
+   type Indices_DL_List is new Indices_List_Package.List with null record;
 
     package Sphere_List_Package is new Ada.Containers.Doubly_Linked_Lists
       (Element_Type => Geosphere);
@@ -33,6 +37,32 @@ package body Geosphere is
                        Indices_Buffer : GL.Objects.Buffers.Buffer;
                        Stride : GL.Types.Int; Num_Faces : GL.Types.Size);
     procedure Refine_Face (Sphere : in out Geosphere; Face_Index, Depth : Natural);
+
+    --  -------------------------------------------------------------------------
+
+    procedure Add_Face_Indices (Sphere : Geosphere; aFace : Geosphere_Face;
+                                Indices : in out Indices_DL_List) is
+        use GA_Maths;
+
+    begin
+        if aFace.Indices /= (-1, -1, -1) then
+            for index in Int3_Range loop
+                Indices.Append (UInt (aFace.Indices (index)));
+            end loop;
+        end if;
+
+        if aFace.Child /= (-1, -1, -1, -1) then
+            for index in Int4_Range loop
+                if aFace.Child (index) /= -1 then
+                    Add_Face_Indices (Sphere, Sphere.Faces.Element (aFace.Child (index)), Indices);
+                end if;
+            end loop;
+        end if;
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Geosphere.Add_Face_Indices.");
+            raise;
+    end Add_Face_Indices;
 
     --  -------------------------------------------------------------------------
 
@@ -199,7 +229,6 @@ package body Geosphere is
                          Normal : GL.Types.Single;
                          Vertex_Buffer, Indices_Buffer : in out GL.Objects.Buffers.Buffer) is
         use GL.Objects.Buffers;
-        use GL.Types;
         Vertices_Array_Length : constant Int := Int (Length (Sphere.Vertices));
         Vertices              : Singles.Vector3_Array (1 .. Vertices_Array_Length);
         Vertex_Data_Bytes     : constant Int := Vertices'Size / 8;
@@ -209,7 +238,6 @@ package body Geosphere is
         Array_Buffer.Bind (Vertex_Buffer);
         Allocate (Array_Buffer, 2 * Long (Vertex_Data_Bytes), Static_Draw);
 
---          Utilities.Print_GL_Array3 ("Geosphere.Draw_Face Vertices" , Vertices);
         Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertices);
         Utilities.Load_Vertex_Sub_Buffer (Array_Buffer, Vertex_Data_Bytes, Vertices);
 
@@ -247,7 +275,6 @@ package body Geosphere is
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
                          return GL.Types.Singles.Vector3 is
-        use GL.Types;
         theVertex : Singles.Vector3;
         GA_Vector : constant Multivectors.Vector :=
                       Sphere.Vertices.Element (Vertex_Index);
@@ -299,7 +326,6 @@ package body Geosphere is
 
     procedure Get_Vertices (Sphere   : Geosphere;
                             Vertices : in out GL.Types.Singles.Vector3_Array) is
-        use GL.Types;
         Index : Int := 0;
 
         procedure Add_Vertex (C : Vertex_Vectors.Cursor) is
@@ -333,7 +359,6 @@ package body Geosphere is
                        Indices_Buffer : GL.Objects.Buffers.Buffer;
                        Stride : GL.Types.Int; Num_Faces : GL.Types.Size) is
         use GL.Objects.Buffers;
-        use GL.Types;
         use GL.Types.Singles;
         Lines             : Singles.Vector3_Array (1 .. 6) := (others => (0.0, 0.0, 0.0));
         V1                : Singles.Vector3 := (0.0, 0.0, 0.0);
@@ -473,9 +498,9 @@ package body Geosphere is
     --  gsDraw(geosphere * sphere, mv::Float normal /*= 0.0*/)
     procedure GS_Draw (Render_Program    : GL.Objects.Programs.Program;
                        Model_View_Matrix : GL.Types.Singles.Matrix4;
-                       Sphere            : Geosphere; Normal : GL.Types.Single := 0.0) is
+                       Sphere            : Geosphere;
+                       Normal : GL.Types.Single := 0.0) is
         use GL.Objects.Buffers;
-        use GL.Types;
         use Face_Vectors;
         Vertex_Buffer      : GL.Objects.Buffers.Buffer;
         Vertices           : Singles.Vector3_Array (1 .. Int (Length (Sphere.Vertices)));
