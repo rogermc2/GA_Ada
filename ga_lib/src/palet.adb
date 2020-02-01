@@ -139,6 +139,13 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
+   procedure Set_Current_Sphere (aSphere : Geosphere.Geosphere) is
+   begin
+      G_Draw_State.M_Sphere := aSphere;
+   end Set_Current_Sphere;
+
+   --  ------------------------------------------------------------------------
+
    procedure Set_Draw_Mode_Off (Mode : Draw_Mode_Type) is
    begin
       case Mode is

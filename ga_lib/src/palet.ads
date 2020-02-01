@@ -8,7 +8,6 @@ package Palet is
 
    use  GL.Types;
 
-   function Current_Sphere return Geosphere.Geosphere;
    type Draw_Mode_Type is (OD_Shade, OD_Wireframe ,OD_Magnitude, OD_Orientation);
    type Draw_Mode is record
       Shade       : Boolean := False;
@@ -23,6 +22,7 @@ package Palet is
    function Background_Red (Palet_Data : Colour_Palet) return Single;
    function Background_Green (Palet_Data : Colour_Palet) return Single;
    function Background_Blue (Palet_Data : Colour_Palet) return Single;
+   function Current_Sphere return Geosphere.Geosphere;
    function Foreground_Alpha (Palet_Data : Colour_Palet) return Single;
    function Foreground_Blue (Palet_Data : Colour_Palet) return Single;
    function Foreground_Colour (Palet_Data : Colour_Palet) return Color;
@@ -37,6 +37,7 @@ package Palet is
    procedure Set_Background_Colour (Palet_Data  : in out Colour_Palet;
                                     Back_Colour : Color);
    procedure Set_Background_Colour (Palet_Data : Colour_Palet);
+   procedure Set_Current_Sphere (aSphere : Geosphere.Geosphere);
    procedure Set_Draw_Mode_Off (Mode : Draw_Mode_Type);
    procedure Set_Draw_Mode_On (Mode : Draw_Mode_Type);
    procedure Set_Foreground_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
