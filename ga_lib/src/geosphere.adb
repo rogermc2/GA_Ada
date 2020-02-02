@@ -554,8 +554,6 @@ package body Geosphere is
 
             for index in Integer range 1 .. 4 loop
                 Refine_Face (Sphere, Num_Faces + index, Depth - 1);
-                Put_Line ("Geosphere.Refine_Face Num_Faces + index: " &
-                         Integer'Image (Num_Faces + index));
             end loop;
         end if;
 
