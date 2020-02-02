@@ -17,13 +17,28 @@ with Utilities;
 
 package body Pick_Manager is
 
+   type GL_Pick is record
+      Picking_Program    : GL.Objects.Programs.Program;
+      Picking_Colour_ID  : GL.Uniforms.Uniform;
+      Picking_Matrix_ID  : GL.Uniforms.Uniform;
+      Pick_Active        : Boolean := False;  --  set to true during picking
+      --  set to picking window (x, y, w, h) during picking
+      OpenGL_Pick        : GL.Types.Int_Array (1 .. 4) := (0, 0, 0, 0);
+      --  Must be set correctly by caller of pick() to get correct distances returned
+      Frustum_Near       : GL.Types.Single := 1.0;
+      --  Must be set correctly by caller of pick() to get correct distances returned
+      Frustum_Far        : GL.Types.Single := 100.0;
+      --  not required for pick(), provided for completenes
+      FrustumWidth       : GL.Types.Single := 0.0;
+      --  not required for pick(), provided for completenes
+      Frustum_Height     : GL.Types.Single := 0.0;
+      Pick_Window_Size   : GL.Types.Int := 4;
+   end record;
+
     type Pixels_Array is array (Positive range <>) of aliased GL.Types.UByte;
 
     Max_Items          : constant GL.Types.Int := 100;
     White              : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
-    Picking_Program    : GL.Objects.Programs.Program;
-    Picking_Colour_ID  : GL.Uniforms.Uniform;
-    Picking_Matrix_ID  : GL.Uniforms.Uniform;
     Vertex_Buffer      : GL.Objects.Buffers.Buffer;
     Element_Buffer     : GL.Objects.Buffers.Buffer;
     Pick_Data          : GL_Pick;
@@ -33,16 +48,16 @@ package body Pick_Manager is
     procedure Init_Pick_Manager is
       use GL.Objects.Shaders;
     begin
-        Picking_Program := Program_Loader.Program_From
+        Pick_Data.Picking_Program := Program_Loader.Program_From
           ((Program_Loader.Src ("src/shaders/picking_vertex_shader.glsl",
            Vertex_Shader),
            Program_Loader.Src ("src/shaders/picking_fragment_shader.glsl",
              Fragment_Shader)));
 
-        Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Picking_Program, "Picking_Colour");
-        Picking_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Picking_Program, "MVP");
+        Pick_Data.Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
+          (Pick_Data.Picking_Program, "Picking_Colour");
+        Pick_Data.Picking_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Pick_Data.Picking_Program, "MVP");
 
     exception
         when others =>
@@ -80,7 +95,7 @@ package body Pick_Manager is
         --        Message         : Ada.Strings.Unbounded.Unbounded_String;
     begin
         Utilities.Clear_Background_Colour_And_Depth (White);
-        GL.Objects.Programs.Use_Program (Picking_Program);
+        GL.Objects.Programs.Use_Program (Pick_Data.Picking_Program);
         --  Only the positions are needed (not the UVs and normals)
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
         for count in GL.Types.Int range 1 .. Max_Items loop
@@ -89,13 +104,13 @@ package body Pick_Manager is
             Trans_Matrix := Maths.Translation_Matrix (Positions (count));
             Model_Matrix := Trans_Matrix * Rot_Matrix;
             MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-            GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
+            GL.Uniforms.Set_Single (Pick_Data.Picking_Matrix_ID, MVP_Matrix);
 
             --  Convert count, the integer mesh ID, into an RGB color
             R :=  Single (Unsigned_32 (count) and 16#FF#) / 255.0;
             G :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF00#, 8)) / 255.0;
             B :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF0000#, 16)) / 255.0;
-            GL.Uniforms.Set_Single (Picking_Colour_ID, R, G, B, 1.0);
+            GL.Uniforms.Set_Single (Pick_Data.Picking_Colour_ID, R, G, B, 1.0);
 
             GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, True, 0, 0);
