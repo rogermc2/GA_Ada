@@ -29,18 +29,14 @@ package C3GA is
 --     type Scalar is private;
 --     type Vector is private;
 
-   subtype Point is Multivectors.Multivector (Multivectors.MV_Point);
-   subtype Line is Multivectors.Multivector (Multivectors.MV_Line);
-   subtype Circle is Multivectors.Multivector (Multivectors.MV_Circle);
-   subtype Sphere is Multivectors.Multivector (Multivectors.MV_Sphere);
-   subtype Dual_Plane is Multivectors.Multivector (Multivectors.MV_Dual_Plane);
-   subtype Dual_Sphere is Multivectors.Multivector (Multivectors.MV_Dual_Sphere);
+   subtype Point is Multivectors.Multivector;
+   subtype Line is Multivectors.Multivector;
+   subtype Circle is Multivectors.Multivector;
+   subtype Sphere is Multivectors.Multivector;
+   subtype Dual_Plane is Multivectors.Multivector;
+   subtype Dual_Sphere is Multivectors.Multivector;
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
    type C3GA_Normalized_Point is array (1 .. 5) of Float;
-
---     type Multivector (Grade_Use : GA_Maths.Grade_Usage) is record
---        Coordinates : GA_Maths.MV_Coordinate_Array := (others => 0.0);  --  m_c[32]
---     end record;
 
    --  Joinable grade definitions
    Grade_0 : constant GA_Maths.Unsigned_Integer := 1;

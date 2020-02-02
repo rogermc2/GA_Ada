@@ -12,13 +12,13 @@ package Multivectors is
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
                     MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point, MV_Line,
                     MV_Circle, MV_Sphere, MV_Dual_Plane, MV_Dual_Sphere);
-   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is private;
+   type Multivector is private;
    type Multivector_List is private;
-   subtype Bivector is Multivector (MV_Bivector);
-   subtype Normalized_Point is Multivector (MV_Normalized_Point);
-   subtype Rotor is Multivector (MV_Rotor);
-   subtype Scalar is Multivector (MV_Scalar);
-   subtype Vector is Multivector (MV_Vector);
+   subtype Bivector is Multivector;
+   subtype Normalized_Point is Multivector;
+   subtype Rotor is Multivector;
+   subtype Scalar is Multivector;
+   subtype Vector is Multivector;
 
    MV_Exception : Exception;
 
@@ -79,8 +79,8 @@ package Multivectors is
                            return Multivector;
     function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
                             Cont : Blade.Contraction_Type) return Multivector;
-   function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
-                              return Normalized_Point;
+--     function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
+--                                return Normalized_Point;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -137,7 +137,8 @@ package Multivectors is
                             return Multivector;
 
 private
-   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is record
+   type Multivector is record
+      Type_Of_MV : MV_Type := MV_Multivector;
       Blades     : Blade.Blade_List;
       Sorted     : Boolean := False;
    end record;

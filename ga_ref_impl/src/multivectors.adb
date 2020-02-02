@@ -1232,6 +1232,7 @@ package body Multivectors is
         use Blade;
         BV : Bivector;
     begin
+        BV.Type_Of_MV := MV_Bivector;
         BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
         BV.Blades.Append (New_Basis_Blade (BV_e2e3, e2e3));
         BV.Blades.Append (New_Basis_Blade (BV_e3e1, e3e1));
@@ -1269,6 +1270,7 @@ package body Multivectors is
     function New_Rotor (Scalar_Weight : Float) return Rotor is
         R : Rotor;
     begin
+        R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         return  R;
     end New_Rotor;
@@ -1279,6 +1281,7 @@ package body Multivectors is
         use Blade;
         R : Rotor;
     begin
+        R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
         R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e1e2)));
         R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e2e3)));
@@ -1292,6 +1295,7 @@ package body Multivectors is
         use Blade;
         R : Rotor;
     begin
+        R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
         R.Blades.Append (New_Basis_Blade (E3_e1, e1));
         R.Blades.Append (New_Basis_Blade (E3_e2, e2));
@@ -1305,6 +1309,7 @@ package body Multivectors is
         use Blade;
         V       : Vector;
     begin
+        V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E2_e1, e1));
         Add_Blade (V, New_Basis_Blade (E2_e2, e2));
         return V;
@@ -1316,6 +1321,7 @@ package body Multivectors is
         use Blade;
         V       : Vector;
     begin
+        V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
         Add_Blade (V, New_Basis_Blade (E3_e2, e2));
         Add_Blade (V, New_Basis_Blade (E3_e3, e3));
