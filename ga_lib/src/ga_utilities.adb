@@ -32,7 +32,7 @@ package body GA_Utilities is
       end if;
 
       if Scale /= 0.0 and Top_G /= 0 then
-         --  Initialize a list e of basis blades
+         --  Initialize a list of basis blades
          Blades.Append (Blade.New_Basis_Blade (Top_G));  --  add BB(k) to e
          for Power_of_2 in 0 .. Dim - 1 loop
             Bit_Pos := 2 ** Power_of_2;
@@ -51,16 +51,23 @@ package body GA_Utilities is
             MV_2 := Left_Contraction (MV_2, thisBlade);
             MV_2 := Left_Contraction (MV_2, thisBlade);
             --  Normalize MV_2 then add to Factors list
-            MV_2 := Unit_E (MV_2);
-            Add_Multivector (Factors, MV_2);
-            --  remove MV_2 from thisBlade Bc
-            thisBlade := Left_Contraction (MV_2, thisBlade);
+            if Norm_Esq (MV_2) /= 0.0 then
+                MV_2 := Unit_E (MV_2);
+                Add_Multivector (Factors, MV_2);
+                --  remove MV_2 from thisBlade Bc
+                thisBlade := Left_Contraction (MV_2, thisBlade);
+            end if;
             Next (B_Cursor);
          end loop;
          --  factor what is left of the input blade
          Add_Multivector (Factors, Unit_E (thisBlade));
       end if;
       return Factors;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Factorize_Blade.");
+         raise;
    end Factorize_Blade;
 
    --  -------------------------------------------------------------------------

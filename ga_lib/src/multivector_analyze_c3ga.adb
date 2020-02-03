@@ -229,24 +229,35 @@ package body Multivector_Analyze_C3GA is
       theAnalysis.Scalors (1) := Weight;
       case Grade is
          when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 1.");
          when 2 =>  --  F Vector
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 2.");
             theAnalysis.M_Type.Blade_Subclass := Vector_Subclass;
             theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (C3GA.no, MV));
          when 3 =>  --  F Bivector
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3.");
             theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
             Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scale);
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3 factored.");
             theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
             theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
             theAnalysis.M_Vectors (3) :=
               -Dual (Outer_Product (theAnalysis.M_Vectors (1),
                      theAnalysis.M_Vectors (2)));
          when 4 =>  --  F Trivector
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 4.");
             theAnalysis.M_Type.Blade_Subclass := Trivector_Subclass;
             theAnalysis.M_Vectors (1) := Basis_Vector (Blade_Types.E3_e1);
             theAnalysis.M_Vectors (2) := Basis_Vector (Blade_Types.E3_e2);
             theAnalysis.M_Vectors (3) := Basis_Vector (Blade_Types.E3_e3);
          when others => null;
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade others.");
       end case;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Multivector_Analyze_C3GA.Analyze_Free.");
+         raise;
    end Analyze_Free;
 
    --  ----------------------------------------------------------------------------
