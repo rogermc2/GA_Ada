@@ -37,6 +37,7 @@ package body C3GA_Draw is
 --              GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
 --              GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
 --          end loop;
+        Put_Line ("C3GA_Draw.Draw MV calling Draw_C3GA.");
         Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 
     exception

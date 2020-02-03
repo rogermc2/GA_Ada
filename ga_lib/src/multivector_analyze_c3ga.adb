@@ -238,7 +238,6 @@ package body Multivector_Analyze_C3GA is
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3.");
             theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
             Blade_Factors := GA_Utilities.Factorize_Blade (MV, Scale);
-            Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3 factored.");
             theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
             theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
             theAnalysis.M_Vectors (3) :=
