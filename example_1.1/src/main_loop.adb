@@ -21,6 +21,7 @@ with Maths;
 with Utilities;
 
 --  with GA_Utilities;
+with E3GA;
 with C3GA;
 with C3GA_Draw;
 with Geosphere;
@@ -109,6 +110,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Right               : Vector3;
         Up                  : Vector3;
         Palet_Data          : Palet.Colour_Palet;
+        N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
         --        Test_MV             : Multivectors.Multivector (Multivectors.MV_Normalized_Point);
     begin
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -169,7 +171,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                 aCircle := Multivectors.Geometric_Product (Points.C1, Points.C2);
                 aCircle := Multivectors.Geometric_Product (aCircle, Points.C3);
 
-                aDual_Plane := (Points.P1);
+                aDual_Plane :=
+                  Multivectors.Geometric_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
+                aDual_Plane := Multivectors.Left_Contraction (Points.P1, aDual_Plane);
             end if;
 
         else
