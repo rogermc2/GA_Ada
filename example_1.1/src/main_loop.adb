@@ -160,8 +160,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             --              GA_Utilities.Print_Multivector ("Display, Point_Position:", Point_Position);
             --              Put_Line ("Norm sq Point_Position" & Float'Image (Multivectors.Norm_Esq (Point_Position)));
             --  Point_Position (L1, L2, C1, C2, C3, P1)
---              C3GA_Draw.Draw (Render_Graphic_Program,
---                              Model_View_Matrix, Point_Position, Palet_Data);
+            C3GA_Draw.Draw (Render_Graphic_Program,
+                            Model_View_Matrix, Point_Position, Palet_Data);
          end loop;
 
          if not Pick_Manager.Pick_Active then

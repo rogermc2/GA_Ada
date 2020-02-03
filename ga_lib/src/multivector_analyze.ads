@@ -93,9 +93,9 @@ package Multivector_Analyze is
 
    MVA_Exception : Exception;
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon);
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+--                       Flags : Flag_Type := (Flag_Invalid, False);
+--                       Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
                       Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);

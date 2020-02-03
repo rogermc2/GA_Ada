@@ -3,19 +3,19 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types;
 
-with Multivector_Analyze_E2GA;
+--  with Multivector_Analyze_E2GA;
 with Multivector_Analyze_C3GA;
 
 package body Multivector_Analyze is
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Flags : Flag_Type := (Flag_Invalid, False);
-                      Epsilon : float := Default_Epsilon) is
-   begin
-      Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
-   end Analyze;
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+--                        Flags : Flag_Type := (Flag_Invalid, False);
+--                        Epsilon : float := Default_Epsilon) is
+--     begin
+--        Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
+--     end Analyze;
 
    --  --------------------------------------------------------------------------
 
