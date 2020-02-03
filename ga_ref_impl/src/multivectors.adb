@@ -1176,12 +1176,30 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Circle return Circle is
+        C : Circle;
+    begin
+        C.Type_Of_MV := MV_Circle;
+        return C;
+    end New_Circle;
+
+    --  -------------------------------------------------------------------------
+
     function New_Dual_Plane return Dual_Plane is
         DP : Dual_Plane;
     begin
-        DP.Type_Of_MV := Multivectors.MV_Dual_Plane;
+        DP.Type_Of_MV := MV_Dual_Plane;
         return DP;
     end New_Dual_Plane;
+
+    --  -------------------------------------------------------------------------
+
+    function New_Line return Line is
+        L : Line;
+    begin
+        L.Type_Of_MV := MV_Line;
+        return L;
+    end New_Line;
 
     --  -------------------------------------------------------------------------
 

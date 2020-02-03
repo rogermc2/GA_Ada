@@ -15,7 +15,9 @@ package Multivectors is
    type Multivector is private;
    type Multivector_List is private;
    subtype Bivector is Multivector;
+   subtype Circle is Multivector;
    subtype Dual_Plane is Multivector;
+   subtype Line is Multivector;
    subtype Normalized_Point is Multivector;
    subtype Rotor is Multivector;
    subtype Scalar is Multivector;
@@ -92,7 +94,9 @@ package Multivectors is
    function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
+   function New_Circle return Circle;
    function New_Dual_Plane return Dual_Plane;
+   function New_Line return Line;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;

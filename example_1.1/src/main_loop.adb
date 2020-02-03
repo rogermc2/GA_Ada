@@ -72,6 +72,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types.Singles;     --  for matrix multiplication
         --        use GL.Toggles;
         use Maths.Single_Math_Functions;
+        use Multivectors;
 
         --          Position_X        : integer := 0;
         --          Position_Y        : single := 160.0;
@@ -85,8 +86,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --          V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
         --          V2                : Multivectors.Vector;
 
-        Point_Position      : Multivectors.Normalized_Point;
-        aLine               : C3GA.Line;
+        Point_Position      : Normalized_Point := New_Normalized_Point;
+        aLine               : Multivectors.Line :=  Multivectors.New_Line;
+        aCircle             : Multivectors.Circle :=  Multivectors.New_Circle;
+        aDual_Plane         : Multivectors.Dual_Plane := Multivectors.New_Dual_Plane;
         --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
         Window_Width        : Glfw.Size;
         Window_Height       : Glfw.Size;
@@ -161,8 +164,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
             if not Pick_Manager.Pick_Active then
                 aLine := Multivectors.Geometric_Product (Points.L1, Points.L2);
-                aLine := Multivectors.Geometric_Product (aLine, C3GA.ni);
-                aLine := Multivectors.Unit_R (aLine);
+                aLine := Multivectors.Unit_R (Multivectors.Geometric_Product (aLine, C3GA.ni));
+
+                aCircle := Multivectors.Geometric_Product (Points.C1, Points.C2);
+                aCircle := Multivectors.Geometric_Product (aCircle, Points.C3);
+
+                aDual_Plane := (Points.P1);
             end if;
 
         else

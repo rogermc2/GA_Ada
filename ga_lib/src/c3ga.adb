@@ -328,7 +328,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Element (C : Circle; E : C3_Base) return float is
+   function Element (C :  Multivectors.Circle; E : C3_Base) return float is
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
                    Get_Blade (Multivector (C), C3_Base'Enum_Rep (E));
@@ -338,7 +338,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Line_Element (L : Line; E : C3_Base) return float is
+   function Line_Element (L :  Multivectors.Line; E : C3_Base) return float is
       use Multivectors;
       theBlade : constant Blade.Basis_Blade  :=
                    Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
@@ -348,14 +348,14 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function E1_E2_NI (C : Circle) return float is
+   function E1_E2_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e1_e2_ni);
    end E1_E2_NI;
 
    --  -------------------------------------------------------------------------
 
-   function E1_E3_NI (C : Circle) return float is
+   function E1_E3_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e1_e3_ni);
    end E1_E3_NI;
@@ -369,7 +369,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function E2_E3_NI (C : Circle) return float is
+   function E2_E3_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e2_e3_ni);
    end E2_E3_NI;
@@ -426,42 +426,42 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function NO_E1_E2 (C : Circle) return float is
+   function NO_E1_E2 (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e1_e2_no);
    end NO_E1_E2;
 
    --  -------------------------------------------------------------------------
 
-   function NO_E1_E3 (C : Circle) return float is
+   function NO_E1_E3 (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e1_e3_no);
    end NO_E1_E3;
 
    --  -------------------------------------------------------------------------
 
-   function NO_E1_NI (C : Circle) return float is
+   function NO_E1_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e1_no_ni);
    end NO_E1_NI;
 
    --  -------------------------------------------------------------------------
 
-   function NO_E2_E3 (C : Circle) return float is
+   function NO_E2_E3 (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e2_e3_no);
    end NO_E2_E3;
 
    --  -------------------------------------------------------------------------
 
-   function NO_E2_NI (C : Circle) return float is
+   function NO_E2_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e2_no_ni);
    end NO_E2_NI;
 
    --  -------------------------------------------------------------------------
 
-   function NO_E3_NI (C : Circle) return float is
+   function NO_E3_NI (C :  Multivectors.Circle) return float is
    begin
       return Element (C, C3_e3_no_ni);
    end NO_E3_NI;
@@ -507,42 +507,42 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   --     function E1_E2_NI (L : Line) return float is
+   --     function E1_E2_NI (L :  Multivectors.Line) return float is
    --     begin
    --        return Element (L, C3_e1_e2_ni);
    --     end E1_E2_NI;
 
    --  -------------------------------------------------------------------------
 
-   --     function E1_E3_NI (L : Line) return float is
+   --     function E1_E3_NI (L :  Multivectors.Line) return float is
    --     begin
    --        return Element (L, C3_e1_e3_ni);
    --     end E1_E3_NI;
 
    --  -------------------------------------------------------------------------
 
-   --     function E2_E3_NI (L : Line) return float is
+   --     function E2_E3_NI (L :  Multivectors.Line) return float is
    --     begin
    --        return Element (L, C3_e2_e3_ni);
    --     end E2_E3_NI;
 
    --  -------------------------------------------------------------------------
 
-   function E1_NO_NI (L : Line) return float is
+   function E1_NO_NI (L :  Multivectors.Line) return float is
    begin
       return Line_Element (L, C3_e1_no_ni);
    end E1_NO_NI;
 
    --  -------------------------------------------------------------------------
 
-   function E2_NO_NI (L : Line) return float is
+   function E2_NO_NI (L :  Multivectors.Line) return float is
    begin
       return Line_Element (L, C3_e2_no_ni);
    end E2_NO_NI;
 
    --  -------------------------------------------------------------------------
 
-   function E3_NO_NI (L : Line) return float is
+   function E3_NO_NI (L :  Multivectors.Line) return float is
    begin
       return Line_Element (L, C3_e3_no_ni);
    end E3_NO_NI;
@@ -862,10 +862,10 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Set_Circle (P1, P2, P3 : Multivectors.Normalized_Point) return Circle is
+   function Set_Circle (P1, P2, P3 : Multivectors.Normalized_Point) return  Multivectors.Circle is
       use Multivectors;
       OP        : Multivector;
-      theCircle : Circle;
+      theCircle :  Multivectors.Circle :=  Multivectors.New_Circle;
    begin
       OP := Outer_Product (Multivector (P1), Outer_Product (Multivector (P2),
                            Multivector (P3)));
@@ -931,10 +931,10 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Line (P1, P2 : Multivectors.Normalized_Point) return Line is
+   function Set_Line (P1, P2 : Multivectors.Normalized_Point) return  Multivectors.Line is
       use Multivectors;
       UR      : constant Multivector := Unit_R (Outer_Product (P1, Outer_Product (P2, ni)));
-      theLine : Line;
+      theLine :  Multivectors.Line :=  Multivectors.New_Line;
    begin
       GA_Utilities.Print_Multivector ("C3GA.Set_Line P2 ^ ni ", Outer_Product (P2, ni));
       GA_Utilities.Print_Multivector ("C3GA.Set_Line P1 ^ P2 ^ ni ", Outer_Product (P1, Outer_Product (P2, ni)));
