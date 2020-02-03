@@ -127,7 +127,9 @@ package body GA_Utilities is
       Curs      : Cursor := theBlades.First;
    begin
       New_Line;
-      Put_Line (Name);      Put_Line ("MV Size: " & Integer'Image (Multivector_Size (MV)));
+      Put_Line (Name);
+      Put_Line ("MV Type: " & MV_Type'Image (MV_Kind (MV)));
+      Put_Line ("MV Size: " & Integer'Image (Multivector_Size (MV)));
       Put_Line ("Grade Use Bitmap: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
       Put_Line ("Multivector Blades, Bitmap and Weight:");
       while Has_Element (Curs) loop
