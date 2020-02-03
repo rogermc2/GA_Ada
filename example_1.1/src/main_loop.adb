@@ -165,17 +165,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          end loop;
 
          if not Pick_Manager.Pick_Active then
-            aLine := Multivectors.Geometric_Product (Points.L1, Points.L2);
-            aLine := Multivectors.Unit_R (Multivectors.Geometric_Product (aLine, C3GA.ni));
+            aLine := Multivectors.Outer_Product (Points.L1, Points.L2);
+            aLine := Multivectors.Unit_R (Multivectors.Outer_Product (aLine, C3GA.ni));
             Multivectors.To_Line (aLine);
 
-            aCircle := Multivectors.Geometric_Product (Points.C1, Points.C2);
-            aCircle := Multivectors.Geometric_Product (aCircle, Points.C3);
+            aCircle := Multivectors.Outer_Product (Points.C1, Points.C2);
+            aCircle := Multivectors.Outer_Product (aCircle, Points.C3);
             Multivectors.To_Circle (aCircle);
 
             --  N_E3_Vec is a direction vector
             aDual_Plane :=
-              Multivectors.Geometric_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
+              Multivectors.Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
             aDual_Plane := Multivectors.Left_Contraction (Points.P1, aDual_Plane);
             Multivectors.To_Dual_Plane (aDual_Plane);
 
