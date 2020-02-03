@@ -127,6 +127,9 @@ package Multivectors is
    function MV_Size (MV : Multivector) return Natural;
    function Space_Dimension (MV : Multivector) return Integer;
    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
+   procedure To_Circle (MV : in out Multivector);
+   procedure To_Dual_Plane (MV : in out Multivector);
+   procedure To_Line (MV : in out Multivector);
    function To_Rotor (MV : Multivector) return Rotor;
    function To_Vector (MV : Multivector) return Vector;
    function Unit_E (MV : Multivector) return Multivector;

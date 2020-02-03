@@ -1654,7 +1654,28 @@ package body Multivectors is
         return Unsigned_Integer (Grade_Count);
     end Top_Grade_Index;
 
-    --  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+
+   procedure To_Circle (MV : in out Multivector) is
+   begin
+      MV.Type_Of_MV := MV_Circle;
+   end To_Circle;
+
+   --  -------------------------------------------------------------------------
+
+   procedure To_Dual_Plane (MV : in out Multivector) is
+   begin
+      MV.Type_Of_MV := MV_Dual_Plane;
+   end To_Dual_Plane;
+
+   --  -------------------------------------------------------------------------
+
+   procedure To_Line (MV : in out Multivector) is
+   begin
+      MV.Type_Of_MV := MV_Line;
+   end To_Line;
+
+   --  -------------------------------------------------------------------------
 
     function To_Rotor (MV : Multivector) return Rotor is
         use Blade;
