@@ -1,14 +1,9 @@
 
---  with Ada.Text_IO; use Ada.Text_IO;
-
 with Maths;
 
 with Blade;
 with Blade_Types; use Blade_Types;
 with GA_Utilities;
---  with Multivectors;
---  with Multivector_Type;
---  with Multivector_Type_Base;
 
 package body C3GA is
 
@@ -97,7 +92,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    --     function C3GA_Point (V : Vector_E3GA) return Normalized_Point is
-   --        thePoint : Normalized_Point;
+   --        thePoint : Normalized_Point := Multivectors.New_Normalized_Point;
    --     begin
    --        --  thePoint.Origin of a Normalized_Point is a constant 1.0
    --        thePoint.E1 := V.Coordinates (1);
@@ -413,7 +408,7 @@ package body C3GA is
 
    function ni return Multivectors.Multivector is
       use Multivectors;
-      Basis   : Multivectors.Vector;
+      Basis : Multivectors.Vector := Multivectors.New_Vector;
    begin
       Add_Blade (Basis, C3_ni, 1.0);
       return Basis;
@@ -423,7 +418,7 @@ package body C3GA is
    --  no is based on C3GA set to no_t
    function no return Multivectors.Normalized_Point is
       use Multivectors;
-      Basis  : Multivectors.Normalized_Point;
+      Basis  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
    begin
       Add_Blade (Basis, C3_no, 1.0);
       return Basis;
@@ -692,6 +687,7 @@ package body C3GA is
    end C3GA_Point;
 
    --  -------------------------------------------------------------------------
+
    --        function Norm_E (MV : Multivector) return Scalar is
    --           use GA_Maths;
    --           GU  : Grade_Usage :=  Grade_Use (MV);
@@ -857,7 +853,7 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function Probe (Pr : C3_Base) return Multivectors.Normalized_Point is
-      NP  : Multivectors.Normalized_Point;
+      NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Multivectors.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
@@ -908,10 +904,10 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector)
-                             return Dual_Plane is
+                             return Multivectors.Dual_Plane is
       use Multivectors;
       LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
-      D_Plane  : Dual_Plane;
+      D_Plane  : Multivectors.Dual_Plane := Multivectors.New_Dual_Plane;
    begin
       Multivectors.Update (D_Plane, Get_Blade_List (LC));
       return D_Plane;
@@ -976,7 +972,7 @@ package body C3GA is
       use GL.Types;
       use Blade;
       use Multivectors;
-      NP  : Multivectors.Normalized_Point;
+      NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
@@ -995,7 +991,7 @@ package body C3GA is
       use GL.Types;
       use Blade;
       use Multivectors;
-      NP : Normalized_Point;
+      NP : Normalized_Point := Multivectors.New_Normalized_Point;
    begin
       Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
       Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));

@@ -657,7 +657,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
-                            return Multivector is
+                                return Multivector is
         use Blade;
         use Blade_List_Package;
         Blades_1  : constant Blade_List := MV1.Blades;
@@ -782,7 +782,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
-                    return Blade.Basis_Blade is
+                        return Blade.Basis_Blade is
         use Blade;
         use Blade_List_Package;
         Blades    : constant Blade_List := MV.Blades;
@@ -1063,7 +1063,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
-                           return Multivector is
+                               return Multivector is
     begin
         return  Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
     end Left_Contraction;
@@ -1071,7 +1071,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
-                             return Ada.Strings.Unbounded.Unbounded_String is
+                                 return Ada.Strings.Unbounded.Unbounded_String is
         use Ada.Strings.Unbounded;
         use Blade;
         use Blade_List_Package;
@@ -1176,6 +1176,15 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Dual_Plane return Dual_Plane is
+        DP : Dual_Plane;
+    begin
+        DP.Type_Of_MV := Multivectors.MV_Dual_Plane;
+        return DP;
+    end New_Dual_Plane;
+
+    --  -------------------------------------------------------------------------
+
     function New_Multivector (Scalar_Weight : Float) return Multivector is
         MV : Multivector;
     begin
@@ -1247,9 +1256,18 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Vector return Vector is
+        V : Vector;
+    begin
+        V.Type_Of_MV := MV_Vector;
+        return V;
+    end New_Vector;
+
+    --  ------------------------------------------------------------------------
+
     function New_Vector (e1, e2 : Float) return Vector is
         use Blade;
-        V       : Vector;
+        V : Vector;
     begin
         V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E2_e1, e1));
@@ -1261,7 +1279,7 @@ package body Multivectors is
 
     function New_Vector (e1, e2, e3 : Float) return Vector is
         use Blade;
-        V       : Vector;
+        V : Vector;
     begin
         V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
@@ -1440,7 +1458,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
-                         return float is
+                             return float is
     begin
         return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
     end Scalar_Product;
@@ -1468,7 +1486,7 @@ package body Multivectors is
     begin
         if List (Blades) /= Empty_List then
             Blade_Sort_Package.Sort (List (Blades));
---              Reverse_Elements (Blades);
+            --              Reverse_Elements (Blades);
             Blade_Cursor := Blades.First;
             Prev_Curs := No_Element;
 
@@ -1730,7 +1748,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Matrix)
-                         return Multivector is
+                             return Multivector is
         Rev          : constant Multivector := Reverse_MV (MV);
         S_Product    : constant Float := Scalar_Product (MV, Rev, Met);
     begin

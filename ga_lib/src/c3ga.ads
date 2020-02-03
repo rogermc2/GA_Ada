@@ -33,7 +33,6 @@ package C3GA is
    subtype Line is Multivectors.Multivector;
    subtype Circle is Multivectors.Multivector;
    subtype Sphere is Multivectors.Multivector;
-   subtype Dual_Plane is Multivectors.Multivector;
    subtype Dual_Sphere is Multivectors.Multivector;
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
    type C3GA_Normalized_Point is array (1 .. 5) of Float;
@@ -115,10 +114,9 @@ package C3GA is
 --     function Outer_Product (NP : Normalized_Point; MV : Multivectors.Multivector)
 --                             return Normalized_Point;
 --     function Outer_Product (L1, L2 : Line) return Line;
---     function Norm_E (MV : Multivectors.Multivector) return Scalar;
    function Norm_E2 (V : Vector_E3GA) return Float;
    function Norm_R (V : Vector_E3GA) return Float;
-    function Norm_R2 (V : Vector_E3GA) return Float;
+   function Norm_R2 (V : Vector_E3GA) return Float;
 --     function Norm_R (MV : Multivectors.Multivector) return Float;
 --     function Norm_Rsq (MV : Multivectors.Multivector) return Float;
    function Probe (Pr : Blade_Types.C3_Base) return Multivectors.Normalized_Point;
@@ -127,7 +125,8 @@ package C3GA is
 --     procedure Set_Coords (P : out Multivectors.Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3GA; C1, C2, C3 : float);
 --     function Set_Coords (C1, C2, C3 : float) return Vector_E3GA;
-   function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector) return Dual_Plane;
+   function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector)
+                            return Multivectors.Dual_Plane;
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; NP : Normalized_Point);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NO_T);
 --     procedure Set_Multivector (MV : out  Multivectors.Multivector; N : GA_Base_Types.NI_T);
