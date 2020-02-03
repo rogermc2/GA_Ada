@@ -20,7 +20,7 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
-with GA_Utilities;
+--  with GA_Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
