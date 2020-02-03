@@ -5,8 +5,6 @@ with Interfaces;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GA_Utilities;
-
 package body Multivectors is
 
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
@@ -470,10 +468,10 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point is
-    begin
-        return Inner_Product (NP1, NP2, Blade.Hestenes_Inner_Product);
-    end Dot_C3;
+--      function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point is
+--      begin
+--          return Inner_Product (NP1, NP2, Blade.Hestenes_Inner_Product);
+--      end Dot_C3;
 
     --  -------------------------------------------------------------------------
 
@@ -996,42 +994,42 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
-                           return Normalized_Point is
-        use Blade;
-        use Blade_List_Package;
-        B1       : Blade.Basis_Blade;
-        B2       : Blade.Basis_Blade;
-        List_1   : constant Blade_List := NP1.Blades;
-        List_2   : constant Blade_List := NP2.Blades;
-        Cursor_1 : Cursor := List_1.First;
-        Cursor_2 : Cursor;
-        IP       : Blade.Basis_Blade;
-        NP       : Normalized_Point;
-    begin
-        while Has_Element (Cursor_1) loop
-            B1 := Element (Cursor_1);
-            Cursor_2 := List_2.First;
-            while Has_Element (Cursor_2) loop
-                B2 := Element (Cursor_2);
-                IP := Blade.Inner_Product_NP (B1, B2, Cont);
-                if Blade.Weight (IP) /= 0.0 then
-                    NP.Blades.Append (IP);
-                end if;
-                Next (Cursor_2);
-            end loop;
-            Next (Cursor_1);
-        end loop;
-
-        Simplify (NP);
-        GA_Utilities.Print_Multivector ("Multivector.Inner_Product_NP NP", NP);
-        return NP;
-
-    exception
-        when others =>
-            Put_Line ("An exception occurred in Multivector.Inner_Product_NP");
-            raise;
-    end Inner_Product_NP;
+--      function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
+--                             return Normalized_Point is
+--          use Blade;
+--          use Blade_List_Package;
+--          B1       : Blade.Basis_Blade;
+--          B2       : Blade.Basis_Blade;
+--          List_1   : constant Blade_List := NP1.Blades;
+--          List_2   : constant Blade_List := NP2.Blades;
+--          Cursor_1 : Cursor := List_1.First;
+--          Cursor_2 : Cursor;
+--          IP       : Blade.Basis_Blade;
+--          NP       : Normalized_Point;
+--      begin
+--          while Has_Element (Cursor_1) loop
+--              B1 := Element (Cursor_1);
+--              Cursor_2 := List_2.First;
+--              while Has_Element (Cursor_2) loop
+--                  B2 := Element (Cursor_2);
+--                  IP := Blade.Inner_Product_NP (B1, B2, Cont);
+--                  if Blade.Weight (IP) /= 0.0 then
+--                      NP.Blades.Append (IP);
+--                  end if;
+--                  Next (Cursor_2);
+--              end loop;
+--              Next (Cursor_1);
+--          end loop;
+--
+--          Simplify (NP);
+--          GA_Utilities.Print_Multivector ("Multivector.Inner_Product_NP NP", NP);
+--          return NP;
+--
+--      exception
+--          when others =>
+--              Put_Line ("An exception occurred in Multivector.Inner_Product_NP");
+--              raise;
+--      end Inner_Product_NP;
 
     --  -------------------------------------------------------------------------
 
@@ -1368,31 +1366,17 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Norm_Esq_NP (NP : Normalized_Point) return Float is
-    --          use Blade_List_Package;
-    --          RMV      : Multivector := Reverse_MV (NP);
-    --          Blades   : constant Blade_List := RMV.Blades;
-    --          R_Blades : Blade_List;
-    --          Curs     : Cursor := Blades.First;
-    --          aBlade   : Blade.Basis_Blade;
-        S        : Float;
-    begin
-        --          while Has_Element (Curs) loop
-        --              aBlade := Element (Curs);
-        --              R_Blades.Append (aBlade);
-        --              Next (Curs);
-        --          end loop;
-        --          RMV.Blades := R_Blades;
-
-        --          S := Scalar_Product_NP (NP, RMV);
-        S := Scalar_Product_NP (NP, NP);
-        GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP NP", NP);
-        --          GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP RMV", RMV);
-        if S < 0.0 then
-            S := 0.0;
-        end if;
-        return S;
-    end Norm_Esq_NP;
+--      function Norm_Esq_NP (NP : Normalized_Point) return Float is
+--          S        : Float;
+--      begin
+--          S := Scalar_Product_NP (NP, NP);
+--          GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP NP", NP);
+--          --          GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP RMV", RMV);
+--          if S < 0.0 then
+--              S := 0.0;
+--          end if;
+--          return S;
+--      end Norm_Esq_NP;
 
     --  -------------------------------------------------------------------------
 
@@ -1535,10 +1519,10 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float is
-    begin
-        return Scalar_Part (Inner_Product_NP (NP1, NP2, Blade.Left_Contraction));
-    end Scalar_Product_NP;
+--      function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float is
+--      begin
+--          return Scalar_Part (Inner_Product_NP (NP1, NP2, Blade.Left_Contraction));
+--      end Scalar_Product_NP;
 
     --  -------------------------------------------------------------------------
 

@@ -44,14 +44,12 @@ package Multivectors is
    function Basis_Vector (Index : E3_Base) return Vector;
    function Basis_Vector (Index : C3_Base) return Vector;
    function Blades (MV : Multivector) return Blade.Blade_List;
---     function C3_Multivector return Multivector;
    function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer)
                         return Float;
    procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
-   function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point;
    function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
@@ -79,8 +77,6 @@ package Multivectors is
                            return Multivector;
     function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
                             Cont : Blade.Contraction_Type) return Multivector;
---     function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
---                                return Normalized_Point;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -108,7 +104,7 @@ package Multivectors is
    function Norm_E (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
    function Norm_Esq (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
-   function Norm_Esq_NP (NP : Normalized_Point) return Float;
+--     function Norm_Esq_NP (NP : Normalized_Point) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
@@ -117,7 +113,7 @@ package Multivectors is
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                             return float;
-   function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float;
+--     function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
