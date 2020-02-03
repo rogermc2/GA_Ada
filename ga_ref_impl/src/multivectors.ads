@@ -105,7 +105,6 @@ package Multivectors is
    function Norm_E (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
    function Norm_Esq (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
---     function Norm_Esq_NP (NP : Normalized_Point) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
@@ -114,7 +113,6 @@ package Multivectors is
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                             return float;
---     function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;

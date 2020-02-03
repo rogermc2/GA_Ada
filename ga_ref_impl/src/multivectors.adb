@@ -263,24 +263,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    --     procedure Add_To_Matrix (M       : in out GA_Maths.Float_Matrix; BB : Blade.Basis_Blade;
-    --                              Blades  : Blade_List) is
-    --        use Blade_List_Package;
-    --        Curs    : Cursor := Blades.First;
-    --     begin
-    --        while Has_Element (Curs) loop
-    --           Add_To_Matrix (M, BB, Element (Curs));
-    --           Next (Curs);
-    --        end loop;
-    --
-    --     exception
-    --        when others =>
-    --           Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2");
-    --           raise;
-    --     end Add_To_Matrix;
-
-    --  -------------------------------------------------------------------------
-
     procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector)is
     begin
         MV_List.Append (MV);
@@ -465,13 +447,6 @@ package body Multivectors is
     begin
         return Inner_Product (MV1, MV2, Blade.Hestenes_Inner_Product);
     end Dot;
-
-    --  -------------------------------------------------------------------------
-
---      function Dot_C3 (NP1, NP2 : Normalized_Point) return Normalized_Point is
---      begin
---          return Inner_Product (NP1, NP2, Blade.Hestenes_Inner_Product);
---      end Dot_C3;
 
     --  -------------------------------------------------------------------------
 
@@ -994,45 +969,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
---      function Inner_Product_NP (NP1, NP2 : Normalized_Point; Cont : Blade.Contraction_Type)
---                             return Normalized_Point is
---          use Blade;
---          use Blade_List_Package;
---          B1       : Blade.Basis_Blade;
---          B2       : Blade.Basis_Blade;
---          List_1   : constant Blade_List := NP1.Blades;
---          List_2   : constant Blade_List := NP2.Blades;
---          Cursor_1 : Cursor := List_1.First;
---          Cursor_2 : Cursor;
---          IP       : Blade.Basis_Blade;
---          NP       : Normalized_Point;
---      begin
---          while Has_Element (Cursor_1) loop
---              B1 := Element (Cursor_1);
---              Cursor_2 := List_2.First;
---              while Has_Element (Cursor_2) loop
---                  B2 := Element (Cursor_2);
---                  IP := Blade.Inner_Product_NP (B1, B2, Cont);
---                  if Blade.Weight (IP) /= 0.0 then
---                      NP.Blades.Append (IP);
---                  end if;
---                  Next (Cursor_2);
---              end loop;
---              Next (Cursor_1);
---          end loop;
---
---          Simplify (NP);
---          GA_Utilities.Print_Multivector ("Multivector.Inner_Product_NP NP", NP);
---          return NP;
---
---      exception
---          when others =>
---              Put_Line ("An exception occurred in Multivector.Inner_Product_NP");
---              raise;
---      end Inner_Product_NP;
-
-    --  -------------------------------------------------------------------------
-
     function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean is
@@ -1374,20 +1310,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
---      function Norm_Esq_NP (NP : Normalized_Point) return Float is
---          S        : Float;
---      begin
---          S := Scalar_Product_NP (NP, NP);
---          GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP NP", NP);
---          --          GA_Utilities.Print_Multivector ("Multivectors.Norm_Esq_NP RMV", RMV);
---          if S < 0.0 then
---              S := 0.0;
---          end if;
---          return S;
---      end Norm_Esq_NP;
-
-    --  -------------------------------------------------------------------------
-
     function Outer_Product (MV1, MV2 : Multivector) return Multivector is
         use Blade;
         use Blade_List_Package;
@@ -1426,7 +1348,6 @@ package body Multivectors is
                 OP     : Bivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
---                  OP.Sorted := Sorted;
                 return OP;
             end;
         else
@@ -1434,7 +1355,6 @@ package body Multivectors is
                 OP     : Multivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
---                  OP.Sorted := Sorted;
                 return OP;
             end;
         end if;
@@ -1524,13 +1444,6 @@ package body Multivectors is
     begin
         return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
     end Scalar_Product;
-
-    --  -------------------------------------------------------------------------
-
---      function Scalar_Product_NP (NP1, NP2 : Normalized_Point) return float is
---      begin
---          return Scalar_Part (Inner_Product_NP (NP1, NP2, Blade.Left_Contraction));
---      end Scalar_Product_NP;
 
     --  -------------------------------------------------------------------------
 
@@ -1779,6 +1692,7 @@ package body Multivectors is
     end Unit_R;
 
     --  -------------------------------------------------------------------------
+
     procedure Update (MV     : in out Multivector; Blades : Blade.Blade_List;
                       Sorted : Boolean := False) is
     begin
