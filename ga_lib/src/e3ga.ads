@@ -134,6 +134,7 @@ package E3GA is
 --      function To_2D (V : Vector) return E2GA.Vector;
 --      function To_3D (V : E2GA.Vector) return Vector;
 --     function To_Vector (MV : Syn_SMultivector) return Vector;
+    function To_MV_Vector (V : E3_Vector) return Multivectors.Vector;
    --  Unit_e normalizes rotor R
 --     function Unit_e (R : Rotor) return Rotor;
    --  Unit_e normalizes Vector X

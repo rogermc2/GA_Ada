@@ -1224,7 +1224,19 @@ package body E3GA is
    --          return V;
    --     end To_Vector;
 
-   --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
+
+    function To_MV_Vector (V : E3_Vector) return Multivectors.Vector is
+        use Blade_Types;
+        MVV : Multivectors.Vector := Multivectors.New_Vector;
+    begin
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e1, Float (V (GL.X))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e2, Float (V (GL.Y))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e3, Float (V (GL.Z))));
+        return MVV;
+    end To_MV_Vector;
+
+    --  ------------------------------------------------------------------------
    --  Unit_e normalizes rotor R
    --     function Unit_e (R : Rotor) return Rotor is
    --        R2         : float;
