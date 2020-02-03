@@ -1115,6 +1115,13 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+   function MV_Kind (MV : Multivector) return MV_Type is
+   begin
+        return MV.Type_Of_MV;
+   end MV_Kind;
+
+   --  -------------------------------------------------------------------------
+
     function MV_First (MV_List : Multivector_List) return Multivector is
     begin
         return MV_List.First_Element;
