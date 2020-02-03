@@ -1258,6 +1258,14 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Normalized_Point return Normalized_Point is
+        NP : Normalized_Point;
+    begin
+        NP.Type_Of_MV := MV_Normalized_Point;
+        return NP;
+    end New_Normalized_Point;
+
+    --  -------------------------------------------------------------------------
     function New_Rotor return Rotor is
     begin
         return  New_Rotor (1.0);

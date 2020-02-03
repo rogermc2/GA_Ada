@@ -955,9 +955,10 @@ package body C3GA is
 --        use GA_Maths.Complex_Types;
       use Multivectors;
       use Blade;
-      NP  : Multivectors.Normalized_Point;
+      NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
 --        NI  : constant Complex := (0.0, 1.0);
    begin
+
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
       Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
