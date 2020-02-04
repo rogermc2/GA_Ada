@@ -86,7 +86,7 @@ package body C3GA_Draw is
               Draw_Free (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
-               --  Draw_Round doesn't method
+               --  Draw_Round doesn't use method
                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
@@ -158,7 +158,7 @@ package body C3GA_Draw is
                                      Tail, To_VectorE3GA (Analysis.M_Vectors (1)),
                                      Analysis.Scalors (1));
             when Bivector_Subclass =>
-                Put_Line ("C3GA_Draw.Draw_Free Bivector.");
+            Put_Line ("C3GA_Draw.Draw_Free Bivector.");
             GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Tail,
@@ -168,7 +168,7 @@ package body C3GA_Draw is
                                    Palet_Type        => Palet_Type,
                                    Scale             => Sqrt (Analysis.Scalors (1) / GA_Maths.Pi));
             when Trivector_Subclass =>
-                Put_Line ("C3GA_Draw.Draw_Free Trivector.");
+            Put_Line ("C3GA_Draw.Draw_Free Trivector.");
             GA_Draw.Draw_Trivector (Render_Program    => Render_Program,
                                     Model_View_Matrix => Model_View_Matrix,
                                     Base              => Tail,

@@ -80,59 +80,60 @@ package body GA_Draw is
 
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
-   procedure Draw_Bivector (Render_Program           : GL.Objects.Programs.Program;
-                            Model_View_Matrix       : GL.Types.Singles.Matrix4 ;
+   procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
+                            Model_View_Matrix              : GL.Types.Singles.Matrix4 ;
                             Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3GA;
-                            Palet_Type               : Palet.Colour_Palet;
-                            Scale                    : float := 1.0;
-                            Method                   : Method_Type := Draw_Bivector_Circle) is
+                            Palet_Type                     : Palet.Colour_Palet;
+                            Scale                          : float := 1.0;
+                            Method                         : Method_Type := Draw_Bivector_Circle) is
       use GA_Maths;
       use GL.Types.Singles;
-      Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Vertex_Array_Object   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
       --          Cords                : Array_3D := (0.0, 0.0, 0.0);
       --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       --          O2                   : Multivectors.Vector := Ortho_2;
-      Base_Coords          : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
-      Normal_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Normal);
+      E2_Norm               : Float := C3GA.Norm_E2 (Base);
+      Base_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+      Normal_Coords         : constant GA_Maths.Array_3D := C3GA.Get_Coords (Normal);
       Ortho_1_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_1);
       Ortho_2_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_2);
-      Translation_Vector   : Vector3 :=  (0.0, 0.0, 0.0);
-      MV_Normal            : constant Multivectors.Vector := Multivectors.New_Vector
+      Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
+      MV_Normal             : constant Multivectors.Vector := Multivectors.New_Vector
         (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
-      MV_Ortho_1           : constant Multivectors.Vector := Multivectors.New_Vector
+      MV_Ortho_1            : constant Multivectors.Vector := Multivectors.New_Vector
         (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
-      MV_Ortho_2           : constant Multivectors.Vector := Multivectors.New_Vector
+      MV_Ortho_2            : constant Multivectors.Vector := Multivectors.New_Vector
         (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
-      MV_Matrix            : Matrix4 := Model_View_Matrix;
-      Scaled               : GL.Types.Single;
-      E2_Norm              : Float := C3GA.Norm_E2 (Base);
-      RT                   : Multivectors.Rotor;
-      OK                   : Boolean := True;
+      MV_Matrix             : Matrix4 := Model_View_Matrix;
+      Scaled                : GL.Types.Single;
+      RT                    : Multivectors.Rotor;
+      OK                    : Boolean := True;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+      Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+      if E2_Norm > 0.0 then
+         Translation_Vector := (Single (Base_Coords (1)), Single (Base_Coords (2)),
+                                Single (Base_Coords (3)));
+         MV_Matrix := Maths.Translation_Matrix (Translation_Vector) * MV_Matrix;
+      end if;
 
-        if Method /= Draw_Bivector_Parallelogram and then
-          Method /= Draw_Bivector_Parallelogram_No_Vectors then
-            if E2_Norm > 0.0 then
-                Translation_Vector := (Single (Base_Coords (1)), Single (Base_Coords (2)),
-                Single (Base_Coords (3)));
-                MV_Matrix := Maths.Translation_Matrix (Translation_Vector) * MV_Matrix;
-            end if;
+      if Method /= Draw_Bivector_Parallelogram and then
+        Method /= Draw_Bivector_Parallelogram_No_Vectors then
+
             --  Rotate e3 to normal direction
-            RT := E3GA_Utilities.Rotor_Vector_To_Vector
-              (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-            OK := GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
-        else
-            E2_Norm := C3GA.Norm_E2 (C3GA.To_VectorE3GA
-                                     ((Multivectors.Outer_Product (MV_Ortho_1, MV_Ortho_2))));
-            Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
-            MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
-        end if;
+         RT := E3GA_Utilities.Rotor_Vector_To_Vector
+           (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
+         OK := GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
+      else
+         E2_Norm := C3GA.Norm_E2 (C3GA.To_VectorE3GA
+                                  ((Multivectors.Outer_Product (MV_Ortho_1, MV_Ortho_2))));
+         Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
+         MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
+      end if;
 
       if OK then
          case Method is
@@ -142,71 +143,71 @@ package body GA_Draw is
             when others => null;
          end case;
       else
-         Put_Line ("Draw_Object.Draw_Bivector, Invertible rotor RT.");
+         Put_Line ("GA_Draw.Draw_Bivector, Invertible rotor RT.");
       end if;
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
+         Put_Line ("An exception occurred in GA_Draw.Draw_Bivector.");
          raise;
    end Draw_Bivector;
 
    --  ----------------------------------------------------------------------
 
---     procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
---                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
---                              Palet_Type             : Palet.Colour_Palet;
---                              Scale                  : float := 1.0;
---                              Method                 : Method_Type := Draw_Bivector_Circle) is
---        use GA_Maths;
---        use GL.Types.Singles;
---
---        Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
---        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
---        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
---        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
---        --          O2                   : Multivectors.Vector := Ortho_2;
---        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
---        MVP_Matrix           : Matrix4 := Singles.Identity4;
---        Scaled               : GL.Types.Single;
---        E2_Norm              : Float;
---     begin
---        GL.Objects.Programs.Use_Program (Render_Program);
---        Vertex_Array_Object.Initialize_Id;
---        Vertex_Array_Object.Bind;
---
---        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
---
---        --          MVP_Matrix := Model_View_Matrix;
---        Translate := (Single (C3GA.e1 (Base)),
---                      Single (C3GA.e2 (Base)),
---                      Single (C3GA.e3 (Base)));
---        E2_Norm := Multivectors.Norm_E2 (Base);
---        if  E2_Norm /= 0.0  then
---           MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
---        end if;
---
---        if  Method = Draw_Bivector_Parallelogram and then
---          Method = Draw_Bivector_Parallelogram_No_Vectors then
---           MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
---        else
---           E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
---           Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (pi / E2_Norm));
---           MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
---             * MVP_Matrix;
---        end if;
---
---        Case Method is
---           when Draw_Bivector_Circle |
---                Draw_Bivector_Circle_Outline =>
---              Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
---           when others => null;
---        end case;
---     exception
---        when  others =>
---           Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
---           raise;
---     end Draw_Bivector;
+   --     procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
+   --                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
+   --                              Palet_Type             : Palet.Colour_Palet;
+   --                              Scale                  : float := 1.0;
+   --                              Method                 : Method_Type := Draw_Bivector_Circle) is
+   --        use GA_Maths;
+   --        use GL.Types.Singles;
+   --
+   --        Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   --        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
+   --        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
+   --        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
+   --        --          O2                   : Multivectors.Vector := Ortho_2;
+   --        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+   --        MVP_Matrix           : Matrix4 := Singles.Identity4;
+   --        Scaled               : GL.Types.Single;
+   --        E2_Norm              : Float;
+   --     begin
+   --        GL.Objects.Programs.Use_Program (Render_Program);
+   --        Vertex_Array_Object.Initialize_Id;
+   --        Vertex_Array_Object.Bind;
+   --
+   --        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
+   --
+   --        --          MVP_Matrix := Model_View_Matrix;
+   --        Translate := (Single (C3GA.e1 (Base)),
+   --                      Single (C3GA.e2 (Base)),
+   --                      Single (C3GA.e3 (Base)));
+   --        E2_Norm := Multivectors.Norm_E2 (Base);
+   --        if  E2_Norm /= 0.0  then
+   --           MVP_Matrix := Maths.Translation_Matrix (Translate) * MVP_Matrix;
+   --        end if;
+   --
+   --        if  Method = Draw_Bivector_Parallelogram and then
+   --          Method = Draw_Bivector_Parallelogram_No_Vectors then
+   --           MVP_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S)) * MVP_Matrix;
+   --        else
+   --           E2_Norm := Multivectors.Norm_E2 (Multivectors.Outer_Product (Ortho_1, Ortho_2));
+   --           Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (pi / E2_Norm));
+   --           MVP_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled))
+   --             * MVP_Matrix;
+   --        end if;
+   --
+   --        Case Method is
+   --           when Draw_Bivector_Circle |
+   --                Draw_Bivector_Circle_Outline =>
+   --              Draw_Circle (Render_Program, MVP_Matrix, Palet_Type, Method);
+   --           when others => null;
+   --        end case;
+   --     exception
+   --        when  others =>
+   --           Put_Line ("An exception occurred in Draw_Object.Draw_Bivector.");
+   --           raise;
+   --     end Draw_Bivector;
 
    --  ----------------------------------------------------------------------
 
@@ -442,7 +443,7 @@ package body GA_Draw is
       use GL.Types.Singles;
       use  Multivectors;
       Translation          : GL.Types.Singles.Matrix4;
---        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
+      --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       Dir_e1               : constant Single := Direction (GL.X);
       Dir_e2               : constant Single := Direction (GL.Y);
       Dir_e3               : constant Single := Direction (GL.Z);
@@ -511,7 +512,7 @@ package body GA_Draw is
                                 (1, 2, 6, 5),
                                 (6, 2, 3, 7),
                                 (0, 3, 2, 1));
-      Vertex              : Vector3_Array (1 .. 8) :=
+      Vertex               : Vector3_Array (1 .. 8) :=
                                (others => (others => 0.0));
       GL_Vertices          : Vector3_Array (1 .. 4) :=
                                (others => (others => 0.0));
@@ -617,12 +618,12 @@ package body GA_Draw is
       use Geosphere;
       Sphere : constant Geosphere.Geosphere := Palet.Current_Sphere;
    begin
-        Count := Count + 1;
-         Geosphere.New_Sphere_List (Sphere);
-         --  gsDraw(m_sphere, 0.0f);
-         Put_Line ("GA_Draw.Draw_Sphere calling GS_Draw Count : " &
+      Count := Count + 1;
+      Geosphere.New_Sphere_List (Sphere);
+      --  gsDraw(m_sphere, 0.0f);
+      Put_Line ("GA_Draw.Draw_Sphere calling GS_Draw Count : " &
                   Integer'Image (Count));
-         Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);
+      Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);
 
       if Normal = 0.0 then
          Draw_Sphere_List (Render_Program, MV_Matrix);
@@ -662,7 +663,7 @@ package body GA_Draw is
       use GL.Types.Singles;
       use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
       use GA_Maths;
---        Vector_Base       : constant Singles.Vector3 := (0.0, 0.0, 0.0);
+      --        Vector_Base       : constant Singles.Vector3 := (0.0, 0.0, 0.0);
       Scale_Sign        : Float;
       P_Scale           : Float;
       Normal            : Single;
@@ -678,17 +679,17 @@ package body GA_Draw is
 
       if Method = Draw_TV_Parellelepiped or
         Method = Draw_TV_Parellelepiped_No_Vectors then
-        Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
-        Draw_Trivector (Render_Program, MV_Matrix, Base, Scale,
-                        Palet_Type, Draw_TV_Sphere) ;
+         Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
+         Draw_Trivector (Render_Program, MV_Matrix, Base, Scale,
+                         Palet_Type, Draw_TV_Sphere) ;
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
       else
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
       end if;
 
       if C3GA.Norm_e2 (Base) /= 0.0 then
-        Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
-        MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
+         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
@@ -711,16 +712,16 @@ package body GA_Draw is
             null;
          when Draw_TV_Parellelepiped =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
---              Draw_Vector (Render_Program    => Render_Program,
---                           Model_View_Matrix => MV_Matrix,
---                           Tail              => Vector_Base,
---                           Direction         => ,
---                           Scale             => );
+            --              Draw_Vector (Render_Program    => Render_Program,
+            --                           Model_View_Matrix => MV_Matrix,
+            --                           Tail              => Vector_Base,
+            --                           Direction         => ,
+            --                           Scale             => );
          when Draw_TV_Parellelepiped_No_Vectors =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
---              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
---                                   Draw_TV_Parellelepiped_No_Vectors);
-          when others => null;
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+         when others => null;
             Put_Line ("GA_Draw.Draw_Trivector others.");
       end case;
 
@@ -736,7 +737,7 @@ package body GA_Draw is
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
                              Base              : C3GA.Vector_E3GA; Scale : float := 1.0;
                              V                 : Multivector_Analyze.Vector_Array;
---                               Palet_Type        : Palet.Colour_Palet;
+                             --                               Palet_Type        : Palet.Colour_Palet;
                              Method            : Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
       use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
@@ -756,15 +757,15 @@ package body GA_Draw is
 
       if Method = Draw_TV_Parellelepiped or
         Method = Draw_TV_Parellelepiped_No_Vectors then
-        Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
+         Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
       else
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
       end if;
 
       if C3GA.Norm_e2 (Base) /= 0.0 then
-        Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
-        MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
+         Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+         MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
       end if;
 
       MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
@@ -791,9 +792,9 @@ package body GA_Draw is
                                  Draw_TV_Parellelepiped);
          when Draw_TV_Parellelepiped_No_Vectors =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
---              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
---                                   Draw_TV_Parellelepiped_No_Vectors);
-          when others => null;
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+         when others => null;
             Put_Line ("GA_Draw.Draw_Trivector others.");
       end case;
 
@@ -805,10 +806,10 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Draw_Vector (Render_Program  : GL.Objects.Programs.Program;
+   procedure Draw_Vector (Render_Program    : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Tail, Direction : C3GA.Vector_E3GA;
-                          Scale           : float := 1.0) is
+                          Tail, Direction   : C3GA.Vector_E3GA;
+                          Scale             : float := 1.0) is
       use GL.Culling;
       use GL.Toggles;
       use GL.Types.Singles;
@@ -819,8 +820,8 @@ package body GA_Draw is
       MV_Matrix            : Matrix4 := Model_View_Matrix;
       Dir_Coords           : constant GA_Maths.Array_3D :=
                                C3GA.Get_Coords (Direction);
---        GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
---        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
+      --        GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
+      --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
       MV_Dir               : constant Multivectors.Vector :=
                                New_Vector (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
       aRotor               : Rotor;
