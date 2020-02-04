@@ -12,8 +12,8 @@ package body E3GA_Utilities is
    --  -------------------------------------------------------------------------
 
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
-        V          :  constant Multivectors.Vector :=
-                       Inner_Product (BV, BV, Blade.Left_Contraction);
+      V          :  constant Multivectors.Vector :=
+                     Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := E3GA.e1_e2 (V);
       Half_Angle : float;
       Cos_HA     : float;
@@ -48,7 +48,7 @@ package body E3GA_Utilities is
       BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
       R2 := Norm_E (BV);
---        R2 := Norm_R (BV);
+      --        R2 := Norm_R (BV);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
@@ -104,9 +104,10 @@ package body E3GA_Utilities is
       R      : Rotor;
       Result : Rotor;
    begin
-      if  Scalar_Product (From, To) < -0.9 then
+      if (Norm_Esq (From) = 0.0 or Norm_Esq (To) = 0.0) or else (Scalar_Product (From, To) < -0.9) then
          w0 := Left_Contraction (From, Outer_Product (From, To));
          Nsq := Norm_Esq (w0);
+
          if Nsq = 0.0 then
             w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e1)));
             w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e2)));
@@ -118,8 +119,14 @@ package body E3GA_Utilities is
          else  --  Nsq /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
             S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To, From))));
+            Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector S: " &
+                        float'Image (S));
             R := (1.0 - Geometric_Product (To, From)) / S;
+            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R: ",
+                                            R);
             Result := Geometric_Product (R, Outer_Product (From, Unit_e (w0)));
+            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result: ",
+                                            Result);
          end if;
       else
          --  (1 + ba)(1 + ab) = 1 + ab + ba + baab
