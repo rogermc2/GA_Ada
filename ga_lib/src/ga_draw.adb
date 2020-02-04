@@ -494,12 +494,12 @@ package body GA_Draw is
 
    procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
                                   Model_View_Matrix : GL.Types.Singles.Matrix4;
-                                  V_Coords          : C3GA.Vector_E3GA;
+                                  MVC               : Multivector_Analyze.Vector_Array;
                                   Scale             : Float;
                                   Method            : Method_Type) is
       use GL.Objects.Buffers;
       use Singles;
-      E3_V_Coords          : constant E3GA.E3_Vector := V_Coords;
+      VC                   : Vector3_Array (1 .. MVC'Length);
       Scale_Matrix         : Matrix4;
       Scale_Sign           : GL.Types.Single;
       Vertex_Buffer        : GL.Objects.Buffers.Buffer;
@@ -511,11 +511,11 @@ package body GA_Draw is
                                 (1, 2, 6, 5),
                                 (6, 2, 3, 7),
                                 (0, 3, 2, 1));
-      Vertices             : Vector3_Array (1 .. 8) :=
+      Vertex              : Vector3_Array (1 .. 8) :=
                                (others => (others => 0.0));
       GL_Vertices          : Vector3_Array (1 .. 4) :=
                                (others => (others => 0.0));
-      Vertex               : Vector3;
+      aVertex              : Vector3;
       Vertex_Vectors       : constant Ints.Vector3_Array (1 .. 8) :=
                                ((-1, -1, -1),  --  -
                                 (0, -1, -1),   --  0
@@ -533,6 +533,9 @@ package body GA_Draw is
       V3                   : E3GA.E3_Vector;
       Stride               : constant Int := 0;
    begin
+      for index in 1 .. MVC'Length loop
+         VC (Int (index)) := E3GA.Get_Coords (MVC (index));
+      end loop;
       if Scale >= 0.0 then
          Scale_Sign := 1.0;
       else
@@ -543,32 +546,32 @@ package body GA_Draw is
       end if;
 
       for Row in Int range 1 .. 8 loop
-         Vertex := (0.0, 0.0, 0.0);
+         aVertex := (0.0, 0.0, 0.0);
          for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
             Vertex_Index := Vertex_Vectors (Row) (Col);
             if Vertex_Index >= 0 then
-               Vertex := Vertex + E3_V_Coords;
-               Vertices (Row) := Vertex;
+               aVertex := aVertex + VC (Vertex_Index);
+               Vertex (Row) := aVertex;
             end if;
          end loop;
       end loop;
 
       for Index in GL_Normals'Range loop
-         V1 := Vertices (Polygon (Index) (GL.X));
-         V2 := Vertices (Polygon (Index) (GL.Y));
-         V3 := Vertices (Polygon (Index) (GL.W));
+         V1 := Vertex (Polygon (Index) (GL.X));
+         V2 := Vertex (Polygon (Index) (GL.Y));
+         V3 := Vertex (Polygon (Index) (GL.W));
          GL_Normals (Index) :=
            (Scale_Sign * E3GA.Outer_Product ((V2 - V1), (V3 - V1)));
 
          if Scale >= 0.0 then
             for GL_Index in Int range 1 .. 3 loop
                GL_Vertices (GL_Index) :=
-                 Vertices (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                 Vertex (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
             end loop;
          else
             for GL_Index in reverse Int range  3 .. 1 loop
                GL_Vertices (GL_Index) :=
-                 Vertices (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                 Vertex (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
             end loop;
          end if;
       end loop;
@@ -582,21 +585,8 @@ package body GA_Draw is
       Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
 
       if Method = Draw_TV_Parellelepiped then
-         Draw_Vector (Render_Program => Render_Program,
-                      Model_View_Matrix => Model_View_Matrix,
-                      Tail           => Vertices (1),
-                      Direction      => V_Coords,
-                      Scale          => Scale);
-         Draw_Vector (Render_Program => Render_Program,
-                      Model_View_Matrix => Model_View_Matrix,
-                      Tail           => Vertices (2),
-                      Direction      => V_Coords,
-                      Scale          => Scale);
-         Draw_Vector (Render_Program => Render_Program,
-                      Model_View_Matrix => Model_View_Matrix,
-                      Tail           => Vertices (3),
-                      Direction      => V_Coords,
-                      Scale          => Scale);
+         Draw_Parallelepiped
+           (Render_Program, Model_View_Matrix, MVC, Scale, Method);
       end if;
 
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -664,69 +654,15 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
    --  Based on draw.cpp drawTriVector
-   --      procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
-   --                                Model_View_Matrix : GL.Types.Singles.Matrix4;
-   --                                Position : Multivectors.Multivector; Colour : GL.Types.Colors.Color;
-   --                                Scale : float;
-   --                                Method : Trivector_Method_Type := Draw_TV_Sphere) is
-   --          use GL.Types.Singles;
-   --          Scale_S             : Single := Single (Abs (Scale));
-   --          Z_Max               : constant Single := 4.0 * Single (GA_Maths.Pi);
-   --          Normal              : Single;  -- s
-   --          Translation_Matrix  : Matrix4 := Identity4;
-   --          Scaling_Matrix      : Matrix4 := Identity4;
-   --          MV_Matrix           : Matrix4;
-   --      begin
-   --          --  scaleSign = (scale < 0.0f) ? -1.0f : 1.0f;
-   --          --  adjust scale for sphere
-   --          Scale_S := Abs (Maths.Cube_Root
-   --                          (Scale_S / ((4.0 / 3.0) * Single (GA_Maths.Pi))));
-   --          --  main part of draw.cpp drawTriVector
-   --          --  s = (scale < 0.0f) ? -1.0f : 1.0f, f;
-   --          if Multivectors.Norm_E2 (Position) >= 0.0 then
-   --              Translation_Matrix :=
-   --                Maths.Translation_Matrix ((Single (C3GA.e1 (Position)),
-   --                                          Single (C3GA.e2 (Position)),
-   --                                          Single (C3GA.e3 (Position))));
-   --          end if;
-   --          Utilities.Print_Matrix ("GA_Draw.Draw_Trivector Translation_Matrix", Translation_Matrix);
-   --
-   --          Scaling_Matrix := Maths.Scaling_Matrix (Scale_S);
-   --          MV_Matrix := Translation_Matrix * Scaling_Matrix * Model_View_Matrix;
-   --
-   --          case Method is
-   --              when DRAW_TV_SPHERE =>
-   --                  --  g_drawState.drawSphere
-   --                  --  (((g_drawState.getDrawMode() & OD_ORIENTATION) ?
-   --                  --     s * 0.1f : 0.0f));
-   --                  if Get_Draw_Mode = OD_Orientation then
-   --                      Normal := 0.1;
-   --                  else
-   --                      Normal := 0.0;
-   --                  end if;
-   --                  --  g_drawState.drawSphere (s)
-   --                  Draw_Sphere (Render_Program, MV_Matrix, Normal, Colour);
-   --              when others => null;
-   --          end case;
-   --
-   --      exception
-   --          when  others =>
-   --              Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
-   --              raise;
-   --      end Draw_Trivector;
-
-   --  ------------------------------------------------------------------------
-
    procedure Draw_Trivector (Render_Program    : GL.Objects.Programs.Program;
                              Model_View_Matrix : GL.Types.Singles.Matrix4;
                              Base              : C3GA.Vector_E3GA; Scale : float := 1.0;
-                             V                 : C3GA.Vector_E3GA;
                              Palet_Type        : Palet.Colour_Palet;
                              Method            : Method_Type := Draw_TV_Sphere) is
       use GL.Types.Singles;
       use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
       use GA_Maths;
-      V_Coords          : constant Array_3D := C3GA.Get_Coords (V);
+--        Vector_Base       : constant Singles.Vector3 := (0.0, 0.0, 0.0);
       Scale_Sign        : Float;
       P_Scale           : Float;
       Normal            : Single;
@@ -743,11 +679,84 @@ package body GA_Draw is
       if Method = Draw_TV_Parellelepiped or
         Method = Draw_TV_Parellelepiped_No_Vectors then
         Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
-         if V_Coords = (0.0, 0.0, 0.0) then
-            Put_Line ("GA_Draw.Draw_Trivector, VC = 0, so Draw_Trivector");
-            Draw_Trivector (Render_Program, MV_Matrix, Base, Scale, (0.0, 0.0, 0.0),
-                            Palet_Type, Draw_TV_Sphere) ;
-         end if;
+        Draw_Trivector (Render_Program, MV_Matrix, Base, Scale,
+                        Palet_Type, Draw_TV_Sphere) ;
+         P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
+      else
+         P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
+      end if;
+
+      if C3GA.Norm_e2 (Base) /= 0.0 then
+        Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+        MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
+      end if;
+
+      MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
+
+      case Method is
+         when Draw_TV_Sphere =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
+            if Palet.Get_Draw_Mode.Orientation then
+               Normal := 0.1;
+            else
+               Normal := 0.0;
+            end if;
+            --  g_drawState.drawSphere (s)
+            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+         when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
+            null;
+         when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
+            null;
+         when Draw_TV_Parellelepiped =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
+--              Draw_Vector (Render_Program    => Render_Program,
+--                           Model_View_Matrix => MV_Matrix,
+--                           Tail              => Vector_Base,
+--                           Direction         => ,
+--                           Scale             => );
+         when Draw_TV_Parellelepiped_No_Vectors =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
+--              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+--                                   Draw_TV_Parellelepiped_No_Vectors);
+          when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
+      end case;
+
+   exception
+      when  others =>
+         Put_Line ("An exception occurred in GA_Draw.Draw_Trivector.");
+         raise;
+   end Draw_Trivector;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Draw_Trivector (Render_Program    : GL.Objects.Programs.Program;
+                             Model_View_Matrix : GL.Types.Singles.Matrix4;
+                             Base              : C3GA.Vector_E3GA; Scale : float := 1.0;
+                             V                 : Multivector_Analyze.Vector_Array;
+--                               Palet_Type        : Palet.Colour_Palet;
+                             Method            : Method_Type := Draw_TV_Sphere) is
+      use GL.Types.Singles;
+      use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
+      use GA_Maths;
+      Scale_Sign        : Float;
+      P_Scale           : Float;
+      Normal            : Single;
+      Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+      Translation       : Singles.Vector3;
+      MV_Matrix         : Matrix4 := Model_View_Matrix;
+   begin
+      if Scale >= 0.0 then
+         Scale_Sign := 1.0;
+      else
+         Scale_Sign := -1.0;
+      end if;
+
+      if Method = Draw_TV_Parellelepiped or
+        Method = Draw_TV_Parellelepiped_No_Vectors then
+        Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
       else
          P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
@@ -782,8 +791,8 @@ package body GA_Draw is
                                  Draw_TV_Parellelepiped);
          when Draw_TV_Parellelepiped_No_Vectors =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
-            Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                                 Draw_TV_Parellelepiped_No_Vectors);
+--              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+--                                   Draw_TV_Parellelepiped_No_Vectors);
           when others => null;
             Put_Line ("GA_Draw.Draw_Trivector others.");
       end case;

@@ -5,6 +5,7 @@ with GL.Objects.Programs;
 with GL.Types; use GL.Types;
 
 with C3GA;
+with Multivector_Analyze;
 with Palet;
 
 package GA_Draw is
@@ -36,15 +37,17 @@ package GA_Draw is
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              V : C3GA.Vector_E3GA;
                               Palet_Type : Palet.Colour_Palet;
+                              Method  : Method_Type := Draw_TV_Sphere);
+    procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
+                              Model_View_Matrix : GL.Types.Singles.Matrix4;
+                              Base : C3GA.Vector_E3GA; Scale : float := 1.0;
+                              V : Multivector_Analyze.Vector_Array;
+--                                Palet_Type : Palet.Colour_Palet;
                               Method  : Method_Type := Draw_TV_Sphere);
     procedure Draw_Vector (Render_Program : GL.Objects.Programs.Program;
                            Model_View_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction : C3GA.Vector_E3GA;
                            Scale : float := 1.0);
---      procedure Init_Projection_Matrix (Proj_Matrix : out GL.Types.Singles.Matrix4;
---                                        Near : GL.Types.Single := -100.0;
---                                        Far  : GL.Types.Single := 100.0);
 
 end GA_Draw;

@@ -4,7 +4,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 with C3GA;
 with GA_Draw;
 with GA_Maths;
-with Multivector_Analyze;
 
 package body C3GA_Draw is
 
@@ -13,6 +12,10 @@ package body C3GA_Draw is
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
                          Palet_Type : Palet.Colour_Palet);
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
+                         Model_View_Matrix : GL.Types.Singles.Matrix4;
+                         Analysis : Multivector_Analyze.MV_Analysis;
+                         Palet_Type        : Palet.Colour_Palet);
+   procedure Draw_Free (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
                          Palet_Type : Palet.Colour_Palet);
@@ -78,8 +81,9 @@ package body C3GA_Draw is
                Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
                --  Draw_Flat doesn't use method
                Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
-            when Free_Blade => null;
+            when Free_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Free.");
+              Draw_Free (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
                --  Draw_Round doesn't method
@@ -112,7 +116,7 @@ package body C3GA_Draw is
         Direction  : constant C3GA.Vector_E3GA :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
         Scale      : Float;
-        V          : constant C3GA.Vector_E3GA := (0.0, 0.0, 0.0);
+--          V          : constant C3GA.Vector_E3GA := (0.0, 0.0, 0.0);
     begin
         case Analysis.M_Type.Blade_Subclass is
             when Line_Subclass =>
@@ -126,7 +130,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Flat Point.");
                 Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
                 GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                        Point_Pos, Scale, V, Palet_Type);
+                                        Point_Pos, Scale, Palet_Type);
             when others => null;
         end case;
 
@@ -135,6 +139,49 @@ package body C3GA_Draw is
             Put_Line ("An exception occurred in C3GA_Draw.Draw_Flat.");
             raise;
     end Draw_Flat;
+
+   --  -------------------------------------------------------------------------
+
+    procedure Draw_Free (Render_Program : GL.Objects.Programs.Program;
+                         Model_View_Matrix : GL.Types.Singles.Matrix4;
+                         Analysis : Multivector_Analyze.MV_Analysis;
+                         Palet_Type        : Palet.Colour_Palet) is
+      use GA_Maths.Float_Functions;
+      use Multivector_Analyze;
+      use C3GA;
+      Tail  : constant Vector_E3GA := (0.0, 0.0, 0.0);
+    begin
+        case Analysis.M_Type.Blade_Subclass is
+            when Vector_Subclass =>
+                Put_Line ("C3GA_Draw.Draw_Free Vector.");
+                GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
+                                     Tail, To_VectorE3GA (Analysis.M_Vectors (1)),
+                                     Analysis.Scalors (1));
+            when Bivector_Subclass =>
+                Put_Line ("C3GA_Draw.Draw_Free Bivector.");
+            GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
+                                   Model_View_Matrix => Model_View_Matrix,
+                                   Base              => Tail,
+                                   Normal            => To_VectorE3GA (Analysis.M_Vectors (3)),
+                                   Ortho_1           => To_VectorE3GA (Analysis.M_Vectors (1)),
+                                   Ortho_2           => To_VectorE3GA (Analysis.M_Vectors (2)),
+                                   Palet_Type        => Palet_Type,
+                                   Scale             => Sqrt (Analysis.Scalors (1) / GA_Maths.Pi));
+            when Trivector_Subclass =>
+                Put_Line ("C3GA_Draw.Draw_Free Trivector.");
+            GA_Draw.Draw_Trivector (Render_Program    => Render_Program,
+                                    Model_View_Matrix => Model_View_Matrix,
+                                    Base              => Tail,
+                                    Scale             => Analysis.Scalors (1),
+                                    V                 => Analysis.M_Vectors);
+            when others => null;
+        end case;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in C3GA_Draw.Draw_Free.");
+            raise;
+    end Draw_Free;
 
     --  -------------------------------------------------------------------------
     --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
@@ -158,14 +205,16 @@ package body C3GA_Draw is
     --  Based on c3ga_draw.drawFlat A.bladeSubclass() == mvAnalysis::POINT
     procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
-                          Position : Multivectors.Normalized_Point;
+                          Analysis : Multivector_Analyze.MV_Analysis;
                           Palet_Type : Palet.Colour_Palet) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
-        V     : constant C3GA.Vector_E3GA := (0.0, 0.0, 0.0);
     begin
-        --        E3GA_Utilities.Print_Vector ("Draw_Point, Pos", Pos);
-        GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
-                                C3GA.To_VectorE3GA (Position), Scale, V, Palet_Type);
+      GA_Draw.Draw_Trivector (Render_Program    => Render_Program,
+                              Model_View_Matrix => Model_View_Matrix,
+                              Base              => Analysis.Points (1),
+                              Scale             => Scale,
+                              Palet_Type        => Palet_Type,
+                              Method            => GA_Draw.Draw_TV_Sphere);
 
     exception
         when others =>
@@ -190,7 +239,6 @@ package body C3GA_Draw is
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
         Radius     : constant Single := Single (Analysis.Scalors (1));
-        VC         : constant Vector_E3GA := (0.0, 0.0, 0.0);
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
@@ -199,11 +247,11 @@ package body C3GA_Draw is
             P_Scale := 4.0 / 3.0 * GA_Maths.PI * (Palet.Point_Size ** 3);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos + Radius * M_Vec1,
-                                    P_Scale, VC, Palet_Type,
+                                    P_Scale, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
             GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
                                     Point_Pos - Radius * M_Vec1,
-                                    P_Scale, VC, Palet_Type,
+                                    P_Scale, Palet_Type,
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
@@ -221,7 +269,7 @@ package body C3GA_Draw is
             P_Scale := 4.0 / 3.0 * GA_Maths.PI * Float (Radius ** 3);
             GA_Draw.Draw_Trivector
               (Render_Program, Model_View_Matrix,
-               Point_Pos, P_Scale, VC, Palet_Type, GA_Draw.Draw_TV_Sphere);
+               Point_Pos, P_Scale, Palet_Type, GA_Draw.Draw_TV_Sphere);
          when others => null;
       end case;
 
