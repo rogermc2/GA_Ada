@@ -109,25 +109,6 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    --  Geometric_Product_NP computes the geometric product of two basis blades.
-    function Geometric_Product_NP (BA, BB : Basis_Blade) return Basis_Blade is
-        BA_Type : constant C3_Base := C3_Base'Enum_Val (BA.Bitmap);
-        BB_Type : constant C3_Base := C3_Base'Enum_Val (BB.Bitmap);
-        GP      : Basis_Blade;
-    begin
-        if (BA_Type = C3_ni and then BB_Type = C3_no) or
-          (BA_Type = C3_no and then BB_Type = C3_ni) then
-            GP := GP_OP (BA, (BB.Bitmap, -BB.Weight), False);
-            Print_Blade ("Blade Geometric_Product_NP GP ni no:", GP);
-        elsif (not (BA_Type = C3_no and then BB_Type = C3_no)) and then
-          (not (BA_Type = C3_ni and then BB_Type = C3_ni)) then
-            GP := GP_OP (BA, BB, False);
-        end if;
-        return GP;
-    end Geometric_Product_NP;
-
-    --  ------------------------------------------------------------------------
-
     function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade is
         S_Blade : constant Basis_Blade := New_Scalar_Blade (Sc);
     begin
@@ -238,18 +219,21 @@ package body Blade is
                 else  --  Grade_1 <= Grade_2 and Grade (BB) = Grade_2 - Grade_1
                     IP_Blade := BB;
                 end if;
+
             when Right_Contraction =>
                 if (Grade_1 < Grade_2) or (Grade (BB) /= Grade_1 - Grade_2) then
                     null;
                 else
                     IP_Blade := BB;
                 end if;
+
             when Hestenes_Inner_Product =>
                 if (Grade_1 = 0) or (Grade_2 = 0) then
                     null;
                 elsif Abs (Grade_1 - Grade_2) = Grade (BB) then
                     IP_Blade := BB;
                 end if;
+
             when Modified_Hestenes_Inner_Product =>
                 if Abs (Grade_1 - Grade_2) = Grade (BB) then
                     IP_Blade := BB;
