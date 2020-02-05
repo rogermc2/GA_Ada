@@ -4,18 +4,17 @@ with Ada.Text_IO; use Ada.Text_IO;
 package body Blade is
 
     --     type Metric_Array is array (Integer range <>) of float;
+    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
+    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
+                                   BB : Basis_Blade; Cont : Contraction_Type)
+                                   return Basis_Blade;
+
+    --  -------------------------------------------------------------------------
 
     function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
     begin
         return Bitmap (Left) < Bitmap (Right);
     end "<";
-
-    --  -------------------------------------------------------------------------
-
-    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
-    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
-                                   BB : Basis_Blade; Cont : Contraction_Type)
-                                   return Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
@@ -263,15 +262,6 @@ package body Blade is
             Put_Line ("An exception occurred in Blade.Inner_Product_Filter");
             raise;
     end Inner_Product_Filter;
-
-    --  ------------------------------------------------------------------------
-
-    function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                               return Basis_Blade is
-    begin
-        return Inner_Product_Filter (Grade (BA), Grade (BB),
-                                     Geometric_Product_NP (BA, BB), Cont);
-    end Inner_Product_NP;
 
     --  ------------------------------------------------------------------------
 

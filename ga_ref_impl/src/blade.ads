@@ -58,8 +58,6 @@ package Blade is
                            return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
                            Cont : Contraction_Type) return Basis_Blade;
-   function Inner_Product_NP (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                              return Basis_Blade;
    function Minus_1_Power (Power : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
