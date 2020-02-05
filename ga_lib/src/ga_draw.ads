@@ -10,7 +10,8 @@ with Palet;
 
 package GA_Draw is
 
-    type Method_Type is (Draw_Bivector_Circle, Draw_Bivector_Parallelogram,
+    type Method_Type is (Draw_Method_Undefined, Draw_Bivector_Circle,
+                         Draw_Bivector_Parallelogram,
                          Draw_Bivector_Parallelogram_No_Vectors,
                          Draw_Bivector_Cross, Draw_Bivector_Curly_Tail,
                          Draw_Bivector_Swirl, Draw_Bivector_Circle_Outline,

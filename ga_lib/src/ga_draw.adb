@@ -140,6 +140,8 @@ package body GA_Draw is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
                Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
+            when Draw_TV_Sphere =>
+               Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
             when others => null;
          end case;
       else
@@ -262,6 +264,7 @@ package body GA_Draw is
          use Palet;
          Norm_Z : Single;
       begin
+         Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " & Circle_Part'Image (Part));
          case Part is
             when Back_Part | Outline_Part =>
                Norm_Z := 1.0;
@@ -303,6 +306,7 @@ package body GA_Draw is
                                                   Count => Num_Steps);
          end if;
       end Draw_Part;
+
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);

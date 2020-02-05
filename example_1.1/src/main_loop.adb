@@ -37,7 +37,6 @@ with Shader_Manager;
 with Points;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-   --      subtype tVec4f is Singles.Vector4;
 
    --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
    Red            : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);

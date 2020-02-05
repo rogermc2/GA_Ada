@@ -12,7 +12,8 @@ package C3GA_Draw is
                    Model_View_Matrix : GL.Types.Singles.Matrix4;
                    MV                : Multivectors.Multivector;
                    Palet_Type        : Palet.Colour_Palet;
-                   Method            : GA_Draw.Method_Type := GA_Draw.Draw_TV_Sphere);
+                   Method            : GA_Draw.Method_Type :=
+                     GA_Draw.Draw_Method_Undefined);
    procedure Draw_Point (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis          : Multivector_Analyze.MV_Analysis;
