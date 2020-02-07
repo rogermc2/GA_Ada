@@ -56,10 +56,11 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   --     function "*" (F : Float; V : Vector) return Vector is
-   --     begin
-   --        return (F * V (1), F * V (2), F * V (3), F * V (4), F * V (5));
-   --     end  "*";
+      function "*" (L : Float; R : Vector_E3GA) return Vector_E3GA is
+        use GL.Types;
+      begin
+         return (Single (L) * R (GL.X), Single (L) * R (GL.Y), Single (L) * R (GL.Z));
+      end  "*";
 
    --  -------------------------------------------------------------------------
 
@@ -943,9 +944,10 @@ package body C3GA is
    end Set_Line;
 
    --  ------------------------------------------------------------------------
-   --  c3ga_util.h
-   --  inline normalizedPoint c3gaPoint (const vectorE3GA &l)
-   --  return _normalizedPoint (l + no + 0.5f * norm_e2 (l) * ni);  no = ni = 1.0
+   --  From c3ga_util.h
+   --  c3gaPoint is afunction that returns a normalizedPoint
+   --  inline normalizedPoint c3gaPoint (const vectorE3GA &vl)
+   --  return _normalizedPoint (vl + no + 0.5f * norm_e2 (vl) * ni);  no = ni = 1.0
 
    function Set_Normalized_Point (V : Vector_E3GA) return Multivectors.Normalized_Point is
 --        use GA_Maths.Complex_Types;
@@ -954,14 +956,12 @@ package body C3GA is
       NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
 --        NI  : constant Complex := (0.0, 1.0);
    begin
-
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
       Add_Blade (NP, New_Basis_Blade (C3_e1, Float (V (GL.X))));
       Add_Blade (NP, New_Basis_Blade (C3_e2, Float (V (GL.Y))));
       Add_Blade (NP, New_Basis_Blade (C3_e3, Float (V (GL.Z))));
       Add_Blade (NP, New_Basis_Blade (C3_ni, 0.5 * (Norm_E2 (V))));
---        GA_Utilities.Print_Multivector ("C3GA.Set_Normalized_Point NP", NP);
       return NP;
    end Set_Normalized_Point;
 

@@ -123,18 +123,46 @@ package body Blade is
     end Geometric_Product;
 
     --  ------------------------------------------------------------------------
-
+    --  Based on BasisBlade.java geometricProduct(BasisBlade a, BasisBlade b, double[] m)
+    --  wher m is an array of doubles giving the metric for each basis vector.
     function Geometric_Product (BA, BB : Basis_Blade;
                                 Met : Metric.Metric_Matrix) return Basis_Blade is
-        Result     : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
+        Result : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
         --  BM is the meet (bitmap of annihilated vectors)
-        BM         : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
-        Row        : Integer range 1 .. 6 := 1;
-        Col        : Integer range 1 .. 5 := 1;
+        --  Only retain vectors commomt to both blades
+        BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
+        BM1    : constant Unsigned_Integer := BM;
+        Row    : Integer range 1 .. Met'Length(1) := 1;
+        Col    : Integer range 1 .. Met'Length(2) := 1;
     begin
+        New_Line;
+--         Put_Line ("Blade.Geometric_Product BA" &
+--                     Unsigned_Integer'Image (BA.Bitmap) & "  " &
+--                     Float'Image (BA.Weight));
+--         Put_Line ("Blade.Geometric_Product BB" &
+--                     Unsigned_Integer'Image (BB.Bitmap) & "  " &
+--                     Float'Image (BB.Weight));
+       Put_Line ("Blade.Geometric_Product initial Result" &
+                   Unsigned_Integer'Image (Result.Bitmap) & "  " &
+                   Float'Image (Result.Weight));
+       Put_Line ("Blade.Geometric_Product BM meet: " & Unsigned_Integer'Image (BM));
         while BM /= 0 loop
             if (BM and 1) /= 0 then
+                --  This basis vector is non-zero
                 Result.Weight := Result.Weight * Met (Row, Col);
+                if BM1 = 19 then
+                    Put_Line ("Blade.Geometric_Product processing BM " &
+                                Unsigned_Integer'Image (BM));
+                    Put_Line ("Blade.Geometric_Product Result" &
+                                Unsigned_Integer'Image (Result.Bitmap) & "  " &
+                                Float'Image (Result.Weight));
+                    Put_Line ("Blade.Geometric_Product, Met (Row, Col)" &
+                                Float'Image (Met (Row, Col)));
+                end if;
+--                  Put_Line ("Blade.Geometric_Product BM, Col, Met (Row, Col)" &
+--                           Unsigned_Integer'Image (BM) & "  " &
+--                           Integer'Image (Col) & "  " &
+--                           Float'Image (Met (Row, Col)));
             end if;
             if Col = 5 then
                 Row := Row + 1;
@@ -142,8 +170,13 @@ package body Blade is
             else
                 Col := Col + 1;
             end if;
+            --  Move rigth to next basis vector indicator
             BM := BM / 2;  --  shift right
         end loop;
+--         Put_Line ("Blade.Geometric_Product Result" &
+--                     Unsigned_Integer'Image (Result.Bitmap) & "  " &
+--                     Float'Image (Result.Weight));
+--          New_Line;
         return Result;
 
     exception
@@ -200,7 +233,18 @@ package body Blade is
 
     function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
                             Cont : Contraction_Type) return Basis_Blade is
+       GM : constant Basis_Blade := Geometric_Product (BA, BB, Met);
+       IP : constant Basis_Blade := Inner_Product_Filter (Grade (BA), Grade (BB),
+                                     Geometric_Product (BA, BB, Met), Cont);
     begin
+        if Weight (GM) /= 0.0 then
+            Put_Line ("Blade.Inner_Product Geometric_Product " &
+                        Unsigned_Integer'Image (Bitmap (GM)) & "  " &
+                        Float'Image (Weight (GM)));
+            Put_Line ("Blade.Inner_Product filtered Inner_Product " &
+                        Unsigned_Integer'Image (Bitmap (IP)) & "  " &
+                        Float'Image (Weight (IP)));
+        end if;
         return Inner_Product_Filter (Grade (BA), Grade (BB),
                                      Geometric_Product (BA, BB, Met), Cont);
     end Inner_Product;
