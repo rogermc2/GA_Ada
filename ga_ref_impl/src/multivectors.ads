@@ -114,6 +114,7 @@ package Multivectors is
    function Norm_Esq (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
+   function Random_Blade (Dim, Grade : Integer; Scale : Float) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
    function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;

@@ -5,6 +5,10 @@ with Interfaces;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Maths;
+
+with GA_Utilities;
+
 package body Multivectors is
 
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
@@ -25,6 +29,7 @@ package body Multivectors is
     function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean;
+    function Random_Vector (Dim : Integer; Scale : Float) return Multivector;
     procedure Simplify (Blades : in out Blade.Blade_List);
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
 
@@ -935,35 +940,35 @@ package body Multivectors is
                             Cont : Blade.Contraction_Type) return Multivector is
         use Blade;
         use Blade_List_Package;
-        B1       : Blade.Basis_Blade;
-        B2       : Blade.Basis_Blade;
-        List_1   : constant Blade_List := MV1.Blades;
-        List_2   : constant Blade_List := MV2.Blades;
-        Cursor_1 : Cursor := List_1.First;
-        Cursor_2 : Cursor;
-        IP       : Blade.Basis_Blade;
-        MV       : Multivector;
+        B1        : Blade.Basis_Blade;
+        B2        : Blade.Basis_Blade;
+        List_1    : constant Blade_List := MV1.Blades;
+        List_2    : constant Blade_List := MV2.Blades;
+        Cursor_1  : Cursor := List_1.First;
+        Cursor_2  : Cursor;
+        Blades_IP : Blade.Basis_Blade;
+        MV        : Multivector;
     begin
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                IP := Blade.Inner_Product (B1, B2, Met, Cont);
-                if Blade.Weight (IP) /= 0.0 then
-                    MV.Blades.Append (IP);
+                Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
+                if Blade.Weight (Blades_IP) /= 0.0 then
+                    MV.Blades.Append (Blades_IP);
                 end if;
                 Next (Cursor_2);
             end loop;
             Next (Cursor_1);
         end loop;
-
+        GA_Utilities.Print_Multivector ("Multivectors.Inner_Product metric MV", MV);
         Simplify (MV);
         return MV;
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Inner_Product");
+            Put_Line ("An exception occurred in Multivectors.Inner_Product metric");
             raise;
     end Inner_Product;
 
@@ -994,7 +999,7 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Matrix_To_MV_Invert");
+            Put_Line ("An exception occurred in Multivectors.Matrix_To_MV_Invert");
             raise;
     end Matrix_To_MV_Invert;
 
@@ -1108,19 +1113,19 @@ package body Multivectors is
 
     exception
         when anError : others =>
-            Put_Line ("An exception occurred in Multivector.Multivector_String.");
+            Put_Line ("An exception occurred in Multivectors.Multivector_String.");
             Put_Line (Exception_Information (anError));
             raise;
     end Multivector_String;
 
     --  -------------------------------------------------------------------------
 
-   function MV_Kind (MV : Multivector) return MV_Type is
-   begin
+    function MV_Kind (MV : Multivector) return MV_Type is
+    begin
         return MV.Type_Of_MV;
-   end MV_Kind;
+    end MV_Kind;
 
-   --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
     function MV_First (MV_List : Multivector_List) return Multivector is
     begin
@@ -1330,7 +1335,8 @@ package body Multivectors is
     end Norm_E;
 
     --  -------------------------------------------------------------------------
-    --  Based on Geometric Algebrs for Computer Science section 3.1.3
+    --  Based on Geometric Algebra for Computer Science section 3.1.3, eq (3.4)
+    --  and ga_ref_impl.Multivector.java norm_e2()
     function Norm_Esq (MV : Multivector) return Float is
         S : Float := Scalar_Product (MV, Reverse_MV (MV));
     begin
@@ -1388,14 +1394,14 @@ package body Multivectors is
     begin
         if MV1.Type_Of_MV = MV_Vector and then MV1.Type_Of_MV = MV_Vector then
             declare
-                OP     : Bivector;
+                OP : Bivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
                 return OP;
             end;
         else
             declare
-                OP     : Multivector;
+                OP : Multivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
                 return OP;
@@ -1404,12 +1410,44 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Outer_Product.");
+            Put_Line ("An exception occurred in Multivectors.Outer_Product.");
             raise;
     end Outer_Product;
 
     --  -------------------------------------------------------------------------
 
+    function Random_Blade (Dim, Grade : Integer; Scale : Float) return Multivector is
+        Result : Multivector :=
+                   New_Multivector (2.0 * Scale * Float (Maths.Random_Float) - 0.5);
+    begin
+        For index in 1 .. Grade loop
+            Result := Outer_Product (Result, Random_Vector (Dim, Scale));
+        end loop;
+        return  Result;
+    end Random_Blade;
+
+    --  -------------------------------------------------------------------------
+
+    function Random_Vector (Dim : Integer; Scale : Float) return Multivector is
+        Result : Multivector :=
+                   New_Multivector (2.0 * Scale * Float (Maths.Random_Float) - 0.5);
+        use Interfaces;
+        use Blade;
+        Bases  : Blade_List;
+        aBlade : Basis_Blade;
+        Bit    : Unsigned_32;
+    begin
+        For index in Unsigned_32 range  0 .. Unsigned_32 (Dim - 1) loop
+            Bit := Shift_Left (1, Natural (index));
+            aBlade := New_Basis_Blade (C3_Base'Enum_Val (Integer (Bit)),
+                                       2.0 * Scale * Float (Maths.Random_Float) - 0.5);
+            Bases.Append (aBlade);
+        end loop;
+        Result.Blades := Bases;
+        return  Result;
+    end Random_Vector;
+
+    --  -------------------------------------------------------------------------
     function Reverse_MV (MV : Multivector) return Multivector is
         use Blade;
         use Blade_List_Package;
@@ -1654,28 +1692,28 @@ package body Multivectors is
         return Unsigned_Integer (Grade_Count);
     end Top_Grade_Index;
 
-   --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
-   procedure To_Circle (MV : in out Multivector) is
-   begin
-      MV.Type_Of_MV := MV_Circle;
-   end To_Circle;
+    procedure To_Circle (MV : in out Multivector) is
+    begin
+        MV.Type_Of_MV := MV_Circle;
+    end To_Circle;
 
-   --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
-   procedure To_Dual_Plane (MV : in out Multivector) is
-   begin
-      MV.Type_Of_MV := MV_Dual_Plane;
-   end To_Dual_Plane;
+    procedure To_Dual_Plane (MV : in out Multivector) is
+    begin
+        MV.Type_Of_MV := MV_Dual_Plane;
+    end To_Dual_Plane;
 
-   --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
-   procedure To_Line (MV : in out Multivector) is
-   begin
-      MV.Type_Of_MV := MV_Line;
-   end To_Line;
+    procedure To_Line (MV : in out Multivector) is
+    begin
+        MV.Type_Of_MV := MV_Line;
+    end To_Line;
 
-   --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------
 
     function To_Rotor (MV : Multivector) return Rotor is
         use Blade;
@@ -1733,7 +1771,7 @@ package body Multivectors is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Unit_R.");
+            Put_Line ("An exception occurred in Multivectors.Unit_R.");
             raise;
     end Unit_R;
 
@@ -1743,15 +1781,16 @@ package body Multivectors is
         use GA_Maths.Float_Functions;
         theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
+        GA_Utilities.Print_Multivector ("Multivectors.Unit_R Metric MV", MV);
         if theNorm = 0.0 then
-            raise MV_Exception with "Multivectors.Unit_R encountered a null multivector";
+            raise MV_Exception with "Multivectors.Unit_R Metric encountered a null multivector";
         end if;
 
         return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Unit_R.");
+            Put_Line ("An exception occurred in Multivectors.Unit_R Metric.");
             raise;
     end Unit_R;
 
