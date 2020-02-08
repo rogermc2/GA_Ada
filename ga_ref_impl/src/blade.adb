@@ -34,6 +34,27 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
+    function BB_First (BB_List : Blade_List) return Basis_Blade is
+    begin
+        return BB_List.First_Element;
+    end BB_First;
+
+    --  -------------------------------------------------------------------------
+
+    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade is
+        use Blade_List_Package;
+        Curs : Cursor := BB_List.First;
+    begin
+        if Index > 1 then
+            for count in 2 .. Index loop
+                Next (Curs);
+            end loop;
+        end if;
+        return Element (Curs);
+    end BB_Item;
+
+    --  -------------------------------------------------------------------------
+
     function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                            return Ada.Strings.Unbounded.Unbounded_String is
         use Names_Package;
@@ -133,20 +154,20 @@ package body Blade is
         --  Only retain vectors commomt to both blades
         BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
         BM1    : constant Unsigned_Integer := BM;
-        Row    : Integer range 1 .. Met'Length(1) := 1;
-        Col    : Integer range 1 .. Met'Length(2) := 1;
+        Row    : Integer range 1 .. Met'Length (1) := 1;
+        Col    : Integer range 1 .. Met'Length (2) := 1;
     begin
         New_Line;
---         Put_Line ("Blade.Geometric_Product BA" &
---                     Unsigned_Integer'Image (BA.Bitmap) & "  " &
---                     Float'Image (BA.Weight));
---         Put_Line ("Blade.Geometric_Product BB" &
---                     Unsigned_Integer'Image (BB.Bitmap) & "  " &
---                     Float'Image (BB.Weight));
-       Put_Line ("Blade.Geometric_Product initial Result" &
-                   Unsigned_Integer'Image (Result.Bitmap) & "  " &
-                   Float'Image (Result.Weight));
-       Put_Line ("Blade.Geometric_Product BM meet: " & Unsigned_Integer'Image (BM));
+        --         Put_Line ("Blade.Geometric_Product BA" &
+        --                     Unsigned_Integer'Image (BA.Bitmap) & "  " &
+        --                     Float'Image (BA.Weight));
+        --         Put_Line ("Blade.Geometric_Product BB" &
+        --                     Unsigned_Integer'Image (BB.Bitmap) & "  " &
+        --                     Float'Image (BB.Weight));
+        Put_Line ("Blade.Geometric_Product initial Result" &
+                    Unsigned_Integer'Image (Result.Bitmap) & "  " &
+                    Float'Image (Result.Weight));
+        Put_Line ("Blade.Geometric_Product BM meet: " & Unsigned_Integer'Image (BM));
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
@@ -160,10 +181,10 @@ package body Blade is
                     Put_Line ("Blade.Geometric_Product, Met (Row, Col)" &
                                 Float'Image (Met (Row, Col)));
                 end if;
---                  Put_Line ("Blade.Geometric_Product BM, Col, Met (Row, Col)" &
---                           Unsigned_Integer'Image (BM) & "  " &
---                           Integer'Image (Col) & "  " &
---                           Float'Image (Met (Row, Col)));
+                --                  Put_Line ("Blade.Geometric_Product BM, Col, Met (Row, Col)" &
+                --                           Unsigned_Integer'Image (BM) & "  " &
+                --                           Integer'Image (Col) & "  " &
+                --                           Float'Image (Met (Row, Col)));
             end if;
             if Col = 5 then
                 Row := Row + 1;
@@ -174,10 +195,10 @@ package body Blade is
             --  Move rigth to next basis vector indicator
             BM := BM / 2;  --  shift right
         end loop;
---         Put_Line ("Blade.Geometric_Product Result" &
---                     Unsigned_Integer'Image (Result.Bitmap) & "  " &
---                     Float'Image (Result.Weight));
---          New_Line;
+        --         Put_Line ("Blade.Geometric_Product Result" &
+        --                     Unsigned_Integer'Image (Result.Bitmap) & "  " &
+        --                     Float'Image (Result.Weight));
+        --          New_Line;
         return Result;
 
     exception
@@ -234,9 +255,9 @@ package body Blade is
 
     function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
                             Cont : Contraction_Type) return Basis_Blade is
-       GM : constant Basis_Blade := Geometric_Product (BA, BB, Met);
-       IP : constant Basis_Blade := Inner_Product_Filter (Grade (BA), Grade (BB),
-                                     Geometric_Product (BA, BB, Met), Cont);
+        GM : constant Basis_Blade := Geometric_Product (BA, BB, Met);
+        IP : constant Basis_Blade := Inner_Product_Filter (Grade (BA), Grade (BB),
+                                                           Geometric_Product (BA, BB, Met), Cont);
     begin
         if Weight (GM) /= 0.0 then
             Put_Line ("Blade.Inner_Product Geometric_Product " &
@@ -291,6 +312,13 @@ package body Blade is
             Put_Line ("An exception occurred in Blade.Inner_Product_Filter");
             raise;
     end Inner_Product_Filter;
+
+    --  ------------------------------------------------------------------------
+
+    function List_Length (Blades : Blade_List) return Integer is
+    begin
+        return Integer (Blades.Length);
+    end List_Length;
 
     --  ------------------------------------------------------------------------
 
@@ -416,7 +444,7 @@ package body Blade is
                 Blade_B := Element (Blade_Cursor);
                 if Bitmap (Blade_B) = Bitmap (Current_Blade) then
                     Current_Blade := New_Basis_Blade (Bitmap (Current_Blade),
-                                  Weight (Current_Blade) + Weight (Blade_B));
+                                                      Weight (Current_Blade) + Weight (Blade_B));
                 else
                     if Weight (Current_Blade) /= 0.0 then
                         Result.Append (Current_Blade);

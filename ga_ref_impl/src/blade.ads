@@ -44,6 +44,9 @@ package Blade is
 
    function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
+
+   function BB_First (BB_List : Blade_List) return Basis_Blade;
+   function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String;
@@ -58,6 +61,7 @@ package Blade is
                            return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix;
                            Cont : Contraction_Type) return Basis_Blade;
+   function List_Length (Blades : Blade_List) return Integer;
    function Minus_1_Power (Power : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
                              return Basis_Blade;
