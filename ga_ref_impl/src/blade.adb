@@ -34,6 +34,13 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
+    procedure Add_Blade (Blades : in out Blade_List; BB : Basis_Blade)is
+    begin
+        Blades.Append (BB);
+    end Add_Blade;
+
+    --  -------------------------------------------------------------------------
+
     function BB_First (BB_List : Blade_List) return Basis_Blade is
     begin
         return BB_List.First_Element;

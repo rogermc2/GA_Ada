@@ -45,6 +45,7 @@ package Blade is
    function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
 
+   procedure Add_Blade (Blades : in out Blade_List; BB : Basis_Blade);
    function BB_First (BB_List : Blade_List) return Basis_Blade;
    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
