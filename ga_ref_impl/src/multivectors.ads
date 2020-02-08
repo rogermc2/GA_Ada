@@ -102,6 +102,7 @@ package Multivectors is
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;
+   function New_Multivector (Blades : Blade.Blade_List) return Multivector;
    function New_Normalized_Point return Normalized_Point;
    function New_Rotor return Rotor;
    function New_Rotor (Scalar_Weight : Float) return Rotor;

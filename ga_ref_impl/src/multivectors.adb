@@ -1240,6 +1240,15 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Multivector (Blades : Blade.Blade_List) return Multivector is
+        MV : Multivector;
+    begin
+        MV.Blades := Blades;
+        return  MV;
+    end New_Multivector;
+
+    --  -------------------------------------------------------------------------
+
     function New_Normalized_Point return Normalized_Point is
         NP : Normalized_Point;
     begin
