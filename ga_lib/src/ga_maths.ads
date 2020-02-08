@@ -78,13 +78,10 @@ package GA_Maths is
    GU_8     : constant Grade_Usage := 16;
    GU_16    : constant Grade_Usage := 32;
 
-   function Bit_Count (Bitmap : Unsigned_Integer) return Natural;
-   function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural;
    function Is_Diagonal (aMatrix : Float_Matrix) return Boolean;
    function Maximum (I1, I2 : Integer) return Integer;
    function Maximum (I1, I2 : Float) return Float;
    function Minimum (I1, I2 : Integer) return Integer;
    function Minimum (I1, I2 : Float) return Float;
-   function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_Integer) return Natural;
 
 end GA_Maths;
