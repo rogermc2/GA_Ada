@@ -1,9 +1,10 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Bits;
+
 package body Blade is
 
-    --     type Metric_Array is array (Integer range <>) of float;
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB : Basis_Blade; Cont : Contraction_Type)
@@ -96,7 +97,7 @@ package body Blade is
         Swaps : Natural := 0;
     begin
         while A /= 0 loop
-            Swaps := Swaps + Bit_Count (A and Map_B);
+            Swaps := Swaps + Bits.Bit_Count (A and Map_B);
             A := A / 2;
         end loop;
 
@@ -208,7 +209,7 @@ package body Blade is
 
     function Grade (BB : Basis_Blade) return Integer is
     begin
-        return  GA_Maths.Bit_Count (BB.Bitmap);
+        return  Bits.Bit_Count (BB.Bitmap);
     end Grade;
 
     --  ------------------------------------------------------------------------

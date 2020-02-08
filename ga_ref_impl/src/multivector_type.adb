@@ -3,6 +3,8 @@ with Interfaces;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Bits;
+
 package body Multivector_Type is
 
     --  Init is based on MultivectorType.java Init
@@ -47,7 +49,7 @@ package body Multivector_Type is
             if Geometric_Product (Versor_Inv, Grade_Inv) =
               Geometric_Product (Grade_Inv, Versor_Inv) then
                 Rec.MV_Kind := Multivector_Type;
-            elsif Bit_Count (Grade_Use (MV)) = 1 then
+            elsif Bits.Bit_Count (Grade_Use (MV)) = 1 then
                 Rec.MV_Kind := Blade_MV;
             else
                 Rec.MV_Kind := Versor_MV;
@@ -116,7 +118,7 @@ package body Multivector_Type is
             Multivectors.Compress (GV_Inv, Epsilon);
             if Grade_Use (GV_Inv) /= 1 or GV_Inv = VG_Inv then
                 Rec.MV_Kind := Multivector_Type;
-            elsif Bit_Count (Grade_Use (MV)) = 1 then
+            elsif Bits.Bit_Count (Grade_Use (MV)) = 1 then
                 Rec.MV_Kind := Blade_MV;
             else
                 Rec.MV_Kind := Versor_MV;

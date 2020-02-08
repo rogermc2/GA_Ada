@@ -7,6 +7,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
+with Bits;
 with GA_Utilities;
 
 package body Multivectors is
@@ -1075,6 +1076,12 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function List_Length (MV_List : Multivector_List) return Integer is
+    begin
+        return  Integer (MV_List.Length);
+    end List_Length;
+
+    --  -------------------------------------------------------------------------
     function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                  return Ada.Strings.Unbounded.Unbounded_String is
         use Ada.Strings.Unbounded;
@@ -1664,7 +1671,7 @@ package body Multivectors is
         Max_Dim      : Integer := 0;
     begin
         while Has_Element (Blade_Cursor) loop
-            High_Bit := Highest_One_Bit (Bitmap (Element (Blade_Cursor)));
+            High_Bit := Bits.Highest_One_Bit (Bitmap (Element (Blade_Cursor)));
             Max_Dim := Maximum (Max_Dim, High_Bit);
             Next (Blade_Cursor);
         end loop;
