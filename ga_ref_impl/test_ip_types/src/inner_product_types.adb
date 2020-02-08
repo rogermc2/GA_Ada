@@ -9,6 +9,7 @@ with Bits;
 with Blade;
 with Blade_Types;
 with GA_Maths;
+with Metric;
 with Multivectors;
 
 package body Inner_Product_Types is
@@ -23,7 +24,7 @@ package body Inner_Product_Types is
 
     --  --------------------------------------------------------------------
 
-    function Init_Conformal return Metric.Metric_Matrix is
+    procedure Test is
         use Blade;
         use Multivectors;
         C3_M : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
@@ -80,18 +81,17 @@ package body Inner_Product_Types is
             OK := Grade (MV_B, K);
             if not OK then
                 raise Inner_Product_Types_Exception with
-                  "Inner_Product_Types.Init_Conformal, empty multivector detected.";
+                  "Inner_Product_Types.Test, empty multivector detected.";
             else
                 Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
                 if Check_Scale < 0.0 then
                     raise Inner_Product_Types_Exception with
-                      "Inner_Product_Types.Init_Conformal, multivector Scalar_Part < 0.";
+                      "Inner_Product_Types.Test, multivector Scalar_Part < 0git add .";
                 end if;
             end if;
-
         end loop;
-        return  C3_M;
-    end Init_Conformal;
+
+    end Test;
 
     --  --------------------------------------------------------------------
 
