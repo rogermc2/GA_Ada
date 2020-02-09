@@ -35,6 +35,54 @@ package C3GA is
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
    type C3GA_Normalized_Point is array (1 .. 5) of Float;
 
+   MV_Basis_Vector_Names : constant array (1 .. 5) of String (1 .. 2)  :=
+                              ("no", "e1", "e2", "e3", "ni");
+    --  MV_Basis_Elements contains the order of basis elements in the general multivector
+    MV_Basis_Elements : constant array (1 .. 32, 1 .. 6) of integer :=
+                          ((-1, 0, 0, 0, 0, 0),
+                           (0, -1, 0, 0, 0, 0),
+                           (1, -1, 0, 0, 0, 0),
+                           (2, -1, 0, 0, 0, 0),
+                           (3, -1, 0, 0, 0, 0),
+                           (4, -1, 0, 0, 0, 0),
+                           (0, 1, -1, 0, 0, 0),
+                           (0, 2, -1, 0, 0, 0),
+                           (0, 3, -1, 0, 0, 0),
+                           (1, 2, -1, 0, 0, 0),
+                           (2, 3, -1, 0, 0, 0),
+                           (1, 3, -1, 0, 0, 0),
+                           (1, 4, -1, 0, 0, 0),
+                           (2, 4, -1, 0, 0, 0),
+                           (3, 4, -1, 0, 0, 0),
+                           (0, 4, -1, 0, 0, 0),
+                           (2, 3, 4, -1, 0, 0),
+                           (1, 3, 4, -1, 0, 0),
+                           (1, 2, 4, -1, 0, 0),
+                           (0, 3, 4, -1, 0, 0),
+                           (0, 1, 4, -1, 0, 0),
+                           (0, 2, 4, -1, 0, 0),
+                           (0, 2, 3, -1, 0, 0),
+                           (0, 1, 3, -1, 0, 0),
+                           (0, 1, 2, -1, 0, 0),
+                           (1, 2, 3, -1, 0, 0),
+                           (1, 2, 3, 4, -1, 0),
+                           (0, 2, 3, 4, -1, 0),
+                           (0, 1, 3, 4, -1, 0),
+                           (0, 1, 2, 4, -1, 0),
+                           (0, 1, 2, 3, -1, 0),
+                           (0, 1, 2, 3, 4, -1));
+
+   --  MV_Grade_Size can be used to lookup the number of coordinates
+   --  for a grade part of a general multivector
+   MV_Grade_Size : constant array (1 .. 6) of Integer := (1, 5, 10, 10, 5, 1);
+   --  This array of integers contains the 'sign' (even/odd permutation of the canonical order)
+   --  of basis elements in the general multivector
+   --  Use it to answer 'what is the permutation of the coordinate at index [x]'?
+    MV_Basis_Element_Sign_By_Index : constant array (1 .. 32) of Float :=
+		(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0,
+                 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                 1.0, 1.0, -1.0, 1.0, 1.0, 1.0);
+
    --  Joinable grade definitions
    Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
    Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
