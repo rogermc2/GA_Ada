@@ -1381,6 +1381,7 @@ package body Multivectors is
 
         function  Product (List_1, List_2 : Blade_List) return Blade_List is
             Cursor_1  : Cursor := List_1.First;
+            Cursor_2  : Cursor;
             Blade_OP  : Blade.Basis_Blade;
             B1        : Blade.Basis_Blade;
             B2        : Blade.Basis_Blade;
@@ -1388,18 +1389,15 @@ package body Multivectors is
         begin
             while Has_Element (Cursor_1) loop
                 B1 := Element (Cursor_1);
-                declare
-                    Cursor_2 : Cursor := List_2.First;
-                begin
-                    while Has_Element (Cursor_2) loop
-                        B2 := Element (Cursor_2);
-                        Blade_OP := Outer_Product (B1, B2);
-                        if Weight (Blade_OP) /= 0.0 then
-                            Result.Append (Blade_OP);
-                        end if;
-                        Next (Cursor_2);
-                    end loop;
-                end;
+                Cursor_2 := List_2.First;
+                while Has_Element (Cursor_2) loop
+                    B2 := Element (Cursor_2);
+                    Blade_OP := Outer_Product (B1, B2);
+--                      if Weight (Blade_OP) /= 0.0 then
+                        Result.Append (Blade_OP);
+--                      end if;
+                    Next (Cursor_2);
+                end loop;
                 Next (Cursor_1);
             end loop;
 
