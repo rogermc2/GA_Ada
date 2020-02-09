@@ -68,7 +68,7 @@ package body Inner_Product_Types is
             Factors := Factorize_Blade (MV_B, Scales);
             Put_Line ("Inner_Product_Types.Test Factors size: " &
                         Integer'Image (List_Length (Factors)));
-            MV_R := New_Multivector (0.0);
+            MV_R := New_Multivector (1.0);
             for index in 1 .. List_Length (Factors) loop
                 GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
                 MV_R := Outer_Product (MV_R, MV_Item (Factors, index));
@@ -79,7 +79,7 @@ package body Inner_Product_Types is
             Fast_Factors := Factorize_Blade_Fast (MV_B, Scales);
             Put_Line ("Inner_Product_Types.Test Fast_Factors size: " &
                         Integer'Image (List_Length (Fast_Factors)));
-            MV_Fast := New_Multivector (0.0);
+            MV_Fast := New_Multivector (1.0);
             for index in 1 .. List_Length (Fast_Factors) loop
                 MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
             end loop;
