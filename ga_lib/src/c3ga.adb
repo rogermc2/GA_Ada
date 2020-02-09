@@ -706,7 +706,6 @@ package body C3GA is
       Float_Buff        : Unbounded_String;
       Result            : Unbounded_String;
       MV_Size           : constant Integer := Integer (Multivectors.Grade_Use (MV));
-      MV_String_Start   : constant String := "";
       Coord             : Float;
       Grade_Size        : Integer;
       Index_A           : Integer := 1;
@@ -720,34 +719,39 @@ package body C3GA is
          if MV_Size > 0 and Shift_Bit > 0 then
             Grade_Size := MV_Grade_Size (index);
             for index_j in 0 .. Grade_Size - 1 loop
-               Coord := Float (MV_Basis_Element_Sign_By_Index (Index_A)) *
-                 Blade.Weight (Element (Curs));
-               if Coord /= 0.0 then
-                  Char_Buff := To_Unbounded_String ("");
-                  Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
-                  if Coord < 0.0 then
-                     Char_Buff := Char_Buff & "-";
-                  elsif Length (Char_Buff) > 0 then
-                     Char_Buff := Char_Buff & "+";
-                  end if;
+--                 if Has_Element (Curs) then
+                  Coord := MV_Basis_Element_Sign_By_Index (Index_A) *
+                    Blade.Weight (Element (Curs));
+                  if Coord /= 0.0 then
+                     Char_Buff := To_Unbounded_String ("");
+                     Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
+                     if Coord < 0.0 then
+                        Char_Buff := Char_Buff & "-";
+                     elsif Length (Char_Buff) > 0 then
+                        Char_Buff := Char_Buff & "+";
+                     end if;
 
-                  Char_Buff := Char_Buff & Float_Buff;
-                  if index > 0 then
-                     Char_Buff :=  Char_Buff & " * ";
-                     Index_BE := 1;
-                     while MV_Basis_Elements (Index_A, Index_BE) >= 0 loop
-                        if Index_BE /= 1 then
-                           Char_Buff := Char_Buff & " ^ ";
-                        end if;
-                        Char_Buff := Char_Buff &
-                          MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
-                        Index_BE := Index_BE + 1;
-                     end loop;
+                     Char_Buff := Char_Buff & Float_Buff;
+                     if index > 0 then
+                        Char_Buff :=  Char_Buff & " * ";
+                        Index_BE := 1;
+                        while MV_Basis_Elements (Index_A, Index_BE) >= 0 loop
+                           if Index_BE /= 1 then
+                              Char_Buff := Char_Buff & " ^ ";
+                           end if;
+                           Char_Buff := Char_Buff &
+                             MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
+                           Index_BE := Index_BE + 1;
+                        end loop;
+                     end if;
+                     Result := Result & Char_Buff;
                   end if;
-                  Result := Result & Char_Buff;
-               end if;
+--                 else
+--                    Put_Line ("C3GA.Multivector_String, no more blades");
+--                 end if;
                Index_K := Index_K + 1;
                Index_A := Index_A + 1;
+--                 Next (Curs);
             end loop;
          else
             Index_A := Index_A + MV_Grade_Size (index);
