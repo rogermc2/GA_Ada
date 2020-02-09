@@ -156,6 +156,7 @@ package C3GA is
    function E1_E2_E3_NO (S : Sphere) return float;
 
    function C3GA_Point (V : Vector_E3GA) return C3GA_Normalized_Point;
+   function Multivector_String (MV : Multivectors.Multivector) return String;
 --     function Outer_Product (NP1, NP2 : Normalized_Point) return Line;
 --     function Outer_Product (NP : Normalized_Point; MV : Multivectors.Multivector)
 --                             return Normalized_Point;

@@ -1,7 +1,4 @@
 
-with Interfaces;
-
-with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -81,69 +78,6 @@ package body GA_Utilities is
     end Multivector_Size;
 
     --  ------------------------------------------------------------------------
-    --  Based on C3GA char *string
-    function Multivector_String (MV : Multivectors.Multivector) return String is
-        use Ada.Strings.Unbounded;
-        use Blade.Blade_List_Package;
-        use Interfaces;
-        use GA_Maths;
-        use C3GA;
-        Blades          : constant Blade.Blade_List := Multivectors.Blades (MV);
-        Curs            : Cursor := Blades.First;
-        Char_Buff       : Unbounded_String := To_Unbounded_String ("0");
-        Float_Buff      : Unbounded_String;
-        Result          : Unbounded_String;
-        MV_Size         : constant Integer := Integer (Multivectors.Grade_Use (MV));
-        MV_String_Start : constant String := "";
-        Coord           : Float;
-        Index_A         : Integer := 1;
-        Index_K         : Integer := 1;
-        Index_BE        : Integer;
-        Shift_Bit       : Unsigned_32;
-    begin
-        --  print all coordinates
-        for index in 0 .. 5 loop
-            Shift_Bit := Shift_Left (1, index);
-            if MV_Size > 0 and Shift_Bit > 0 then
-                for index_j in 0 .. MV_Grade_Size (index) loop
-                    Coord := Float (MV_Basis_Element_Sign_By_Index (Index_A)) *
-                      Blade.Weight (Element (Curs));
-                    if Coord /= 0.0 then
-                        Char_Buff := To_Unbounded_String ("");
-                        Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
-                        if Coord < 0.0 then
-                            Char_Buff := Char_Buff & "-";
-                        elsif Length (Char_Buff) > 0 then
-                            Char_Buff := Char_Buff & "+";
-                        end if;
-
-                        Char_Buff := Char_Buff & Float_Buff;
-                        if index > 0 then
-                            Char_Buff :=  Char_Buff & " * ";
-                            Index_BE := 1;
-                            while MV_Basis_Elements (Index_A, Index_BE) >= 0 loop
-                                if Index_BE /= 1 then
-                                    Char_Buff := Char_Buff & " ^ ";
-                                end if;
-                                Char_Buff := Char_Buff &
-                                  MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
-                                Index_BE := Index_BE + 1;
-                            end loop;
-                        end if;
-                        Result := Result & Char_Buff;
-                    end if;
-                    Index_K := Index_K + 1;
-                    Index_A := Index_A + 1;
-                end loop;
-            else
-               Index_A := Index_A + MV_Grade_Size (index);
-            end if;
-        end loop;
-
-        return To_String (Char_Buff);
-    end Multivector_String;
-
-    --  -------------------------------------------------------------------------
 
     procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array) is
     begin
