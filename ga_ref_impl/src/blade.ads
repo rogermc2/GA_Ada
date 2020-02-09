@@ -22,6 +22,10 @@ package Blade is
      (Element_Type => Basis_Blade);
    type Blade_List is new Blade_List_Package.List with null record;
 
+   package Blade_Vector_Package is new Ada.Containers.Vectors
+     (Index_Type => Natural, Element_Type => Basis_Blade);
+   type Blade_Vector is new Blade_Vector_Package.Vector with null record;
+
    package Names_Package is new
      Ada.Containers.Vectors (Natural, Unbounded_String);
    type Basis_Vector_Names is new Names_Package.Vector with null record;
@@ -46,6 +50,8 @@ package Blade is
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
 
    procedure Add_Blade (Blades : in out Blade_List; BB : Basis_Blade);
+   procedure Add_Blade (Blades : in out Blade_Vector;
+                        Index : Natural; BB : Basis_Blade);
    function BB_First (BB_List : Blade_List) return Basis_Blade;
    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
