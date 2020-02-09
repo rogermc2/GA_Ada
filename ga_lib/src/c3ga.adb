@@ -2,6 +2,7 @@
 with Interfaces;
 
 with Ada.Strings.Unbounded;
+with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
@@ -60,11 +61,11 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-      function "*" (L : Float; R : Vector_E3GA) return Vector_E3GA is
-        use GL.Types;
-      begin
-         return (Single (L) * R (GL.X), Single (L) * R (GL.Y), Single (L) * R (GL.Z));
-      end  "*";
+   function "*" (L : Float; R : Vector_E3GA) return Vector_E3GA is
+      use GL.Types;
+   begin
+      return (Single (L) * R (GL.X), Single (L) * R (GL.Y), Single (L) * R (GL.Z));
+   end  "*";
 
    --  -------------------------------------------------------------------------
 
@@ -394,7 +395,7 @@ package body C3GA is
    ------------------------------------------------------------------------
 
    function Get_Coords (NP : Multivectors.Normalized_Point)
-                         return GA_Maths.Coords_Continuous_Array is
+                        return GA_Maths.Coords_Continuous_Array is
       use Blade.Blade_List_Package;
       Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (NP);
       Curs   : Cursor := Blades.First;
@@ -694,67 +695,69 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    --  Based on C3GA char *string
-    function Multivector_String (MV : Multivectors.Multivector) return String is
-        use Ada.Strings.Unbounded;
-        use Blade.Blade_List_Package;
-        use Interfaces;
-        use GA_Maths;
-        Blades          : constant Blade.Blade_List := Multivectors.Blades (MV);
-        Curs            : Cursor := Blades.First;
-        Char_Buff       : Unbounded_String := To_Unbounded_String ("0");
-        Float_Buff      : Unbounded_String;
-        Result          : Unbounded_String;
-        MV_Size         : constant Integer := Integer (Multivectors.Grade_Use (MV));
-        MV_String_Start : constant String := "";
-        Coord           : Float;
-        Index_A         : Integer := 1;
-        Index_K         : Integer := 1;
-        Index_BE        : Integer;
-        Shift_Bit       : Unsigned_32;
-    begin
-        --  print all coordinates
-        for index in 0 .. 5 loop
-            Shift_Bit := Shift_Left (1, index);
-            if MV_Size > 0 and Shift_Bit > 0 then
-                for index_j in 0 .. MV_Grade_Size (index) loop
-                    Coord := Float (MV_Basis_Element_Sign_By_Index (Index_A)) *
-                      Blade.Weight (Element (Curs));
-                    if Coord /= 0.0 then
-                        Char_Buff := To_Unbounded_String ("");
-                        Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
-                        if Coord < 0.0 then
-                            Char_Buff := Char_Buff & "-";
-                        elsif Length (Char_Buff) > 0 then
-                            Char_Buff := Char_Buff & "+";
+   function Multivector_String (MV : Multivectors.Multivector) return String is
+      use Ada.Strings.Unbounded;
+      use Blade.Blade_List_Package;
+      use Interfaces;
+      use GA_Maths;
+      Blades            : constant Blade.Blade_List := Multivectors.Blades (MV);
+      Curs              : Cursor := Blades.First;
+      Char_Buff         : Unbounded_String := To_Unbounded_String ("0");
+      Float_Buff        : Unbounded_String;
+      Result            : Unbounded_String;
+      MV_Size           : constant Integer := Integer (Multivectors.Grade_Use (MV));
+      MV_String_Start   : constant String := "";
+      Coord             : Float;
+      Grade_Size        : Integer;
+      Index_A           : Integer := 1;
+      Index_K           : Integer := 1;
+      Index_BE          : Integer;
+      Shift_Bit         : Unsigned_32;
+   begin
+      --  print all coordinates
+      for index in 0 .. 5 loop
+         Shift_Bit := Shift_Left (1, index);
+         if MV_Size > 0 and Shift_Bit > 0 then
+            Grade_Size := MV_Grade_Size (index);
+            for index_j in 0 .. Grade_Size - 1 loop
+               Coord := Float (MV_Basis_Element_Sign_By_Index (Index_A)) *
+                 Blade.Weight (Element (Curs));
+               if Coord /= 0.0 then
+                  Char_Buff := To_Unbounded_String ("");
+                  Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
+                  if Coord < 0.0 then
+                     Char_Buff := Char_Buff & "-";
+                  elsif Length (Char_Buff) > 0 then
+                     Char_Buff := Char_Buff & "+";
+                  end if;
+
+                  Char_Buff := Char_Buff & Float_Buff;
+                  if index > 0 then
+                     Char_Buff :=  Char_Buff & " * ";
+                     Index_BE := 1;
+                     while MV_Basis_Elements (Index_A, Index_BE) >= 0 loop
+                        if Index_BE /= 1 then
+                           Char_Buff := Char_Buff & " ^ ";
                         end if;
+                        Char_Buff := Char_Buff &
+                          MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
+                        Index_BE := Index_BE + 1;
+                     end loop;
+                  end if;
+                  Result := Result & Char_Buff;
+               end if;
+               Index_K := Index_K + 1;
+               Index_A := Index_A + 1;
+            end loop;
+         else
+            Index_A := Index_A + MV_Grade_Size (index);
+         end if;
+      end loop;
 
-                        Char_Buff := Char_Buff & Float_Buff;
-                        if index > 0 then
-                            Char_Buff :=  Char_Buff & " * ";
-                            Index_BE := 1;
-                            while MV_Basis_Elements (Index_A, Index_BE) >= 0 loop
-                                if Index_BE /= 1 then
-                                    Char_Buff := Char_Buff & " ^ ";
-                                end if;
-                                Char_Buff := Char_Buff &
-                                  MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
-                                Index_BE := Index_BE + 1;
-                            end loop;
-                        end if;
-                        Result := Result & Char_Buff;
-                    end if;
-                    Index_K := Index_K + 1;
-                    Index_A := Index_A + 1;
-                end loop;
-            else
-               Index_A := Index_A + MV_Grade_Size (index);
-            end if;
-        end loop;
+      return To_String (Char_Buff);
+   end Multivector_String;
 
-        return To_String (Char_Buff);
-    end Multivector_String;
-
-    --  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    --        function Norm_E (MV : Multivector) return Scalar is
    --           use GA_Maths;
@@ -972,7 +975,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector)
-                             return Multivectors.Dual_Plane is
+                            return Multivectors.Dual_Plane is
       use Multivectors;
       LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
       D_Plane  : Multivectors.Dual_Plane := Multivectors.New_Dual_Plane;
@@ -1017,11 +1020,11 @@ package body C3GA is
    --  return _normalizedPoint (vl + no + 0.5f * norm_e2 (vl) * ni);  no = ni = 1.0
 
    function Set_Normalized_Point (V : Vector_E3GA) return Multivectors.Normalized_Point is
---        use GA_Maths.Complex_Types;
+      --        use GA_Maths.Complex_Types;
       use Multivectors;
       use Blade;
       NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
---        NI  : constant Complex := (0.0, 1.0);
+      --        NI  : constant Complex := (0.0, 1.0);
    begin
       --  thePoint.Origin of a Normalized_Point is a constant 1.0
       Add_Blade (NP, New_Basis_Blade (C3_no, 1.0));
@@ -1035,7 +1038,7 @@ package body C3GA is
    --  ------------------------------------------------------------------------
 
    function Set_Normalized_Point (E1, E2, E3 : float)
-                                   return Multivectors.Normalized_Point is
+                                  return Multivectors.Normalized_Point is
       use GL.Types;
       use Blade;
       use Multivectors;
@@ -1054,7 +1057,7 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function Set_Normalized_Point (Point : GA_Maths.Array_3D)
-                                   return Multivectors.Normalized_Point is
+                                  return Multivectors.Normalized_Point is
       use GL.Types;
       use Blade;
       use Multivectors;

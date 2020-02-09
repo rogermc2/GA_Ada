@@ -35,7 +35,7 @@ package C3GA is
    type Dual_Sphere_Array is array (integer range <>) of Dual_Sphere;
    type C3GA_Normalized_Point is array (1 .. 5) of Float;
 
-   MV_Basis_Vector_Names : constant array (1 .. 5) of String (1 .. 2)  :=
+   MV_Basis_Vector_Names : constant array (0 .. 4) of String (1 .. 2)  :=
                               ("no", "e1", "e2", "e3", "ni");
     --  MV_Basis_Elements contains the order of basis elements in the general multivector
     MV_Basis_Elements : constant array (1 .. 32, 1 .. 6) of integer :=
@@ -74,7 +74,7 @@ package C3GA is
 
    --  MV_Grade_Size can be used to lookup the number of coordinates
    --  for a grade part of a general multivector
-   MV_Grade_Size : constant array (1 .. 6) of Integer := (1, 5, 10, 10, 5, 1);
+   MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1);
    --  This array of integers contains the 'sign' (even/odd permutation of the canonical order)
    --  of basis elements in the general multivector
    --  Use it to answer 'what is the permutation of the coordinate at index [x]'?
