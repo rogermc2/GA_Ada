@@ -229,7 +229,7 @@ package body Blade is
         Sign     : Float;
     begin
         if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
-            null;  --  return zero blade
+            OP_Blade  := New_Basis_Blade (0, 0.0);  --  return zero blade
         else  --  compute geometric product
             --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
             --  else xor > 0 so Outer product part of MV
@@ -349,6 +349,16 @@ package body Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := Bitmap;
+        Blade.Weight := Weight;
+        return Blade;
+    end New_Basis_Blade;
+
+    --  ------------------------------------------------------------------------
+
+    function New_Basis_Blade (Weight : Float) return Basis_Blade is
+        Blade : Basis_Blade;
+    begin
+        Blade.Bitmap := 0;
         Blade.Weight := Weight;
         return Blade;
     end New_Basis_Blade;
