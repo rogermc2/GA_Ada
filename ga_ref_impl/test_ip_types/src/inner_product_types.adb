@@ -8,7 +8,9 @@ with Maths;
 with Bits;
 with Blade;
 with Blade_Types;
+with C3GA;
 with GA_Maths;
+with GA_Utilities;
 with Metric;
 with Multivectors;
 
@@ -52,6 +54,7 @@ package body Inner_Product_Types is
         OK           : Boolean;
         Check_Scale  : Float;
     begin
+        Scales (1) := 0.0;
         for index in 1 .. dim loop
             MV_B := Random_Blade
               (Dim, Integer (Float (Maths.Random_Float) * (float (Dim) + 0.49)), 1.0);
@@ -63,37 +66,54 @@ package body Inner_Product_Types is
             Update (MV_B, Blades);
 
             Factors := Factorize_Blade (MV_B, Scales);
+            Put_Line ("Inner_Product_Types.Test Factors size: " &
+                        Integer'Image (List_Length (Factors)));
             MV_R := New_Multivector (0.0);
             for index in 1 .. List_Length (Factors) loop
+                GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
                 MV_R := Outer_Product (MV_R, MV_Item (Factors, index));
+                GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Item", MV_Item (Factors, index));
             end loop;
+            GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
 
             Fast_Factors := Factorize_Blade_Fast (MV_B, Scales);
+            Put_Line ("Inner_Product_Types.Test Fast_Factors size: " &
+                        Integer'Image (List_Length (Fast_Factors)));
             MV_Fast := New_Multivector (0.0);
             for index in 1 .. List_Length (Fast_Factors) loop
                 MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
             end loop;
 
+            Put_Line ("Inner_Product_Types.Test normalizing MV_B");
             MV_B := Unit_E (MV_B);
+            Put_Line ("Inner_Product_Types.Test normalizing MV_R");
             MV_R := Unit_E (MV_R);
+            Put_Line ("Inner_Product_Types.Test normalizing MV_Fast");
             MV_Fast := Unit_E (MV_Fast);
 
             OK := Grade (MV_B, K);
+            Put_Line ("Inner_Product_Types.Test OK set");
             if not OK then
                 raise Inner_Product_Types_Exception with
                   "Inner_Product_Types.Test, empty multivector detected.";
             else
+                Put_Line ("Inner_Product_Types.Test Check_Scale");
                 Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
+                Put_Line ("Inner_Product_Types.Test Check_Scale set");
                 if Check_Scale < 0.0 then
                     Put_Line ("Whaaaaa! Scalar_Part < 0.");
                     Sss (K) := "-";
                 else
                     Sss (K) := "+";
                 end if;
-                Put_Line ("B = ");
+                Put_Line ("B = " & C3GA.Multivector_String (MV_B));
             end if;
         end loop;
 
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Inner_Product_Types.Test");
+            raise;
     end Test;
 
     --  --------------------------------------------------------------------
@@ -142,7 +162,7 @@ package body Inner_Product_Types is
                     end if;
                 end loop;
 
-                B_Current := Geometric_Product (B_Current, 1.0 / S);
+                B_Current := Geometric_Product (MV_B, 1.0 / S);
                 for index in 0 .. K - 2 loop
                     aFactor := New_Multivector (E_Array (index));
                     aFactor := Inner_Product
@@ -200,10 +220,7 @@ package body Inner_Product_Types is
             else
                 S := Norm_E (MV_B);
             end if;
-
-            if Scale'length > 0 then
-                Scale (1) := S;
-            end if;
+            Scale (1) := S;
 
             if K > 0 and S /= 0.0 then
                 E := Largest_Basis_Blade (MV_B);
@@ -250,6 +267,8 @@ package body Inner_Product_Types is
                         Add_Multivector (Factors, New_Multivector (L_List));
                     end loop;
                 end if;
+            else
+                Add_Multivector (Factors, New_Multivector (0.0));
             end if;
         end if;
         return  Factors;
