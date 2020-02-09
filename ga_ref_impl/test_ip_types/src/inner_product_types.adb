@@ -40,8 +40,8 @@ package body Inner_Product_Types is
 --          e3     : Multivector := New_Multivector (New_Basis_Blade (0));
 --          ni     : Multivector := New_Multivector (New_Basis_Blade (0));
 --          Scale  : Float;
-        Scales : Scale_Array (1 .. 1);
---          Sss    : Blade_List;
+        Scales       : Scale_Array (1 .. 1);
+        Sss          : array (1 .. Dim + 1) of String (1 .. 1);
         Blades       : Blade_List;
         MV_B         : Multivector;
         MV_R         : Multivector;
@@ -85,9 +85,12 @@ package body Inner_Product_Types is
             else
                 Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
                 if Check_Scale < 0.0 then
-                    raise Inner_Product_Types_Exception with
-                      "Inner_Product_Types.Test, multivector Scalar_Part < 0git add .";
+                    Put_Line ("Whaaaaa! Scalar_Part < 0.");
+                    Sss (K) := "-";
+                else
+                    Sss (K) := "+";
                 end if;
+                Put_Line ("B = ");
             end if;
         end loop;
 
