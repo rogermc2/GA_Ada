@@ -36,12 +36,12 @@ package body Inner_Product_Types is
                   (0.0, 0.0, 0.0, 1.0, 0.0),
                   (-1.0, 0.0, 0.0, 0.0, 0.0));
         Dim    : constant Integer := 8;
---          no     : Multivector := New_Multivector (New_Basis_Blade (0));
---          e1     : Multivector := New_Multivector (New_Basis_Blade (0));
---          e2     : Multivector := New_Multivector (New_Basis_Blade (0));
---          e3     : Multivector := New_Multivector (New_Basis_Blade (0));
---          ni     : Multivector := New_Multivector (New_Basis_Blade (0));
---          Scale  : Float;
+        --          no     : Multivector := New_Multivector (New_Basis_Blade (0));
+        --          e1     : Multivector := New_Multivector (New_Basis_Blade (0));
+        --          e2     : Multivector := New_Multivector (New_Basis_Blade (0));
+        --          e3     : Multivector := New_Multivector (New_Basis_Blade (0));
+        --          ni     : Multivector := New_Multivector (New_Basis_Blade (0));
+        --          Scale  : Float;
         Scales       : Scale_Array (1 .. 1);
         Sss          : array (1 .. Dim + 1) of String (1 .. 1);
         Blades       : Blade_List;
@@ -70,11 +70,9 @@ package body Inner_Product_Types is
                         Integer'Image (List_Length (Factors)));
             MV_R := New_Multivector (1.0);
             for index in 1 .. List_Length (Factors) loop
-                GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
                 MV_R := Outer_Product (MV_R, MV_Item (Factors, index));
-                GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Item", MV_Item (Factors, index));
             end loop;
-            GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
+--              GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
 
             Fast_Factors := Factorize_Blade_Fast (MV_B, Scales);
             Put_Line ("Inner_Product_Types.Test Fast_Factors size: " &
@@ -84,22 +82,16 @@ package body Inner_Product_Types is
                 MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
             end loop;
 
-            Put_Line ("Inner_Product_Types.Test normalizing MV_B");
             MV_B := Unit_E (MV_B);
-            Put_Line ("Inner_Product_Types.Test normalizing MV_R");
             MV_R := Unit_E (MV_R);
-            Put_Line ("Inner_Product_Types.Test normalizing MV_Fast");
             MV_Fast := Unit_E (MV_Fast);
 
             OK := Grade (MV_B, K);
-            Put_Line ("Inner_Product_Types.Test OK set");
             if not OK then
                 raise Inner_Product_Types_Exception with
                   "Inner_Product_Types.Test, empty multivector detected.";
             else
-                Put_Line ("Inner_Product_Types.Test Check_Scale");
                 Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
-                Put_Line ("Inner_Product_Types.Test Check_Scale set");
                 if Check_Scale < 0.0 then
                     Put_Line ("Whaaaaa! Scalar_Part < 0.");
                     Sss (K) := "-";
@@ -119,7 +111,7 @@ package body Inner_Product_Types is
     --  --------------------------------------------------------------------
 
     function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : in out Scale_Array)
-                             return Multivectors.Multivector_List is
+                              return Multivectors.Multivector_List is
         use Interfaces;
         use Blade;
         use Blade_Types;
