@@ -715,16 +715,16 @@ package body C3GA is
    begin
       --  print all coordinates
       GA_Utilities.Print_Multivector ("C3GA.Multivector_String MV", MV);
-      Put_Line ("C3GA.Multivector_String Grade_Usage" & Unsigned_32'Image (Grade_Usage));
+--        Put_Line ("C3GA.Multivector_String Grade_Usage" & Unsigned_32'Image (Grade_Usage));
       for Coord_Index in 0 .. 5 loop   --  i
          Shift_Bit := Shift_Left (1, Coord_Index);
-         Put_Line ("C3GA.Multivector_String Coord_Index, Shift_Bit : " &
-                     Integer'Image (Coord_Index) & Unsigned_32'Image (Shift_Bit));
+--           Put_Line ("C3GA.Multivector_String Coord_Index, Shift_Bit : " &
+--                       Integer'Image (Coord_Index) & Unsigned_32'Image (Shift_Bit));
          if (Grade_Usage and Shift_Bit) > 0 then
 --          Grade_Usage : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1);
 --          Thus, in C3, grade 0 blades have 1 coordinate; grade 1 blades have 5 coordinats;
             Grade_Size := MV_Grade_Size (Coord_Index);
-            Put_Line ("C3GA.Multivector_String Grade_Size" & Integer'Image (Grade_Size));
+--              Put_Line ("C3GA.Multivector_String Grade_Size" & Integer'Image (Grade_Size));
             Curs:= Blades.First;   --  k
             for index_j in 0 .. Grade_Size - 1 loop
 --                 if Has_Element (Curs) then
