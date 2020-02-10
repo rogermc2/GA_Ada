@@ -25,7 +25,7 @@ package body Inner_Product_Types is
                                    return Multivectors.Multivector_List;
 
     --  --------------------------------------------------------------------
-    --  Base on Util.java main
+    --  Based on Util.java main
     procedure Test is
         use Blade;
         use Multivectors;
@@ -42,7 +42,6 @@ package body Inner_Product_Types is
         --          e3     : Multivector := New_Multivector (New_Basis_Blade (0));
         --          ni     : Multivector := New_Multivector (New_Basis_Blade (0));
         Scale        : Float := 0.0;
---          Scales       : Scale_Array (1 .. 1);
         Sss          : array (1 .. Dim + 1) of String (1 .. 1);
         Blades       : Blade_List;
         MV_B         : Multivector;
