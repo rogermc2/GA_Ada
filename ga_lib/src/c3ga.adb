@@ -701,7 +701,7 @@ package body C3GA is
       use Interfaces;
       use GA_Maths;
       Blades            : constant Blade.Blade_List := Multivectors.Blades (MV);
-      Curs              : Cursor := Blades.First;
+      Curs              : Cursor := Blades.First;   --  k
       Char_Buff         : Unbounded_String := To_Unbounded_String ("0");
       Float_Buff        : Unbounded_String;
       Result            : Unbounded_String;
@@ -709,7 +709,6 @@ package body C3GA is
       Coord             : Float;
       Grade_Size        : Integer;
       Index_A           : Integer := 1;
-      Index_K           : Integer := 1;
       Index_BE          : Integer;
       Shift_Bit         : Unsigned_32;
    begin
@@ -749,14 +748,13 @@ package body C3GA is
 --                 else
 --                    Put_Line ("C3GA.Multivector_String, no more blades");
 --                 end if;
-               Index_K := Index_K + 1;
                Index_A := Index_A + 1;
---                 Next (Curs);
-            end loop;
+               Next (Curs);
+            end loop;  //  end index_j
          else
             Index_A := Index_A + MV_Grade_Size (index);
          end if;
-      end loop;
+      end loop;  //  index
 
       return To_String (Char_Buff);
    end Multivector_String;
