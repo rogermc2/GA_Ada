@@ -96,9 +96,9 @@ package body Inner_Product_Types is
             else
                 Sss (K) := "+";
             end if;
-            Put_Line ("B = " & C3GA.Multivector_String (MV_B));
-            Put_Line ("R = " & C3GA.Multivector_String (MV_R));
-            Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast));
+            Put_Line ("B = " & C3GA.Multivector_String (MV_B) & ", ");
+--              Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
+--              Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
         end if;
 
     exception
