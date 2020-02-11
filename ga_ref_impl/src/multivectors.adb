@@ -1379,7 +1379,7 @@ package body Multivectors is
         use Blade;
         use Blade_List_Package;
 
-        function  Product (List_1, List_2 : Blade_List) return Blade_List is
+        function Product (List_1, List_2 : Blade_List) return Blade_List is
             Cursor_1  : Cursor := List_1.First;
             Cursor_2  : Cursor;
             Blade_OP  : Blade.Basis_Blade;
@@ -1401,7 +1401,6 @@ package body Multivectors is
                 Next (Cursor_1);
             end loop;
 
-            Simplify (Result);
             return Result;
         end Product;
 
@@ -1411,6 +1410,7 @@ package body Multivectors is
                 OP : Bivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
+                Simplify (OP);
                 return OP;
             end;
         else
@@ -1418,6 +1418,7 @@ package body Multivectors is
                 OP : Multivector;
             begin
                 OP.Blades := Product (MV1.Blades, MV2.Blades);
+                Simplify (OP);
                 return OP;
             end;
         end if;
