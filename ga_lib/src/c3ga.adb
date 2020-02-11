@@ -714,7 +714,6 @@ package body C3GA is
       Shift_Bit         : Unsigned_32;
    begin
       --  print all coordinates
-      GA_Utilities.Print_Multivector ("C3GA.Multivector_String MV", MV);
 --        Put_Line ("C3GA.Multivector_String Grade_Usage" & Unsigned_32'Image (Grade_Usage));
       for Coord_Index in 0 .. 5 loop   --  i
          Shift_Bit := Shift_Left (1, Coord_Index);

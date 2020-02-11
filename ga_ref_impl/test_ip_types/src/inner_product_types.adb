@@ -63,6 +63,7 @@ package body Inner_Product_Types is
         Blades.Append (New_Basis_Blade (15, -0.213881));
         Update (MV_B, Blades);
 
+       GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_B", MV_B);
         Factors := Factorize_Blade (MV_B, Scale);
         Put_Line ("Inner_Product_Types.Test Factors size: " &
                     Integer'Image (List_Length (Factors)));
@@ -70,7 +71,7 @@ package body Inner_Product_Types is
         for index in 1 .. List_Length (Factors) loop
             MV_R := Outer_Product (MV_R, MV_Item (Factors, index));
         end loop;
-        --              GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
+        GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
 
         Fast_Factors := Factorize_Blade_Fast (MV_B, Scale);
         Put_Line ("Inner_Product_Types.Test Fast_Factors size: " &
@@ -79,6 +80,7 @@ package body Inner_Product_Types is
         for index in 1 .. List_Length (Fast_Factors) loop
             MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
         end loop;
+        GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_Fast);
 
         MV_B := Unit_E (MV_B);
         MV_R := Unit_E (MV_R);
