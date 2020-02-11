@@ -118,30 +118,24 @@ package body Inner_Product_Types is
       use Blade_Types;
       use GA_Maths;
       use Multivectors;
-      K         : Integer;
-      --          S         : Float;
-      E         : Basis_Blade;
-      E_Array   : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
-      Idx       : Integer := 0;
-      Basis_Bit : Unsigned_32;
-      B_Current : Multivector;
-      aFactor   : Multivector;
-      Factors   : Multivector_List;
-      OK        : constant Boolean := Grade (MV_B, K);
+      K          : Integer;
+      E          : Basis_Blade;
+      E_Array    : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
+      Idx        : Integer := 0;
+      Basis_Bit  : Unsigned_32;
+      B_Current  : Multivector;
+      aFactor    : Multivector;
+      Factors    : Multivector_List;
    begin
-      if not OK then
+      if not Grade (MV_B, K) then
          raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Factorize_Blade Empty multivector detected.";
+           "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
       else
          if K = 0 then
             Scale := Scalar_Part (MV_B);
          else
             Scale := Norm_E (MV_B);
          end if;
-
-         --              if Scale'length > 0 then
-         --                  Scale (1) := S;
-         --              end if;
 
          if K > 0 and Scale /= 0.0 then
             E := Largest_Basis_Blade (MV_B);
@@ -190,51 +184,52 @@ package body Inner_Product_Types is
       use Blade_Types;
       use GA_Maths;
       use Multivectors;
-      K            : Unsigned_32;
+      Grade_K      : Unsigned_32;
       Sc           : Float;
       Blade_E      : Basis_Blade;
       Lowest_Bit   : Integer;
-      Highest_Bit  : Integer;
-      Blades_B     : Blade_List;
-      Basis_Bit    : Unsigned_32;
-      Basis_Bitmap : Unsigned_32;
-      Vec_Bitmap   : Unsigned_32;
-      Blades_Bj    : Basis_Blade;
-      Factors      : Multivector_List;  --  F
-      L_List       : Blade_List;
-      OK           : constant Boolean := Grade (MV_B, Integer (K));
+      Highest_Bit   : Integer;
+      Blades_B      : Blade_List;
+      Basis_Bit     : Unsigned_32;
+      Basis_Bitmap  : Unsigned_32;
+      Vec_Bitmap    : Unsigned_32;
+      Blades_Bj     : Basis_Blade;
+      Factors       : Multivector_List;  --  F
+      L_List        : Blade_List;
    begin
-      if not OK then
+      if not Grade (MV_B, Integer (Grade_K)) then
          raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Factorize_Blade Empty multivector detected.";
+           "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
       else
-         if K = 0 then
+         Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Grade_K: " &
+                     Unsigned_32'Image (Grade_K));
+         if Grade_K = 0 then
             Scale := Scalar_Part (MV_B);
          else
             Scale := Norm_E (MV_B);
          end if;
 
-         if K > 0 and Scale /= 0.0 then
+         if Grade_K > 0 and Scale /= 0.0 then
             Blade_E := Largest_Basis_Blade (MV_B);
             Lowest_Bit := Bits.Lowest_One_Bit (Bitmap (Blade_E));
             Highest_Bit := Bits.Highest_One_Bit (Bitmap (Blade_E));
-            Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Lowest and Highest Bit: "&
+            Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Lowest and Highest Bit: " &
                      Integer'Image (Lowest_Bit) & Integer'Image (Highest_Bit));
 
-            if K = 1 then
+            if Grade_K = 1 then
                Add_Multivector (Factors, Unit_E (MV_B));
             else
                if Weight (Blade_E) < 0.0 then
                   Scale := - Scale;
                   --  take care of orientation of blade:
 
-                  if (K and 1) = 1 then
+                  if (Grade_K and 1) = 1 then
                      Scale := - Scale;
                   end if;
                end if;
 
                --  fix sign issues
-               if (K mod 4) = 2 then
+               if (Grade_K mod 4) = 2 then
                   Scale := - Scale;
                end if;
 

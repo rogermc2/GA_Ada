@@ -828,8 +828,9 @@ package body Multivectors is
     end Get_Blade;
 
     --  -------------------------------------------------------------------------
-    --  Grade returns the grade (bit count) of a Multivector if homogeneous.
+    --  Grade returns the grade (bit count) of an homogeneous Multivector.
     --  0 is returned for null Multivectors.
+    --  False is returned if the Multivector is not homogeneous.
     function Grade (MV : Multivector; theGrade : out Integer)
                     return Boolean is
         use Blade;
@@ -840,7 +841,7 @@ package body Multivectors is
         OK        : Boolean := not Blades.Is_Empty;
     begin
         if OK then
-            thisBlade := Element (Cursor_B);
+            thisBlade := Element (Cursor_B);   -- Blades.First
             theGrade := Blade.Grade (thisBlade);
             Next (Cursor_B);
             while OK and Has_Element (Cursor_B) loop
