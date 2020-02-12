@@ -12,6 +12,9 @@ package Metric is
    Null_Metric      : constant Metric_Matrix (1 .. 0, 1 .. 0) := (others => (others => 0.0));
    Metric_Exception : Ada.Exceptions.Exception_Id;
 
+   function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
+   function Is_Diagonal (Met : Metric_Record) return Boolean;
+   function Is_Euclidean (Met : Metric_Record) return Boolean;
    function Matrix (Met : Metric_Record) return GA_Maths.Float_Matrix;
    function Metric_C3 return Metric_Matrix;
    function New_Metric (Dimension : Integer) return Metric_Matrix;

@@ -3,6 +3,26 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Metric is
 
+    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean is
+    begin
+        return Met.Anti_Euclidean;
+    end Is_Anti_Euclidean;
+
+   --  --------------------------------------------------------------------
+
+    function Is_Diagonal (Met : Metric_Record) return Boolean is
+    begin
+        return Met.Diagonal;
+    end Is_Diagonal;
+
+   --  --------------------------------------------------------------------
+
+    function Is_Euclidean (Met : Metric_Record) return Boolean is
+    begin
+        return Met.Euclidean;
+    end Is_Euclidean;
+
+   --  --------------------------------------------------------------------
     function Matrix (Met : Metric_Record) return GA_Maths.Float_Matrix is
     begin
         return Met.Matrix;
