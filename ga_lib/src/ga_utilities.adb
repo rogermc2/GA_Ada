@@ -135,7 +135,9 @@ package body GA_Utilities is
    procedure Print_Matrix (Name : String; aMatrix : Real_Matrix) is
       use GA_Maths;
    begin
-      Put_Line (Name & ":");
+      if Name /= "" then
+         Put_Line (Name & ":");
+      end if;
       Put_Line ("Size:" & Integer'Image (aMatrix'Length) & " X"
                 & Integer'Image (aMatrix'Length (2)));
       for Row in aMatrix'Range (1) loop
@@ -143,9 +145,25 @@ package body GA_Utilities is
             Put (Float_3'Image (Float_3 (aMatrix (Row, Column))) & "   ");
          end loop;
          New_Line;
-         New_Line;
       end loop;
+      New_Line;
    end Print_Matrix;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Metric (Name : String; aMetric : Metric.Metric_Record) is
+      use Metric;
+      Dim : constant Integer := aMetric.Dim;
+   begin
+      New_Line;
+      Put_Line (Name);
+      Put_Line ("Dimension: " & Integer'Image (Dim));
+      Print_Matrix ("", Matrix (aMetric));
+      Put_Line ("Is_Diagonal: " & Boolean'Image (Is_Diagonal (aMetric)));
+      Put_Line ("Is_Euclidean: " & Boolean'Image (Is_Euclidean (aMetric)));
+      Put_Line ("Is_Anti_Euclidean: " & Boolean'Image (Is_Anti_Euclidean (aMetric)));
+      New_Line;
+   end Print_Metric;
 
    --  ------------------------------------------------------------------------
 
