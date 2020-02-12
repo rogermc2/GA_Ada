@@ -1047,7 +1047,7 @@ package body Multivectors is
         Blades         : constant Blade_List := theMV.Blades;
         Cursor_B       : Cursor := Blades.First;
         Largest_Blade  : Blade.Basis_Blade;
-        Best_Scale     : Float := -1.0;
+        Best_Scale     : Float := 0.0;
     begin
         Simplify (theMV);
         while Has_Element (Cursor_B) loop

@@ -693,7 +693,6 @@ package body C3GA is
    end C3GA_Point;
 
    --  -------------------------------------------------------------------------
-
    --  Based on C3GA char *string
    function Multivector_String (MV : Multivectors.Multivector) return String is
       use Ada.Strings.Unbounded;
@@ -702,7 +701,7 @@ package body C3GA is
       use GA_Maths;
       Blades            : constant Blade.Blade_List := Multivectors.Blades (MV);
       Curs              : Cursor := Blades.First;   --  k
-      Char_Buff         : Unbounded_String := To_Unbounded_String ("0");
+      Char_Buff         : Unbounded_String := To_Unbounded_String ("");
       Float_Buff        : Unbounded_String;
       Result            : Unbounded_String;
       Grade_Usage       : constant Unsigned_32 := Unsigned_32 (Multivectors.Grade_Use (MV));
@@ -714,27 +713,23 @@ package body C3GA is
       Shift_Bit         : Unsigned_32;
    begin
       --  print all coordinates
---        Put_Line ("C3GA.Multivector_String Grade_Usage" & Unsigned_32'Image (Grade_Usage));
       for Coord_Index in 0 .. 5 loop   --  i
          Shift_Bit := Shift_Left (1, Coord_Index);
---           Put_Line ("C3GA.Multivector_String Coord_Index, Shift_Bit : " &
---                       Integer'Image (Coord_Index) & Unsigned_32'Image (Shift_Bit));
          if (Grade_Usage and Shift_Bit) > 0 then
 --          Grade_Usage : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1);
 --          Thus, in C3, grade 0 blades have 1 coordinate; grade 1 blades have 5 coordinats;
             Grade_Size := MV_Grade_Size (Coord_Index);
---              Put_Line ("C3GA.Multivector_String Grade_Size" & Integer'Image (Grade_Size));
             Curs:= Blades.First;   --  k
             for index_j in 0 .. Grade_Size - 1 loop
---                 if Has_Element (Curs) then
                   Coord := MV_Basis_Element_Sign_By_Index (Index_A) *
                     Blade.Weight (Element (Curs));
+
                   if Coord /= 0.0 then
                      Char_Buff := To_Unbounded_String ("");
                      Float_Buff := To_Unbounded_String (Float'Image (Abs (Coord)));
                      if Coord < 0.0 then
                         Char_Buff := Char_Buff & "-";
-                     elsif Length (Char_Buff) > 0 then
+                     elsif index_j > 0 then
                         Char_Buff := Char_Buff & "+";
                      end if;
 
@@ -750,12 +745,11 @@ package body C3GA is
                              MV_Basis_Vector_Names (MV_Basis_Elements (Index_A, Index_BE));
                            Index_BE := Index_BE + 1;
                         end loop;
+                        Char_Buff := Char_Buff & ASCII.LF & "    ";
                      end if;
                      Result := Result & Char_Buff;
                   end if;
---                 else
---                    Put_Line ("C3GA.Multivector_String, no more blades");
---                 end if;
+
                Index_A := Index_A + 1;
                Next (Curs);
             end loop;  --  end index_j
@@ -764,7 +758,8 @@ package body C3GA is
          end if;
       end loop;  --  Grade_Index
 
-      return To_String (Char_Buff);
+      return To_String (Result);
+
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in C3GA.Multivector_String.");

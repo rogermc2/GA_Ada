@@ -42,7 +42,7 @@ package body Inner_Product_Types is
       --          e3     : Multivector := New_Multivector (New_Basis_Blade (0));
       --          ni     : Multivector := New_Multivector (New_Basis_Blade (0));
       Scale        : Float := 0.0;
-      Sss          : array (1 .. Dim + 1) of String (1 .. 1);
+      Scale_Signs  : array (1 .. Dim + 1) of String (1 .. 1);
       Blades       : Blade_List;
       MV_B         : Multivector;
       MV_R         : Multivector;
@@ -80,7 +80,6 @@ package body Inner_Product_Types is
       for index in 1 .. List_Length (Fast_Factors) loop
          MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
       end loop;
-      GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_Fast);
 
       MV_B := Unit_E (MV_B);
       MV_R := Unit_E (MV_R);
@@ -89,18 +88,21 @@ package body Inner_Product_Types is
       OK := Grade (MV_B, K);
       if not OK then
          raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Test, empty multivector detected.";
+           "Inner_Product_Types.Test, inhomogeneous multivector detected.";
       else
          Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
          if Check_Scale < 0.0 then
-            Put_Line ("Whaaaaa! Scalar_Part < 0.");
-            Sss (K) := "-";
+            Put_Line ("Whaaaaa! Scalar_Part < 0: " & Float'Image (Check_Scale));
+            Scale_Signs (K) := "-";
          else
-            Sss (K) := "+";
+            Scale_Signs (K) := "+";
          end if;
+         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_B);
+         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_R);
+         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_Fast);
          Put_Line ("B = " & C3GA.Multivector_String (MV_B) & ", ");
-         --              Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
-         --              Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
+                     Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
+                     Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
       end if;
 
    exception
@@ -220,9 +222,10 @@ package body Inner_Product_Types is
                Add_Multivector (Factors, Unit_E (MV_B));
             else
                if Weight (Blade_E) < 0.0 then
+                  --  positive scale for blade needed
                   Scale := - Scale;
-                  --  take care of orientation of blade:
 
+                  --  take care of orientation of blade:
                   if (Grade_K and 1) = 1 then
                      Scale := - Scale;
                   end if;
