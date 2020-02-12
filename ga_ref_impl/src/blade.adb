@@ -172,34 +172,10 @@ package body Blade is
         Row    : Integer range 1 .. Met'Length (1) := 1;
         Col    : Integer range 1 .. Met'Length (2) := 1;
     begin
---          New_Line;
-        --         Put_Line ("Blade.Geometric_Product BA" &
-        --                     Unsigned_Integer'Image (BA.Bitmap) & "  " &
-        --                     Float'Image (BA.Weight));
-        --         Put_Line ("Blade.Geometric_Product BB" &
-        --                     Unsigned_Integer'Image (BB.Bitmap) & "  " &
-        --                     Float'Image (BB.Weight));
---          Put_Line ("Blade.Geometric_Product initial Result" &
---                      Unsigned_Integer'Image (Result.Bitmap) & "  " &
---                      Float'Image (Result.Weight));
---          Put_Line ("Blade.Geometric_Product BM meet: " & Unsigned_Integer'Image (BM));
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
                 Result.Weight := Result.Weight * Met (Row, Col);
---                  if BM1 = 19 then
---                      Put_Line ("Blade.Geometric_Product processing BM " &
---                                  Unsigned_Integer'Image (BM));
---                      Put_Line ("Blade.Geometric_Product Result" &
---                                  Unsigned_Integer'Image (Result.Bitmap) & "  " &
---                                  Float'Image (Result.Weight));
---                      Put_Line ("Blade.Geometric_Product, Met (Row, Col)" &
---                                  Float'Image (Met (Row, Col)));
---                  end if;
-                --                  Put_Line ("Blade.Geometric_Product BM, Col, Met (Row, Col)" &
-                --                           Unsigned_Integer'Image (BM) & "  " &
-                --                           Integer'Image (Col) & "  " &
-                --                           Float'Image (Met (Row, Col)));
             end if;
             if Col = 5 then
                 Row := Row + 1;
@@ -210,10 +186,6 @@ package body Blade is
             --  Move rigth to next basis vector indicator
             BM := BM / 2;  --  shift right
         end loop;
-        --         Put_Line ("Blade.Geometric_Product Result" &
-        --                     Unsigned_Integer'Image (Result.Bitmap) & "  " &
-        --                     Float'Image (Result.Weight));
-        --          New_Line;
         return Result;
 
     exception
