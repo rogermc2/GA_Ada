@@ -15,7 +15,7 @@ package Metric is
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
    function Is_Diagonal (Met : Metric_Record) return Boolean;
    function Is_Euclidean (Met : Metric_Record) return Boolean;
-   function Matrix (Met : Metric_Record) return GA_Maths.Float_Matrix;
+   function Matrix (Met : Metric_Record) return Metric_Matrix;
    function Metric_C3 return Metric_Matrix;
    function New_Metric (Dimension : Integer) return Metric_Matrix;
    function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric_Matrix;
@@ -23,7 +23,7 @@ package Metric is
 
 private
    type Metric_Record (Dim : Integer) is record
-      Matrix          : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim);
+      Matrix          : Metric_Matrix (1 .. Dim, 1 .. Dim);
       Eigen_Metric    : GA_Maths.Float_Array_Package.Real_Vector (1 .. Dim);
       Diagonal        : Boolean;
       Euclidean       : Boolean := False;

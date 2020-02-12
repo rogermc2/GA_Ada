@@ -50,7 +50,7 @@ begin
    MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
    GA_Utilities.Print_Multivector ("MV_A", MV_A);
 
-   if General_Inverse (MV_A, Met, MV_AI_1) then
+   if General_Inverse (MV_A, Metric.Matrix (Met), MV_AI_1) then
         GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
         MV_Info := Multivector_Type.Init (MV_AI_1);
         GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);

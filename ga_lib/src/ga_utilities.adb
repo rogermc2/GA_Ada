@@ -158,7 +158,7 @@ package body GA_Utilities is
       New_Line;
       Put_Line (Name);
       Put_Line ("Dimension: " & Integer'Image (Dim));
-      Print_Matrix ("", Matrix (aMetric));
+      Print_Matrix ("", Real_Matrix ((Matrix (aMetric))));
       Put_Line ("Is_Diagonal: " & Boolean'Image (Is_Diagonal (aMetric)));
       Put_Line ("Is_Euclidean: " & Boolean'Image (Is_Euclidean (aMetric)));
       Put_Line ("Is_Anti_Euclidean: " & Boolean'Image (Is_Anti_Euclidean (aMetric)));

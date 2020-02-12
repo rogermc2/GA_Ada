@@ -23,7 +23,7 @@ package body Metric is
     end Is_Euclidean;
 
    --  --------------------------------------------------------------------
-    function Matrix (Met : Metric_Record) return GA_Maths.Float_Matrix is
+    function Matrix (Met : Metric_Record) return Metric_Matrix is
     begin
         return Met.Matrix;
     end Matrix;
@@ -76,9 +76,9 @@ package body Metric is
                 theMetric.Matrix (row, col) := Met (row, col);
             end loop;
         end loop;
-        Eigensystem (theMetric.Matrix, Eigen_Values, Eigin_Vectors);
+        Eigensystem (Real_Matrix (theMetric.Matrix), Eigen_Values, Eigin_Vectors);
         theMetric.Eigen_Metric := Eigen_Values;
-        theMetric.Diagonal := Is_Diagonal (theMetric.Matrix);
+        theMetric.Diagonal := Is_Diagonal (Real_Matrix (theMetric.Matrix));
 
         if theMetric.Diagonal then
             theMetric.Euclidean := True;
