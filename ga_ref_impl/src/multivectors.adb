@@ -14,13 +14,6 @@ package body Multivectors is
 
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
-    --     Basis : array (1 .. 5, 1 ..5) of float :=
-    --       ((0.0, 0.0, 0.0, 0.0, -1.0),
-    --        (0.0, 1.0, 0.0, 0.0, 0.0),
-    --        (0.0, 0.0, 1.0, 0.0, 0.0),
-    --        (0.0, 0.0, 0.0 ,1.0, 0.0),
-    --        (-1.0, 0.0, 0.0 , 0.0, 0.0));
-
     MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
     --  This array can be used to lookup the number of coordinates for
     --  the grade part of a general multivector
