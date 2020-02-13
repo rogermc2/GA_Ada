@@ -78,6 +78,8 @@ package GA_Maths is
    GU_16    : constant Grade_Usage := 32;
 
    function Is_Diagonal (aMatrix : Float_Matrix) return Boolean;
+   function Is_Euclidean (aMatrix : Float_Matrix) return Boolean;
+   function Is_Symetric (aMatrix : Float_Matrix) return Boolean;
    function Maximum (I1, I2 : Integer) return Integer;
    function Maximum (I1, I2 : Float) return Float;
    function Minimum (I1, I2 : Integer) return Integer;
