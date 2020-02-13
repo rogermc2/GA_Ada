@@ -5,7 +5,7 @@ package body Bits is
 
    function Bit_Count (Bitmap : Unsigned_32) return Natural is
       use Interfaces;
-      Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bitmap);
+      Count   : Unsigned_32 := Bitmap;
    begin
       Count := Count - ((Shift_Right (Count, 1)) and 16#55555555#);
       Count := (Count and 16#33333333#) + (Shift_Right (Count, 2) and 16#33333333#);
@@ -34,20 +34,19 @@ package body Bits is
 
    function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_32) return Natural is
       use Interfaces;
-      Num : Unsigned_32 := Unsigned_32 (Bitmap);
+      Num : Unsigned_32 := Bitmap;
    begin
       Num := Num or Shift_Right (Num, 1);
       Num := Num or Shift_Right (Num, 2);
       Num := Num or Shift_Right (Num, 4);
       Num := Num or Shift_Right (Num, 8);
       Num := Num or Shift_Right (Num, 16);
-      return Bit_Count (Unsigned_32 (Not Num));
+      return Bit_Count (Not Num);
    end Number_Of_Leading_Zero_Bits;
 
    --  ------------------------------------------------------------------------
 
-   function Number_Of_Trailing_Zero_Bits (Bitmap : Unsigned_32)
-                                          return Natural is
+   function Number_Of_Trailing_Zero_Bits (Bitmap : Unsigned_32) return Natural is
       use Interfaces;
    begin
       return Bit_Count ((not Bitmap) and (Bitmap - 1));
