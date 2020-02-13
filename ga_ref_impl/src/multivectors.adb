@@ -1,7 +1,5 @@
 --  Derived from ga_ref_impl Multivector.java
 
-with Interfaces;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -24,7 +22,6 @@ package body Multivectors is
                                   BBs    : in out Basis_Blade_Array;
                                   Inv_MV : out Multivector) return Boolean;
     function Random_Vector (Dim : Integer; Scale : Float) return Multivector;
-    procedure Simplify (Blades : in out Blade.Blade_List);
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
 
     --  -------------------------------------------------------------------------
@@ -321,7 +318,6 @@ package body Multivectors is
         use Interfaces;
         use Blade;
         use Blade_List_Package;
-        use GA_Maths;
         Blades  : constant Blade_List := Get_Blade_List (MV);
         Curs    : Cursor := Blades.First;
         Found   : Boolean := False;
@@ -423,7 +419,6 @@ package body Multivectors is
     function Cosine_Series (MV : Multivector; Order : Integer)
                             return Multivector is
         use Interfaces;
-        use GA_Maths;
         Scaled    : constant Multivector := MV;
         Scaled_GP : Multivector;
         Temp      : Multivector := Scaled;
@@ -453,7 +448,6 @@ package body Multivectors is
 
     function Dual (MV : Multivector) return Multivector is
         use Interfaces;
-        use GA_Maths;
         Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
         Dual_MV : Multivector;
     begin
@@ -469,7 +463,6 @@ package body Multivectors is
 
     function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector is
         use Interfaces;
-        use GA_Maths;
         Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
         Dual_MV : Multivector;
     begin
@@ -485,7 +478,6 @@ package body Multivectors is
 
     function Dual (MV : Multivector; Dim : Integer) return Multivector is
         use Interfaces;
-        use GA_Maths;
         Index   : constant Unsigned_32 := 2 ** Dim - 1;
         Dual_MV : Multivector;
     begin
@@ -809,10 +801,9 @@ package body Multivectors is
         use Interfaces;
         use Blade;
         use Blade_List_Package;
-        use GA_Maths;
-        Blades   : constant Blade_List := MV.Blades;
-        Curs     : Cursor := Blades.First;
-        Found    : Boolean := False;
+        Blades : constant Blade_List := MV.Blades;
+        Curs   : Cursor := Blades.First;
+        Found  : Boolean := False;
     begin
         while Has_Element (Curs) and not Found loop
             Found := Bitmap (Element (Curs)) = Index;
@@ -879,7 +870,6 @@ package body Multivectors is
     --  Grade_Use returns a bitmap of grades that are in use in MV
     --  Bit 1: Scalar, Bit 2 etc non-scalar grades
     function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
-        use GA_Maths;
         use Interfaces;
         use Blade;
         use Blade_List_Package;
@@ -894,7 +884,7 @@ package body Multivectors is
               Shift_Left (1, Blade.Grade (BB));
             Next (Cursor_B);
         end loop;
-        return Unsigned_32 (GU_Bitmap);
+        return GU_Bitmap;
     end Grade_Use;
 
     --  -------------------------------------------------------------------------
@@ -1028,7 +1018,6 @@ package body Multivectors is
         use Ada.Containers;
         use Blade;
         use Blade_List_Package;
-        use GA_Maths;
         Blades : constant Blade_List := MV.Blades;
         Result : Boolean := Is_Null (MV);
     begin
@@ -1512,7 +1501,6 @@ package body Multivectors is
         use Interfaces;
         use Blade;
         use Blade_List_Package;
-        use GA_Maths;
         BB       : Blade.Basis_Blade;
         Blades   : constant Blade_List := MV.Blades;
         B_Cursor : Cursor := Blades.First;
@@ -1554,59 +1542,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    procedure Simplify (Blades : in out Blade.Blade_List) is
-        use Interfaces;
-        use Blade;
-        use Blade_List_Package;
-        use GA_Maths;
-        Current_Blade  : Blade.Basis_Blade;
-        Previous_Blade : Blade.Basis_Blade;
-        Blade_Cursor   : Cursor;
-        Prev_Curs      : Cursor;
-        Has_Previous   : Boolean := False;
-    begin
-        if List (Blades) /= Empty_List then
-            Blade_Sort_Package.Sort (List (Blades));
-            --              Reverse_Elements (Blades);
-            Blade_Cursor := Blades.First;
-            Prev_Curs := No_Element;
-
-            while Has_Element (Blade_Cursor) loop
-                Current_Blade := Element (Blade_Cursor);
-                if Weight (Current_Blade) = 0.0 then
-                    Blades.Delete (Blade_Cursor);
-                    Has_Previous := False;
-                    --  Delete sets Blade_Cursor to No_Element
-                    Prev_Curs := No_Element;
-                elsif Has_Previous and then
-                  Bitmap (Previous_Blade) = Bitmap (Current_Blade) then
-                    Update_Blade (Previous_Blade,
-                                  Weight (Previous_Blade) + Weight (Current_Blade));
-                    Blades.Replace_Element (Prev_Curs, Previous_Blade);
-                    Blades.Delete (Blade_Cursor);
-                    Blade_Cursor := Prev_Curs;
-                else
-                    Previous_Blade := Current_Blade;
-                    Has_Previous := True;
-                    Prev_Curs := Blade_Cursor;
-                end if;
-                Next (Blade_Cursor);
-            end loop;
-
-            Blade_Cursor := Blades.First;
-            while Has_Element (Blade_Cursor) loop
-                if Weight (Element (Blade_Cursor)) = 0.0 then
-                    Blades.Delete (Blade_Cursor);
-                else
-                    Next (Blade_Cursor);
-                end if;
-            end loop;
-        end if;
-
-    end Simplify;
-
-    --  -------------------------------------------------------------------------
-
     function Sine (MV : Multivector) return Multivector is
     begin
         return Sine (MV, 12);
@@ -1643,7 +1578,6 @@ package body Multivectors is
 
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector is
         use Interfaces;
-        use GA_Maths;
         Scaled    : constant Multivector := MV;
         Scaled_GP : Multivector;
         Temp      : Multivector := Scaled;
@@ -1673,18 +1607,21 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Space_Dimension (MV : Multivector) return Integer is
+    function Space_Dimension (MV : Multivector) return Natural is
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Blades       : constant Blade_List := MV.Blades;
         Blade_Cursor : Cursor := Blades.First;
-        High_Bit     : Integer;
-        Max_Dim      : Integer := 0;
+        High_Bit     : Natural := 0;
+        BM           : Interfaces.Unsigned_32;
+        Max_Dim      : Natural := 0;
     begin
         while Has_Element (Blade_Cursor) loop
-            High_Bit := Bits.Highest_One_Bit (Bitmap (Element (Blade_Cursor)));
-            Max_Dim := Maximum (Max_Dim, High_Bit);
+            BM := Bitmap (Element (Blade_Cursor));
+            if Bits.Highest_One_Bit (BM, High_Bit) then
+                Max_Dim := Maximum (Max_Dim, High_Bit);
+            end if;
             Next (Blade_Cursor);
         end loop;
         return Max_Dim + 1;
