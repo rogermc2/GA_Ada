@@ -1,4 +1,4 @@
-
+with Interfaces;
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Strings.Unbounded;
 
@@ -47,7 +47,7 @@ package Multivectors is
    function Basis_Vector (Index : E3_Base) return Vector;
    function Basis_Vector (Index : C3_Base) return Vector;
    function Blades (MV : Multivector) return Blade.Blade_List;
-   function Component  (MV : Multivector; BM : GA_Maths.Unsigned_Integer)
+   function Component  (MV : Multivector; BM : Interfaces.Unsigned_32)
                         return Float;
    procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine (MV : Multivector) return Multivector;
@@ -67,10 +67,10 @@ package Multivectors is
    function General_Inverse (MV : Multivector; Met : Metric.Metric_Matrix;
                              Inv : out Multivector) return Boolean;
    --  Get_Basis_Vector returns multivector of the required base.
-   function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
+   function Get_Blade (MV : Multivector; Index : Interfaces.Unsigned_32)
                        return Blade.Basis_Blade;
    function Get_Blade (MV : Multivector; theBlade : out Multivector;
-                       Index : GA_Maths.Unsigned_Integer) return Boolean;
+                       Index : Interfaces.Unsigned_32) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
    function Grade (MV : Multivector; theGrade : out Integer) return Boolean;
@@ -129,7 +129,7 @@ package Multivectors is
    function Sine (MV : Multivector; Order : Integer) return Multivector;
    function MV_Size (MV : Multivector) return Natural;
    function Space_Dimension (MV : Multivector) return Integer;
-   function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer;
+   function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
    procedure To_Line (MV : in out Multivector);

@@ -13,7 +13,7 @@ package body Multivector_Type is
         use GA_Maths;
         use Multivectors;
         Rec        : MV_Type_Record;
-        Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
+        Count      : array (1 .. 2) of Unsigned_32 := (0, 0);
         Index      : constant Integer := 1;
         GU_Bitmap  : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
         Versor_Inv : Multivector;
@@ -73,7 +73,7 @@ package body Multivector_Type is
         use Multivectors;
         Ca         : Multivector := MV;
         Rec        : MV_Type_Record;
-        Count      : array (1 .. 2) of Unsigned_Integer := (0, 0);
+        Count      : array (1 .. 2) of Unsigned_32 := (0, 0);
         Index      : constant Integer := 1;
         GU_Bitmap  : Unsigned_32 := Unsigned_32 (Grade_Use (MV));
         Versor_Inv : Multivector;
@@ -142,7 +142,7 @@ package body Multivector_Type is
 
     --  -------------------------------------------------------------------------
 
-    function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer is
+    function Top_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32 is
     begin
         return MV.Grade;
     end Top_Grade;
@@ -172,7 +172,7 @@ package body Multivector_Type is
         Put_Line ("Zero       " & boolean'Image (Info.Zero));
         Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
         Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
-        Put_Line ("Grade      " & GA_Maths.Unsigned_Integer'Image (Info.Grade));
+        Put_Line ("Grade      " & Interfaces.Unsigned_32'Image (Info.Grade));
 
     exception
         when others =>

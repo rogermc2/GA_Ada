@@ -259,7 +259,7 @@ package body Inner_Product_Types is
                              Basis_Bitmap;
                            Sc := Weight (Blades_Bj) *
                              Canonical_Reordering_Sign
-                               (Unsigned_Integer (Basis_Bitmap), Bitmap (Blades_Bj));
+                               (Unsigned_32 (Basis_Bitmap), Bitmap (Blades_Bj));
                            Blade.Add_Blade
                              (L_List, New_Basis_Blade (C3_Base'Enum_Val (Vec_Bitmap), Sc));
                         end if;

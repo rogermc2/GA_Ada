@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with GL.Types;
 
 with GA_Maths;
@@ -84,12 +86,12 @@ package C3GA is
                  1.0, 1.0, -1.0, 1.0, 1.0, 1.0);
 
    --  Joinable grade definitions
-   Grade_0 : constant GA_Maths.Unsigned_Integer := 1;
-   Grade_1 : constant GA_Maths.Unsigned_Integer := 2;
-   Grade_2 : constant GA_Maths.Unsigned_Integer := 4;
-   Grade_3 : constant GA_Maths.Unsigned_Integer := 8;
-   Grade_4 : constant GA_Maths.Unsigned_Integer := 16;
-   Grade_5 : constant GA_Maths.Unsigned_Integer := 32;
+   Grade_0 : constant Interfaces.Unsigned_32 := 1;
+   Grade_1 : constant Interfaces.Unsigned_32 := 2;
+   Grade_2 : constant Interfaces.Unsigned_32 := 4;
+   Grade_3 : constant Interfaces.Unsigned_32 := 8;
+   Grade_4 : constant Interfaces.Unsigned_32 := 16;
+   Grade_5 : constant Interfaces.Unsigned_32 := 32;
 
 --     function "+" (L, R : Vector_E3GA) return Vector_E3GA;
 --     function "-" (L, R : Vector_E3GA) return Vector_E3GA;

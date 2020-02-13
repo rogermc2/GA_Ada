@@ -1,6 +1,4 @@
 
-with Interfaces;
-
 with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -219,9 +217,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2 (MV : Multivectors.Multivector) return float is
-      use GA_Maths;
-      BM_E12   : constant Unsigned_Integer := Unsigned_Integer (C3_Base'Enum_Rep (C3_e1))
-        or Unsigned_Integer (C3_Base'Enum_Rep (C3_e2));
+      use Interfaces;
+      BM_E12   : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_e1))
+        or Unsigned_32 (C3_Base'Enum_Rep (C3_e2));
    begin
       return  Multivectors.Component (MV, BM_E12);
    end e1_e2;
@@ -229,10 +227,10 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e3 (MV : Multivectors.Multivector) return float is
-      use GA_Maths;
-      BM_E13   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      use Interfaces;
+      BM_E13   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or
+        Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return  Multivectors.Component (MV, BM_E13);
    end e1_e3;
@@ -240,9 +238,9 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e2_e3 (MV : Multivectors.Multivector) return float is
-      use GA_Maths;
-      BM_E23   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      use Interfaces;
+      BM_E23   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return Multivectors.Component (MV, BM_E23);
    end e2_e3;
@@ -250,17 +248,17 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2_e3 (MV : Multivectors.Multivector) return float is
-      use GA_Maths;
-      BM   : constant Unsigned_Integer :=
-               Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      use Interfaces;
+      BM   : constant Unsigned_32 :=
+               Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or
+        Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return Multivectors.Component (MV, BM);
    end e1_e2_e3;
 
    --  -------------------------------------------------------------------------
 
-   --     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer  is
+   --     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32  is
    --     begin
    --        return MV.Grade_Use;
    --     end Grade_Use;
@@ -273,9 +271,9 @@ package body C3GA is
    --        use  Multivector_Type_Base;
    --        MV_Info            : MV_Type;
    --        GU                 : GA_Maths.Grade_Usage := Grade_Use (MV);
-   --        Count              : array (Unsigned_Integer range 1 .. 2) of Integer := (0, 0);
-   --        Count_Index        : Unsigned_Integer := 0;
-   --        Index              : Unsigned_Integer := 0;
+   --        Count              : array (Unsigned_32 range 1 .. 2) of Integer := (0, 0);
+   --        Count_Index        : Unsigned_32 := 0;
+   --        Index              : Unsigned_32 := 0;
    --        Done               : Boolean := False;
    --     begin
    --        MV_Info.M_Type := Multivector_Object;
@@ -286,7 +284,7 @@ package body C3GA is
    --              Index := Count_Index and US_1;
    --              Count (Index) := Count (Index) + 1;
    --           end if;
-   --           GU := Unsigned_Integer (Shift_Right (Unsigned_32 (GU), 1));
+   --           GU := Unsigned_32 (Shift_Right (Unsigned_32 (GU), 1));
    --           MV_Info.M_Grade := Integer (Count_Index);
    --           Count_Index := Count_Index + 1;
    --        end loop;
@@ -698,14 +696,12 @@ package body C3GA is
       use Ada.Strings.Unbounded;
       use Blade.Blade_List_Package;
       use Interfaces;
-      use GA_Maths;
       Blades            : constant Blade.Blade_List := Multivectors.Blades (MV);
       Curs              : Cursor := Blades.First;   --  k
       Char_Buff         : Unbounded_String := To_Unbounded_String ("");
       Float_Buff        : Unbounded_String;
       Result            : Unbounded_String;
       Grade_Usage       : constant Unsigned_32 := Unsigned_32 (Multivectors.Grade_Use (MV));
-      S                 : constant Integer := Integer (Multivectors.MV_Size (MV));
       Coord             : Float;
       Grade_Size        : Integer;
       Index_A           : Integer := 1;
@@ -761,7 +757,7 @@ package body C3GA is
       return To_String (Result);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exception occurred in C3GA.Multivector_String.");
       raise;
    end Multivector_String;
@@ -1085,11 +1081,12 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA is
+      use Interfaces;
       use GL.Types;
       use GA_Maths;
       theVector : Vector_E3GA;
       GU        : constant Grade_Usage := Multivectors.Grade_Use (MV);
-      Index     : Unsigned_Integer := 0;
+      Index     : Unsigned_32 := 0;
    begin
       if (GU and GU_0) /= 0 then
          Index := Index + 1;

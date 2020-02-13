@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
@@ -13,6 +15,7 @@ package body Blade is
     --  -------------------------------------------------------------------------
 
     function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
+        use Interfaces;
     begin
         return Bitmap (Left) < Bitmap (Right);
     end "<";
@@ -72,8 +75,9 @@ package body Blade is
 
     function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                            return Ada.Strings.Unbounded.Unbounded_String is
+        use Interfaces;
         use Names_Package;
-        BM        : Unsigned_Integer := aBlade.Bitmap;
+        BM        : Unsigned_32 := aBlade.Bitmap;
         Index     : Natural := 1;
         Scale     : constant GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
         Name      : Unbounded_String;
@@ -84,7 +88,7 @@ package body Blade is
             theString := To_Unbounded_String (GA_Maths.float_3'Image (Scale));
         else
             while BM /= 0 loop
-                --           Put_Line ("Blade, BM: " & Unsigned_Integer'Image (BM));
+                --           Put_Line ("Blade, BM: " & Unsigned_32'Image (BM));
                 if (BM and 1) /= 0 then
                     if Length (theString) > 0 then
                         theString := theString & "^";
@@ -121,15 +125,16 @@ package body Blade is
 
     --  -------------------------------------------------------------------------
 
-    function Bitmap (BB : Basis_Blade) return Unsigned_Integer is
+    function Bitmap (BB : Basis_Blade) return Unsigned_32 is
     begin
         return BB.Bitmap;
     end Bitmap;
 
     --  ------------------------------------------------------------------------
 
-    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float is
-        A     : Unsigned_Integer := Map_A / 2;
+    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_32) return float is
+        use Interfaces;
+        A     : Unsigned_32 := Map_A / 2;
         Swaps : Natural := 0;
     begin
         while A /= 0 loop
@@ -164,11 +169,12 @@ package body Blade is
     --  wher m is an array of doubles giving the metric for each basis vector.
     function Geometric_Product (BA, BB : Basis_Blade;
                                 Met : Metric.Metric_Matrix) return Basis_Blade is
+        use Interfaces;
         Result : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
         --  BM is the meet (bitmap of annihilated vectors)
         --  Only retain vectors commomt to both blades
-        BM     : Unsigned_Integer := Bitmap (BA) and Bitmap (BB);
-        BM1    : constant Unsigned_Integer := BM;
+        BM     : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
+        BM1    : constant Unsigned_32 := BM;
         Row    : Integer range 1 .. Met'Length (1) := 1;
         Col    : Integer range 1 .. Met'Length (2) := 1;
     begin
@@ -197,6 +203,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
+        use Interfaces;
         OP_Blade : Basis_Blade;
         Sign     : Float;
     begin
@@ -248,10 +255,10 @@ package body Blade is
     begin
         if Weight (GM) /= 0.0 then
             Put_Line ("Blade.Inner_Product Geometric_Product " &
-                        Unsigned_Integer'Image (Bitmap (GM)) & "  " &
+                        Unsigned_32'Image (Bitmap (GM)) & "  " &
                         Float'Image (Weight (GM)));
             Put_Line ("Blade.Inner_Product filtered Inner_Product " &
-                        Unsigned_Integer'Image (Bitmap (IP)) & "  " &
+                        Unsigned_32'Image (Bitmap (IP)) & "  " &
                         Float'Image (Weight (IP)));
         end if;
         return Inner_Product_Filter (Grade (BA), Grade (BB),
@@ -316,7 +323,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
+    function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
                               return Basis_Blade is
         Blade : Basis_Blade;
     begin
@@ -371,7 +378,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function New_Complex_Basis_Blade (Index  : C3_Base;
-                                      Weight : Complex_Types.Complex := (0.0, 1.0))
+                                      Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
                                       return Complex_Basis_Blade is
     begin
         return (Index'Enum_Rep, Weight);
@@ -408,7 +415,7 @@ package body Blade is
     begin
         New_Line;
         Put_Line (Name & " Bitmap and Weight");
-        Put_Line (GA_Maths.Unsigned_Integer'Image (Bitmap (B)) &
+        Put_Line (Interfaces.Unsigned_32'Image (Bitmap (B)) &
                     "  " & float'Image (Weight (B)));
     end Print_Blade;
 
@@ -425,6 +432,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     procedure Simplify (Blades : in out Blade_List) is
+        use Interfaces;
         use Blade_List_Package;
         Current_Blade  : Blade.Basis_Blade;
         Blade_B        : Blade.Basis_Blade;
@@ -472,7 +480,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer) is
+    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32) is
     begin
         BB.Bitmap := Bitmap;
     exception
@@ -483,7 +491,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;
+    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32;
                             Weight : Float) is
     begin
         BB.Bitmap := Bitmap;

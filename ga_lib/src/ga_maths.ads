@@ -30,13 +30,12 @@ package GA_Maths is
    type Fixed_4 is delta 0.01 range -1.0 .. 1.0;
    for Fixed_4'Small use 0.01;
 
-   type Unsigned_Integer is mod 2 ** 32;
-   US_1 : constant Unsigned_Integer := Unsigned_Integer (1);
+   US_1 : constant Interfaces.Unsigned_32 := Interfaces.Unsigned_32 (1);
    type Vector_Unsigned_3D is array (1 .. 3) of Interfaces.Unsigned_32;
 
    subtype Basis_Index is Integer range 1 .. 2;  --  e1, e2
    subtype Grade_Index is Integer range 0 .. 2;  --  Scalar, Vector, Bivector
-   subtype Grade_Usage is Unsigned_Integer;
+   subtype Grade_Usage is Interfaces.Unsigned_32;
 
    type Basis_Array is array (Basis_Index) of integer;
    type Grade_Array is array (Grade_Index) of integer;
@@ -45,10 +44,10 @@ package GA_Maths is
    type Array_I3 is array (1 .. 3) of integer;
    type Array_I4 is array (1 .. 4) of integer;
    type Array_I8 is array (1 .. 8) of integer;
-   type Array_UI2 is array (1 .. 2) of Unsigned_Integer;
-   type Array_UI3 is array (1 .. 3) of Unsigned_Integer;
-   type Array_UI4 is array (1 .. 4) of Unsigned_Integer;
-   type Array_UI8 is array (1 .. 8) of Unsigned_Integer;
+   type Array_UI2 is array (1 .. 2) of Interfaces.Unsigned_32;
+   type Array_UI3 is array (1 .. 3) of Interfaces.Unsigned_32;
+   type Array_UI4 is array (1 .. 4) of Interfaces.Unsigned_32;
+   type Array_UI8 is array (1 .. 8) of Interfaces.Unsigned_32;
    type Array_F1 is array (1 .. 1) of float;
    type Array_F2 is array (1 .. 2) of float;
    type Array_F4 is array (1 .. 4) of float;

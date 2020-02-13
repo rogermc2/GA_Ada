@@ -3,7 +3,7 @@ with Interfaces;
 
 package body Bits is
 
-   function Bit_Count (Bitmap : GA_Maths.Unsigned_Integer) return Natural is
+   function Bit_Count (Bitmap : Unsigned_32) return Natural is
       use Interfaces;
       Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bitmap);
    begin
@@ -18,23 +18,22 @@ package body Bits is
 
    --  ------------------------------------------------------------------------
 
-   function Highest_One_Bit (Bitmap : GA_Maths.Unsigned_Integer) return Natural is
+   function Highest_One_Bit (Bitmap : Unsigned_32) return Natural is
    begin
       return 31 - Number_Of_Leading_Zero_Bits (Bitmap);
    end Highest_One_Bit;
 
    --  ------------------------------------------------------------------------
 
-   function Lowest_One_Bit (Bitmap : GA_Maths.Unsigned_Integer) return Natural is
+   function Lowest_One_Bit (Bitmap : Unsigned_32) return Natural is
    begin
       return Number_Of_Trailing_Zero_Bits (Bitmap);
    end Lowest_One_Bit;
 
    --  -----------------------------------------------------------------------
 
-   function Number_Of_Leading_Zero_Bits (Bitmap : GA_Maths.Unsigned_Integer) return Natural is
+   function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_32) return Natural is
       use Interfaces;
-      use GA_Maths;
       Num : Unsigned_32 := Unsigned_32 (Bitmap);
    begin
       Num := Num or Shift_Right (Num, 1);
@@ -42,14 +41,14 @@ package body Bits is
       Num := Num or Shift_Right (Num, 4);
       Num := Num or Shift_Right (Num, 8);
       Num := Num or Shift_Right (Num, 16);
-      return Bit_Count (Unsigned_Integer (Not Num));
+      return Bit_Count (Unsigned_32 (Not Num));
    end Number_Of_Leading_Zero_Bits;
 
    --  ------------------------------------------------------------------------
 
-   function Number_Of_Trailing_Zero_Bits (Bitmap : GA_Maths.Unsigned_Integer)
+   function Number_Of_Trailing_Zero_Bits (Bitmap : Unsigned_32)
                                           return Natural is
-      use GA_Maths;
+      use Interfaces;
    begin
       return Bit_Count ((not Bitmap) and (Bitmap - 1));
    end Number_Of_Trailing_Zero_Bits;

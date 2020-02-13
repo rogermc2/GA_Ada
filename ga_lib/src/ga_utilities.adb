@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -8,6 +10,7 @@ package body GA_Utilities is
 
    function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                               return Multivectors.Multivector_List is
+      use Interfaces;
       use GA_Maths;
       use Blade;
       use Multivectors;
@@ -15,10 +18,10 @@ package body GA_Utilities is
       Dim        : constant Integer := Space_Dimension (MV);
       MV_Info    : constant Multivector_Type.MV_Type_Record := Multivector_Type.Init (MV);
       --  Top_G is k
-      Top_G      : constant Unsigned_Integer := Multivector_Type.Top_Grade (MV_Info);
+      Top_G      : constant Unsigned_32 := Multivector_Type.Top_Grade (MV_Info);
       Blades     : Blade_List;   --  e
       B_Cursor   : Cursor;
-      Bit_Pos    : Unsigned_Integer;
+      Bit_Pos    : Unsigned_32;
       thisBlade  : Multivector;  --  Bc
       MV_2       : Multivector;
       Factors    : Multivectors.Multivector_List;
@@ -90,7 +93,7 @@ package body GA_Utilities is
       Put_Line ("Blades, Bitmap and Weight:");
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         Put_Line (GA_Maths.Unsigned_Integer'Image (Blade.Bitmap (aBlade)) &
+         Put_Line (Interfaces.Unsigned_32'Image (Blade.Bitmap (aBlade)) &
                      "  " & float'Image (Blade.Weight (aBlade)));
          Next (Curs);
       end loop;
@@ -183,7 +186,7 @@ package body GA_Utilities is
       Put_Line ("Multivector Blades, Bitmap and Weight:");
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         Put_Line (GA_Maths.Unsigned_Integer'Image (Blade.Bitmap (aBlade)) &
+         Put_Line (Interfaces.Unsigned_32'Image (Blade.Bitmap (aBlade)) &
                      "  " & float'Image (Blade.Weight (aBlade)));
          Next (Curs);
       end loop;
@@ -203,8 +206,8 @@ package body GA_Utilities is
       Put_Line (Name);
       Put_Line ("Zero        " & boolean'Image (Zero (Info)));
       Put_Line ("MV Type     " & MV_Type'Image (MV_Kind (Info)));
-      Put_Line ("Top_Grade   " & GA_Maths.Unsigned_Integer'Image (Top_Grade (Info)));
-      Put_Line ("Grade use   " & GA_Maths.Unsigned_Integer'Image (Grade_Use (Info)));
+      Put_Line ("Top_Grade   " & Interfaces.Unsigned_32'Image (Top_Grade (Info)));
+      Put_Line ("Grade use   " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
       Put_Line ("Parity      " & Parity_Type'Image (Parity (Info)));
    exception
       when others =>

@@ -317,7 +317,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Component (MV : Multivector; BM : GA_Maths.Unsigned_Integer) return Float is
+    function Component (MV : Multivector; BM : Interfaces.Unsigned_32) return Float is
+        use Interfaces;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -421,6 +422,7 @@ package body Multivectors is
 
     function Cosine_Series (MV : Multivector; Order : Integer)
                             return Multivector is
+        use Interfaces;
         use GA_Maths;
         Scaled    : constant Multivector := MV;
         Scaled_GP : Multivector;
@@ -432,7 +434,7 @@ package body Multivectors is
         for Count in 2 .. Order loop
             Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
             Temp := Geometric_Product (Temp, Scaled_GP);
-            if (GA_Maths.Unsigned_Integer (Count) and 1) = 0 then
+            if (Unsigned_32 (Count) and 1) = 0 then
                 Result := Result + Geometric_Product (Temp, Float (Sign));
                 Sign := -Sign;
             end if;
@@ -450,12 +452,13 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Dual (MV : Multivector) return Multivector is
+        use Interfaces;
         use GA_Maths;
-        Index   : constant Unsigned_Integer := 2 ** Space_Dimension (MV) - 1;
+        Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
         Dual_MV : Multivector;
     begin
         Put_Line ("Multivectors.Dual Space_Dimension (MV)" & Integer'Image (Space_Dimension (MV)));
-        Put_Line ("Multivectors.Dual Index" & Unsigned_Integer'Image (Index));
+        Put_Line ("Multivectors.Dual Index" & Unsigned_32'Image (Index));
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
         Dual_MV := Versor_Inverse (Dual_MV);
         Dual_MV := Inner_Product (MV, Dual_MV, Blade.Left_Contraction);
@@ -465,12 +468,13 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector is
+        use Interfaces;
         use GA_Maths;
-        Index   : constant Unsigned_Integer := 2 ** Space_Dimension (MV) - 1;
+        Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
         Dual_MV : Multivector;
     begin
         Put_Line ("Multivectors.Dual Space_Dimension (MV)" & Integer'Image (Space_Dimension (MV)));
-        Put_Line ("Multivectors.Dual Index" & Unsigned_Integer'Image (Index));
+        Put_Line ("Multivectors.Dual Index" & Unsigned_32'Image (Index));
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
         Dual_MV := Versor_Inverse (Dual_MV);
         Dual_MV := Inner_Product (MV, Dual_MV, Met, Blade.Left_Contraction);
@@ -480,8 +484,9 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Dual (MV : Multivector; Dim : Integer) return Multivector is
+        use Interfaces;
         use GA_Maths;
-        Index   : constant Unsigned_Integer := 2 ** Dim - 1;
+        Index   : constant Unsigned_32 := 2 ** Dim - 1;
         Dual_MV : Multivector;
     begin
         Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
@@ -709,7 +714,7 @@ package body Multivectors is
         BBs        : Basis_Blade_Array (1 .. Max_G);
     begin
         for index in BBs'Range loop
-            BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
+            BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
         end loop;
         --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
         --  the coordinates of another multivector 'x' (stored in a vector)
@@ -748,7 +753,7 @@ package body Multivectors is
         BBs        : Basis_Blade_Array (1 .. Max_G);
     begin
         for index in BBs'Range loop
-            BBs (index) := New_Basis_Blade (Unsigned_Integer (index - 1));
+            BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
         end loop;
         --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
         --  the coordinates of another multivector 'x' (stored in a vector)
@@ -780,7 +785,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Get_Blade (MV : Multivector; Index : GA_Maths.Unsigned_Integer)
+    function Get_Blade (MV : Multivector; Index : Interfaces.Unsigned_32)
                         return Blade.Basis_Blade is
         use Blade;
         use Blade_List_Package;
@@ -800,7 +805,8 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Get_Blade (MV    : Multivector; theBlade : out Multivector;
-                        Index : GA_Maths.Unsigned_Integer) return Boolean is
+                        Index : Interfaces.Unsigned_32) return Boolean is
+        use Interfaces;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -888,7 +894,7 @@ package body Multivectors is
               Shift_Left (1, Blade.Grade (BB));
             Next (Cursor_B);
         end loop;
-        return Unsigned_Integer (GU_Bitmap);
+        return Unsigned_32 (GU_Bitmap);
     end Grade_Use;
 
     --  -------------------------------------------------------------------------
@@ -1018,6 +1024,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Is_Scalar (MV : Multivector) return Boolean is
+        use Interfaces;
         use Ada.Containers;
         use Blade;
         use Blade_List_Package;
@@ -1502,6 +1509,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Scalar_Part (MV : Multivector) return Float is
+        use Interfaces;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -1547,6 +1555,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     procedure Simplify (Blades : in out Blade.Blade_List) is
+        use Interfaces;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -1633,6 +1642,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector is
+        use Interfaces;
         use GA_Maths;
         Scaled    : constant Multivector := MV;
         Scaled_GP : Multivector;
@@ -1644,7 +1654,7 @@ package body Multivectors is
         for Count in 2 .. Order loop
             Scaled_GP := Geometric_Product (Scaled, 1.0 / Float (Count));
             Temp := Geometric_Product (Temp, Scaled_GP);
-            if (GA_Maths.Unsigned_Integer (Count) and 1) /= 0 then
+            if (Unsigned_32 (Count) and 1) /= 0 then
                 --  use only the odd part of the series
                 Result := Result + Geometric_Product (Temp, Float (Sign));
                 Sign := -Sign;
@@ -1682,7 +1692,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Top_Grade_Index (MV : Multivector) return GA_Maths.Unsigned_Integer is
+    function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32 is
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -1698,7 +1708,7 @@ package body Multivectors is
             Next (Blade_Cursor);
         end loop;
         --          Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
-        return Unsigned_Integer (Grade_Count);
+        return Interfaces.Unsigned_32 (Grade_Count);
     end Top_Grade_Index;
 
     --  -------------------------------------------------------------------------

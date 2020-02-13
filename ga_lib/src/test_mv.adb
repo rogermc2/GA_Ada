@@ -33,7 +33,7 @@ begin
 --
 --     C3GA_Utilities.Print_Multivector ("no", no_bv);
 --     MV_Info := Multivector_Type.Init (no_bv);
---     Put_Line ("Bit count: " & GA_Maths.Unsigned_Integer
+--     Put_Line ("Bit count: " & GA_Maths.Unsigned_32
 --                    'Image (1) &
 --                 Natural'Image (GA_Maths.Bit_Count (1)));
 --     Multivector_Type.Print_Multivector_Info ("no", MV_Info);

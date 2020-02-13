@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types;
@@ -8,7 +10,6 @@ with Maths;
 
 with Blade_Types;
 with E3GA;
-with GA_Maths;
 with GA_Utilities;
 with Metric;
 with Multivector_Type;
@@ -33,7 +34,6 @@ package body Multivector_Analyze_C3GA is
                       Flags    : Flag_Type := (Flag_Invalid, false);
                       Epsilon  : float := Default_Epsilon) is
       use Multivector_Type;
-      use GA_Maths;
 
       MV_X      : Multivectors.Multivector := MV;
       MV_Info   : Multivector_Type.MV_Type_Record;
@@ -137,9 +137,9 @@ package body Multivector_Analyze_C3GA is
                            MV          : Multivectors.Multivector;
                            Met         : Metric.Metric_Matrix;
                            Probe       : Multivectors.Normalized_Point) is
-      use GA_Maths;
+      use Interfaces;
       use Multivectors;
-      Grade         : Unsigned_Integer :=
+      Grade         : Unsigned_32 :=
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       --  Attitude is a free N-vector
       Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV, Met));
@@ -216,8 +216,9 @@ package body Multivector_Analyze_C3GA is
 
    procedure Analyze_Free (theAnalysis : in out MV_Analysis;
                            MV          : Multivectors.Multivector) is
+      use Interfaces;
       use Multivectors;
-      Grade         : constant GA_Maths.Unsigned_Integer :=
+      Grade         : constant Unsigned_32 :=
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       Weight        : constant Float := Norm_E (MV);
       --        Attitude      : constant Multivector := MV;
@@ -263,11 +264,11 @@ package body Multivector_Analyze_C3GA is
 
    procedure Analyze_Round (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector) is
+      use Interfaces;
       use Maths.Single_Math_Functions;
-      use GA_Maths;
       use Multivectors;
       MV_X             : Multivector := MV;
-      Grade            : constant Unsigned_Integer :=
+      Grade            : constant Interfaces.Unsigned_32 :=
                            Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       Blade_Factors    : Multivector_List;
       LC               : Multivector;
@@ -284,7 +285,7 @@ package body Multivector_Analyze_C3GA is
       Scale            : Float;
    begin
       --          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
-      --                      Unsigned_Integer'Image (Grade));
+      --                      Unsigned_32'Image (Grade));
       if Grade = 0 then
          theAnalysis.M_Type.Blade_Class := Scalar_Blade;
          theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
@@ -403,9 +404,8 @@ package body Multivector_Analyze_C3GA is
 
    procedure Analyze_Tangent (theAnalysis : in out MV_Analysis;
                               MV          : Multivectors.Multivector) is
-      use GA_Maths;
       use Multivectors;
-      Grade          : constant Unsigned_Integer :=
+      Grade          : constant Interfaces.Unsigned_32 :=
                          Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       LC_NI_MV       : Multivector;
       LC_NI_MV_Inv   : Multivector;

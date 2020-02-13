@@ -102,8 +102,8 @@ package E3GA is
 --     function Geometric_Product (R : Rotor; V : Vector) return Syn_SMultivector;
 --     function Geometric_Product (R1, R2 : Rotor) return Rotor;
 --     function Geometric_Product (V1, V2 : Vector) return Rotor;
---     function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_Integer;
---     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer;
+--     function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_32;
+--     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32;
 --     function Inverse (aRotor : Rotor) return Rotor;
 --     function Inverse (V : Vector) return Vector;
 --     function Left_Contraction (BV1, BV2 : Bivector) return Scalar;

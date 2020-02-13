@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with GA_Maths;
 with Metric;
 with Multivectors;
@@ -14,7 +16,7 @@ package Multivector_Type is
                  Epsilon : Float := 0.0) return MV_Type_Record;
 
    function MV_Kind (MV : MV_Type_Record) return MV_Type;
-   function Top_Grade (MV : MV_Type_Record) return GA_Maths.Unsigned_Integer;
+   function Top_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32;
    function Grade_Use (MV : MV_Type_Record) return GA_Maths.Grade_Usage;
    function Parity (MV : MV_Type_Record) return Parity_Type;
    procedure Print_Multivector_Info (Name : String; Info : MV_Type_Record);
@@ -25,7 +27,7 @@ private
    type MV_Type_Record is record
       MV_Kind   : MV_Type := Unspecified_MV_Type;  -- type MV, Versor or Blade
       Zero      : Boolean;
-      Grade     : GA_Maths.Unsigned_Integer := 0;  --  Top_Grade
+      Grade     : Interfaces.Unsigned_32 := 0;  --  Top_Grade
       Grade_Use : GA_Maths.Grade_Usage;
       Parity    : Parity_Type := No_Parity;
    end record;

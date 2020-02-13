@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Maths;
 
 with Blade;
@@ -424,9 +426,10 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
       use Blade_Types;
-      BM_E12   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e2));
+      BM_E12   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e2));
    begin
       return Component (MV, BM_E12);
    end e1_e2;
@@ -434,9 +437,10 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
       use Blade_Types;
-      BM_E13   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      BM_E13   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return  Component (MV, BM_E13);
    end e1_e3;
@@ -444,9 +448,10 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e2_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
       use Blade_Types;
-      BM_E23   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      BM_E23   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return Component (MV, BM_E23);
    end e2_e3;
@@ -454,9 +459,10 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e3_e1 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
       use Blade_Types;
-      BM_E31   : constant Unsigned_Integer :=
-                   Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      BM_E31   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return Component (MV, BM_E31);
    end e3_e1;
@@ -464,10 +470,11 @@ package body E3GA is
    --  -------------------------------------------------------------------------
 
    function e1_e2_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
       use Blade_Types;
-      BM   : constant Unsigned_Integer :=
-               Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
+      BM   : constant Unsigned_32 :=
+               Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or
+        Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
       return Component (MV, BM);
    end e1_e2_e3;
@@ -733,12 +740,13 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function Get_Coords (R : Rotor) return Array_4D is
+      use Interfaces;
       use Blade;
       use Blade_Types;
       use Blade_List_Package;
       Blades  : constant Blade_List := Get_Blade_List (R);
       Curs    : Cursor := Blades.First;
-      BM      : Unsigned_Integer;
+      BM      : Unsigned_32;
       Result  : Array_4D := (others => 0.0);
    begin
       Result (1) := Scalar_Part (R);
@@ -775,14 +783,14 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_Integer  is
+   --      function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_32  is
    --      begin
    --          return BV.Grade_Use;
    --      end Grade_Use;
 
    --  ------------------------------------------------------------------------
 
-   --      function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer  is
+   --      function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32  is
    --      begin
    --          return MV.Grade_Use;
    --      end Grade_Use;

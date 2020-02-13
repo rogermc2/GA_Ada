@@ -1,10 +1,12 @@
 
+with Interfaces; use Interfaces;
+
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;
 
 with Blade_Types; use Blade_Types;
-with GA_Maths; use GA_Maths;
+with GA_Maths;
 with Metric;
 
 package Blade is
@@ -12,7 +14,7 @@ package Blade is
    use Ada.Strings.Unbounded;
 
    type Basis_Blade is record
-      Bitmap : Unsigned_Integer := 0;
+      Bitmap : Interfaces.Unsigned_32 := 0;
       Weight : Float := 0.0;
    end record;
 
@@ -54,10 +56,10 @@ package Blade is
                         Index : Natural; BB : Basis_Blade);
    function BB_First (BB_List : Blade_List) return Basis_Blade;
    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
-   function Bitmap (BB : Basis_Blade) return Unsigned_Integer;
+   function Bitmap (BB : Basis_Blade) return Unsigned_32;
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                           return Ada.Strings.Unbounded.Unbounded_String;
-   function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_Integer) return float;
+   function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_32) return float;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix)
@@ -70,7 +72,7 @@ package Blade is
                            Cont : Contraction_Type) return Basis_Blade;
    function List_Length (Blades : Blade_List) return Integer;
    function Minus_1_Power (Power : Integer) return Integer;
-   function New_Basis_Blade (Bitmap : Unsigned_Integer; Weight : Float := 1.0)
+   function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
                              return Basis_Blade;
    function New_Basis_Blade (Weight : Float) return Basis_Blade;
 
@@ -79,7 +81,7 @@ package Blade is
    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
    function New_Complex_Basis_Blade (Index  : C3_Base;
-                                     Weight : Complex_Types.Complex := (0.0, 1.0))
+                                     Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
                                      return Complex_Basis_Blade;
    function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade;
    function New_Zero_Blade return Basis_Blade;
@@ -89,15 +91,15 @@ package Blade is
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
    procedure Simplify (Blades : in out Blade_List);
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
-   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer);
-   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_Integer;
+   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32);
+   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32;
                            Weight : Float);
    function Weight (BB : Basis_Blade) return Float;
 
 private
    type Complex_Basis_Blade is record
-      Bitmap : Unsigned_Integer := 0;
-      Weight : Complex_Types.Complex := (0.0, 0.0);
+      Bitmap : Unsigned_32 := 0;
+      Weight : GA_Maths.Complex_Types.Complex := (0.0, 0.0);
    end record;
 
 end Blade;
