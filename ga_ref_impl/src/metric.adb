@@ -23,6 +23,7 @@ package body Metric is
     end Is_Euclidean;
 
    --  --------------------------------------------------------------------
+
     function Matrix (Met : Metric_Record) return Metric_Matrix is
     begin
         return Met.Matrix;
@@ -67,10 +68,14 @@ package body Metric is
     function New_Metric (Met : Metric_Matrix) return Metric_Record is
         use GA_Maths;
         use Float_Array_Package;
+        M_Matrix      : Metric_Matrix := Met;
         Eigen_Values  : Real_Vector (Met'Range);
         Eigin_Vectors : Float_Matrix (Met'Range, Met'Range);
         theMetric     : Metric_Record (Met'Last - Met'First + 1);
     begin
+        if not Is_Symmetric (M_Matrix) then
+            raise Metric_Exception;
+        end if;
         for row in Met'Range loop
             for col in Met'Range (2) loop
                 theMetric.Matrix (row, col) := Met (row, col);
