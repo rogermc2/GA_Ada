@@ -25,7 +25,7 @@ private
    type Metric_Record (Dim : Integer) is record
       Matrix          : Metric_Matrix (1 .. Dim, 1 .. Dim);
       Eigen_Metric    : Metric_Matrix (1 .. Dim, 1 .. Dim);
-      Diagonal        : Boolean;
+      Diagonal        : Boolean := False;
       Euclidean       : Boolean := False;
       Anti_Euclidean  : Boolean := False;
       Eigen_Values    : Real_Vector (1 .. Dim);
