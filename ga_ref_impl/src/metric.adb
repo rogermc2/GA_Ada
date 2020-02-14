@@ -85,16 +85,25 @@ package body Metric is
          For row in Eigen_Values'Range loop
             theMetric (row, row) := Eigen_Values (row);
          end loop;
+
          State.Diagonal := Is_Diagonal (Met);
-         if State.Diagonal then
+         if not State.Diagonal then
+            State.Euclidean := False;
+            State.Anti_Euclidean := False;
+         else
+            State.Euclidean := True;
             State.Anti_Euclidean := True;
             For col in Met'Range (2) loop
                if Met (col, col) /= 1.0 then
                   State.Euclidean := False;
                end if;
+               if Met (col, col) /= -1.0 then
+                  State.Anti_Euclidean := False;
+               end if;
             end loop;
          end if;
       end if;
+
       State.Eigen_Metric := theMetric;
       return theMetric;
 
