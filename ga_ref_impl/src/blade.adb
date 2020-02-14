@@ -1,6 +1,4 @@
 
-with Interfaces;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
@@ -15,7 +13,6 @@ package body Blade is
     --  -------------------------------------------------------------------------
 
     function "<" (Left, Right : Blade.Basis_Blade) return Boolean is
-        use Interfaces;
     begin
         return Bitmap (Left) < Bitmap (Right);
     end "<";
@@ -75,7 +72,6 @@ package body Blade is
 
     function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
                            return Ada.Strings.Unbounded.Unbounded_String is
-        use Interfaces;
         use Names_Package;
         BM        : Unsigned_32 := aBlade.Bitmap;
         Index     : Natural := 1;
@@ -133,7 +129,6 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_32) return float is
-        use Interfaces;
         A     : Unsigned_32 := Map_A / 2;
         Swaps : Natural := 0;
     begin
@@ -169,12 +164,10 @@ package body Blade is
     --  wher m is an array of doubles giving the metric for each basis vector.
     function Geometric_Product (BA, BB : Basis_Blade;
                                 Met : Metric.Metric_Matrix) return Basis_Blade is
-        use Interfaces;
         Result : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
         --  BM is the meet (bitmap of annihilated vectors)
         --  Only retain vectors commomt to both blades
         BM     : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-        BM1    : constant Unsigned_32 := BM;
         Row    : Integer range 1 .. Met'Length (1) := 1;
         Col    : Integer range 1 .. Met'Length (2) := 1;
     begin
@@ -203,7 +196,6 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade is
-        use Interfaces;
         OP_Blade : Basis_Blade;
         Sign     : Float;
     begin
@@ -432,7 +424,6 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     procedure Simplify (Blades : in out Blade_List) is
-        use Interfaces;
         use Blade_List_Package;
         Current_Blade  : Blade.Basis_Blade;
         Blade_B        : Blade.Basis_Blade;
@@ -466,7 +457,42 @@ package body Blade is
         end if;
     end Simplify;
 
-    --  -------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
+
+   function Transform_Basis (BB      : Blade.Basis_Blade;
+                             aMatrix : GA_Maths.Float_Matrix)
+                             return Blade.Blade_List is
+      use Blade_List_Package;
+      BM     : Unsigned_32 := Bitmap (BB);
+      Curs   : Cursor;
+      Temp   : Blade.Blade_List;
+      Col    : Integer := 1;
+      Value  : Float;
+      Result : Blade.Blade_List;
+   begin
+      --  start with just scalar
+      Result.Append (New_Basis_Blade (Weight (BB)));
+      --  for each 1 bit: convert to list of blades
+      while (BM and 1) /= 0 loop
+         for Row in aMatrix'Range(1) loop
+            Value := aMatrix (Row, Col);
+            if Value /= 0.0 then
+               Curs := Result.First;
+               while Has_Element (Curs) loop
+                  Temp.Append (Outer_Product (Element (Curs),
+                               New_Basis_Blade (Shift_Left (1, Row), Value)));
+                  Next (Curs);
+               end loop;
+            end if;
+         end loop;
+         BM := BM / 2;  --  Shift BM right by one bit
+         Col := Col + 1;
+      end loop;
+
+      return Result;
+   end Transform_Basis;
+
+   --  ------------------------------------------------------------------------
 
     procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
     begin
