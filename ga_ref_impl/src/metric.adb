@@ -3,6 +3,12 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Metric is
 
+   function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
+   begin
+      return Met.Inverse_Eigen_Matrix;
+   end Inverse_Eigen_Matrix;
+
+   --  --------------------------------------------------------------------
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean is
    begin
       return Met.Anti_Euclidean;
@@ -79,9 +85,9 @@ package body Metric is
       else
          State.Matrix := Metric_Matrix (Met);
          Eigensystem (Real_Matrix (Met), Eigen_Values, Eigen_Vectors);
-         State.Inverse_Vectors := Transpose (Eigen_Vectors);
          State.Eigen_Values := Eigen_Values;
-         State.Eigen_Vectors := Eigen_Vectors;
+         State.Eigen_Vectors := Metric_Matrix (Eigen_Vectors);
+         State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Eigen_Vectors));
          For row in Eigen_Values'Range loop
             theMetric (row, row) := Eigen_Values (row);
          end loop;
