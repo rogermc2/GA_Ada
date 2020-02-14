@@ -65,34 +65,47 @@ package body Metric is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Met : Metric_Matrix) return Metric_Record is
+   function New_Metric (Met   : GA_Maths.Float_Matrix;
+                        State : out Metric_Record) return Metric_Matrix is
       use GA_Maths;
-      use Float_Array_Package;
-      Eigen_Values  : Real_Vector (Met'Range);
-      Eigin_Vectors : Float_Matrix (Met'Range, Met'Range);
-      theMetric     : Metric_Record (Met'Last - Met'First + 1);
+      Eigen_Values    : Real_Vector (Met'Range);
+      Eigen_Vectors   : Float_Matrix (Met'Range, Met'Range);
+      theMetric       : Metric_Matrix (Met'Range (1), Met'Range (2)) :=
+                          (others => (others => 0.0));
    begin
-      for row in Met'Range loop
-         for col in Met'Range (2) loop
-            theMetric.Matrix (row, col) := Met (row, col);
+      if not Is_Symetric (Met) then
+         raise Metric_Exception with
+           "Matric.New_Metric cannot process non-symmetric matrices.";
+      else
+         State.Matrix := Metric_Matrix (Met);
+         Eigensystem (Real_Matrix (Met), Eigen_Values, Eigen_Vectors);
+         State.Inverse_Vectors := Transpose (Eigen_Vectors);
+         State.Eigen_Values := Eigen_Values;
+         State.Eigen_Vectors := Eigen_Vectors;
+         For row in Eigen_Values'Range loop
+            theMetric (row, row) := Eigen_Values (row);
          end loop;
-      end loop;
-
-      Eigensystem (Real_Matrix (theMetric.Matrix), Eigen_Values, Eigin_Vectors);
-      theMetric.Eigen_Metric := Eigen_Values;
-      theMetric.Anti_Euclidean := Is_Anti_Euclidean (Real_Matrix (theMetric.Matrix));
-      theMetric.Diagonal := Is_Diagonal (Real_Matrix (theMetric.Matrix));
-      theMetric.Euclidean := Is_Euclidean (Real_Matrix (theMetric.Matrix));
-
+         State.Diagonal := Is_Diagonal (Met);
+         if not State.Diagonal then
+            State.Euclidean := False;
+            State.Anti_Euclidean := False;
+         else
+            State.Euclidean := True;
+            State.Anti_Euclidean := True;
+            For col in Met'Range (2) loop
+               if Met (col, col) /= 1.0 then
+                  State.Euclidean := False;
+               end if;
+            end loop;
+         end if;
+      end if;
+      State.Eigen_Metric := theMetric;
       return theMetric;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Metric.New_Metric 3");
+         Put_Line ("An exception occurred in Metric.New_Metric 4");
          raise;
-
    end New_Metric;
-
-   --  ------------------------------------------------------------------------
 
 end Metric;
