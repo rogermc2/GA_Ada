@@ -208,6 +208,7 @@ package body Blade is
         Sign     : Float;
     begin
         if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
+            --  BA and BB are parallel; so their volume is zero
             OP_Blade  := New_Basis_Blade (0, 0.0);  --  return zero blade
         else  --  compute geometric product
             --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
