@@ -458,7 +458,7 @@ package body Blade is
     end Simplify;
 
    --  -------------------------------------------------------------------------
-
+   --  Transform_Basis transforms a Basis_Blade to a new basis
    function Transform_Basis (BB      : Blade.Basis_Blade;
                              aMatrix : GA_Maths.Float_Matrix)
                              return Blade.Blade_List is
@@ -470,19 +470,22 @@ package body Blade is
       Value  : Float;
       Result : Blade.Blade_List;
    begin
-      --  start with just scalar
+      --  start with just a scalar
       Result.Append (New_Basis_Blade (Weight (BB)));
-      --  for each 1 bit: convert to list of blades
+      --  convert each 1 bit to a list of blades
       while (BM and 1) /= 0 loop
+         Temp.Clear;
          for Row in aMatrix'Range(1) loop
             Value := aMatrix (Row, Col);
             if Value /= 0.0 then
+               --  Wedge column Col of the matrix with Result
                Curs := Result.First;
                while Has_Element (Curs) loop
                   Temp.Append (Outer_Product (Element (Curs),
                                New_Basis_Blade (Shift_Left (1, Row), Value)));
                   Next (Curs);
                end loop;
+               Result := Temp;
             end if;
          end loop;
          BM := BM / 2;  --  Shift BM right by one bit
