@@ -1,6 +1,31 @@
 
 package body GA_Maths is
 
+   function Is_Anti_Euclidean (aMatrix : Float_Matrix) return Boolean is
+      epsilon : constant float := 10.0 ** (-9);
+      row     : Integer := aMatrix'First;
+      col     : Integer := aMatrix'First (2);
+      OK      : Boolean := aMatrix'Length (1) = aMatrix'Length (2);
+   begin
+      if OK then
+         while row <= aMatrix'Last and OK loop
+            while col <= aMatrix'Last (2) and OK loop
+               if row = col then
+                  OK := aMatrix (row, col) = -1.0;
+               else
+                  OK := Abs (aMatrix (row, col) ** 2 -
+                               aMatrix (col, row) ** 2) <= epsilon;
+               end if;
+               col := col + 1;
+            end loop;
+            row := row + 1;
+         end loop;
+      end if;
+      return OK;
+   end Is_Anti_Euclidean;
+
+   --  ------------------------------------------------------------------------
+
    function Is_Diagonal (aMatrix : Float_Matrix) return Boolean is
       epsilon : constant float := 10.0 ** (-9);
       row     : Integer := aMatrix'First;
@@ -58,7 +83,7 @@ package body GA_Maths is
                   OK := Abs (aMatrix (row, col)) <= epsilon;
                else
                   OK := Abs (aMatrix (row, col) ** 2 -
-                             aMatrix (col, row) ** 2) <= epsilon;
+                               aMatrix (col, row) ** 2) <= epsilon;
                end if;
                col := col + 1;
             end loop;
