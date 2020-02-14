@@ -90,6 +90,9 @@ package Blade is
    procedure Print_Blade (Name : String; B : Basis_Blade);
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
    procedure Simplify (Blades : in out Blade_List);
+   function Transform_Basis (BB      : Blade.Basis_Blade;
+                             aMatrix : GA_Maths.Float_Matrix)
+                             return Blade.Blade_List;
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32;

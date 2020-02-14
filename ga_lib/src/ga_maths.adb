@@ -11,7 +11,7 @@ package body GA_Maths is
          while row <= aMatrix'Last and OK loop
             while col <= aMatrix'Last (2) and OK loop
                if row = col then
-                  OK := aMatrix (row, col) = -1.0;
+                  OK := aMatrix (row, col) + 1.0 <= epsilon;
                else
                   OK := Abs (aMatrix (row, col) ** 2 -
                                aMatrix (col, row) ** 2) <= epsilon;
@@ -57,7 +57,9 @@ package body GA_Maths is
       if OK then
          while row <= aMatrix'Last and OK loop
             while col <= aMatrix'Last (2) and OK loop
-               if row /= col then
+               if row = col then
+                  OK := aMatrix (row, col) - 1.0 <= epsilon;
+               else
                   OK := Abs (aMatrix (row, col) - aMatrix (col, row)) <= epsilon;
                end if;
                col := col + 1;
