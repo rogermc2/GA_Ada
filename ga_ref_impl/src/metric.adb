@@ -71,25 +71,22 @@ package body Metric is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Met   : GA_Maths.Float_Matrix;
-                        State : out Metric_Record) return Metric_Matrix is
+   function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record is
       use GA_Maths;
-      Eigen_Values    : Real_Vector (Met'Range);
+      Eigen_Values    : Real_Vector (Met'Range);  --  m_eigenMetric
       Eigen_Vectors   : Float_Matrix (Met'Range, Met'Range);
-      theMetric       : Metric_Matrix (Met'Range (1), Met'Range (2)) :=
-                          (others => (others => 0.0));
+      State           : Metric_Record (Met'Length (1));
    begin
       if not Is_Symetric (Met) then
          raise Metric_Exception with
            "Matric.New_Metric cannot process non-symmetric matrices.";
       else
-         State.Matrix := Metric_Matrix (Met);
-         Eigensystem (Real_Matrix (Met), Eigen_Values, Eigen_Vectors);
-         State.Eigen_Values := Eigen_Values;
+         Eigensystem (Real_Matrix (Met), Eigen_Values, Eigen_Vectors); --  m_eig
+         State.Eigen_Metric := Eigen_Values;
          State.Eigen_Vectors := Metric_Matrix (Eigen_Vectors);
          State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Eigen_Vectors));
          For row in Eigen_Values'Range loop
-            theMetric (row, row) := Eigen_Values (row);
+            State.Matrix (row, row) := Eigen_Values (row);
          end loop;
 
          State.Diagonal := Is_Diagonal (Met);
@@ -110,8 +107,7 @@ package body Metric is
          end if;
       end if;
 
-      State.Eigen_Metric := theMetric;
-      return theMetric;
+      return State;
 
    exception
       when others =>

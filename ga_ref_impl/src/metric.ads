@@ -18,20 +18,19 @@ package Metric is
    function Metric_C3 return Metric_Matrix;
    function New_Metric (Dimension : Integer) return Metric_Matrix;
    function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric_Matrix;
-   function New_Metric (Met : GA_Maths.Float_Matrix;
-                        State : out Metric_Record) return Metric_Matrix;
+   function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record;
 
 private
    use GA_Maths.Float_Array_Package;
    type Metric_Record (Dim : Integer) is record
-      Matrix               : Metric_Matrix (1 .. Dim, 1 .. Dim);
-      Eigen_Metric         : Metric_Matrix (1 .. Dim, 1 .. Dim);
+      Matrix               : Metric_Matrix (1 .. Dim, 1 .. Dim) :=
+                               (others => (others => 0.0));
       Diagonal             : Boolean := False;
       Euclidean            : Boolean := False;
       Anti_Euclidean       : Boolean := False;
-      Eigen_Values         : Real_Vector (1 .. Dim);
-      Eigen_Vectors        : Metric_Matrix (1 .. Dim, 1 .. Dim);
-      Inverse_Eigen_Matrix : Metric_Matrix (1 .. Dim, 1 .. Dim);
+      Eigen_Metric         : Real_Vector (1 .. Dim);  --  m_eigenMetric
+      Eigen_Vectors        : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_eig.getV()
+      Inverse_Eigen_Matrix : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_invEigMatrix
    end record;
 
 end Metric;
