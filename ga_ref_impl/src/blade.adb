@@ -9,6 +9,10 @@ package body Blade is
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB : Basis_Blade; Cont : Contraction_Type)
                                    return Basis_Blade;
+    function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
+    function Transform_Basis (BB      : Blade.Basis_Blade;
+                              aMatrix : Metric.Metric_Matrix)
+                              return Blade_List;
 
     --  -------------------------------------------------------------------------
 
@@ -459,17 +463,24 @@ package body Blade is
     end Simplify;
 
    --  -------------------------------------------------------------------------
+
+    function To_Metric_Basis (BB : Basis_Blade) return Blade_List is
+    begin
+        return Transform_Basis (BB, Metric.C3_Eigen_Matrix);
+    end To_Metric_Basis;
+
+    --  ------------------------------------------------------------------------
    --  Transform_Basis transforms a Basis_Blade to a new basis
    function Transform_Basis (BB      : Blade.Basis_Blade;
-                             aMatrix : GA_Maths.Float_Matrix)
-                             return Blade.Blade_List is
+                             aMatrix : Metric.Metric_Matrix)
+                             return Blade_List is
       use Blade_List_Package;
       BM     : Unsigned_32 := Bitmap (BB);
       Curs   : Cursor;
-      Temp   : Blade.Blade_List;
+      Temp   : Blade_List;
       Col    : Integer := 1;
       Value  : Float;
-      Result : Blade.Blade_List;
+      Result : Blade_List;
    begin
       --  start with just a scalar
       Result.Append (New_Basis_Blade (Weight (BB)));

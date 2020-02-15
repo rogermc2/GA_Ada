@@ -14,6 +14,13 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
+   function C3_Eigen_Matrix return Metric_Matrix is
+   begin
+      return Metric_C3.Matrix;
+   end C3_Eigen_Matrix;
+
+   --  --------------------------------------------------------------------
+
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
       return Met.Inverse_Eigen_Matrix;
