@@ -61,9 +61,9 @@ package Blade is
                           return Ada.Strings.Unbounded.Unbounded_String;
    function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_32) return float;
    function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
-   function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
+--     function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
    function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Matrix)
-                               return Basis_Blade;
+                               return Blade_List;
    function Grade (BB : Basis_Blade) return Integer;
    function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)

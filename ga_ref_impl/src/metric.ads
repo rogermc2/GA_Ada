@@ -11,6 +11,7 @@ package Metric is
    Metric_Exception : Exception;
 
    function C3_Eigen_Matrix return Metric_Matrix;
+   function C3_Inverse_Eigen_Matrix return Metric_Matrix;
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
    function Is_Diagonal (Met : Metric_Record) return Boolean;
