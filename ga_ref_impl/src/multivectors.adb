@@ -752,8 +752,9 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function General_Inverse (MV  : Multivector;  Met : Metric.Metric_Matrix;
-                              Inv : out Multivector) return Boolean is
+    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
+                              return Multivector is
+        use GA_Maths.Float_Array_Package;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
@@ -763,7 +764,10 @@ package body Multivectors is
         aBlade     : Basis_Blade;
         Curs       : Cursor := Blades.First;
         Mat        : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
+        Mat_Inv    : Float_Matrix (1 .. Max_G, 1 .. Max_G) := (others => (others => 0.0));
         BBs        : Basis_Blade_Array (1 .. Max_G);
+        Value      : Float;
+        Result     : Blade_List;
     begin
         for index in BBs'Range loop
             BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
@@ -781,7 +785,16 @@ package body Multivectors is
             Next (Curs);
         end loop;
 
-        return  Matrix_To_MV_Invert (Mat, BBs, Inv);
+        Mat_Inv := Inverse (Mat);
+        for Row in BBs'Range loop
+            Value := Mat_Inv (Row, 1);
+            if Value /= 0.0 then
+                Update_Blade (BBs (Row), Value);
+                Result.Append (BBs (Row));
+            end if;
+        end loop;
+
+        return New_Multivector (Result);
 
     exception
         when others =>
@@ -1408,7 +1421,7 @@ package body Multivectors is
                 while Has_Element (Cursor_2) loop
                     B2 := Element (Cursor_2);
                     Blade_OP := Outer_Product (B1, B2);
-                        Result.Append (Blade_OP);
+                    Result.Append (Blade_OP);
                     Next (Cursor_2);
                 end loop;
                 Next (Cursor_1);

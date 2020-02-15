@@ -64,8 +64,8 @@ package Multivectors is
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
    function General_Inverse (MV : Multivector; Inv : out Multivector) return Boolean;
-   function General_Inverse (MV : Multivector; Met : Metric.Metric_Matrix;
-                             Inv : out Multivector) return Boolean;
+   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
+                             return Multivector;
    --  Get_Basis_Vector returns multivector of the required base.
    function Get_Blade (MV : Multivector; Index : Interfaces.Unsigned_32)
                        return Blade.Basis_Blade;
