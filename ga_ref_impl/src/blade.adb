@@ -56,6 +56,18 @@ package body Blade is
 
    --  -------------------------------------------------------------------------
 
+   procedure Add_Blades (Blades : in out Blade_List; More_Blades : Blade_List)is
+      use Blade_List_Package;
+      Curs : Cursor := More_Blades.First;
+   begin
+      while Has_Element (Curs) loop
+         Blades.Append (Element (Curs));
+         Next (Curs);
+      end loop;
+   end Add_Blades;
+
+   --  -------------------------------------------------------------------------
+
    function BB_First (BB_List : Blade_List) return Basis_Blade is
    begin
       return BB_List.First_Element;
@@ -171,29 +183,22 @@ package body Blade is
 
    function Geometric_Product (BA, BB : Basis_Blade;
                                Met    : Metric.Metric_Matrix) return Blade_List is
-      List_A : Blade_List := To_Eigen_Basis (BA);
-      List_B : Blade_List := To_Eigen_Basis (BB);
-      --  BM is the meet (bitmap of annihilated vectors)
-      --  Only retain vectors commomt to both blades
-      BM     : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-      Row    : Integer range 1 .. Met'Length (1) := 1;
-      Col    : Integer range 1 .. Met'Length (2) := 1;
-      Result : Blade_List;
+      use Blade_List_Package;
+      List_A    : constant Blade_List := To_Eigen_Basis (BA);
+      List_B    : constant Blade_List := To_Eigen_Basis (BB);
+      LA_Cursor : Cursor := List_A.First;
+      LB_Cursor : Cursor;
+      Result    : Blade_List;
    begin
-      while BM /= 0 loop
-         if (BM and 1) /= 0 then
-            --  This basis vector is non-zero
-            null;
-            --              Result.Weight := Result.Weight * Met (Row, Col);
-         end if;
-         if Col = 5 then
-            Row := Row + 1;
-            Col := 1;
-         else
-            Col := Col + 1;
-         end if;
-         --  Move rigth to next basis vector indicator
-         BM := BM / 2;  --  shift right
+      while Has_Element (LA_Cursor) loop
+         LB_Cursor := List_B.First;
+         while Has_Element (LB_Cursor) loop
+            Add_Blades (Result, Geometric_Product
+                        (Element (LA_Cursor), Element (LB_Cursor),
+                         Metric.C3_Eigen_Matrix));
+            Next (LB_Cursor);
+         end loop;
+         Next (LA_Cursor);
       end loop;
       return Result;
 

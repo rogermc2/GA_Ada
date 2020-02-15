@@ -54,6 +54,7 @@ package Blade is
    procedure Add_Blade (Blades : in out Blade_List; BB : Basis_Blade);
    procedure Add_Blade (Blades : in out Blade_Vector;
                         Index : Natural; BB : Basis_Blade);
+   procedure Add_Blades (Blades : in out Blade_List; More_Blades : Blade_List);
    function BB_First (BB_List : Blade_List) return Basis_Blade;
    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
    function Bitmap (BB : Basis_Blade) return Unsigned_32;
