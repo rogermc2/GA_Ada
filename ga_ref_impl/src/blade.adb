@@ -10,6 +10,7 @@ package body Blade is
                                    BB : Basis_Blade; Cont : Contraction_Type)
                                    return Basis_Blade;
     function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
+    function To_Metric_Basis (BL : Blade_List) return Blade_List;
     function Transform_Basis (BB      : Blade.Basis_Blade;
                               aMatrix : Metric.Metric_Matrix)
                               return Blade_List;
@@ -468,6 +469,28 @@ package body Blade is
     begin
         return Transform_Basis (BB, Metric.C3_Eigen_Matrix);
     end To_Metric_Basis;
+
+    --  ------------------------------------------------------------------------
+
+   function To_Metric_Basis (BL : Blade_List) return Blade_List is
+      use Blade_List_Package;
+      BL_Cursor      : Cursor := BL.First;
+      Tmp_List       : Blade_List;
+      TL_Cursor      : Cursor;
+      Result         : Blade_List;
+   begin
+      while Has_Element (BL_Cursor) loop
+         Tmp_List := To_Metric_Basis (Element (BL_Cursor));
+         TL_Cursor := Tmp_List.First;
+         while Has_Element (TL_Cursor) loop
+            Result.Append (Element (TL_Cursor));
+            Next (TL_Cursor);
+         end loop;
+         Next (BL_Cursor);
+      end loop;
+      return Result;
+
+   end To_Metric_Basis;
 
     --  ------------------------------------------------------------------------
    --  Transform_Basis transforms a Basis_Blade to a new basis
