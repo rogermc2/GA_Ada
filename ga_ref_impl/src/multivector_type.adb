@@ -1,6 +1,4 @@
 
-with Interfaces;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
@@ -10,7 +8,6 @@ package body Multivector_Type is
     --  Init is based on MultivectorType.java Init
     function Init (MV : Multivectors.Multivector) return MV_Type_Record is
         use Interfaces;
-        use GA_Maths;
         use Multivectors;
         Rec        : MV_Type_Record;
         Count      : array (1 .. 2) of Unsigned_32 := (0, 0);
@@ -69,7 +66,6 @@ package body Multivector_Type is
     function Init (MV : Multivectors.Multivector; aMetric : Metric.Metric_Matrix;
                    Epsilon : Float := 0.0) return MV_Type_Record is
         use Interfaces;
-        use GA_Maths;
         use Multivectors;
         Ca         : Multivector := MV;
         Rec        : MV_Type_Record;

@@ -242,18 +242,37 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
-                             BB, GP : Blade.Basis_Blade) is
+    procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix;
+                             BB, BG : Blade.Basis_Blade) is
         use Blade;
-        BMB  : constant Integer := Integer (Bitmap (BB)) + 1;
-        BMGP : constant Integer := Integer (Bitmap (GP)) + 1;
+        Col : constant Integer := Integer (Bitmap (BG));
+        Row : constant Integer := Integer (Bitmap (BB));
+        V   : constant Float := M (Col, Row);
     begin
-        M (BMGP, BMB) :=  M (BMGP, BMB) + Weight (GP);
+        M (Col, Row) := V + Weight (BG);
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Multivector.Add_To_Matrix 1");
-            Put_Line ("BMB, BMGP: " & Integer'Image (BMB) &  Integer'Image (BMGP));
+            Put_Line ("An exception occurred in Multivector.Add_To_Matrix 1.");
+            raise;
+    end Add_To_Matrix;
+
+    --  -------------------------------------------------------------------------
+
+    procedure Add_To_Matrix (M  : in out GA_Maths.Float_Matrix;
+                             BB : Blade.Basis_Blade; BL : Blade.Blade_List) is
+        use Blade;
+        use Blade_List_Package;
+        Curs  : Cursor := BL.First;
+    begin
+        while Has_Element (Curs) loop
+            Add_To_Matrix (M, BB, Element (Curs));
+            Next (Curs);
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Multivector.Add_To_Matrix 2.");
             raise;
     end Add_To_Matrix;
 
@@ -658,6 +677,7 @@ package body Multivectors is
         use Blade_List_Package;
         Blades_1  : constant Blade_List := MV1.Blades;
         Blades_2  : constant Blade_List := MV2.Blades;
+        Blades_GP : Blade_List;
         Curs_1    : Cursor := Blades_1.First;
         Curs_2    : Cursor;
         Blade_1   : Blade.Basis_Blade;
@@ -676,7 +696,8 @@ package body Multivectors is
             Curs_2 := Blades_2.First;
             while Has_Element (Curs_2) loop
                 Blade_2 := Element (Curs_2);
-                GP.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2, Met));
+                Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
+                Add_Blades (GP.Blades, Blades_GP);
                 Next (Curs_2);
             end loop;
             Next (Curs_1);
@@ -1377,15 +1398,17 @@ package body Multivectors is
             B2        : Blade.Basis_Blade;
             Result    : Blade_List;
         begin
+            --  For each element of List_1
+            --     For  each element of List_1
+            --        Calculate the outer product of these two elements
+            --        Append the resultant element to the Result list.
             while Has_Element (Cursor_1) loop
                 B1 := Element (Cursor_1);
                 Cursor_2 := List_2.First;
                 while Has_Element (Cursor_2) loop
                     B2 := Element (Cursor_2);
                     Blade_OP := Outer_Product (B1, B2);
---                      if Weight (Blade_OP) /= 0.0 then
                         Result.Append (Blade_OP);
---                      end if;
                     Next (Cursor_2);
                 end loop;
                 Next (Cursor_1);

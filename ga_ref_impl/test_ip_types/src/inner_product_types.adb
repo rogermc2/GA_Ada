@@ -29,12 +29,6 @@ package body Inner_Product_Types is
    procedure Test is
       use Blade;
       use Multivectors;
-      C3_M         : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
-                       ((0.0, 0.0, 0.0, 0.0, -1.0),
-                        (0.0, 1.0, 0.0, 0.0, 0.0),
-                        (0.0, 0.0, 1.0, 0.0, 0.0),
-                        (0.0, 0.0, 0.0, 1.0, 0.0),
-                        (-1.0, 0.0, 0.0, 0.0, 0.0));
       Dim          : constant Integer := 8;
       --          no     : Multivector := New_Multivector (New_Basis_Blade (0));
       --          e1     : Multivector := New_Multivector (New_Basis_Blade (0));
@@ -198,6 +192,7 @@ package body Inner_Product_Types is
       Blades_Bj     : Basis_Blade;
       Factors       : Multivector_List;  --  F
       L_List        : Blade_List;
+      Has_Bit_Set   : Boolean;
    begin
       if not Grade (MV_B, Integer (Grade_K)) then
          raise Inner_Product_Types_Exception with
@@ -214,7 +209,7 @@ package body Inner_Product_Types is
          if Grade_K > 0 and Scale /= 0.0 then
             Blade_E := Largest_Basis_Blade (MV_B);
             Lowest_Bit := Bits.Lowest_One_Bit (Bitmap (Blade_E));
-            Highest_Bit := Bits.Highest_One_Bit (Bitmap (Blade_E));
+            Has_Bit_Set := Bits.Highest_One_Bit (Bitmap (Blade_E), Highest_Bit);
             Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Lowest and Highest Bit: " &
                      Integer'Image (Lowest_Bit) & Integer'Image (Highest_Bit));
 
