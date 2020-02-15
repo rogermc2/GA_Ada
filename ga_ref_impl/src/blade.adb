@@ -10,9 +10,9 @@ package body Blade is
                                   BB               : Basis_Blade; Cont : Contraction_Type)
                                   return Basis_Blade;
    function To_Eigen_Basis (BB : Basis_Blade) return Blade_List;
-   function To_Eigen_Basis (BL : Blade_List) return Blade_List;
-   function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
-   function To_Metric_Basis (BL : Blade_List) return Blade_List;
+--     function To_Eigen_Basis (BL : Blade_List) return Blade_List;
+--     function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
+   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix) return Blade_List;
    function Transform_Basis (BB      : Blade.Basis_Blade;
                              aMatrix : Metric.Metric_Matrix)
                              return Blade_List;
@@ -194,13 +194,14 @@ package body Blade is
          LB_Cursor := List_B.First;
          while Has_Element (LB_Cursor) loop
             Add_Blades (Result, Geometric_Product
-                        (Element (LA_Cursor), Element (LB_Cursor),
-                         Metric.C3_Eigen_Matrix));
+                        (Element (LA_Cursor), Element (LB_Cursor), Met));
             Next (LB_Cursor);
          end loop;
          Next (LA_Cursor);
       end loop;
-      return Result;
+
+      Simplify (Result);
+      return To_Metric_Basis (Result, Met);
 
    exception
       when others =>
@@ -515,36 +516,36 @@ package body Blade is
 
    --  ------------------------------------------------------------------------
 
-   function To_Eigen_Basis (BL : Blade_List) return Blade_List is
-      use Blade_List_Package;
-      BL_Cursor      : Cursor := BL.First;
-      Tmp_List       : Blade_List;
-      TL_Cursor      : Cursor;
-      Result         : Blade_List;
-   begin
-      while Has_Element (BL_Cursor) loop
-         Tmp_List := To_Eigen_Basis (Element (BL_Cursor));
-         TL_Cursor := Tmp_List.First;
-         while Has_Element (TL_Cursor) loop
-            Result.Append (Element (TL_Cursor));
-            Next (TL_Cursor);
-         end loop;
-         Next (BL_Cursor);
-      end loop;
-      return Result;
-
-   end To_Eigen_Basis;
+--     function To_Eigen_Basis (BL : Blade_List) return Blade_List is
+--        use Blade_List_Package;
+--        BL_Cursor      : Cursor := BL.First;
+--        Tmp_List       : Blade_List;
+--        TL_Cursor      : Cursor;
+--        Result         : Blade_List;
+--     begin
+--        while Has_Element (BL_Cursor) loop
+--           Tmp_List := To_Eigen_Basis (Element (BL_Cursor));
+--           TL_Cursor := Tmp_List.First;
+--           while Has_Element (TL_Cursor) loop
+--              Result.Append (Element (TL_Cursor));
+--              Next (TL_Cursor);
+--           end loop;
+--           Next (BL_Cursor);
+--        end loop;
+--        return Result;
+--
+--     end To_Eigen_Basis;
 
    --  -------------------------------------------------------------------------
 
-   function To_Metric_Basis (BB : Basis_Blade) return Blade_List is
+   function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix) return Blade_List is
    begin
-      return Transform_Basis (BB, Metric.C3_Eigen_Matrix);
+      return Transform_Basis (BB, Met);
    end To_Metric_Basis;
 
    --  ------------------------------------------------------------------------
 
-   function To_Metric_Basis (BL : Blade_List) return Blade_List is
+   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix) return Blade_List is
       use Blade_List_Package;
       BL_Cursor      : Cursor := BL.First;
       Tmp_List       : Blade_List;
@@ -552,7 +553,7 @@ package body Blade is
       Result         : Blade_List;
    begin
       while Has_Element (BL_Cursor) loop
-         Tmp_List := To_Metric_Basis (Element (BL_Cursor));
+         Tmp_List := To_Metric_Basis (Element (BL_Cursor), Met);
          TL_Cursor := Tmp_List.First;
          while Has_Element (TL_Cursor) loop
             Result.Append (Element (TL_Cursor));
