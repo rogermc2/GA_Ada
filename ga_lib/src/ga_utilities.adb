@@ -3,15 +3,11 @@ with Interfaces;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Blade;
-with C3GA;
-
 package body GA_Utilities is
 
    function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
                               return Multivectors.Multivector_List is
       use Interfaces;
-      use GA_Maths;
       use Blade;
       use Multivectors;
       use Blade_List_Package;
