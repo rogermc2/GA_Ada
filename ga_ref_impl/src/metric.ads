@@ -15,7 +15,7 @@ package Metric is
    function Is_Diagonal (Met : Metric_Record) return Boolean;
    function Is_Euclidean (Met : Metric_Record) return Boolean;
    function Matrix (Met : Metric_Record) return Metric_Matrix;
-   function Metric_C3 return Metric_Matrix;
+   function C3_Metric return Metric_Record;
    function New_Metric (Dimension : Integer) return Metric_Matrix;
    function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric_Matrix;
    function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record;

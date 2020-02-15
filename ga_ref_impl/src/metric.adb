@@ -3,12 +3,24 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Metric is
 
+   C3_M : constant GA_Maths.Float_Matrix (1 .. 5, 1 .. 5) :=
+            ((0.0, 0.0, 0.0, 0.0, -1.0),
+             (0.0, 1.0, 0.0, 0.0, 0.0),
+             (0.0, 0.0, 1.0, 0.0, 0.0),
+             (0.0, 0.0, 0.0, 1.0, 0.0),
+             (-1.0, 0.0, 0.0, 0.0, 0.0));
+
+   Metric_C3 : Metric_Record (5);
+
+   --  --------------------------------------------------------------------
+
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
       return Met.Inverse_Eigen_Matrix;
    end Inverse_Eigen_Matrix;
 
    --  --------------------------------------------------------------------
+
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean is
    begin
       return Met.Anti_Euclidean;
@@ -29,6 +41,7 @@ package body Metric is
    end Is_Euclidean;
 
    --  --------------------------------------------------------------------
+
    function Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
       return Met.Matrix;
@@ -36,16 +49,10 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
-   function Metric_C3 return Metric_Matrix is
-      C3_M : constant Metric_Matrix (1 .. 5, 1 .. 5) :=
-               ((0.0, 0.0, 0.0, 0.0, -1.0),
-                (0.0, 1.0, 0.0, 0.0, 0.0),
-                (0.0, 0.0, 1.0, 0.0, 0.0),
-                (0.0, 0.0, 0.0, 1.0, 0.0),
-                (-1.0, 0.0, 0.0, 0.0, 0.0));
+   function C3_Metric return Metric_Record is
    begin
-      return  C3_M;
-   end Metric_C3;
+      return  Metric_C3;
+   end C3_Metric;
 
    --  --------------------------------------------------------------------
 
@@ -114,5 +121,9 @@ package body Metric is
          Put_Line ("An exception occurred in Metric.New_Metric 4");
          raise;
    end New_Metric;
+
+begin
+
+   Metric_C3 := New_Metric (C3_M);
 
 end Metric;

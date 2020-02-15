@@ -41,12 +41,12 @@ package Blade is
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);
 
-    Metric_C3 : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
-                  (1 => (1  => 1.0, others => 0.0),
-                   2 => (2  => 1.0, others => 0.0),
-                   3 => (3  => 1.0, others => 0.0),
-                   4 => (5  => -1.0, others => 0.0),
-                   5 => (4  => -1.0, others => 0.0));
+--      Metric_C3 : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
+--                    (1 => (1  => 1.0, others => 0.0),
+--                     2 => (2  => 1.0, others => 0.0),
+--                     3 => (3  => 1.0, others => 0.0),
+--                     4 => (5  => -1.0, others => 0.0),
+--                     5 => (4  => -1.0, others => 0.0));
 
    function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
