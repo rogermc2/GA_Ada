@@ -155,6 +155,7 @@ package body Multivector_Analyze_C3GA is
             Grade := 5 - Grade;
         end if;
 
+        Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat calling General_Inverse");
         MV_Inverse := General_Inverse (MV, Met);
         --  MV_Location is a normalized dual sphere
         GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
@@ -302,6 +303,7 @@ package body Multivector_Analyze_C3GA is
             --              GA_Utilities.Print_Multivector
             --                ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
 
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
             LC_NI_MV_Inverse := General_Inverse (LC_NI_MV);
             --  location is normalized dual sphere
             Location := Geometric_Product (MV_X, LC_NI_MV_Inverse);  --  _location
@@ -412,6 +414,7 @@ package body Multivector_Analyze_C3GA is
         theAnalysis.M_Type.Blade_Class := Tangent_Blade;
 
         LC_NI_MV := Left_Contraction (C3GA.ni, MV);
+         Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling General_Inverse");
         LC_NI_MV_Inv := General_Inverse (LC_NI_MV);
             Location :=
               Geometric_Product (MV, LC_NI_MV_Inv);
