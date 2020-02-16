@@ -28,9 +28,8 @@ package GL_Util is
                            Width, Height : GL.Types.Size);
     procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array);
     function Rotor_To_GL_Matrix (R : Multivectors.Rotor) return  GL.Types.Singles.Matrix4;
-    function Rotor_GL_Multiply (R : Multivectors.Rotor;
-                                GL_Matrix : in out GL.Types.Singles.Matrix4)
-                               return Boolean;
+    procedure Rotor_GL_Multiply (R : Multivectors.Rotor;
+                                GL_Matrix : in out GL.Types.Singles.Matrix4);
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Doubles.Vector3;
     function To_GL (V3 : Multivectors.Multivector) return GL.Types.Singles.Vector3;
     function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3;

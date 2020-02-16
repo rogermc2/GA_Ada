@@ -16,18 +16,18 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
---      function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
---      begin
---          return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
---      end From_GL;
+    --      function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
+    --      begin
+    --          return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
+    --      end From_GL;
 
     --  -------------------------------------------------------------------------
 
---      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
---      begin
---          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
---                                  Float (V3 (GL.Y)));
---      end From_GL;
+    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
+    --      begin
+    --          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
+    --                                  Float (V3 (GL.Y)));
+    --      end From_GL;
 
     --  -------------------------------------------------------------------------
 
@@ -51,55 +51,48 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-   procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
-   begin
-      Put_Line (Name & ": ");
-      for Index in anArray'First .. anArray'Last loop
-         Utilities.Print_Vector ("", anArray (Index));
-      end loop;
-      New_Line;
-   end Print_GL_Int3_Array;
+    procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Utilities.Print_Vector ("", anArray (Index));
+        end loop;
+        New_Line;
+    end Print_GL_Int3_Array;
 
-   --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     --  Rotor_GL_Multiply multiplies GL_Matrix by rotor 'R'
-    function Rotor_GL_Multiply (R : Multivectors.Rotor;
-                                GL_Matrix : in out GL.Types.Singles.Matrix4)
-                                return Boolean is
+    procedure Rotor_GL_Multiply (R : Multivectors.Rotor;
+                                 GL_Matrix : in out GL.Types.Singles.Matrix4) is
         use E3GA;
         use Multivectors;
         use GL;
         use GL.Types.Singles;
-        IR        : Rotor := New_Rotor;
+        IR        : constant Rotor := General_Inverse (R);
         E_Rot     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
         VC        : Vector3;
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
-        R_Invertible : constant Boolean := Rotor_Inverse (R, IR);
     begin
-        if R_Invertible then
-            --  compute the images of all OpenGL basis vectors
-            E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
-            Image (1) := To_GL (E_Rot);
-            E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
-            Image (2) := To_GL (E_Rot);
-            E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
-            Image (3) := To_GL (E_Rot);
-            Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
-            --  Transfer the coordinates to the OpenGL matrix
-            for row in GL.Index_Homogeneous loop
-                Image_Row := Image_Row + 1;
-                VC := Image (Image_Row);
-                Matrix (row, X) := VC (X);
-                Matrix (row, Y) := VC (Y);
-                Matrix (row, Z) := VC (Z);
-            end loop;
-            GL_Matrix := Matrix * GL_Matrix;
-        else
-            Put_Line ("GL_Util.Rotor_GL_Multiply, rotor is not invertible.");
-        end if;
-        return R_Invertible;
+        --  compute the images of all OpenGL basis vectors
+        E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
+        Image (1) := To_GL (E_Rot);
+        E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
+        Image (2) := To_GL (E_Rot);
+        E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
+        Image (3) := To_GL (E_Rot);
+        Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
+        --  Transfer the coordinates to the OpenGL matrix
+        for row in GL.Index_Homogeneous loop
+            Image_Row := Image_Row + 1;
+            VC := Image (Image_Row);
+            Matrix (row, X) := VC (X);
+            Matrix (row, Y) := VC (Y);
+            Matrix (row, Z) := VC (Z);
+        end loop;
+        GL_Matrix := Matrix * GL_Matrix;
 
     exception
         when others =>
@@ -217,20 +210,20 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
---      function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
---          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
---      begin
---
---          return (Single (C3_Coords (1)), Single (C3_Coords (2)),
---                  Single (C3_Coords (3)));
---      end To_GL;
+    --      function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
+    --          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
+    --      begin
+    --
+    --          return (Single (C3_Coords (1)), Single (C3_Coords (2)),
+    --                  Single (C3_Coords (3)));
+    --      end To_GL;
 
     --  -------------------------------------------------------------------------
 
---      function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
---      begin
---          return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
---      end To_GL;
+    --      function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
+    --      begin
+    --          return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
+    --      end To_GL;
 
     --  -------------------------------------------------------------------------
 
