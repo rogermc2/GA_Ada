@@ -11,7 +11,6 @@ with Blade;
 with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
-with GA_Utilities;
 
 package body GL_Util is
 
@@ -70,16 +69,13 @@ package body GL_Util is
         use Multivectors;
         use GL;
         use GL.Types.Singles;
-        IR        : Rotor;
+        IR        : constant Rotor := General_Inverse (R);
         E_Rot     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
         VC        : Vector3;
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
-   begin
-        GA_Utilities.Print_Multivector ("GL_Util.Rotor_GL_Multiply R", R);
-        Put_Line ("GL_Util.Rotor_GL_Multiply calling General_Inverse");
-        IR := General_Inverse (R);
+    begin
         --  compute the images of all OpenGL basis vectors
         E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
         Image (1) := To_GL (E_Rot);

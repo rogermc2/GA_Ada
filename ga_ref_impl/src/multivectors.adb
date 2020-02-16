@@ -245,8 +245,8 @@ package body Multivectors is
     procedure Add_To_Matrix (M : in out GA_Maths.Float_Matrix;
                              BB, BG : Blade.Basis_Blade) is
         use Blade;
-        Col : constant Integer := Integer (Bitmap (BG));
-        Row : constant Integer := Integer (Bitmap (BB));
+        Col : constant Integer := Integer (Bitmap (BG)) + 1;
+        Row : constant Integer := Integer (Bitmap (BB)) + 1;
         V   : constant Float := M (Col, Row);
     begin
         M (Col, Row) := V + Weight (BG);
@@ -614,11 +614,10 @@ package body Multivectors is
         Value      : Float;
         Result     : Blade_List;
     begin
-        Put_Line ("Multivector.General_Inverse Dim" &
-                   Integer'Image (Dim));
         for index in BBs'Range loop
             BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
         end loop;
+
         --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
         --  the coordinates of another multivector 'x' (stored in a vector)
         --  would result in the geometric product of 'Mat' and 'x'

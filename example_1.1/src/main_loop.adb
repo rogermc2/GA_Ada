@@ -49,7 +49,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     --  rotor g_modelRotor(_rotor(1.0f))
-    Model_Rotor              : Multivectors.Rotor;
+    Model_Rotor              : Multivectors.Rotor := Multivectors.New_Rotor;
     --      Rotate_Model    : boolean := False;
     --      Rotate_Model_Out_Of_Plane  : boolean := False;
     --      Pick            : GL_Util.GL_Pick;
@@ -143,7 +143,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Toggles.Enable (GL.Toggles.Cull_Face);
         GL.Culling.Set_Cull_Face (GL.Culling.Back);
 
+        Put_Line ("Main_Loop.Display calling Rotor_GL_Multiply.");
         GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+
         Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
         Shader_Manager.Set_Drawing_Colour (Red);
 
