@@ -58,14 +58,14 @@ package Multivectors is
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : Vector) return Multivector;
+   function General_Inverse (MV : Multivector) return Multivector;
+   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
+                             return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
                                return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
-   function General_Inverse (MV : Multivector; Inv : out Multivector) return Boolean;
-   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
-                             return Multivector;
    --  Get_Basis_Vector returns multivector of the required base.
    function Get_Blade (MV : Multivector; Index : Interfaces.Unsigned_32)
                        return Blade.Basis_Blade;
@@ -118,7 +118,7 @@ package Multivectors is
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Random_Blade (Dim, Grade : Integer; Scale : Float) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
-   function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
+--     function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;

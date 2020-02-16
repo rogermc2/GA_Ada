@@ -108,7 +108,6 @@ package body GA_Draw is
       MV_Matrix             : Matrix4 := Model_View_Matrix;
       Scaled                : GL.Types.Single;
       RT                    : Multivectors.Rotor;
-      OK                    : Boolean := True;
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Vertex_Array_Object.Initialize_Id;
@@ -127,7 +126,7 @@ package body GA_Draw is
             --  Rotate e3 to normal direction
          RT := E3GA_Utilities.Rotor_Vector_To_Vector
            (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-         OK := GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
+         GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
       else
          E2_Norm := C3GA.Norm_E2 (C3GA.To_VectorE3GA
                                   ((Multivectors.Outer_Product (MV_Ortho_1, MV_Ortho_2))));
@@ -135,7 +134,6 @@ package body GA_Draw is
          MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
       end if;
 
-      if OK then
          case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
@@ -144,9 +142,6 @@ package body GA_Draw is
                Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
             when others => null;
          end case;
-      else
-         Put_Line ("GA_Draw.Draw_Bivector, Invertible rotor RT.");
-      end if;
 
    exception
       when  others =>
@@ -472,7 +467,7 @@ package body GA_Draw is
       --  rotate e3 to vector direction
       aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
         (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-      if GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix) then
+      GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
          MV_Matrix := MV_Matrix * Model_View_Matrix;
 
          Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
@@ -485,9 +480,6 @@ package body GA_Draw is
                                                First => 0,
                                                Count => 1 * 3);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);
-      else
-         Put_Line ("GA_Draw.Draw_Line, aRotor is not invertible.");
-      end if;
 
    exception
       when  others =>
@@ -859,7 +851,7 @@ package body GA_Draw is
             MV_Matrix := Maths.Scaling_Matrix (1.1 / Sqrt (Single (Scale))) * MV_Matrix;
          end if;
 
-         if GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix) then
+         GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
             MV_Matrix := Model_View_Matrix;
 
             if C3GA.Norm_e2 (Tail) /= 0.0 then
@@ -879,9 +871,6 @@ package body GA_Draw is
 
             Set_Front_Face (Saved_Front_Face);
             Set_Cull_Face (Saved_Cull_Face);
-         else
-            Put_Line ("GA_Draw.Draw_Vector, aRotor is not invertible.");
-         end if;
       end if;
 
    exception
