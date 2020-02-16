@@ -148,7 +148,6 @@ package body GL_Util is
         use Blade.Blade_List_Package;
         use Blade;
         use Blade_Types;
-        use GA_Maths;
         Blades  : constant Blade.Blade_List := Multivectors.Get_Blade_List (V3);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
@@ -158,7 +157,7 @@ package body GL_Util is
         Val_Z   : Double := 0.0;
     begin
         while Has_Element (Curs) loop
-            BM := Unsigned_32 (Bitmap (Element (Curs)));
+            BM := Bitmap (Element (Curs));
             Value := Double (Blade.Weight (Element (Curs)));
             if (BM and E3_Base'Enum_Rep (E3_e1)) /= 0 then
                 Val_X := Val_X + Value;
@@ -195,7 +194,7 @@ package body GL_Util is
         Val_Z   : Single := 0.0;
     begin
         while Has_Element (Curs) loop
-            BM := Unsigned_32 (Bitmap (Element (Curs)));
+            BM := Bitmap (Element (Curs));
             Value := Single (Blade.Weight (Element (Curs)));
             if (BM and E3_Base'Enum_Rep (E3_e1)) /= 0 then
                 Val_X := Val_X + Value;
