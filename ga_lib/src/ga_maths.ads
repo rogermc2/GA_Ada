@@ -52,6 +52,7 @@ package GA_Maths is
    type Array_F2 is array (1 .. 2) of float;
    type Array_F4 is array (1 .. 4) of float;
    type Array_F8 is array (1 .. 8) of float;
+   type Float_Array is array (Natural range <>) of float;
 
    type GA_Matrix3 is new Float_Matrix (1 .. 3, 1 .. 3);
 
