@@ -54,15 +54,15 @@ package Multivectors is
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector) return Multivector;
-   function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector;
+   function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : Vector) return Multivector;
    function General_Inverse (MV : Multivector) return Multivector;
-   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
+   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
                              return Multivector;
    function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
-   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                                return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
@@ -78,14 +78,14 @@ package Multivectors is
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
-    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
-                            Cont : Blade.Contraction_Type) return Multivector;
+   function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
+                           Cont : Blade.Contraction_Type) return Multivector;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
    function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
-   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                               return Multivector;
    function List_Length (MV_List : Multivector_List) return Integer;
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
@@ -112,9 +112,9 @@ package Multivectors is
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
-   function Norm_E (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
+   function Norm_E (MV : Multivector; Met : Metric.Metric_Record) return Float;
    function Norm_Esq (MV : Multivector) return Float;
-   function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float;
+   function Norm_Esq (MV : Multivector; Met : Metric.Metric_Record) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Random_Blade (Dim, Grade : Integer; Scale : Float) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
@@ -122,7 +122,7 @@ package Multivectors is
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
-   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                             return float;
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
@@ -137,12 +137,12 @@ package Multivectors is
    function To_Vector (MV : Multivector) return Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
-   function Unit_R (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector;
+   function Unit_R (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    procedure Update (MV : in out Multivector; Blades : Blade.Blade_List;
                      Sorted : Boolean := False);
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
    function Versor_Inverse (MV : Multivector) return Multivector;
-   function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Matrix)
+   function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
                             return Multivector;
 
 private

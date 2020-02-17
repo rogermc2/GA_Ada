@@ -480,7 +480,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Dual (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector is
+    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector is
         use Interfaces;
         Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
         Dual_MV : Multivector;
@@ -598,7 +598,7 @@ package body Multivectors is
     end From_Vector;
 
     --  -------------------------------------------------------------------------
-
+    --  Implements metric == null case of Multivector.java generalInverse
     function General_Inverse (MV : Multivector) return Multivector is
         use GA_Maths.Float_Array_Package;
         use Blade;
@@ -650,7 +650,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Matrix)
+    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
                               return Multivector is
         use GA_Maths.Float_Array_Package;
         use Blade;
@@ -663,6 +663,7 @@ package body Multivectors is
         Mat        : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
         Mat_Inv    : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
         BBs        : Basis_Blade_Array (1 .. Dim);
+        GP         : Blade_List;
         Value      : Float;
         Result     : Blade_List;
     begin
@@ -678,8 +679,8 @@ package body Multivectors is
         while Has_Element (Curs) loop
             aBlade := Element (Curs);
             for index in BBs'Range loop
-                Add_To_Matrix (Mat, BBs (index),
-                               Geometric_Product (aBlade, BBs (index), Met));
+                GP := Geometric_Product (aBlade, BBs (index), Met);
+                Add_To_Matrix (Mat, BBs (index), GP);
             end loop;
             Next (Curs);
         end loop;
@@ -775,7 +776,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+    function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                                 return Multivector is
         use Blade;
         use Blade_List_Package;
@@ -974,7 +975,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix;
+    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
                             Cont : Blade.Contraction_Type) return Multivector is
         use Blade;
         use Blade_List_Package;
@@ -992,7 +993,7 @@ package body Multivectors is
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
+                Blades_IP := Blade.Inner_Product (B1, B2, Metric.Eigen_Metric (Met), Cont);
                 if Blade.Weight (Blades_IP) /= 0.0 then
                     MV.Blades.Append (Blades_IP);
                 end if;
@@ -1105,7 +1106,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+    function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                                return Multivector is
     begin
         return  Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
@@ -1381,7 +1382,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Norm_E (MV : Multivector; Met : Metric.Metric_Matrix) return Float is
+    function Norm_E (MV : Multivector; Met : Metric.Metric_Record) return Float is
         use GA_Maths.Float_Functions;
     begin
         return Sqrt (Norm_Esq (MV, Met));
@@ -1401,7 +1402,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Matrix) return Float is
+    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Record) return Float is
         S : Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
         if S < 0.0 then
@@ -1574,7 +1575,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Matrix)
+    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                              return float is
     begin
         return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
@@ -1782,7 +1783,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Unit_R (MV : Multivector; Met : Metric.Metric_Matrix) return Multivector is
+    function Unit_R (MV : Multivector; Met : Metric.Metric_Record) return Multivector is
         use GA_Maths.Float_Functions;
         theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
@@ -1837,7 +1838,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Matrix)
+    function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
                              return Multivector is
         Rev          : constant Multivector := Reverse_MV (MV);
         S_Product    : constant Float := Scalar_Product (MV, Rev, Met);
