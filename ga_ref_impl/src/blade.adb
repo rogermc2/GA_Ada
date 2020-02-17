@@ -2,7 +2,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
 
 package body Blade is
 
@@ -222,17 +221,7 @@ package body Blade is
         Index      : Integer range 1 .. Met_Length := 1;
         Result     : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
-        if Bitmap (BA) = Bitmap (BB) then
-            GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, BA:", BA);
-            GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, BB:", BB);
-            GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, Result:", Result);
-        end if;
         while BM /= 0 and then Index <= Met_Length loop
-            if Bitmap (BA) = Bitmap (BB) then
-                GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, Result:", Result);
-                Put_Line ("Blade.Geometric_Product metric, BM: " &
-                            Unsigned_32'Image (BM));
-            end if;
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
                 Result.Weight := Result.Weight * Met (Index);
@@ -244,9 +233,6 @@ package body Blade is
             end if;
         end loop;
 
-        if Bitmap (BA) = Bitmap (BB) then
-            GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, Result:", Result);
-        end if;
         return Result;
 
     exception
@@ -304,24 +290,7 @@ package body Blade is
 
     function Inner_Product (BA, BB : Basis_Blade; Met : Real_Vector;
                             Cont   : Contraction_Type) return Basis_Blade is
-        GM :  constant Basis_Blade := Geometric_Product (BA, BB, Met);
-        IP :  constant Basis_Blade := Inner_Product_Filter (Grade (BA), Grade (BB),
-                                                            Geometric_Product (BA, BB, Met), Cont);
     begin
-        if Bitmap (BA) = Bitmap (BB) then
-            GA_Utilities.Print_Blade ("Blade.Inner_Product, BA:", BA);
-            GA_Utilities.Print_Blade ("Blade.Inner_Product, BB:", BB);
-            GA_Utilities.Print_Blade ("Blade.Inner_Product, GM:", GM);
-            GA_Utilities.Print_Blade ("Blade.Inner_Product, IP:", IP);
-        end if;
-        if Weight (GM) /= 0.0 then
-            Put_Line ("Blade.Inner_Product Geometric_Product " &
-                        Unsigned_32'Image (Bitmap (GM)) & "  " &
-                        Float'Image (Weight (GM)));
-            Put_Line ("Blade.Inner_Product filtered Inner_Product " &
-                        Unsigned_32'Image (Bitmap (IP)) & "  " &
-                        Float'Image (Weight (IP)));
-        end if;
         return Inner_Product_Filter (Grade (BA), Grade (BB),
                                      Geometric_Product (BA, BB, Met), Cont);
     end Inner_Product;
