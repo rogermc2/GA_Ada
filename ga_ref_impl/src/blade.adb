@@ -215,18 +215,19 @@ package body Blade is
 
     function Geometric_Product (BA, BB : Basis_Blade; Met : Real_Vector)
                                 return Basis_Blade is
-        Result : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
         --  BM is the meet (bitmap of annihilated vectors)
         --  Only retain vectors commomt to both blades
-        BM     : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-        Index  : Integer range 1 .. Met'Length := Met'Length (1);
+        BM         : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
+        Met_Length : constant Integer := Met'Length;
+        Index      : Integer range 1 .. Met_Length := 1;
+        Result     : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
         if Bitmap (BA) = Bitmap (BB) then
             GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, BA:", BA);
             GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, BB:", BB);
             GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, Result:", Result);
         end if;
-        while BM /= 0 loop
+        while BM /= 0 and then Index <= Met_Length loop
             if Bitmap (BA) = Bitmap (BB) then
                 GA_Utilities.Print_Blade ("Blade.Geometric_Product metric, Result:", Result);
                 Put_Line ("Blade.Geometric_Product metric, BM: " &
@@ -238,7 +239,9 @@ package body Blade is
             end if;
             --  Move right to next basis vector indicator
             BM := Shift_Right (BM, 1);
-            Index := Index + 1;
+            if Index < Met_Length then
+                Index := Index + 1;
+            end if;
         end loop;
 
         if Bitmap (BA) = Bitmap (BB) then
