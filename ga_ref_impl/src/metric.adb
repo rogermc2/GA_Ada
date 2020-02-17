@@ -28,6 +28,13 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
+   function Eigen_Metric (Met : Metric_Record) return Real_Vector is
+   begin
+      return Met.Eigen_Metric;
+   end Eigen_Metric;
+
+   --  --------------------------------------------------------------------
+
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
       return Met.Inverse_Eigen_Matrix;
