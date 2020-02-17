@@ -18,7 +18,7 @@ package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
-                            Met         : Metric.Metric_Matrix;
+                            Met         : Metric.Metric_Record;
                             Probe       : Multivectors.Normalized_Point);
     procedure Analyze_Free (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector);
@@ -41,9 +41,9 @@ package body Multivector_Analyze_C3GA is
         procedure Classify is
             use Multivectors;
             --  C3GA.ni weight = 1.0
-            OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Metric.C3_Eigen_Matrix);
-            IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Metric.C3_Eigen_Matrix);
-            Xsq_Val    : constant Float := Norm_Esq (MV_X, Metric.C3_Eigen_Matrix);
+            OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Metric.C3_Metric);
+            IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Metric.C3_Metric);
+            Xsq_Val    : constant Float := Norm_Esq (MV_X, Metric.C3_Metric);
             --              Xsq_Val    : constant Float := Norm_Esq_NP (MV_X);
             OP_NiX     : constant Boolean := Abs (OP_Nix_Val) > Epsilon;
             IP_NiX     : constant Boolean := Abs (IP_Nix_Val) > Epsilon;
@@ -60,11 +60,11 @@ package body Multivector_Analyze_C3GA is
                 Analyze_Free (Analysis, MV_X);
             elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
-                Analyze_Flat (Analysis, MV_X, Metric.C3_Eigen_Matrix, Probe);
+                Analyze_Flat (Analysis, MV_X, Metric.C3_Metric, Probe);
             elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
                 Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
-                Analyze_Flat (Analysis, Dual (MV_X), Metric.C3_Eigen_Matrix, Probe);
+                Analyze_Flat (Analysis, Dual (MV_X), Metric.C3_Metric, Probe);
             elsif OP_NiX and IP_NiX then
                 if not Xsq then
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
@@ -135,7 +135,7 @@ package body Multivector_Analyze_C3GA is
 
     procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                             MV          : Multivectors.Multivector;
-                            Met         : Metric.Metric_Matrix;
+                            Met         : Metric.Metric_Record;
                             Probe       : Multivectors.Normalized_Point) is
         use Interfaces;
         use Multivectors;
