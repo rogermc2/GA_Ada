@@ -20,6 +20,7 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
+with Blade_Types;
 with GA_Utilities;
 with E3GA;
 with C3GA;
@@ -49,7 +50,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     --  rotor g_modelRotor(_rotor(1.0f))
-    Model_Rotor              : Multivectors.Rotor := Multivectors.New_Rotor;
+    Model_Rotor              : Multivectors.Rotor := Multivectors.New_C3_Rotor (1.0);
     --      Rotate_Model    : boolean := False;
     --      Rotate_Model_Out_Of_Plane  : boolean := False;
     --      Pick            : GL_Util.GL_Pick;
@@ -143,7 +144,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Toggles.Enable (GL.Toggles.Cull_Face);
         GL.Culling.Set_Cull_Face (GL.Culling.Back);
 
+        GA_Utilities.Print_Multivector ("Main_Loop.Display Model_Rotor", Model_Rotor);
+        Put_Line ("Main_Loop.Display calling Rotor_GL_Multiply.");
         GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+        Put_Line ("Main_Loop.Display  Rotor_GL_Multiply returned.");
 
         Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
         Shader_Manager.Set_Drawing_Colour (Red);
@@ -238,12 +242,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
     --          use GL.Objects.Buffers;
     --        Font_File : string := "../fonts/Helvetica.ttc";
+        use Blade_Types;
         Sphere : Geosphere.Geosphere;
         Depth  : constant integer := 3;
     begin
         Vertices_Array_Object.Initialize_Id;
         Vertices_Array_Object.Bind;
-        Model_Rotor := Multivectors.New_Rotor;
         Shader_Manager.Init (Render_Program);
         Palet.Set_Point_Size (1.0);
         Geosphere.GS_Compute (Sphere, Depth);
