@@ -615,14 +615,14 @@ package body Multivectors is
         Curs       : Cursor := Blades.First;
         Mat        : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
         Mat_Inv    : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-        BB_USize   : constant Interfaces.Unsigned_32 := Interfaces.Shift_Left (1, Dim);
-        BB_Size    : constant Integer := Integer (BB_USize);
+        BB_Size    : constant Integer := 2 ** Dim;
         BBs        : Basis_Blade_Array (1 .. BB_Size);
         Value      : Float;
         Result     : Blade_List;
     begin
         Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
         Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
+        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
         for index in BBs'Range loop
             BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
         end loop;
@@ -1246,20 +1246,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function New_C3_Rotor (Scalar_Weight : Float) return Rotor is
-        use Blade;
-        R : Rotor;
-    begin
-        R.Type_Of_MV := MV_Rotor;
-        R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
-        R.Blades.Append (New_Basis_Blade (C3_e1_e2, 0.0));
-        R.Blades.Append (New_Basis_Blade (C3_e2_e3, 0.0));
-        R.Blades.Append (New_Basis_Blade (C3_e1_e3, 0.0));
-        return  R;
-    end New_C3_Rotor;
-
-    --  -------------------------------------------------------------------
-
     function New_Circle return Circle is
         C : Circle;
     begin
@@ -1331,10 +1317,14 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function New_Rotor (Scalar_Weight : Float) return Rotor is
+        use Blade;
         R : Rotor;
     begin
         R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
+        R.Blades.Append (New_Basis_Blade (BV_e1e2, 0.0));
+        R.Blades.Append (New_Basis_Blade (BV_e2e3, 0.0));
+        R.Blades.Append (New_Basis_Blade (BV_e3e1, 0.0));
         return  R;
     end New_Rotor;
 
@@ -1698,7 +1688,7 @@ package body Multivectors is
         while Has_Element (Blade_Cursor) loop
             BM := Bitmap (Element (Blade_Cursor));
             if Bits.Highest_One_Bit (BM, High_Bit) then
-                Max_Dim := Maximum (Max_Dim, High_Bit);
+                Max_Dim := Maximum (Max_Dim, High_Bit + 1);
             end if;
             Next (Blade_Cursor);
         end loop;

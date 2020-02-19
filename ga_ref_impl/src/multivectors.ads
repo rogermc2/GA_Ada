@@ -96,7 +96,6 @@ package Multivectors is
    function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
-   function New_C3_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Circle return Circle;
    function New_Dual_Plane return Dual_Plane;
    function New_Line return Line;

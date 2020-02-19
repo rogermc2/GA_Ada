@@ -20,7 +20,6 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
-with Blade_Types;
 with GA_Utilities;
 with E3GA;
 with C3GA;
@@ -50,7 +49,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     --  rotor g_modelRotor(_rotor(1.0f))
-    Model_Rotor              : Multivectors.Rotor := Multivectors.New_C3_Rotor (1.0);
+    Model_Rotor              : Multivectors.Rotor := Multivectors.New_Rotor (1.0);
     --      Rotate_Model    : boolean := False;
     --      Rotate_Model_Out_Of_Plane  : boolean := False;
     --      Pick            : GL_Util.GL_Pick;
@@ -242,7 +241,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
     --          use GL.Objects.Buffers;
     --        Font_File : string := "../fonts/Helvetica.ttc";
-        use Blade_Types;
         Sphere : Geosphere.Geosphere;
         Depth  : constant integer := 3;
     begin
