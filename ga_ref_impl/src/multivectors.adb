@@ -617,19 +617,18 @@ package body Multivectors is
         use Blade_List_Package;
         use GA_Maths;
         Dim        : constant Integer :=  Space_Dimension (MV);
-        Blades     : constant Blade_List := MV.Blades;
-        aBlade     : Basis_Blade;
-        Curs       : Cursor := Blades.First;
-        Mat        : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-        Mat_Inv    : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
         BB_Size    : constant Integer := 2 ** Dim;
+        Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+        Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
         BBs        : Basis_Blade_Array (1 .. BB_Size);
+        Curs       : Cursor := MV.Blades.First;
+        aBlade     : Basis_Blade;
         Value      : Float;
         Result     : Blade_List;
     begin
-        --          Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
-        --          Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
-        --          GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+        Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
+        Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
+        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
         --  create all unit basis blades for 'Dim'
         for index in BBs'Range loop
             BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
@@ -678,14 +677,12 @@ package body Multivectors is
         use Blade_List_Package;
         use GA_Maths;
         Dim        : constant Integer :=  Space_Dimension (MV);
-        Blades     : constant Blade_List := MV.Blades;
-        aBlade     : Basis_Blade;
-        BL_Curs    : Cursor := Blades.First;
-        Mat        : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-        Mat_Inv    : Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-        BB_USize   : constant Interfaces.Unsigned_32 := Interfaces.Shift_Left (1, Dim);
-        BB_Size    : constant Integer := Integer (BB_USize);
+        BB_Size    : constant Integer := 2 ** Dim;
+        Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+        Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
         BBs        : Basis_Blade_Array (1 .. BB_Size);
+        BL_Curs    : Cursor := MV.Blades.First;
+        aBlade     : Basis_Blade;
         GP         : Blade_List;
         Value      : Float;
         Result     : Blade_List;
