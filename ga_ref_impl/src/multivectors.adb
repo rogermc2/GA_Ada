@@ -250,17 +250,17 @@ package body Multivectors is
       Bit_Num : Integer;
    begin
       if Bits.Highest_One_Bit (Bitmap (BG), Bit_Num) then
-         Row := Bit_Num + 1;
+         Row := Bit_Num + 2;
       end if;
       if Bits.Highest_One_Bit (Bitmap (BB), Bit_Num) then
-         Col := Bit_Num + 1;
+         Col := Bit_Num + 2;
       end if;
 
-      --          GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
-      --          GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
-      --          GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
-      --          Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
-      --                      Integer'Image (Row) & Integer'Image (Col));
+--                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
+--                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
+--                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
+--                Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
+--                            Integer'Image (Row) & Integer'Image (Col));
       M (Row, Col) := M (Row, Col) + Weight (BG);
 
    exception
@@ -617,7 +617,7 @@ package body Multivectors is
       use Blade_List_Package;
       use GA_Maths;
       Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** (Dim - 1);
+      BB_Size    : constant Integer := 2 ** Dim;
       Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       BBs        : Basis_Blade_Array (1 .. BB_Size);
@@ -626,9 +626,9 @@ package body Multivectors is
       Value      : Float;
       Result     : Blade_List;
    begin
-      Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
-      Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
-      GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+--        Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
+--        Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
+--        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
       --  create all unit basis blades for 'Dim'
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
@@ -639,18 +639,17 @@ package body Multivectors is
       --  would result in the geometric product of 'Mat' and 'x'
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
          for index in BBs'Range loop
-            GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", Geometric_Product (aBlade, BBs (index)));
+--              GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", Geometric_Product (aBlade, BBs (index)));
             Add_To_Matrix (Mat, BBs (index),
                            Geometric_Product (aBlade, BBs (index)));
          end loop;
          Next (Curs);
       end loop;
 
-      GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
+--        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
       Mat_Inv := Inverse (Mat);
-      GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
+--        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
       --  reconstruct multivector from first column of matrix
       --          for Row in BBs'Range loop
       for Row in Mat_Inv'Range (1) loop
@@ -660,8 +659,8 @@ package body Multivectors is
             Result.Append (BBs (Row));
          end if;
       end loop;
-      GA_Utilities.Print_Multivector ("Multivector.General_Inverse Result",
-                                      New_Multivector (Result));
+--        GA_Utilities.Print_Multivector ("Multivector.General_Inverse Result",
+--                                        New_Multivector (Result));
       return New_Multivector (Result);
 
    exception
@@ -679,7 +678,7 @@ package body Multivectors is
       use Blade_List_Package;
       use GA_Maths;
       Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** (Dim - 1);
+      BB_Size    : constant Integer := 2 ** Dim;
       Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       BBs        : Basis_Blade_Array (1 .. BB_Size);
