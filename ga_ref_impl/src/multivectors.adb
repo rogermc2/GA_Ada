@@ -617,7 +617,7 @@ package body Multivectors is
       use Blade_List_Package;
       use GA_Maths;
       Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** Dim;
+      BB_Size    : constant Integer := 2 ** (Dim - 1);
       Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       BBs        : Basis_Blade_Array (1 .. BB_Size);
@@ -648,10 +648,10 @@ package body Multivectors is
          Next (Curs);
       end loop;
 
-      --  reconstruct multivector from first column of matrix
-      Mat_Inv := Inverse (Mat);
       GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
+      Mat_Inv := Inverse (Mat);
       GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
+      --  reconstruct multivector from first column of matrix
       --          for Row in BBs'Range loop
       for Row in Mat_Inv'Range (1) loop
          Value := Mat_Inv (Row, 1);
@@ -679,7 +679,7 @@ package body Multivectors is
       use Blade_List_Package;
       use GA_Maths;
       Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** Dim;
+      BB_Size    : constant Integer := 2 ** (Dim - 1);
       Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       BBs        : Basis_Blade_Array (1 .. BB_Size);
@@ -1330,9 +1330,6 @@ package body Multivectors is
    begin
       R.Type_Of_MV := MV_Rotor;
       R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
-      R.Blades.Append (New_Basis_Blade (BV_e1e2, 0.0));
-      R.Blades.Append (New_Basis_Blade (BV_e2e3, 0.0));
-      R.Blades.Append (New_Basis_Blade (BV_e3e1, 0.0));
       return  R;
    end New_Rotor;
 
