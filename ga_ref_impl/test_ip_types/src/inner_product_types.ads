@@ -3,7 +3,7 @@ with Metric;
 
 package Inner_Product_Types is
 
-    procedure Test;
+    procedure Factorization_Test;
 
     Inner_Product_Types_Exception : Exception;
 

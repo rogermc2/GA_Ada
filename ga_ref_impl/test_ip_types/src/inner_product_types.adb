@@ -26,7 +26,7 @@ package body Inner_Product_Types is
 
    --  --------------------------------------------------------------------
    --  Based on Util.java main
-   procedure Test is
+   procedure Factorization_Test is
       use Blade;
       use Multivectors;
       Dim          : constant Integer := 8;
@@ -57,18 +57,19 @@ package body Inner_Product_Types is
       Blades.Append (New_Basis_Blade (15, -0.213881));
       Update (MV_B, Blades);
 
-      GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_B", MV_B);
+      GA_Utilities.Print_Multivector ("MV_B before factorization", MV_B);
       Factors := Factorize_Blade (MV_B, Scale);
-      Put_Line ("Inner_Product_Types.Test Factors size: " &
+      Put_Line ("Factorization_Test Factors size: " &
                   Integer'Image (List_Length (Factors)));
       MV_R := New_Multivector (1.0);
       for index in 1 .. List_Length (Factors) loop
+         GA_Utilities.Print_Multivector ("Factorized Blade ", MV_Item (Factors, index));
          MV_R := Outer_Product (MV_R, MV_Item (Factors, index));
       end loop;
-      GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_R", MV_R);
+      GA_Utilities.Print_Multivector ("Factorized  MV_R", MV_R);
 
       Fast_Factors := Factorize_Blade_Fast (MV_B, Scale);
-      Put_Line ("Inner_Product_Types.Test Fast_Factors size: " &
+      Put_Line ("Factorization_Test Fast_Factors size: " &
                   Integer'Image (List_Length (Fast_Factors)));
       MV_Fast := New_Multivector (1.0);
       for index in 1 .. List_Length (Fast_Factors) loop
@@ -82,7 +83,7 @@ package body Inner_Product_Types is
       OK := Grade (MV_B, K);
       if not OK then
          raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Test, inhomogeneous multivector detected.";
+           "Factorization_Test, inhomogeneous multivector detected.";
       else
          Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
          if Check_Scale < 0.0 then
@@ -91,9 +92,9 @@ package body Inner_Product_Types is
          else
             Scale_Signs (K) := "+";
          end if;
-         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_B);
-         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_R);
-         GA_Utilities.Print_Multivector ("Inner_Product_Types.Test MV_Fast", MV_Fast);
+         GA_Utilities.Print_Multivector ("Factorization_Test MV_B", MV_B);
+         GA_Utilities.Print_Multivector ("Factorization_Test MV_R", MV_R);
+         GA_Utilities.Print_Multivector ("Factorization_Test MV_Fast", MV_Fast);
          Put_Line ("B = " & C3GA.Multivector_String (MV_B) & ", ");
                      Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
                      Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
@@ -101,12 +102,13 @@ package body Inner_Product_Types is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Test");
+         Put_Line ("An exception occurred in Inner_Product_Types.Factorization_Test");
          raise;
-   end Test;
+   end Factorization_Test;
 
    --  --------------------------------------------------------------------
-
+   --  Factorize_Blade returns the k unit factors of the blade and
+   --  the scale of the blade
    function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : in out Float)
                               return Multivectors.Multivector_List is
       use Interfaces;
@@ -114,8 +116,8 @@ package body Inner_Product_Types is
       use Blade_Types;
       use GA_Maths;
       use Multivectors;
-      K          : Integer;
-      E          : Basis_Blade;
+      K_Grade    : Integer;
+      E_Largest  : Basis_Blade;
       E_Array    : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
       Idx        : Integer := 0;
       Basis_Bit  : Unsigned_32;
@@ -123,30 +125,33 @@ package body Inner_Product_Types is
       aFactor    : Multivector;
       Factors    : Multivector_List;
    begin
-      if not Grade (MV_B, K) then
+      if not Grade (MV_B, K_Grade) then
          raise Inner_Product_Types_Exception with
            "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
       else
-         if K = 0 then
+         --  set scale of output, no matter what
+         if K_Grade = 0 then
             Scale := Scalar_Part (MV_B);
          else
             Scale := Norm_E (MV_B);
          end if;
 
-         if K > 0 and Scale /= 0.0 then
-            E := Largest_Basis_Blade (MV_B);
-            E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K));
+         if K_Grade > 0 and Scale /= 0.0 then
+            --  not a scalar-blade or a null-blade
+            E_Largest := Largest_Basis_Blade (MV_B);
+            E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K_Grade));
 
-            for Index_G in Unsigned_32 range 0 .. Unsigned_32 (Space_Dimension (MV_B) - 1) loop
+            for Index_G in Unsigned_32 range
+              0 .. Unsigned_32 (Space_Dimension (MV_B) - 1) loop
                Basis_Bit := Shift_Left (1, Integer (Index_G));
-               if Bitmap (E) > 0 and Basis_Bit /= 0 then
+               if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
                   Idx := Idx + 1;
                   E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
                end if;
             end loop;
 
             B_Current := Geometric_Product (MV_B, 1.0 / Scale);
-            for index in 0 .. K - 2 loop
+            for index in 0 .. K_Grade - 2 loop
                aFactor := New_Multivector (E_Array (index));
                aFactor := Inner_Product
                  (Inner_Product (aFactor, B_Current, Left_Contraction),
@@ -192,7 +197,6 @@ package body Inner_Product_Types is
       Blades_Bj     : Basis_Blade;
       Factors       : Multivector_List;  --  F
       L_List        : Blade_List;
-      Has_Bit_Set   : Boolean;
    begin
       if not Grade (MV_B, Integer (Grade_K)) then
          raise Inner_Product_Types_Exception with
@@ -209,7 +213,7 @@ package body Inner_Product_Types is
          if Grade_K > 0 and Scale /= 0.0 then
             Blade_E := Largest_Basis_Blade (MV_B);
             Lowest_Bit := Bits.Lowest_One_Bit (Bitmap (Blade_E));
-            Has_Bit_Set := Bits.Highest_One_Bit (Bitmap (Blade_E), Highest_Bit);
+            Highest_Bit := Bits.Highest_One_Bit (Bitmap (Blade_E));
             Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Lowest and Highest Bit: " &
                      Integer'Image (Lowest_Bit) & Integer'Image (Highest_Bit));
 
