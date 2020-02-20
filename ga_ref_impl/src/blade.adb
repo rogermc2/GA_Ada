@@ -186,13 +186,18 @@ package body Blade is
     function Geometric_Product (BA, BB : Basis_Blade;
                                 Met    : Metric.Metric_Record) return Blade_List is
         use Blade_List_Package;
-        List_A     : constant Blade_List := To_Eigen_Basis (BA, Met);
-        List_B     : constant Blade_List := To_Eigen_Basis (BB, Met);
+        List_A     : Blade_List;
+        List_B     : Blade_List;
         Eigen_Vals : constant Real_Vector := Metric.Eigen_Metric (Met);  --  M.getEigenMetric
         LA_Cursor  : Cursor := List_A.First;
         LB_Cursor  : Cursor;
         Result     : Blade_List;
     begin
+        Put_Line ("Blade.Geometric_Product with Metric loading List_A.");
+        List_A := To_Eigen_Basis (BA, Met);
+        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product Metric List_A",
+                                     List_A);
+        List_B := To_Eigen_Basis (BB, Met);
         while Has_Element (LA_Cursor) loop
             LB_Cursor := List_B.First;
             while Has_Element (LB_Cursor) loop
@@ -602,9 +607,9 @@ package body Blade is
                         List_A := Temp;
                     end if;
                 end loop;
-                BM := BM / 2;  --  Shift BM right by one bit
-                I_Col := I_Col + 1;
             end if;  --  (BM and 1) /= 0
+            BM := BM / 2;  --  Shift BM right by one bit
+            I_Col := I_Col + 1;
         end loop;  --  BM /= 0
 
         return List_A;

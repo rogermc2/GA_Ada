@@ -686,18 +686,25 @@ package body Multivectors is
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
       end loop;
+
+      Put_Line ("Multivector.General_Inverse Metric BB_Size: " & Integer'Image (BB_Size));
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
       --  the coordinates of another multivector 'x' (stored in a vector)
       --  would result in the geometric product of 'Mat' and 'x'
       while Has_Element (BL_Curs) loop
          aBlade := Element (BL_Curs);
          for index in BBs'Range loop
+            Put_Line ("Multivector.General_Inverse Metric index: " &
+                     Integer'Image (index));
             GP_List := Geometric_Product (aBlade, BBs (index), Met);
+            GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+                     GP_List);
             Add_To_Matrix (Mat, BBs (index), GP_List);
          end loop;
          Next (BL_Curs);
       end loop;
 
+      Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
       Mat_Inv := Inverse (Mat);
       for Row in BBs'Range loop
          Value := Mat_Inv (Row, 1);
