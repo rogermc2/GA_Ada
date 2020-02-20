@@ -687,7 +687,6 @@ package body Multivectors is
          BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
       end loop;
 
-      Put_Line ("Multivector.General_Inverse Metric BB_Size: " & Integer'Image (BB_Size));
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
       --  the coordinates of another multivector 'x' (stored in a vector)
       --  would result in the geometric product of 'Mat' and 'x'

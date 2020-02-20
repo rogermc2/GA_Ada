@@ -588,17 +588,25 @@ package body Blade is
         Value  : Float;
         List_A : Blade_List;
     begin
+        GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+        Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
         --  start with just a scalar
         List_A.Append (New_Basis_Blade (Weight (BA)));
         --  convert each 1 bit to a list of blades
+        Put_Line ("Blade.Transform_Basis ist blade added");
         while BM /= 0 loop
+            Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
             if (BM and 1) /= 0 then
                 Temp.Clear;
                 for Row in Met'Range (1) loop
+                    Put_Line ("Blade.Transform_Basis Row, I_Col" &
+                               Integer'Image (Row) & Integer'Image (I_Col));
                     Value := Met (Row, I_Col);
                     if Value /= 0.0 then
                         --  Wedge column Col of the matrix with List_A
                         Curs := List_A.First;
+                        Put_Line ("Blade.Transform_Basis Row, I_Col" &
+                                 Integer'Image (Row) & Integer'Image (I_Col));
                         while Has_Element (Curs) loop
                             Temp.Append (Outer_Product (Element (Curs),
                                          New_Basis_Blade (Shift_Left (1, Row), Value)));
