@@ -2,20 +2,22 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
+with GA_Utilities;
 
 package body Blade is
 
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
-                                   BB               : Basis_Blade; Cont : Contraction_Type)
-                                  return Basis_Blade;
-    function To_Eigen_Basis (BB : Basis_Blade) return Blade_List;
+                                   BB  : Basis_Blade; Cont : Contraction_Type)
+                                   return Basis_Blade;
+    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
+                             return Blade_List;
     --     function To_Eigen_Basis (BL : Blade_List) return Blade_List;
     --     function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
-    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix) return Blade_List;
-    function Transform_Basis (BB      : Blade.Basis_Blade;
-                              aMatrix : Metric.Metric_Matrix)
-                             return Blade_List;
+    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
+                              return Blade_List;
+    function Transform_Basis (BA : Blade.Basis_Blade; Met : Metric.Metric_Matrix)
+                              return Blade_List;
 
     --  -------------------------------------------------------------------------
 
@@ -90,7 +92,7 @@ package body Blade is
     --  -------------------------------------------------------------------------
 
     function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                          return Ada.Strings.Unbounded.Unbounded_String is
+                           return Ada.Strings.Unbounded.Unbounded_String is
         use Names_Package;
         BM        : Unsigned_32 := aBlade.Bitmap;
         Index     : Natural := 1;
@@ -184,8 +186,8 @@ package body Blade is
     function Geometric_Product (BA, BB : Basis_Blade;
                                 Met    : Metric.Metric_Record) return Blade_List is
         use Blade_List_Package;
-        List_A     : constant Blade_List := To_Eigen_Basis (BA);
-        List_B     : constant Blade_List := To_Eigen_Basis (BB);
+        List_A     : constant Blade_List := To_Eigen_Basis (BA, Met);
+        List_B     : constant Blade_List := To_Eigen_Basis (BB, Met);
         Eigen_Vals : constant Real_Vector := Metric.Eigen_Metric (Met);  --  M.getEigenMetric
         LA_Cursor  : Cursor := List_A.First;
         LB_Cursor  : Cursor;
@@ -195,13 +197,14 @@ package body Blade is
             LB_Cursor := List_B.First;
             while Has_Element (LB_Cursor) loop
                 Add_Blade (Result, Geometric_Product
-                            (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals));
+                           (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals));
                 Next (LB_Cursor);
             end loop;
             Next (LA_Cursor);
         end loop;
 
         Simplify (Result);
+        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product Metric Result", Result);
         return To_Metric_Basis (Result, Metric.Matrix (Met));
 
     exception
@@ -214,8 +217,8 @@ package body Blade is
 
     function Geometric_Product (BA, BB : Basis_Blade; Met : Real_Vector)
                                 return Basis_Blade is
-        --  BM is the meet (bitmap of annihilated vectors)
-        --  Only retain vectors commomt to both blades
+    --  BM is the meet (bitmap of annihilated vectors)
+    --  Only retain vectors commomt to both blades
         BM         : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
         Met_Length : constant Integer := Met'Length;
         Index      : Integer range 1 .. Met_Length := 1;
@@ -259,6 +262,11 @@ package body Blade is
         end if;
 
         return OP_Blade;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Blade.GP_OP");
+            raise;
     end GP_OP;
 
     --  ------------------------------------------------------------------------
@@ -280,7 +288,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                           return Basis_Blade is
+                            return Basis_Blade is
     begin
         return Inner_Product_Filter (Grade (BA), Grade (BB),
                                      Geometric_Product (BA, BB), Cont);
@@ -299,7 +307,7 @@ package body Blade is
 
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    BB               : Basis_Blade; Cont : Contraction_Type)
-                                  return Basis_Blade is
+                                   return Basis_Blade is
         IP_Blade : Basis_Blade;
     begin
         case Cont is
@@ -354,7 +362,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
-                             return Basis_Blade is
+                              return Basis_Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := Bitmap;
@@ -409,7 +417,7 @@ package body Blade is
 
     function New_Complex_Basis_Blade (Index  : C3_Base;
                                       Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
-                                     return Complex_Basis_Blade is
+                                      return Complex_Basis_Blade is
     begin
         return (Index'Enum_Rep, Weight);
     end New_Complex_Basis_Blade;
@@ -497,9 +505,10 @@ package body Blade is
 
     --  -------------------------------------------------------------------------
 
-    function To_Eigen_Basis (BB : Basis_Blade) return Blade_List is
+    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
+                             return Blade_List is
     begin
-        return Transform_Basis (BB, Metric.C3_Inverse_Eigen_Matrix);
+        return Transform_Basis (BB, Metric.Inverse_Eigen_Matrix (Met));
     end To_Eigen_Basis;
 
     --  ------------------------------------------------------------------------
@@ -526,14 +535,16 @@ package body Blade is
 
     --  -------------------------------------------------------------------------
 
-    function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix) return Blade_List is
+    function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
+                              return Blade_List is
     begin
         return Transform_Basis (BB, Met);
     end To_Metric_Basis;
 
     --  ------------------------------------------------------------------------
 
-    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix) return Blade_List is
+    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
+                              return Blade_List is
         use Blade_List_Package;
         BL_Cursor      : Cursor := BL.First;
         Tmp_List       : Blade_List;
@@ -549,46 +560,59 @@ package body Blade is
             end loop;
             Next (BL_Cursor);
         end loop;
+        Simplify (Result);
         return Result;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Blade.To_Metric_Basis");
+            raise;
 
     end To_Metric_Basis;
 
     --  ------------------------------------------------------------------------
     --  Transform_Basis transforms a Basis_Blade to a new basis
-    function Transform_Basis (BB      : Blade.Basis_Blade;
-                              aMatrix : Metric.Metric_Matrix)
-                             return Blade_List is
+    function Transform_Basis (BA  : Blade.Basis_Blade;
+                              Met : Metric.Metric_Matrix)
+                              return Blade_List is
         use Blade_List_Package;
-        BM     : Unsigned_32 := Bitmap (BB);
+        BM     : Unsigned_32 := Bitmap (BA);
         Curs   : Cursor;
         Temp   : Blade_List;
-        Col    : Integer := 1;
+        I_Col  : Integer := 1;
         Value  : Float;
-        Result : Blade_List;
+        List_A : Blade_List;
     begin
         --  start with just a scalar
-        Result.Append (New_Basis_Blade (Weight (BB)));
+        List_A.Append (New_Basis_Blade (Weight (BA)));
         --  convert each 1 bit to a list of blades
-        while (BM and 1) /= 0 loop
-            Temp.Clear;
-            for Row in aMatrix'Range (1) loop
-                Value := aMatrix (Row, Col);
-                if Value /= 0.0 then
-                    --  Wedge column Col of the matrix with Result
-                    Curs := Result.First;
-                    while Has_Element (Curs) loop
-                        Temp.Append (Outer_Product (Element (Curs),
-                                     New_Basis_Blade (Shift_Left (1, Row), Value)));
-                        Next (Curs);
-                    end loop;
-                    Result := Temp;
-                end if;
-            end loop;
-            BM := BM / 2;  --  Shift BM right by one bit
-            Col := Col + 1;
-        end loop;
+        while BM /= 0 loop
+            if (BM and 1) /= 0 then
+                Temp.Clear;
+                for Row in Met'Range (1) loop
+                    Value := Met (Row, I_Col);
+                    if Value /= 0.0 then
+                        --  Wedge column Col of the matrix with List_A
+                        Curs := List_A.First;
+                        while Has_Element (Curs) loop
+                            Temp.Append (Outer_Product (Element (Curs),
+                                         New_Basis_Blade (Shift_Left (1, Row), Value)));
+                            Next (Curs);
+                        end loop;
+                        List_A := Temp;
+                    end if;
+                end loop;
+                BM := BM / 2;  --  Shift BM right by one bit
+                I_Col := I_Col + 1;
+            end if;  --  (BM and 1) /= 0
+        end loop;  --  BM /= 0
 
-        return Result;
+        return List_A;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Blade.Transform_Basis");
+            raise;
     end Transform_Basis;
 
     --  ------------------------------------------------------------------------

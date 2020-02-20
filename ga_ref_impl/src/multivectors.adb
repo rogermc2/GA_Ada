@@ -245,16 +245,11 @@ package body Multivectors is
    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
                             BB, BG : Blade.Basis_Blade) is
       use Blade;
-      Row     : Integer := 1;
-      Col     : Integer := 1;
-      Bit_Num : Integer;
+      Row     : Integer;
+      Col     : Integer;
    begin
-      if Bits.Highest_One_Bit (Bitmap (BG), Bit_Num) then
-         Row := Bit_Num + 2;
-      end if;
-      if Bits.Highest_One_Bit (Bitmap (BB), Bit_Num) then
-         Col := Bit_Num + 2;
-      end if;
+         Row := Bits.Highest_One_Bit (Bitmap (BG)) + 1;
+         Col := Bits.Highest_One_Bit (Bitmap (BB)) + 1;
 
 --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
 --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
@@ -684,7 +679,7 @@ package body Multivectors is
       BBs        : Basis_Blade_Array (1 .. BB_Size);
       BL_Curs    : Cursor := MV.Blades.First;
       aBlade     : Basis_Blade;
-      GP         : Blade_List;
+      GP_List    : Blade_List;
       Value      : Float;
       Result     : Blade_List;
    begin
@@ -694,17 +689,15 @@ package body Multivectors is
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
       --  the coordinates of another multivector 'x' (stored in a vector)
       --  would result in the geometric product of 'Mat' and 'x'
-
       while Has_Element (BL_Curs) loop
          aBlade := Element (BL_Curs);
          for index in BBs'Range loop
-            GP := Geometric_Product (aBlade, BBs (index), Met);
-            Add_To_Matrix (Mat, BBs (index), GP);
+            GP_List := Geometric_Product (aBlade, BBs (index), Met);
+            Add_To_Matrix (Mat, BBs (index), GP_List);
          end loop;
          Next (BL_Curs);
       end loop;
 
-      GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
       Mat_Inv := Inverse (Mat);
       for Row in BBs'Range loop
          Value := Mat_Inv (Row, 1);
@@ -1680,20 +1673,17 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Space_Dimension (MV : Multivector) return Natural is
+      use GA_Maths;
       use Blade;
       use Blade_List_Package;
-      use GA_Maths;
       Blades       : constant Blade_List := MV.Blades;
       Blade_Cursor : Cursor := Blades.First;
-      High_Bit     : Natural := 0;
       BM           : Interfaces.Unsigned_32;
       Max_Dim      : Natural := 0;
    begin
       while Has_Element (Blade_Cursor) loop
          BM := Bitmap (Element (Blade_Cursor));
-         if Bits.Highest_One_Bit (BM, High_Bit) then
-            Max_Dim := Maximum (Max_Dim, High_Bit);
-         end if;
+         Max_Dim := Maximum (Max_Dim, (Bits.Highest_One_Bit (BM)));
          Next (Blade_Cursor);
       end loop;
       return Max_Dim + 1;

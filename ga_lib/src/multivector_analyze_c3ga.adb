@@ -154,8 +154,8 @@ package body Multivector_Analyze_C3GA is
         if theAnalysis.M_Flags.Dual then
             Grade := 5 - Grade;
         end if;
-
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat calling General_Inverse");
+        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat calling General_Inverse MV",
+                                        MV);
         MV_Inverse := General_Inverse (MV, Met);
         --  MV_Location is a normalized dual sphere
         GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",

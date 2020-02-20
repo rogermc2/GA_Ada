@@ -15,15 +15,9 @@ package body Bits is
 
     --  ------------------------------------------------------------------------
 
-    function Highest_One_Bit (Bitmap : Unsigned_32; Bit : out Natural) return Boolean is
-        aBit_Is_Set : constant Boolean := Bitmap > 0;
+    function Highest_One_Bit (Bitmap : Unsigned_32) return Natural is
     begin
-        if aBit_Is_Set then
-            Bit := 31 - Number_Of_Leading_Zero_Bits (Bitmap);
-        else
-            Bit := 0;
-        end if;
-        return aBit_Is_Set;
+        return 32 - Number_Of_Leading_Zero_Bits (Bitmap);
     end Highest_One_Bit;
 
     --  ------------------------------------------------------------------------
