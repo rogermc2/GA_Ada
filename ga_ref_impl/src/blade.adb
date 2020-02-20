@@ -588,6 +588,7 @@ package body Blade is
         Value  : Float;
         List_A : Blade_List;
     begin
+        GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
         GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
         Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
         --  start with just a scalar
