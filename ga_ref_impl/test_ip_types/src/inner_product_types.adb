@@ -43,8 +43,7 @@ package body Inner_Product_Types is
       MV_Fast      : Multivector;
       Factors      : Multivector_List;
       Fast_Factors : Multivector_List;
-      --          Index_I      : constant Integer := 0;
-      K            : Integer;
+      K_Grade      : Integer;
       OK           : Boolean;
       Check_Scale  : Float;
    begin
@@ -61,6 +60,7 @@ package body Inner_Product_Types is
       Factors := Factorize_Blade (MV_B, Scale);
       Put_Line ("Factorization_Test Factors size: " &
                   Integer'Image (List_Length (Factors)));
+
       MV_R := New_Multivector (1.0);
       for index in 1 .. List_Length (Factors) loop
          GA_Utilities.Print_Multivector ("Factorized Blade ", MV_Item (Factors, index));
@@ -80,7 +80,7 @@ package body Inner_Product_Types is
       MV_R := Unit_E (MV_R);
       MV_Fast := Unit_E (MV_Fast);
 
-      OK := Grade (MV_B, K);
+      OK := Grade (MV_B, K_Grade);
       if not OK then
          raise Inner_Product_Types_Exception with
            "Factorization_Test, inhomogeneous multivector detected.";
@@ -88,9 +88,9 @@ package body Inner_Product_Types is
          Check_Scale := Scalar_Part (Geometric_Product (MV_R, Versor_Inverse (MV_Fast)));
          if Check_Scale < 0.0 then
             Put_Line ("Whaaaaa! Scalar_Part < 0: " & Float'Image (Check_Scale));
-            Scale_Signs (K) := "-";
+            Scale_Signs (K_Grade) := "-";
          else
-            Scale_Signs (K) := "+";
+            Scale_Signs (K_Grade) := "+";
          end if;
          GA_Utilities.Print_Multivector ("Factorization_Test MV_B", MV_B);
          GA_Utilities.Print_Multivector ("Factorization_Test MV_R", MV_R);
@@ -141,9 +141,8 @@ package body Inner_Product_Types is
             E_Largest := Largest_Basis_Blade (MV_B);
             E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K_Grade));
 
-            for Index_G in Unsigned_32 range
-              0 .. Unsigned_32 (Space_Dimension (MV_B) - 1) loop
-               Basis_Bit := Shift_Left (1, Integer (Index_G));
+            for Index_G in 0 .. Space_Dimension (MV_B) - 1 loop
+               Basis_Bit := 2 ** Index_G;
                if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
                   Idx := Idx + 1;
                   E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
@@ -240,7 +239,7 @@ package body Inner_Product_Types is
                                               Blades_B);
 
                for index in Lowest_Bit .. Highest_Bit loop
-                  Basis_Bit := Shift_Left (1, Integer (index));
+                  Basis_Bit := 2 ** Integer (index);
                   if (Unsigned_32 (Bitmap (Blade_E)) and Basis_Bit) /= 0 then
                      Put_Line ("Inner_Product_Types.Factorize_Blade_Fast Basis_Bit" &
                               Unsigned_32'Image (Basis_Bit));
