@@ -16,7 +16,7 @@ package body Inner_Product_Types is
       Factors_F    : Multivector_List;
       MV_R         : Multivector;
    begin
-      Factors_F := Factorize_Blade (MV, Scale);
+      Factors_F := Factorize_Blades (MV, Scale);
       MV_R := New_Multivector (1.0);
       for index in 1 .. List_Length (Factors_F) loop
          MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
@@ -31,10 +31,10 @@ package body Inner_Product_Types is
    end Factorize_Multivector;
 
    --  --------------------------------------------------------------------
-   --  Factorize_Blade returns the k unit factors of the blade and
+   --  Factorize_Blades returns the k unit factors of the blade and
    --  the scale of the blade
-   function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : out Float)
-                             return Multivectors.Multivector_List is
+   function Factorize_Blades (MV_B : Multivectors.Multivector; Scale : out Float)
+                              return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
@@ -48,7 +48,7 @@ package body Inner_Product_Types is
    begin
       if not Grade (MV_B, K_Grade) then
          raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
+           "Inner_Product_Types.Factorize_Blades inhomogenous multivector detected.";
       else
          --  set scale of output, no matter what
          if K_Grade = 0 then
@@ -100,9 +100,9 @@ package body Inner_Product_Types is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Blade");
+         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Blades");
          raise;
-   end Factorize_Blade;
+   end Factorize_Blades;
 
    --  --------------------------------------------------------------------
 

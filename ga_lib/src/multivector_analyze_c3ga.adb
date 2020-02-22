@@ -192,7 +192,7 @@ package body Multivector_Analyze_C3GA is
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
             when 4 =>  --  Plane
                 theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
-                Blade_Factors := Inner_Product_Types.Factorize_Blade
+                Blade_Factors := Inner_Product_Types.Factorize_Blades
                   (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude))), Scale);
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
 
@@ -237,7 +237,7 @@ package body Multivector_Analyze_C3GA is
             when 3 =>  --  F Bivector
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3.");
                 theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
-                Blade_Factors := Inner_Product_Types.Factorize_Blade (MV, Scale);
+                Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
                 theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
                 theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
                 theAnalysis.M_Vectors (3) :=
@@ -366,7 +366,7 @@ package body Multivector_Analyze_C3GA is
                     end if;
                 when 3 =>
                     theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
-                    Blade_Factors := Inner_Product_Types.Factorize_Blade (MV, Scale);
+                    Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
                     theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
                     theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
                     theAnalysis.M_Vectors (3) :=
@@ -435,7 +435,7 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Vectors (1) := Unit_E (Left_Contraction (C3GA.no, Attitude));
             when 3 =>
                 theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
-                Blade_Factors := Inner_Product_Types.Factorize_Blade (MV, Scale);
+                Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
                 theAnalysis.M_Vectors (1) := MV_First (Blade_Factors);
                 theAnalysis.M_Vectors (2) := MV_Item (Blade_Factors, 2);
                 theAnalysis.M_Vectors (3) :=
