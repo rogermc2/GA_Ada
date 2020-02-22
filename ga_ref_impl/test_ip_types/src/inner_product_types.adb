@@ -57,9 +57,7 @@ package body Inner_Product_Types is
       Update (MV_B, Blades);
 
       GA_Utilities.Print_Multivector ("MV_B before factorization", MV_B);
-      Factors_F := Factorize_Blade (MV_B, Scale);
-      Put_Line ("Factorization_Test Factors size: " &
-                  Integer'Image (List_Length (Factors_F)));
+      Factors := Factorize_Blade (MV_B, Scale);
 
       MV_R := New_Multivector (1.0);
       for index in 1 .. List_Length (Factors_F) loop
@@ -67,13 +65,12 @@ package body Inner_Product_Types is
                                          MV_Item (Factors_F, index));
          MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
       end loop;
-      GA_Utilities.Print_Multivector ("Factorized  MV_R", MV_R);
+      GA_Utilities.Print_Multivector ("MV_R before factorization", MV_R);
 
       Fast_Factors := Factorize_Blade_Fast (MV_B, Scale);
-      Put_Line ("Factorization_Test Fast_Factors size: " &
-                  Integer'Image (List_Length (Fast_Factors)));
       MV_Fast := New_Multivector (1.0);
       for index in 1 .. List_Length (Fast_Factors) loop
+         GA_Utilities.Print_Multivector ("Factorized Blade ", MV_Item (Fast_Factors, index));
          MV_Fast := Outer_Product (MV_Fast, MV_Item (Fast_Factors, index));
       end loop;
 
@@ -202,8 +199,6 @@ package body Inner_Product_Types is
          raise Inner_Product_Types_Exception with
            "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
       else
-         Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Grade_K: " &
-                     Unsigned_32'Image (Grade_K));
          if Grade_K = 0 then
             Scale := Scalar_Part (MV_B);
          else
@@ -214,8 +209,6 @@ package body Inner_Product_Types is
             Blade_E := Largest_Basis_Blade (MV_B);
             Lowest_Bit := Bits.Lowest_One_Bit (Bitmap (Blade_E));
             Highest_Bit := Bits.Highest_One_Bit (Bitmap (Blade_E));
-            Put_Line ("Inner_Product_Types.Factorize_Blade_Fast, Lowest and Highest Bit: " &
-                     Integer'Image (Lowest_Bit) & Integer'Image (Highest_Bit));
 
             if Grade_K = 1 then
                Add_Multivector (Factors, Unit_E (MV_B));
@@ -236,20 +229,11 @@ package body Inner_Product_Types is
                end if;
 
                Blades_B := Blades (MV_B);
-               GA_Utilities.Print_Blade_List ("Inner_Product_Types.Factorize_Blade_Fast Blades_B",
-                                              Blades_B);
-
                for index in Lowest_Bit .. Highest_Bit loop
                   Basis_Bit := 2 ** Integer (index);
                   if (Unsigned_32 (Bitmap (Blade_E)) and Basis_Bit) /= 0 then
---                       Put_Line ("Inner_Product_Types.Factorize_Blade_Fast Basis_Bit" &
---                                Unsigned_32'Image (Basis_Bit));
---                       Put_Line ("Inner_Product_Types.Factorize_Blade_Fast Basis_Bitmap" &
---                                Unsigned_32'Image (Basis_Bitmap));
                      Basis_Bitmap := Unsigned_32 (Bitmap (Blade_E)) xor Basis_Bit;
---                       Put_Line ("Inner_Product_Types.Factorize_Blade_Fast Basis_Bitmap" &
---                                   Unsigned_32'Image (Basis_Bitmap));
---                       New_Line;
+                     New_Line;
                      for index_j in 1 .. List_Length (Blades_B) loop
                         Blades_Bj := BB_Item (Blades_B, index_j);
                         if (Unsigned_32 (Bitmap (Blades_Bj)) and Basis_Bitmap) =
