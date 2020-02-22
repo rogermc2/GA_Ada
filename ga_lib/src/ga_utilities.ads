@@ -8,8 +8,6 @@ with Multivector_Type;
 package GA_Utilities is
    use GA_Maths.Float_Array_Package;
 
-   function Factorize_Blade (MV : Multivectors.Multivector; Scale : out Float)
-                             return Multivectors.Multivector_List;
    function Multivector_Size (MV : Multivectors.Multivector) return Integer;
    procedure Print_Blade (Name : String; B : Blade.Basis_Blade);
    procedure Print_Blade_List (Name : String; BL : Blade.Blade_List);
