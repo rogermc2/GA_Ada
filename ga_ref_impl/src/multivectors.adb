@@ -7,6 +7,7 @@ with Maths;
 
 with Bits;
 with GA_Utilities;
+with Inner_Product_Types;
 
 package body Multivectors is
 
@@ -799,10 +800,13 @@ package body Multivectors is
                                 return Multivector is
       use Blade;
       use Blade_List_Package;
-      Blades_1  : constant Blade_List := MV1.Blades;
-      Blades_2  : constant Blade_List := MV2.Blades;
+      MV1_Fact  : Multivector;
+      MV2_Fact  : Multivector;
+      Scale     : Float;
+      Blades_1  : Blade_List;
+      Blades_2  : Blade_List;
       Blades_GP : Blade_List;
-      Curs_1    : Cursor := Blades_1.First;
+      Curs_1    : Cursor;
       Curs_2    : Cursor;
       Blade_1   : Blade.Basis_Blade;
       Blade_2   : Blade.Basis_Blade;
@@ -814,6 +818,13 @@ package body Multivectors is
       if Is_Empty (List (Blades_2)) then
          raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
+
+      MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
+      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, Scale);
+
+      Blades_1 := MV1_Fact.Blades;
+      Blades_2 := MV2_Fact.Blades;
+      Curs_1 := Blades_1.First;
 
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
