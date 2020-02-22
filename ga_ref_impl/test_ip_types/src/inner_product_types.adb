@@ -57,7 +57,7 @@ package body Inner_Product_Types is
       Update (MV_B, Blades);
 
       GA_Utilities.Print_Multivector ("MV_B before factorization", MV_B);
-      Factors := Factorize_Blade (MV_B, Scale);
+      Factors_F := Factorize_Blade (MV_B, Scale);
 
       MV_R := New_Multivector (1.0);
       for index in 1 .. List_Length (Factors_F) loop
@@ -65,7 +65,7 @@ package body Inner_Product_Types is
                                          MV_Item (Factors_F, index));
          MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
       end loop;
-      GA_Utilities.Print_Multivector ("MV_R before factorization", MV_R);
+      GA_Utilities.Print_Multivector ("MV_R", MV_R);
 
       Fast_Factors := Factorize_Blade_Fast (MV_B, Scale);
       MV_Fast := New_Multivector (1.0);
