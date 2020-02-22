@@ -673,46 +673,53 @@ package body Multivectors is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** Dim;
-      Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-      Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-      BBs        : Basis_Blade_Array (1 .. BB_Size);
-      BL_Curs    : Cursor := MV.Blades.First;
-      aBlade     : Basis_Blade;
-      GP_List    : Blade_List;
+      MV_Fact    : Multivector;
+      Dim        : Integer;
+      BB_Size    : Integer;
       Value      : Float;
       Result     : Blade_List;
    begin
-      for index in BBs'Range loop
-         BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
-      end loop;
+      MV_Fact := Inner_Product_Types.Factorize_Multivector (MV, Value);
+      Dim := Space_Dimension (MV_Fact);
+      BB_Size := 2 ** Dim;
+
+      declare
+         Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+         Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+         BBs        : Basis_Blade_Array (1 .. BB_Size);
+         BL_Curs    : Cursor := MV.Blades.First;
+         aBlade     : Basis_Blade;
+         GP_List    : Blade_List;
+      begin
+         for index in BBs'Range loop
+            BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
+         end loop;
 
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
       --  the coordinates of another multivector 'x' (stored in a vector)
       --  would result in the geometric product of 'Mat' and 'x'
-      while Has_Element (BL_Curs) loop
-         aBlade := Element (BL_Curs);
-         for index in BBs'Range loop
-            Put_Line ("Multivector.General_Inverse Metric index: " &
-                     Integer'Image (index));
-            GP_List := Geometric_Product (aBlade, BBs (index), Met);
-            GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
-                     GP_List);
-            Add_To_Matrix (Mat, BBs (index), GP_List);
+         while Has_Element (BL_Curs) loop
+            aBlade := Element (BL_Curs);
+            for index in BBs'Range loop
+               Put_Line ("Multivector.General_Inverse Metric index: " &
+                           Integer'Image (index));
+               GP_List := Geometric_Product (aBlade, BBs (index), Met);
+               GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+                                              GP_List);
+               Add_To_Matrix (Mat, BBs (index), GP_List);
+            end loop;
+            Next (BL_Curs);
          end loop;
-         Next (BL_Curs);
-      end loop;
-
-      Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
-      Mat_Inv := Inverse (Mat);
-      for Row in BBs'Range loop
-         Value := Mat_Inv (Row, 1);
-         if Value /= 0.0 then
-            Update_Blade (BBs (Row), Value);
-            Result.Append (BBs (Row));
-         end if;
-      end loop;
+         Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
+         Mat_Inv := Inverse (Mat);
+         for Row in BBs'Range loop
+            Value := Mat_Inv (Row, 1);
+            if Value /= 0.0 then
+               Update_Blade (BBs (Row), Value);
+               Result.Append (BBs (Row));
+            end if;
+         end loop;
+      end; --  declare block
 
       return New_Multivector (Result);
 
