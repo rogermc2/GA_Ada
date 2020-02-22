@@ -43,7 +43,7 @@ begin
    Update (MV_B, Blades);
 
    GA_Utilities.Print_Multivector ("MV_B before factorization", MV_B);
-   Factors_F := Factorize_Blade (MV_B, Scale);
+   Factors_F := Factorize_Blades (MV_B, Scale);
 
    MV_R := New_Multivector (1.0);
    for index in 1 .. List_Length (Factors_F) loop
