@@ -26,9 +26,9 @@ private
 
    type MV_Type_Record is record
       MV_Kind   : MV_Type := Unspecified_MV_Type;  -- type MV, Versor or Blade
-      Zero      : Boolean;
+      Zero      : Boolean := True;
       Grade     : Interfaces.Unsigned_32 := 0;  --  Top_Grade
-      Grade_Use : GA_Maths.Grade_Usage;
+      Grade_Use : GA_Maths.Grade_Usage := 0;
       Parity    : Parity_Type := No_Parity;
    end record;
 
