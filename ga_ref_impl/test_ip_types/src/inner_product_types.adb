@@ -116,7 +116,6 @@ package body Inner_Product_Types is
       use Multivectors;
       K_Grade    : Integer;
       E_Largest  : Basis_Blade;
-      --        E_Array    : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
       Basis_Bit  : Unsigned_32;
       B_Current  : Multivector;
       aFactor    : Multivector;
@@ -150,11 +149,16 @@ package body Inner_Product_Types is
                end loop;
 
                B_Current := Geometric_Product (MV_B, 1.0 / Scale);
+               --  for all but one of the E_Array basis vectors:
                for index in 0 .. K_Grade - 2 loop
+                  --  Project basis vector E_Array (index) onto B_Current
+                  --  (E(i) lc B_Current) inv(B_Current) but
+                  --  inv(B_Current) not required because Bc is a unit vector
                   aFactor := New_Multivector (E_Array (index));
                   aFactor := Inner_Product
                     (Inner_Product (aFactor, B_Current, Left_Contraction),
                      B_Current, Left_Contraction);
+                  --  Normalize aFactor
                   aFactor := Unit_E (aFactor);
                   Add_Multivector (Factors, aFactor);
                   --  Remove aFactor from B_Current
