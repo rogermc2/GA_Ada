@@ -20,9 +20,9 @@ package body Inner_Product_Types is
 
    function Factorize_Blade (MV_B  : Multivectors.Multivector;
                              Scale : in out Float)
-                              return Multivectors.Multivector_List;
+                             return Multivectors.Multivector_List;
    function Factorize_Blade_Fast (MV_B : Multivectors.Multivector; Scale : in out Float)
-                                   return Multivectors.Multivector_List;
+                                  return Multivectors.Multivector_List;
 
    --  --------------------------------------------------------------------
    --  Based on Util.java main
@@ -94,8 +94,8 @@ package body Inner_Product_Types is
          GA_Utilities.Print_Multivector ("Factorization_Test MV_R", MV_R);
          GA_Utilities.Print_Multivector ("Factorization_Test MV_Fast", MV_Fast);
          Put_Line ("B = " & C3GA.Multivector_String (MV_B) & ", ");
-                     Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
-                     Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
+         Put_Line ("R = " & C3GA.Multivector_String (MV_R) & ", ");
+         Put_Line ("Ra = " & C3GA.Multivector_String (MV_Fast) & ", ");
       end if;
 
    exception
@@ -108,7 +108,7 @@ package body Inner_Product_Types is
    --  Factorize_Blade returns the k unit factors of the blade and
    --  the scale of the blade
    function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : in out Float)
-                              return Multivectors.Multivector_List is
+                             return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
@@ -116,8 +116,7 @@ package body Inner_Product_Types is
       use Multivectors;
       K_Grade    : Integer;
       E_Largest  : Basis_Blade;
-      E_Array    : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
-      Idx        : Integer := 0;
+      --        E_Array    : array (0 .. Space_Dimension (MV_B)) of Basis_Blade;
       Basis_Bit  : Unsigned_32;
       B_Current  : Multivector;
       aFactor    : Multivector;
@@ -137,27 +136,31 @@ package body Inner_Product_Types is
          if K_Grade > 0 and Scale /= 0.0 then
             --  not a scalar-blade or a null-blade
             E_Largest := Largest_Basis_Blade (MV_B);
-            E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K_Grade));
+            declare
+               E_Array : array (0 .. K_Grade - 1 ) of Basis_Blade;
+               Idx     : Integer := 0;
+            begin
+               E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K_Grade));
+               for Index_G in 0 .. K_Grade - 1 loop
+                  Basis_Bit := 2 ** Index_G;
+                  if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
+                     E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
+                     Idx := Idx + 1;
+                  end if;
+               end loop;
 
-            for Index_G in 0 .. Space_Dimension (MV_B) - 1 loop
-               Basis_Bit := 2 ** Index_G;
-               if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
-                  Idx := Idx + 1;
-                  E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
-               end if;
-            end loop;
-
-            B_Current := Geometric_Product (MV_B, 1.0 / Scale);
-            for index in 0 .. K_Grade - 2 loop
-               aFactor := New_Multivector (E_Array (index));
-               aFactor := Inner_Product
-                 (Inner_Product (aFactor, B_Current, Left_Contraction),
-                  B_Current, Left_Contraction);
-               aFactor := Unit_E (aFactor);
-               Add_Multivector (Factors, aFactor);
-               --  Remove aFactor from B_Current
-               B_Current := Inner_Product (aFactor, B_Current, Left_Contraction);
-            end loop;
+               B_Current := Geometric_Product (MV_B, 1.0 / Scale);
+               for index in 0 .. K_Grade - 2 loop
+                  aFactor := New_Multivector (E_Array (index));
+                  aFactor := Inner_Product
+                    (Inner_Product (aFactor, B_Current, Left_Contraction),
+                     B_Current, Left_Contraction);
+                  aFactor := Unit_E (aFactor);
+                  Add_Multivector (Factors, aFactor);
+                  --  Remove aFactor from B_Current
+                  B_Current := Inner_Product (aFactor, B_Current, Left_Contraction);
+               end loop;
+            end;  --  declare block
             --  last factor = what is left of the input blade
             --  B_Current is already normalized but
             --  renormalize to remove any FP round-off error
@@ -182,10 +185,10 @@ package body Inner_Product_Types is
       use Blade_Types;
       use GA_Maths;
       use Multivectors;
-      Grade_K      : Unsigned_32;
-      Sc           : Float;
-      Blade_E      : Basis_Blade;
-      Lowest_Bit   : Integer;
+      Grade_K       : Unsigned_32;
+      Sc            : Float;
+      Blade_E       : Basis_Blade;
+      Lowest_Bit    : Integer;
       Highest_Bit   : Integer;
       Blades_B      : Blade_List;
       Basis_Bit     : Unsigned_32;
