@@ -9,6 +9,27 @@ with Blade_Types;
 
 package body Inner_Product_Types is
 
+   function Factorize_Multivector (MV  : Multivectors.Multivector;
+                                   Scale : out Float)
+                                   return Multivectors.Multivector is
+      use Multivectors;
+      Factors_F    : Multivector_List;
+      MV_R         : Multivector;
+   begin
+      Factors_F := Factorize_Blade (MV, Scale);
+      MV_R := New_Multivector (1.0);
+      for index in 1 .. List_Length (Factors_F) loop
+         MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
+      end loop;
+      return MV_R;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Multivector");
+         raise;
+
+   end Factorize_Multivector;
+
    --  --------------------------------------------------------------------
    --  Factorize_Blade returns the k unit factors of the blade and
    --  the scale of the blade

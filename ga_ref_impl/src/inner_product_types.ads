@@ -3,6 +3,9 @@ with Multivectors;
 
 package Inner_Product_Types is
 
+   function Factorize_Multivector (MV  : Multivectors.Multivector;
+                                   Scale : out Float)
+                                   return Multivectors.Multivector;
    function Factorize_Blade (MV_B  : Multivectors.Multivector;
                              Scale : out Float)
                              return Multivectors.Multivector_List;
