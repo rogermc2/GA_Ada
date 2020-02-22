@@ -1016,15 +1016,25 @@ package body Multivectors is
                            Cont     : Blade.Contraction_Type) return Multivector is
       use Blade;
       use Blade_List_Package;
+      MV1_Fact  : Multivector;
+      MV2_Fact  : Multivector;
       B1        : Blade.Basis_Blade;
       B2        : Blade.Basis_Blade;
-      List_1    : constant Blade_List := MV1.Blades;
-      List_2    : constant Blade_List := MV2.Blades;
-      Cursor_1  : Cursor := List_1.First;
+      List_1    : Blade_List;
+      List_2    : Blade_List;
+      Cursor_1  : Cursor;
       Cursor_2  : Cursor;
       Blades_IP : Blade.Basis_Blade;
+      Scale     : Float;
       MV        : Multivector;
    begin
+      MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
+      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, Scale);
+
+      List_1 := MV1_Fact.Blades;
+      List_2 := MV2_Fact.Blades;
+      Cursor_1 := List_1.First;
+
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
          Cursor_2 := List_2.First;
