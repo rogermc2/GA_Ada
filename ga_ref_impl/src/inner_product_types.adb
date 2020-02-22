@@ -3,26 +3,20 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Interfaces;
 
-with Maths;
-
 with Bits;
 with Blade;
 with Blade_Types;
-with GA_Maths;
 
 package body Inner_Product_Types is
-
-   type Scale_Array is array (Integer range <>) of Float;
 
    --  --------------------------------------------------------------------
    --  Factorize_Blade returns the k unit factors of the blade and
    --  the scale of the blade
-   function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : in out Float)
+   function Factorize_Blade (MV_B : Multivectors.Multivector; Scale : out Float)
                              return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
-      use GA_Maths;
       use Multivectors;
       K_Grade    : Integer;
       E_Largest  : Basis_Blade;
@@ -92,12 +86,11 @@ package body Inner_Product_Types is
    --  --------------------------------------------------------------------
 
    function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
-                                  Scale : in out Float)
+                                  Scale : out Float)
                                   return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
-      use GA_Maths;
       use Multivectors;
       Grade_K       : Unsigned_32;
       Sc            : Float;
@@ -148,18 +141,18 @@ package body Inner_Product_Types is
                Blades_B := Blades (MV_B);
                for index in Lowest_Bit .. Highest_Bit loop
                   Basis_Bit := 2 ** Integer (index);
-                  if (Unsigned_32 (Bitmap (Blade_E)) and Basis_Bit) /= 0 then
-                     Basis_Bitmap := Unsigned_32 (Bitmap (Blade_E)) xor Basis_Bit;
+                  if (Bitmap (Blade_E) and Basis_Bit) /= 0 then
+                     Basis_Bitmap := Bitmap (Blade_E) xor Basis_Bit;
                      New_Line;
                      for index_j in 1 .. List_Length (Blades_B) loop
                         Blades_Bj := BB_Item (Blades_B, index_j);
-                        if (Unsigned_32 (Bitmap (Blades_Bj)) and Basis_Bitmap) =
+                        if (Bitmap (Blades_Bj) and Basis_Bitmap) =
                           Basis_Bitmap then
-                           Vec_Bitmap := Unsigned_32 (Bitmap (Blades_Bj)) xor
+                           Vec_Bitmap := Bitmap (Blades_Bj) xor
                              Basis_Bitmap;
                            Sc := Weight (Blades_Bj) *
                              Canonical_Reordering_Sign
-                               (Unsigned_32 (Basis_Bitmap), Bitmap (Blades_Bj));
+                               (Basis_Bitmap, Bitmap (Blades_Bj));
                            Blade.Add_Blade
                              (L_List, New_Basis_Blade (C3_Base'Enum_Val (Vec_Bitmap), Sc));
                         end if;
