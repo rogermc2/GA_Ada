@@ -50,6 +50,8 @@ package body Inner_Product_Types is
          raise Inner_Product_Types_Exception with
            "Inner_Product_Types.Factorize_Blades inhomogenous multivector detected.";
       else
+        Put_Line ("Inner_Product_Types.Factorize_Blades K_Grade" &
+                   Integer'Image (K_Grade));
          --  set scale of output, no matter what
          if K_Grade = 0 then
             Scale := Scalar_Part (MV_B);
@@ -64,7 +66,7 @@ package body Inner_Product_Types is
                E_Array : array (0 .. K_Grade - 1 ) of Basis_Blade;
                Idx     : Integer := 0;
             begin
-               E_Array (0) := New_Basis_Blade (C3_Base'Enum_Val (K_Grade));
+               E_Array (0) := New_Basis_Blade (Unsigned_32 (K_Grade));
                for Index_G in 0 .. K_Grade - 1 loop
                   Basis_Bit := 2 ** Index_G;
                   if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
