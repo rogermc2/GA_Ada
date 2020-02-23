@@ -478,8 +478,6 @@ package body Multivectors is
       Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
       Dual_MV : Multivector;
    begin
-      Put_Line ("Multivectors.Dual Space_Dimension (MV)" & Integer'Image (Space_Dimension (MV)));
-      Put_Line ("Multivectors.Dual Index" & Unsigned_32'Image (Index));
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
       Dual_MV := Versor_Inverse (Dual_MV);
       Dual_MV := Inner_Product (MV, Dual_MV, Blade.Left_Contraction);
@@ -493,8 +491,6 @@ package body Multivectors is
       Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
       Dual_MV : Multivector;
    begin
-      Put_Line ("Multivectors.Dual Space_Dimension (MV)" & Integer'Image (Space_Dimension (MV)));
-      Put_Line ("Multivectors.Dual Index" & Unsigned_32'Image (Index));
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
       Dual_MV := Versor_Inverse (Dual_MV);
       Dual_MV := Inner_Product (MV, Dual_MV, Met, Blade.Left_Contraction);
@@ -701,16 +697,16 @@ package body Multivectors is
          while Has_Element (BL_Curs) loop
             aBlade := Element (BL_Curs);
             for index in BBs'Range loop
-               Put_Line ("Multivector.General_Inverse Metric index: " &
-                           Integer'Image (index));
+--                 Put_Line ("Multivector.General_Inverse Metric index: " &
+--                             Integer'Image (index));
                GP_List := Geometric_Product (aBlade, BBs (index), Met);
-               GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
-                                              GP_List);
+--                 GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+--                                                GP_List);
                Add_To_Matrix (Mat, BBs (index), GP_List);
             end loop;
             Next (BL_Curs);
          end loop;
-         Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
+--           Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
          Mat_Inv := Inverse (Mat);
          for Row in BBs'Range loop
             Value := Mat_Inv (Row, 1);
@@ -810,6 +806,7 @@ package body Multivectors is
       MV1_Fact  : Multivector;
       MV2_Fact  : Multivector;
       Scale     : Float;
+      F_Scale   : Float;
       Blades_1  : Blade_List;
       Blades_2  : Blade_List;
       Blades_GP : Blade_List;
@@ -827,11 +824,11 @@ package body Multivectors is
       end if;
 
       MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
-      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, Scale);
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
-                                      MV1_Fact);
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
-                                      MV2_Fact);
+      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, F_Scale);
+--        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
+--                                        MV1_Fact);
+--        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
+--                                        MV2_Fact);
 
       Blades_1 := MV1_Fact.Blades;
       Blades_2 := MV2_Fact.Blades;
@@ -848,7 +845,7 @@ package body Multivectors is
          end loop;
          Next (Curs_1);
       end loop;
-      GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, GP.Blades", GP.Blades);
+--        GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, GP.Blades", GP.Blades);
       Simplify (GP);
 
       if Is_Empty (GP.Blades) then
@@ -1175,6 +1172,7 @@ package body Multivectors is
    end List_Length;
 
    --  -------------------------------------------------------------------------
+
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
                                  return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
