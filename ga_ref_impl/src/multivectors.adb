@@ -819,10 +819,10 @@ package body Multivectors is
       Blade_2   : Blade.Basis_Blade;
       GP        : Multivector;
    begin
-      if Is_Empty (List (Blades_1)) then
+      if Is_Empty (List (MV1.Blades)) then
          raise MV_Exception with "Multivector.Geometric_Product, MV1 is null.";
       end if;
-      if Is_Empty (List (Blades_2)) then
+      if Is_Empty (List (MV2.Blades)) then
          raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
 
@@ -942,13 +942,16 @@ package body Multivectors is
       Inversion     : Blade_List;
       thisBlade     : Blade.Basis_Blade;
       Cursor_B      : Cursor := Blades.First;
+      Result        : Multivector;
    begin
       while Has_Element (Cursor_B) loop
          thisBlade := Element (Cursor_B);
          Inversion.Append (Blade.Grade_Inversion (thisBlade));
          Next (Cursor_B);
       end loop;
-      return  (MV.Type_Of_MV, Inversion, False);
+      Result := (MV.Type_Of_MV, Inversion, False);
+      Simplify (Result);
+      return Result;
    end Grade_Inversion;
 
    --  -------------------------------------------------------------------------
@@ -1048,7 +1051,7 @@ package body Multivectors is
          end loop;
          Next (Cursor_1);
       end loop;
-      GA_Utilities.Print_Multivector ("Multivectors.Inner_Product metric MV", MV);
+
       Simplify (MV);
       return MV;
 
