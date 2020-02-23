@@ -828,6 +828,10 @@ package body Multivectors is
 
       MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
       MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, Scale);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
+                                      MV1_Fact);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
+                                      MV2_Fact);
 
       Blades_1 := MV1_Fact.Blades;
       Blades_2 := MV2_Fact.Blades;
@@ -844,6 +848,7 @@ package body Multivectors is
          end loop;
          Next (Curs_1);
       end loop;
+      GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, GP.Blades", GP.Blades);
       Simplify (GP);
 
       if Is_Empty (GP.Blades) then

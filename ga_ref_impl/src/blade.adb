@@ -2,7 +2,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
 
 package body Blade is
 
@@ -189,15 +188,14 @@ package body Blade is
         List_A     : Blade_List;
         List_B     : Blade_List;
         Eigen_Vals : constant Real_Vector := Metric.Eigen_Metric (Met);  --  M.getEigenMetric
-        LA_Cursor  : Cursor := List_A.First;
+        LA_Cursor  : Cursor;
         LB_Cursor  : Cursor;
         Result     : Blade_List;
     begin
-        Put_Line ("Blade.Geometric_Product with Metric loading List_A.");
         List_A := To_Eigen_Basis (BA, Met);
-        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product Metric List_A",
-                                     List_A);
         List_B := To_Eigen_Basis (BB, Met);
+
+        LA_Cursor := List_A.First;
         while Has_Element (LA_Cursor) loop
             LB_Cursor := List_B.First;
             while Has_Element (LB_Cursor) loop
@@ -209,7 +207,6 @@ package body Blade is
         end loop;
 
         Simplify (Result);
-        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product Metric Result", Result);
         return To_Metric_Basis (Result, Metric.Matrix (Met));
 
     exception
@@ -588,26 +585,26 @@ package body Blade is
         Value  : Float;
         List_A : Blade_List;
     begin
-        GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
-        GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
-        Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
+--          GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
+--          GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+--          Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
         --  start with just a scalar
         List_A.Append (New_Basis_Blade (Weight (BA)));
         --  convert each 1 bit to a list of blades
-        Put_Line ("Blade.Transform_Basis ist blade added");
+--          Put_Line ("Blade.Transform_Basis 1st blade added");
         while BM /= 0 loop
-            Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
+--              Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
             if (BM and 1) /= 0 then
                 Temp.Clear;
                 for Row in Met'Range (1) loop
-                    Put_Line ("Blade.Transform_Basis Row, I_Col" &
-                               Integer'Image (Row) & Integer'Image (I_Col));
+--                      Put_Line ("Blade.Transform_Basis Row, I_Col" &
+--                                 Integer'Image (Row) & Integer'Image (I_Col));
                     Value := Met (Row, I_Col);
                     if Value /= 0.0 then
                         --  Wedge column Col of the matrix with List_A
                         Curs := List_A.First;
-                        Put_Line ("Blade.Transform_Basis Row, I_Col" &
-                                 Integer'Image (Row) & Integer'Image (I_Col));
+--                          Put_Line ("Blade.Transform_Basis Row, I_Col" &
+--                                   Integer'Image (Row) & Integer'Image (I_Col));
                         while Has_Element (Curs) loop
                             Temp.Append (Outer_Product (Element (Curs),
                                          New_Basis_Blade (Shift_Left (1, Row), Value)));
