@@ -61,12 +61,12 @@ package body Inner_Product_Types is
                 --  not a scalar-blade or a null-blade
                 E_Largest := Largest_Basis_Blade (MV_B);
                 declare
-                    E_Array : array (0 .. K_Grade - 1 ) of Basis_Blade;
+                    E_Array : array (0 .. K_Grade - 1) of Basis_Blade;
                     Idx     : Integer := 0;
                 begin
                     E_Array (0) := New_Basis_Blade (Unsigned_32 (K_Grade));
                     for Index_G in 0 .. K_Grade - 1 loop
-                        Basis_Bit := 2 ** Index_G;
+                        Basis_Bit := Shift_Left (1, Index_G);
                         if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
                             E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
                             Idx := Idx + 1;
@@ -164,7 +164,7 @@ package body Inner_Product_Types is
 
                     Blades_B := Blades (MV_B);
                     for index in Lowest_Bit .. Highest_Bit loop
-                        Basis_Bit := 2 ** Integer (index);
+                        Basis_Bit := Shift_Left (1, Integer (index));
                         if (Bitmap (Blade_E) and Basis_Bit) /= 0 then
                             Basis_Bitmap := Bitmap (Blade_E) xor Basis_Bit;
                             New_Line;

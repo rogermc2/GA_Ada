@@ -475,7 +475,7 @@ package body Multivectors is
 
    function Dual (MV : Multivector) return Multivector is
       use Interfaces;
-      Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
+      Index   : constant Unsigned_32 := Shift_Left (1, Space_Dimension (MV) - 1);
       Dual_MV : Multivector;
    begin
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
@@ -488,7 +488,7 @@ package body Multivectors is
 
    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector is
       use Interfaces;
-      Index   : constant Unsigned_32 := 2 ** Space_Dimension (MV) - 1;
+      Index   : constant Unsigned_32 := Shift_Left (1, Space_Dimension (MV) - 1);
       Dual_MV : Multivector;
    begin
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
@@ -501,7 +501,7 @@ package body Multivectors is
 
    function Dual (MV : Multivector; Dim : Integer) return Multivector is
       use Interfaces;
-      Index   : constant Unsigned_32 := 2 ** Dim - 1;
+      Index   : constant Unsigned_32 := Shift_Left (1, Dim - 1);
       Dual_MV : Multivector;
    begin
       Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
@@ -604,12 +604,14 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
    --  Implements metric == null case of Multivector.java generalInverse
    function General_Inverse (MV : Multivector) return Multivector is
+      use Interfaces;
       use GA_Maths.Float_Array_Package;
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
       Dim        : constant Integer :=  Space_Dimension (MV);
-      BB_Size    : constant Integer := 2 ** Dim;
+      US_Size    : constant Unsigned_32 := Shift_Left (1, Dim);
+      BB_Size    : constant Integer := Integer (US_Size);
       Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
       BBs        : Basis_Blade_Array (1 .. BB_Size);
@@ -665,19 +667,22 @@ package body Multivectors is
 
    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
                               return Multivector is
+      use Interfaces;
       use GA_Maths.Float_Array_Package;
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
       MV_Fact    : Multivector;
       Dim        : Integer;
+      US_Size    : Unsigned_32;
       BB_Size    : Integer;
       Value      : Float;
       Result     : Blade_List;
    begin
       MV_Fact := Inner_Product_Types.Factorize_Multivector (MV, Value);
       Dim := Space_Dimension (MV_Fact);
-      BB_Size := 2 ** Dim;
+      US_Size := Shift_Left (1, Dim);
+      BB_Size := Integer (US_Size);
 
       declare
          Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
