@@ -16,7 +16,7 @@ package body Blade is
     --     function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
     function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
                               return Blade_List;
-    function Transform_Basis (BA : Blade.Basis_Blade; Met : Metric.Metric_Matrix)
+    function Transform_Basis (BA : Blade.Basis_Blade; Met : GA_Maths.Float_Matrix)
                               return Blade_List;
 
     --  -------------------------------------------------------------------------
@@ -513,7 +513,7 @@ package body Blade is
     function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List is
     begin
-        return Transform_Basis (BB, Metric.Inverse_Eigen_Matrix (Met));
+        return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inverse_Eigen_Matrix (Met)));
     end To_Eigen_Basis;
 
     --  ------------------------------------------------------------------------
@@ -543,7 +543,7 @@ package body Blade is
     function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
                               return Blade_List is
     begin
-        return Transform_Basis (BB, Met);
+        return Transform_Basis (BB, GA_Maths.Float_Matrix (Met));
     end To_Metric_Basis;
 
     --  ------------------------------------------------------------------------
@@ -578,7 +578,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
     --  Transform_Basis transforms a Basis_Blade to a new basis
     function Transform_Basis (BA  : Blade.Basis_Blade;
-                              Met : Metric.Metric_Matrix)
+                              Met : GA_Maths.Float_Matrix)
                               return Blade_List is
         use Blade_List_Package;
         BM     : Unsigned_32 := Bitmap (BA);
@@ -589,14 +589,14 @@ package body Blade is
         List_A : Blade_List;
     begin
 --          GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
---          GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
---          Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
+        GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+        Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
         --  start with just a scalar
         List_A.Append (New_Basis_Blade (Weight (BA)));
         --  convert each 1 bit to a list of blades
 --          Put_Line ("Blade.Transform_Basis 1st blade added");
         while BM /= 0 loop
---              Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
+            Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
             if (BM and 1) /= 0 then
                 Temp.Clear;
                 for Row in Met'Range (1) loop
