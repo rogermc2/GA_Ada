@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
+with GA_Utilities;
 
 package body Blade is
 
@@ -194,6 +195,8 @@ package body Blade is
     begin
         List_A := To_Eigen_Basis (BA, Met);
         List_B := To_Eigen_Basis (BB, Met);
+        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
+        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
 
         LA_Cursor := List_A.First;
         while Has_Element (LA_Cursor) loop
@@ -617,7 +620,7 @@ package body Blade is
             BM := BM / 2;  --  Shift BM right by one bit
             I_Col := I_Col + 1;
         end loop;  --  BM /= 0
-
+        Simplify (List_A);
         return List_A;
 
     exception
