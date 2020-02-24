@@ -834,8 +834,12 @@ package body Multivectors is
 
       MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
       MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, F_Scale);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
+                                      MV1);
       GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
                                       MV1_Fact);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
+                                      MV2);
       GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
                                       MV2_Fact);
 
