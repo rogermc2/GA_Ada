@@ -174,6 +174,7 @@ package body Multivector_Analyze_C3GA is
       if theAnalysis.M_Flags.Dual then
          Grade := 5 - Grade;
       end if;
+
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat calling General_Inverse MV",
                                       MV);
       MV_Inverse := General_Inverse (MV, Met);

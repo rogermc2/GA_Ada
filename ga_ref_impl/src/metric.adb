@@ -28,10 +28,10 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
-   function Eigen_Metric (Met : Metric_Record) return Real_Vector is
+   function Eigen_Values (Met : Metric_Record) return Real_Vector is
    begin
-      return Met.Eigen_Metric;
-   end Eigen_Metric;
+      return Met.Eigen_Values;
+   end Eigen_Values;
 
    --  --------------------------------------------------------------------
 
@@ -101,20 +101,20 @@ package body Metric is
 
    function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record is
       use GA_Maths;
-      Eigen_Values    : Real_Vector (Met'Range);  --  m_eigenMetric
-      Eigen_Vectors   : Float_Matrix (Met'Range, Met'Range);
-      State           : Metric_Record (Met'Length (1));
+      Values    : Real_Vector (Met'Range);  --  m_eigenMetric
+      Vectors   : Float_Matrix (Met'Range, Met'Range);
+      State     : Metric_Record (Met'Length (1));
    begin
       if not Is_Symetric (Met) then
          raise Metric_Exception with
            "Matric.New_Metric cannot process non-symmetric matrices.";
       else
-         Eigensystem (Real_Matrix (Met), Eigen_Values, Eigen_Vectors); --  m_eig
-         State.Eigen_Metric := Eigen_Values;
-         State.Eigen_Vectors := Metric_Matrix (Eigen_Vectors);
-         State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Eigen_Vectors));
-         For row in Eigen_Values'Range loop
-            State.Matrix (row, row) := Eigen_Values (row);
+         Eigensystem (Real_Matrix (Met), Values, Vectors); --  m_eig
+         State.Eigen_Values := Values;
+         State.Eigen_Vectors := Metric_Matrix (Vectors);
+         State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Vectors));
+         For row in Values'Range loop
+            State.Matrix (row, row) := Values (row);
          end loop;
 
          State.Diagonal := Is_Diagonal (Met);

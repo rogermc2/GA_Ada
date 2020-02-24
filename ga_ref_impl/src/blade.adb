@@ -187,7 +187,7 @@ package body Blade is
         use Blade_List_Package;
         List_A     : Blade_List;
         List_B     : Blade_List;
-        Eigen_Vals : constant Real_Vector := Metric.Eigen_Metric (Met);  --  M.getEigenMetric
+        Eigen_Vals : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
         LA_Cursor  : Cursor;
         LB_Cursor  : Cursor;
         Result     : Blade_List;

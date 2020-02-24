@@ -681,7 +681,7 @@ package body Multivectors is
    begin
       MV_Fact := Inner_Product_Types.Factorize_Multivector (MV, Value);
       Dim := Space_Dimension (MV_Fact);
-      US_Size := Shift_Left (1, Dim);
+      US_Size := Shift_Left (1, Dim - 1);
       BB_Size := Integer (US_Size);
 
       declare
@@ -692,6 +692,8 @@ package body Multivectors is
          aBlade     : Basis_Blade;
          GP_List    : Blade_List;
       begin
+         GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+
          for index in BBs'Range loop
             BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
          end loop;
@@ -704,9 +706,11 @@ package body Multivectors is
             for index in BBs'Range loop
 --                 Put_Line ("Multivector.General_Inverse Metric index: " &
 --                             Integer'Image (index));
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
                GP_List := Geometric_Product (aBlade, BBs (index), Met);
---                 GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
---                                                GP_List);
+               GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+                                              GP_List);
                Add_To_Matrix (Mat, BBs (index), GP_List);
             end loop;
             Next (BL_Curs);
@@ -830,10 +834,10 @@ package body Multivectors is
 
       MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
       MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, F_Scale);
---        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
---                                        MV1_Fact);
---        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
---                                        MV2_Fact);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
+                                      MV1_Fact);
+      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
+                                      MV2_Fact);
 
       Blades_1 := MV1_Fact.Blades;
       Blades_2 := MV2_Fact.Blades;
@@ -1050,7 +1054,7 @@ package body Multivectors is
          Cursor_2 := List_2.First;
          while Has_Element (Cursor_2) loop
             B2 := Element (Cursor_2);
-            Blades_IP := Blade.Inner_Product (B1, B2, Metric.Eigen_Metric (Met), Cont);
+            Blades_IP := Blade.Inner_Product (B1, B2, Metric.Eigen_Values (Met), Cont);
             if Blade.Weight (Blades_IP) /= 0.0 then
                MV.Blades.Append (Blades_IP);
             end if;

@@ -14,7 +14,7 @@ package Metric is
    function C3_Eigen_Matrix return Metric_Matrix;
    function C3_Inverse_Eigen_Matrix return Metric_Matrix;
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
-   function Eigen_Metric (Met : Metric_Record) return Real_Vector;
+   function Eigen_Values (Met : Metric_Record) return Real_Vector;
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
    function Is_Diagonal (Met : Metric_Record) return Boolean;
    function Is_Euclidean (Met : Metric_Record) return Boolean;
@@ -31,7 +31,7 @@ private
       Diagonal             : Boolean := False;
       Euclidean            : Boolean := False;
       Anti_Euclidean       : Boolean := False;
-      Eigen_Metric         : Real_Vector (1 .. Dim);  --  m_eigenMetric
+      Eigen_Values         : Real_Vector (1 .. Dim);  --  m_eigenMetric
       Eigen_Vectors        : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_eig.getV()
       Inverse_Eigen_Matrix : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_invEigMatrix
    end record;
