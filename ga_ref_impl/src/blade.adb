@@ -12,8 +12,6 @@ package body Blade is
                                    return Basis_Blade;
     function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List;
-    --     function To_Eigen_Basis (BL : Blade_List) return Blade_List;
-    --     function To_Metric_Basis (BB : Basis_Blade) return Blade_List;
     function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
                               return Blade_List;
     function Transform_Basis (BA : Blade.Basis_Blade; Met : GA_Maths.Float_Matrix)
@@ -543,6 +541,7 @@ package body Blade is
     function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
                               return Blade_List is
     begin
+        GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
         return Transform_Basis (BB, GA_Maths.Float_Matrix (Met));
     end To_Metric_Basis;
 
@@ -556,8 +555,12 @@ package body Blade is
         TL_Cursor      : Cursor;
         Result         : Blade_List;
     begin
+        GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
         while Has_Element (BL_Cursor) loop
+            Tmp_List.Clear;
+            GA_Utilities.Print_Blade ("Blade.To_Metric_Basis blade", Element (BL_Cursor));
             Tmp_List := To_Metric_Basis (Element (BL_Cursor), Met);
+            GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis Tmp_List", Tmp_List);
             TL_Cursor := Tmp_List.First;
             while Has_Element (TL_Cursor) loop
                 Result.Append (Element (TL_Cursor));
@@ -577,18 +580,20 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
     --  Transform_Basis transforms a Basis_Blade to a new basis
+    --  Based on Metric.java ArrayList transform(BasisBlade a, DoubleMatrix2D M)
     function Transform_Basis (BA  : Blade.Basis_Blade;
                               Met : GA_Maths.Float_Matrix)
                               return Blade_List is
         use Blade_List_Package;
+        List_A : Blade_List;
         BM     : Unsigned_32 := Bitmap (BA);
         Curs   : Cursor;
         Temp   : Blade_List;
         I_Col  : Integer := 1;
         Value  : Float;
-        List_A : Blade_List;
     begin
---          GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
+        New_Line;
+        GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
         GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
         Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
         --  start with just a scalar
@@ -621,6 +626,7 @@ package body Blade is
             I_Col := I_Col + 1;
         end loop;  --  BM /= 0
         Simplify (List_A);
+        GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
         return List_A;
 
     exception
