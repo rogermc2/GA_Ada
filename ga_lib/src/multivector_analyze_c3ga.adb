@@ -326,8 +326,10 @@ package body Multivector_Analyze_C3GA is
 
          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
          LC_NI_MV_Inverse := General_Inverse (LC_NI_MV, Metric.C3_Metric);
+         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 1");
          --  location is normalized dual sphere
          Location := Geometric_Product (MV_X, LC_NI_MV_Inverse, Metric.C3_Metric);  --  _location
+         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 2");
          Location := Geometric_Product
            (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Metric.C3_Metric));
          --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
@@ -336,6 +338,7 @@ package body Multivector_Analyze_C3GA is
          --                    ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
 
          NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Metric.C3_Metric);
+         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 3");
          Radius_Sq := Scalar_Part
            (Geometric_Product (MV_X, Grade_Inversion (MV_X), Metric.C3_Metric)) / NI_Xsq;
          if Radius_Sq < 0.0 then
@@ -437,8 +440,10 @@ package body Multivector_Analyze_C3GA is
       LC_NI_MV := Left_Contraction (C3GA.ni, MV, Metric.C3_Metric);
       Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling General_Inverse");
       LC_NI_MV_Inv := General_Inverse (LC_NI_MV, Metric.C3_Metric);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling Geometric_Product 1");
       Location :=
         Geometric_Product (MV, LC_NI_MV_Inv, Metric.C3_Metric);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling Geometric_Product 2");
       Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Metric.C3_Metric));
       Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
       Weight := Norm_E (Left_Contraction (C3GA.no, Attitude, Metric.C3_Metric));

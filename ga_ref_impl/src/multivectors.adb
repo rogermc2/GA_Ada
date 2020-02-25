@@ -7,7 +7,6 @@ with Maths;
 
 with Bits;
 with GA_Utilities;
-with Inner_Product_Types;
 
 package body Multivectors is
 
@@ -249,14 +248,14 @@ package body Multivectors is
       Row     : Integer;
       Col     : Integer;
    begin
-         Row := Bits.Highest_One_Bit (Bitmap (BG)) + 1;
-         Col := Bits.Highest_One_Bit (Bitmap (BB)) + 1;
+      Row := Bits.Highest_One_Bit (Bitmap (BG)) + 1;
+      Col := Bits.Highest_One_Bit (Bitmap (BB)) + 1;
 
---                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
---                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
---                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
---                Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
---                            Integer'Image (Row) & Integer'Image (Col));
+      --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
+      --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
+      --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
+      --                Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
+      --                            Integer'Image (Row) & Integer'Image (Col));
       M (Row, Col) := M (Row, Col) + Weight (BG);
 
    exception
@@ -444,7 +443,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Cosine_Series (MV : Multivector; Order : Integer)
-                            return Multivector is
+                           return Multivector is
       use Interfaces;
       Scaled    : constant Multivector := MV;
       Scaled_GP : Multivector;
@@ -620,9 +619,9 @@ package body Multivectors is
       Value      : Float;
       Result     : Blade_List;
    begin
---        Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
---        Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
---        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+      --        Put_Line ("Multivector.General_Inverse Dim" & Integer'Image (Dim));
+      --        Put_Line ("Multivector.General_Inverse BB_Size" & Integer'Image (BB_Size));
+      --        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
       --  create all unit basis blades for 'Dim'
       for index in BBs'Range loop
          BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
@@ -634,16 +633,16 @@ package body Multivectors is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          for index in BBs'Range loop
---              GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", Geometric_Product (aBlade, BBs (index)));
+            --              GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", Geometric_Product (aBlade, BBs (index)));
             Add_To_Matrix (Mat, BBs (index),
                            Geometric_Product (aBlade, BBs (index)));
          end loop;
          Next (Curs);
       end loop;
 
---        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
+      --        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
       Mat_Inv := Inverse (Mat);
---        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
+      --        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
       --  reconstruct multivector from first column of matrix
       --          for Row in BBs'Range loop
       for Row in Mat_Inv'Range (1) loop
@@ -653,8 +652,8 @@ package body Multivectors is
             Result.Append (BBs (Row));
          end if;
       end loop;
---        GA_Utilities.Print_Multivector ("Multivector.General_Inverse Result",
---                                        New_Multivector (Result));
+      --        GA_Utilities.Print_Multivector ("Multivector.General_Inverse Result",
+      --                                        New_Multivector (Result));
       return New_Multivector (Result);
 
    exception
@@ -666,67 +665,70 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
-                              return Multivector is
+                             return Multivector is
       use Interfaces;
       use GA_Maths.Float_Array_Package;
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      MV_Fact    : Multivector;
       Dim        : Integer;
       US_Size    : Unsigned_32;
       BB_Size    : Integer;
       Value      : Float;
-      Result     : Blade_List;
+      Blades     : Blade_List;
+      Result     : Multivector;
    begin
-      MV_Fact := Inner_Product_Types.Factorize_Multivector (MV, Value);
-      Dim := Space_Dimension (MV_Fact);
-      US_Size := Shift_Left (1, Dim - 1);
-      BB_Size := Integer (US_Size);
+      GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+      if Is_Null (MV) then
+         Result := MV;
+      else
+         Dim := Space_Dimension (MV);
+         US_Size := Shift_Left (1, Dim - 1);
+         BB_Size := Integer (US_Size);
 
-      declare
-         Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-         Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-         BBs        : Basis_Blade_Array (1 .. BB_Size);
-         BL_Curs    : Cursor := MV.Blades.First;
-         aBlade     : Basis_Blade;
-         GP_List    : Blade_List;
-      begin
-         GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
-
-         for index in BBs'Range loop
-            BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
-         end loop;
-
-      --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
-      --  the coordinates of another multivector 'x' (stored in a vector)
-      --  would result in the geometric product of 'Mat' and 'x'
-         while Has_Element (BL_Curs) loop
-            aBlade := Element (BL_Curs);
+         declare
+            Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+            Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
+            BBs        : Basis_Blade_Array (1 .. BB_Size);
+            BL_Curs    : Cursor := MV.Blades.First;
+            aBlade     : Basis_Blade;
+            GP_List    : Blade_List;
+         begin
             for index in BBs'Range loop
---                 Put_Line ("Multivector.General_Inverse Metric index: " &
---                             Integer'Image (index));
-               GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
-               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
-               GP_List := Geometric_Product (aBlade, BBs (index), Met);
-               GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
-                                              GP_List);
-               Add_To_Matrix (Mat, BBs (index), GP_List);
+               BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
             end loop;
-            Next (BL_Curs);
-         end loop;
---           Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
-         Mat_Inv := Inverse (Mat);
-         for Row in BBs'Range loop
-            Value := Mat_Inv (Row, 1);
-            if Value /= 0.0 then
-               Update_Blade (BBs (Row), Value);
-               Result.Append (BBs (Row));
-            end if;
-         end loop;
-      end; --  declare block
 
-      return New_Multivector (Result);
+            --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
+            --  the coordinates of another multivector 'x' (stored in a vector)
+            --  would result in the geometric product of 'Mat' and 'x'
+            while Has_Element (BL_Curs) loop
+               aBlade := Element (BL_Curs);
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
+               for index in BBs'Range loop
+                  --                 Put_Line ("Multivector.General_Inverse Metric index: " &
+                  --                             Integer'Image (index));
+                  GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
+                  GP_List := Geometric_Product (aBlade, BBs (index), Met);
+                  GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+                                                 GP_List);
+                  Add_To_Matrix (Mat, BBs (index), GP_List);
+               end loop;
+               Next (BL_Curs);
+            end loop;
+            --           Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
+            Mat_Inv := Inverse (Mat);
+            for Row in BBs'Range loop
+               Value := Mat_Inv (Row, 1);
+               if Value /= 0.0 then
+                  Update_Blade (BBs (Row), Value);
+                  Blades.Append (BBs (Row));
+               end if;
+            end loop;
+            Result := New_Multivector (Blades);
+         end; --  declare block
+      end if;
+
+      return Result;
 
    exception
       when others =>
@@ -809,13 +811,9 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                                return Multivector is
+                               return Multivector is
       use Blade;
       use Blade_List_Package;
-      MV1_Fact  : Multivector;
-      MV2_Fact  : Multivector;
-      Scale     : Float;
-      F_Scale   : Float;
       Blades_1  : Blade_List;
       Blades_2  : Blade_List;
       Blades_GP : Blade_List;
@@ -832,19 +830,13 @@ package body Multivectors is
          raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
 
-      MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
-      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, F_Scale);
       GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
                                       MV1);
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1_Fact",
-                                      MV1_Fact);
       GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
                                       MV2);
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2_Fact",
-                                      MV2_Fact);
 
-      Blades_1 := MV1_Fact.Blades;
-      Blades_2 := MV2_Fact.Blades;
+      Blades_1 := MV1.Blades;
+      Blades_2 := MV2.Blades;
       Curs_1 := Blades_1.First;
 
       while Has_Element (Curs_1) loop
@@ -858,7 +850,7 @@ package body Multivectors is
          end loop;
          Next (Curs_1);
       end loop;
---        GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, GP.Blades", GP.Blades);
+      --        GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, GP.Blades", GP.Blades);
       Simplify (GP);
 
       if Is_Empty (GP.Blades) then
@@ -878,7 +870,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Get_Blade (MV : Multivector; Index : Interfaces.Unsigned_32)
-                        return Blade.Basis_Blade is
+                       return Blade.Basis_Blade is
       use Blade;
       use Blade_List_Package;
       Blades    : constant Blade_List := MV.Blades;
@@ -922,7 +914,7 @@ package body Multivectors is
    --  0 is returned for null Multivectors.
    --  False is returned if the Multivector is not homogeneous.
    function Grade (MV : Multivector; theGrade : out Integer)
-                    return Boolean is
+                   return Boolean is
       use Blade;
       use Blade_List_Package;
       Blades    : constant Blade_List := MV.Blades;
@@ -993,7 +985,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
-                            return Multivector is
+                           return Multivector is
       use Blade;
       use Blade_List_Package;
       B1       : Basis_Blade;
@@ -1034,8 +1026,6 @@ package body Multivectors is
                            Cont     : Blade.Contraction_Type) return Multivector is
       use Blade;
       use Blade_List_Package;
-      MV1_Fact  : Multivector;
-      MV2_Fact  : Multivector;
       B1        : Blade.Basis_Blade;
       B2        : Blade.Basis_Blade;
       List_1    : Blade_List;
@@ -1043,14 +1033,10 @@ package body Multivectors is
       Cursor_1  : Cursor;
       Cursor_2  : Cursor;
       Blades_IP : Blade.Basis_Blade;
-      Scale     : Float;
       MV        : Multivector;
    begin
-      MV1_Fact := Inner_Product_Types.Factorize_Multivector (MV1, Scale);
-      MV2_Fact := Inner_Product_Types.Factorize_Multivector (MV2, Scale);
-
-      List_1 := MV1_Fact.Blades;
-      List_2 := MV2_Fact.Blades;
+      List_1 := MV1.Blades;
+      List_2 := MV2.Blades;
       Cursor_1 := List_1.First;
 
       while Has_Element (Cursor_1) loop
@@ -1172,7 +1158,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                               return Multivector is
+                              return Multivector is
    begin
       return  Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
    end Left_Contraction;
@@ -1187,7 +1173,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
-                                 return Ada.Strings.Unbounded.Unbounded_String is
+                                return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade;
       use Blade_List_Package;
@@ -1644,7 +1630,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                             return float is
+                            return float is
    begin
       return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
    end Scalar_Product;
@@ -1904,7 +1890,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
-                             return Multivector is
+                            return Multivector is
       Rev          : constant Multivector := Reverse_MV (MV);
       S_Product    : constant Float := Scalar_Product (MV, Rev, Met);
    begin

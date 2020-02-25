@@ -558,9 +558,9 @@ package body Blade is
         GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
         while Has_Element (BL_Cursor) loop
             Tmp_List.Clear;
-            GA_Utilities.Print_Blade ("Blade.To_Metric_Basis blade", Element (BL_Cursor));
+--              GA_Utilities.Print_Blade ("Blade.To_Metric_Basis blade", Element (BL_Cursor));
             Tmp_List := To_Metric_Basis (Element (BL_Cursor), Met);
-            GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis Tmp_List", Tmp_List);
+--              GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis Tmp_List", Tmp_List);
             TL_Cursor := Tmp_List.First;
             while Has_Element (TL_Cursor) loop
                 Result.Append (Element (TL_Cursor));
@@ -593,15 +593,15 @@ package body Blade is
         Value  : Float;
     begin
         New_Line;
-        GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
-        GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
-        Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
+--          GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
+--          GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+--          Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
         --  start with just a scalar
         List_A.Append (New_Basis_Blade (Weight (BA)));
         --  convert each 1 bit to a list of blades
 --          Put_Line ("Blade.Transform_Basis 1st blade added");
         while BM /= 0 loop
-            Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
+--              Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
             if (BM and 1) /= 0 then
                 Temp.Clear;
                 for Row in Met'Range (1) loop
@@ -626,7 +626,7 @@ package body Blade is
             I_Col := I_Col + 1;
         end loop;  --  BM /= 0
         Simplify (List_A);
-        GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
+--          GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
         return List_A;
 
     exception

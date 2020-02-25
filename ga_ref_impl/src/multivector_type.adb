@@ -109,12 +109,12 @@ package body Multivector_Type is
 
             Versor_Inv := Versor_Inverse (MV, aMetric);
             Grade_Inv := Grade_Inversion (MV);
---              GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
+            GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init Grade_Inv", Grade_Inv);
             VG_Inv := Geometric_Product (Versor_Inv, Grade_Inv, aMetric);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init VG_Inv", VG_Inv);
             Multivectors.Compress (VG_Inv, Epsilon);
---              GA_Utilities.Print_Multivector ("Multivector_Type.Init Compressed VG_Inv", VG_Inv);
+--                                     _  GA_Utilities.Print_Multivector ("Multivector_Type.Init Compressed VG_Inv", VG_Inv);
             GV_Inv := Geometric_Product (Grade_Inv, Versor_Inv,aMetric);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init GV_Inv", GV_Inv);
             Multivectors.Compress (GV_Inv, Epsilon);
