@@ -703,14 +703,14 @@ package body Multivectors is
             --  would result in the geometric product of 'Mat' and 'x'
             while Has_Element (BL_Curs) loop
                aBlade := Element (BL_Curs);
-               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
+--                 GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
                for index in BBs'Range loop
                   --                 Put_Line ("Multivector.General_Inverse Metric index: " &
                   --                             Integer'Image (index));
-                  GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
+--                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
                   GP_List := Geometric_Product (aBlade, BBs (index), Met);
-                  GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
-                                                 GP_List);
+--                    GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+--                                                   GP_List);
                   Add_To_Matrix (Mat, BBs (index), GP_List);
                end loop;
                Next (BL_Curs);
@@ -830,10 +830,10 @@ package body Multivectors is
          raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
 
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
-                                      MV1);
-      GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
-                                      MV2);
+--        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
+--                                        MV1);
+--        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
+--                                        MV2);
 
       Blades_1 := MV1.Blades;
       Blades_2 := MV2.Blades;
@@ -842,9 +842,15 @@ package body Multivectors is
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          Curs_2 := Blades_2.First;
+--           GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_1",
+--                                      Blade_1);
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
+--              GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_2",
+--                                        Blade_2);
             Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
+--              GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, Blades_GP",
+--                                              Blades_GP);
             Add_Blades (GP.Blades, Blades_GP);
             Next (Curs_2);
          end loop;

@@ -191,10 +191,12 @@ package body Blade is
       LB_Cursor  : Cursor;
       Result     : Blade_List;
    begin
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA", BA);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB", BB);
       List_A := To_Eigen_Basis (BA, Met);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
       List_B := To_Eigen_Basis (BB, Met);
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
 
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
@@ -228,7 +230,7 @@ package body Blade is
       Index       : Integer range 1 .. Vals_Length := 1;
       Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
    begin
-      GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
       while BM /= 0 and then Index <= Vals_Length loop
          if (BM and 1) /= 0 then
             --  This basis vector is non-zero
@@ -255,12 +257,12 @@ package body Blade is
       OP_Blade : Basis_Blade;
       Sign     : Float;
    begin
-      if (BA.Bitmap xor BB.Bitmap) = 38 then
-         Put_Line ("Blade.GP_OP, BA.Bitmap" & Unsigned_32'Image (BA.Bitmap));
-         Put_Line ("Blade.GP_OP, BB.Bitmap" & Unsigned_32'Image (BB.Bitmap));
-         Put_Line ("Blade.GP_OP, And Bitmaps" & Unsigned_32'Image (BA.Bitmap and BB.Bitmap));
-         Put_Line ("Blade.GP_OP, Xor Bitmaps" & Unsigned_32'Image (BA.Bitmap xor BB.Bitmap));
-      end if;
+--        if (BA.Bitmap xor BB.Bitmap) = 38 then
+--           Put_Line ("Blade.GP_OP, BA.Bitmap" & Unsigned_32'Image (BA.Bitmap));
+--           Put_Line ("Blade.GP_OP, BB.Bitmap" & Unsigned_32'Image (BB.Bitmap));
+--           Put_Line ("Blade.GP_OP, And Bitmaps" & Unsigned_32'Image (BA.Bitmap and BB.Bitmap));
+--           Put_Line ("Blade.GP_OP, Xor Bitmaps" & Unsigned_32'Image (BA.Bitmap xor BB.Bitmap));
+--        end if;
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          --  BA and BB are parallel; so their volume is zero
          OP_Blade  := New_Basis_Blade (0, 0.0);  --  return zero blade
@@ -607,8 +609,8 @@ package body Blade is
    begin
       New_Line;
       --          GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
-      --          GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
-      --          Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
+--                GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+--                Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
       --  start with just a scalar
       List_A.Append (New_Basis_Blade (Weight (BA)));
       --  convert each 1 bit to a list of blades
@@ -617,7 +619,7 @@ package body Blade is
          --              Put_Line ("Blade.Transform_Basis BM" & Unsigned_32'Image (BM));
          if (BM and 1) /= 0 then
             Temp.Clear;
-            for Row in Met'Range (1) loop
+            for Row in 1 .. Met'Length (1) loop
                --                      Put_Line ("Blade.Transform_Basis Row, I_Col" &
                --                                 Integer'Image (Row) & Integer'Image (I_Col));
                Value := Met (Row, I_Col);
@@ -628,7 +630,7 @@ package body Blade is
                   --                                   Integer'Image (Row) & Integer'Image (I_Col));
                   while Has_Element (Curs) loop
                      Temp.Append (Outer_Product (Element (Curs),
-                                  New_Basis_Blade (Shift_Left (1, Row), Value)));
+                                  New_Basis_Blade (Shift_Left (1, Row - 1), Value)));
                      Next (Curs);
                   end loop;
                   List_A := Temp;
