@@ -218,23 +218,23 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (BA, BB : Basis_Blade; Met : Real_Vector)
+    function Geometric_Product (BA, BB : Basis_Blade; Eigen_Vals : Real_Vector)
                                 return Basis_Blade is
     --  BM is the meet (bitmap of annihilated vectors)
     --  Only retain vectors commomt to both blades
-        BM         : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-        Met_Length : constant Integer := Met'Length;
-        Index      : Integer range 1 .. Met_Length := 1;
-        Result     : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
+        BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
+        Vals_Length : constant Integer := Eigen_Vals'Length;
+        Index       : Integer range 1 .. Vals_Length := 1;
+        Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
-        while BM /= 0 and then Index <= Met_Length loop
+        while BM /= 0 and then Index <= Vals_Length loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
-                Result.Weight := Result.Weight * Met (Index);
+                Result.Weight := Result.Weight * Eigen_Vals (Index);
             end if;
             --  Move right to next basis vector indicator
             BM := Shift_Right (BM, 1);
-            if Index < Met_Length then
+            if Index < Vals_Length then
                 Index := Index + 1;
             end if;
         end loop;
@@ -541,7 +541,7 @@ package body Blade is
     function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
                               return Blade_List is
     begin
-        GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
+--          GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
         return Transform_Basis (BB, GA_Maths.Float_Matrix (Met));
     end To_Metric_Basis;
 
