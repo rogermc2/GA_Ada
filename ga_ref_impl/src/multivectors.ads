@@ -98,7 +98,7 @@ package Multivectors is
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    function New_Circle return Circle;
    function New_Dual_Plane return Dual_Plane;
-   function New_Line return Line;
+   function New_MV_Line return Line;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;

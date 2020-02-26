@@ -570,7 +570,7 @@ package body Blade is
       TL_Cursor      : Cursor;
       Result         : Blade_List;
    begin
-      GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
+--        GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
       while Has_Element (BL_Cursor) loop
          Tmp_List.Clear;
          --              GA_Utilities.Print_Blade ("Blade.To_Metric_Basis blade", Element (BL_Cursor));
@@ -607,7 +607,7 @@ package body Blade is
       I_Col  : Integer := 1;
       Value  : Float;
    begin
-      New_Line;
+--        New_Line;
       --          GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
 --                GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
 --                Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));

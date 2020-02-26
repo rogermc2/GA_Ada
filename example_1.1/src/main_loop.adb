@@ -88,7 +88,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --          V2                : Multivectors.Vector;
 
         Point_Position      : Normalized_Point := New_Normalized_Point;
-        aLine               : Multivectors.Line :=  Multivectors.New_Line;
+        aLine               : Multivectors.Line :=  Multivectors.New_MV_Line;
         aCircle             : Multivectors.Circle :=  Multivectors.New_Circle;
         aDual_Plane         : Multivectors.Dual_Plane := Multivectors.New_Dual_Plane;
         --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);

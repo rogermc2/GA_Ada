@@ -1196,7 +1196,7 @@ package body Multivectors is
             declare
                Blade_String : constant String := To_String (Blade_UBS);
             begin
-               New_Line;
+--                 New_Line;
                if Blade_Cursor = Blades.First then
                   theString := To_Unbounded_String (Blade_String);
                else
@@ -1309,12 +1309,12 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function New_Line return Line is
+   function New_MV_Line return Line is
       L : Line;
    begin
       L.Type_Of_MV := MV_Line;
       return L;
-   end New_Line;
+   end New_MV_Line;
 
    --  -------------------------------------------------------------------------
 
