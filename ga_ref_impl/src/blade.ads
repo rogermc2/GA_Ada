@@ -33,21 +33,22 @@ package Blade is
      Ada.Containers.Vectors (Natural, Unbounded_String);
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
-    function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
+   function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
 
-    package Blade_Sort_Package is new
-      Blade_List_Package.Generic_Sorting ("<");
+   package Blade_Sort_Package is new
+     Blade_List_Package.Generic_Sorting ("<");
 
    type Contraction_Type is (Left_Contraction, Right_Contraction,
                              Hestenes_Inner_Product,
                              Modified_Hestenes_Inner_Product);
+   Blade_Exception : Exception;
 
    function "*" (S : Float; BB : Basis_Blade) return Basis_Blade;
    function "*" (BB : Basis_Blade; S : Float) return Basis_Blade;
 
    procedure Add_Blade (Blades : in out Blade_List; BB : Basis_Blade);
    procedure Add_Blade (Blades : in out Blade_Vector;
-                        Index : Natural; BB : Basis_Blade);
+                        Index  : Natural; BB : Basis_Blade);
    procedure Add_Blades (Blades : in out Blade_List; More_Blades : Blade_List);
    function BB_First (BB_List : Blade_List) return Basis_Blade;
    function BB_Item (BB_List : Blade_List; Index : Integer) return Basis_Blade;
@@ -66,7 +67,7 @@ package Blade is
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
                            return Basis_Blade;
    function Inner_Product (BA, BB : Basis_Blade; Met : Real_Vector;
-                           Cont : Contraction_Type) return Basis_Blade;
+                           Cont   : Contraction_Type) return Basis_Blade;
    function List_Length (Blades : Blade_List) return Integer;
    function Minus_1_Power (Power : Integer) return Integer;
    function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
@@ -89,7 +90,7 @@ package Blade is
    procedure Simplify (Blades : in out Blade_List);
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
    procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32);
-   procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32;
+   procedure Update_Blade (BB     : in out Basis_Blade; Bitmap : Unsigned_32;
                            Weight : Float);
    function Weight (BB : Basis_Blade) return Float;
 
