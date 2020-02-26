@@ -633,7 +633,8 @@ package body Multivectors is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          for index in BBs'Range loop
-            --              GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", Geometric_Product (aBlade, BBs (index)));
+            --              GA_Utilities.Print_Blade ("Multivector.General_Inverse GP",
+--              Geometric_Product (aBlade, BBs (index)));
             Add_To_Matrix (Mat, BBs (index),
                            Geometric_Product (aBlade, BBs (index)));
          end loop;
@@ -671,12 +672,12 @@ package body Multivectors is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      Dim        : Integer;
-      US_Size    : Unsigned_32;
-      BB_Size    : Integer;
-      Value      : Float;
-      Blades     : Blade_List;
-      Result     : Multivector;
+      Dim          : Integer;
+      US_Size      : Unsigned_32;
+      BB_Max_Index : Integer;
+      Value        : Float;
+      Blades       : Blade_List;
+      Result       : Multivector;
    begin
       GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
       if Is_Null (MV) then
@@ -684,18 +685,22 @@ package body Multivectors is
       else
          Dim := Space_Dimension (MV);
          US_Size := Shift_Left (1, Dim - 1);
-         BB_Size := Integer (US_Size);
+         BB_Max_Index := Integer (US_Size) - 1;
 
          declare
-            Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-            Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-            BBs        : Basis_Blade_Array (1 .. BB_Size);
+            Mat        : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
+            Mat_Inv    : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
+            BBs        : Basis_Blade_Array (0 .. BB_Max_Index);
             BL_Curs    : Cursor := MV.Blades.First;
             aBlade     : Basis_Blade;
             GP_List    : Blade_List;
          begin
+            --  The BBs array contains incremental bitmaps in the range 0 - 31
+            --  of weight 1.0
             for index in BBs'Range loop
-               BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
+               BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
+--                 GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)",
+--                                           BBs (index));
             end loop;
 
             --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
@@ -703,19 +708,25 @@ package body Multivectors is
             --  would result in the geometric product of 'Mat' and 'x'
             while Has_Element (BL_Curs) loop
                aBlade := Element (BL_Curs);
---                 GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
+               --  GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
+               --  for each bitmap
                for index in BBs'Range loop
                   --                 Put_Line ("Multivector.General_Inverse Metric index: " &
                   --                             Integer'Image (index));
 --                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
                   GP_List := Geometric_Product (aBlade, BBs (index), Met);
---                    GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
---                                                   GP_List);
-                  Add_To_Matrix (Mat, BBs (index), GP_List);
+                  if not Is_Empty (GP_List) then
+                     GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
+                                                    BBs (index));
+                     GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+                                                    GP_List);
+                     Add_To_Matrix (Mat, BBs (index), GP_List);
+                  end if;
                end loop;
                Next (BL_Curs);
             end loop;
-            --           Put_Line ("Multivector.General_Inverse Metric  matrix 'Mat' constructed");
+--              GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
+--                                         Mat);
             Mat_Inv := Inverse (Mat);
             for Row in BBs'Range loop
                Value := Mat_Inv (Row, 1);
@@ -727,7 +738,9 @@ package body Multivectors is
             Result := New_Multivector (Blades);
          end; --  declare block
       end if;
-
+      Simplify (Result);
+      GA_Utilities.Print_Multivector ("Multivector.General_Inverse Metric Result",
+                                       Result);
       return Result;
 
    exception
