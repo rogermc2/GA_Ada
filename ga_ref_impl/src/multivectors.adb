@@ -699,21 +699,22 @@ package body Multivectors is
             --  of weight 1.0
             for index in BBs'Range loop
                BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
---                 GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)",
---                                           BBs (index));
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)",
+                                         BBs (index));
             end loop;
 
             --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
             --  the coordinates of another multivector 'x' (stored in a vector)
             --  would result in the geometric product of 'Mat' and 'x'
             while Has_Element (BL_Curs) loop
+               --  for each blade of BL
                aBlade := Element (BL_Curs);
-               --  GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
                --  for each bitmap
                for index in BBs'Range loop
                   --                 Put_Line ("Multivector.General_Inverse Metric index: " &
                   --                             Integer'Image (index));
---                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
+                  GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
                   GP_List := Geometric_Product (aBlade, BBs (index), Met);
                   if not Is_Empty (GP_List) then
                      GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
