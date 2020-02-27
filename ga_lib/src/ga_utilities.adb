@@ -95,6 +95,26 @@ package body GA_Utilities is
         New_Line;
     end Print_Matrix;
 
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Matrix (Name  : String; aMatrix : Real_Matrix;
+                           Start, Last : GA_Maths.Array_I2) is
+        use GA_Maths;
+   begin
+        if Name /= "" then
+            Put_Line (Name & ":");
+        end if;
+        Put_Line ("Size:" & Integer'Image (aMatrix'Length) & " X"
+                  & Integer'Image (aMatrix'Length (2)));
+        for Row in Start (1) .. Last (1) loop
+            for Column in  Start (2) .. Last (2) loop
+                Put (Float_3'Image (Float_3 (aMatrix (Row, Column))) & "   ");
+            end loop;
+            New_Line;
+        end loop;
+        New_Line;
+   end Print_Matrix;
+
     --  ------------------------------------------------------------------------
 
     procedure Print_Metric (Name : String; aMetric : Metric.Metric_Record) is
