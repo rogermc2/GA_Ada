@@ -248,14 +248,14 @@ package body Multivectors is
       Row     : Integer;
       Col     : Integer;
    begin
-      Row := Bits.Highest_One_Bit (Bitmap (BG)) + 1;
-      Col := Bits.Highest_One_Bit (Bitmap (BB)) + 1;
+      Row := Bits.Highest_One_Bit (Bitmap (BG));
+      Col := Bits.Highest_One_Bit (Bitmap (BB));
 
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
       --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
       --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
-      --                Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
-      --                            Integer'Image (Row) & Integer'Image (Col));
+     Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
+                Integer'Image (Row) & Integer'Image (Col));
       M (Row, Col) := M (Row, Col) + Weight (BG);
 
    exception
@@ -611,9 +611,10 @@ package body Multivectors is
       Dim        : constant Integer :=  Space_Dimension (MV);
       US_Size    : constant Unsigned_32 := Shift_Left (1, Dim);
       BB_Size    : constant Integer := Integer (US_Size);
-      Mat        : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-      Mat_Inv    : Float_Matrix (1 .. BB_Size, 1 .. BB_Size) := (others => (others => 0.0));
-      BBs        : Basis_Blade_Array (1 .. BB_Size);
+      Max_Index  : constant Integer := BB_Size - 1;
+      Mat        : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
+      Mat_Inv    : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
+      BBs        : Basis_Blade_Array (0 .. Max_Index);
       Curs       : Cursor := MV.Blades.First;
       aBlade     : Basis_Blade;
       Value      : Float;
@@ -624,7 +625,7 @@ package body Multivectors is
       --        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
       --  create all unit basis blades for 'Dim'
       for index in BBs'Range loop
-         BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
+         BBs (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
       end loop;
 
       --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
@@ -715,6 +716,7 @@ package body Multivectors is
                   --                 Put_Line ("Multivector.General_Inverse Metric index: " &
                   --                             Integer'Image (index));
                   GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs (index)", BBs (index));
+                  --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
                   GP_List := Geometric_Product (aBlade, BBs (index), Met);
                   if not Is_Empty (GP_List) then
                      GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
@@ -726,8 +728,8 @@ package body Multivectors is
                end loop;
                Next (BL_Curs);
             end loop;
---              GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
---                                         Mat);
+            GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
+                                       Mat, (1, 1), (6, 6));
             Mat_Inv := Inverse (Mat);
             for Row in BBs'Range loop
                Value := Mat_Inv (Row, 1);
@@ -749,6 +751,46 @@ package body Multivectors is
          Put_Line ("An exception occurred in Multivector.General_Inverse Metric");
          raise;
    end General_Inverse;
+
+   --  -------------------------------------------------------------------------
+
+   function Init_Geometric_Matrix (MV : Multivector)
+                                   return GA_Maths.Float_Matrix is
+      use Blade;
+      use GA_Maths;
+      use Blade_List_Package;
+      MV_List   : constant Blade_List := MV.Blades;
+      MV_Curs   : Cursor;
+      Dim       : constant Natural:= Space_Dimension (MV);
+      Max_Index : constant Natural := Dim - 1;
+      L         : Basis_Blade_Array (0 .. Max_Index);
+      L_Prod    : Basis_Blade;  --  L_i
+      G_Product : array (0 .. Max_Index, 0 .. Max_Index) of Basis_Blade;
+      Matrix_G  : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) :=
+                    (others => (others => 0.0));
+   begin
+      for index in L'Range loop
+         L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
+      end loop;
+
+      for k in Matrix_G'Range(1) loop
+         for j in Matrix_G'Range(2) loop
+            L_Prod := Geometric_Product (L(k), L(j));
+            G_Product (k, j) := L_Prod;  --  L_i
+         end loop;
+      end loop;
+
+      for i in Matrix_G'Range(1) loop
+         for j in Matrix_G'Range(2) loop
+            MV_Curs := MV_List.First;
+            while Has_Element (MV_Curs) loop
+               Matrix_G (i, j) := Matrix_G (i, j) + Weight (Element (MV_Curs));
+               Next (MV_Curs);
+            end loop;
+         end loop;
+      end loop;
+      return Matrix_G;
+   end Init_Geometric_Matrix;
 
    --  -------------------------------------------------------------------------
 
