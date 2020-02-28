@@ -250,12 +250,16 @@ package body Multivectors is
    begin
       Row := Bits.Highest_One_Bit (Bitmap (BG));
       Col := Bits.Highest_One_Bit (Bitmap (BB));
+      GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BG)",
+                                  Bitmap (BG));
+      GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BB)",
+                                  Bitmap (BB));
 
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
       --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
       --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
---       Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
---                  Integer'Image (Row) & Integer'Image (Col));
+     Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
+                Integer'Image (Row) & Integer'Image (Col));
       M (Row, Col) := M (Row, Col) + Weight (BG);
 
    exception
