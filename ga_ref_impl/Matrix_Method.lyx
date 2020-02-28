@@ -219,6 +219,10 @@ Consider the geometric product of two basis blades
 
 \end_inset
 
+so, the result is a bivector.
+\end_layout
+
+\begin_layout Standard
 For example:
 \begin_inset Formula 
 \begin{eqnarray*}
@@ -236,7 +240,7 @@ For
 \begin_inset Formula $j=i$
 \end_inset
 
-:
+, the result is scalar:
 \begin_inset Formula 
 \begin{eqnarray*}
 \left(A_{8}\left(i\right)L_{8}\left(i\right)\right)\left(B_{8}\left(i\right)L_{8}\left(i\right)\right) & = & A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\cdot L_{8}\left(i\right)\right)+A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(i\right)\right)\\
