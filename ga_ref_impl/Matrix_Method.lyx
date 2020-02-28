@@ -81,6 +81,10 @@
 
 \begin_body
 
+\begin_layout Section
+Three-dimensional Representation
+\end_layout
+
 \begin_layout Standard
 For three-dimensional Euclidean space:
 \begin_inset Formula 
@@ -119,12 +123,8 @@ Geometric Product
 \end_layout
 
 \begin_layout Standard
-The geometric product of 
-\begin_inset Formula $MV_{8A}$
-\end_inset
-
- and 
-\begin_inset Formula $MV_{8B}$
+The geometric product 
+\begin_inset Formula $MV_{8A}MV_{8B}=MV_{8A}\cdot MV_{8B}+MV_{8A}\wedge MV_{8B}$
 \end_inset
 
  is linear in 
@@ -159,8 +159,12 @@ In the
 \begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
- operating on 
+ operating on a column vector 
 \begin_inset Formula $B_{8}$
+\end_inset
+
+ that represents 
+\begin_inset Formula $MV_{8B}$
 \end_inset
 
 :
@@ -178,6 +182,75 @@ where:
 \begin_inset Formula 
 \begin{eqnarray*}
 B_{8} & = & \left[B_{0},B_{1},B_{2},B_{3},B_{4},B_{5},B_{6},B_{7}\right]^{T}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the geometric product of two basis blades 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $L\left(j\right)$
+\end_inset
+
+ weighted by 
+\begin_inset Formula $A_{8}\left(i\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{8}\left(j\right)$
+\end_inset
+
+, 
+\begin_inset Formula $j\neq i$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left(A_{8}\left(i\right)L_{8}\left(i\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\cdot L_{8}\left(j\right)\right)+A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(j\right)\right)\\
+ & = & A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(j\right)\right)
+\end{eqnarray*}
+
+\end_inset
+
+For example:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left(A_{8}\left(2\right)L_{8}\left(2\right)\right)\left(B_{8}\left(3\right)L_{8}\left(3\right)\right) & = & A_{2}B_{2}\left(e1\cdot e2\right)+A_{2}B_{2}\left(e1\wedge e2\right)\\
+ & = & A_{2}B_{2}\left(e1\wedge e2\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $j=i$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left(A_{8}\left(i\right)L_{8}\left(i\right)\right)\left(B_{8}\left(i\right)L_{8}\left(i\right)\right) & = & A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\cdot L_{8}\left(i\right)\right)+A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(i\right)\right)\\
+ & = & A_{8}\left(i\right)B_{8}\left(i\right)\left|L_{8}\left(i\right)\right|^{2}\\
+ & = & A_{8}\left(i\right)B_{8}\left(i\right)
+\end{eqnarray*}
+
+\end_inset
+
+For example:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left(A_{8}\left(2\right)L_{8}\left(2\right)\right)\left(B_{8}\left(2\right)L_{8}\left(2\right)\right) & = & A_{2}B_{2}\left(e1\cdot e1\right)+A_{2}B_{2}\left(e1\wedge e1\right)\\
+ & = & A_{2}B_{2}
 \end{eqnarray*}
 
 \end_inset
