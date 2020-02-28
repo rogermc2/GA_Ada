@@ -2,20 +2,19 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
 
 package body Blade is
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB               : Basis_Blade; Cont : Contraction_Type)
-                                   return Basis_Blade;
+                                  return Basis_Blade;
    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
-                             return Blade_List;
+                            return Blade_List;
    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
-                              return Blade_List;
+                             return Blade_List;
    function Transform_Basis (BA : Blade.Basis_Blade; Met : GA_Maths.Float_Matrix)
-                              return Blade_List;
+                             return Blade_List;
 
    --  -------------------------------------------------------------------------
 
@@ -90,7 +89,7 @@ package body Blade is
    --  -------------------------------------------------------------------------
 
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                           return Ada.Strings.Unbounded.Unbounded_String is
+                          return Ada.Strings.Unbounded.Unbounded_String is
       use Names_Package;
       BM        : Unsigned_32 := aBlade.Bitmap;
       Index     : Natural := 1;
@@ -191,12 +190,12 @@ package body Blade is
       LB_Cursor  : Cursor;
       Result     : Blade_List;
    begin
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA", BA);
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB", BB);
+      --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA", BA);
+      --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB", BB);
       List_A := To_Eigen_Basis (BA, Met);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
+      --        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
       List_B := To_Eigen_Basis (BB, Met);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
+      --        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
 
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
@@ -221,7 +220,7 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Geometric_Product (BA, BB : Basis_Blade; Eigen_Vals : Real_Vector)
-                                return Basis_Blade is
+                               return Basis_Blade is
       --  Eigen_Vals gives the metric for each basis vector
       --  BM is the meet (bitmap of annihilated vectors)
       --  Only retain vectors commomt to both blades
@@ -230,7 +229,7 @@ package body Blade is
       Index       : Integer range 1 .. Vals_Length := 1;
       Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
    begin
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
+      --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
       while BM /= 0 and then Index <= Vals_Length loop
          if (BM and 1) /= 0 then
             --  This basis vector is non-zero
@@ -257,12 +256,12 @@ package body Blade is
       OP_Blade : Basis_Blade;
       Sign     : Float;
    begin
---        if (BA.Bitmap xor BB.Bitmap) = 38 then
---           Put_Line ("Blade.GP_OP, BA.Bitmap" & Unsigned_32'Image (BA.Bitmap));
---           Put_Line ("Blade.GP_OP, BB.Bitmap" & Unsigned_32'Image (BB.Bitmap));
---           Put_Line ("Blade.GP_OP, And Bitmaps" & Unsigned_32'Image (BA.Bitmap and BB.Bitmap));
---           Put_Line ("Blade.GP_OP, Xor Bitmaps" & Unsigned_32'Image (BA.Bitmap xor BB.Bitmap));
---        end if;
+      --        if (BA.Bitmap xor BB.Bitmap) = 38 then
+      --           Put_Line ("Blade.GP_OP, BA.Bitmap" & Unsigned_32'Image (BA.Bitmap));
+      --           Put_Line ("Blade.GP_OP, BB.Bitmap" & Unsigned_32'Image (BB.Bitmap));
+      --           Put_Line ("Blade.GP_OP, And Bitmaps" & Unsigned_32'Image (BA.Bitmap and BB.Bitmap));
+      --           Put_Line ("Blade.GP_OP, Xor Bitmaps" & Unsigned_32'Image (BA.Bitmap xor BB.Bitmap));
+      --        end if;
       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          --  BA and BB are parallel; so their volume is zero
          OP_Blade  := New_Basis_Blade (0, 0.0);  --  return zero blade
@@ -301,7 +300,7 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
-                            return Basis_Blade is
+                           return Basis_Blade is
    begin
       return Inner_Product_Filter (Grade (BA), Grade (BB),
                                    Geometric_Product (BA, BB), Cont);
@@ -320,7 +319,7 @@ package body Blade is
 
    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                   BB               : Basis_Blade; Cont : Contraction_Type)
-                                   return Basis_Blade is
+                                  return Basis_Blade is
       IP_Blade : Basis_Blade;
    begin
       case Cont is
@@ -375,7 +374,7 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
-                              return Basis_Blade is
+                             return Basis_Blade is
       Blade : Basis_Blade;
    begin
       if Bitmap < 32 then
@@ -435,7 +434,7 @@ package body Blade is
 
    function New_Complex_Basis_Blade (Index  : C3_Base;
                                      Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
-                                      return Complex_Basis_Blade is
+                                     return Complex_Basis_Blade is
    begin
       return (Index'Enum_Rep, Weight);
    end New_Complex_Basis_Blade;
@@ -464,16 +463,6 @@ package body Blade is
    begin
       return GP_OP (BA, BB, True);
    end Outer_Product;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Print_Blade (Name : String; B : Basis_Blade) is
-   begin
-      New_Line;
-      Put_Line (Name & " Bitmap and Weight");
-      Put_Line (Interfaces.Unsigned_32'Image (Bitmap (B)) &
-                  "  " & float'Image (Weight (B)));
-   end Print_Blade;
 
    --  ------------------------------------------------------------------------
 
@@ -524,7 +513,7 @@ package body Blade is
    --  -------------------------------------------------------------------------
 
    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
-                             return Blade_List is
+                            return Blade_List is
    begin
       return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inverse_Eigen_Matrix (Met)));
    end To_Eigen_Basis;
@@ -554,7 +543,7 @@ package body Blade is
    --  -------------------------------------------------------------------------
 
    function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
-                              return Blade_List is
+                             return Blade_List is
    begin
       --          GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
       return Transform_Basis (BB, GA_Maths.Float_Matrix (Met));
@@ -563,14 +552,14 @@ package body Blade is
    --  ------------------------------------------------------------------------
 
    function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
-                              return Blade_List is
+                             return Blade_List is
       use Blade_List_Package;
       BL_Cursor      : Cursor := BL.First;
       Tmp_List       : Blade_List;
       TL_Cursor      : Cursor;
       Result         : Blade_List;
    begin
---        GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
+      --        GA_Utilities.Print_Blade_List ("Blade.To_Metric_Basis BL", BL);
       while Has_Element (BL_Cursor) loop
          Tmp_List.Clear;
          --              GA_Utilities.Print_Blade ("Blade.To_Metric_Basis blade", Element (BL_Cursor));
@@ -598,7 +587,7 @@ package body Blade is
    --  Based on Metric.java ArrayList transform(BasisBlade a, DoubleMatrix2D M)
    function Transform_Basis (BA  : Blade.Basis_Blade;
                              Met : GA_Maths.Float_Matrix)
-                              return Blade_List is
+                             return Blade_List is
       use Blade_List_Package;
       List_A : Blade_List;
       BM     : Unsigned_32 := Bitmap (BA);
@@ -607,10 +596,10 @@ package body Blade is
       I_Col  : Integer := 1;
       Value  : Float;
    begin
---        New_Line;
+      --        New_Line;
       --          GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
---                GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
---                Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
+      --                GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+      --                Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
       --  start with just a scalar
       List_A.Append (New_Basis_Blade (Weight (BA)));
       --  convert each 1 bit to a list of blades

@@ -85,7 +85,6 @@ package Blade is
    function New_Zero_Blade return Basis_Blade;
 
    function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
-   procedure Print_Blade (Name : String; B : Basis_Blade);
    function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
    procedure Simplify (Blades : in out Blade_List);
    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);

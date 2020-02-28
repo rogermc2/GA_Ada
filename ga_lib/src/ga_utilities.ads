@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Blade;
 with GA_Maths;
 with Metric;
@@ -9,6 +11,7 @@ package GA_Utilities is
    use GA_Maths.Float_Array_Package;
 
    function Multivector_Size (MV : Multivectors.Multivector) return Integer;
+   procedure Print_Bitmap (Name : String; Bitmap : Interfaces.Unsigned_32);
    procedure Print_Blade (Name : String; B : Blade.Basis_Blade);
    procedure Print_Blade_List (Name : String; BL : Blade.Blade_List);
    procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array);
