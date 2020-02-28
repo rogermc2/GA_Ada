@@ -781,8 +781,8 @@ package body Multivectors is
 
       for k in Matrix_G'Range(1) loop
          for j in Matrix_G'Range(2) loop
-            L_Prod := Geometric_Product (L(k), L(j));
-            G_Product (k, j) := L_Prod;  --  L_i
+            L_Prod := Geometric_Product (L(k), L(j));  --  L_i
+            G_Product (k, j) := L_Prod;
          end loop;
       end loop;
 
