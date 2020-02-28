@@ -86,7 +86,8 @@ For three-dimensional Euclidean space:
 \begin_inset Formula 
 \begin{eqnarray*}
 L_{8} & = & \left[1,e1,e2,e3,e1\wedge e2,e2\wedge e3,e3\wedge e1,e1\wedge e2\wedge e3\right]\\
-MV_{8} & = & L_{8}\,A_{8\times8}
+A_{8} & = & \left[A_{0},A_{1},A_{2},A_{3},A_{4},A_{5},A_{6},A_{7}\right]^{T}\\
+MV_{8} & = & L_{8}\cdot A_{8}
 \end{eqnarray*}
 
 \end_inset
@@ -97,7 +98,86 @@ MV_{8} & = & L_{8}\,A_{8\times8}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray*}
-MV\left(i\right) & = & \sum_{k=1}^{8}L\left(k\right)\,A\left(i,k\right)
+MV_{8} & = & \sum_{k=1}^{8}L\left(k\right)\,A\left(k\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8} & = & A_{0}+A_{1}e1+A_{2}e2+A_{3}e3+A_{3}e1\wedge e2+A_{5}e2\wedge e3+A_{6}e3\wedge e1+A_{7}e1\wedge e2\wedge e3
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Geometric Product
+\end_layout
+
+\begin_layout Standard
+The geometric product of 
+\begin_inset Formula $MV_{8A}$
+\end_inset
+
+ and 
+\begin_inset Formula $MV_{8B}$
+\end_inset
+
+ is linear in 
+\begin_inset Formula $MV_{8B}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Therefore, 
+\begin_inset Formula $MV_{8A}$
+\end_inset
+
+ acts as a linear operator on
+\begin_inset Formula $MV_{8B}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In the 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+ based representation, the 
+\begin_inset Formula $MV_{8A}$
+\end_inset
+
+ operator can be represented as a matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ operating on 
+\begin_inset Formula $B_{8}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8A}MV_{8B} & = & A_{8\times8}^{G}B_{8}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\begin_inset Formula 
+\begin{eqnarray*}
+B_{8} & = & \left[B_{0},B_{1},B_{2},B_{3},B_{4},B_{5},B_{6},B_{7}\right]^{T}
 \end{eqnarray*}
 
 \end_inset
