@@ -119,6 +119,26 @@ MV_{8} & = & A_{0}+A_{1}e1+A_{2}e2+A_{3}e3+A_{3}e1\wedge e2+A_{5}e2\wedge e3+A_{
 \end_layout
 
 \begin_layout Section
+Objective
+\end_layout
+
+\begin_layout Standard
+Generate an 
+\begin_inset Formula $8\times8$
+\end_inset
+
+ matrix representation, 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+, of 
+\begin_inset Formula $MV_{8}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
 Geometric Product
 \end_layout
 
@@ -190,44 +210,69 @@ B_{8} & = & \left[B_{0},B_{1},B_{2},B_{3},B_{4},B_{5},B_{6},B_{7}\right]^{T}
 \end_layout
 
 \begin_layout Standard
-Consider the geometric product of two basis blades 
-\begin_inset Formula $L_{8}\left(i\right)$
+The geometric product of two basis blades 
+\begin_inset Formula $L_{8}\left(k\right)$
 \end_inset
 
  and 
-\begin_inset Formula $L\left(j\right)$
+\begin_inset Formula $L_{8}\left(j\right)$
+\end_inset
+
+ is also an element of 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
+ & = & L_{8}\left(k\right)\cdot L_{8}\left(j\right)+L_{8}\left(k\right)\wedge L_{8}\left(j\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the geometric product of two basis blades 
+\begin_inset Formula $L_{8}\left(k\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{8}\left(j\right)$
 \end_inset
 
  weighted by 
-\begin_inset Formula $A_{8}\left(i\right)$
+\begin_inset Formula $A_{8}\left(k\right)$
 \end_inset
 
  and 
 \begin_inset Formula $B_{8}\left(j\right)$
 \end_inset
 
-, 
-\begin_inset Formula $j\neq i$
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "equation (20.2)"
+key "GAcs"
+literal "false"
+
 \end_inset
 
 :
 \begin_inset Formula 
 \begin{eqnarray*}
-\left(A_{8}\left(i\right)L_{8}\left(i\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\cdot L_{8}\left(j\right)\right)+A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(j\right)\right)\\
- & = & A_{8}\left(i\right)B_{8}\left(j\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(j\right)\right)
+\left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\\
+ & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)
 \end{eqnarray*}
 
 \end_inset
 
-so, the result is a bivector.
-\end_layout
 
-\begin_layout Standard
-For example:
 \begin_inset Formula 
 \begin{eqnarray*}
-\left(A_{8}\left(2\right)L_{8}\left(2\right)\right)\left(B_{8}\left(3\right)L_{8}\left(3\right)\right) & = & A_{2}B_{2}\left(e1\cdot e2\right)+A_{2}B_{2}\left(e1\wedge e2\right)\\
- & = & A_{2}B_{2}\left(e1\wedge e2\right)
+MV_{8} & = & L_{8}\cdot A_{8}
 \end{eqnarray*}
 
 \end_inset
@@ -236,26 +281,58 @@ For example:
 \end_layout
 
 \begin_layout Standard
-For 
-\begin_inset Formula $j=i$
+For matrix multiplication, 
+\begin_inset Formula $A_{8\times8}^{G}B_{8}=C_{8}$
 \end_inset
 
-, the result is scalar:
+; therefore:
 \begin_inset Formula 
 \begin{eqnarray*}
-\left(A_{8}\left(i\right)L_{8}\left(i\right)\right)\left(B_{8}\left(i\right)L_{8}\left(i\right)\right) & = & A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\cdot L_{8}\left(i\right)\right)+A_{8}\left(i\right)B_{8}\left(i\right)\left(L_{8}\left(i\right)\wedge L_{8}\left(i\right)\right)\\
- & = & A_{8}\left(i\right)B_{8}\left(i\right)\left|L_{8}\left(i\right)\right|^{2}\\
- & = & A_{8}\left(i\right)B_{8}\left(i\right)
+C_{8}\left(m\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(m,k\right)B_{8}\left(k\right)
 \end{eqnarray*}
 
 \end_inset
 
-For example:
+
 \begin_inset Formula 
 \begin{eqnarray*}
-\left(A_{8}\left(2\right)L_{8}\left(2\right)\right)\left(B_{8}\left(2\right)L_{8}\left(2\right)\right) & = & A_{2}B_{2}\left(e1\cdot e1\right)+A_{2}B_{2}\left(e1\wedge e1\right)\\
- & = & A_{2}B_{2}
+A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A\left(k\right)
 \end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+\begin{bmatrix}C_{1}\\
+C_{2}\\
+C_{3}
+\end{bmatrix}=\begin{bmatrix}A_{1,1}^{G} & A_{1,2}^{G} & A_{1,3}^{G}\\
+A_{2,1}^{G} & A_{2,2}^{G} & A_{2,3}^{G}\\
+A_{3,1}^{G} & A_{3,2}^{G} & A_{3,3}^{G}
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+B_{2}\\
+B_{3}
+\end{bmatrix} & = & \begin{bmatrix}\sum_{k}A_{1,k}^{G}B_{k}\\
+\sum_{k}A_{2,k}^{G}B_{k}\\
+\sum_{k}A_{3,k}^{G}B_{k}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Physics/QuantumMechanics,/Physics/Mathematics"
+options "plain"
 
 \end_inset
 
