@@ -262,14 +262,44 @@ literal "false"
 
 :
 \begin_inset Formula 
+\begin{eqnarray}
+\left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
+ & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}\\
+ & = & \left(A_{8}\left(k\right)L_{8}\left(i\right)\right)B_{8}\left(j\right)\\
+ & =
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For matrix multiplication, 
+\begin_inset Formula $C_{8}=A_{8\times8}^{G}B_{8}$
+\end_inset
+
+ where:
+\begin_inset Formula 
 \begin{eqnarray*}
-\left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\\
- & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)
+C_{8}\left(i\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(i,k\right)B_{8}\left(k\right)\\
+ & = & A_{8\times8}^{G}\left(i,1\right)B_{8}\left(1\right)+A_{8\times8}^{G}\left(i,2\right)B_{8}\left(2\right)+\cdots+A_{8\times8}^{G}\left(i,8\right)B_{8}\left(8\right)
 \end{eqnarray*}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Therefore, the element, 
+\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray*}
 MV_{8} & = & L_{8}\cdot A_{8}
@@ -281,19 +311,6 @@ MV_{8} & = & L_{8}\cdot A_{8}
 \end_layout
 
 \begin_layout Standard
-For matrix multiplication, 
-\begin_inset Formula $A_{8\times8}^{G}B_{8}=C_{8}$
-\end_inset
-
-; therefore:
-\begin_inset Formula 
-\begin{eqnarray*}
-C_{8}\left(m\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(m,k\right)B_{8}\left(k\right)
-\end{eqnarray*}
-
-\end_inset
-
-
 \begin_inset Formula 
 \begin{eqnarray*}
 A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A\left(k\right)
