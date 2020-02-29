@@ -612,10 +612,8 @@ package body Multivectors is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      Dim        : constant Integer :=  Space_Dimension (MV);
-      US_Size    : constant Unsigned_32 := Shift_Left (1, Dim);
-      BB_Size    : constant Integer := Integer (US_Size);
-      Max_Index  : constant Integer := BB_Size - 1;
+      Dim        : constant Natural :=  Space_Dimension (MV);
+      Max_Index  : constant Natural := 2 ** Dim - 1;
       Mat        : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
       Mat_Inv    : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
       BBs_L      : Basis_Blade_Array (0 .. Max_Index);
@@ -677,9 +675,8 @@ package body Multivectors is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      Dim          : Integer;
-      US_Size      : Unsigned_32;
-      BB_Max_Index : Integer;
+      Dim          : Natural;
+      BB_Max_Index : Natural;
       Value        : Float;
       Blades       : Blade_List;
       Result       : Multivector;
@@ -689,8 +686,9 @@ package body Multivectors is
          Result := MV;
       else
          Dim := Space_Dimension (MV);
-         US_Size := Shift_Left (1, Dim - 1);
-         BB_Max_Index := Integer (US_Size) - 1;
+         BB_Max_Index := 2 ** Dim - 1;
+--           Put_Line ("Multivector.General_Inverse Dim, BB_Max_Index " &
+--                       Integer'Image (Dim) & Integer'Image (BB_Max_Index));
 
          declare
             Mat        : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
@@ -1780,6 +1778,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   --  Space_Dimension returns the dimension of the space that this blade
+   --  (apparently) lives in.
    function Space_Dimension (MV : Multivector) return Natural is
       use GA_Maths;
       use Blade;
@@ -1794,7 +1794,7 @@ package body Multivectors is
          Max_Dim := Maximum (Max_Dim, (Bits.Highest_One_Bit (BM)));
          Next (Blade_Cursor);
       end loop;
-      return Max_Dim + 1;
+      return Max_Dim;  --  Multivector.java spaceDim returns Max_Dim + 1
    end Space_Dimension;
 
    --  -------------------------------------------------------------------------
