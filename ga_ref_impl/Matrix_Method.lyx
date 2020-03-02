@@ -275,7 +275,8 @@ literal "false"
 \begin_inset Formula 
 \begin{eqnarray}
 \left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
- & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
+ & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}\\
+ & = & A_{8\times8}^{G}\left(k,j\right)L_{8}\left(i\right)
 \end{eqnarray}
 
 \end_inset
@@ -284,63 +285,44 @@ Thus,
 \begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- is the coefficient of the basis element 
-\begin_inset Formula $L_{8}\left(i\right)$
+ is a coefficient of the matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
- where:
+ such that:
 \begin_inset Formula 
 \begin{eqnarray*}
-L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)
+A_{8\times8}^{G}L_{8} & = & C_{8}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, 
+\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ is an element of row 
+\begin_inset Formula $i$
+\end_inset
+
+ of 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+A_{8\times8}^{G}\left(i,l\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)
 \end{eqnarray*}
 
 \end_inset
 
 
 \begin_inset VSpace medskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For matrix multiplication, 
-\begin_inset Formula $C_{8}=A_{8\times8}^{G}B_{8}$
-\end_inset
-
-, so:
-\begin_inset Formula 
-\begin{eqnarray*}
-C_{8}\left(i\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(i,k\right)B_{8}\left(k\right)\\
- & = & A_{8\times8}^{G}\left(i,1\right)B_{8}\left(1\right)+A_{8\times8}^{G}\left(i,2\right)B_{8}\left(2\right)+\cdots+A_{8\times8}^{G}\left(i,8\right)B_{8}\left(8\right)
-\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-which shows, based on equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:20.2"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, that 
-\begin_inset Formula $A_{8}\left(k\right)$
-\end_inset
-
- contributes to row 
-\begin_inset Formula $i$
-\end_inset
-
- of 
-\begin_inset Formula $A_{8\times8}^{G}.$
 \end_inset
 
 
