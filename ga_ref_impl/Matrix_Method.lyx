@@ -225,10 +225,21 @@ The geometric product of two basis blades
 :
 \begin_inset Formula 
 \begin{eqnarray*}
-L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
+s_{i}^{j,k}L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
  & = & L_{8}\left(k\right)\cdot L_{8}\left(j\right)+L_{8}\left(k\right)\wedge L_{8}\left(j\right)
 \end{eqnarray*}
 
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{i}^{j,k}$
+\end_inset
+
+ is a scalar determined by the metric.
+\begin_inset VSpace medskip
 \end_inset
 
 
@@ -264,11 +275,29 @@ literal "false"
 \begin_inset Formula 
 \begin{eqnarray}
 \left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
- & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}\\
- & = & \left(A_{8}\left(k\right)L_{8}\left(i\right)\right)B_{8}\left(j\right)\\
- & =
+ & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
 \end{eqnarray}
 
+\end_inset
+
+Thus, 
+\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ is the coefficient of the basis element 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
+
+ where:
+\begin_inset Formula 
+\begin{eqnarray*}
+L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset VSpace medskip
 \end_inset
 
 
@@ -279,7 +308,7 @@ For matrix multiplication,
 \begin_inset Formula $C_{8}=A_{8\times8}^{G}B_{8}$
 \end_inset
 
- where:
+, so:
 \begin_inset Formula 
 \begin{eqnarray*}
 C_{8}\left(i\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(i,k\right)B_{8}\left(k\right)\\
@@ -292,51 +321,66 @@ C_{8}\left(i\right) & = & \sum_{k=1}^{8}A_{8\times8}^{G}\left(i,k\right)B_{8}\le
 \end_layout
 
 \begin_layout Standard
-Therefore, the element, 
+which shows, based on equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:20.2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, that 
+\begin_inset Formula $A_{8}\left(k\right)$
+\end_inset
+
+ contributes to row 
+\begin_inset Formula $i$
+\end_inset
+
+ of 
+\begin_inset Formula $A_{8\times8}^{G}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also, based on equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:20.2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
 \begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- is
-\end_layout
+ means that 
+\begin_inset Formula $A_{8}\left(k\right)$
+\end_inset
 
-\begin_layout Standard
-\begin_inset Formula 
-\begin{eqnarray*}
-MV_{8} & = & L_{8}\cdot A_{8}
-\end{eqnarray*}
+ contributes to column 
+\begin_inset Formula $j$
+\end_inset
 
+ of 
+\begin_inset Formula $A_{8\times8}^{G}.$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
+Therefore:
 \begin_inset Formula 
 \begin{eqnarray*}
-A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A\left(k\right)
-\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{eqnarray*}
-\begin{bmatrix}C_{1}\\
-C_{2}\\
-C_{3}
-\end{bmatrix}=\begin{bmatrix}A_{1,1}^{G} & A_{1,2}^{G} & A_{1,3}^{G}\\
-A_{2,1}^{G} & A_{2,2}^{G} & A_{2,3}^{G}\\
-A_{3,1}^{G} & A_{3,2}^{G} & A_{3,3}^{G}
-\end{bmatrix}\begin{bmatrix}B_{1}\\
-B_{2}\\
-B_{3}
-\end{bmatrix} & = & \begin{bmatrix}\sum_{k}A_{1,k}^{G}B_{k}\\
-\sum_{k}A_{2,k}^{G}B_{k}\\
-\sum_{k}A_{3,k}^{G}B_{k}
-\end{bmatrix}
+A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A_{8}\left(k\right)
 \end{eqnarray*}
 
 \end_inset
