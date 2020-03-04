@@ -81,6 +81,10 @@
 
 \begin_body
 
+\begin_layout Title
+The Matrix Method For Geometric Products
+\end_layout
+
 \begin_layout Section
 Three-dimensional Representation
 \end_layout
@@ -144,54 +148,54 @@ Geometric Product
 
 \begin_layout Standard
 The geometric product of two multivectors 
-\begin_inset Formula $MV_{8A}$
+\begin_inset Formula $MV_{A}$
 \end_inset
 
  and 
-\begin_inset Formula $MV_{8B}$
+\begin_inset Formula $MV_{B}$
 \end_inset
 
  is given by:
 \begin_inset Formula 
 \begin{eqnarray*}
-MV_{8A}MV_{8B} & = & MV_{8A}\cdot MV_{8B}+MV_{8A}\wedge MV_{8B}
+MV_{A}MV_{B} & = & MV_{A}\cdot MV_{B}+MV_{A}\wedge MV_{B}
 \end{eqnarray*}
 
 \end_inset
 
-which is linear in 
-\begin_inset Formula $MV_{8B}$
+This equation is linear in 
+\begin_inset Formula $MV_{B}$
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Standard
-Therefore, 
-\begin_inset Formula $MV_{8A}$
+ and, therefore, 
+\begin_inset Formula $MV_{A}$
 \end_inset
 
  acts as a linear operator on 
-\begin_inset Formula $MV_{8B}$
-\end_inset
-
- which can be represented as a matrix 
-\begin_inset Formula $A_{8\times8}^{G}$
+\begin_inset Formula $MV_{B}$
 \end_inset
 
 .
 \end_layout
 
 \begin_layout Standard
-In the 
+Therefore, in the 
 \begin_inset Formula $L_{8}$
 \end_inset
 
- based representation, the geometric product 
+ based representation, the multivector 
+\begin_inset Formula $MV_{8A}$
+\end_inset
+
+ can be represented by a matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ and the geometric product 
 \begin_inset Formula $MV_{8A}MV_{8B}$
 \end_inset
 
- can be represented as a matrix 
+ can be represented by 
 \begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
@@ -199,7 +203,7 @@ In the
 \begin_inset Formula $B_{8}$
 \end_inset
 
- that represents the coefficients of 
+ that represents the coefficients of the multivector 
 \begin_inset Formula $MV_{8B}$
 \end_inset
 
@@ -226,7 +230,11 @@ B_{8} & = & \left[B_{0},B_{1},B_{2},B_{3},B_{4},B_{5},B_{6},B_{7}\right]^{T}
 \end_layout
 
 \begin_layout Standard
-The geometric product of two basis blades 
+In the 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+ based representation the geometric product of two basis blades 
 \begin_inset Formula $L_{8}\left(k\right)$
 \end_inset
 
@@ -303,18 +311,12 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Consider the expression 
+Consider the expressions: 
 \begin_inset Formula 
 \begin{eqnarray*}
-A_{8\times8}^{G}L_{8} & = & C_{8}
-\end{eqnarray*}
-
-\end_inset
-
-where:
-\begin_inset Formula 
-\begin{eqnarray*}
-C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
+A_{8\times8}^{G}L_{8} & = & C_{8}\\
+C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)\\
+\therefore\left(A_{8\times8}^{G}L_{8}\right)(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
 \end{eqnarray*}
 
 \end_inset
@@ -323,11 +325,25 @@ C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
 \end_layout
 
 \begin_layout Standard
-Thus, 
+Therefore, 
 \begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- is a coefficient of row 
+ being the coefficient of 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
+
+ in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:20.2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, contributes to one or more of the coefficients of row 
 \begin_inset Formula $i$
 \end_inset
 
