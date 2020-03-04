@@ -424,6 +424,142 @@ A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A_{8}\left(k\right)
 
 \end_layout
 
+\begin_layout Section
+\start_of_appendix
+Vector And Matrix Multiplication
+\end_layout
+
+\begin_layout Standard
+Given two vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ of size 
+\begin_inset Formula $n$
+\end_inset
+
+, there are two possible multiplication methods which result in matrices
+ of sizes 
+\begin_inset Formula $1\times1$
+\end_inset
+
+ and 
+\begin_inset Formula $n\times n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{1\times n}\times V_{n\times1}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{n\times1}\times V_{1\times n}\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ are declared as row vectors, then the preceding expressions can be expressed
+ as:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U\times V^{T}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U^{T}\times V\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider a multivector 
+\begin_inset Formula $MV_{A}=\sum_{k=1}^{n}A_{k}E_{k}$
+\end_inset
+
+ of an n-dimensional space defined by basis vectors 
+\begin_inset Formula $E_{K}$
+\end_inset
+
+ and weight coefficients 
+\begin_inset Formula $A_{k}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This definition of 
+\begin_inset Formula $MV_{A}$
+\end_inset
+
+ corresponds to the type 1 multiplication methods above.
+ Therefore 
+\begin_inset Formula $MV_{A}$
+\end_inset
+
+ can also be defined by 
+\begin_inset Formula $MV_{A}=AE^{T}$
+\end_inset
+
+ where 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+ represent row vectors of coefficients and basis vectors respectively.
+\end_layout
+
+\begin_layout Standard
+However, if matrix representation 
+\begin_inset Formula $\left[MV_{A}\right]$
+\end_inset
+
+ of 
+\begin_inset Formula $MV_{A}$
+\end_inset
+
+ is defined using the type 2 multiplication methods above, 
+\begin_inset Formula $\left[MV_{A}\right]=A^{T}E$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[MV_{A}\right]_{i,j} & = & A_{i}E_{j}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
