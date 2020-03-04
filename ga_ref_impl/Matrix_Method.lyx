@@ -131,7 +131,7 @@ Generate an
 \begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
-, of 
+, of the multivector 
 \begin_inset Formula $MV_{8}$
 \end_inset
 
@@ -143,11 +143,23 @@ Geometric Product
 \end_layout
 
 \begin_layout Standard
-The geometric product 
-\begin_inset Formula $MV_{8A}MV_{8B}=MV_{8A}\cdot MV_{8B}+MV_{8A}\wedge MV_{8B}$
+The geometric product of two multivectors 
+\begin_inset Formula $MV_{8A}$
 \end_inset
 
- is linear in 
+ and 
+\begin_inset Formula $MV_{8B}$
+\end_inset
+
+ is given by:
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8A}MV_{8B} & = & MV_{8A}\cdot MV_{8B}+MV_{8A}\wedge MV_{8B}
+\end{eqnarray*}
+
+\end_inset
+
+which is linear in 
 \begin_inset Formula $MV_{8B}$
 \end_inset
 
@@ -159,8 +171,12 @@ Therefore,
 \begin_inset Formula $MV_{8A}$
 \end_inset
 
- acts as a linear operator on
+ acts as a linear operator on 
 \begin_inset Formula $MV_{8B}$
+\end_inset
+
+ which can be represented as a matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
 .
@@ -171,11 +187,11 @@ In the
 \begin_inset Formula $L_{8}$
 \end_inset
 
- based representation, the 
-\begin_inset Formula $MV_{8A}$
+ based representation, the geometric product 
+\begin_inset Formula $MV_{8A}MV_{8B}$
 \end_inset
 
- operator can be represented as a matrix 
+ can be represented as a matrix 
 \begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
@@ -183,7 +199,7 @@ In the
 \begin_inset Formula $B_{8}$
 \end_inset
 
- that represents 
+ that represents the coefficients of 
 \begin_inset Formula $MV_{8B}$
 \end_inset
 
@@ -272,27 +288,33 @@ literal "false"
 \end_inset
 
 :
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray}
 \left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
- & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}\\
- & = & A_{8\times8}^{G}\left(k,j\right)L_{8}\left(i\right)
+ & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
 \end{eqnarray}
 
 \end_inset
 
-Thus, 
-\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
-\end_inset
 
- is a coefficient of the matrix 
-\begin_inset Formula $A_{8\times8}^{G}$
-\end_inset
+\end_layout
 
- such that:
+\begin_layout Standard
+Consider the expression 
 \begin_inset Formula 
 \begin{eqnarray*}
 A_{8\times8}^{G}L_{8} & = & C_{8}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\begin_inset Formula 
+\begin{eqnarray*}
+C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
 \end{eqnarray*}
 
 \end_inset
@@ -301,28 +323,44 @@ A_{8\times8}^{G}L_{8} & = & C_{8}
 \end_layout
 
 \begin_layout Standard
-Therefore, 
+Thus, 
 \begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- is an element of row 
+ is a coefficient of row 
 \begin_inset Formula $i$
 \end_inset
 
- of 
+ of the matrix 
 \begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
-:
+.
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray*}
-A_{8\times8}^{G}\left(i,l\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)
+MV_{8A}MV_{8B} & = & A_{8\times8}^{G}B_{8}\\
+A_{8\times8}^{G}B_{8} & = & \begin{bmatrix}\sum_{j=1}^{8}A_{8\times8}^{G}\left(1,j\right)B_{8}\left(j\right)\\
+\sum_{j=1}^{8}A_{8\times8}^{G}\left(2,j\right)B_{8}\left(j\right)\\
+\vdots\\
+\sum_{j=1}^{8}A_{8\times8}^{G}\left(8,j\right)B_{8}\left(j\right)
+\end{bmatrix}
 \end{eqnarray*}
 
 \end_inset
 
+Therefore,
+\begin_inset Formula 
+\begin{eqnarray*}
+\left(A_{8\times8}^{G}B_{8}\right)\left(k\right) & = & \sum_{j=1}^{8}A_{8\times8}^{G}\left(k,j\right)B_{8}\left(j\right)
+\end{eqnarray*}
 
-\begin_inset VSpace medskip
 \end_inset
 
 
