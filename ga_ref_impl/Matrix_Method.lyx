@@ -86,6 +86,271 @@ The Matrix Method For Geometric Products
 \end_layout
 
 \begin_layout Section
+Vector and Matrix Multiplication
+\end_layout
+
+\begin_layout Standard
+Given two vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ of size 
+\begin_inset Formula $n$
+\end_inset
+
+, there are two possible multiplication methods which result in matrices
+ of sizes 
+\begin_inset Formula $1\times1$
+\end_inset
+
+ and 
+\begin_inset Formula $n\times n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{1\times n}\times V_{n\times1}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{n\times1}\times V_{1\times n}\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ are declared as row vectors, then the preceding expressions can be expressed
+ as:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U\times V^{T}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U^{T}\times V\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also, the type 1 product, 
+\begin_inset Formula $M_{1\times1}=\sum_{j=1}^{n}U_{j}V_{j}$
+\end_inset
+
+ can be expressed as a vector of terms 
+\begin_inset Formula $\left[UV\right]_{n\times1}=\begin{bmatrix}U_{1}V_{1}, & \cdots, & U_{j}V_{j}, & \cdots, & U_{n}V_{n}\end{bmatrix}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A metric is a function that defines a distance between each pair of elements
+ of a set.
+\end_layout
+
+\begin_layout Section
+Application To Multivectors
+\end_layout
+
+\begin_layout Standard
+Consider two multivector 
+\begin_inset Formula $MV_{A}=\sum_{k=1}^{n}A_{k}E_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $MV_{B}=\sum_{k=1}^{n}B_{k}E_{k}$
+\end_inset
+
+ of an n-dimensional space defined by basis vectors 
+\begin_inset Formula $E_{K}$
+\end_inset
+
+ and weight coefficients 
+\begin_inset Formula $A_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{k}$
+\end_inset
+
+ respectively.
+\end_layout
+
+\begin_layout Standard
+Define a matrix 
+\begin_inset Formula $\left[AB\right]_{n\times n}$
+\end_inset
+
+ with terms: 
+\begin_inset Formula 
+\begin{eqnarray*}
+AB_{j,k} & = & A_{j}E_{j}B_{k}E_{k}\\
+ & = & A_{j}B_{k}E_{j}E_{k}\\
+ & = & A_{j}B_{k}E_{i}
+\end{eqnarray*}
+
+\end_inset
+
+in which 
+\begin_inset Formula $E_{i}=A_{j}B_{k}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{n\times n} & = & \begin{bmatrix}A_{1}B_{1}E_{11} & \cdots & A_{1}B_{k}E_{1k} & \cdots & A_{1}B_{n}E_{1n}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{j}B_{1}E_{j1} & \cdots & A_{j}B_{k}E_{jk} & \cdots & A_{j}B_{n}E_{jn}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{n}B_{1}E_{n1} & \cdots & A_{n}B_{k}E_{nk} & \cdots & A_{n}B_{n}E_{nn}
+\end{bmatrix}\\
+ & = & \begin{bmatrix}A_{1}E_{11} & \cdots & A_{1}E_{1k} & \cdots & A_{1}E_{1n}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{j}E_{j1} & \cdots & A_{j}E_{jk} & \cdots & A_{j}E_{jn}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{n}E_{n1} & \cdots & A_{n}E_{nk} & \cdots & A_{n}E_{nn}
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+\vdots\\
+B_{k}\\
+\vdots\\
+B_{n}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{lm}^{l,m}E_{lm}=E_{l}E_{m}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{lm}^{l,m}=\pm1$
+\end_inset
+
+, dependent on the metric of the sytem.
+ 
+\end_layout
+
+\begin_layout Subsection
+Two Dimensional Example
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+E & = & \left[1,e1,e2,e1\wedge e2\right]\\
+A & = & \left[A_{1},A_{2}\right]\\
+B & = & \left[B_{1},B_{2}\right]
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{2\times2} & = & \begin{bmatrix}A_{1}E_{11} & A_{1}E_{12}\\
+A_{2}E_{21} & A_{2}E_{22}
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+B_{2}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{11}=E_{1}E_{1}=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{12}=E_{1}E_{2}=e1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{21}=E_{2}E_{1}=e2\wedge e1=-e1\wedge e2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{22}=E_{2}E_{2}=e2\wedge e2=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, define the matrix 
+\begin_inset Formula $\left[A^{G}\right]$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[A^{G}\right]_{2\times2} & = & \begin{bmatrix}A_{1} & A_{1}e1\\
+-A_{2}e1\wedge e2 & 0
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{2\times2} & = & \left[A^{G}\right]B\\
+ & = & \begin{bmatrix}A_{1} & A_{1}e1\\
+-A_{2}e1\wedge e2 & 0
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+B_{2}
+\end{bmatrix}\\
+ & = & \begin{bmatrix}A_{1}\left(B_{1}+B_{2}e1\right) & -A_{2}B_{1}e1\wedge e2\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Three-dimensional Representation
 \end_layout
 
@@ -417,142 +682,6 @@ Therefore:
 \begin_inset Formula 
 \begin{eqnarray*}
 A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A_{8}\left(k\right)
-\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-\start_of_appendix
-Vector And Matrix Multiplication
-\end_layout
-
-\begin_layout Standard
-Given two vectors 
-\begin_inset Formula $U$
-\end_inset
-
- and 
-\begin_inset Formula $V$
-\end_inset
-
- of size 
-\begin_inset Formula $n$
-\end_inset
-
-, there are two possible multiplication methods which result in matrices
- of sizes 
-\begin_inset Formula $1\times1$
-\end_inset
-
- and 
-\begin_inset Formula $n\times n$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $U_{1\times n}\times V_{n\times1}\rightarrow M_{1\times1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $U_{n\times1}\times V_{1\times n}\rightarrow M_{n\times n}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-If the vectors 
-\begin_inset Formula $U$
-\end_inset
-
- and 
-\begin_inset Formula $V$
-\end_inset
-
- are declared as row vectors, then the preceding expressions can be expressed
- as:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $U\times V^{T}\rightarrow M_{1\times1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $U^{T}\times V\rightarrow M_{n\times n}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Consider a multivector 
-\begin_inset Formula $MV_{A}=\sum_{k=1}^{n}A_{k}E_{k}$
-\end_inset
-
- of an n-dimensional space defined by basis vectors 
-\begin_inset Formula $E_{K}$
-\end_inset
-
- and weight coefficients 
-\begin_inset Formula $A_{k}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-This definition of 
-\begin_inset Formula $MV_{A}$
-\end_inset
-
- corresponds to the type 1 multiplication methods above.
- Therefore 
-\begin_inset Formula $MV_{A}$
-\end_inset
-
- can also be defined by 
-\begin_inset Formula $MV_{A}=AE^{T}$
-\end_inset
-
- where 
-\begin_inset Formula $A$
-\end_inset
-
- and 
-\begin_inset Formula $E$
-\end_inset
-
- represent row vectors of coefficients and basis vectors respectively.
-\end_layout
-
-\begin_layout Standard
-However, if matrix representation 
-\begin_inset Formula $\left[MV_{A}\right]$
-\end_inset
-
- of 
-\begin_inset Formula $MV_{A}$
-\end_inset
-
- is defined using the type 2 multiplication methods above, 
-\begin_inset Formula $\left[MV_{A}\right]=A^{T}E$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{eqnarray*}
-\left[MV_{A}\right]_{i,j} & = & A_{i}E_{j}
 \end{eqnarray*}
 
 \end_inset
