@@ -266,9 +266,25 @@ Two Dimensional Example
 \end_layout
 
 \begin_layout Standard
+Bases: 
+\begin_inset Formula $e1,e2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Basis vectors:
 \begin_inset Formula 
 \begin{eqnarray*}
-E & = & \left[1,e1,e2,e1\wedge e2\right]\\
+E & = & \left[1,e1,e2,e1\wedge e2\right]
+\end{eqnarray*}
+
+\end_inset
+
+Multivector coefficients:
+\begin_inset Formula 
+\begin{eqnarray*}
 A & = & \left[A_{1},A_{2}\right]\\
 B & = & \left[B_{1},B_{2}\right]
 \end{eqnarray*}
@@ -291,28 +307,28 @@ where:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $E_{11}=E_{1}E_{1}=1$
+\begin_inset Formula $s_{1}^{1,1}E_{11}=E_{1}E_{1}=1=E_{1}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $E_{12}=E_{1}E_{2}=e1$
+\begin_inset Formula $s_{2}^{1,2}E_{12}=E_{1}E_{2}=e1=E_{2}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $E_{21}=E_{2}E_{1}=e2\wedge e1=-e1\wedge e2$
+\begin_inset Formula $s_{4}^{2,1}E_{21}=E_{2}E_{1}=e2\cdot e1+e2\wedge e1=0-e1\wedge e2=-E_{4}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $E_{22}=E_{2}E_{2}=e2\wedge e2=0$
+\begin_inset Formula $s_{1}^{2,2}E_{22}=E_{2}E_{2}=e2\cdot e2+e2\wedge e2=1+0=E_{1}$
 \end_inset
 
 
@@ -327,7 +343,7 @@ Therefore, define the matrix
 \begin_inset Formula 
 \begin{eqnarray*}
 \left[A^{G}\right]_{2\times2} & = & \begin{bmatrix}A_{1} & A_{1}e1\\
--A_{2}e1\wedge e2 & 0
+-A_{2}e1\wedge e2 & A_{2}
 \end{bmatrix}
 \end{eqnarray*}
 
@@ -344,6 +360,21 @@ B_{2}
 \end{bmatrix}\\
  & = & \begin{bmatrix}A_{1}\left(B_{1}+B_{2}e1\right) & -A_{2}B_{1}e1\wedge e2\end{bmatrix}
 \end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two dimensional Euclidean metric:
+\begin_inset Formula 
+\[
+\begin{array}{cc}
+1 & 0\\
+0 & 1
+\end{array}
+\]
 
 \end_inset
 
@@ -514,7 +545,7 @@ In the
 :
 \begin_inset Formula 
 \begin{eqnarray*}
-s_{i}^{j,k}L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
+s_{i}^{k,j}L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
  & = & L_{8}\left(k\right)\cdot L_{8}\left(j\right)+L_{8}\left(k\right)\wedge L_{8}\left(j\right)
 \end{eqnarray*}
 
@@ -524,7 +555,7 @@ where:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $s_{i}^{j,k}$
+\begin_inset Formula $s_{i}^{k,j}$
 \end_inset
 
  is a scalar determined by the metric.
@@ -567,7 +598,7 @@ literal "false"
 \begin_inset Formula 
 \begin{eqnarray}
 \left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
- & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
+ & = & s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
 \end{eqnarray}
 
 \end_inset
@@ -580,8 +611,8 @@ Consider the expressions:
 \begin_inset Formula 
 \begin{eqnarray*}
 A_{8\times8}^{G}L_{8} & = & C_{8}\\
-C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)\\
-\therefore\left(A_{8\times8}^{G}L_{8}\right)(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
+C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)\\
+\therefore\left(A_{8\times8}^{G}L_{8}\right)(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
 \end{eqnarray*}
 
 \end_inset
@@ -591,7 +622,7 @@ C_{8}(c) & = & \sum_{i=1}^{8}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
 
 \begin_layout Standard
 Therefore, 
-\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
  being the coefficient of 
@@ -642,6 +673,14 @@ Therefore,
 \left(A_{8\times8}^{G}B_{8}\right)\left(k\right) & = & \sum_{j=1}^{8}A_{8\times8}^{G}\left(k,j\right)B_{8}\left(j\right)
 \end{eqnarray*}
 
+\end_inset
+
+Therefore, row 
+\begin_inset Formula $k$
+\end_inset
+
+ of 
+\begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
 
