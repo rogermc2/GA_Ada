@@ -177,7 +177,7 @@ Application To Multivectors
 \end_layout
 
 \begin_layout Standard
-Consider two multivector 
+Consider two multivectors 
 \begin_inset Formula $MV_{A}=\sum_{k=1}^{n}A_{k}E_{k}$
 \end_inset
 
@@ -621,11 +621,41 @@ C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\le
 \end_layout
 
 \begin_layout Standard
-Therefore, 
+But 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $MV_{8A}MV_{8B}=A_{8\times8}^{G}B_{8}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, therefore, as 
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- being the coefficient of 
+ is the coefficient of 
 \begin_inset Formula $L_{8}\left(i\right)$
 \end_inset
 
@@ -639,7 +669,11 @@ noprefix "false"
 
 \end_inset
 
-, contributes to one or more of the coefficients of row 
+ 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
+\end_inset
+
+ contributes to one or more of the coefficients of row 
 \begin_inset Formula $i$
 \end_inset
 
