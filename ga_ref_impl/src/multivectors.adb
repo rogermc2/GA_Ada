@@ -695,7 +695,7 @@ package body Multivectors is
             Mat_Inv    : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
             BBs_L      : Basis_Blade_Array (0 .. BB_Max_Index);
             BL_Curs    : Cursor := MV.Blades.First;
-            aBlade     : Basis_Blade;
+            MV_Blade   : Basis_Blade;
             GP_List    : Blade_List;
          begin
             --  Array of basis bitmaps (0 - 31)
@@ -710,17 +710,17 @@ package body Multivectors is
             --  would result in the geometric product of 'Mat' and 'x'
             while Has_Element (BL_Curs) loop
                --  for each blade of BL
-               aBlade := Element (BL_Curs);
-               GA_Utilities.Print_Blade ("Multivector.General_Inverse aBlade", aBlade);
-               GA_Utilities.Print_Bitmap ("Multivector.General_Inverse aBlade",
-                                          Bitmap (aBlade));
+               MV_Blade := Element (BL_Curs);
+               GA_Utilities.Print_Blade ("Multivector.General_Inverse MV_Blade", MV_Blade);
+               GA_Utilities.Print_Bitmap ("Multivector.General_Inverse MV_Blade",
+                                          Bitmap (MV_Blade));
                --  for each bitmap
                for index in BBs_L'Range loop
                   --                 Put_Line ("Multivector.General_Inverse Metric index: " &
                   --                             Integer'Image (index));
 --                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)", BBs (index));
                   --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
-                  GP_List := Geometric_Product (aBlade, BBs_L (index), Met);
+                  GP_List := Geometric_Product (MV_Blade, BBs_L (index), Met);
                   if not Is_Empty (GP_List) then
 --                       GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
 --                                                      BBs (index));
