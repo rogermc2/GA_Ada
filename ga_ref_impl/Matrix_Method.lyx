@@ -603,16 +603,27 @@ literal "false"
 
 \end_inset
 
+Therefore, 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
 
+ represents a label for row 
+\begin_inset Formula $i$
+\end_inset
+
+ of a vector containing the blade 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-Consider the expressions: 
+Consider
 \begin_inset Formula 
 \begin{eqnarray*}
 A_{8\times8}^{G}L_{8} & = & C_{8}\\
-C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)\\
-\therefore\left(A_{8\times8}^{G}L_{8}\right)(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
+C_{8}(i) & = & \sum_{j=1}^{8}A_{8}\left(k\right)B_{8}\left(j\right)
 \end{eqnarray*}
 
 \end_inset
@@ -621,37 +632,42 @@ C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\le
 \end_layout
 
 \begin_layout Standard
-But 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
+Consider the expressions: 
+\begin_inset Formula 
+\begin{eqnarray*}
+A_{8\times8}^{G}L_{8} & = & C_{8}\\
+C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
+\end{eqnarray*}
 
-\begin_inset Formula $MV_{8A}MV_{8B}=A_{8\times8}^{G}B_{8}$
 \end_inset
 
 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-, therefore, as 
+\end_layout
+
+\begin_layout Standard
+But, 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
+
+ is the label for row 
+\begin_inset Formula $i$
+\end_inset
+
+ of the blade vector 
+\begin_inset Formula $C_{8}$
+\end_inset
+
+; therefore, from equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:20.2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
@@ -670,11 +686,11 @@ noprefix "false"
 \end_inset
 
  
-\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- contributes to one or more of the coefficients of row 
-\begin_inset Formula $i$
+ contributes to a coefficient of row 
+\begin_inset Formula $c$
 \end_inset
 
  of the matrix 
@@ -683,38 +699,6 @@ noprefix "false"
 
 .
 \begin_inset VSpace medskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{eqnarray*}
-MV_{8A}MV_{8B} & = & A_{8\times8}^{G}B_{8}\\
-A_{8\times8}^{G}B_{8} & = & \begin{bmatrix}\sum_{j=1}^{8}A_{8\times8}^{G}\left(1,j\right)B_{8}\left(j\right)\\
-\sum_{j=1}^{8}A_{8\times8}^{G}\left(2,j\right)B_{8}\left(j\right)\\
-\vdots\\
-\sum_{j=1}^{8}A_{8\times8}^{G}\left(8,j\right)B_{8}\left(j\right)
-\end{bmatrix}
-\end{eqnarray*}
-
-\end_inset
-
-Therefore,
-\begin_inset Formula 
-\begin{eqnarray*}
-\left(A_{8\times8}^{G}B_{8}\right)\left(k\right) & = & \sum_{j=1}^{8}A_{8\times8}^{G}\left(k,j\right)B_{8}\left(j\right)
-\end{eqnarray*}
-
-\end_inset
-
-Therefore, row 
-\begin_inset Formula $k$
-\end_inset
-
- of 
-\begin_inset Formula $A_{8\times8}^{G}$
 \end_inset
 
 
