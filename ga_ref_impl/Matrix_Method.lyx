@@ -611,93 +611,42 @@ Therefore,
 \begin_inset Formula $i$
 \end_inset
 
- of a vector containing the blade 
-\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Consider
-\begin_inset Formula 
-\begin{eqnarray*}
-A_{8\times8}^{G}L_{8} & = & C_{8}\\
-C_{8}(i) & = & \sum_{j=1}^{8}A_{8}\left(k\right)B_{8}\left(j\right)
-\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Consider the expressions: 
-\begin_inset Formula 
-\begin{eqnarray*}
-A_{8\times8}^{G}L_{8} & = & C_{8}\\
-C_{8}(c) & = & \sum_{i=1}^{8}s_{i}^{i,c}A_{8\times8}^{G}\left(i,c\right)L_{8}\left(i\right)
-\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-But, 
-\begin_inset Formula $L_{8}\left(i\right)$
-\end_inset
-
- is the label for row 
-\begin_inset Formula $i$
-\end_inset
-
- of the blade vector 
+ of a vector, 
 \begin_inset Formula $C_{8}$
 \end_inset
 
-; therefore, from equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:20.2"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, 
+, containing the blade 
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- is the coefficient of 
-\begin_inset Formula $L_{8}\left(i\right)$
-\end_inset
+ where:
+\end_layout
 
- in equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:20.2"
-plural "false"
-caps "false"
-noprefix "false"
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+A_{8\times8}^{G}B_{8} & = & C_{8}\\
+C_{8}(i) & = & \sum_{j=1}^{8}A_{8\times8}^{G}\left(i,j\right)B_{8}\left(j\right)
+\end{eqnarray*}
 
 \end_inset
 
- 
+
+\end_layout
+
+\begin_layout Standard
+Therefore, 
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- contributes to a coefficient of row 
-\begin_inset Formula $c$
-\end_inset
-
- of the matrix 
-\begin_inset Formula $A_{8\times8}^{G}$
+ contributes to 
+\begin_inset Formula $C_{8}(i)$
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
 \begin_inset VSpace medskip
 \end_inset
 
