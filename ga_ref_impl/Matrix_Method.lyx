@@ -615,11 +615,19 @@ Therefore,
 \begin_inset Formula $C_{8}$
 \end_inset
 
-, containing the blade 
+, containing the blade weight 
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- where:
+ where 
+\begin_inset Formula $C_{8}$
+\end_inset
+
+ is defined in terms of the matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ by:
 \end_layout
 
 \begin_layout Standard
@@ -639,8 +647,12 @@ Therefore,
 \begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
 \end_inset
 
- contributes to 
-\begin_inset Formula $C_{8}(i)$
+ contributes to element 
+\begin_inset Formula $i$
+\end_inset
+
+ of 
+\begin_inset Formula $C_{8}$
 \end_inset
 
 .
@@ -654,25 +666,23 @@ Therefore,
 \end_layout
 
 \begin_layout Standard
-Also, based on equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:20.2"
-plural "false"
-caps "false"
-noprefix "false"
+As 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
 
+ shows that 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
+\end_inset
+
+ combines with 
+\begin_inset Formula $B_{8}\left(j\right)$
 \end_inset
 
 , 
-\begin_inset Formula $A_{8}\left(k\right)B_{8}\left(j\right)$
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
 \end_inset
 
- means that 
-\begin_inset Formula $A_{8}\left(k\right)$
-\end_inset
-
- contributes to column 
+ must contribute to column 
 \begin_inset Formula $j$
 \end_inset
 
@@ -687,7 +697,7 @@ noprefix "false"
 Therefore:
 \begin_inset Formula 
 \begin{eqnarray*}
-A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}A_{8}\left(k\right)
+A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}s_{i}^{k,j}A_{8}\left(k\right)
 \end{eqnarray*}
 
 \end_inset

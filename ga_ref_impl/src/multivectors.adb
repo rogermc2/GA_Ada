@@ -758,43 +758,48 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Init_Geometric_Matrix (MV : Multivector)
+   function   Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
                                    return GA_Maths.Float_Matrix is
       use Blade;
       use GA_Maths;
       use Blade_List_Package;
-      MV_List   : constant Blade_List := MV.Blades;
-      MV_Curs   : Cursor;
-      Dim       : constant Natural:= Space_Dimension (MV);
-      Max_Index : constant Natural := Dim - 1;
-      L         : Basis_Blade_Array (0 .. Max_Index);
-      L_Prod    : Basis_Blade;  --  L_i
-      G_Product : array (0 .. Max_Index, 0 .. Max_Index) of Basis_Blade;
-      Matrix_G  : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) :=
-                    (others => (others => 0.0));
+      MV_List     : constant Blade_List := MV.Blades;
+      MV_Curs     : Cursor;
+      Dim         : constant Natural:= Space_Dimension (MV);
+      Max_Index   : constant Natural := Dim - 1;
+      B_Blades    : Basis_Blade_Array (0 .. Max_Index);
+      L_Prod      : Blade_List;  --  s^jk_i L_i
+      L_Prod_Curs : Cursor;
+      Matrix_AG   : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) :=
+                      (others => (others => 0.0));
    begin
       --  Array of basis bitmaps (0 - 31)
-      for index in L'Range loop
-         L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
+      for index in B_Blades'Range loop
+         B_Blades (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
       end loop;
 
-      for k in Matrix_G'Range(1) loop
-         for j in Matrix_G'Range(2) loop
-            L_Prod := Geometric_Product (L(k), L(j));  --  L_i
-            G_Product (k, j) := L_Prod;
+      --  Loop over all indices j, k to compute the geometric product
+      --  of all basis blades as in equation (20.1)
+      for k in Matrix_AG'Range(1) loop
+         for j in Matrix_AG'Range(2) loop
+            L_Prod := Geometric_Product (B_Blades(k), B_Blades(j), Met);  --  L_i
+            L_Prod_Curs := L_Prod.First;
+            while Has_Element (L_Prod_Curs) loop
+               Next (L_Prod_Curs);
+            end loop;
          end loop;
       end loop;
 
-      for i in Matrix_G'Range(1) loop
-         for j in Matrix_G'Range(2) loop
+      for k in Matrix_AG'Range(1) loop
+         for j in Matrix_AG'Range(2) loop
             MV_Curs := MV_List.First;
             while Has_Element (MV_Curs) loop
-               Matrix_G (i, j) := Matrix_G (i, j) + Weight (Element (MV_Curs));
+               Matrix_AG (k, j) := Matrix_AG (k, j) + Weight (Element (MV_Curs));
                Next (MV_Curs);
             end loop;
          end loop;
       end loop;
-      return Matrix_G;
+      return Matrix_AG;
    end Init_Geometric_Matrix;
 
    --  -------------------------------------------------------------------------
