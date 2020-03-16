@@ -76,6 +76,8 @@ package Multivectors is
    function Grade (MV : Multivector; theGrade : out Integer) return Boolean;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
+   function Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
+                                   return GA_Maths.Float_Matrix;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;

@@ -758,7 +758,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function   Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
+   function Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
                                    return GA_Maths.Float_Matrix is
       use Blade;
       use GA_Maths;
@@ -770,6 +770,7 @@ package body Multivectors is
       B_Blades    : Basis_Blade_Array (0 .. Max_Index);
       L_Prod      : Blade_List;  --  s^jk_i L_i
       L_Prod_Curs : Cursor;
+      Li          : array (0 .. Max_Index, 0 .. Max_Index) of Blade_List;
       Matrix_AG   : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) :=
                       (others => (others => 0.0));
    begin
@@ -783,10 +784,7 @@ package body Multivectors is
       for k in Matrix_AG'Range(1) loop
          for j in Matrix_AG'Range(2) loop
             L_Prod := Geometric_Product (B_Blades(k), B_Blades(j), Met);  --  L_i
-            L_Prod_Curs := L_Prod.First;
-            while Has_Element (L_Prod_Curs) loop
-               Next (L_Prod_Curs);
-            end loop;
+            Li (k, j) := L_Prod;
          end loop;
       end loop;
 
