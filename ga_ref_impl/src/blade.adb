@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
+with GA_Utilities;
 
 package body Blade is
 
@@ -179,7 +180,8 @@ package body Blade is
    end Geometric_Product;
 
    --  ------------------------------------------------------------------------
-
+   --  This Geometric_Product returns an ArrayList because
+   --  the result does not have to be a single BasisBlade.
    function Geometric_Product (BA, BB : Basis_Blade;
                                Met    : Metric.Metric_Record) return Blade_List is
       use Blade_List_Package;
@@ -190,12 +192,14 @@ package body Blade is
       LB_Cursor  : Cursor;
       Result     : Blade_List;
    begin
-      --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA", BA);
-      --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB", BB);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
+      --  List_A and List_B needed because To_Eigen_Basis returns an ArrayList
+      --  because its result does not have to be a single BasisBlade.
       List_A := To_Eigen_Basis (BA, Met);
-      --        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A", List_A);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
       List_B := To_Eigen_Basis (BB, Met);
-      --        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B", List_B);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
 
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
@@ -208,6 +212,7 @@ package body Blade is
          Next (LA_Cursor);
       end loop;
 
+      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product pre-simplify:", Result);
       Simplify (Result);
       return To_Metric_Basis (Result, Metric.Matrix (Met));
 

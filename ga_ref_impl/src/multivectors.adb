@@ -783,7 +783,12 @@ package body Multivectors is
       --  of all basis blades as in equation (20.1)
       for k in Matrix_AG'Range(1) loop
          for j in Matrix_AG'Range(2) loop
+            --  L_Prod is an ArrayList because the result of Geometric_Product
+            --  for non-diagonal metrics does not have to be a single BasisBlade.
             L_Prod := Geometric_Product (B_Blades(k), B_Blades(j), Met);  --  L_i
+            GA_Utilities.Print_Blade_List
+              ("Init_Geometric_Matrix L_Prod " & Integer'Image (k) & ", " &
+                 Integer'Image (j), L_Prod);
             Li (k, j) := L_Prod;
          end loop;
       end loop;
