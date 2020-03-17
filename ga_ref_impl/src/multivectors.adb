@@ -250,10 +250,10 @@ package body Multivectors is
    begin
       Row := Bits.Highest_One_Bit (Bitmap (BG));
       Col := Bits.Highest_One_Bit (Bitmap (BB));
-      GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BG)",
-                                  Bitmap (BG));
-      GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BB)",
-                                  Bitmap (BB));
+--        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BG)",
+--                                    Bitmap (BG));
+--        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BB)",
+--                                    Bitmap (BB));
 
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
       --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
@@ -686,54 +686,55 @@ package body Multivectors is
          Result := MV;
       else
          Dim := Space_Dimension (MV);
-         BB_Max_Index := 2 ** Dim - 1;
---           Put_Line ("Multivector.General_Inverse Dim, BB_Max_Index " &
---                       Integer'Image (Dim) & Integer'Image (BB_Max_Index));
+         BB_Max_Index := 2 ** Dim;
+         Put_Line ("Multivector.General_Inverse Dim, BB_Max_Index " &
+                     Integer'Image (Dim) & Integer'Image (BB_Max_Index));
 
          declare
             Mat        : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
             Mat_Inv    : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
             BBs_L      : Basis_Blade_Array (0 .. BB_Max_Index);
-            BL_Curs    : Cursor := MV.Blades.First;
-            MV_Blade   : Basis_Blade;
-            GP_List    : Blade_List;
+--              BL_Curs    : Cursor := MV.Blades.First;
+--              MV_Blade   : Basis_Blade;
+--              GP_List    : Blade_List;
          begin
-            --  Array of basis bitmaps (0 - 31)
-            for index in BBs_L'Range loop
-               BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
---                 GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)",
---                                           BBs_L (index));
-            end loop;
-
-            --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
-            --  the coordinates of another multivector 'x' (stored in a vector)
-            --  would result in the geometric product of 'Mat' and 'x'
-            while Has_Element (BL_Curs) loop
-               --  for each blade of BL
-               MV_Blade := Element (BL_Curs);
-               GA_Utilities.Print_Blade ("Multivector.General_Inverse MV_Blade", MV_Blade);
-               GA_Utilities.Print_Bitmap ("Multivector.General_Inverse MV_Blade",
-                                          Bitmap (MV_Blade));
-               --  for each bitmap
-               for index in BBs_L'Range loop
-                  --                 Put_Line ("Multivector.General_Inverse Metric index: " &
-                  --                             Integer'Image (index));
---                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)", BBs (index));
-                  --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
-                  GP_List := Geometric_Product (MV_Blade, BBs_L (index), Met);
-                  if not Is_Empty (GP_List) then
---                       GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
---                                                      BBs (index));
---                       GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
---                                                      GP_List);
-                     Add_To_Matrix (Mat, BBs_L (index), GP_List);
-                  end if;
-               end loop;
-               Next (BL_Curs);
-            end loop;
-
-            GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
-                                       Mat, (1, 1), (6, 6));
+--              --  Array of basis bitmaps (0 - 31)
+--              for index in BBs_L'Range loop
+--                 BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
+--  --                 GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)",
+--  --                                           BBs_L (index));
+--              end loop;
+--
+--              --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
+--              --  the coordinates of another multivector 'x' (stored in a vector)
+--              --  would result in the geometric product of 'Mat' and 'x'
+--              while Has_Element (BL_Curs) loop
+--                 --  for each blade of BL
+--                 MV_Blade := Element (BL_Curs);
+--                 GA_Utilities.Print_Blade ("Multivector.General_Inverse MV_Blade", MV_Blade);
+--                 GA_Utilities.Print_Bitmap ("Multivector.General_Inverse MV_Blade",
+--                                            Bitmap (MV_Blade));
+--                 --  for each bitmap
+--                 for index in BBs_L'Range loop
+--                    --                 Put_Line ("Multivector.General_Inverse Metric index: " &
+--                    --                             Integer'Image (index));
+--  --                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)", BBs (index));
+--                    --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
+--                    GP_List := Geometric_Product (MV_Blade, BBs_L (index), Met);
+--                    if not Is_Empty (GP_List) then
+--  --                       GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
+--  --                                                      BBs (index));
+--  --                       GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+--  --                                                      GP_List);
+--                       Add_To_Matrix (Mat, BBs_L (index), GP_List);
+--                    end if;
+--                 end loop;
+--                 Next (BL_Curs);
+--              end loop;
+--
+--              GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
+--                                         Mat, (1, 1), (6, 6));
+            Mat := To_Geometric_Matrix (MV, Met);
             Mat_Inv := Inverse (Mat);
             for Row in BBs_L'Range loop
                Value := Mat_Inv (Row, 0);
@@ -755,6 +756,63 @@ package body Multivectors is
          Put_Line ("An exception occurred in Multivector.General_Inverse Metric");
          raise;
    end General_Inverse;
+
+   --  -------------------------------------------------------------------------
+
+   function To_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
+                                 return GA_Maths.Float_Matrix is
+      use Blade;
+      use GA_Maths;
+      use Blade_List_Package;
+      Dim         : constant Natural:= Space_Dimension (MV);
+      Max_Index   : constant Natural := Dim;
+      Matrix_AG   : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
+      BBs_L      : Basis_Blade_Array (0 .. Max_Index);
+      BL_Curs    : Cursor := MV.Blades.First;
+      MV_Blade   : Basis_Blade;
+      GP_List    : Blade_List;
+
+   begin
+      --  Array of basis bitmaps (0 - 31)
+      for index in BBs_L'Range loop
+         BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
+         --                 GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
+         --                                           BBs_L (index));
+      end loop;
+
+      --  Construct a matrix 'Matrix_AG' such that matrix multiplication of
+      --  'Matrix_AG' with the coordinates of another multivector 'x'
+      --  (stored in a vector) would result in the geometric product of
+      --  'Matrix_AG' and 'x'
+      while Has_Element (BL_Curs) loop
+         --  for each blade of BL
+         MV_Blade := Element (BL_Curs);
+         GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix MV_Blade", MV_Blade);
+--           GA_Utilities.Print_Bitmap ("Multivector.To_Geometric_Matrix MV_Blade",
+--                                      Bitmap (MV_Blade));
+         --  for each bitmap
+         for index in BBs_L'Range loop
+            --                 Put_Line ("Multivector.To_Geometric_Matrix Metric index: " &
+            --                             Integer'Image (index));
+            --                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)", BBs (index));
+            --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
+            GP_List := Geometric_Product (MV_Blade, BBs_L (index), Met);
+            if not Is_Empty (GP_List) then
+               --                       GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
+               --                                                      BBs (index));
+               --                       GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
+               --                                                      GP_List);
+               Add_To_Matrix (Matrix_AG, BBs_L (index), GP_List);
+            end if;
+         end loop;
+         Next (BL_Curs);
+      end loop;
+
+      GA_Utilities.Print_Matrix ("Multivector.To_Geometric_Matrix Matrix_AG",
+                                 Matrix_AG, (1, 1), (5, 5));
+
+      return Matrix_AG;
+   end To_Geometric_Matrix;
 
    --  -------------------------------------------------------------------------
 

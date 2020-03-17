@@ -22,10 +22,10 @@ procedure Test_Matrix is
                  C3GA.Set_Normalized_Point (1.0, -0.5, 0.3);
    Dim       : constant Natural:= Space_Dimension (MV);
    Met       : Metric.Metric_Record (5) := Metric.C3_Metric;
-   Max_Index : constant Natural := Dim - 1;
+   Max_Index : constant Natural := Dim;
    Matrix_AG : GA_Maths.Float_Matrix (0 .. Max_Index, 0 .. Max_Index);
 begin
-   Matrix_AG := Multivectors.Init_Geometric_Matrix (MV, Met);
+   Matrix_AG := Multivectors.To_Geometric_Matrix (MV, Met);
    GA_Utilities.Print_Matrix ("", Matrix_AG);
 
    exception

@@ -134,6 +134,8 @@ package Multivectors is
    function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
+   function To_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
+                                 return GA_Maths.Float_Matrix;
    procedure To_Line (MV : in out Multivector);
    function To_Rotor (MV : Multivector) return Rotor;
    function To_Vector (MV : Multivector) return Vector;
