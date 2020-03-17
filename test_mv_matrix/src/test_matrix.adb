@@ -26,7 +26,8 @@ procedure Test_Matrix is
    Matrix_AG : GA_Maths.Float_Matrix (0 .. Max_Index, 0 .. Max_Index);
 begin
    Matrix_AG := Multivectors.To_Geometric_Matrix (MV, Met);
-   GA_Utilities.Print_Matrix ("", Matrix_AG);
+   New_Line;
+   GA_Utilities.Print_Matrix ("Test_Matrix Matrix_AG", Matrix_AG);
 
    exception
       when anError :  others =>

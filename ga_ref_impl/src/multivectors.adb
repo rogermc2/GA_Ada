@@ -808,9 +808,6 @@ package body Multivectors is
          Next (BL_Curs);
       end loop;
 
-      GA_Utilities.Print_Matrix ("Multivector.To_Geometric_Matrix Matrix_AG",
-                                 Matrix_AG, (1, 1), (5, 5));
-
       return Matrix_AG;
    end To_Geometric_Matrix;
 
