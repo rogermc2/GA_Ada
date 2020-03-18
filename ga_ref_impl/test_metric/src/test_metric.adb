@@ -1,12 +1,29 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GA_Utilities;
 with Metric;
-with Metric_Test;
 
+--  --------------------------------------------------------------------
+--  Based on Metric.java main
 procedure Test_Metric is
+   M_Matrix : constant Metric.Metric_Matrix (1 .. 3, 1 .. 3) :=
+                ((1.0, 0.0, 0.0),
+                 (0.0, 0.0, -1.0),
+                 (0.0, -1.0, 0.0));
+   E3_Matrix : constant Metric.Metric_Matrix (1 .. 3, 1 .. 3) :=
+                ((1.0, 0.0, 0.0),
+                 (0.0, 1.0, 0.0),
+                 (0.0, 0.0, 1.0));
+   Met       : constant Metric.Metric_Record := Metric.New_Metric (M_Matrix);
+   E3_Met    : constant Metric.Metric_Record := Metric.New_Metric (E3_Matrix);
 begin
+   GA_Utilities.Print_Metric ("Test_Metric", Met);
+   GA_Utilities.Print_Metric ("Test_Metric E3", E3_Met);
 
-   Metric_Test.Test;
+exception
+   when others =>
+      Put_Line ("An exception occurred in Test_Metric.");
+      raise;
 
 end Test_Metric;
