@@ -10,7 +10,13 @@ package body Metric is
              (0.0, 0.0, 0.0, 1.0, 0.0),
              (-1.0, 0.0, 0.0, 0.0, 0.0));
 
+   E3_M : constant GA_Maths.Float_Matrix (1 .. 3, 1 .. 3) :=
+            ((1.0, 0.0, 0.0),
+             (0.0, 1.0, 0.0),
+             (0.0, 0.0, 1.0));
+
    Metric_C3 : Metric_Record (5);
+   Metric_E3 : Metric_Record (3);
 
    --  --------------------------------------------------------------------
 
@@ -25,6 +31,20 @@ package body Metric is
    begin
       return Metric_C3.Inverse_Eigen_Matrix;
    end C3_Inverse_Eigen_Matrix;
+
+   --  --------------------------------------------------------------------
+
+   function E3_Eigen_Matrix return Metric_Matrix is
+   begin
+      return Metric_E3.Matrix;
+   end E3_Eigen_Matrix;
+
+   --  --------------------------------------------------------------------
+
+   function E3_Inverse_Eigen_Matrix return Metric_Matrix is
+   begin
+      return Metric_E3.Inverse_Eigen_Matrix;
+   end E3_Inverse_Eigen_Matrix;
 
    --  --------------------------------------------------------------------
 
@@ -74,6 +94,13 @@ package body Metric is
    begin
       return  Metric_C3;
    end C3_Metric;
+
+   --  --------------------------------------------------------------------
+
+   function E3_Metric return Metric_Record is
+   begin
+      return  Metric_E3;
+   end E3_Metric;
 
    --  --------------------------------------------------------------------
 
@@ -146,5 +173,6 @@ package body Metric is
 begin
 
    Metric_C3 := New_Metric (C3_M);
+   Metric_E3 := New_Metric (E3_M);
 
 end Metric;

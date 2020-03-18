@@ -245,13 +245,9 @@ package body Multivectors is
    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
                             Beta, Gamma : Blade.Basis_Blade) is
       use Blade;
-      Row     : Integer;
-      Col     : Integer;
+      Row  : constant Integer := Integer (Bitmap (Gamma));
+      Col  : constant Integer := Integer (Bitmap (Beta));
    begin
-      Row := Integer (Bitmap (Gamma));
-      Col := Integer (Bitmap (Beta));
---        Row := Bits.Highest_One_Bit (Bitmap (Gamma));
---        Col := Bits.Highest_One_Bit (Bitmap (Beta));
 --        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Gamma)",
 --                                    Bitmap (Gamma));
 --        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Beta)",

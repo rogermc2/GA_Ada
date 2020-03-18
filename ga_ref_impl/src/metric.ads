@@ -6,7 +6,6 @@ package Metric is
 
    type Metric_Record (Dim : Integer) is private;
    subtype Metric_Matrix is GA_Maths.Float_Matrix;
---     type Metric_Matrix is array (Integer range <>, Integer range <>) of float;
    type Metric_Data is array (Integer range <>) of float;
 
    Null_Metric      : constant Metric_Matrix (1 .. 0, 1 .. 0) := (others => (others => 0.0));
@@ -14,6 +13,8 @@ package Metric is
 
    function C3_Eigen_Matrix return Metric_Matrix;
    function C3_Inverse_Eigen_Matrix return Metric_Matrix;
+   function E3_Eigen_Matrix return Metric_Matrix;
+   function E3_Inverse_Eigen_Matrix return Metric_Matrix;
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
    function Eigen_Values (Met : Metric_Record) return Real_Vector;
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
@@ -21,6 +22,7 @@ package Metric is
    function Is_Euclidean (Met : Metric_Record) return Boolean;
    function Matrix (Met : Metric_Record) return Metric_Matrix;
    function C3_Metric return Metric_Record;
+   function E3_Metric return Metric_Record;
    function New_Metric (Dimension : Integer) return Metric_Matrix;
    function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric_Matrix;
    function New_Metric (Met : Metric_Matrix) return Metric_Record;
