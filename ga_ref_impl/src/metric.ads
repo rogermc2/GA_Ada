@@ -5,7 +5,8 @@ package Metric is
    use GA_Maths.Float_Array_Package;
 
    type Metric_Record (Dim : Integer) is private;
-   type Metric_Matrix is array (Integer range <>, Integer range <>) of float;
+   subtype Metric_Matrix is GA_Maths.Float_Matrix;
+--     type Metric_Matrix is array (Integer range <>, Integer range <>) of float;
    type Metric_Data is array (Integer range <>) of float;
 
    Null_Metric      : constant Metric_Matrix (1 .. 0, 1 .. 0) := (others => (others => 0.0));
@@ -22,7 +23,7 @@ package Metric is
    function C3_Metric return Metric_Record;
    function New_Metric (Dimension : Integer) return Metric_Matrix;
    function New_Metric (Dimension : Integer; Data : Metric_Data) return Metric_Matrix;
-   function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record;
+   function New_Metric (Met : Metric_Matrix) return Metric_Record;
 
 private
    type Metric_Record (Dim : Integer) is record

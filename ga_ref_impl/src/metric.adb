@@ -99,7 +99,7 @@ package body Metric is
 
    --  ------------------------------------------------------------------------
 
-   function New_Metric (Met : GA_Maths.Float_Matrix) return Metric_Record is
+   function New_Metric (Met : Metric_Matrix) return Metric_Record is
       use GA_Maths;
       Values    : Real_Vector (Met'Range);  --  m_eigenMetric
       Vectors   : Float_Matrix (Met'Range, Met'Range);

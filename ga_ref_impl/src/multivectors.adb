@@ -827,7 +827,8 @@ package body Multivectors is
       L_Prod      : Blade_List;  --  s^jk_i L_i
       L_Prod_Curs : Cursor;
       Li          : array (0 .. Max_Index, 0 .. Max_Index) of Blade_List;
-      Matrix_AG   : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) :=
+      Li_Curs     : Cursor;
+      Matrix_AG   : Float_Matrix (0 .. 31, 0 .. 31) :=
                       (others => (others => 0.0));
    begin
       --  Array of basis bitmaps (0 - 31)
@@ -837,8 +838,8 @@ package body Multivectors is
 
       --  Loop over all indices j, k to compute the geometric product
       --  of all basis blades as in equation (20.1)
-      for k in Matrix_AG'Range(1) loop
-         for j in Matrix_AG'Range(2) loop
+      for k in B_Blades'Range loop
+         for j in B_Blades'Range loop
             --  L_Prod is an ArrayList because the result of Geometric_Product
             --  for non-diagonal metrics does not have to be a single BasisBlade.
             L_Prod := Geometric_Product (B_Blades(k), B_Blades(j), Met);  --  L_i
@@ -849,12 +850,14 @@ package body Multivectors is
          end loop;
       end loop;
 
-      for k in Matrix_AG'Range(1) loop
-         for j in Matrix_AG'Range(2) loop
-            MV_Curs := MV_List.First;
-            while Has_Element (MV_Curs) loop
-               Matrix_AG (k, j) := Matrix_AG (k, j) + Weight (Element (MV_Curs));
-               Next (MV_Curs);
+      for index in B_Blades'Range loop
+         for k in Li'Range(1) loop
+            for j in Li'Range(2) loop
+               Li_Curs := Li (k, j).First;
+               while Has_Element (Li_Curs) loop
+                  Add_To_Matrix (Matrix_AG, B_Blades (index), Element (Li_Curs));
+                  Next (Li_Curs);
+               end loop;
             end loop;
          end loop;
       end loop;
@@ -1858,7 +1861,7 @@ package body Multivectors is
          Max_Dim := Maximum (Max_Dim, (Bits.Highest_One_Bit (BM)));
          Next (Blade_Cursor);
       end loop;
-      return Max_Dim;  --  Multivector.java spaceDim returns Max_Dim + 1
+      return Max_Dim + 1;  --  Multivector.java spaceDim returns Max_Dim + 1
    end Space_Dimension;
 
    --  -------------------------------------------------------------------------
