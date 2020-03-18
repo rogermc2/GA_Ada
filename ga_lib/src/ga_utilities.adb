@@ -125,9 +125,12 @@ package body GA_Utilities is
       end if;
       Put_Line ("Size:" & Integer'Image (aMatrix'Length (1)) & " X"
                 & Integer'Image (aMatrix'Length (2)));
+      Put ("Rows:" & Integer'Image (Start (1)) & " .."
+                & Integer'Image (L_Row));
+      Put_Line ("    Columns:" & Integer'Image (Start (2)) & " .."
+                & Integer'Image (L_Col));
       for Row in Start (1) .. L_Row loop
          for Column in Start (2) .. L_Col loop
-            Put (Integer'Image (Column));
             Put (Float_3'Image (Float_3 (aMatrix (Row, Column))) & "   ");
          end loop;
          New_Line;
