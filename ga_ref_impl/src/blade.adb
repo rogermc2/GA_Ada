@@ -212,7 +212,6 @@ package body Blade is
          Next (LA_Cursor);
       end loop;
 
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product pre-simplify:", Result);
       Simplify (Result);
       return To_Metric_Basis (Result, Metric.Matrix (Met));
 

@@ -243,24 +243,26 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    procedure Add_To_Matrix (M      : in out GA_Maths.Float_Matrix;
-                            BB, BG : Blade.Basis_Blade) is
+                            Beta, Gamma : Blade.Basis_Blade) is
       use Blade;
       Row     : Integer;
       Col     : Integer;
    begin
-      Row := Bits.Highest_One_Bit (Bitmap (BG));
-      Col := Bits.Highest_One_Bit (Bitmap (BB));
---        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BG)",
---                                    Bitmap (BG));
---        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (BB)",
---                                    Bitmap (BB));
+      Row := Integer (Bitmap (Gamma));
+      Col := Integer (Bitmap (Beta));
+--        Row := Bits.Highest_One_Bit (Bitmap (Gamma));
+--        Col := Bits.Highest_One_Bit (Bitmap (Beta));
+--        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Gamma)",
+--                                    Bitmap (Gamma));
+--        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Beta)",
+--                                    Bitmap (Beta));
 
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
-      --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BB", BB);
-      --                GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix BG", BG);
+--                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Beta", Beta);
+--                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Gamma", Gamma);
      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
                 Integer'Image (Row) & Integer'Image (Col));
-      M (Row, Col) := M (Row, Col) + Weight (BG);
+      M (Row, Col) := M (Row, Col) + Weight (Gamma);
 
    exception
       when others =>
@@ -271,13 +273,13 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    procedure Add_To_Matrix (M  : in out GA_Maths.Float_Matrix;
-                            BB : Blade.Basis_Blade; BL : Blade.Blade_List) is
+                            Beta : Blade.Basis_Blade; Gamma : Blade.Blade_List) is
       use Blade;
       use Blade_List_Package;
-      Curs  : Cursor := BL.First;
+      Curs  : Cursor := Gamma.First;
    begin
       while Has_Element (Curs) loop
-         Add_To_Matrix (M, BB, Element (Curs));
+         Add_To_Matrix (M, Beta, Element (Curs));
          Next (Curs);
       end loop;
 
@@ -681,13 +683,13 @@ package body Multivectors is
       Blades       : Blade_List;
       Result       : Multivector;
    begin
-      GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
+      GA_Utilities.Print_Multivector ("Multivector.General_Inverse Metric MV", MV);
       if Is_Null (MV) then
          Result := MV;
       else
          Dim := Space_Dimension (MV);
          BB_Max_Index := 2 ** Dim;
-         Put_Line ("Multivector.General_Inverse Dim, BB_Max_Index " &
+         Put_Line ("Multivector.General_Inverse Metric Dim, BB_Max_Index " &
                      Integer'Image (Dim) & Integer'Image (BB_Max_Index));
 
          declare
@@ -758,6 +760,10 @@ package body Multivectors is
    end General_Inverse;
 
    --  -------------------------------------------------------------------------
+   --  To_Geometric_Matrix constructs a matrix 'Matrix_AG' such that matrix multiplication of
+   --  'Matrix_AG' with the coordinates of another multivector 'x'
+   --  (stored in a vector) would result in the geometric product of
+   --  'Matrix_AG' and 'x'
 
    function To_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
                                  return GA_Maths.Float_Matrix is
@@ -765,9 +771,8 @@ package body Multivectors is
       use GA_Maths;
       use Blade_List_Package;
       Dim         : constant Natural:= Space_Dimension (MV);
-      Max_Index   : constant Natural := Dim;
-      Matrix_AG   : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
-      BBs_L      : Basis_Blade_Array (0 .. Max_Index);
+      Matrix_AG   : Float_Matrix (0 .. 31, 0 .. 31) := (others => (others => 0.0));
+      BBs_L      : Basis_Blade_Array (0 .. Dim);
       BL_Curs    : Cursor := MV.Blades.First;
       MV_Blade   : Basis_Blade;
       GP_List    : Blade_List;
@@ -780,11 +785,7 @@ package body Multivectors is
          --                                           BBs_L (index));
       end loop;
 
-      --  Construct a matrix 'Matrix_AG' such that matrix multiplication of
-      --  'Matrix_AG' with the coordinates of another multivector 'x'
-      --  (stored in a vector) would result in the geometric product of
-      --  'Matrix_AG' and 'x'
-      while Has_Element (BL_Curs) loop
+       while Has_Element (BL_Curs) loop
          --  for each blade of BL
          MV_Blade := Element (BL_Curs);
          GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix MV_Blade", MV_Blade);
@@ -794,19 +795,19 @@ package body Multivectors is
          for index in BBs_L'Range loop
             --                 Put_Line ("Multivector.To_Geometric_Matrix Metric index: " &
             --                             Integer'Image (index));
-            --                    GA_Utilities.Print_Blade ("Multivector.General_Inverse BBs_L (index)", BBs (index));
+            --                    GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)", BBs (index));
             --  gp(aBlade, BBs (index), Met) corresponds to L_k L_j of equation (20.1)
             GP_List := Geometric_Product (MV_Blade, BBs_L (index), Met);
             if not Is_Empty (GP_List) then
-               --                       GA_Utilities.Print_Blade ("Multivector.General_Inverse Metric BBs (index)",
-               --                                                      BBs (index));
-               --                       GA_Utilities.Print_Blade_List ("Multivector.General_Inverse Metric GP_List",
-               --                                                      GP_List);
+               GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
+                                         BBs_L (index));
+               GA_Utilities.Print_Blade_List ("Multivector.To_Geometric_Matrix GP_List",
+                                              GP_List);
                Add_To_Matrix (Matrix_AG, BBs_L (index), GP_List);
             end if;
          end loop;
          Next (BL_Curs);
-      end loop;
+       end loop;
 
       return Matrix_AG;
    end To_Geometric_Matrix;
@@ -821,7 +822,7 @@ package body Multivectors is
       MV_List     : constant Blade_List := MV.Blades;
       MV_Curs     : Cursor;
       Dim         : constant Natural:= Space_Dimension (MV);
-      Max_Index   : constant Natural := Dim - 1;
+      Max_Index   : constant Natural := Dim;
       B_Blades    : Basis_Blade_Array (0 .. Max_Index);
       L_Prod      : Blade_List;  --  s^jk_i L_i
       L_Prod_Curs : Cursor;
