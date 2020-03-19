@@ -11,7 +11,7 @@ with Metric;
 with Multivectors; use Multivectors;
 with Multivector_Type;
 
-procedure Test_General_Inverse is
+procedure General_Inverse_Test is
    use Blade.Names_Package;
    BV_Names     : Blade.Basis_Vector_Names;
 
@@ -36,11 +36,11 @@ procedure Test_General_Inverse is
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
-   GA_Utilities.Print_Metric ("Test_General_Inverse Metric", Met);
-   GA_Utilities.Print_Float_Array ("Test_General_Inverse Metric Eigen_Values",
+   GA_Utilities.Print_Metric ("General_Inverse_Test Metric", Met);
+   GA_Utilities.Print_Float_Array ("General_Inverse_Test Metric Eigen_Values",
                                    Metric.Eigen_Values (Met));
    New_Line;
-   GA_Utilities.Print_Matrix ("Test_General_Inverse Metric Eigen_Vectors",
+   GA_Utilities.Print_Matrix ("General_Inverse_Test Metric Eigen_Vectors",
                                    Metric.Eigen_Vectors (Met));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
@@ -68,6 +68,6 @@ begin
 
 exception
    when anError :  others =>
-      Put_Line ("An exception occurred in Test_General_Inverse.");
+      Put_Line ("An exception occurred in General_Inverse_Test.");
       raise;
-end Test_General_Inverse;
+end General_Inverse_Test;
