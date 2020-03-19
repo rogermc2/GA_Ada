@@ -679,6 +679,7 @@ package body Multivectors is
       Blades       : Blade_List;
       Result       : Multivector;
    begin
+      GA_Utilities.Print_Metric ("Multivector.General_Inverse Metric", Met);
       GA_Utilities.Print_Multivector ("Multivector.General_Inverse Metric MV", MV);
       if Is_Null (MV) then
          Result := MV;
@@ -739,6 +740,8 @@ package body Multivectors is
       GP_List    : Blade_List;
 
    begin
+      GA_Utilities.Print_Metric ("Multivector.To_Geometric_Matrix Metric", Met);
+
       --  Create all unit basis blades for Dim L
       --  Array of basis bitmaps (0 - 31)
       for index in BBs_L'Range loop
@@ -920,7 +923,6 @@ package body Multivectors is
       if Is_Empty (List (MV2.Blades)) then
          raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
       end if;
-
       --        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
       --                                        MV1);
       --        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",

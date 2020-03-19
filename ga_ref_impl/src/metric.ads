@@ -16,6 +16,7 @@ package Metric is
    function E3_Eigen_Matrix return Metric_Matrix;
    function E3_Inverse_Eigen_Matrix return Metric_Matrix;
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
+   function Eigen_Vectors (Met : Metric_Record) return Metric_Matrix;
    function Eigen_Values (Met : Metric_Record) return Real_Vector;
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
    function Is_Diagonal (Met : Metric_Record) return Boolean;

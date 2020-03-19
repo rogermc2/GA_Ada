@@ -55,6 +55,13 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
+   function Eigen_Vectors (Met : Metric_Record) return Metric_Matrix is
+   begin
+      return Met.Eigen_Vectors;
+   end Eigen_Vectors;
+
+   --  --------------------------------------------------------------------
+
    function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
       return Met.Inverse_Eigen_Matrix;
@@ -134,15 +141,16 @@ package body Metric is
    begin
       if not Is_Symetric (Met) then
          raise Metric_Exception with
-           "Matric.New_Metric cannot process non-symmetric matrices.";
+           "Metric.New_Metric cannot process non-symmetric matrices.";
       else
          Eigensystem (Real_Matrix (Met), Values, Vectors); --  m_eig
          State.Eigen_Values := Values;
          State.Eigen_Vectors := Metric_Matrix (Vectors);
          State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Vectors));
-         For row in Values'Range loop
-            State.Matrix (row, row) := Values (row);
-         end loop;
+--           For row in Values'Range loop
+--              State.Matrix (row, row) := Values (row);
+--           end loop;
+         State.Matrix := Met;
 
          State.Diagonal := Is_Diagonal (Met);
          if not State.Diagonal then
