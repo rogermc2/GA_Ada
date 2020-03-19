@@ -20,6 +20,10 @@ procedure Test_Metric is
 begin
    GA_Utilities.Print_Metric ("Test_Metric", Met);
    GA_Utilities.Print_Metric ("Test_Metric E3", E3_Met);
+   GA_Utilities.Print_Float_Array ("Eigen_Values (Met)", Metric.Eigen_Values (Met));
+   GA_Utilities.Print_Matrix ("Eigen_Vectors (Met)", Metric.Eigen_Vectors (Met));
+   GA_Utilities.Print_Float_Array ("Eigen_Values (E3_Met)", Metric.Eigen_Values (E3_Met));
+   GA_Utilities.Print_Matrix ("Eigen_Vectors (E3_Met)", Metric.Eigen_Vectors (E3_Met));
 
 exception
    when others =>

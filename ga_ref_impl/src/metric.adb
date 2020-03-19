@@ -135,6 +135,7 @@ package body Metric is
 
    function New_Metric (Met : Metric_Matrix) return Metric_Record is
       use GA_Maths;
+      use Float_Array_Package;
       Values    : Real_Vector (Met'Range);  --  m_eigenMetric
       Vectors   : Float_Matrix (Met'Range, Met'Range);
       State     : Metric_Record (Met'Length (1));
