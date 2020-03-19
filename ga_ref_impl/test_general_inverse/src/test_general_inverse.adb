@@ -30,6 +30,8 @@ procedure Test_General_Inverse is
    ni_bv        : Multivector := Basis_Vector (Blade_Types.C3_ni);
 
    MV_A         : Multivector;
+   MV_AI        : Multivector;
+   MV_A1        : Multivector;
    MV_AI_1      : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
@@ -42,7 +44,10 @@ begin
 
    MV_A := e1_bv + Outer_Product (e2_bv, (Outer_Product (e3_bv, e1_bv)));
    GA_Utilities.Print_Multivector ("MV_A", MV_A);
-   New_Line;
+
+   MV_A1 := e1_bv + Outer_Product (e2_bv, e3_bv);
+   GA_Utilities.Print_Multivector ("MV_A1", MV_A1);
+
    MV_Info := Multivector_Type.Init (MV_A);
 --     GA_Utilities.Print_Multivector_Info ("MV A Info", MV_Info);
 --     New_Line;
@@ -50,7 +55,7 @@ begin
 --     MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
 --     GA_Utilities.Print_Multivector ("MV_A", MV_A);
 
-   MV_AI_1 := General_Inverse (MV_A, Met);
+   MV_AI_1 := General_Inverse (MV_A1, Met);
    GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
    MV_Info := Multivector_Type.Init (MV_AI_1);
    GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
