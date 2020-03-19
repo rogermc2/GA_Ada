@@ -67,6 +67,20 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Float_Array (Name : String; anArray : GA_Maths.Float_Vector) is
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put (Float'Image (anArray (Index)) & " ");
+         if Index mod 6 = 0 then
+            New_Line;
+         end if;
+      end loop;
+      New_Line;
+   end Print_Float_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array) is
    begin
       Put_Line (Name & ": ");

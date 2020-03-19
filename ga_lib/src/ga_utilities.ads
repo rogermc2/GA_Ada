@@ -14,6 +14,7 @@ package GA_Utilities is
    procedure Print_Bitmap (Name : String; Bitmap : Interfaces.Unsigned_32);
    procedure Print_Blade (Name : String; B : Blade.Basis_Blade);
    procedure Print_Blade_List (Name : String; BL : Blade.Blade_List);
+   procedure Print_Float_Array (Name : String; anArray : GA_Maths.Float_Vector);
    procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array);
    procedure Print_Matrix (Name : String; aMatrix : GA_Maths.GA_Matrix3);
    procedure Print_Matrix (Name : String; aMatrix : Real_Matrix);
