@@ -1,0 +1,170 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5533,        162]
+NotebookOptionsPosition[      4549,        131]
+NotebookOutlinePosition[      4902,        147]
+CellTagsIndexPosition[      4859,        144]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Remove", "[", "\"\<Global`*\>\"", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Off", "[", 
+   RowBox[{"General", "::", "\"\<spell1\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "SetDirectory", "[", 
+   "\"\</Ada\\ Projects/GA_Ada/ga_ref_impl/test_general_inverse\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Directory", "[", "]"}]}], "Input",
+ CellChangeTimes->{{3.532979586951098*^9, 3.532979615448196*^9}, {
+   3.5329826770597963`*^9, 3.532982784413616*^9}, {3.5329830221506853`*^9, 
+   3.532983024843397*^9}, {3.53298328860998*^9, 3.532983359940187*^9}, {
+   3.5351637463591547`*^9, 3.535163754729013*^9}, {3.544058263526946*^9, 
+   3.544058274634918*^9}, {3.5440583639467707`*^9, 3.544058500384274*^9}, 
+   3.544058531518052*^9, {3.544058646347443*^9, 3.544058673540655*^9}, {
+   3.544058824761539*^9, 3.5440588261930637`*^9}, {3.544153025891436*^9, 
+   3.5441530486942797`*^9}, {3.547329608976534*^9, 3.547329632436891*^9}, {
+   3.581015459820033*^9, 3.581015479107823*^9}, {3.581015541467389*^9, 
+   3.581015545560749*^9}, {3.679261181265957*^9, 3.679261190288199*^9}, {
+   3.788996018071095*^9, 3.788996079198843*^9}, {3.7936032770105543`*^9, 
+   3.79360334773423*^9}},ExpressionUUID->"8a4ad502-f328-4dc1-8969-\
+5daca2e64d79"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Remove","rmnsm",
+   "\"There are no symbols matching \\\"\\!\\(\\*RowBox[{\\\"\\\\\\\"Global`*\
+\\\\\\\"\\\"}]\\)\\\".\"",2,12,1,18008489244410666042,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.793603357154934*^9},ExpressionUUID->"f0ce7dd6-1b41-4928-bf93-\
+c729ca93fb8f"],
+
+Cell[BoxData["\<\"/Ada \
+Projects/GA_Ada/ga_ref_impl/test_general_inverse\"\>"], "Output",
+ CellChangeTimes->{{3.7936033503852158`*^9, 
+  3.793603357159239*^9}},ExpressionUUID->"c73b0530-2a8f-4d70-8810-\
+0d90e6a109eb"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"metMatrix", " ", ":=", " ", 
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"0", "0", "0", "0", 
+      RowBox[{"-", "1"}]},
+     {"0", "1", "0", "0", "0"},
+     {"0", "0", "1", "0", "0"},
+     {"0", "0", "0", "1", "0"},
+     {
+      RowBox[{"-", "1"}], "0", "0", "0", "0"}
+    }], "\[NoBreak]", ")"}]}]], "Input",
+ CellChangeTimes->{{3.793602948850911*^9, 
+  3.79360302365998*^9}},ExpressionUUID->"87cfa7e1-baa4-425c-bc42-\
+a1a71d69a233"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Eigenvalues", " ", "[", "metMatrix", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eVec", " ", ":=", 
+   RowBox[{"Eigenvectors", " ", "[", "metMatrix", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"eVec", "//", "MatrixForm"}]}], "Input",
+ CellChangeTimes->{{3.793603027728163*^9, 
+  3.793603142218224*^9}},ExpressionUUID->"f6f2c4cf-e514-46fe-af8d-\
+61bb6071421d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "1"}], ",", "1", ",", "1", ",", "1", ",", "1"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.793603054100501*^9, 3.793603096906413*^9, 
+  3.7936031454336233`*^9, 
+  3.793603357240323*^9},ExpressionUUID->"6fbba239-4005-40d6-9ba3-\
+6081794365cc"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"1", "0", "0", "0", "1"},
+     {
+      RowBox[{"-", "1"}], "0", "0", "0", "1"},
+     {"0", "0", "0", "1", "0"},
+     {"0", "0", "1", "0", "0"},
+     {"0", "1", "0", "0", "0"}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{3.793603054100501*^9, 3.793603096906413*^9, 
+  3.7936031454336233`*^9, 
+  3.793603357243471*^9},ExpressionUUID->"ac75e025-61a5-4f30-a52c-\
+84aa7584294f"]
+}, Open  ]]
+},
+WindowSize->{808, 911},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
+2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1284, 24, 205, "Input", "ExpressionUUID" -> \
+"8a4ad502-f328-4dc1-8969-5daca2e64d79"],
+Cell[1867, 48, 334, 8, 34, "Message", "ExpressionUUID" -> \
+"f0ce7dd6-1b41-4928-bf93-c729ca93fb8f"],
+Cell[2204, 58, 218, 4, 49, "Output", "ExpressionUUID" -> \
+"c73b0530-2a8f-4d70-8810-0d90e6a109eb"]
+}, Open  ]],
+Cell[2437, 65, 460, 13, 148, "Input", "ExpressionUUID" -> \
+"87cfa7e1-baa4-425c-bc42-a1a71d69a233"],
+Cell[CellGroupData[{
+Cell[2922, 82, 401, 9, 112, "Input", "ExpressionUUID" -> \
+"f6f2c4cf-e514-46fe-af8d-61bb6071421d"],
+Cell[3326, 93, 298, 8, 49, "Output", "ExpressionUUID" -> \
+"6fbba239-4005-40d6-9ba3-6081794365cc"],
+Cell[3627, 103, 906, 25, 223, "Output", "ExpressionUUID" -> \
+"ac75e025-61a5-4f30-a52c-84aa7584294f"]
+}, Open  ]]
+}
+]
+*)
+
