@@ -15,8 +15,8 @@ package body Metric is
              (0.0, 1.0, 0.0),
              (0.0, 0.0, 1.0));
 
-   Metric_C3 : Metric_Record (5);
-   Metric_E3 : Metric_Record (3);
+   Metric_C3 : Metric_Record (C3_M'Length(1));
+   Metric_E3 : Metric_Record (E3_M'Length(1));
 
    --  --------------------------------------------------------------------
 
