@@ -256,8 +256,9 @@ package body Multivectors is
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
       --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Beta", Beta);
       --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Gamma", Gamma);
-      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col: " &
-                  Integer'Image (Row) & Integer'Image (Col));
+      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
+                  Integer'Image (Row) & Integer'Image (Col) & "  " &
+                  Float'Image (Weight (Gamma)));
       M (Row, Col) := M (Row, Col) + Weight (Gamma);
 
    exception
