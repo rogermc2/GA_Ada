@@ -11,16 +11,16 @@ with Metric;
 with Multivectors; use Multivectors;
 with Multivector_Type;
 
-procedure Test_MV is
+procedure Test_General_Inverse is
    use Blade.Names_Package;
    BV_Names     : Blade.Basis_Vector_Names;
 
    Met_Matrix   : constant Metric.Metric_Matrix (1 .. 5, 1 .. 5) :=
-     ((0.0, 0.0, 0.0, 0.0, -1.0),
-      (0.0, 1.0, 0.0, 0.0, 0.0),
-      (0.0, 0.0, 1.0, 0.0, 0.0),
-      (0.0, 0.0, 0.0 ,1.0, 0.0),
-      (-1.0, 0.0, 0.0 , 0.0, 0.0));
+                    ((0.0, 0.0, 0.0, 0.0, -1.0),
+                     (0.0, 1.0, 0.0, 0.0, 0.0),
+                     (0.0, 0.0, 1.0, 0.0, 0.0),
+                     (0.0, 0.0, 0.0 ,1.0, 0.0),
+                     (-1.0, 0.0, 0.0 , 0.0, 0.0));
    Met          : constant Metric.Metric_Record := Metric.New_Metric (Met_Matrix);
 
    no_bv        : Multivector := Basis_Vector (Blade_Types.C3_no);
@@ -44,22 +44,19 @@ begin
    GA_Utilities.Print_Multivector ("MV_A", MV_A);
    New_Line;
    MV_Info := Multivector_Type.Init (MV_A);
-   GA_Utilities.Print_Multivector_Info ("MV A Info", MV_Info);
-   New_Line;
+--     GA_Utilities.Print_Multivector_Info ("MV A Info", MV_Info);
+--     New_Line;
 
-   MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
-   GA_Utilities.Print_Multivector ("MV_A", MV_A);
+--     MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
+--     GA_Utilities.Print_Multivector ("MV_A", MV_A);
 
-   if General_Inverse (MV_A, Metric.Matrix (Met), MV_AI_1) then
-        GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
-        MV_Info := Multivector_Type.Init (MV_AI_1);
-        GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
-   else
-        Put_Line ("Multivector MV_A is not invertable.");
-   end if;
+   MV_AI_1 := General_Inverse (MV_A, Met);
+   GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
+   MV_Info := Multivector_Type.Init (MV_AI_1);
+   GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
 
-   exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in Test_MV.");
+exception
+   when anError :  others =>
+      Put_Line ("An exception occurred in Test_General_Inverse.");
       raise;
-end Test_MV;
+end Test_General_Inverse;
