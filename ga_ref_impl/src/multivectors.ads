@@ -76,8 +76,6 @@ package Multivectors is
    function Grade (MV : Multivector; theGrade : out Integer) return Boolean;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
-   function Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
-                                   return GA_Maths.Float_Matrix;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
@@ -106,6 +104,7 @@ package Multivectors is
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;
    function New_Multivector (Blades : Blade.Blade_List) return Multivector;
    function New_Normalized_Point return Normalized_Point;
+   function New_Normalized_Point (e1, e2, e3 : Float) return Normalized_Point;
    function New_Rotor return Rotor;
    function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
@@ -134,8 +133,6 @@ package Multivectors is
    function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
-   function To_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
-                                 return GA_Maths.Float_Matrix;
    procedure To_Line (MV : in out Multivector);
    function To_Rotor (MV : Multivector) return Rotor;
    function To_Vector (MV : Multivector) return Vector;

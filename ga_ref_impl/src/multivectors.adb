@@ -18,11 +18,11 @@ package body Multivectors is
 
    procedure Compress (MV : in out Multivector);
    function Cosine_Series (MV : Multivector; Order : Integer) return Multivector;
-   --      function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
-   --                                    BBs    : in out Basis_Blade_Array;
-   --                                    Inv_MV : out Multivector) return Boolean;
    function Random_Vector (Dim : Integer; Scale : Float) return Multivector;
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
+   function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
+                                 Met : Metric.Metric_Record)
+                                 return GA_Maths.Float_Matrix;
 
    --  -------------------------------------------------------------------------
 
@@ -245,8 +245,9 @@ package body Multivectors is
    procedure Add_To_Matrix (M           : in out GA_Maths.Float_Matrix;
                             Beta, Gamma : Blade.Basis_Blade) is
       use Blade;
-      Row  : constant Integer := Integer (Bitmap (Gamma));
-      Col  : constant Integer := Integer (Bitmap (Beta));
+      --  Matrix indices are 1 greater than bitmap values
+      Row  : constant Integer := Integer (Bitmap (Gamma)) + 1;
+      Col  : constant Integer := Integer (Bitmap (Beta)) + 1;
    begin
       --        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Gamma)",
       --                                    Bitmap (Gamma));
@@ -256,9 +257,9 @@ package body Multivectors is
       --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
       --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Beta", Beta);
       --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Gamma", Gamma);
-      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
-                  Integer'Image (Row) & Integer'Image (Col) & "  " &
-                  Float'Image (Weight (Gamma)));
+      --        Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
+      --                    Integer'Image (Row) & Integer'Image (Col) & "  " &
+      --                    Float'Image (Weight (Gamma)));
       M (Row, Col) := M (Row, Col) + Weight (Gamma);
 
    exception
@@ -688,19 +689,27 @@ package body Multivectors is
 
          declare
             --  cern.colt.matrix.DoubleFactory2D.dense.make(1 << dim, 1 << dim);
-            BB_Max_Index : constant integer := 2 ** Dim - 1;  --  1 << dim
-            Mat          : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
-            Mat_Inv      : Float_Matrix (0 .. BB_Max_Index, 0 .. BB_Max_Index) := (others => (others => 0.0));
-            BBs_L        : Basis_Blade_Array (0 .. BB_Max_Index);
+            L_Max    : constant integer := 2 ** Dim;  --  1 << dim
+            Mat      : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+            Mat_Inv  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+            BBs_L    : Basis_Blade_Array (1 .. L_Max);
          begin
-            Put_Line ("Multivector.General_Inverse Metric Dim, BB_Max_Index " &
-                        Integer'Image (Dim) & Integer'Image (BB_Max_Index));
-            Mat := To_Geometric_Matrix (MV, Met);
-            GA_Utilities.Print_Matrix ("Multivector.General_Inverse MetricMat",
-                                       Mat, (0, 0), (6, 6));
+            Put_Line ("Multivector.General_Inverse Metric Dim, L_Max " &
+                        Integer'Image (Dim) & Integer'Image (L_Max));
+            --  Create all unit basis blades for Dim L
+            --  Array of basis bitmaps (0 - 31)
+            for index in BBs_L'Range loop
+               BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
+                              GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
+                                                        BBs_L (index));
+            end loop;
+
+            Mat := To_Geometric_Matrix (MV, BBs_L, Met);
+            GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
+                                       Mat, (1, 1), (6, 6));
             Mat_Inv := Inverse (Mat);
             for Row in BBs_L'Range loop
-               Value := Mat_Inv (Row, 0);
+               Value := Mat_Inv (Row, 1);
                if Value /= 0.0 then
                   Update_Blade (BBs_L (Row), Value);
                   Blades.Append (BBs_L (Row));
@@ -726,29 +735,20 @@ package body Multivectors is
    --  multivector 'x' (stored in a vector) would result in the
    --  geometric product of 'Matrix_AG' and 'x'
    --  Metric version:
-   function To_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
+   function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
+                                 Met : Metric.Metric_Record)
                                  return GA_Maths.Float_Matrix is
       use Blade;
       use GA_Maths;
       use Blade_List_Package;
-      Dim        : constant Natural:= Space_Dimension (MV);
-      Max_Index  : constant integer := 2 ** Dim - 1;  --  1 << dim - 1
-      Matrix_AG  : Float_Matrix (0 .. Max_Index, 0 .. Max_Index) := (others => (others => 0.0));
-      BBs_L      : Basis_Blade_Array (0 .. Max_Index); --  B
+      L_Max      : constant integer := BBs_L'Length;
+      Matrix_AG  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
       BL_Curs_i  : Cursor := MV.Blades.First;
       Blade_b    : Basis_Blade;  --  b
       GP_List    : Blade_List;
 
    begin
       GA_Utilities.Print_Metric ("Multivector.To_Geometric_Matrix Metric", Met);
-
-      --  Create all unit basis blades for Dim L
-      --  Array of basis bitmaps (0 - 31)
-      for index in BBs_L'Range loop
-         BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
-         --                 GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
-         --                                           BBs_L (index));
-      end loop;
 
       while Has_Element (BL_Curs_i) loop
          --  for each blade of BL
@@ -765,10 +765,10 @@ package body Multivectors is
             --  gp(aBlade, BBs (index_j), Met) corresponds to L_k L_j of equation (20.1)
             GP_List := Geometric_Product (Blade_b, BBs_L (index_j), Met);
             if not Is_Empty (GP_List) then
-               GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
-                                         BBs_L (index_j));
-               GA_Utilities.Print_Blade_List ("Multivector.To_Geometric_Matrix GP_List",
-                                              GP_List);
+               --                 GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
+               --                                           BBs_L (index_j));
+               --                 GA_Utilities.Print_Blade_List ("Multivector.To_Geometric_Matrix GP_List",
+               --                                                GP_List);
                Add_To_Matrix (Matrix_AG, BBs_L (index_j), GP_List);
             end if;
          end loop;
@@ -777,58 +777,6 @@ package body Multivectors is
 
       return Matrix_AG;
    end To_Geometric_Matrix;
-
-   --  -------------------------------------------------------------------------
-
-   function Init_Geometric_Matrix (MV : Multivector;  Met : Metric.Metric_Record)
-                                   return GA_Maths.Float_Matrix is
-      use Blade;
-      use GA_Maths;
-      use Blade_List_Package;
-      MV_List     : constant Blade_List := MV.Blades;
-      MV_Curs     : Cursor;
-      Dim         : constant Natural:= Space_Dimension (MV);
-      Max_Index   : constant Natural := Dim;
-      B_Blades    : Basis_Blade_Array (0 .. Max_Index);
-      L_Prod      : Blade_List;  --  s^jk_i L_i
-      L_Prod_Curs : Cursor;
-      Li          : array (0 .. Max_Index, 0 .. Max_Index) of Blade_List;
-      Li_Curs     : Cursor;
-      Matrix_AG   : Float_Matrix (0 .. 31, 0 .. 31) :=
-                      (others => (others => 0.0));
-   begin
-      --  Array of basis bitmaps (0 - 31)
-      for index in B_Blades'Range loop
-         B_Blades (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index));
-      end loop;
-
-      --  Loop over all indices j, k to compute the geometric product
-      --  of all basis blades as in equation (20.1)
-      for k in B_Blades'Range loop
-         for j in B_Blades'Range loop
-            --  L_Prod is an ArrayList because the result of Geometric_Product
-            --  for non-diagonal metrics does not have to be a single BasisBlade.
-            L_Prod := Geometric_Product (B_Blades(k), B_Blades(j), Met);  --  L_i
-            GA_Utilities.Print_Blade_List
-              ("Init_Geometric_Matrix L_Prod " & Integer'Image (k) & ", " &
-                 Integer'Image (j), L_Prod);
-            Li (k, j) := L_Prod;
-         end loop;
-      end loop;
-
-      for index in B_Blades'Range loop
-         for k in Li'Range(1) loop
-            for j in Li'Range(2) loop
-               Li_Curs := Li (k, j).First;
-               while Has_Element (Li_Curs) loop
-                  Add_To_Matrix (Matrix_AG, B_Blades (index), Element (Li_Curs));
-                  Next (Li_Curs);
-               end loop;
-            end loop;
-         end loop;
-      end loop;
-      return Matrix_AG;
-   end Init_Geometric_Matrix;
 
    --  -------------------------------------------------------------------------
 
@@ -1447,6 +1395,23 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function New_Normalized_Point (e1, e2, e3 : Float) return Normalized_Point is
+      use GA_Maths.Float_Functions;
+      use Blade;
+      NP     : Normalized_Point;
+   begin
+      NP.Type_Of_MV := MV_Normalized_Point;
+      NP.Blades.Append (New_Basis_Blade (C3_no, 1.0));
+      NP.Blades.Append (New_Basis_Blade (C3_e1, e1));
+      NP.Blades.Append (New_Basis_Blade (C3_e2, e2));
+      NP.Blades.Append (New_Basis_Blade (C3_e3, e3));
+      NP.Blades.Append
+        (New_Basis_Blade (C3_ni, Sqrt (e1*e1 + e2*e2 + e3*e3)));
+      return NP;
+   end New_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
+
    function New_Rotor return Rotor is
    begin
       return  New_Rotor (1.0);
@@ -1460,7 +1425,7 @@ package body Multivectors is
    begin
       R.Type_Of_MV := MV_Rotor;
       R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
-      return  R;
+      return R;
    end New_Rotor;
 
    --  -------------------------------------------------------------------------
@@ -1474,7 +1439,7 @@ package body Multivectors is
       R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e1e2)));
       R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e2e3)));
       R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e3e1)));
-      return  R;
+      return R;
    end New_Rotor;
 
    --  -------------------------------------------------------------------------
@@ -1488,7 +1453,7 @@ package body Multivectors is
       R.Blades.Append (New_Basis_Blade (E3_e1, e1));
       R.Blades.Append (New_Basis_Blade (E3_e2, e2));
       R.Blades.Append (New_Basis_Blade (E3_e3, e3));
-      return  R;
+      return R;
    end New_Rotor;
 
    --  -------------------------------------------------------------------------
@@ -1813,20 +1778,8 @@ package body Multivectors is
    --  Space_Dimension returns the dimension of the space that this blade
    --  (apparently) lives in.
    function Space_Dimension (MV : Multivector) return Natural is
-      use GA_Maths;
-      use Blade;
-      use Blade_List_Package;
-      Blades       : constant Blade_List := MV.Blades;
-      Blade_Cursor : Cursor := Blades.First;
-      BM           : Interfaces.Unsigned_32;
-      Max_Dim      : Natural := 0;
    begin
-      while Has_Element (Blade_Cursor) loop
-         BM := Bitmap (Element (Blade_Cursor));
-         Max_Dim := Maximum (Max_Dim, (Bits.Highest_One_Bit (BM)));
-         Next (Blade_Cursor);
-      end loop;
-      return Max_Dim + 1;  --  Multivector.java spaceDim returns Max_Dim + 1
+       return GA_Utilities.Multivector_Size (MV);  --  Multivector.java spaceDim returns Max_Dim + 1
    end Space_Dimension;
 
    --  -------------------------------------------------------------------------
