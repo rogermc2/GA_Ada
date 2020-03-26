@@ -24,7 +24,6 @@ begin
    GA_Utilities.Print_Matrix ("Eigen_Vectors (Met)", Metric.Eigen_Vectors (Met));
    GA_Utilities.Print_Float_Array ("Eigen_Values (E3_Met)", Metric.Eigen_Values (E3_Met));
    GA_Utilities.Print_Matrix ("Eigen_Vectors (E3_Met)", Metric.Eigen_Vectors (E3_Met));
-
 exception
    when others =>
       Put_Line ("An exception occurred in Test_Metric.");
