@@ -30,9 +30,7 @@ procedure General_Inverse_Test is
    ni_bv        : Multivector := Basis_Vector (Blade_Types.C3_ni);
 
    MV_A         : Multivector;
-   MV_AI        : Multivector;
-   MV_A1        : Multivector;
-   MV_AI_1      : Multivector;
+   MV_A_Inv      : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
@@ -48,23 +46,15 @@ begin
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
-   MV_A := e1_bv + Outer_Product (e2_bv, (Outer_Product (e3_bv, e1_bv)));
+   MV_A := New_Normalized_Point (1.0, 2.5, 3.0);
    GA_Utilities.Print_Multivector ("MV_A", MV_A);
 
-   MV_A1 := e1_bv + Outer_Product (e2_bv, e3_bv);
-   GA_Utilities.Print_Multivector ("MV_A1", MV_A1);
-
    MV_Info := Multivector_Type.Init (MV_A);
---     GA_Utilities.Print_Multivector_Info ("MV A Info", MV_Info);
---     New_Line;
 
---     MV_A := e1_bv + Outer_Product (e2_bv, e3_bv);
---     GA_Utilities.Print_Multivector ("MV_A", MV_A);
-
-   MV_AI_1 := General_Inverse (MV_A1, Met);
-   GA_Utilities.Print_Multivector ("MV_AI_1", MV_AI_1);
-   MV_Info := Multivector_Type.Init (MV_AI_1);
-   GA_Utilities.Print_Multivector_Info ("MV AI 1 Info", MV_Info);
+   MV_A_Inv := General_Inverse (MV_A, Met);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_Inv", MV_A_Inv);
+   MV_Info := Multivector_Type.Init (MV_A_Inv);
+   GA_Utilities.Print_Multivector_Info ("General_Inverse_Test MV_A_Inv Info", MV_Info);
 
 exception
    when anError :  others =>
