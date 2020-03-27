@@ -8,9 +8,8 @@ generalInverse[pMV_, pMetric_] := Module[{mvSize, mMatrix, lMax, i, j,
      dim = Dimensions[pMV, 1][[1]]; lMax = BitShiftLeft[1, dim]; 
       mMatrix = Table[0, {i, 1, lMax}, {j, 1, lMax}]; 
       basisBlades = Table[blade[i - 1, 1], {i, 1, lMax}]; 
-      Do[b = pMV[[i]]; Print["generalInverse b: ", b]; 
-        Do[gp = geometricProduct[b, basisBlades[[j]], pMetric]; 
-          mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
+      Do[b = pMV[[i]]; Do[gp = geometricProduct[b, basisBlades[[j]], 
+            pMetric]; mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
          {j, 1, lMax}], {i, 1, dim}]; Print["generalInverse final mMatrix: ", 
        MatrixForm[mMatrix]]; invMatrix = Inverse[mMatrix]; 
       Print["generalInverse invMatrix: ", MatrixForm[invMatrix]]; 
@@ -29,7 +28,8 @@ geometricProduct[pBladeA_, pBladeB_, pMetric_] :=
       iMax = Dimensions[listB, 1][[1]]; 
       Do[Do[gp = geometricProduct[listA[[i]], listB[[j]]]; 
          result = Append[result, gp], {j, 1, jMax}], {i, 1, iMax}]; 
-      result = mvSimplify[result]; result]
+      result = mvSimplify[result]; result = toMetricBasis[result, 
+        eigenvecs /. pMetric]; result]
  
 gpOp[pBladeA_, pBladeB_, pOuter_] := Module[{bBlade = {0, 0}, bitmap, sign}, 
      If[pOuter == True && BitAnd[pBladeA[[1]], pBladeB[[1]]] != 0, Null, 
@@ -73,6 +73,13 @@ mvSimplify[pBladeList_] := Module[{result = {},
            If[current[[2]] != 0., result = Append[result, current]; 
              current = b]], {i, 2, dim}]; If[current[[2]] != 0., 
          result = Append[result, current]]; ]; result]
+ 
+toMetricBasis[pBladeList_, pEVecMatrix_] := Module[{result = {}, tmp, i}, 
+     Do[tmp = toMetricBlade[pBladeList[[i]], pEVecMatrix]; 
+        result = Append[result, tmp[[i]]], {i, 1, Dimensions[pBladeList][[
+         1]]}]; result = Simplify[result]; result]
+ 
+toMetricBlade[pblade_, pEVecMatrix_] := transform[pblade, pEVecMatrix]
  
 addToMatrix[pMatrix_, pBeta_, pGamma_] := 
     Module[{v, aBlade, result = pMatrix}, 
