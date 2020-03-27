@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     67888,       1414]
-NotebookOptionsPosition[     65880,       1365]
-NotebookOutlinePosition[     66237,       1381]
-CellTagsIndexPosition[     66194,       1378]
+NotebookDataLength[     68048,       1417]
+NotebookOptionsPosition[     66042,       1368]
+NotebookOutlinePosition[     66397,       1384]
+CellTagsIndexPosition[     66354,       1381]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -936,14 +936,16 @@ Cell[BoxData[
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{
-    "geometricProduct", " ", "computes", " ", "the", " ", "geometric", " ", 
-     "product", " ", "of", " ", "two", " ", "basis", " ", "blades", " ", "in",
-      " ", "arbitray", " ", "non"}], "-", 
-    RowBox[{"Euclidean", " ", 
-     RowBox[{"metric", "."}], "\[IndentingNewLine]", "*", " ", "pM", " ", 
-     "is", " ", "an", " ", "array", " ", "of", " ", "floats", " ", "giving", 
-     " ", "the", " ", "metric", " ", "for", " ", "each", " ", "basis", " ", 
-     RowBox[{"vector", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+     "geometricProduct", " ", "computes", " ", "the", " ", "geometric", " ", 
+      "product", " ", "of", " ", "two", " ", "basis", " ", "blades", " ", 
+      "in", " ", "arbitray", " ", "non"}], "-", 
+     RowBox[{"Euclidean", " ", 
+      RowBox[{"metric", "."}], "\[IndentingNewLine]", "*", " ", "pMetric", 
+      " ", "is", " ", "an", " ", "instance", " ", "of", " ", "Metric", " ", 
+      "giving", " ", "the", " ", "metric", " ", "and", " ", "precomputed", 
+      " ", "eigen", " ", "vectors"}]}], ",", " ", 
+    RowBox[{"etc", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{
     RowBox[{"geometricProduct", "[", 
@@ -1081,8 +1083,9 @@ Cell[BoxData[
    3.794266190403205*^9}, 3.79426634094648*^9, 3.7942664148406143`*^9, {
    3.794274063950642*^9, 3.794274069468952*^9}, {3.794274120052154*^9, 
    3.7942741214759293`*^9}, 3.794280067653288*^9, {3.7942801016161137`*^9, 
-   3.794280122555594*^9}, {3.79428023138877*^9, 
-   3.79428023701266*^9}},ExpressionUUID->"a40ffb2b-7950-412c-8db7-\
+   3.794280122555594*^9}, {3.79428023138877*^9, 3.79428023701266*^9}, {
+   3.794292361855432*^9, 3.7942923730978193`*^9}, {3.7942924036956177`*^9, 
+   3.794292412406046*^9}},ExpressionUUID->"a40ffb2b-7950-412c-8db7-\
 fc43d681b954"],
 
 Cell[BoxData[
@@ -1364,7 +1367,7 @@ Cell[BoxData[{
 6f5ea481145d"]
 },
 WindowSize->{1030, 911},
-WindowMargins->{{349, Automatic}, {Automatic, 22}},
+WindowMargins->{{77, Automatic}, {Automatic, 0}},
 FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
 2017)",
 StyleDefinitions->"Default.nb"
@@ -1383,7 +1386,7 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 1284, 24, 143, "Input", "ExpressionUUID" -> \
 "c56b4523-dc33-409c-b004-327973c7851a"],
-Cell[1867, 48, 3034, 43, 66, "Output", "ExpressionUUID" -> \
+Cell[1867, 48, 3034, 43, 49, "Output", "ExpressionUUID" -> \
 "90db07db-1ba7-4b5f-b4db-820bbdcef053"]
 }, Open  ]],
 Cell[4916, 94, 422, 9, 49, "Input", "ExpressionUUID" -> \
@@ -1408,13 +1411,13 @@ Cell[40048, 842, 630, 17, 81, "Input", "ExpressionUUID" -> \
 "e7199ffc-acfd-4df5-856b-8fa3fa556a67"],
 Cell[40681, 861, 3108, 70, 422, "Input", "ExpressionUUID" -> \
 "2476cec6-d757-4075-8c69-9f338cc41794"],
-Cell[43792, 933, 8219, 152, 608, "Input", "ExpressionUUID" -> \
+Cell[43792, 933, 8381, 155, 639, "Input", "ExpressionUUID" -> \
 "a40ffb2b-7950-412c-8db7-fc43d681b954"],
-Cell[52014, 1087, 3405, 74, 298, "Input", "ExpressionUUID" -> \
+Cell[52176, 1090, 3405, 74, 298, "Input", "ExpressionUUID" -> \
 "3262f78c-7107-47ee-8a8b-9b0098c131a8"],
-Cell[55422, 1163, 9789, 182, 825, "Input", "ExpressionUUID" -> \
+Cell[55584, 1166, 9789, 182, 825, "Input", "ExpressionUUID" -> \
 "d7b4df9f-e4d2-47b6-9cca-d406d8381302"],
-Cell[65214, 1347, 662, 16, 201, "Input", "ExpressionUUID" -> \
+Cell[65376, 1350, 662, 16, 201, "Input", "ExpressionUUID" -> \
 "873dce43-56ad-4928-ad65-6f5ea481145d"]
 }
 ]
