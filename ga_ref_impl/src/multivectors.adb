@@ -249,11 +249,11 @@ package body Multivectors is
       Row  : constant Integer := Integer (Bitmap (Gamma)) + 1;
       Col  : constant Integer := Integer (Bitmap (Beta)) + 1;
    begin
-      Put_Line ("Multivector.Add_To_Matrix 1 M size: " &
-                  Integer'Image (M'Length(1)));
-      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
-                  Integer'Image (Row) & Integer'Image (Col) & "  " &
-                  Float'Image (Weight (Gamma)));
+      --        Put_Line ("Multivector.Add_To_Matrix 1 M size: " &
+      --                    Integer'Image (M'Length(1)));
+      --        Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
+      --                    Integer'Image (Row) & Integer'Image (Col) & "  " &
+      --                    Float'Image (Weight (Gamma)));
       M (Row, Col) := M (Row, Col) + Weight (Gamma);
 
    exception
@@ -747,10 +747,11 @@ package body Multivectors is
       while Has_Element (BL_Curs_i) loop
          --  for each blade of BL
          Blade_B := Element (BL_Curs_i);
-         GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix Blade_B", Blade_B);
-         --           GA_Utilities.Print_Bitmap ("Multivector.To_Geometric_Matrix Blade_B",
-         --                                      Bitmap (Blade_B));
+         --   GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix Blade_B", Blade_B);
          --  for each bitmap
+         --  geometric multiply the multivector blade by each unit basis blade
+         --  and add each result to matrix M at rows corresponding to the
+         --  the product and the column corresponding to the unit basis blade.
          for index_j in BBs_L'Range loop
             --  metric instanceof Metric
             --                 Put_Line ("Multivector.To_Geometric_Matrix Metric index: " &
@@ -759,10 +760,10 @@ package body Multivectors is
             --  gp(aBlade, BBs (index_j), Met) corresponds to L_k L_j of equation (20.1)
             GP_List := Geometric_Product (Blade_b, BBs_L (index_j), Met);
             if not Is_Empty (GP_List) then
-               --                 GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
-               --                                           BBs_L (index_j));
-               --                 GA_Utilities.Print_Blade_List ("Multivector.To_Geometric_Matrix GP_List",
-               --                                                GP_List);
+               --  GA_Utilities.Print_Blade ("Multivector.To_Geometric_Matrix BBs_L (index)",
+               --                             BBs_L (index_j));
+               --   GA_Utilities.Print_Blade_List ("Multivector.To_Geometric_Matrix GP_List",
+               --                                   GP_List);
                Add_To_Matrix (Matrix_AG, BBs_L (index_j), GP_List);
             end if;
          end loop;
