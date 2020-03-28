@@ -27,6 +27,7 @@ procedure Test_MV is
    Op23         : Multivector;
    Op23_1       : Multivector;
    Add_1_Op23_1 : Multivector;
+   Inv_Add_1_Op23_1 : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
@@ -110,6 +111,8 @@ begin
    GA_Utilities.Print_Multivector ("Add_1_Op23_1: e1 + ((e2 ^ e3) ^ e1", Add_1_Op23_1);
    GA_Utilities.Print_Multivector ("Add_1_Op23_1 G Inverse", General_Inverse (Add_1_Op23_1));
    GA_Utilities.Print_Multivector ("Add_1_Op23_1 V Inverse", Versor_Inverse (Add_1_Op23_1));
+
+   Inv_Add_1_Op23_1 := General_Inverse (Add_1_Op23_1);
    exception
       when anError :  others =>
          Put_Line ("An exception occurred in Test_MV.");
