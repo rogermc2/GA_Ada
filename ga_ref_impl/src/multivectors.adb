@@ -249,17 +249,11 @@ package body Multivectors is
       Row  : constant Integer := Integer (Bitmap (Gamma)) + 1;
       Col  : constant Integer := Integer (Bitmap (Beta)) + 1;
    begin
-      --        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Gamma)",
-      --                                    Bitmap (Gamma));
-      --        GA_Utilities.Print_Bitmap ("Multivector.Add_To_Matrix Bitmap (Beta)",
-      --                                    Bitmap (Beta));
-
-      --                GA_Utilities.Print_Matrix ("Multivector.Add_To_Matrix M", M);
-      --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Beta", Beta);
-      --                      GA_Utilities.Print_Blade ("Multivector.Add_To_Matrix Gamma", Gamma);
-      --        Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
-      --                    Integer'Image (Row) & Integer'Image (Col) & "  " &
-      --                    Float'Image (Weight (Gamma)));
+      Put_Line ("Multivector.Add_To_Matrix 1 M size: " &
+                  Integer'Image (M'Length(1)));
+      Put_Line ("Multivector.Add_To_Matrix 1 Row, Col, Weight: " &
+                  Integer'Image (Row) & Integer'Image (Col) & "  " &
+                  Float'Image (Weight (Gamma)));
       M (Row, Col) := M (Row, Col) + Weight (Gamma);
 
    exception
@@ -1789,7 +1783,7 @@ package body Multivectors is
          Next (Blade_Cursor);
       end loop;
 
-      return Max_D;
+      return Max_D + 1;
    end Space_Dimension;
 
    --  -------------------------------------------------------------------------
