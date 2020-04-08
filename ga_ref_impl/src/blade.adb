@@ -260,22 +260,16 @@ package body Blade is
       OP_Blade : Basis_Blade;
       Sign     : Float;
    begin
-      --        if (BA.Bitmap xor BB.Bitmap) = 38 then
-      --           Put_Line ("Blade.GP_OP, BA.Bitmap" & Unsigned_32'Image (BA.Bitmap));
-      --           Put_Line ("Blade.GP_OP, BB.Bitmap" & Unsigned_32'Image (BB.Bitmap));
-      --           Put_Line ("Blade.GP_OP, And Bitmaps" & Unsigned_32'Image (BA.Bitmap and BB.Bitmap));
-      --           Put_Line ("Blade.GP_OP, Xor Bitmaps" & Unsigned_32'Image (BA.Bitmap xor BB.Bitmap));
-      --        end if;
-      if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
+       if Outer and then (BA.Bitmap and BB.Bitmap) /= 0 then
          --  BA and BB are parallel; so their volume is zero
          OP_Blade  := New_Basis_Blade (0, 0.0);  --  return zero blade
-      else  --  compute geometric product
+       else  --  compute geometric product
          --  if BA.Bitmap = BB.Bitmap, xor = 0, so Dot product part of MV
          --  else xor > 0 so Outer product part of MV
          Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
          OP_Blade := New_Basis_Blade
            (BA.Bitmap xor BB.Bitmap, Sign * BA.Weight * BB.Weight);
-      end if;
+       end if;
 
       return OP_Blade;
 
