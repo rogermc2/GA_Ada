@@ -70,6 +70,52 @@ mvSimplify[pBladeList_] := Module[{result = {},
             current = b], {i, 2, Dimensions[sortedA][[1]]}]; 
         If[current[[2]] != 0., result = AppendTo[result, current]]; ]; result]
  
+mvGeometricProductMetric[pMVa_, pMVb_, pMetric_] := 
+    Module[{bladeA = {0, 0}, bladeB = {0, 0}, gp = {0, 0}, 
+      result = {{0, 0}}}, Do[bladeA = pMVa[[indexA]]; 
+        Do[bladeB = pMVb[[indexB]]; gp = geometricProductMetric[bladeA, 
+            bladeB, pMetric]; Do[result = AppendTo[result, gp[[indexGP]]], 
+           {indexGP, 1, Dimensions[gp, 1][[1]]}], {indexB, 1, 
+          Dimensions[pMVb, 1][[1]]}], {indexA, 1, Dimensions[pMVa, 1][[1]]}]; 
+      result = mvSimplify[result]; result]
+ 
+geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
+    Module[{listA = toEigenBasis[pBladeA, invMetricMatrix /. pMetric], 
+      listB = toEigenBasis[pBladeB, invMetricMatrix /. pMetric], jMax, iMax, 
+      gp, result = {{0, 0}}, bitmap, i = 0}, 
+     jMax = Dimensions[listA, 1][[1]]; iMax = Dimensions[listB, 1][[1]]; 
+      Do[Do[gp = gProduct[listA[[i]], listB[[j]], eigenvals /. pMetric]; 
+         result = AppendTo[result, gp], {j, 1, jMax}], {i, 1, iMax}]; 
+      result = mvSimplify[result]; result = toMetricBasis[result, 
+        eigenvecs /. pMetric]; result]
+ 
+toEigenBasis[pblade_, pMatrix_] := transform[pblade, pMatrix]
+ 
+transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
+      aBM = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, i = 1, 
+      op}, While[aBM != 0, If[BitAnd[aBM, 1] != 0, 
+         tmp = {}; Do[If[pMatrix[[j,i]] != 0, m = pMatrix[[j,i]]; 
+             Do[op = outerProduct[aList[[k]], blade[2^(j - 1), m]]; tmp = 
+                AppendTo[tmp, op], {k, 1, Dimensions[aList, 1][[1]]}]], 
+           {j, 1, maxj}]; aList = tmp]; aBM = BitShiftRight[aBM]; i = i + 1]; 
+      aList]
+ 
+outerProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, True]
+ 
+gProduct[pBladeA_, pBladeB_, pMetEigenVals_] := 
+    Module[{result = geometricProduct[pBladeA, pBladeB], bitmap, i = 1}, 
+     bitmap = BitAnd[pBladeA[[1]], pBladeB[[1]]]; While[bitmap != 0, 
+       If[BitAnd[bitmap, 1] != 0, result[[2]] = result[[2]]*
+           pMetEigenVals[[i]]]; i = i + 1; bitmap = BitShiftRight[bitmap]]; 
+      result]
+ 
+toMetricBasis[pBladeList_, pEVecMatrix_] := Module[{result = {}, tmp, i}, 
+     Do[tmp = toMetricBlade[pBladeList[[i]], pEVecMatrix]; 
+        result = AppendTo[result, tmp[[i]]], {i, 1, Dimensions[pBladeList][[
+         1]]}]; result = mvSimplify[result]; result]
+ 
+toMetricBlade[pblade_, pEVecMatrix_] := transform[pblade, pEVecMatrix]
+ 
 mvOuterProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0}, 
       op = {0, 0}, result = {{0, 0}}}, 
      Do[bladeA = pMVa[[indexA]]; Do[bladeB = pMVb[[indexB]]; 
@@ -77,8 +123,6 @@ mvOuterProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0},
          {indexB, 1, Dimensions[pMVb, 1][[1]]}], 
        {indexA, 1, Dimensions[pMVa, 1][[1]]}]; result = mvSimplify[result]; 
       result]
- 
-outerProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, True]
  
 mvInnerProduct[pMVA_, pMVB_, pType_:leftContraction] := 
     Module[{result = {{0, 0}}, blade1 = {0, 0}, blade2 = {0, 0}, i, j}, 
