@@ -31,7 +31,8 @@ procedure General_Inverse_Test is
 
    MV_A         : Multivector;
    MV_A_Inv     : Multivector;
-   MV_A_GP     : Multivector;
+   MV_A_GP      : Multivector;
+   MV_A_GP_Met  : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
@@ -48,11 +49,14 @@ begin
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
    MV_A := New_Normalized_Point (1.0, 1.0, 1.0);
-   GA_Utilities.Print_Multivector ("MV_A", MV_A);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A", MV_A);
 
    MV_Info := Multivector_Type.Init (MV_A);
-   MV_A_GP := Geometric_Product (MV_A, MV_A,Met);
+   MV_A_GP := Geometric_Product (MV_A, MV_A);
    GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP", MV_A_GP);
+
+--     MV_A_GP_Met := Geometric_Product (MV_A, MV_A,Met);
+--     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP_Met", MV_A_GP_Met);
 
 --     MV_A_Inv := General_Inverse (MV_A, Met);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_Inv", MV_A_Inv);
