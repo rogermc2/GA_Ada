@@ -55,8 +55,8 @@ begin
    MV_A_GP := Geometric_Product (MV_A, MV_A);
    GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP", MV_A_GP);
 
---     MV_A_GP_Met := Geometric_Product (MV_A, MV_A,Met);
---     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP_Met", MV_A_GP_Met);
+   MV_A_GP_Met := Geometric_Product (MV_A, MV_A,Met);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP_Met", MV_A_GP_Met);
 
 --     MV_A_Inv := General_Inverse (MV_A, Met);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_Inv", MV_A_Inv);

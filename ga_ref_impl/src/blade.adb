@@ -12,7 +12,7 @@ package body Blade is
                                   return Basis_Blade;
    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                             return Blade_List;
-   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
+   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Record)
                              return Blade_List;
    function Transform_Basis (BA : Blade.Basis_Blade; Met : GA_Maths.Float_Matrix)
                              return Blade_List;
@@ -213,7 +213,7 @@ package body Blade is
       end loop;
 
       Simplify (Result);
-      return To_Metric_Basis (Result, Metric.Inv_Eigen_Matrix (Met));
+      return To_Metric_Basis (Result, Met);
 
    exception
       when others =>
@@ -540,16 +540,16 @@ package body Blade is
 
    --  -------------------------------------------------------------------------
 
-   function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Matrix)
+   function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List is
    begin
       --          GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
-      return Transform_Basis (BB, GA_Maths.Float_Matrix (Met));
+      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inv_Eigen_Matrix (Met)));
    end To_Metric_Basis;
 
    --  ------------------------------------------------------------------------
 
-   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Matrix)
+   function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Record)
                              return Blade_List is
       use Blade_List_Package;
       BL_Cursor      : Cursor := BL.First;
