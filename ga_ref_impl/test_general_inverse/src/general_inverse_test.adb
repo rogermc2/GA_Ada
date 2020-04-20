@@ -30,7 +30,7 @@ procedure General_Inverse_Test is
    ni_bv        : Multivector := Basis_Vector (Blade_Types.C3_ni);
 
    MV_A         : Multivector;
-   MV_A_Inv      : Multivector;
+   MV_A_Inv     : Multivector;
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin

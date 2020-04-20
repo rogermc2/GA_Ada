@@ -1,28 +1,89 @@
+initMetric[pMatrix_] := Module[{mMatrix, mEig, eVals, eVecs, eVecsInv, i, 
+      diag = DiagonalMatrixQ[pMatrix], euclidean = False, 
+      antiEuclidean = False, p, h, s, m, a, j}, 
+     If[SymmetricMatrixQ[pMatrix], mEig = Eigensystem[N[pMatrix]]; 
+        mMatrix = pMatrix; eVecs = mEig[[2]]; Print["initMetric eVecs ", 
+         MatrixForm[eVecs]]; eVecsInv = Transpose[eVecs]; eVals = mEig[[1]]; 
+        Print["initMetric eVals ", MatrixForm[eVals]]; 
+        If[diag == True, euclidean = True; antiEuclidean = True; 
+          For[i = 1, i < Dimensions[pMatrix, 1][[1]], i = i + 1, 
+           If[pMatrix[[i,i]] != 1., euclidean = False]; 
+            If[pMatrix[[i,i]] != -1., antiEuclidean = False]]], 
+       Print["initMetric, The metric matrix must be symmetric."]; ]; 
+      Return[{mEig, eVecsInv, eVals, diag, euclidean, antiEuclidean, eVecs}]]
+ 
+eigenVals[pMetric_] := pMetric[[3]]
+ 
+eigenVecs[pMetric_] := pMetric[[7]]
+ 
+invEigenVecs[pMetric_] := pMetric[[2]]
+ 
+isDiag[pMetric_] := pMetric[[4]]
+ 
+isEuclidean[pMetric_] := pMetric[[5]]
+ 
+isAntiEuclidean[pMetric_] := pMetric[[6]]
+ 
 addBlade[pMV_, pblade_] := AppendTo[pMV, pblade]
  
-normedPoint[pe1_, pe2_, pe3_] := {{0, 1}, {1, pe1}, {2, pe2}, {4, pe3}, 
-     {8, 0.5*Sqrt[pe1^2 + pe2^2 + pe3^2]}}
+normedPoint[pe1_, pe2_, pe3_] := {{1, 1}, {2, pe1}, {4, pe2}, {8, pe3}, 
+     {16, 0.5*Sqrt[pe1^2 + pe2^2 + pe3^2]}}
+ 
+mvAdd[pMVa_, pMVb_] := Module[{result = pMVa}, 
+     result = mvSimplify[addAll[result, pMVb]]; result]
+ 
+mvSimplify[pBladeList_] := Module[{result = {}, 
+      dim = Dimensions[pBladeList][[1]], sortedA = {}, i, current = {}, 
+      b = {}}, If[dim != 0, Do[b = pBladeList[[i]]; If[b[[2]] != 0., 
+           sortedA = AppendTo[sortedA, b]], {i, 1, dim}]; 
+        dim = Dimensions[sortedA][[1]]; If[dim == 0, result = {}, 
+         sortedA = SortBy[sortedA, First]; current = sortedA[[1]]; 
+          Do[b = sortedA[[i]]; If[b[[1]] == current[[1]], current[[2]] = 
+              current[[2]] + b[[2]], If[Chop[current[[2]]] != 0, result = 
+                AppendTo[result, current]]; current = b], 
+           {i, 2, Dimensions[sortedA][[1]]}]; If[Chop[current[[2]]] != 0, 
+           result = AppendTo[result, current]]; ]]; result]
+ 
+addAll[listA_, listB_] := Module[{result = listA}, 
+     Do[result = AppendTo[result, listB[[indexB]]], 
+       {indexB, 1, Dimensions[listB][[1]]}]; result]
  
 generalInverse[pMV_, pMetric_] := Module[{mvSize, mMatrix, lMax, i, j, 
       basisBlades, b, gp, invMatrix, v, result = {}}, 
      dim = Dimensions[pMV, 1][[1]]; lMax = BitShiftLeft[1, dim]; 
       mMatrix = Table[0, {i, 1, lMax}, {j, 1, lMax}]; 
       basisBlades = Table[blade[i - 1, 1], {i, 1, lMax}]; 
-      Do[b = pMV[[i]]; Do[gp = geometricProduct[b, basisBlades[[j]], 
+      Do[b = pMV[[i]]; Do[gp = geometricProductMetric[b, basisBlades[[j]], 
             pMetric]; mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
-         {j, 1, lMax}], {i, 1, dim}]; Print["generalInverse final mMatrix: ", 
-       MatrixForm[mMatrix]]; 
-      Print["generalInverse final mMatrix determinant: ", 
-       MatrixForm[Det[mMatrix]]]; invMatrix = Inverse[mMatrix]; 
-      Print["generalInverse final invMatrix determinant: ", 
-       MatrixForm[Det[invMatrix]]]; Print["generalInverse invMatrix: ", 
-       MatrixForm[invMatrix]]; Do[v = invMatrix[[j,1]]; 
-        If[v != 0, basisBlades[[j,2]] = v; result = AppendTo[result, 
-            basisBlades[[j]]]], {j, 1, lMax}]; Return[result]]
+         {j, 1, lMax}], {i, 1, dim}]; invMatrix = Inverse[mMatrix]; 
+      Do[v = invMatrix[[j,1]]; If[v != 0, basisBlades[[j,2]] = v; 
+          result = AppendTo[result, basisBlades[[j]]]], {j, 1, lMax}]; 
+      result = mvSimplify[result]]
  
 blade[pBitMap_, pWeight_] := {pBitMap, pWeight}
  
-geometricProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, False]
+geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
+    Module[{listA, listB, jMax, iMax, gp, result = {{0, 0}}, bitmap, iA, jB}, 
+     listA = toEigenBlade[pBladeA, invEigenVecs[pMetric]]; 
+      listB = toEigenBlade[pBladeB, invEigenVecs[pMetric]]; 
+      iMax = Dimensions[listA, 1][[1]]; jMax = Dimensions[listB, 1][[1]]; 
+      Do[Do[gp = gProduct[listA[[iA]], listB[[jB]], eigenVals[pMetric]]; 
+         result = AppendTo[result, gp], {jB, 1, jMax}], {iA, 1, iMax}]; 
+      result = mvSimplify[result]; result = toMetricBasis[result, 
+        eigenVecs[pMetric]]; result]
+ 
+toEigenBlade[pblade_, pInvEVecMatrix_] := transform[pblade, pInvEVecMatrix]
+ 
+transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
+      bitmap = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, 
+      i = 1, j, k, op}, While[bitmap != 0, If[BitAnd[bitmap, 1] != 0, 
+         tmp = {}; Do[If[pMatrix[[j,i]] != 0, m = pMatrix[[j,i]]; 
+             Do[op = outerProduct[aList[[k]], blade[2^(j - 1), m]]; tmp = 
+                AppendTo[tmp, op], {k, 1, Dimensions[aList, 1][[1]]}]], 
+           {j, 1, maxj}]; aList = tmp]; bitmap = BitShiftRight[bitmap]; 
+        i = i + 1]; aList]
+ 
+outerProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, True]
  
 gpOp[pBladeA_, pBladeB_, pOuter_] := Module[{bBlade = {0, 0}, bitmap, sign}, 
      If[pOuter == True && BitAnd[pBladeA[[1]], pBladeB[[1]]] != 0, Null, 
@@ -45,6 +106,23 @@ bitCount[pi_] := Module[{i = pi},
       i = i + BitShiftRight[i, 8]; i = i + BitShiftRight[i, 16]; 
       BitAnd[i, 63]]
  
+gProduct[pBladeA_, pBladeB_, pMetEigenVals_] := 
+    Module[{result = geometricProduct[pBladeA, pBladeB], bitmap, i = 1}, 
+     bitmap = BitAnd[pBladeA[[1]], pBladeB[[1]]]; While[bitmap != 0, 
+       If[BitAnd[bitmap, 1] != 0, result[[2]] = result[[2]]*
+           pMetEigenVals[[i]]]; i = i + 1; bitmap = BitShiftRight[bitmap]]; 
+      result]
+ 
+geometricProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, False]
+ 
+toMetricBasis[pBladeList_, pEVecMatrix_] := 
+    Module[{result = {}, tmp = {}, i, j}, 
+     Do[tmp = toMetricBlade[pBladeList[[i]], pEVecMatrix]; 
+        result = addAll[result, tmp], {i, 1, Dimensions[pBladeList][[1]]}]; 
+      result = mvSimplify[result]; result]
+ 
+toMetricBlade[pblade_, pEVecMatrix_] := transform[pblade, pEVecMatrix]
+ 
 addToMatrix[pMatrix_, pBeta_, pGamma_] := 
     Module[{v, aBlade, result = pMatrix}, 
      Do[aBlade := pGamma[[i]]; v = result[[aBlade[[1]] + 1,pBeta[[1]] + 1]]; 
@@ -59,62 +137,14 @@ mvGeometricProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0},
        {indexA, 1, Dimensions[pMVa, 1][[1]]}]; result = mvSimplify[result]; 
       result]
  
-mvSimplify[pBladeList_] := Module[{result = {}, 
-      dim = Dimensions[pBladeList][[1]], sortedA = {}, i, current = {}, 
-      b = {}}, If[dim == 0, result = pBladeList, 
-       Do[b = pBladeList[[i]]; If[b[[2]] != 0., sortedA = AppendTo[sortedA, 
-             b]], {i, 1, dim}]; sortedA = SortBy[sortedA, First]; 
-        current = sortedA[[1]]; Do[b = sortedA[[i]]; 
-          If[b[[1]] == current[[1]], current[[2]] = current[[2]] + b[[2]], 
-           If[current[[2]] != 0., result = AppendTo[result, current]]; 
-            current = b], {i, 2, Dimensions[sortedA][[1]]}]; 
-        If[current[[2]] != 0., result = AppendTo[result, current]]; ]; result]
- 
 mvGeometricProductMetric[pMVa_, pMVb_, pMetric_] := 
     Module[{bladeA = {0, 0}, bladeB = {0, 0}, gp = {0, 0}, 
       result = {{0, 0}}}, Do[bladeA = pMVa[[indexA]]; 
         Do[bladeB = pMVb[[indexB]]; gp = geometricProductMetric[bladeA, 
-            bladeB, pMetric]; Do[result = AppendTo[result, gp[[indexGP]]], 
-           {indexGP, 1, Dimensions[gp, 1][[1]]}], {indexB, 1, 
-          Dimensions[pMVb, 1][[1]]}], {indexA, 1, Dimensions[pMVa, 1][[1]]}]; 
-      result = mvSimplify[result]; result]
- 
-geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
-    Module[{listA = toEigenBasis[pBladeA, invMetricMatrix /. pMetric], 
-      listB = toEigenBasis[pBladeB, invMetricMatrix /. pMetric], jMax, iMax, 
-      gp, result = {{0, 0}}, bitmap, i = 0}, 
-     jMax = Dimensions[listA, 1][[1]]; iMax = Dimensions[listB, 1][[1]]; 
-      Do[Do[gp = gProduct[listA[[i]], listB[[j]], eigenvals /. pMetric]; 
-         result = AppendTo[result, gp], {j, 1, jMax}], {i, 1, iMax}]; 
-      result = mvSimplify[result]; result = toMetricBasis[result, 
-        eigenvecs /. pMetric]; result]
- 
-toEigenBasis[pblade_, pMatrix_] := transform[pblade, pMatrix]
- 
-transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
-      aBM = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, i = 1, 
-      op}, While[aBM != 0, If[BitAnd[aBM, 1] != 0, 
-         tmp = {}; Do[If[pMatrix[[j,i]] != 0, m = pMatrix[[j,i]]; 
-             Do[op = outerProduct[aList[[k]], blade[2^(j - 1), m]]; tmp = 
-                AppendTo[tmp, op], {k, 1, Dimensions[aList, 1][[1]]}]], 
-           {j, 1, maxj}]; aList = tmp]; aBM = BitShiftRight[aBM]; i = i + 1]; 
-      aList]
- 
-outerProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, True]
- 
-gProduct[pBladeA_, pBladeB_, pMetEigenVals_] := 
-    Module[{result = geometricProduct[pBladeA, pBladeB], bitmap, i = 1}, 
-     bitmap = BitAnd[pBladeA[[1]], pBladeB[[1]]]; While[bitmap != 0, 
-       If[BitAnd[bitmap, 1] != 0, result[[2]] = result[[2]]*
-           pMetEigenVals[[i]]]; i = i + 1; bitmap = BitShiftRight[bitmap]]; 
+            bladeB, pMetric]; result = addAll[result, gp], 
+         {indexB, 1, Dimensions[pMVb, 1][[1]]}], 
+       {indexA, 1, Dimensions[pMVa, 1][[1]]}]; result = mvSimplify[result]; 
       result]
- 
-toMetricBasis[pBladeList_, pEVecMatrix_] := Module[{result = {}, tmp, i}, 
-     Do[tmp = toMetricBlade[pBladeList[[i]], pEVecMatrix]; 
-        result = AppendTo[result, tmp[[i]]], {i, 1, Dimensions[pBladeList][[
-         1]]}]; result = mvSimplify[result]; result]
- 
-toMetricBlade[pblade_, pEVecMatrix_] := transform[pblade, pEVecMatrix]
  
 mvOuterProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0}, 
       op = {0, 0}, result = {{0, 0}}}, 
@@ -135,11 +165,6 @@ innerProduct[pBladeA_, pBladeB_, pType_:leftContraction] :=
     Module[{gp = geometricProduct[pBladeA, pBladeB]}, 
      innerProductFilter[pBladeA[[1]], pBladeB[[1]], gp, pType]]
  
-innerProduct[pBladeA_, pBladeB_, pMet_, pType_:leftContraction] := 
-    Module[{gp = geometricProduct[pBladeA, pBladeB, pMet]}, 
-     Print["innerProduct metric gp ", gp]; innerProductFilter[pBladeA[[1]], 
-       pBladeB[[1]], gp, pType]]
- 
 innerProductFilter[pGradeA_, pGradeB_, pBlade_, pType_:leftContraction] := 
     Module[{result = {0, 0}, blade = {0, 0}}, 
      blade = innerProductFilterBlade[pGradeA, pGradeB, pBlade, pType]; 
@@ -155,6 +180,19 @@ innerProductFilterBlade[pGradeA_, pGradeB_, pBlade_,
         result = blade, If[Abs[pGradeA - pGradeB] != pBlade[[1]], 
          result = blade]], modifiedHestenes, 
        If[Abs[pGradeA - pGradeB] != pBlade[[1]], result = blade]]; result]
+ 
+mvInnerProductMetric[pMVA_, pMVB_, pMetric_, pType_:leftContraction] := 
+    Module[{result = {{0, 0}}, blade1 = {0, 0}, blade2 = {0, 0}, i, j, ip}, 
+     Do[blade1 = pMVA[[i]]; Do[blade2 = pMVB[[j]]; 
+          ip = innerProductMetric[blade1, blade2, pMetric, pType]; 
+          addAll[result, ip], {j, 1, Dimensions[pMVB, 1][[1]]}], 
+       {i, 1, Dimensions[pMVA, 1][[1]]}]; result = mvSimplify[result]; result]
+ 
+innerProductMetric[pBladeA_, pBladeB_, pMet_, pType_:leftContraction] := 
+    Module[{gp = geometricProductMetric[pBladeA, pBladeB, pMet], 
+      result = {{0, 0}}}, Do[AppendTo[result, innerProductFilter[
+         pBladeA[[1]], pBladeB[[1]], gp[[j]], pType]], 
+       {j, 1, Dimensions[gp, 1][[1]]}]; result]
  
 scalarProduct[pMV_] := Module[{result = 0, index, blade = {}}, 
      Do[blade = pMV[[index]]; If[blade[[1]] == 0, 
