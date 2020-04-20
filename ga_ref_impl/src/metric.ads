@@ -12,10 +12,10 @@ package Metric is
    Metric_Exception : Exception;
 
    function C3_Eigen_Matrix return Metric_Matrix;
-   function C3_Inverse_Eigen_Matrix return Metric_Matrix;
+   function C3_Inv_Eigen_Matrix return Metric_Matrix;
    function E3_Eigen_Matrix return Metric_Matrix;
-   function E3_Inverse_Eigen_Matrix return Metric_Matrix;
-   function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
+   function E3_Inv_Eigen_Matrix return Metric_Matrix;
+   function Inv_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix;
    function Eigen_Vectors (Met : Metric_Record) return Metric_Matrix;
    function Eigen_Values (Met : Metric_Record) return Real_Vector;
    function Is_Anti_Euclidean (Met : Metric_Record) return Boolean;
@@ -37,7 +37,7 @@ private
       Anti_Euclidean       : Boolean := False;
       Eigen_Values         : Real_Vector (1 .. Dim);  --  m_eigenMetric
       Eigen_Vectors        : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_eig.getV()
-      Inverse_Eigen_Matrix : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_invEigMatrix
+      Inv_Eigen_Matrix     : Metric_Matrix (1 .. Dim, 1 .. Dim);  --  m_invEigMatrix
    end record;
 
 end Metric;

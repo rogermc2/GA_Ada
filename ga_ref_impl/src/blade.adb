@@ -213,7 +213,7 @@ package body Blade is
       end loop;
 
       Simplify (Result);
-      return To_Metric_Basis (Result, Metric.Matrix (Met));
+      return To_Metric_Basis (Result, Metric.Inv_Eigen_Matrix (Met));
 
    exception
       when others =>
@@ -513,7 +513,7 @@ package body Blade is
    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                             return Blade_List is
    begin
-      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inverse_Eigen_Matrix (Met)));
+      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Eigen_Vectors (Met)));
    end To_Eigen_Basis;
 
    --  ------------------------------------------------------------------------

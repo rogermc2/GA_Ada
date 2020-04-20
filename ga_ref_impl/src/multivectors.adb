@@ -1401,7 +1401,7 @@ package body Multivectors is
       NP.Blades.Append (New_Basis_Blade (C3_e2, e2));
       NP.Blades.Append (New_Basis_Blade (C3_e3, e3));
       NP.Blades.Append
-        (New_Basis_Blade (C3_ni, Sqrt (e1*e1 + e2*e2 + e3*e3)));
+        (New_Basis_Blade (C3_ni, 0.5 * Sqrt (e1*e1 + e2*e2 + e3*e3)));
       return NP;
    end New_Normalized_Point;
 

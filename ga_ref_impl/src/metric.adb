@@ -27,10 +27,10 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
-   function C3_Inverse_Eigen_Matrix return Metric_Matrix is
+   function C3_Inv_Eigen_Matrix return Metric_Matrix is
    begin
-      return Metric_C3.Inverse_Eigen_Matrix;
-   end C3_Inverse_Eigen_Matrix;
+      return Metric_C3.Inv_Eigen_Matrix;
+   end C3_Inv_Eigen_Matrix;
 
    --  --------------------------------------------------------------------
 
@@ -41,10 +41,10 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
-   function E3_Inverse_Eigen_Matrix return Metric_Matrix is
+   function E3_Inv_Eigen_Matrix return Metric_Matrix is
    begin
-      return Metric_E3.Inverse_Eigen_Matrix;
-   end E3_Inverse_Eigen_Matrix;
+      return Metric_E3.Inv_Eigen_Matrix;
+   end E3_Inv_Eigen_Matrix;
 
    --  --------------------------------------------------------------------
 
@@ -62,10 +62,10 @@ package body Metric is
 
    --  --------------------------------------------------------------------
 
-   function Inverse_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
+   function Inv_Eigen_Matrix (Met : Metric_Record) return Metric_Matrix is
    begin
-      return Met.Inverse_Eigen_Matrix;
-   end Inverse_Eigen_Matrix;
+      return Met.Inv_Eigen_Matrix;
+   end Inv_Eigen_Matrix;
 
    --  --------------------------------------------------------------------
 
@@ -138,6 +138,7 @@ package body Metric is
       use Float_Array_Package;
       Values    : Real_Vector (Met'Range);  --  m_eigenMetric
       Vectors   : Float_Matrix (Met'Range, Met'Range);
+      aVector   : Real_Vector (Met'Range);
       State     : Metric_Record (Met'Length (1));
    begin
       if not Is_Symetric (Met) then
@@ -146,11 +147,18 @@ package body Metric is
       else
          Eigensystem (Real_Matrix (Met), Values, Vectors); --  m_eig
          State.Eigen_Values := Values;
-         State.Eigen_Vectors := Metric_Matrix (Vectors);
-         State.Inverse_Eigen_Matrix := Metric_Matrix (Transpose (Vectors));
---           For row in Values'Range loop
---              State.Matrix (row, row) := Values (row);
---           end loop;
+         --  Columns of Eigen_Vectors are the eigenvectors
+         State.Inv_Eigen_Matrix := Metric_Matrix (Vectors);
+         State.Eigen_Vectors := Metric_Matrix (Transpose (Vectors));
+         For col in 1 .. State.Eigen_Vectors'Length(2) loop
+            For row in 1 .. State.Eigen_Vectors'Length(1) loop
+               aVector(row) := State.Eigen_Vectors (row, col);
+            end loop;
+            aVector := aVector / abs(aVector);
+            For row in 1 .. State.Eigen_Vectors'Length(1) loop
+               State.Eigen_Vectors (row, col) := aVector(row);
+            end loop;
+         end loop;
          State.Matrix := Met;
 
          State.Diagonal := Is_Diagonal (Met);
