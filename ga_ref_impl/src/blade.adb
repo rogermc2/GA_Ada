@@ -190,23 +190,26 @@ package body Blade is
       Eigen_Vals : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
       LA_Cursor  : Cursor;
       LB_Cursor  : Cursor;
+      GP         : Basis_Blade;
       Result     : Blade_List;
    begin
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
+      GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
+      GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
       --  List_A and List_B needed because To_Eigen_Basis returns an ArrayList
       --  because its result does not have to be a single BasisBlade.
       List_A := To_Eigen_Basis (BA, Met);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
+      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
       List_B := To_Eigen_Basis (BB, Met);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
+      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
 
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
          LB_Cursor := List_B.First;
          while Has_Element (LB_Cursor) loop
-            Add_Blade (Result, Geometric_Product
-                       (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals));
+            GP := Geometric_Product
+                       (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals);
+            GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric blade GP:", GP);
+            Add_Blade (Result, (GP));
             Next (LB_Cursor);
          end loop;
          Next (LA_Cursor);
@@ -230,20 +233,18 @@ package body Blade is
       --  Only retain vectors commomt to both blades
       BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
       Vals_Length : constant Integer := Eigen_Vals'Length;
-      Index       : Integer range 1 .. Vals_Length := 1;
+      Index       : Integer := 1;
       Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
    begin
       --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
-      while BM /= 0 and then Index <= Vals_Length loop
+      while BM /= 0 loop
          if (BM and 1) /= 0 then
             --  This basis vector is non-zero
             Result.Weight := Result.Weight * Eigen_Vals (Index);
          end if;
          --  Move right to next basis vector indicator
          BM := Shift_Right (BM, 1);
-         if Index < Vals_Length then
-            Index := Index + 1;
-         end if;
+         Index := Index + 1;
       end loop;
 
       return Result;
@@ -513,7 +514,8 @@ package body Blade is
    function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                             return Blade_List is
    begin
-      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Eigen_Vectors (Met)));
+--        GA_Utilities.Print_Matrix("To_Eigen_Basis, Inv_Eigen_Matrix", Metric.Inv_Eigen_Matrix (Met));
+      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inv_Eigen_Matrix (Met)));
    end To_Eigen_Basis;
 
    --  ------------------------------------------------------------------------
@@ -543,8 +545,9 @@ package body Blade is
    function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List is
    begin
+--        GA_Utilities.Print_Matrix("To_Metric_Basis, Eigen_Vectors", Metric.Eigen_Vectors (Met));
       --          GA_Utilities.Print_Blade ("Blade.To_Metric_Basis BB", BB);
-      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Inv_Eigen_Matrix (Met)));
+      return Transform_Basis (BB, GA_Maths.Float_Matrix (Metric.Eigen_Vectors (Met)));
    end To_Metric_Basis;
 
    --  ------------------------------------------------------------------------
@@ -613,22 +616,24 @@ package body Blade is
                if Value /= 0.0 then
                   --  Wedge column Col of the matrix with List_A
                   Curs := List_A.First;
-                  --                          Put_Line ("Blade.Transform_Basis Row, I_Col" &
-                  --                                   Integer'Image (Row) & Integer'Image (I_Col));
+--                     Put_Line ("Blade.Transform_Basis Row, I_Col, Value: " &
+--                                Integer'Image (Row) & Integer'Image (I_Col) & "  " &
+--                                Float'Image (Value));
                   while Has_Element (Curs) loop
                      Temp.Append (Outer_Product (Element (Curs),
-                                  New_Basis_Blade (Shift_Left (1, Row - 1), Value)));
+                                  New_Basis_Blade (2 ** (Row - 1), Value)));
+--                                    New_Basis_Blade (Shift_Left (1, Row - 1), Value)));
                      Next (Curs);
                   end loop;
                   List_A := Temp;
                end if;
-            end loop;
+            end loop;  --  Row
+            List_A := Temp;
          end if;  --  (BM and 1) /= 0
          BM := BM / 2;  --  Shift BM right by one bit
          I_Col := I_Col + 1;
       end loop;  --  BM /= 0
-      Simplify (List_A);
-      --          GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
+--        GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
       return List_A;
 
    exception

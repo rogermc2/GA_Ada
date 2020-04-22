@@ -819,15 +819,11 @@ package body Multivectors is
         Blade_2   : Blade.Basis_Blade;
         GP        : Multivector;
     begin
-        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product, MV1",
-                                        MV1);
-        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product, MV2",
-                                        MV2);
         if Is_Empty (List (Blades_1)) then
-            raise MV_Exception with "Multivector.Geometric_Product, MV1 is null.";
+            raise MV_Exception with "Multivectors.Geometric_Product, MV1 is null.";
         end if;
         if Is_Empty (List (Blades_2)) then
-            raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
+            raise MV_Exception with "Multivectors.Geometric_Product, MV2 is null.";
         end if;
 
         while Has_Element (Curs_1) loop
@@ -874,10 +870,10 @@ package body Multivectors is
         if Is_Empty (List (MV2.Blades)) then
             raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
         end if;
---          GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
---                                          MV1);
---          GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
---                                          MV2);
+        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
+                                        MV1);
+        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
+                                        MV2);
 
         Blades_1 := MV1.Blades;
         Blades_2 := MV2.Blades;
@@ -886,15 +882,15 @@ package body Multivectors is
         while Has_Element (Curs_1) loop
             Blade_1 := Element (Curs_1);
             Curs_2 := Blades_2.First;
-            --           GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_1",
-            --                                      Blade_1);
+--              GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_1",
+--                                         Blade_1);
             while Has_Element (Curs_2) loop
                 Blade_2 := Element (Curs_2);
-                --              GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_2",
-                --                                        Blade_2);
+--                  GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_2",
+--                                             Blade_2);
                 Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
-                --              GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, Blades_GP",
-                --                                              Blades_GP);
+                GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, Blades_GP",
+                                                Blades_GP);
                 Add_Blades (GP.Blades, Blades_GP);
                 Next (Curs_2);
             end loop;
@@ -1409,7 +1405,7 @@ package body Multivectors is
         NP.Blades.Append (New_Basis_Blade (C3_e2, e2));
         NP.Blades.Append (New_Basis_Blade (C3_e3, e3));
         NP.Blades.Append
-          (New_Basis_Blade (C3_ni, 0.5 * Sqrt (e1 * e1 + e2 * e2 + e3 * e3)));
+          (New_Basis_Blade (C3_ni, 0.5 * (e1 * e1 + e2 * e2 + e3 * e3)));
         return NP;
     end New_Normalized_Point;
 

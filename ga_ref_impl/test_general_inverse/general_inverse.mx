@@ -27,7 +27,7 @@ isAntiEuclidean[pMetric_] := pMetric[[6]]
 addBlade[pMV_, pblade_] := AppendTo[pMV, pblade]
  
 normedPoint[pe1_, pe2_, pe3_] := {{1, 1}, {2, pe1}, {4, pe2}, {8, pe3}, 
-     {16, 0.5*Sqrt[pe1^2 + pe2^2 + pe3^2]}}
+     {16, 0.5*(pe1^2 + pe2^2 + pe3^2)}}
  
 mvAdd[pMVa_, pMVb_] := Module[{result = pMVa}, 
      result = mvSimplify[addAll[result, pMVb]]; result]
@@ -64,15 +64,15 @@ blade[pBitMap_, pWeight_] := {pBitMap, pWeight}
  
 geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
     Module[{listA, listB, jMax, iMax, gp, result = {{0, 0}}, bitmap, iA, jB}, 
-     listA = toEigenBlade[pBladeA, invEigenVecs[pMetric]]; 
-      listB = toEigenBlade[pBladeB, invEigenVecs[pMetric]]; 
+     listA = toEigenBlade[pBladeA, pMetric]; 
+      listB = toEigenBlade[pBladeB, pMetric]; 
       iMax = Dimensions[listA, 1][[1]]; jMax = Dimensions[listB, 1][[1]]; 
       Do[Do[gp = gProduct[listA[[iA]], listB[[jB]], eigenVals[pMetric]]; 
          result = AppendTo[result, gp], {jB, 1, jMax}], {iA, 1, iMax}]; 
-      result = mvSimplify[result]; result = toMetricBasis[result, 
-        eigenVecs[pMetric]]; result]
+      result = mvSimplify[result]; result = toMetricBasis[result, pMetric]; 
+      result]
  
-toEigenBlade[pblade_, pInvEVecMatrix_] := transform[pblade, pInvEVecMatrix]
+toEigenBlade[pblade_, pMetric_] := transform[pblade, invEigenVecs[pMetric]]
  
 transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
       bitmap = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, 
@@ -115,13 +115,12 @@ gProduct[pBladeA_, pBladeB_, pMetEigenVals_] :=
  
 geometricProduct[pBladeA_, pBladeB_] := gpOp[pBladeA, pBladeB, False]
  
-toMetricBasis[pBladeList_, pEVecMatrix_] := 
-    Module[{result = {}, tmp = {}, i, j}, 
-     Do[tmp = toMetricBlade[pBladeList[[i]], pEVecMatrix]; 
+toMetricBasis[pBladeList_, pMetric_] := Module[{result = {}, tmp = {}, i, j}, 
+     Do[tmp = toMetricBlade[pBladeList[[i]], pMetric]; 
         result = addAll[result, tmp], {i, 1, Dimensions[pBladeList][[1]]}]; 
       result = mvSimplify[result]; result]
  
-toMetricBlade[pblade_, pEVecMatrix_] := transform[pblade, pEVecMatrix]
+toMetricBlade[pblade_, pMetric_] := transform[pblade, eigenVecs[pMetric]]
  
 addToMatrix[pMatrix_, pBeta_, pGamma_] := 
     Module[{v, aBlade, result = pMatrix}, 
