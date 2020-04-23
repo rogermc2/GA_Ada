@@ -48,17 +48,20 @@ addAll[listA_, listB_] := Module[{result = listA},
      Do[result = AppendTo[result, listB[[indexB]]], 
        {indexB, 1, Dimensions[listB][[1]]}]; result]
  
-generalInverse[pMV_, pMetric_] := Module[{mvSize, mMatrix, lMax, i, j, 
+generalInverse[pMV_, pMetric_] := Module[{dim, mMatrix, lMax, i, j, 
       basisBlades, b, gp, invMatrix, v, result = {}}, 
      dim = Dimensions[pMV, 1][[1]]; lMax = BitShiftLeft[1, dim]; 
       mMatrix = Table[0, {i, 1, lMax}, {j, 1, lMax}]; 
       basisBlades = Table[blade[i - 1, 1], {i, 1, lMax}]; 
       Do[b = pMV[[i]]; Do[gp = geometricProductMetric[b, basisBlades[[j]], 
             pMetric]; mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
-         {j, 1, lMax}], {i, 1, dim}]; invMatrix = Inverse[mMatrix]; 
-      Do[v = invMatrix[[j,1]]; If[v != 0, basisBlades[[j,2]] = v; 
-          result = AppendTo[result, basisBlades[[j]]]], {j, 1, lMax}]; 
-      result = mvSimplify[result]]
+         {j, 1, lMax}], {i, 1, dim}]; Print["mMatrix determinant:  ", 
+       Det[mMatrix]]; Print["mMatrix cond2:  ", cond2[mMatrix]]; 
+      If[cond2[mMatrix] < 1/$MachineEpsilon, invMatrix = Inverse[mMatrix]; 
+        Do[v = invMatrix[[j,1]]; If[v != 0, basisBlades[[j,2]] = v; 
+            result = AppendTo[result, basisBlades[[j]]]], {j, 1, lMax}]; 
+        result = mvSimplify[result], Print["mMatrix is ill-conditioned"]]; 
+      result]
  
 blade[pBitMap_, pWeight_] := {pBitMap, pWeight}
  
@@ -127,6 +130,9 @@ addToMatrix[pMatrix_, pBeta_, pGamma_] :=
      Do[aBlade := pGamma[[i]]; v = result[[aBlade[[1]] + 1,pBeta[[1]] + 1]]; 
         result[[aBlade[[1]] + 1,pBeta[[1]] + 1]] = v + aBlade[[2]], 
        {i, 1, Dimensions[pGamma, 1][[1]]}]; result]
+ 
+cond2[(mat_)?MatrixQ] := Divide @@ 
+     Table[SingularValueList[mat, k, Tolerance -> 0][[1]], {k, {1, -1}}]
  
 mvGeometricProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0}, 
       gp = {0, 0}, result = {{0, 0}}}, 
