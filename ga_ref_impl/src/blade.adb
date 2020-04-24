@@ -185,8 +185,8 @@ package body Blade is
    function Geometric_Product (BA, BB : Basis_Blade;
                                Met    : Metric.Metric_Record) return Blade_List is
       use Blade_List_Package;
-      List_A     : Blade_List;
-      List_B     : Blade_List;
+      List_A     : constant Blade_List := To_Eigen_Basis (BA, Met);
+      List_B     : constant Blade_List := To_Eigen_Basis (BB, Met);
       Eigen_Vals : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
       LA_Cursor  : Cursor;
       LB_Cursor  : Cursor;
@@ -197,10 +197,8 @@ package body Blade is
       GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
       --  List_A and List_B needed because To_Eigen_Basis returns an ArrayList
       --  because its result does not have to be a single BasisBlade.
-      List_A := To_Eigen_Basis (BA, Met);
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
-      List_B := To_Eigen_Basis (BB, Met);
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
 
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
@@ -208,7 +206,7 @@ package body Blade is
          while Has_Element (LB_Cursor) loop
             GP := Geometric_Product
                        (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals);
-            GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric blade GP:", GP);
+--              GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric blade GP:", GP);
             Add_Blade (Result, (GP));
             Next (LB_Cursor);
          end loop;
@@ -216,7 +214,9 @@ package body Blade is
       end loop;
 
       Simplify (Result);
-      return To_Metric_Basis (Result, Met);
+      Result := To_Metric_Basis (Result, Met);
+      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric Result:", Result);
+      return Result;
 
    exception
       when others =>
@@ -243,7 +243,8 @@ package body Blade is
             Result.Weight := Result.Weight * Eigen_Vals (Index);
          end if;
          --  Move right to next basis vector indicator
-         BM := Shift_Right (BM, 1);
+         BM := BM / 2;
+--           BM := Shift_Right (BM, 1);
          Index := Index + 1;
       end loop;
 
@@ -519,29 +520,6 @@ package body Blade is
    end To_Eigen_Basis;
 
    --  ------------------------------------------------------------------------
-
-   --     function To_Eigen_Basis (BL : Blade_List) return Blade_List is
-   --        use Blade_List_Package;
-   --        BL_Cursor      : Cursor := BL.First;
-   --        Tmp_List       : Blade_List;
-   --        TL_Cursor      : Cursor;
-   --        Result         : Blade_List;
-   --     begin
-   --        while Has_Element (BL_Cursor) loop
-   --           Tmp_List := To_Eigen_Basis (Element (BL_Cursor));
-   --           TL_Cursor := Tmp_List.First;
-   --           while Has_Element (TL_Cursor) loop
-   --              Result.Append (Element (TL_Cursor));
-   --              Next (TL_Cursor);
-   --           end loop;
-   --           Next (BL_Cursor);
-   --        end loop;
-   --        return Result;
-   --
-   --     end To_Eigen_Basis;
-
-   --  -------------------------------------------------------------------------
-
    function To_Metric_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List is
    begin
@@ -633,7 +611,6 @@ package body Blade is
          BM := BM / 2;  --  Shift BM right by one bit
          I_Col := I_Col + 1;
       end loop;  --  BM /= 0
---        GA_Utilities.Print_Blade_List ("Leaving Blade.Transform_Basis List_A", List_A);
       return List_A;
 
    exception

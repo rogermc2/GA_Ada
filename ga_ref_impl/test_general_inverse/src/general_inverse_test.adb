@@ -36,12 +36,12 @@ procedure General_Inverse_Test is
    MV_Info      : Multivector_Type.MV_Type_Record;
 
 begin
-   GA_Utilities.Print_Metric ("General_Inverse_Test Metric", Met);
-   GA_Utilities.Print_Float_Array ("General_Inverse_Test Metric Eigen_Values",
-                                   Metric.Eigen_Values (Met));
-   New_Line;
-   GA_Utilities.Print_Matrix ("General_Inverse_Test Metric Eigen_Vectors",
-                                   Metric.Eigen_Vectors (Met));
+--     GA_Utilities.Print_Metric ("General_Inverse_Test Metric", Met);
+--     GA_Utilities.Print_Float_Array ("General_Inverse_Test Metric Eigen_Values",
+--                                     Metric.Eigen_Values (Met));
+--     New_Line;
+--     GA_Utilities.Print_Matrix ("General_Inverse_Test Metric Eigen_Vectors",
+--                                     Metric.Eigen_Vectors (Met));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));

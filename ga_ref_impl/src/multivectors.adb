@@ -855,8 +855,8 @@ package body Multivectors is
                                return Multivector is
         use Blade;
         use Blade_List_Package;
-        Blades_1  : Blade_List;
-        Blades_2  : Blade_List;
+        Blades_1  : constant Blade_List := MV1.Blades;
+        Blades_2  : constant Blade_List := MV2.Blades;
         Blades_GP : Blade_List;
         Curs_1    : Cursor;
         Curs_2    : Cursor;
@@ -870,15 +870,11 @@ package body Multivectors is
         if Is_Empty (List (MV2.Blades)) then
             raise MV_Exception with "Multivector.Geometric_Product, MV2 is null.";
         end if;
-        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
-                                        MV1);
-        GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
-                                        MV2);
-
-        Blades_1 := MV1.Blades;
-        Blades_2 := MV2.Blades;
+--          GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV1",
+--                                          MV1);
+--          GA_Utilities.Print_Multivector ("Multivector.Geometric_Product with Metric, MV2",
+--                                          MV2);
         Curs_1 := Blades_1.First;
-
         while Has_Element (Curs_1) loop
             Blade_1 := Element (Curs_1);
             Curs_2 := Blades_2.First;
@@ -889,8 +885,8 @@ package body Multivectors is
 --                  GA_Utilities.Print_Blade ("Multivector.Geometric_Product with Metric, Blade_2",
 --                                             Blade_2);
                 Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
-                GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, Blades_GP",
-                                                Blades_GP);
+--                  GA_Utilities.Print_Blade_List ("Multivector.Geometric_Product with Metric, Blades_GP",
+--                                                  Blades_GP);
                 Add_Blades (GP.Blades, Blades_GP);
                 Next (Curs_2);
             end loop;
@@ -1620,6 +1616,7 @@ package body Multivectors is
     end Random_Vector;
 
     --  -------------------------------------------------------------------------
+
     function Reverse_MV (MV : Multivector) return Multivector is
         use Blade;
         use Blade_List_Package;
