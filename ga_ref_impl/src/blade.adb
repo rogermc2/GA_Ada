@@ -193,8 +193,8 @@ package body Blade is
       GP         : Basis_Blade;
       Result     : Blade_List;
    begin
-      GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
-      GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
+--        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
       --  List_A and List_B needed because To_Eigen_Basis returns an ArrayList
       --  because its result does not have to be a single BasisBlade.
 --        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
@@ -213,9 +213,11 @@ package body Blade is
          Next (LA_Cursor);
       end loop;
 
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-simplify Result:", Result);
       Simplify (Result);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-To_Metric_Basis Result:", Result);
       Result := To_Metric_Basis (Result, Met);
-      GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric Result:", Result);
+--        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric Result:", Result);
       return Result;
 
    exception
@@ -571,14 +573,15 @@ package body Blade is
       List_A : Blade_List;
       BM     : Unsigned_32 := Bitmap (BA);
       Curs   : Cursor;
+      OP     : Basis_Blade;
       Temp   : Blade_List;
       I_Col  : Integer := 1;
       Value  : Float;
    begin
       --        New_Line;
-      --          GA_Utilities.Print_Matrix ("Blade.Transform_Basis entered Met", Real_Matrix ((Met)));
-      --                GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
-      --                Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
+--        GA_Utilities.Print_Matrix ("Blade.Transform_Basis Met", Real_Matrix ((Met)));
+--        GA_Utilities.Print_Blade ("Blade.Transform_Basis BA", BA);
+--        Put_Line ("Blade.Transform_Basis Bitmap (BA)" & Unsigned_32'Image (BM));
       --  start with just a scalar
       List_A.Append (New_Basis_Blade (Weight (BA)));
       --  convert each 1 bit to a list of blades
@@ -594,16 +597,18 @@ package body Blade is
                if Value /= 0.0 then
                   --  Wedge column Col of the matrix with List_A
                   Curs := List_A.First;
---                     Put_Line ("Blade.Transform_Basis Row, I_Col, Value: " &
+--                    Put_Line ("Blade.Transform_Basis Row, I_Col, Value: " &
 --                                Integer'Image (Row) & Integer'Image (I_Col) & "  " &
 --                                Float'Image (Value));
                   while Has_Element (Curs) loop
-                     Temp.Append (Outer_Product (Element (Curs),
-                                  New_Basis_Blade (2 ** (Row - 1), Value)));
---                                    New_Basis_Blade (Shift_Left (1, Row - 1), Value)));
+--                       GA_Utilities.Print_Blade ("Blade.Transform_Basis Element (Curs)", Element (Curs));
+                     OP := Outer_Product (Element (Curs),
+                                  New_Basis_Blade (2 ** (Row - 1), Value));
+--                       GA_Utilities.Print_Blade ("Blade.Transform_Basis OP", OP);
+                     Temp.Append (OP);
+--                       GA_Utilities.Print_Blade_List ("Blade.Transform_Basis Temp", Temp);
                      Next (Curs);
                   end loop;
-                  List_A := Temp;
                end if;
             end loop;  --  Row
             List_A := Temp;
@@ -611,6 +616,7 @@ package body Blade is
          BM := BM / 2;  --  Shift BM right by one bit
          I_Col := I_Col + 1;
       end loop;  --  BM /= 0
+--        GA_Utilities.Print_Blade_List("Blade.Transform_Basis result", List_A);
       return List_A;
 
    exception

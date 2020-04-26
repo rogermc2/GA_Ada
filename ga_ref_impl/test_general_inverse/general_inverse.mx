@@ -67,15 +67,13 @@ blade[pBitMap_, pWeight_] := {pBitMap, pWeight}
  
 geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
     Module[{listA, listB, jMax, iMax, gp, result = {{0, 0}}, bitmap, iA, jB}, 
-     Print["geometricProductMetric pBladeA", pBladeA]; 
-      Print["geometricProductMetric pBladeB", pBladeB]; 
-      listA = toEigenBlade[pBladeA, pMetric]; 
+     listA = toEigenBlade[pBladeA, pMetric]; 
       listB = toEigenBlade[pBladeB, pMetric]; 
       iMax = Dimensions[listA, 1][[1]]; jMax = Dimensions[listB, 1][[1]]; 
       Do[Do[gp = gProduct[listA[[iA]], listB[[jB]], eigenVals[pMetric]]; 
          result = AppendTo[result, gp], {jB, 1, jMax}], {iA, 1, iMax}]; 
       result = mvSimplify[result]; result = toMetricBasis[result, pMetric]; 
-      Print["geometricProductMetric result", result]; result]
+      result]
  
 toEigenBlade[pblade_, pMetric_] := transform[pblade, invEigenVecs[pMetric]]
  
