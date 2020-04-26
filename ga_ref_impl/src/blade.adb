@@ -193,13 +193,8 @@ package body Blade is
       GP         : Basis_Blade;
       Result     : Blade_List;
    begin
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
---        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
       --  List_A and List_B needed because To_Eigen_Basis returns an ArrayList
       --  because its result does not have to be a single BasisBlade.
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_A:", List_A);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric List_B:", List_B);
-
       LA_Cursor := List_A.First;
       while Has_Element (LA_Cursor) loop
          LB_Cursor := List_B.First;
@@ -213,11 +208,8 @@ package body Blade is
          Next (LA_Cursor);
       end loop;
 
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-simplify Result:", Result);
       Simplify (Result);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-To_Metric_Basis Result:", Result);
       Result := To_Metric_Basis (Result, Met);
---        GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric Result:", Result);
       return Result;
 
    exception
