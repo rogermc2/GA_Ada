@@ -2,12 +2,10 @@ initMetric[pMatrix_] := Module[{mMatrix, mEig, eVals, eVecs, eVecsInv, i,
       diag = DiagonalMatrixQ[pMatrix], euclidean = False, 
       antiEuclidean = False, p, h, s, m, a, j}, 
      If[SymmetricMatrixQ[pMatrix], mEig = Eigensystem[N[pMatrix]]; 
-        mMatrix = pMatrix; eVecs = mEig[[2]]; Print["initMetric eVecs ", 
-         MatrixForm[eVecs]]; eVecsInv = Transpose[eVecs]; eVals = mEig[[1]]; 
-        Print["initMetric eVals ", MatrixForm[eVals]]; 
-        If[diag == True, euclidean = True; antiEuclidean = True; 
-          For[i = 1, i < Dimensions[pMatrix, 1][[1]], i = i + 1, 
-           If[pMatrix[[i,i]] != 1., euclidean = False]; 
+        mMatrix = pMatrix; eVecs = mEig[[2]]; eVecsInv = Transpose[eVecs]; 
+        eVals = mEig[[1]]; If[diag == True, euclidean = True; 
+          antiEuclidean = True; For[i = 1, i < Dimensions[pMatrix, 1][[1]], 
+           i = i + 1, If[pMatrix[[i,i]] != 1., euclidean = False]; 
             If[pMatrix[[i,i]] != -1., antiEuclidean = False]]], 
        Print["initMetric, The metric matrix must be symmetric."]; ]; 
       Return[{mEig, eVecsInv, eVals, diag, euclidean, antiEuclidean, eVecs}]]
@@ -45,7 +43,7 @@ mvSimplify[pBladeList_] := Module[{result = {},
            result = AppendTo[result, current]]; ]]; result]
  
 addAll[listA_, listB_] := Module[{result = listA}, 
-     Do[result = AppendTo[result, listB[[indexB]]], 
+     Do[result = Append[result, listB[[indexB]]], 
        {indexB, 1, Dimensions[listB][[1]]}]; result]
  
 generalInverse[pMV_, pMetric_] := Module[{dim, mMatrix, lMax, i, j, 
@@ -66,12 +64,12 @@ generalInverse[pMV_, pMetric_] := Module[{dim, mMatrix, lMax, i, j,
 blade[pBitMap_, pWeight_] := {pBitMap, pWeight}
  
 geometricProductMetric[pBladeA_, pBladeB_, pMetric_] := 
-    Module[{listA, listB, jMax, iMax, gp, result = {{0, 0}}, bitmap, iA, jB}, 
+    Module[{listA, listB, jMax, iMax, gp, result = {}, bitmap, iA, jB}, 
      listA = toEigenBlade[pBladeA, pMetric]; 
       listB = toEigenBlade[pBladeB, pMetric]; 
       iMax = Dimensions[listA, 1][[1]]; jMax = Dimensions[listB, 1][[1]]; 
       Do[Do[gp = gProduct[listA[[iA]], listB[[jB]], eigenVals[pMetric]]; 
-         result = AppendTo[result, gp], {jB, 1, jMax}], {iA, 1, iMax}]; 
+         result = Append[result, gp], {jB, 1, jMax}], {iA, 1, iMax}]; 
       result = mvSimplify[result]; result = toMetricBasis[result, pMetric]; 
       result]
  
@@ -97,10 +95,10 @@ gpOp[pBladeA_, pBladeB_, pOuter_] := Module[{bBlade = {0, 0}, bitmap, sign},
 canonicalReorderingSign[pA_, pB_] := Module[{a = pA, sum = 0, sign = 1}, 
      If[IntegerQ[pA] && IntegerQ[pB], a = BitShiftRight[a, 1]; 
         While[a != 0, sum = sum + bitCount[BitAnd[a, pB]]; 
-          a = BitShiftRight[a, 1]]]; sign = If[BitAnd[sum, 1] == 0, 1, -1, 
-        Print[
-         "canonicalReorderingSign called with non-integer input parameter!"]]\
-; sign]
+          a = BitShiftRight[a, 1]]; sign = If[BitAnd[sum, 1] == 0, 1, -1], 
+       Print[
+        "canonicalReorderingSign called with non-integer input parameter!"]]; 
+      sign]
  
 bitCount[pi_] := Module[{i = pi}, 
      i = i - BitAnd[BitShiftRight[i, 1], 1431655765]; 
@@ -143,13 +141,13 @@ mvGeometricProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0},
       result]
  
 mvGeometricProductMetric[pMVa_, pMVb_, pMetric_] := 
-    Module[{bladeA = {0, 0}, bladeB = {0, 0}, gp = {0, 0}, 
-      result = {{0, 0}}}, Do[bladeA = pMVa[[indexA]]; 
-        Do[bladeB = pMVb[[indexB]]; gp = geometricProductMetric[bladeA, 
-            bladeB, pMetric]; result = addAll[result, gp], 
-         {indexB, 1, Dimensions[pMVb, 1][[1]]}], 
-       {indexA, 1, Dimensions[pMVa, 1][[1]]}]; result = mvSimplify[result]; 
-      result]
+    Module[{bladeA = {0, 0}, bladeB = {0, 0}, gp = {0, 0}, result = {}}, 
+     Do[bladeA = pMVa[[indexA]]; Do[bladeB = pMVb[[indexB]]; 
+          gp = geometricProductMetric[bladeA, bladeB, pMetric]; 
+          result = addAll[result, gp], {indexB, 1, Dimensions[pMVb, 1][[
+           1]]}], {indexA, 1, Dimensions[pMVa, 1][[1]]}]; 
+      Print["mvGeometricProductMetric pre-simplify result : ", 
+       MatrixForm[result]]; result = mvSimplify[result]; result]
  
 mvOuterProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0}, 
       op = {0, 0}, result = {{0, 0}}}, 

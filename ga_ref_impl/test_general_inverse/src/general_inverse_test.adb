@@ -29,11 +29,16 @@ procedure General_Inverse_Test is
    e3_bv        : Multivector := Basis_Vector (Blade_Types.C3_e3);
    ni_bv        : Multivector := Basis_Vector (Blade_Types.C3_ni);
 
-   MV_A         : Multivector;
-   MV_A_Inv     : Multivector;
+   MV_A         : constant Multivector := New_Normalized_Point (-0.356756, -0.881980, 0.0);
+   MV_Info      : Multivector_Type.MV_Type_Record;
    MV_A_GP      : Multivector;
    MV_A_GP_Met  : Multivector;
-   MV_Info      : Multivector_Type.MV_Type_Record;
+   MV_A_Inv     : Multivector;
+
+   NP_1         : Multivector;
+   NP_1_GP      : Multivector;
+   NP_1_GP_Met  : Multivector;
+   NP_1_Inv     : Multivector;
 
 begin
 --     GA_Utilities.Print_Metric ("General_Inverse_Test Metric", Met);
@@ -48,20 +53,24 @@ begin
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
-   MV_A := New_Normalized_Point (1.0, 1.0, 1.0);
    GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A", MV_A);
-
-   MV_Info := Multivector_Type.Init (MV_A);
    MV_A_GP := Geometric_Product (MV_A, MV_A);
    GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP", MV_A_GP);
-
-   MV_A_GP_Met := Geometric_Product (MV_A, MV_A,Met);
+   MV_A_GP_Met := Geometric_Product (MV_A, MV_A, Met);
    GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP_Met", MV_A_GP_Met);
+   MV_A_Inv := General_Inverse (MV_A, Met);
 
---     MV_A_Inv := General_Inverse (MV_A, Met);
---     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_Inv", MV_A_Inv);
---     MV_Info := Multivector_Type.Init (MV_A_Inv);
---     GA_Utilities.Print_Multivector_Info ("General_Inverse_Test MV_A_Inv Info", MV_Info);
+--     NP_1 := New_Normalized_Point (1.0, 1.0, 1.0);
+--     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1", NP_1);
+--
+--     NP_1_GP := Geometric_Product (NP_1, NP_1);
+--     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_GP", NP_1_GP);
+--
+--     NP_1_GP_Met := Geometric_Product (NP_1, NP_1, Met);
+--     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_GP_Met", NP_1_GP_Met);
+--
+--     NP_1_Inv := General_Inverse (NP_1, Met);
+--     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_Inv", NP_1_Inv);
 
 exception
    when anError :  others =>
