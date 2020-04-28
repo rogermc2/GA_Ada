@@ -48,14 +48,10 @@ addAll[listA_, listB_] := Module[{result = listA},
  
 generalInverse[pMV_, pMetric_] := Module[{dim, mMatrix, lMax, im, jm, ib, jb, 
       i, j, basisBlades, b, gp, invMatrix, v, result = {}}, 
-     dim = spaceDim[pMV]; lMax = BitShiftLeft[1, dim]; 
-      Print["generalInverse lMax: ", lMax]; 
-      mMatrix = Table[0, {im, 1, lMax}, {jm, 1, lMax}]; 
-      basisBlades = Table[blade[ib - 1, 1], {ib, 1, lMax}]; 
-      Do[Print["generalInverse i: ", i]; b = pMV[[i]]; 
-        Print["generalInverse i, b: ", i, "  ", b]; 
-        Do[gp = geometricProductMetric[b, basisBlades[[j]], pMetric]; 
-          mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
+     dim = spaceDim[pMV]; lMax = 2^dim; mMatrix = Table[0, {im, 1, lMax}, 
+        {jm, 1, lMax}]; basisBlades = Table[blade[ib - 1, 1], {ib, 1, lMax}]; 
+      Do[b = pMV[[i]]; Do[gp = geometricProductMetric[b, basisBlades[[j]], 
+            pMetric]; mMatrix = addToMatrix[mMatrix, basisBlades[[j]], gp], 
          {j, 1, lMax}], {i, 1, Dimensions[pMV, 1][[1]]}]; 
       Print["generalInverse mMatrix determinant:  ", Det[mMatrix]]; 
       Print["generalInverse mMatrix cond2:  ", cond2[mMatrix]]; 
