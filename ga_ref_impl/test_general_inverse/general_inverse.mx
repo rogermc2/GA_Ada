@@ -73,7 +73,7 @@ geometricProductMetric[pBladeA_, pBladeB_, pMetric_] :=
       result = mvSimplify[result]; result = toMetricBasis[result, pMetric]; 
       result]
  
-toEigenBlade[pblade_, pMetric_] := transform[pblade, invEigenVecs[pMetric]]
+toEigenBlade[pblade_, pMetric_] := transform[pblade, eigenVecs[pMetric]]
  
 transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
       bitmap = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, 
@@ -121,7 +121,7 @@ toMetricBasis[pBladeList_, pMetric_] := Module[{result = {}, tmp = {}, i, j},
         result = addAll[result, tmp], {i, 1, Dimensions[pBladeList][[1]]}]; 
       result = mvSimplify[result]; result]
  
-toMetricBlade[pblade_, pMetric_] := transform[pblade, eigenVecs[pMetric]]
+toMetricBlade[pblade_, pMetric_] := transform[pblade, invEigenVecs[pMetric]]
  
 addToMatrix[pMatrix_, pBeta_, pGamma_] := 
     Module[{v, aBlade, result = pMatrix}, 
@@ -146,8 +146,7 @@ mvGeometricProductMetric[pMVa_, pMVb_, pMetric_] :=
           gp = geometricProductMetric[bladeA, bladeB, pMetric]; 
           result = addAll[result, gp], {indexB, 1, Dimensions[pMVb, 1][[
            1]]}], {indexA, 1, Dimensions[pMVa, 1][[1]]}]; 
-      Print["mvGeometricProductMetric pre-simplify result : ", 
-       MatrixForm[result]]; result = mvSimplify[result]; result]
+      result = mvSimplify[result]; result]
  
 mvOuterProduct[pMVa_, pMVb_] := Module[{bladeA = {0, 0}, bladeB = {0, 0}, 
       op = {0, 0}, result = {{0, 0}}}, 
