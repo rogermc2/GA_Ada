@@ -1,14 +1,22 @@
 
 with Interfaces;
 
+with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Numerics.Generic_Complex_Elementary_Functions;
 with Ada.Numerics.Generic_Complex_Types;
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics.Generic_Real_Arrays;
-
 with Ada.Numerics;
 
 package GA_Maths is
+
+   package Float_List_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Float);
+   type Float_List is new Float_List_Package.List with null Record;
+
+    package Float_Sort_Package is new
+      Float_List_Package.Generic_Sorting ("<");
+
    package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
    package Long_Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (Long_Float);
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
@@ -80,6 +88,7 @@ package GA_Maths is
    GU_8     : constant Grade_Usage := 16;
    GU_16    : constant Grade_Usage := 32;
 
+   function Condition_Number (aMatrix : Float_Matrix) return Float;
    function Is_Anti_Euclidean (aMatrix : Float_Matrix) return Boolean;
    function Is_Diagonal (aMatrix : Float_Matrix) return Boolean;
    function Is_Euclidean (aMatrix : Float_Matrix) return Boolean;
