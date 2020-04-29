@@ -99,7 +99,7 @@ toEigenBlade[pblade_, pMetric_] := transform[pblade, eigenVecs[pMetric]]
 transform[pBlade_, pMatrix_] := Module[{aList = {{0, pBlade[[2]]}}, 
       bitmap = pBlade[[1]], maxj = Dimensions[pMatrix, 1][[1]], tmp, m, 
       i = 1, j, k, op}, While[bitmap != 0, If[BitAnd[bitmap, 1] != 0, 
-         tmp = {}; Do[If[pMatrix[[j,i]] != 0, m = pMatrix[[j,i]]; 
+         tmp = {}; Do[m = pMatrix[[j,i]]; If[m != 0, 
              Do[op = outerProduct[aList[[k]], blade[2^(j - 1), m]]; tmp = 
                 AppendTo[tmp, op], {k, 1, Dimensions[aList, 1][[1]]}]], 
            {j, 1, maxj}]; aList = tmp]; bitmap = BitShiftRight[bitmap]; 
