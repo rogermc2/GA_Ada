@@ -10,11 +10,13 @@ with Ada.Numerics;
 
 package GA_Maths is
    package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
+   package Long_Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (Long_Float);
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
    package Complex_Types is new Ada.Numerics.Generic_Complex_Types (Float);
    package Complex_Functions is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
    subtype Float_Vector is Float_Array_Package.Real_Vector;
+   subtype Long_Float_Matrix is Long_Float_Array_Package.Real_Matrix;
 
    type float_3 is digits 3;
    type Bit_Map is new integer range 0 .. 2 ** 30;
@@ -83,8 +85,10 @@ package GA_Maths is
    function Is_Euclidean (aMatrix : Float_Matrix) return Boolean;
    function Is_Symetric (aMatrix : Float_Matrix) return Boolean;
    function Maximum (I1, I2 : Integer) return Integer;
-   function Maximum (I1, I2 : Float) return Float;
+   function Maximum (F1, F2 : Float) return Float;
+   function Maximum (F1, F2 : Long_Float) return Long_Float;
    function Minimum (I1, I2 : Integer) return Integer;
-   function Minimum (I1, I2 : Float) return Float;
+   function Minimum (F1, F2 : Float) return Float;
+   function Minimum (F1, F2 : Long_Float) return Long_Float;
 
 end GA_Maths;

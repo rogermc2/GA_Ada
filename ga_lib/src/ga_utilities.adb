@@ -36,7 +36,7 @@ package body GA_Utilities is
       Put_Line (Name);
       Put_Line (" Bitmap and Weight:");
       Put_Line (Interfaces.Unsigned_32'Image (Blade.Bitmap (B)) &
-                  "  " & float'Image (Blade.Weight (B)));
+                  "  " & Long_Float'Image (Blade.Weight (B)));
       New_Line;
    end Print_Blade;
 
@@ -54,7 +54,7 @@ package body GA_Utilities is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          Put_Line (Interfaces.Unsigned_32'Image (Bitmap (aBlade)) &
-                     "  " & float'Image (Weight (aBlade)));
+                     "  " & Long_Float'Image (Weight (aBlade)));
          Next (Curs);
       end loop;
       New_Line;
@@ -187,7 +187,7 @@ package body GA_Utilities is
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          Put_Line (Interfaces.Unsigned_32'Image (Blade.Bitmap (aBlade)) &
-                     "  " & float'Image (Blade.Weight (aBlade)));
+                     "  " & Long_Float'Image (Blade.Weight (aBlade)));
          Next (Curs);
       end loop;
       New_Line;
@@ -228,7 +228,7 @@ package body GA_Utilities is
       Put (Name & ":  ");
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
-         Put (float'Image (Blade.Weight (aBlade)) & " ");
+         Put (Long_Float'Image (Blade.Weight (aBlade)) & " ");
          Next (Curs);
       end loop;
       New_Line;

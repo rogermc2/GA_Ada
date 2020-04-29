@@ -110,13 +110,26 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Maximum (I1, I2 : Float) return Float is
+   function Maximum (F1, F2 : Float) return Float is
       Max : Float;
    begin
-      if I1 > I2 then
-         Max := I1;
+      if F1 > F2 then
+         Max := F1;
       else
-         Max := I2;
+         Max := F2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
+   function Maximum (F1, F2 : Long_Float) return Long_Float is
+      Max : Long_Float;
+   begin
+      if F1 > F2 then
+         Max := F1;
+      else
+         Max := F2;
       end if;
       return Max;
    end Maximum;
@@ -136,13 +149,26 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Minimum (I1, I2 : Float) return Float is
+   function Minimum (F1, F2 : Float) return Float is
       Min : Float;
    begin
-      if I1 < I2 then
-         Min := I1;
+      if F1 < F2 then
+         Min := F1;
       else
-         Min := I2;
+         Min := F2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Minimum (F1, F2 : Long_Float) return Long_Float is
+      Min : Long_Float;
+   begin
+      if F1 < F2 then
+         Min := F1;
+      else
+         Min := F2;
       end if;
       return Min;
    end Minimum;
