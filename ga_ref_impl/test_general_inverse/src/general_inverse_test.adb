@@ -36,9 +36,11 @@ procedure General_Inverse_Test is
 
    NP_1         : constant Multivector := New_Normalized_Point (-0.356756, -0.881980, 0.0);
    NP_1_OP      : Multivector;
-   NP_1_GP      : Multivector;
+   NP_1_IP      : Multivector;
    NP_1_GP_Met  : Multivector;
+   NP_1_IP_Met  : Multivector;
    NP_1_Inv     : Multivector;
+   NP_1_GP      : Multivector;
 
 begin
 --     GA_Utilities.Print_Float_Array ("General_Inverse_Test Metric Eigen_Values",
@@ -69,9 +71,14 @@ begin
 
    NP_1_GP_Met := Geometric_Product (NP_1, NP_1, C3_Metric);
    GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_GP_Met", NP_1_GP_Met);
---
---     NP_1_Inv := General_Inverse (NP_1, Met);
---     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_Inv", NP_1_Inv);
+
+   NP_1_IP := Inner_Product (NP_1, NP_1,Blade.Left_Contraction);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_IP", NP_1_IP);
+   NP_1_IP_Met := Geometric_Product (NP_1, NP_1, C3_Metric);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_IP_Met", NP_1_IP_Met);
+
+   NP_1_Inv := General_Inverse (NP_1, C3_Metric);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_Inv", NP_1_Inv);
 
 exception
    when anError :  others =>

@@ -200,13 +200,20 @@ package body GA_Maths is
     function Condition_Number (aMatrix : Float_Matrix) return Float is
         use Float_Array_Package;
         use Float_Functions;
+        use Float_List_Package;
         Singular_Values : constant Float_List := Singular_Value_List (aMatrix);
-        Max             : constant Float := Singular_Values.First_Element;
-        Min             : constant Float := Singular_Values.Last_Element;
+        Max             : Float;
+        Min             : Float;
         Result          : Float := 0.0;
     begin
-        if Min > 0.0 then
-            Result := Max / Min;
+        if List (Singular_Values) /= Empty_List then
+            Max := Singular_Values.First_Element;
+            Min := Singular_Values.Last_Element;
+            if Min > 0.0 then
+                Result := Max / Min;
+            else
+                Result := Max / 10.0 ** (-8);
+            end if;
         end if;
         return Result;
     end Condition_Number;

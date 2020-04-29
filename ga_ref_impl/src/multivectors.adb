@@ -698,7 +698,7 @@ package body Multivectors is
                 --                  GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
                 --                                             Mat, (1, 1), (6, 6));
                 Det := Determinant (Mat);
-                if Abs (Det) > 0.0 then
+                if Abs (Det) > 10.0**(-7) then
                     Put_Line ("Multivectors.General_Inverse Det: " & Long_Float'Image (Det));
                     Mat_Inv := Inverse (Mat);
                     for Row in BBs_L'Range loop
