@@ -48,7 +48,7 @@ package Multivectors is
    function Basis_Vector (Index : C3_Base) return Vector;
    function Blades (MV : Multivector) return Blade.Blade_List;
    function Component  (MV : Multivector; BM : Interfaces.Unsigned_32)
-                        return Long_Float;
+                        return Float;
    procedure Compress (MV : in out Multivector; Epsilon : Float);
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;

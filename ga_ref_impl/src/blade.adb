@@ -11,7 +11,7 @@ package body Blade is
                                    BB : Basis_Blade; Cont : Contraction_Type)
                                    return Basis_Blade;
 
-    function New_Blade (Weight : Long_Float := 1.0) return Basis_Blade;
+    function New_Blade (Weight : Float := 1.0) return Basis_Blade;
     function To_Eigen_Basis (BB : Basis_Blade; Met : Metric.Metric_Record)
                              return Blade_List;
     function To_Metric_Basis (BL : Blade_List; Met : Metric.Metric_Record)
@@ -31,7 +31,7 @@ package body Blade is
     function "*" (S : Float; BB : Basis_Blade) return Basis_Blade is
 
     begin
-        return (BB.Bitmap, Long_Float (S) * BB.Weight);
+        return (BB.Bitmap, Float (S) * BB.Weight);
     end "*";
 
     --  ------------------------------------------------------------------------
@@ -240,7 +240,7 @@ package body Blade is
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
-                Result.Weight := Result.Weight * Long_Float (Eigen_Vals (Index));
+                Result.Weight := Result.Weight * Float (Eigen_Vals (Index));
             end if;
             --  Move right to next basis vector indicator
             --           BM := BM / 2;
@@ -270,7 +270,7 @@ package body Blade is
             --  else xor > 0 so Outer product part of MV
             Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
             OP_Blade := New_Blade
-              (BA.Bitmap xor BB.Bitmap, Long_Float (Sign) * BA.Weight * BB.Weight);
+              (BA.Bitmap xor BB.Bitmap, Float (Sign) * BA.Weight * BB.Weight);
         end if;
 
         return OP_Blade;
@@ -291,8 +291,8 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     function Grade_Inversion (B : Basis_Blade) return Basis_Blade is
-        W : constant Long_Float
-          := Long_Float (Minus_1_Power (Grade (B)) * Integer (B.Weight));
+        W : constant Float
+          := Float (Minus_1_Power (Grade (B)) * Integer (B.Weight));
     begin
         return New_Blade (B.Bitmap, W);
     end Grade_Inversion;
@@ -373,7 +373,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function New_Blade (Weight : Long_Float := 1.0) return Basis_Blade is
+    function New_Blade (Weight : Float := 1.0) return Basis_Blade is
         Blade : Basis_Blade;
     begin
         Blade.Weight := Weight;
@@ -382,7 +382,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function New_Blade (Bitmap : Unsigned_32; Weight : Long_Float := 1.0)
+    function New_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
                         return Basis_Blade is
         Blade : Basis_Blade;
     begin
@@ -404,7 +404,7 @@ package body Blade is
     begin
         if Bitmap < 32 then
             Blade.Bitmap := Bitmap;
-            Blade.Weight := Long_Float (Weight);
+            Blade.Weight := Float (Weight);
         else
             raise Blade_Exception with
               "Blade.New_Basis_Blade, invalid Bitmap" & Unsigned_32'Image (Bitmap);
@@ -418,7 +418,7 @@ package body Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := 0;
-        Blade.Weight := Long_Float (Weight);
+        Blade.Weight := Float (Weight);
         return Blade;
     end New_Basis_Blade;
 
@@ -426,14 +426,14 @@ package body Blade is
 
     function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Long_Float (Weight));
+        return (Index'Enum_Rep, Float (Weight));
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Long_Float (Weight));
+        return (Index'Enum_Rep, Float (Weight));
 
     exception
         when others =>
@@ -445,14 +445,14 @@ package body Blade is
 
     function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Long_Float (Weight));
+        return (Index'Enum_Rep, Float (Weight));
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Long_Float (Weight));
+        return (Index'Enum_Rep, Float (Weight));
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
@@ -470,7 +470,7 @@ package body Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := 0;
-        Blade.Weight := Long_Float (Weight);
+        Blade.Weight := Float (Weight);
         return Blade;
     end New_Scalar_Blade;
 
@@ -493,8 +493,8 @@ package body Blade is
 
     function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
         G   : constant Integer := Grade (B); -- Bit_Count (B.Bitmap)
-        W   : constant Long_Float
-          := Long_Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
+        W   : constant Float
+          := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
     begin
         return (B.Bitmap, W);
     end Reverse_Blade;
@@ -661,7 +661,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    procedure Update_Blade (BB : in out Basis_Blade; Weight : Long_Float) is
+    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float) is
     begin
         BB.Weight := Weight;
 
@@ -686,7 +686,7 @@ package body Blade is
     --  ------------------------------------------------------------------------
 
     procedure Update_Blade (BB     : in out Basis_Blade; Bitmap : Unsigned_32;
-                            Weight : Long_Float) is
+                            Weight : Float) is
     begin
         if Bitmap < 32 then
             BB.Bitmap := Bitmap;
@@ -699,7 +699,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function Weight (BB : Basis_Blade) return Long_Float is
+    function Weight (BB : Basis_Blade) return Float is
     begin
         return BB.Weight;
     end Weight;

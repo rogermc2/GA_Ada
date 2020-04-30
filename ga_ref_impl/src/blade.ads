@@ -16,7 +16,7 @@ package Blade is
 
     type Basis_Blade is record
         Bitmap : Interfaces.Unsigned_32 := 0;
-        Weight : Long_Float := 0.0;
+        Weight : Float := 0.0;
     end record;
 
     type Complex_Basis_Blade is private;
@@ -78,8 +78,7 @@ package Blade is
     function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;
     function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
     function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
-    function New_Blade (Bitmap : Unsigned_32; Weight : Long_Float := 1.0)
-                        return Basis_Blade;
+    function New_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0) return Basis_Blade;
     function New_Complex_Basis_Blade (Index  : C3_Base;
                                       Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
                                        return Complex_Basis_Blade;
@@ -89,11 +88,11 @@ package Blade is
     function Outer_Product (BA, BB : Basis_Blade) return Basis_Blade;
     function Reverse_Blade (B : Basis_Blade) return Basis_Blade;
     procedure Simplify (Blades : in out Blade_List);
-    procedure Update_Blade (BB : in out Basis_Blade; Weight : Long_Float);
+    procedure Update_Blade (BB : in out Basis_Blade; Weight : Float);
     procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32);
     procedure Update_Blade (BB : in out Basis_Blade; Bitmap : Unsigned_32;
-                            Weight : Long_Float);
-    function Weight (BB : Basis_Blade) return Long_Float;
+                            Weight : Float);
+    function Weight (BB : Basis_Blade) return Float;
 
 private
     type Complex_Basis_Blade is record
