@@ -6,6 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Maths;
 
 with Bits;
+with GA_Maths;
 with GA_Utilities;
 
 package body Multivectors is
@@ -22,7 +23,7 @@ package body Multivectors is
     function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
     function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
                                   Met : Metric.Metric_Record)
-                                  return GA_Maths.Long_Float_Matrix;
+                                  return GA_Maths.Float_Matrix;
 
     --  -------------------------------------------------------------------------
 
@@ -145,7 +146,7 @@ package body Multivectors is
     begin
         while Has_Element (Curs) loop
             aBlade := Element (Curs);
-            Blade.Update_Blade (aBlade, Long_Float (Scale) * Weight (aBlade));
+            Blade.Update_Blade (aBlade, Scale * Weight (aBlade));
             N_Blades.Replace_Element (N_Curs, aBlade);
             Next (Curs);
             Next (N_Curs);
@@ -175,7 +176,7 @@ package body Multivectors is
     begin
         while Has_Element (Curs) loop
             aBlade := Element (Curs);
-            Blade.Update_Blade (aBlade, Weight (aBlade) / Long_Float (Scale));
+            Blade.Update_Blade (aBlade, Weight (aBlade) / Scale);
             N_Blades.Replace_Element (N_Curs, aBlade);
             Next (Curs);
             Next (N_Curs);
@@ -242,7 +243,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    procedure Add_To_Matrix (M           : in out GA_Maths.Long_Float_Matrix;
+    procedure Add_To_Matrix (M           : in out GA_Maths.Float_Matrix;
                              Beta, Gamma : Blade.Basis_Blade) is
         use Blade;
         --  Matrix indices are 1 greater than bitmap values
@@ -259,7 +260,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    procedure Add_To_Matrix (M    : in out GA_Maths.Long_Float_Matrix;
+    procedure Add_To_Matrix (M    : in out GA_Maths.Float_Matrix;
                              Beta : Blade.Basis_Blade; Gamma : Blade.Blade_List) is
         use Blade;
         use Blade_List_Package;
@@ -333,14 +334,14 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Component (MV : Multivector; BM : Interfaces.Unsigned_32) return Long_Float is
+    function Component (MV : Multivector; BM : Interfaces.Unsigned_32) return Float is
         use Interfaces;
         use Blade;
         use Blade_List_Package;
         Blades  : constant Blade_List := Get_Blade_List (MV);
         Curs    : Cursor := Blades.First;
         Found   : Boolean := False;
-        Value   : Long_Float := 0.0;
+        Value   : Float := 0.0;
     begin
         while Has_Element (Curs) and not Found loop
             Found := Blade.Bitmap (Element (Curs)) = BM;
@@ -367,7 +368,7 @@ package body Multivectors is
         Blades    : Blade_List := MV.Blades;
         thisBlade : Blade.Basis_Blade;
         Curs      : Cursor := Blades.First;
-        Max_Mag   : Long_Float := 0.0;
+        Max_Mag   : Float := 0.0;
     begin
         Simplify (MV);
         while Has_Element (Curs) loop
@@ -382,7 +383,7 @@ package body Multivectors is
             --  remove basis blades with too low scale
             while Has_Element (Curs) loop
                 thisBlade := Element (Curs);
-                if Abs (Weight (thisBlade)) < Long_Float (Epsilon) then
+                if Abs (Weight (thisBlade)) < Epsilon then
                     Blades.Delete (Curs);
                 end if ;
                 Next (Curs);
@@ -597,19 +598,19 @@ package body Multivectors is
     --  Implements metric == null case of Multivector.java generalInverse
     function General_Inverse (MV : Multivector) return Multivector is
         use Interfaces;
-        use GA_Maths.Long_Float_Array_Package;
+        use GA_Maths.Float_Array_Package;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
         Dim        : constant Natural := Space_Dimension (MV);
         Max_Index  : constant Natural := 2 ** Dim;
-        Mat        : Long_Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
-        Mat_Inv    : Long_Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
+        Mat        : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
+        Mat_Inv    : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
         BBs_L      : Basis_Blade_Array (1 .. Max_Index);
         Curs       : Cursor := MV.Blades.First;
         aBlade     : Basis_Blade;
         GP         : Basis_Blade;
-        Value      : Long_Float;
+        Value      : Float;
         Result     : Blade_List;
     begin
         GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
@@ -659,12 +660,14 @@ package body Multivectors is
     function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
                               return Multivector is
         use Interfaces;
-        use GA_Maths.Long_Float_Array_Package;
         use Blade;
         use Blade_List_Package;
         use GA_Maths;
+        use Float_Array_Package;
+        use Lapack;
         Dim          : Natural;
-        Value        : Long_Float;
+        Cond         : Float;
+        Value        : Float;
         Blades       : Blade_List;
         Result       : Multivector;
     begin
@@ -678,10 +681,10 @@ package body Multivectors is
             declare
                 --  cern.colt.matrix.DoubleFactory2D.dense.make(1 << dim, 1 << dim);
                 L_Max    : constant integer := 2 ** (Dim - 1);  --  1 << dim
-                Mat      : Long_Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
-                Mat_Inv  : Long_Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+                Mat      : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+                Mat_Inv  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
                 BBs_L    : Basis_Blade_Array (1 .. L_Max);
-                Det      : Long_Float;
+                Det      : Float;
             begin
                 --                  Put_Line ("Multivectors.General_Inverse Metric Dim, L_Max " &
                 --                              Integer'Image (Dim) & Integer'Image (L_Max));
@@ -698,8 +701,11 @@ package body Multivectors is
                 --                  GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
                 --                                             Mat, (1, 1), (6, 6));
                 Det := Determinant (Mat);
-                if Abs (Det) > 10.0**(-7) then
-                    Put_Line ("Multivectors.General_Inverse Det: " & Long_Float'Image (Det));
+                Cond := Condition_Number (Mat);
+                    Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
+                    Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
+                    Put_Line ("Multivectors.General_Inverse 1 / Float'Model_Epsilon: " & Float'Image (1.0 / Float'Model_Epsilon));
+                if Cond < 1.0 / Float'Model_Epsilon then
                     Mat_Inv := Inverse (Mat);
                     for Row in BBs_L'Range loop
                         Value := Mat_Inv (Row, 1);
@@ -741,7 +747,7 @@ package body Multivectors is
         if Sc /= 0.0 then
             while Has_Element (Curs) loop
                 New_MV.Blades.Append (New_Blade (Bitmap (Element (Curs)),
-                                      Long_Float (Sc) * Weight (Element (Curs))));
+                                      Sc * Weight (Element (Curs))));
                 Next (Curs);
             end loop;
             Simplify (New_MV);
@@ -1111,7 +1117,7 @@ package body Multivectors is
         Blades         : constant Blade_List := theMV.Blades;
         Cursor_B       : Cursor := Blades.First;
         Largest_Blade  : Blade.Basis_Blade;
-        Best_Scale     : Long_Float := 0.0;
+        Best_Scale     : Float := 0.0;
     begin
         Simplify (theMV);
         while Has_Element (Cursor_B) loop
@@ -1610,7 +1616,7 @@ package body Multivectors is
         BB       : Blade.Basis_Blade;
         Blades   : constant Blade_List := MV.Blades;
         B_Cursor : Cursor := Blades.First;
-        Sum      : Long_Float := 0.0;
+        Sum      : Float := 0.0;
     begin
         while Has_Element (B_Cursor) loop
             BB := Element (B_Cursor);
@@ -1730,12 +1736,12 @@ package body Multivectors is
     --  Metric version:
     function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
                                   Met : Metric.Metric_Record)
-                                  return GA_Maths.Long_Float_Matrix is
+                                  return GA_Maths.Float_Matrix is
         use Blade;
         use GA_Maths;
         use Blade_List_Package;
         L_Max      : constant integer := BBs_L'Length;
-        Matrix_AG  : Long_Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+        Matrix_AG  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
         BL_Curs_i  : Cursor := MV.Blades.First;
         Blade_b    : Basis_Blade;  --  b
         GP_List    : Blade_List;
