@@ -44,15 +44,12 @@ package body SVD is
     function Singular_Value_Decomposition (aMatrix : Complex_Arrays.Complex_Matrix)
                                            return SVD is
         use Lapack;
-        --          use Float_Array_Package;
-        --          use Float_Functions;
-        --          use Float_Sort_Package;
         use Real_Arrays;
         use Complex_Types;
         use Complex_Arrays;
 
-        One          : constant Real := 1.0e0;
-        Zero         : constant Real := 0.0e0;
+--          One          : constant Real := 1.0e0;
+--          Zero         : constant Real := 0.0e0;
 
         Num_Rows        : constant Natural := aMatrix'Length (1);
         Num_Cols        : constant Natural := aMatrix'Length (2);
@@ -84,7 +81,7 @@ package body SVD is
                RWORK  => Vector_R,
                INFO   => Return_code);
         declare
-            Work_Vector_Rows : Integer := Integer (Re (Short_Vector (1)));
+            Work_Vector_Rows : Integer := Short_Vector'Length;
             Work_Vector      : Complex_Vector (1 .. Work_Vector_Rows);
         begin
             GESVD (JOBU   => 'S', JOBVT  => 'S',
