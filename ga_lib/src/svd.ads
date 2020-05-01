@@ -19,9 +19,11 @@ package SVD is
 private
 
     type SVD (Num_Rows, Num_Cols : Natural) is record
-        Matrix_U : Real_Arrays.Real_Matrix (1 .. Num_Rows, 1 .. Num_Cols) := (others => (others => 0.0));
-        Matrix_V : Real_Arrays.Real_Matrix (1 .. Num_Rows, 1 .. Num_Cols) := (others => (others => 0.0));
-        Matrix_W : Real_Arrays.Real_Vector (1 .. Num_Rows) := (others => 0.0);
+        Matrix_U : Complex_Arrays.Complex_Matrix (1 .. Num_Rows, 1 .. Num_Cols) :=
+                     (others => (others => (0.0, 0.0)));
+        Matrix_V : Complex_Arrays.Complex_Matrix (1 .. Num_Rows, 1 .. Num_Cols) :=
+                     (others => (others => (0.0, 0.0)));
+        Matrix_W : Complex_Arrays.Complex_Vector (1 .. Num_Rows) := (others => (0.0, 0.0));
     end record;
 
 end SVD;
