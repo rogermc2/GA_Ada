@@ -5,8 +5,10 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada_Lapack;
 
 package body SVD is
-
-    package Complex_Maths   is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+    package Complex_Types is new Ada.Numerics.Generic_Complex_Types (Real);
+    package Complex_Arrays is new
+      Ada.Numerics.Generic_Complex_Arrays (Real_Arrays, Complex_Types);
+    package Complex_Maths is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
     package Lapack is new Ada_Lapack (Real, Complex_Types,
                                       Real_Arrays, Complex_Arrays);
 
@@ -14,14 +16,13 @@ package body SVD is
 
     function Singular_Value_Decomposition (aMatrix : GA_Maths.Float_Matrix)
                                            return SVD is
-        use Complex_Arrays;
         use Real_Arrays;
-        Converted_Matrix : Complex_Arrays.Complex_Matrix (aMatrix'Range (1), aMatrix'Range (2)) :=
-                             (others => (others => (0.0, 0.0)));
+        Converted_Matrix : Real_Arrays.Real_Matrix (aMatrix'Range (1), aMatrix'Range (2)) :=
+                             (others => (others => 0.0));
     begin
         for row in aMatrix'Range (1) loop
             for col in aMatrix'Range (2) loop
-                Converted_Matrix (row, col) := (Real (aMatrix (row, col)), 0.0);
+                Converted_Matrix (row, col) := (Real (aMatrix (row, col)));
             end loop;
         end loop;
         return Singular_Value_Decomposition (Converted_Matrix);
@@ -31,34 +32,15 @@ package body SVD is
 
     function Singular_Value_Decomposition (aMatrix : Real_Arrays.Real_Matrix)
                                            return SVD is
-        use Complex_Arrays;
-        Converted_Matrix : Complex_Arrays.Complex_Matrix (aMatrix'Range (1), aMatrix'Range (2)) :=
-                             (others => (others => (0.0, 0.0)));
-    begin
-        Set_Re (Converted_Matrix, aMatrix);
-        return Singular_Value_Decomposition (Converted_Matrix);
-    end Singular_Value_Decomposition;
-
-    --  ------------------------------------------------------------------------
-
-    function Singular_Value_Decomposition (aMatrix : Complex_Arrays.Complex_Matrix)
-                                           return SVD is
         use Lapack;
         use Real_Arrays;
-        use Complex_Types;
-        use Complex_Arrays;
 
---          One          : constant Real := 1.0e0;
---          Zero         : constant Real := 0.0e0;
-
-        Num_Rows        : constant Natural := aMatrix'Length (1);
-        Num_Cols        : constant Natural := aMatrix'Length (2);
-
-        Matrix_A        : Complex_Matrix := aMatrix;
-        Matrix_U        : Complex_Matrix (1 .. Num_Rows, 1 .. Num_Cols);
-        V_Transpose     : Complex_Matrix (1 .. Num_Cols, 1 .. Num_Cols);
-        Vector_R        : Real_Vector (1 .. Num_Rows);
-        Short_Vector    : Complex_Vector (1 .. 1);
+        Num_Rows        : constant Integer := aMatrix'Length (1);
+        Num_Cols        : constant Integer := aMatrix'Length (2);
+        Matrix_A        : Real_Matrix := aMatrix;
+        Matrix_U        : Real_Matrix (1 .. Num_Rows, 1 .. Num_Cols);
+        V_Transpose     : Real_Matrix (1 .. Num_Cols, 1 .. Num_Cols);
+        Short_Vector    : Real_Vector (1 .. 1);
         Num_Singular    : Integer := GA_Maths.Minimum (Num_Rows, Num_Cols);
         Singular_Values : Real_Vector (1 .. Num_Singular);  --  sorted: S(i) >= S(i+1).
         Return_Code     : Integer := 0;
@@ -78,11 +60,10 @@ package body SVD is
                U      => Matrix_U, LDU    => Num_Rows,
                VT     => V_Transpose, LDVT   => Num_Cols,
                WORK   => Short_Vector, LWORK  => -1,
-               RWORK  => Vector_R,
                INFO   => Return_code);
         declare
             Work_Vector_Rows : Integer := Short_Vector'Length;
-            Work_Vector      : Complex_Vector (1 .. Work_Vector_Rows);
+            Work_Vector      : Real_Vector (1 .. Work_Vector_Rows);
         begin
             GESVD (JOBU   => 'S', JOBVT  => 'S',
                    M      => Num_Rows, N      => Num_Cols,
@@ -91,7 +72,6 @@ package body SVD is
                    U      => Matrix_U, LDU    => Num_Rows,
                    VT     => V_Transpose, LDVT   => Num_Cols,
                    WORK   => Work_Vector, LWORK  => Work_Vector_Rows,
-                   RWORK  => Vector_R,
                    INFO   => Return_Code);
             if Return_Code = 0 then
                 theSVD.Matrix_W := Work_Vector;
