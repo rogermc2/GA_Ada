@@ -1,63 +1,177 @@
 
-with Ada.Text_IO; use Ada.Text_IO;
-
-with Interfaces;
-
 package body GA_Maths is
 
-   function Bit_Count (Bitmap : Unsigned_Integer) return Natural is
-      use Interfaces;
-      Count   : Unsigned_32 := Interfaces.Unsigned_32 (Bitmap);
+   function Is_Anti_Euclidean (aMatrix : Float_Matrix) return Boolean is
+      epsilon : constant float := 10.0 ** (-9);
+      row     : Integer := aMatrix'First;
+      col     : Integer := aMatrix'First (2);
+      OK      : Boolean := aMatrix'Length (1) = aMatrix'Length (2);
    begin
-      Count := Count - ((Shift_Right (Count, 1)) and 16#55555555#);
-      Count := (Count and 16#33333333#) + (Shift_Right (Count, 2) and 16#33333333#);
-      Count := (Count + Shift_Right (Count, 4)) and 16#0F0F0F0F#;
-      Count := Count + (Shift_Right (Count, 8));
-      Count := Count + (Shift_Right (Count, 16));
-      --  Return count in range 0 to 31.
-      return Natural (Count and 16#3F#);
-   end Bit_Count;
-
-   --  ------------------------------------------------------------------------
-
-   function Highest_One_Bit (Bitmap : Unsigned_Integer) return Natural is
-   begin
-      return 32 - Number_Of_Leading_Zero_Bits (Bitmap);
-   end Highest_One_Bit;
+      if OK then
+         while row <= aMatrix'Last and OK loop
+            while col <= aMatrix'Last (2) and OK loop
+               if row = col then
+                  OK := aMatrix (row, col) + 1.0 <= epsilon;
+               else
+                  OK := Abs (aMatrix (row, col) ** 2 -
+                               aMatrix (col, row) ** 2) <= epsilon;
+               end if;
+               col := col + 1;
+            end loop;
+            row := row + 1;
+         end loop;
+      end if;
+      return OK;
+   end Is_Anti_Euclidean;
 
    --  ------------------------------------------------------------------------
 
    function Is_Diagonal (aMatrix : Float_Matrix) return Boolean is
       epsilon : constant float := 10.0 ** (-9);
       row     : Integer := aMatrix'First;
-      col     : Integer := aMatrix'First(2);
-      OK      : Boolean := True;
+      col     : Integer := aMatrix'First (2);
+      OK      : Boolean := aMatrix'Length (1) = aMatrix'Length (2);
    begin
-      while row <= aMatrix'Last and OK loop
-         while col <= aMatrix'Last(2) and OK loop
-            if row /= col then
-               OK := Abs(aMatrix(row,col)) <= epsilon;
-            end if;
-            col := col +1;
+      if OK then
+         while row <= aMatrix'Last and OK loop
+            while col <= aMatrix'Last (2) and OK loop
+               if row /= col then
+                  OK := Abs (aMatrix (row, col)) <= epsilon;
+               end if;
+               col := col + 1;
+            end loop;
+            row := row + 1;
          end loop;
-         row := row + 1;
-      end loop;
+      end if;
       return OK;
    end Is_Diagonal;
 
    --  ------------------------------------------------------------------------
 
-   function Number_Of_Leading_Zero_Bits (Bitmap : Unsigned_Integer) return Natural is
-      use Interfaces;
-      Num : Unsigned_32 := Unsigned_32 (Bitmap);
+   function Is_Symetric (aMatrix : Float_Matrix) return Boolean is
+      epsilon : constant float := 10.0 ** (-9);
+      row     : Integer := aMatrix'First;
+      col     : Integer := aMatrix'First (2);
+      OK      : Boolean := aMatrix'Length (1) = aMatrix'Length (2);
    begin
-      Num := Num or Shift_Right (Num, 1);
-      Num := Num or Shift_Right (Num, 2);
-      Num := Num or Shift_Right (Num, 4);
-      Num := Num or Shift_Right (Num, 8);
-      Num := Num or Shift_Right (Num, 16);
-      return Natural (Bit_Count (Unsigned_Integer (Not Num)));
-   end Number_Of_Leading_Zero_Bits;
+      if OK then
+         while row <= aMatrix'Last and OK loop
+            while col <= aMatrix'Last (2) and OK loop
+               if row = col then
+                  OK := aMatrix (row, col) - 1.0 <= epsilon;
+               else
+                  OK := Abs (aMatrix (row, col) - aMatrix (col, row)) <= epsilon;
+               end if;
+               col := col + 1;
+            end loop;
+            row := row + 1;
+         end loop;
+      end if;
+      return OK;
+   end Is_Symetric;
+
+   --  ------------------------------------------------------------------------
+
+   function Is_Euclidean (aMatrix : Float_Matrix) return Boolean is
+      epsilon : constant float := 10.0 ** (-9);
+      row     : Integer := aMatrix'First;
+      col     : Integer := aMatrix'First (2);
+      OK      : Boolean := aMatrix'Length (1) = aMatrix'Length (2);
+   begin
+      if OK then
+         while row <= aMatrix'Last and OK loop
+            while col <= aMatrix'Last (2) and OK loop
+               if row = col then
+                  OK := Abs (aMatrix (row, col)) <= epsilon;
+               else
+                  OK := Abs (aMatrix (row, col) ** 2 -
+                               aMatrix (col, row) ** 2) <= epsilon;
+               end if;
+               col := col + 1;
+            end loop;
+            row := row + 1;
+         end loop;
+      end if;
+      return OK;
+   end Is_Euclidean;
+
+   --  ------------------------------------------------------------------------
+
+   function Maximum (I1, I2 : Integer) return Integer is
+      Max : Integer;
+   begin
+      if I1 > I2 then
+         Max := I1;
+      else
+         Max := I2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
+   function Maximum (F1, F2 : Float) return Float is
+      Max : Float;
+   begin
+      if F1 > F2 then
+         Max := F1;
+      else
+         Max := F2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
+   function Maximum (F1, F2 : Long_Float) return Long_Float is
+      Max : Long_Float;
+   begin
+      if F1 > F2 then
+         Max := F1;
+      else
+         Max := F2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
+   function Minimum (I1, I2 : Integer) return Integer is
+      Min : Integer;
+   begin
+      if I1 < I2 then
+         Min := I1;
+      else
+         Min := I2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Minimum (F1, F2 : Float) return Float is
+      Min : Float;
+   begin
+      if F1 < F2 then
+         Min := F1;
+      else
+         Min := F2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Minimum (F1, F2 : Long_Float) return Long_Float is
+      Min : Long_Float;
+   begin
+      if F1 < F2 then
+         Min := F1;
+      else
+         Min := F2;
+      end if;
+      return Min;
+   end Minimum;
 
    --  ------------------------------------------------------------------------
 

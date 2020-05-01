@@ -20,6 +20,8 @@ package Graphic_Data is
       To_Unbounded_String ("tetrahedron"),
       To_Unbounded_String ("icosahedron"));
 
+   GLUT_Read_Exception : Exception;
+
    procedure Get_GLUT_Model_2D (Render_Program : GL.Objects.Programs.Program;
                                 Model_Name : Ada.Strings.Unbounded.Unbounded_String;
                                 Model_Rotor : Multivectors.Rotor);

@@ -6,6 +6,7 @@ bin
 *~
 *.a
 *.html
+*.txt
 *.o
 *.cswi
 *.ali
@@ -14,10 +15,10 @@ bin
 *.cgpr
 *.stderr
 *.stdout
+*copy.gpr
+*.lyx#
 bivectors
 circle
-test_mv
-test_e2mv
 removal
 
 

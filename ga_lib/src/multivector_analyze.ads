@@ -1,5 +1,7 @@
 
+with Blade_Types;
 with C3GA;
+with E3GA;
 with GA_Maths;
 with Multivectors;
 with Multivector_Type;
@@ -7,11 +9,12 @@ with Multivector_Type_Base;
 
 package Multivector_Analyze is
 
-   Flag_Invalid          : constant boolean := false;
-   Flag_Valid            : constant boolean := true;
-   Number_Of_Points      : integer := 3;
-   Number_Of_Scalars     : integer := 3;
-   Number_Of_Vectors     : integer := 3;
+   Flag_Invalid    : constant boolean := false;
+   Flag_Valid      : constant boolean := true;
+   Max_Points      : constant integer := 3;
+   Max_Scalars     : constant integer := 3;
+   Max_Vectors     : constant integer := 3;
+   Default_Epsilon : constant float := 10.0 ** (-5);
 
    type Flag_Type is record
       Valid : boolean := Flag_Invalid;
@@ -59,7 +62,7 @@ package Multivector_Analyze is
       Multivector_Kind : Multivector_Type_Base.Object_Type :=  --  m_type[1]
                            Multivector_Type_Base.MV_Object;
       Blade_Class      : Blade_Type := Non_Blade;              --  m_type[2]
-      --  m_type[3] = grade / class dependent
+                                     --  m_type[3] = grade / class dependent
       M_Grade          : GA_Maths.Grade_Usage;
 --        MV_Subtype       : M_Type_Type := Unspecified_Type;
       Blade_Subclass   : Blade_Subclass_Type := Unspecified_Subclass;  --  m_type[3]
@@ -67,12 +70,11 @@ package Multivector_Analyze is
 --        Round_Kind       : Round_Type := Round_Invalid;
    end record;
 
-   type Point_Array is array (1 .. Number_Of_Points) of Multivectors.Vector;
-   type Scalar_Array is array (1 .. Number_Of_Scalars) of float;
-   type Vector_Array is array (1 .. Number_Of_Vectors) of Multivectors.Vector;
+   type Point_Array is array (1 .. Max_Points) of E3GA.E3_Vector;
+   type Scalar_Array is array (1 .. Max_Scalars) of float;
+   type Vector_Array is array (1 .. Max_Vectors) of Multivectors.Vector;
 
    type MV_Analysis is record
-      --
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
       M_MV_Type        : Multivector_Type.MV_Type_Record;
@@ -82,19 +84,20 @@ package Multivector_Analyze is
       Pseudo_Scalar    : Boolean := False;
       Versor_Kind      : Versor_Subclass_Type := Not_A_Versor;
       --  Each analyzed multivector is decomposed into
-      --  (analysis dependent) points, vectors and scalars.
-      M_Points         : Point_Array;
-      M_Scalors        : Scalar_Array;
-      M_Vectors        : Vector_Array;
+      --  (analysis dependent) points, scalars and vectors.
+     --  Only Points (1) seeems to be used
+      Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
+      Scalors          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
+      M_Vectors        : Vector_Array;  --  m_vc Multivectors.Vector array
    end record;
 
-   function Default_Epsilon return float;  --  Must precede Analyze
+   MVA_Exception : Exception;
+
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+--                       Flags : Flag_Type := (Flag_Invalid, False);
+--                       Epsilon : float := Default_Epsilon);
    procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                     Flags : Flag_Type := (Flag_Invalid, False);
-                     Epsilon : float := Default_Epsilon);
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Probe : C3GA.Normalized_Point;
---                        Probe : C3GA.Normalized_Point := C3GA.Probe (Blade.C3_no));
+                      Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon);
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;

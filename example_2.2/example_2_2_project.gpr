@@ -9,12 +9,12 @@ project Example_2_2_Project is
    for Main use ("removal.adb");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnatyclux3");
+      for Default_Switches ("ada") use ("-gnatyclux");
    end Compiler;
 
-    package Linker is
-        for Default_Switches ("ada") use ("-framework", "GLUT");
-    end Linker;
+   package Linker is
+      for Default_Switches ("ada") use ("-framework", "GLUT");
+   end Linker;
 
 end Example_2_2_Project;
 
