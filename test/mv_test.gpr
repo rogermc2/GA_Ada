@@ -1,4 +1,5 @@
 with "../../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
+with "../ada-lapack/ada_lapack.gpr";
 
 project Mv_Test is
 
