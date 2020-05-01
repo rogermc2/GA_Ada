@@ -8,6 +8,7 @@ with Maths;
 with Bits;
 with GA_Maths;
 with GA_Utilities;
+with SVD;
 
 package body Multivectors is
 
@@ -664,7 +665,6 @@ package body Multivectors is
         use Blade_List_Package;
         use GA_Maths;
         use Float_Array_Package;
-        use Lapack;
         Dim          : Natural;
         Cond         : Float;
         Value        : Float;
@@ -701,10 +701,10 @@ package body Multivectors is
                 --                  GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
                 --                                             Mat, (1, 1), (6, 6));
                 Det := Determinant (Mat);
-                Cond := Condition_Number (Mat);
-                    Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
-                    Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
-                    Put_Line ("Multivectors.General_Inverse 1 / Float'Model_Epsilon: " & Float'Image (1.0 / Float'Model_Epsilon));
+                Cond := SVD.Condition_Number (Mat);
+--                      Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
+--                      Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
+--                      Put_Line ("Multivectors.General_Inverse 1 / Float'Model_Epsilon: " & Float'Image (1.0 / Float'Model_Epsilon));
                 if Cond < 1.0 / Float'Model_Epsilon then
                     Mat_Inv := Inverse (Mat);
                     for Row in BBs_L'Range loop

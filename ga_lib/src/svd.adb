@@ -65,7 +65,6 @@ package body SVD is
             Work_Vector      : Real_Vector (1 .. Work_Vector_Rows);
             theSVD           : SVD (Num_Rows, Num_Cols, Num_Singular, Work_Vector_Rows);
         begin
-            Put_Line ("Singular_Value_Decomposition, Work_Vector_Rows " & Integer'Image (Work_Vector_Rows));
             GESVD (JOBU   => 'S', JOBVT  => 'S',
                    M      => Num_Rows, N      => Num_Cols,
                    A      => Matrix_A, LDA    => Num_Rows,

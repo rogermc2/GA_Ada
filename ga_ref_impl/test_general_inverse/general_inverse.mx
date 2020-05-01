@@ -55,6 +55,7 @@ generalInverse[pMV_, pMetric_] := Module[{dim, mMatrix, lMax, im, jm, ib, jb,
          {j, 1, lMax}], {i, 1, Dimensions[pMV, 1][[1]]}]; 
       Print["generalInverse mMatrix determinant:  ", Det[mMatrix]]; 
       Print["generalInverse mMatrix cond2:  ", cond2[mMatrix]]; 
+      Print["generalInverse 1 / $MachineEpsilon:  ", 1/$MachineEpsilon]; 
       If[cond2[mMatrix] < 1/$MachineEpsilon, invMatrix = Inverse[mMatrix]; 
         Do[v = invMatrix[[j,1]]; If[v != 0, basisBlades[[j,2]] = v; 
             result = AppendTo[result, basisBlades[[j]]]], {j, 1, lMax}]; 
