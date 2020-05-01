@@ -9,7 +9,7 @@ project Example_2_2_Project is
    for Main use ("removal.adb");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnaty4bceux");
+      for Default_Switches ("ada") use ("-gnatyclux");
    end Compiler;
 
    package Linker is
