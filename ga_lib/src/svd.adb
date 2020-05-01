@@ -44,7 +44,6 @@ package body SVD is
         Num_Singular    : Integer := GA_Maths.Minimum (Num_Rows, Num_Cols);
         Singular_Values : Real_Vector (1 .. Num_Singular);  --  sorted: S(i) >= S(i+1).
         Return_Code     : Integer := 0;
-        theSVD          : SVD (Num_Rows, Num_Cols, Num_Singular);
         --  Return_Code  = 0:  successful exit.
         --            < 0:  if INFO = -i, the i-th argument had an illegal value.
         --            > 0:  if DBDSQR did not converge, INFO specifies how many
@@ -62,9 +61,11 @@ package body SVD is
                WORK   => Short_Vector, LWORK  => -1,
                INFO   => Return_code);
         declare
-            Work_Vector_Rows : Integer := Short_Vector'Length;
+            Work_Vector_Rows : Integer := Integer (Short_Vector (Short_Vector'First));
             Work_Vector      : Real_Vector (1 .. Work_Vector_Rows);
+            theSVD           : SVD (Num_Rows, Num_Cols, Num_Singular, Work_Vector_Rows);
         begin
+            Put_Line ("Singular_Value_Decomposition, Work_Vector_Rows " & Integer'Image (Work_Vector_Rows));
             GESVD (JOBU   => 'S', JOBVT  => 'S',
                    M      => Num_Rows, N      => Num_Cols,
                    A      => Matrix_A, LDA    => Num_Rows,
@@ -74,19 +75,16 @@ package body SVD is
                    WORK   => Work_Vector, LWORK  => Work_Vector_Rows,
                    INFO   => Return_Code);
             if Return_Code = 0 then
+                theSVD.Matrix_U := Matrix_U;
+                theSVD.Matrix_V := Transpose (V_Transpose);
+                theSVD.Sorted_Singular_Values := Singular_Values;
                 theSVD.Matrix_W := Work_Vector;
+                return theSVD;
+            else
+                raise SVD_Exception with
+                  "Singular_Value_Decomposition failed with return code" & Integer'Image (Return_Code);
             end if;
         end;
-
-        if Return_Code > 0 then
-            raise SVD_Exception with
-              "Singular_Value_Decomposition failed with return code" & Integer'Image (Return_Code);
-        else
-            theSVD.Matrix_U := Matrix_U;
-            theSVD.Matrix_V := Transpose (V_Transpose);
-            theSVD.Sorted_Singular_Values := Singular_Values;
-        end if;
-        return theSVD;
     end Singular_Value_Decomposition;
 
     --  ------------------------------------------------------------------------
@@ -99,11 +97,11 @@ package body SVD is
                       Float (anSVD.Sorted_Singular_Values (anSVD.Sorted_Singular_Values'Last));
         Result    : Float := 0.0;
     begin
-            if Min > 0.0 then
-                Result := Max / Min;
-            else
-                Result := Max / 10.0 ** (-8);
-            end if;
+        if Min > 0.0 then
+            Result := Max / Min;
+        else
+            Result := Max / 10.0 ** (-8);
+        end if;
         return Result;
     end Condition_Number;
 
