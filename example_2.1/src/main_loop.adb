@@ -38,7 +38,7 @@ with E2GA;
 with E2GA_Draw;
 with E3GA;
 with GA_Maths;
-with Multivector;
+with Multivectors;
 
 with Silo;
 
@@ -58,7 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program : GL.Objects.Programs.Program;
                                  MV_Matrix      : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4     : Multivector.Vector;
+                                 V2, V3, V4     : Multivectors.Vector;
                                  Colour         : GL.Types.Colors.Color);
    procedure Draw_Text (Window_Width, Window_Height : Glfw.Size;
                         theText         : String;
@@ -81,7 +81,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Maths.Single_Math_Functions;
       use GA_Maths;
       use GA_Maths.Float_Functions;
-      use Multivector;
+      use Multivectors;
 
       Label             : Silo.Label_Data;
       Label_Position    : GL.Types.Singles.Vector2;
@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Position_Y        : single := 100.0;
 
       A                 : float := 0.0;
-      BV                : Multivector.Bivector;
+      BV                : Bivector;
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
       V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
@@ -126,7 +126,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Entry_Width * Scale_S / 2.0,
          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix);
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
 
       while A < Two_Pi - 0.1 loop
@@ -195,7 +195,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Draw_Parallelogram (Render_Program  : GL.Objects.Programs.Program;
                                  MV_Matrix       : GL.Types.Singles.Matrix4;
-                                 V2, V3, V4      : Multivector.Vector;
+                                 V2, V3, V4      : Multivectors.Vector;
                                  Colour          : GL.Types.Colors.Color) is
       use GL.Objects.Buffers;
       use GL.Types.Colors;
@@ -218,7 +218,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array_Object.Initialize_Id;
       Vertex_Array_Object.Bind;
 
-      GA_Draw.Set_Projection_Matrix (Projection_Matrix );
+      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
 
       GA_Draw.Graphic_Shader_Locations (Render_Program, MV_Matrix_ID, Projection_Matrix_ID,
                                         Colour_Location);

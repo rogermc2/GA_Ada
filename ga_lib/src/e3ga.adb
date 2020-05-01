@@ -1,51 +1,52 @@
 
 with Interfaces;
-with Ada.Text_IO; use Ada.Text_IO;
+
+with Maths;
 
 with Blade;
+with Blade_Types;
 
 package body E3GA is
-   use GA_Maths;
 
-   type Array_BM8 is array (GA_Maths.Bit_Map range 1 .. 8) of integer;
+   --     type Array_BM8 is array (GA_Maths.Bit_Map range 1 .. 8) of integer;
 
-   MV_Space_Dim          : constant Integer := 3;
-   MV_Metric_Euclidean   : constant Boolean := True; -- The space's metric is Euclidean
+   --     MV_Space_Dim          : constant Integer := 3;
+   --     MV_Metric_Euclidean   : constant Boolean := True; -- The space's metric is Euclidean
    --  MV_Grade_Size can be used to lookup the number of coordinates for
    --  a grade part of a general multivector
-   MV_Grade_Size         : constant Array_I4 := (1, 3, 3, 1);
+   --     MV_Grade_Size         : constant Array_I4 := (1, 3, 3, 1);
    --  MV_Size can be used to lookup the number of coordinates based on a grade usage bitmap
-   MV_Size               : constant array (1 .. 16) of integer :=
-     (0, 1, 3, 4, 3, 4, 6, 7, 1, 2, 4, 5, 4, 5, 7, 8);
-   MV_Basis_Vector_Names : constant array (1 .. 3) of string (1 .. 2) :=
-     ("e1", "e2", "e3");
+   --     MV_Size               : constant array (1 .. 16) of integer :=
+   --       (0, 1, 3, 4, 3, 4, 6, 7, 1, 2, 4, 5, 4, 5, 7, 8);
+   --     MV_Basis_Vector_Names : constant array (1 .. 3) of string (1 .. 2) :=
+   --       ("e1", "e2", "e3");
    --  MV_Basis_Elements contains the order of basis elements in the general multivector
-   MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
-     ((-1, 0, 0, 0),
-      (0, -1, 0, 0),
-      (1, -1, 0, 0),
-      (2, -1, 0, 0),
-      (0, 1, -1, 0),
-      (1, 2, -1, 0),
-      (0, 2, -1, 0),
-      (0, 1, 2, -1));
+   --     MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
+   --       ((-1, 0, 0, 0),
+   --        (0, -1, 0, 0),
+   --        (1, -1, 0, 0),
+   --        (2, -1, 0, 0),
+   --        (0, 1, -1, 0),
+   --        (1, 2, -1, 0),
+   --        (0, 2, -1, 0),
+   --        (0, 1, 2, -1));
    --  This array contains the 'sign' (even/odd permutation of the canonical order)
    --  of basis elements in the general multivector.
    --  This answers 'what is the permutation of the coordinate at index [x]'?
-   MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
-     (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
+   --     MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
+   --       (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
    --  This answers 'what is the permutation of the coordinate at bitmap [x]'?
-   MV_Basis_Element_Sign_By_Bitmap : constant Array_F8 :=
-     (1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0);
+   --     MV_Basis_Element_Sign_By_Bitmap : constant Array_F8 :=
+   --       (1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0);
    --  This answers 'at what index is the basis element [x] (x = basis vector bitmap)'?
-   MV_Basis_Element_Index_By_Bitmap : constant Array_BM8 :=
-     (0, 1, 2, 4, 3, 6, 5, 7);
+   --     MV_Basis_Element_Index_By_Bitmap : constant Array_BM8 :=
+   --       (0, 1, 2, 4, 3, 6, 5, 7);
    --  This answers 'at what index is the basis element [x] (x = basis vector bitmap)'?
-   MV_Basis_Element_Bitmap_By_Index : constant Array_I8 :=
-     (0, 1, 2, 4, 3, 6, 5, 7);
+   --     MV_Basis_Element_Bitmap_By_Index : constant Array_I8 :=
+   --       (0, 1, 2, 4, 3, 6, 5, 7);
    --  This answers 'at what is the grade of basis element bitmap [x]'?
-   MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
-     (0, 1, 1, 2, 1, 2, 2, 3);
+   --     MV_Basis_Element_Grade_By_Bitmap : constant Array_BM8 :=
+   --       (0, 1, 1, 2, 1, 2, 2, 3);
 
    --     e1_basis : Array_3D := (1.0, 0.0, 0.0);
    --     e2_basis : Array_3D := (0.0, 1.0, 0.0);
@@ -63,14 +64,16 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function "+" (V1, V2 : Vector) return Vector is
-   --        theVector : Vector;
-   --      begin
-   --         theVector.Coordinates (1) := V1.Coordinates (1) + V2.Coordinates (1);
-   --         theVector.Coordinates (2) := V1.Coordinates (2) + V2.Coordinates (2);
-   --         theVector.Coordinates (3) := V1.Coordinates (3) + V2.Coordinates (3);
-   --          return theVector;
-   --      end "+";
+   function "+" (V1, V2 : E3_Vector) return E3_Vector is
+      use GL;
+      use GL.Types;
+      Sum : E3_Vector;
+   begin
+      Sum (X) := V1 (X) + V2 (X);
+      Sum (Y) := V1 (Y) + V2 (Y);
+      Sum (Z) := V1 (Z) + V2 (Z);
+      return Sum;
+   end "+";
 
    --  ------------------------------------------------------------------------
 
@@ -85,13 +88,9 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function "-" (V1, V2 : Vector) return Vector is
-   --        theVector : Vector;
+   --      function "-" (VL, VR : Vector) return Vector is
    --      begin
-   --         theVector.Coordinates (1) := V1.Coordinates (1) - V2.Coordinates (1);
-   --         theVector.Coordinates (2) := V1.Coordinates (2) - V2.Coordinates (2);
-   --         theVector.Coordinates (3) := V1.Coordinates (3) - V2.Coordinates (3);
-   --          return theVector;
+   --          return (VL (1) - VR (1), VL (2) - VR (2), VL (3) - VR (3));
    --      end "-";
 
    --  ------------------------------------------------------------------------
@@ -115,10 +114,11 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function "*" (R1, R2 : Rotor) return Rotor is
-      use Blade_List_Package;
+      use Blade.Blade_List_Package;
       use Blade;
-      R1_Blades  : Blade_List := Get_Blade_List (R1);
-      R2_Blades  : Blade_List := Get_Blade_List (R2);
+      use Blade_Types;
+      R1_Blades  : constant Blade_List := Get_Blade_List (R1);
+      R2_Blades  : constant  Blade_List := Get_Blade_List (R2);
       Curs_1     : Cursor := R1_Blades.First;
       Curs_2     : Cursor := R2_Blades.First;
       Blade_1    : Basis_Blade;
@@ -126,7 +126,7 @@ package body E3GA is
       New_Blade  : Basis_Blade;
       Index      : E3_Base := E3_e1;
       Product    : Rotor :=
-        New_Rotor (Scalar_Part (R1) * Scalar_Part (R2));
+                     New_Rotor (Scalar_Part (R1) * Scalar_Part (R2));
    begin
       --  R1.C1_Scalar * R2.C1_Scalar, R1.C2_e1e2 * R2.C2_e1e2,
       --  R1.C3_e2e3 * R2.C3_e2e3, R1.C4_e3e1 * R2.C4_e3e1
@@ -164,23 +164,23 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "/" (R : Rotor; S : float) return Multivector.Rotor is
-      use Blade_List_Package;
+   function "/" (R : Rotor; S : float) return Multivectors.Rotor is
       use Blade;
-      Blades    : Blade_List := Get_Blade_List (R);
+      use Blade_List_Package;
+      Blades    : constant Blade_List := Get_Blade_List (R);
       Curs      : Cursor := Blades.First;
       aBlade    : Basis_Blade;
       New_Blade : Basis_Blade;
-      Index     : E3_Base := E3_e1;
+      Index     : Blade_Types.E3_Base := Blade_Types.E3_e1;
       Quotient  : Rotor :=
-        New_Rotor (Scalar_Part (R) / S);
+                    New_Rotor (Scalar_Part (R) / S);
    begin
       while Has_Element (Curs) loop
          aBlade := Element (Curs);
          New_Blade := New_Basis_Blade (Index, Weight (aBlade) * S);
          Add_Blade (Quotient, New_Blade);
          Next (Curs);
-         Index := E3_Base'Succ (Index);
+         Index := Blade_Types.E3_Base'Succ (Index);
       end loop;
       return Quotient;
    end "/";
@@ -194,7 +194,7 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "+" (W : float; R : Multivector.Rotor) return Multivector.Rotor is
+   function "+" (W : float; R : Rotor) return Rotor is
       Sum       : Rotor := R;
    begin
       Update_Scalar_Part (Sum, Scalar_Part (R) + W);
@@ -211,7 +211,7 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function "-" (W : float; R : Rotor) return Multivector.Rotor is
+   function "-" (W : float; R : Rotor) return Multivectors.Rotor is
       Sum       : Rotor := R;
    begin
       Update_Scalar_Part (Sum, W - Scalar_Part (R));
@@ -290,10 +290,10 @@ package body E3GA is
    --  ------------------------------------------------------------------------
 
    function Dot_Product (R1, R2 : Rotor) return Float is
-      use Blade_List_Package;
       use Blade;
-      R1_Blades : Blade_List := Get_Blade_List (R1);
-      R2_Blades : Blade_List := Get_Blade_List (R2);
+      use Blade_List_Package;
+      R1_Blades : constant Blade_List := Get_Blade_List (R1);
+      R2_Blades : constant Blade_List := Get_Blade_List (R2);
       R1_Curs   : Cursor := R1_Blades.First;
       R2_Curs   : Cursor := R2_Blades.First;
       Product   : Float := Scalar_Part (R1) * Scalar_Part (R2);
@@ -372,158 +372,146 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function e1 return Multivector.Multivector is
-      use Blade;
-      Basis   : Multivector.Vector;
+   function e1 return Multivectors.Vector is
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, E3_e1, 1.0);
+      Multivectors.Add_Blade (Basis, Blade_Types.E3_e1, 1.0);
       return Basis;
    end e1;
 
    --  -------------------------------------------------------------------------
 
-   function e1 (MV : Multivector.Multivector) return float is
-      use Blade;
-      Value : Float;
-      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e1), Value);
+   function e1 (MV : Multivectors.Multivector) return float is
+      use Blade_Types;
    begin
-      return Value;
+      return Component (MV, E3_Base'Enum_Rep (E3_e1));
    end e1;
 
    --  -------------------------------------------------------------------------
 
-   function e2 return Multivector.Multivector is
-      use Blade;
-      Basis   : Multivector.Vector;
+   function e2 return Multivectors.Vector is
+      use Blade_Types;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, E3_e2, 1.0);
+      Multivectors.Add_Blade (Basis, E3_e2, 1.0);
       return Basis;
    end e2;
 
    --  -------------------------------------------------------------------------
 
-   function e2 (MV : Multivector.Multivector) return float is
-      use Blade;
-      Value : Float;
-      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e2), Value);
+   function e2 (MV : Multivectors.Multivector) return float is
+      use Blade_Types;
    begin
-      return Value;
+      return Component (MV, E3_Base'Enum_Rep (E3_e2));
    end e2;
 
    --  -------------------------------------------------------------------------
 
-   function e3 return Multivector.Multivector is
-      use Blade;
-      Basis   : Multivector.Vector;
+   function e3 return Multivectors.Vector is
+      use Blade_Types;
+      Basis   : Multivectors.Vector;
    begin
-      Multivector.Add_Blade (Basis, E3_e3, 1.0);
+      Multivectors.Add_Blade (Basis, E3_e3, 1.0);
       return Basis;
    end e3;
 
    --  -------------------------------------------------------------------------
 
-   function e3 (MV : Multivector.Multivector) return float is
-      use Blade;
-      Value : Float;
-      OK    : Boolean := Component (MV, E3_Base'Enum_Rep (E3_e3), Value);
+   function e3 (MV : Multivectors.Multivector) return float is
+      use Blade_Types;
    begin
-      return Value;
+      return Component (MV, E3_Base'Enum_Rep (E3_e3));
    end e3;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e2 (MV : Multivector.Multivector) return float is
-      use Blade;
-      BM_E12   : constant Unsigned_Integer :=
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e2));
-      Value : Float;
-      OK    : Boolean := Component (MV, BM_E12, Value);
+   function e1_e2 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
+      use Blade_Types;
+      BM_E12   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e2));
    begin
-      return Value;
+      return Component (MV, BM_E12);
    end e1_e2;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e3 (MV : Multivector.Multivector) return float is
-      use Blade;
-      BM_E13   : constant Unsigned_Integer :=
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
-     Value : Float;
-      OK    : Boolean := Component (MV, BM_E13, Value);
+   function e1_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
+      use Blade_Types;
+      BM_E13   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
-      return Value;
+      return  Component (MV, BM_E13);
    end e1_e3;
 
    --  -------------------------------------------------------------------------
 
-   function e2_e3 (MV : Multivector.Multivector) return float is
-      use Blade;
-      BM_E23   : constant Unsigned_Integer :=
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
-       Value : Float;
-      OK    : Boolean := Component (MV, BM_E23, Value);
+   function e2_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
+      use Blade_Types;
+      BM_E23   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
-      return Value;
+      return Component (MV, BM_E23);
    end e2_e3;
 
    --  -------------------------------------------------------------------------
 
-   function e3_e1 (MV : Multivector.Multivector) return float is
-      use Blade;
-      BM_E31   : constant Unsigned_Integer :=
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
-       Value : Float;
-      OK    : Boolean := Component (MV, BM_E31, Value);
+   function e3_e1 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
+      use Blade_Types;
+      BM_E31   : constant Unsigned_32 :=
+                   Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
-      return Value;
+      return Component (MV, BM_E31);
    end e3_e1;
 
    --  -------------------------------------------------------------------------
 
-   function e1_e2_e3 (MV : Multivector.Multivector) return float is
-      use Blade;
-      BM   : constant Unsigned_Integer :=
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e1)) or
-        Unsigned_Integer (E3_Base'Enum_Rep (E3_e2)) or Unsigned_Integer (E3_Base'Enum_Rep (E3_e3));
-        Value : Float;
-        OK    : Boolean := Component (MV, BM, Value);
+   function e1_e2_e3 (MV : Multivectors.Multivector) return float is
+      use Interfaces;
+      use Blade_Types;
+      BM   : constant Unsigned_32 :=
+               Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or
+        Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
    begin
-      return Value;
+      return Component (MV, BM);
    end e1_e2_e3;
 
    --  -------------------------------------------------------------------------
 
---     function e1e2 (R : Rotor) return float is
---        use Blade_List_Package;
---        Blades  : constant Blade_List := Get_Blade_List (R);
---        Curs    : Cursor := Blades.First;
---     begin
---        Next (Curs);
---        return Blade.Weight (Element (Curs));
---              return R.C2_e1e2;
---     end e1e2;
+   --     function e1e2 (R : Rotor) return float is
+   --        use Blade_List_Package;
+   --        Blades  : constant Blade_List := Get_Blade_List (R);
+   --        Curs    : Cursor := Blades.First;
+   --     begin
+   --        Next (Curs);
+   --        return Blade.Weight (Element (Curs));
+   --              return R.C2_e1e2;
+   --     end e1e2;
 
    --  ------------------------------------------------------------------------
 
---     function e2e3 (R : Rotor) return float is
---        use Blade_List_Package;
---        Blades  : constant Blade_List := Get_Blade_List (R);
---        Curs    : Cursor := Blades.First;
---     begin
---        Next (Curs);
---        Next (Curs);
---        return Blade.Weight (Element (Curs));
---        --        return R.C3_e2e3;
---     end e2e3;
+   --     function e2e3 (R : Rotor) return float is
+   --        use Blade_List_Package;
+   --        Blades  : constant Blade_List := Get_Blade_List (R);
+   --        Curs    : Cursor := Blades.First;
+   --     begin
+   --        Next (Curs);
+   --        Next (Curs);
+   --        return Blade.Weight (Element (Curs));
+   --        --        return R.C3_e2e3;
+   --     end e2e3;
 
    --  ------------------------------------------------------------------------
 
---     function e3e1 (R : Rotor) return float is
---        use Blade_List_Package;
---        Blades  : constant Blade_List := Get_Blade_List (R);
---     begin
---        return Blade.Weight (Blades.Last_Element);
---     end e3e1;
+   --     function e3e1 (R : Rotor) return float is
+   --        use Blade_List_Package;
+   --        Blades  : constant Blade_List := Get_Blade_List (R);
+   --     begin
+   --        return Blade.Weight (Blades.Last_Element);
+   --     end e3e1;
 
    --  ------------------------------------------------------------------------
    --
@@ -548,62 +536,48 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
---     function Get_Coord (S : Multivector.Scalar) return float is
---        use Multivector.Blade_List_Package;
---        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (S);
---     begin
---        return Blade.Weight (Blades.First_Element);
---     end Get_Coord;
+   --     function Get_Coord (S : Multivector.Scalar) return float is
+   --        use Multivector.Blade_List_Package;
+   --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (S);
+   --     begin
+   --        return Blade.Weight (Blades.First_Element);
+   --     end Get_Coord;
 
    --  ------------------------------------------------------------------------
 
---     function Get_Coord_1 (V : Multivector.Vector) return float is
---        use Multivector.Blade_List_Package;
---        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
---     begin
---        return Blade.Weight (Blades.First_Element);
---     end Get_Coord_1;
+   --     function Get_Coord_1 (V : Multivector.Vector) return float is
+   --        use Multivector.Blade_List_Package;
+   --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   --     begin
+   --        return Blade.Weight (Blades.First_Element);
+   --     end Get_Coord_1;
 
    --  ------------------------------------------------------------------------
 
---     function Get_Coord_2 (V : Multivector.Vector) return float is
---        use Multivector.Blade_List_Package;
---        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
---        Curs   : Cursor := Blades.First;
---     begin
---        Next (Curs);
---        return Blade.Weight (Element (Curs));
---     end Get_Coord_2;
+   --     function Get_Coord_2 (V : Multivector.Vector) return float is
+   --        use Multivector.Blade_List_Package;
+   --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   --        Curs   : Cursor := Blades.First;
+   --     begin
+   --        Next (Curs);
+   --        return Blade.Weight (Element (Curs));
+   --     end Get_Coord_2;
 
    --  ------------------------------------------------------------------------
 
---     function Get_Coord_3 (V : Multivector.Vector) return float is
---        use Multivector.Blade_List_Package;
---        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
---     begin
---        return Blade.Weight (Blades.Last_Element);
---     end Get_Coord_3;
+   --     function Get_Coord_3 (V : Multivector.Vector) return float is
+   --        use Multivector.Blade_List_Package;
+   --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
+   --     begin
+   --        return Blade.Weight (Blades.Last_Element);
+   --     end Get_Coord_3;
 
    --  ------------------------------------------------------------------------
 
    --      function Get_Coords (V : Vector) return Array_3D is
    --      begin
-   --          return (V.Coordinates (1), V.Coordinates (2), V.Coordinates (3));
+   --          return (V (1), V (2), V (3));
    --      end Get_Coords;
-
-   --  ------------------------------------------------------------------------
-
-   function Get_Coords (V : Multivector.Vector) return Array_3D is
-      use Multivector.Blade_List_Package;
-      Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
-      Curs   : Cursor := Blades.First;
-      Result : Array_3D;
-   begin
-      Result (1) := Blade.Weight (Blades.First_Element);
-      Result (2) := Blade.Weight (Element (Next (Curs)));
-      Result (3) := Blade.Weight (Blades.Last_Element);
-      return Result;
-   end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
@@ -732,20 +706,47 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function Get_Coords (MV : Multivector) return E3GA.MV_Coordinate_Array is
-   --        Coords : MV_Coordinate_Array := MV.Coordinates;
-   --     begin
-   --        return Coords;
-   --     end Get_Coords;
+   function Get_Coords (MV : Multivector) return MV_Coordinate_Array is
+      use Blade.Blade_List_Package;
+      Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (MV);
+      Curs   : Cursor := Blades.First;
+      Coords : E3GA.MV_Coordinate_Array := (others => 0.0);
+      Index  : Integer := 0;
+   begin
+      while Has_Element (Curs) loop
+         Index := Index + 1;
+         Coords (Index) := Blade.Weight (Element (Curs));
+         Next (Curs);
+      end loop;
+      return Coords;
+   end Get_Coords;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Coords (Vec : Multivectors.Vector) return E3_Vector is
+      use Blade.Blade_List_Package;
+      Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (Vec);
+      Curs   : Cursor := Blades.First;
+      Coords : E3_Vector := (others => 0.0);
+   begin
+      Coords (GL.X) := GL.Types.Single (Blade.Weight (Element (Curs)));
+      Next (Curs);
+      Coords (GL.Y) := GL.Types.Single (Blade.Weight (Element (Curs)));
+      Next (Curs);
+      Coords (GL.Z) := GL.Types.Single (Blade.Weight (Element (Curs)));
+      return Coords;
+   end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
    function Get_Coords (R : Rotor) return Array_4D is
-      use Blade_List_Package;
+      use Interfaces;
       use Blade;
+      use Blade_Types;
+      use Blade_List_Package;
       Blades  : constant Blade_List := Get_Blade_List (R);
       Curs    : Cursor := Blades.First;
-      BM      : Unsigned_Integer;
+      BM      : Unsigned_32;
       Result  : Array_4D := (others => 0.0);
    begin
       Result (1) := Scalar_Part (R);
@@ -768,10 +769,10 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
---     function Get_Coords (SMV : Syn_SMultivector) return Array_4D is
---     begin
---        return (SMV.C1_e1, SMV.C2_e2, SMV.C3_e3, SMV.C4_e1e2e3);
---     end Get_Coords;
+   --     function Get_Coords (SMV : Syn_SMultivector) return Array_4D is
+   --     begin
+   --        return (SMV.C1_e1, SMV.C2_e2, SMV.C3_e3, SMV.C4_e1e2e3);
+   --     end Get_Coords;
 
    --  ------------------------------------------------------------------------
 
@@ -782,51 +783,65 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_Integer  is
+   --      function Grade_Use (BV : Bivector) return GA_Maths.Unsigned_32  is
    --      begin
    --          return BV.Grade_Use;
    --      end Grade_Use;
 
    --  ------------------------------------------------------------------------
 
-   --      function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_Integer  is
+   --      function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32  is
    --      begin
    --          return MV.Grade_Use;
    --      end Grade_Use;
 
    --  ------------------------------------------------------------------------
+   --  Based on c3ga.h scalar inverse
+
+   --     function Inverse (S : Float) return Float is
+   --        S2  : constant Float := S * S;
+   --        Inv : Float := S;
+   --     begin
+   --        --  scalar inverse doesn't include this test
+   --        if S2 /= 0.0 then
+   --           Inv := 1.0 / S2;
+   --        end if;
+   --        return S * Inv;
+   --     end Inverse;
+
+   --  ------------------------------------------------------------------------
    --  Based on e3ga.h rotor inverse
---     function Inverse (aRotor : Rotor) return Rotor is
---        use Blade_List_Package;
---        use Blade;
---        Blades     : Blade_List := Get_Blade_List (aRotor);
---        Curs       : Cursor := Blades.First;
---        aBlade     : Basis_Blade;
---        Norm_Inv   : Float;
---        Index      : E3_Base := Blade.E3_e1;
---        Inv_Blades : Blade_List;
---        Inv_R      : Rotor;
---     begin
---        Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
---        Inv_R := New_Multivector (Norm_Inv * Scalar_Part (aRotor));
---
---        Norm_Inv := -Norm_Inv;
---        while Has_Element (Curs) loop
---           aBlade := New_Basis_Blade (Index, Norm_Inv * Weight (Element (Curs)));
---           Inv_Blades.Append (aBlade);
---           Index := Blade.E3_Base'Succ (Index);
---           Next (Curs);
---        end loop;
---        Update (Inv_R, Inv_Blades);
---        return Inv_R;
---        --        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
---        --                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
---
---     exception
---        when anError :  others =>
---           Put_Line ("An exception occurred in E3GA.Inverse.");
---           raise;
---     end Inverse;
+   --     function Inverse (aRotor : Rotor) return Rotor is
+   --        use Blade_List_Package;
+   --        use Blade;
+   --        Blades     : Blade_List := Get_Blade_List (aRotor);
+   --        Curs       : Cursor := Blades.First;
+   --        aBlade     : Basis_Blade;
+   --        Norm_Inv   : Float;
+   --        Index      : E3_Base := Blade.E3_e1;
+   --        Inv_Blades : Blade_List;
+   --        Inv_R      : Rotor;
+   --     begin
+   --        Norm_Inv := 1.0 / Dot_Product (aRotor, aRotor);
+   --        Inv_R := New_Multivector (Norm_Inv * Scalar_Part (aRotor));
+   --
+   --        Norm_Inv := -Norm_Inv;
+   --        while Has_Element (Curs) loop
+   --           aBlade := New_Basis_Blade (Index, Norm_Inv * Weight (Element (Curs)));
+   --           Inv_Blades.Append (aBlade);
+   --           Index := Blade.E3_Base'Succ (Index);
+   --           Next (Curs);
+   --        end loop;
+   --        Update (Inv_R, Inv_Blades);
+   --        return Inv_R;
+   --        --        return  (Norm_Inv * aRotor.C1_Scalar, -Norm_Inv * aRotor.C2_e1e2,
+   --        --                 -Norm_Inv * aRotor.C3_e2e3, -Norm_Inv * aRotor.C4_e3e1);
+   --
+   --     exception
+   --        when anError :  others =>
+   --           Put_Line ("An exception occurred in E3GA.Inverse.");
+   --           raise;
+   --     end Inverse;
 
    --  ------------------------------------------------------------------------
 
@@ -1076,30 +1091,6 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   function Norm_R (BV : Bivector) return Float is
-      use GA_Maths.Float_Functions;
-      DP     : constant float := Dot_Product (BV, BV);
-      Result : Float := 0.0;
-   begin
-      if DP /= 0.0 then
-         if DP < 0.0 then
-            Result := -Sqrt (-DP);
-         else
-            Result := Sqrt (DP);
-         end if;
-      end if;
-      return Result;
-   end Norm_R;
-
-   --  ------------------------------------------------------------------------
-
-      function Norm_R2 (BV : Bivector) return Float is
-      begin
-         return Dot_Product (BV, BV);
-      end Norm_R2;
-
-   --  ------------------------------------------------------------------------
-
    --     function Norm_R2 (BV : Bivector) return Scalar is
    --        Norm : Scalar;
    --     begin
@@ -1109,19 +1100,13 @@ package body E3GA is
 
    --  ------------------------------------------------------------------------
 
-   --      function Outer_Product (V1, V2 : Vector) return Bivector is
-   --          use Float_Array_Package;
-   --          use GA_Maths;
-   --          Result : Bivector;
-   --      begin
-   --          Set_Bivector (Result, V1.Coordinates (1) * V2.Coordinates (2) -
-   --                            V1.Coordinates (2) * V2.Coordinates (1),
-   --                                V1.Coordinates (2) * V2.Coordinates (3) -
-   --                            V1.Coordinates (3) * V2.Coordinates (2),
-   --                                V1.Coordinates (3) * V2.Coordinates (1) -
-   --                            V1.Coordinates (1) * V2.Coordinates (3));
-   --          return Result;
-   --      end Outer_Product;
+   function Outer_Product (V1, V2 : E3_Vector) return E3_Vector is
+      use GL.Types;
+   begin
+      return (V1 (GL.X) * V2 (GL.Y) - V1 (GL.Y) * V2 (GL.X),
+              V1 (GL.Y) * V2 (GL.Z) - V1 (GL.Z) * V2 (GL.Y),
+              V1 (GL.Z) * V2 (GL.X) - V1 (GL.X) * V2 (GL.Z));
+   end Outer_Product;
 
    --  ------------------------------------------------------------------------
 
@@ -1159,12 +1144,12 @@ package body E3GA is
 
    --  ------------------------------------------------------------
 
-   procedure Set_Coords (MV : out Multivector.Multivector; C1, C2, C3 : float) is
-      use Blade;
+   procedure Set_Coords (MV : out Multivectors.Multivector; C1, C2, C3 : float) is
+      use Blade_Types;
    begin
-      Multivector.Add_Blade (MV, E3_e1, C1);
-      Multivector.Add_Blade (MV, E3_e2, C2);
-      Multivector.Add_Blade (MV, E3_e3, C3);
+      Multivectors.Add_Blade (MV, E3_e1, C1);
+      Multivectors.Add_Blade (MV, E3_e2, C2);
+      Multivectors.Add_Blade (MV, E3_e3, C3);
    end Set_Coords;
 
    --  ------------------------------------------------------------
@@ -1247,7 +1232,19 @@ package body E3GA is
    --          return V;
    --     end To_Vector;
 
-   --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
+
+    function To_MV_Vector (V : E3_Vector) return Multivectors.Vector is
+        use Blade_Types;
+        MVV : Multivectors.Vector := Multivectors.New_Vector;
+    begin
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e1, Float (V (GL.X))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e2, Float (V (GL.Y))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e3, Float (V (GL.Z))));
+        return MVV;
+    end To_MV_Vector;
+
+    --  ------------------------------------------------------------------------
    --  Unit_e normalizes rotor R
    --     function Unit_e (R : Rotor) return Rotor is
    --        R2         : float;
@@ -1264,16 +1261,16 @@ package body E3GA is
    --     end Unit_E;
 
    --  ------------------------------------------------------------------------
-   --  Unit_e normalizes vector X
-   --      function Unit_e (X : Vector) return Vector is
-   --          Scale      : float;
-   --          New_Vector : Vector;
-   --      begin
-   --          Scale := Float_Functions.Sqrt (Dot_Product (X, X));
-   --          Set_Coords (New_Vector, Get_Coord_1 (X) / Scale,
-   --                      Get_Coord_2 (X) / Scale, Get_Coord_3 (X) / Scale);
-   --          return New_Vector;
-   --      end Unit_E;
+   --  Unit_E normalizes vector X
+   function Unit_E (X : E3_Vector) return E3_Vector is
+      use Gl.Types;
+      use Gl.Types.Singles;
+      use Maths.Single_Math_Functions;
+      E2 : constant Single := Dot_Product (X, X);
+      IE : constant Single := 1.0 / Sqrt (E2);
+   begin
+      return (IE * X);
+   end Unit_E;
 
    --  ------------------------------------------------------------------------
 

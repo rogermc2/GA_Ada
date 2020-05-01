@@ -1,0 +1,721 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 15mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+The Matrix Method For Geometric Products
+\end_layout
+
+\begin_layout Section
+Vector and Matrix Multiplication
+\end_layout
+
+\begin_layout Standard
+Given two vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ of size 
+\begin_inset Formula $n$
+\end_inset
+
+, there are two possible multiplication methods which result in matrices
+ of sizes 
+\begin_inset Formula $1\times1$
+\end_inset
+
+ and 
+\begin_inset Formula $n\times n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{1\times n}\times V_{n\times1}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U_{n\times1}\times V_{1\times n}\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the vectors 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ are declared as row vectors, then the preceding expressions can be expressed
+ as:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U\times V^{T}\rightarrow M_{1\times1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $U^{T}\times V\rightarrow M_{n\times n}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also, the type 1 product, 
+\begin_inset Formula $M_{1\times1}=\sum_{j=1}^{n}U_{j}V_{j}$
+\end_inset
+
+ can be expressed as a vector of terms 
+\begin_inset Formula $\left[UV\right]_{n\times1}=\begin{bmatrix}U_{1}V_{1}, & \cdots, & U_{j}V_{j}, & \cdots, & U_{n}V_{n}\end{bmatrix}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A metric is a function that defines a distance between each pair of elements
+ of a set.
+\end_layout
+
+\begin_layout Section
+Application To Multivectors
+\end_layout
+
+\begin_layout Standard
+Consider two multivectors 
+\begin_inset Formula $MV_{A}=\sum_{k=1}^{n}A_{k}E_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $MV_{B}=\sum_{k=1}^{n}B_{k}E_{k}$
+\end_inset
+
+ of an n-dimensional space defined by basis vectors 
+\begin_inset Formula $E_{K}$
+\end_inset
+
+ and weight coefficients 
+\begin_inset Formula $A_{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{k}$
+\end_inset
+
+ respectively.
+\end_layout
+
+\begin_layout Standard
+Define a matrix 
+\begin_inset Formula $\left[AB\right]_{n\times n}$
+\end_inset
+
+ with terms: 
+\begin_inset Formula 
+\begin{eqnarray*}
+AB_{j,k} & = & A_{j}E_{j}B_{k}E_{k}\\
+ & = & A_{j}B_{k}E_{j}E_{k}\\
+ & = & A_{j}B_{k}E_{i}
+\end{eqnarray*}
+
+\end_inset
+
+in which 
+\begin_inset Formula $E_{i}=A_{j}B_{k}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{n\times n} & = & \begin{bmatrix}A_{1}B_{1}E_{11} & \cdots & A_{1}B_{k}E_{1k} & \cdots & A_{1}B_{n}E_{1n}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{j}B_{1}E_{j1} & \cdots & A_{j}B_{k}E_{jk} & \cdots & A_{j}B_{n}E_{jn}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{n}B_{1}E_{n1} & \cdots & A_{n}B_{k}E_{nk} & \cdots & A_{n}B_{n}E_{nn}
+\end{bmatrix}\\
+ & = & \begin{bmatrix}A_{1}E_{11} & \cdots & A_{1}E_{1k} & \cdots & A_{1}E_{1n}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{j}E_{j1} & \cdots & A_{j}E_{jk} & \cdots & A_{j}E_{jn}\\
+\vdots & \cdots & \vdots & \cdots & \vdots\\
+A_{n}E_{n1} & \cdots & A_{n}E_{nk} & \cdots & A_{n}E_{nn}
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+\vdots\\
+B_{k}\\
+\vdots\\
+B_{n}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{lm}^{l,m}E_{lm}=E_{l}E_{m}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{lm}^{l,m}=\pm1$
+\end_inset
+
+, dependent on the metric of the sytem.
+ 
+\end_layout
+
+\begin_layout Subsection
+Two Dimensional Example
+\end_layout
+
+\begin_layout Standard
+Bases: 
+\begin_inset Formula $e1,e2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Basis vectors:
+\begin_inset Formula 
+\begin{eqnarray*}
+E & = & \left[1,e1,e2,e1\wedge e2\right]
+\end{eqnarray*}
+
+\end_inset
+
+Multivector coefficients:
+\begin_inset Formula 
+\begin{eqnarray*}
+A & = & \left[A_{1},A_{2}\right]\\
+B & = & \left[B_{1},B_{2}\right]
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{2\times2} & = & \begin{bmatrix}A_{1}E_{11} & A_{1}E_{12}\\
+A_{2}E_{21} & A_{2}E_{22}
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+B_{2}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{1}^{1,1}E_{11}=E_{1}E_{1}=1=E_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{2}^{1,2}E_{12}=E_{1}E_{2}=e1=E_{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{4}^{2,1}E_{21}=E_{2}E_{1}=e2\cdot e1+e2\wedge e1=0-e1\wedge e2=-E_{4}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{1}^{2,2}E_{22}=E_{2}E_{2}=e2\cdot e2+e2\wedge e2=1+0=E_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, define the matrix 
+\begin_inset Formula $\left[A^{G}\right]$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[A^{G}\right]_{2\times2} & = & \begin{bmatrix}A_{1} & A_{1}e1\\
+-A_{2}e1\wedge e2 & A_{2}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+\left[AB\right]_{2\times2} & = & \left[A^{G}\right]B\\
+ & = & \begin{bmatrix}A_{1} & A_{1}e1\\
+-A_{2}e1\wedge e2 & 0
+\end{bmatrix}\begin{bmatrix}B_{1}\\
+B_{2}
+\end{bmatrix}\\
+ & = & \begin{bmatrix}A_{1}\left(B_{1}+B_{2}e1\right) & -A_{2}B_{1}e1\wedge e2\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two dimensional Euclidean metric:
+\begin_inset Formula 
+\[
+\begin{array}{cc}
+1 & 0\\
+0 & 1
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Three-dimensional Representation
+\end_layout
+
+\begin_layout Standard
+For three-dimensional Euclidean space:
+\begin_inset Formula 
+\begin{eqnarray*}
+L_{8} & = & \left[1,e1,e2,e3,e1\wedge e2,e2\wedge e3,e3\wedge e1,e1\wedge e2\wedge e3\right]\\
+A_{8} & = & \left[A_{0},A_{1},A_{2},A_{3},A_{4},A_{5},A_{6},A_{7}\right]^{T}\\
+MV_{8} & = & L_{8}\cdot A_{8}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8} & = & \sum_{k=1}^{8}L\left(k\right)\,A\left(k\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8} & = & A_{0}+A_{1}e1+A_{2}e2+A_{3}e3+A_{3}e1\wedge e2+A_{5}e2\wedge e3+A_{6}e3\wedge e1+A_{7}e1\wedge e2\wedge e3
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Objective
+\end_layout
+
+\begin_layout Standard
+Generate an 
+\begin_inset Formula $8\times8$
+\end_inset
+
+ matrix representation, 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+, of the multivector 
+\begin_inset Formula $MV_{8}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Geometric Product
+\end_layout
+
+\begin_layout Standard
+The geometric product of two multivectors 
+\begin_inset Formula $MV_{A}$
+\end_inset
+
+ and 
+\begin_inset Formula $MV_{B}$
+\end_inset
+
+ is given by:
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{A}MV_{B} & = & MV_{A}\cdot MV_{B}+MV_{A}\wedge MV_{B}
+\end{eqnarray*}
+
+\end_inset
+
+This equation is linear in 
+\begin_inset Formula $MV_{B}$
+\end_inset
+
+ and, therefore, 
+\begin_inset Formula $MV_{A}$
+\end_inset
+
+ acts as a linear operator on 
+\begin_inset Formula $MV_{B}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Therefore, in the 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+ based representation, the multivector 
+\begin_inset Formula $MV_{8A}$
+\end_inset
+
+ can be represented by a matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ and the geometric product 
+\begin_inset Formula $MV_{8A}MV_{8B}$
+\end_inset
+
+ can be represented by 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ operating on a column vector 
+\begin_inset Formula $B_{8}$
+\end_inset
+
+ that represents the coefficients of the multivector 
+\begin_inset Formula $MV_{8B}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+MV_{8A}MV_{8B} & = & A_{8\times8}^{G}B_{8}
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\begin_inset Formula 
+\begin{eqnarray*}
+B_{8} & = & \left[B_{0},B_{1},B_{2},B_{3},B_{4},B_{5},B_{6},B_{7}\right]^{T}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+ based representation the geometric product of two basis blades 
+\begin_inset Formula $L_{8}\left(k\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{8}\left(j\right)$
+\end_inset
+
+ is also an element of 
+\begin_inset Formula $L_{8}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{eqnarray*}
+s_{i}^{k,j}L_{8}\left(i\right) & = & L_{8}\left(k\right)L_{8}\left(j\right)\\
+ & = & L_{8}\left(k\right)\cdot L_{8}\left(j\right)+L_{8}\left(k\right)\wedge L_{8}\left(j\right)
+\end{eqnarray*}
+
+\end_inset
+
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s_{i}^{k,j}$
+\end_inset
+
+ is a scalar determined by the metric.
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the geometric product of two basis blades 
+\begin_inset Formula $L_{8}\left(k\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{8}\left(j\right)$
+\end_inset
+
+ weighted by 
+\begin_inset Formula $A_{8}\left(k\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{8}\left(j\right)$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "equation (20.2)"
+key "GAcs"
+literal "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+\left(A_{8}\left(k\right)L_{8}\left(k\right)\right)\left(B_{8}\left(j\right)L_{8}\left(j\right)\right) & = & A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(k\right)L_{8}\left(j\right)\nonumber \\
+ & = & s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)L_{8}\left(i\right)\label{eq:20.2}
+\end{eqnarray}
+
+\end_inset
+
+Therefore, 
+\begin_inset Formula $L_{8}\left(i\right)$
+\end_inset
+
+ represents a label for row 
+\begin_inset Formula $i$
+\end_inset
+
+ of a vector, 
+\begin_inset Formula $C_{8}$
+\end_inset
+
+, containing the blade weight 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $C_{8}$
+\end_inset
+
+ is defined in terms of the matrix 
+\begin_inset Formula $A_{8\times8}^{G}$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+A_{8\times8}^{G}B_{8} & = & C_{8}\\
+C_{8}(i) & = & \sum_{j=1}^{8}A_{8\times8}^{G}\left(i,j\right)B_{8}\left(j\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ contributes to element 
+\begin_inset Formula $i$
+\end_inset
+
+ of 
+\begin_inset Formula $C_{8}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)B_{8}\left(j\right)$
+\end_inset
+
+ shows that 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
+\end_inset
+
+ combines with 
+\begin_inset Formula $B_{8}\left(j\right)$
+\end_inset
+
+, 
+\begin_inset Formula $s_{i}^{k,j}A_{8}\left(k\right)$
+\end_inset
+
+ must contribute to column 
+\begin_inset Formula $j$
+\end_inset
+
+ of 
+\begin_inset Formula $A_{8\times8}^{G}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\begin_inset Formula 
+\begin{eqnarray*}
+A_{8\times8}^{G}\left(i,j\right) & = & \sum_{k=1}^{8}s_{i}^{k,j}A_{8}\left(k\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Physics/QuantumMechanics,/Physics/Mathematics"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

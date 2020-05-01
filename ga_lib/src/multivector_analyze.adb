@@ -1,28 +1,26 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with E3GA_Utilities;
-with Multivector;
-with Multivector_Analyze_E2GA;
+with GL.Types;
+
+--  with Multivector_Analyze_E2GA;
 with Multivector_Analyze_C3GA;
 
 package body Multivector_Analyze is
 
-   Default_Epsilon_Value : float := 10.0 ** (-5);
+   --  --------------------------------------------------------------------------
+
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+--                        Flags : Flag_Type := (Flag_Invalid, False);
+--                        Epsilon : float := Default_Epsilon) is
+--     begin
+--        Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
+--     end Analyze;
 
    --  --------------------------------------------------------------------------
 
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
-                      Flags : Flag_Type := (Flag_Invalid, False);
-                      Epsilon : float := Default_Epsilon) is
-   begin
-      Multivector_Analyze_E2GA.Analyze (theAnalysis, MV, Flags, Epsilon);
-   end Analyze;
-
-   --  --------------------------------------------------------------------------
-
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivector.Multivector;
-                      Probe : C3GA.Normalized_Point;
+   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+                      Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
                       Flags : Flag_Type := (Flag_Invalid, False);
                       Epsilon : float := Default_Epsilon) is
    begin
@@ -35,13 +33,6 @@ package body Multivector_Analyze is
    begin
       return  A.M_Type.Blade_Subclass;
    end Blade_Subclass;
-
-   --  --------------------------------------------------------------------------
-
-   function Default_Epsilon return float is
-   begin
-      return Default_Epsilon_Value;
-   end Default_Epsilon;
 
    --  --------------------------------------------------------------------------
 
@@ -60,7 +51,6 @@ package body Multivector_Analyze is
    --  --------------------------------------------------------------------------
 
    function isBlade (A : MV_Analysis) return Boolean is
-      use Multivector_Type;
    begin
 --        return A.M_Type.Multivector_Kind
       return A.M_Type.Blade_Class /= Non_Blade;
@@ -70,7 +60,7 @@ package body Multivector_Analyze is
 
    function isVersor (A : MV_Analysis) return Boolean is
    begin
-      return A.Versor_Kind /= Invalid_Versor;
+      return A.Versor_Kind /= Not_A_Versor;
    end isVersor;
 
    --  --------------------------------------------------------------------------
@@ -93,45 +83,51 @@ package body Multivector_Analyze is
 
    function Num_Points return integer is
    begin
-      return Number_Of_Points;
+      return Max_Points;
    end Num_Points;
 
    --  --------------------------------------------------------------------------
 
    function Num_Vectors return integer is
    begin
-      return Number_Of_Vectors;
+      return Max_Vectors;
    end Num_Vectors;
 
    --  --------------------------------------------------------------------------
 
    function Num_Scalars return integer is
    begin
-      return Number_Of_Scalars;
+      return Max_Scalars;
    end Num_Scalars;
 
    --  --------------------------------------------------------------------------
 
-   procedure Print_Analysis (Name : String; Info : MV_Analysis) is
+   procedure Print_Analysis (Name : String; Analysis : MV_Analysis) is
+      use GL.Types;
       use Multivector_Type;
-      use Multivector_Type_Base;
    begin
       Put_Line (Name);
-      Put_Line ("Valid Flag    " & boolean'Image (Info.M_Flags.Valid));
-      Put_Line ("Dual Flag     " & boolean'Image (Info.M_Flags.Dual));
-      Print_Multivector_Info (Name & " M_MV_Type data", Info.M_MV_Type);
-      Put_Line ("Conformal Type     " & Conformal_Type'Image (Info.Conformal_Kind));
-      Put_Line ("Epsilon    " & Float'Image (Info.Epsilon));
-      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
-      Put_Line ("Versor_Kind    " & Versor_Type'Image (Info.Versor_Kind));
-      Put_Line ("Pseudo_Scalar    " & boolean'Image (Info.Pseudo_Scalar));
-      Put_Line ("Points array length    " & integer'Image (Info.M_Points'Length));
-      Put_Line ("Scalars array length    " & integer'Image (Info.M_Scalors'Length));
-      Put_Line ("Vectors array length    " & integer'Image (Info.M_Vectors'Length));
-      New_Line;
+      Put_Line ("Valid Flag    " & boolean'Image (Analysis.M_Flags.Valid));
+      Put_Line ("Dual Flag     " & boolean'Image (Analysis.M_Flags.Dual));
+      Print_Multivector_Info (Name & " M_MV_Type data", Analysis.M_MV_Type);
+      Put_Line ("Model Type    " &
+                  Model_Type'Image (Analysis.M_Type.Model_Kind));
+      Put_Line ("Multivector_Kind " &
+                  Multivector_Type_Base.Object_Type'Image (Analysis.M_Type.Multivector_Kind));
+      Put_Line ("Epsilon      " & Float'Image (Analysis.Epsilon));
+      Put_Line ("Pseudo_Scalar " & boolean'Image (Analysis.Pseudo_Scalar));
+      Put_Line ("Versor_Kind   " & Versor_Subclass_Type'Image (Analysis.Versor_Kind));
+      Put_Line ("Blade_Subclass " & Blade_Subclass_Type'Image (Analysis.M_Type.Blade_Subclass));
+      Put_Line ("Points  array:");
+      for index in Analysis.Points'Range loop
+            Put_Line (Single'Image (Analysis.Points (index) (GL.X)) & " " &
+                      Single'Image (Analysis.Points (index) (GL.Y)) & " " &
+                      Single'Image (Analysis.Points (index) (GL.Z)));
+      end loop;
+
    exception
-      when anError :  others =>
-         Put_Line ("An exception occurred in GA_Utilities.Print_Analysis.");
+      when  others =>
+         Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis.");
          raise;
    end Print_Analysis;
 

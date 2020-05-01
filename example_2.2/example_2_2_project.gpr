@@ -1,0 +1,20 @@
+with "/Ada_Source/OpenGLAda/examples/common/common.gpr";
+limited with "/Ada_Source/OpenGLAda/opengl-glfw.gpr";
+
+project Example_2_2_Project is
+
+   for Source_Dirs use ("src", "../ga_lib/src", "../ga_common");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("removal.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatyclux");
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-framework", "GLUT");
+   end Linker;
+
+end Example_2_2_Project;
+

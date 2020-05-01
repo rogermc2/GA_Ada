@@ -1,28 +1,23 @@
 
-with Interfaces;
-
-with Ada.Containers;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
+with Blade_Types;
+with E3GA;
 with GA_Utilities;
-with Multivector_Type_Base;
 
 package body E3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   function exp (BV : Multivector.Bivector) return Multivector.Rotor is
-      use E3GA;
-      use Multivector;
-      V          : Vector :=
-        Inner_Product (BV, BV, Blade.Left_Contraction);
+   function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
+      V          :  constant Multivectors.Vector :=
+                     Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := E3GA.e1_e2 (V);
       Half_Angle : float;
       Cos_HA     : float;
       Sin_HA     : float;
-      Sum        : Bivector;
       Result     : Rotor;
    begin
       if X2 > 0.0 then
@@ -42,18 +37,18 @@ package body E3GA_Utilities is
    --  ----------------------------------------------------------------------------
 
    --  special log() for 3D rotors
-   function log (R : Multivector.Rotor) return Multivector.Bivector is
+   function log (R : Multivectors.Rotor) return Multivectors.Bivector is
       use E3GA;
-      use Multivector;
       R2       : float;
       R1       : float;
-      BV       : Multivector.Bivector;
-      Result   : Multivector.Bivector;
+      BV       : Bivector;
+      Result   : Bivector;
    begin
       --  get the bivector 2-blade part of R
       BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := E3GA.Norm_R (BV);
+      R2 := Norm_E (BV);
+      --        R2 := Norm_R (BV);
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
@@ -71,16 +66,15 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Rotor (Name : String; R : Multivector.Rotor) is
-      Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
+   procedure Print_Rotor (Name : String; R : Multivectors.Rotor) is
    begin
       GA_Utilities.Print_Multivector (Name, R);
    end Print_Rotor;
 
    --  ------------------------------------------------------------------------
 
-   procedure Rotor_To_Matrix (R : Multivector.Rotor;  M : out GA_Maths.GA_Matrix3) is
-      Rot : GA_Maths.Array_4D := E3GA.Get_Coords (R);
+   procedure Rotor_To_Matrix (R : Multivectors.Rotor;  M : out GA_Maths.GA_Matrix3) is
+      Rot : constant GA_Maths.Array_4D := E3GA.Get_Coords (R);
    begin
       M (1, 1) := 1.0 - 2.0 * (Rot (3) * Rot (3) + Rot (4) * Rot (4));
       M (2, 1) := 2.0 * (Rot (2) * Rot (3) + Rot (4) * Rot (1));
@@ -99,33 +93,40 @@ package body E3GA_Utilities is
    --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
    --                                = bx        + i by  (with respect to a)
    --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (From, To : Multivector.Vector) return Multivector.Rotor is
+   function Rotor_Vector_To_Vector (From, To : Multivectors.Vector)
+                                    return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
-      use Multivector;
       S      : float;
       w0     : Vector;
       w1     : Vector;
       w2     : Vector;
-      N2     : Float;
+      Nsq    : Float;
       R      : Rotor;
       Result : Rotor;
    begin
-      if  Scalar_Product (From, To) < -0.9 then
+      if (Norm_Esq (From) = 0.0 or Norm_Esq (To) = 0.0) or else (Scalar_Product (From, To) < -0.9) then
          w0 := Left_Contraction (From, Outer_Product (From, To));
-         N2 := Norm_E2 (w0);
-         if N2 = 0.0 then
-            w1 := Left_Contraction (From, Outer_Product (From, Get_Basis_Vector (Blade.E3_e1)));
-            w2 := Left_Contraction (From, Outer_Product (From, Get_Basis_Vector (Blade.E3_e2)));
-            if Norm_E2 (w1) > Norm_E2 (w2) then
+         Nsq := Norm_Esq (w0);
+
+         if Nsq = 0.0 then
+            w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e1)));
+            w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e2)));
+            if Norm_Esq (w1) > Norm_Esq (w2) then
                Result := Outer_Product (From, Unit_e (w1));
             else
                Result := Outer_Product (From, Unit_e (w2));
             end if;
-         else  --  N2 /= 0.0
+         else  --  Nsq /= 0.0
             --  Replace V1 with -V1 and additional 180 degree rotation.
             S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To, From))));
+            Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector S: " &
+                        float'Image (S));
             R := (1.0 - Geometric_Product (To, From)) / S;
+            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R: ",
+                                            R);
             Result := Geometric_Product (R, Outer_Product (From, Unit_e (w0)));
+            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result: ",
+                                            Result);
          end if;
       else
          --  (1 + ba)(1 + ab) = 1 + ab + ba + baab
@@ -134,11 +135,16 @@ package body E3GA_Utilities is
          --                   = 2(1 + a.b)
          --  Geometric Algebra fot Computer Science, Equation (10.13)
          S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To, From))));
-         Result :=  (1.0 + Geometric_Product (To, From)) / S;
+         Result :=  To_Rotor ((1.0 + Geometric_Product (To, From)) / S);
       end if;
       Simplify (Result);
 
       return Result;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in E3GA_Utilities.Rotor_Vector_To_Vector.");
+         raise;
    end Rotor_Vector_To_Vector;
 
    --  ----------------------------------------------------------------------------
