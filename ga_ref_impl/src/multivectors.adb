@@ -614,9 +614,6 @@ package body Multivectors is
         Value      : Float;
         Result     : Blade_List;
     begin
-        GA_Utilities.Print_Multivector ("Multivector.General_Inverse MV", MV);
-        --          Put_Line ("Multivector.General_Inverse Dim: " & Integer'Image (Dim));
-        --          Put_Line ("Multivector.General_Inverse Max_Index: " & Integer'Image (Max_Index));
         for index in BBs_L'Range loop
             BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
         end loop;
@@ -628,17 +625,14 @@ package body Multivectors is
             aBlade := Element (Curs);
             for index in BBs_L'Range loop
                 GP := Geometric_Product (aBlade, BBs_L (index));
-                GA_Utilities.Print_Blade ("Multivector.General_Inverse GP", GP);
                 Add_To_Matrix (Mat, BBs_L (index), GP);
             end loop;
             Next (Curs);
         end loop;
 
-        --        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat", Mat);
         Mat_Inv := Inverse (Mat);
-        --        GA_Utilities.Print_Matrix ("Multivector.General_Inverse Mat_Inv", Mat_Inv);
         --  reconstruct multivector from first column of matrix
-        --          for Row in BBs'Range loop
+        --  for Row in BBs'Range loop
         for Row in Mat_Inv'Range (1) loop
             Value := Mat_Inv (Row, 1);
             if Value /= 0.0 then
@@ -646,8 +640,6 @@ package body Multivectors is
                 Result.Append (BBs_L (Row));
             end if;
         end loop;
-        --        GA_Utilities.Print_Multivector ("Multivector.General_Inverse Result",
-        --                                        New_Multivector (Result));
         return New_Multivector (Result);
 
     exception
@@ -686,25 +678,18 @@ package body Multivectors is
                 BBs_L    : Basis_Blade_Array (1 .. L_Max);
                 Det      : Float;
             begin
-                --                  Put_Line ("Multivectors.General_Inverse Metric Dim, L_Max " &
-                --                              Integer'Image (Dim) & Integer'Image (L_Max));
                 --  Create all unit basis blades for Dim L
                 --  Array of basis bitmaps (0 - 31)
                 for index in BBs_L'Range loop
-                    --                      Put_Line ("Multivectors.General_Inverse index: " & Integer'Image (index));
                     BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
-                    --                      GA_Utilities.Print_Blade ("Multivectors.General_Inverse BBs_L (index)",
-                    --                                                BBs_L (index));
                 end loop;
 
                 Mat := To_Geometric_Matrix (MV, BBs_L, Met);
-                --                  GA_Utilities.Print_Matrix ("Multivector.General_Inverse Metric Mat",
-                --                                             Mat, (1, 1), (6, 6));
                 Det := Determinant (Mat);
                 Cond := SVD.Condition_Number (Mat);
---                      Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
---                      Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
---                      Put_Line ("Multivectors.General_Inverse 1 / Float'Model_Epsilon: " & Float'Image (1.0 / Float'Model_Epsilon));
+                --                      Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
+                --                      Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
+                --                      Put_Line ("Multivectors.General_Inverse 1 / Float'Model_Epsilon: " & Float'Image (1.0 / Float'Model_Epsilon));
                 if Cond < 1.0 / Float'Model_Epsilon then
                     Mat_Inv := Inverse (Mat);
                     for Row in BBs_L'Range loop
@@ -832,12 +817,6 @@ package body Multivectors is
             Next (Curs_1);
         end loop;
         Simplify (GP);
-
-        --          if Is_Empty (GP.Blades) then
-        --              Put_Line ("Multivectors.Geometric_Product with Metric, product MV is null.");
-        --              GA_Utilities.Print_Multivector ("MV1", MV1);
-        --              GA_Utilities.Print_Multivector ("MV2", MV2);
-        --          end if;
         return GP;
 
     end Geometric_Product;
@@ -1046,37 +1025,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    --      function Matrix_To_MV_Invert (Mat    : GA_Maths.Float_Matrix;
-    --                                    BBs    : in out Basis_Blade_Array;
-    --                                    Inv_MV : out Multivector) return Boolean is
-    --          use GA_Maths.Float_Array_Package;
-    --          Dim           : constant Integer := Mat'Last - Mat'First + 1;
-    --          Inv_Mat       : GA_Maths.Float_Matrix (1 .. Dim, 1 .. Dim) := (others => (others => 0.0));
-    --          Value         : Float;
-    --          Blades        : Blade.Blade_List;
-    --          Invertable    : constant Boolean := Determinant (Mat) /= 0.0;
-    --      begin
-    --          if Invertable then
-    --              Inv_Mat := Inverse (Mat);
-    --              for Index in Inv_Mat'Range loop
-    --                  Value := Inv_Mat (Index, 1);
-    --                  if Value /= 0.0 then
-    --                      Blade.Update_Blade (BBs (Index), Value);
-    --                      Blades.Append (BBs (Index));
-    --                  end if;
-    --              end loop;
-    --              Inv_MV.Blades := Blades;
-    --          end if;
-    --          return Invertable;
-    --
-    --      exception
-    --          when others =>
-    --              Put_Line ("An exception occurred in Multivectors.Matrix_To_MV_Invert");
-    --              raise;
-    --      end Matrix_To_MV_Invert;
-
-    --  -------------------------------------------------------------------------
-
     function Is_Null (MV : Multivector) return Boolean is
         M : Multivector := MV;
     begin
@@ -1172,7 +1120,6 @@ package body Multivectors is
                 declare
                     Blade_String : constant String := To_String (Blade_UBS);
                 begin
-                    --                 New_Line;
                     if Blade_Cursor = Blades.First then
                         theString := To_Unbounded_String (Blade_String);
                     else

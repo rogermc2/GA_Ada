@@ -28,11 +28,10 @@ procedure General_Inverse_Test is
    e3_bv        : Multivector := Basis_Vector (Blade_Types.C3_e3);
    ni_bv        : Multivector := Basis_Vector (Blade_Types.C3_ni);
 
+   MV_A1        : Multivector;
+   MV_A2        : Multivector;
    MV_A         : Multivector;
-   MV_Info      : Multivector_Type.MV_Type_Record;
-   MV_A_GP      : Multivector;
-   MV_A_GP_Met  : Multivector;
-   MV_A_Inv     : Multivector;
+   MV_A_Inv    : Multivector;
 
    NP_1         : constant Multivector := New_Normalized_Point (-0.356756, -0.881980, 0.0);
    NP_1_OP      : Multivector;
@@ -43,19 +42,25 @@ procedure General_Inverse_Test is
    NP_1_GP      : Multivector;
 
 begin
---     GA_Utilities.Print_Float_Array ("General_Inverse_Test Metric Eigen_Values",
---                                     Metric.Eigen_Values (C3_Metric));
---     New_Line;
---     GA_Utilities.Print_Matrix ("General_Inverse_Test Metric Eigen_Vectors",
---                                     Metric.Eigen_Vectors (C3_Metric));
---     GA_Utilities.Print_Matrix ("General_Inverse_Test Metric Inv_Eigen_Matrix",
---                                     Metric.Inv_Eigen_Matrix (C3_Metric));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e3"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("ni"));
 
+   MV_A1 := Outer_Product (e2_bv, e3_bv);
+   MV_A2 := e1_bv + Outer_Product (e2_bv, e3_bv);
+   MV_A := e1_bv + Outer_Product (Outer_Product (e2_bv, e3_bv), e1_bv);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A1", MV_A1);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A2", MV_A2);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A", MV_A);
+
+   MV_A_Inv := General_Inverse (MV_A);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_Inv", MV_A_Inv);
+
+   GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1", NP_1);
+   NP_1_OP := Outer_Product (NP_1, NP_1);
+   GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_OP", NP_1_OP);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A", MV_A);
 --     MV_A_GP := Geometric_Product (MV_A, MV_A);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test MV_A_GP", MV_A_GP);
