@@ -1,6 +1,6 @@
 
-with Ada.Numerics.Generic_Complex_Elementary_Functions;
-with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Numerics.Generic_Complex_Arrays;
+with Ada.Numerics.Generic_Complex_Types;
 
 with Ada_Lapack;
 
@@ -8,15 +8,12 @@ package body SVD is
     package Complex_Types is new Ada.Numerics.Generic_Complex_Types (Real);
     package Complex_Arrays is new
       Ada.Numerics.Generic_Complex_Arrays (Real_Arrays, Complex_Types);
-    package Complex_Maths is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
-    package Lapack is new Ada_Lapack (Real, Complex_Types,
-                                      Real_Arrays, Complex_Arrays);
+    package Lapack is new Ada_Lapack (Real, Complex_Types, Real_Arrays, Complex_Arrays);
 
     --  ------------------------------------------------------------------------
 
     function Singular_Value_Decomposition (aMatrix : GA_Maths.Float_Matrix)
                                            return SVD is
-        use Real_Arrays;
         Converted_Matrix : Real_Arrays.Real_Matrix (aMatrix'Range (1), aMatrix'Range (2)) :=
                              (others => (others => 0.0));
     begin
@@ -41,7 +38,7 @@ package body SVD is
         Matrix_U        : Real_Matrix (1 .. Num_Rows, 1 .. Num_Cols);
         V_Transpose     : Real_Matrix (1 .. Num_Cols, 1 .. Num_Cols);
         Short_Vector    : Real_Vector (1 .. 1);
-        Num_Singular    : Integer := GA_Maths.Minimum (Num_Rows, Num_Cols);
+        Num_Singular    : constant Integer := GA_Maths.Minimum (Num_Rows, Num_Cols);
         Singular_Values : Real_Vector (1 .. Num_Singular);  --  sorted: S(i) >= S(i+1).
         Return_Code     : Integer := 0;
         --  Return_Code  = 0:  successful exit.
@@ -61,7 +58,7 @@ package body SVD is
                WORK   => Short_Vector, LWORK  => -1,
                INFO   => Return_code);
         declare
-            Work_Vector_Rows : Integer := Integer (Short_Vector (Short_Vector'First));
+            Work_Vector_Rows : constant  Integer := Integer (Short_Vector (Short_Vector'First));
             Work_Vector      : Real_Vector (1 .. Work_Vector_Rows);
             theSVD           : SVD (Num_Rows, Num_Cols, Num_Singular, Work_Vector_Rows);
         begin
@@ -89,10 +86,10 @@ package body SVD is
     --  ------------------------------------------------------------------------
 
     function Condition_Number (aMatrix : GA_Maths.Float_Matrix) return Float is
-        anSVD     : SVD := Singular_Value_Decomposition (aMatrix);
-        Max       : Float :=
+        anSVD     : constant SVD := Singular_Value_Decomposition (aMatrix);
+        Max       : constant Float :=
                       Float (anSVD.Sorted_Singular_Values (anSVD.Sorted_Singular_Values'First));
-        Min       : Float :=
+        Min       : constant Float :=
                       Float (anSVD.Sorted_Singular_Values (anSVD.Sorted_Singular_Values'Last));
         Result    : Float := 0.0;
     begin

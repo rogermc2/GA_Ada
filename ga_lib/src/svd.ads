@@ -1,6 +1,4 @@
 
-with Ada.Numerics.Generic_Complex_Arrays;
-with Ada.Numerics.Generic_Complex_Types;
 with Ada.Numerics.Generic_Real_Arrays;
 
 with GA_Maths;
