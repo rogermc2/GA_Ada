@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with C3GA;
+with GA_Draw;
 with GA_Maths;
 
 package body C3GA_Draw is
@@ -9,8 +10,7 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Palet_Type : Palet.Colour_Palet;
-                         Method : Method_Type);
+                         Palet_Type : Palet.Colour_Palet);
     procedure Draw_Flat (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analysis : Multivector_Analyze.MV_Analysis;
@@ -29,9 +29,9 @@ package body C3GA_Draw is
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
                     MV : Multivectors.Multivector;
-                    Palet_Type : Palet.Colour_Palet;
-                    Method   : GA_Draw.Method_Type :=
-                     GA_Draw.Draw_Method_Undefined) is
+                    Palet_Type : Palet.Colour_Palet) is
+--                      Method   : GA_Draw.Method_Type :=
+--                       GA_Draw.Draw_Method_Undefined) is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
@@ -42,7 +42,7 @@ package body C3GA_Draw is
 --              GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
 --              GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
 --          end loop;
-        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type, Method);
+        Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 
     exception
         when others =>
@@ -74,8 +74,7 @@ package body C3GA_Draw is
     procedure Draw_C3GA (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Analyzed_MV : Multivector_Analyze.MV_Analysis;
-                         Palet_Type : Palet.Colour_Palet;
-                         Method : Method_Type) is
+                         Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
     begin
         if Analyzed_MV.M_Type.Model_Kind = Conformal_Model then
