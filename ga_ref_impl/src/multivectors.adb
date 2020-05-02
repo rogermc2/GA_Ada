@@ -6,7 +6,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Maths;
 
 with Bits;
-with GA_Maths;
 with GA_Utilities;
 with SVD;
 
@@ -654,7 +653,6 @@ package body Multivectors is
                               return Multivector is
         use Interfaces;
         use Blade;
-        use Blade_List_Package;
         use GA_Maths;
         use Float_Array_Package;
         Dim          : Natural;
@@ -676,7 +674,7 @@ package body Multivectors is
                 Mat      : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
                 Mat_Inv  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
                 BBs_L    : Basis_Blade_Array (1 .. L_Max);
-                Det      : Float;
+--                  Det      : Float;
             begin
                 --  Create all unit basis blades for Dim L
                 --  Array of basis bitmaps (0 - 31)
@@ -685,7 +683,7 @@ package body Multivectors is
                 end loop;
 
                 Mat := To_Geometric_Matrix (MV, BBs_L, Met);
-                Det := Determinant (Mat);
+--                  Det := Determinant (Mat);
                 Cond := SVD.Condition_Number (Mat);
                 --                      Put_Line ("Multivectors.General_Inverse Determinant: " & Float'Image (Det));
                 --                      Put_Line ("Multivectors.General_Inverse Condition_Number: " & Float'Image (Cond));
@@ -1286,7 +1284,6 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function New_Normalized_Point (e1, e2, e3 : Float) return Normalized_Point is
-        use GA_Maths.Float_Functions;
         use Blade;
         NP     : Normalized_Point;
     begin
@@ -1572,7 +1569,7 @@ package body Multivectors is
             end if;
             Next (B_Cursor);
         end loop;
-        return Float (Sum);
+        return Sum;
     end Scalar_Part;
 
     --  -------------------------------------------------------------------------
