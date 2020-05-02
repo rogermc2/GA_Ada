@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Maths;
 
 with Bits;
-with GA_Utilities;
+--  with GA_Utilities;
 with SVD;
 
 package body Multivectors is
@@ -661,8 +661,6 @@ package body Multivectors is
         Blades       : Blade_List;
         Result       : Multivector;
     begin
-        --          GA_Utilities.Print_Metric ("Multivectors.General_Inverse Metric", Met);
-        GA_Utilities.Print_Multivector ("Multivectors.General_Inverse Metric MV", MV);
         if Is_Null (MV) then
             Result := MV;
         else
@@ -705,8 +703,6 @@ package body Multivectors is
             end; --  declare block
         end if;
         Simplify (Result);
-        GA_Utilities.Print_Multivector ("Multivector.General_Inverse Metric Result",
-                                        Result);
         return Result;
 
     exception
@@ -1822,7 +1818,6 @@ package body Multivectors is
         use GA_Maths.Float_Functions;
         theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
-        GA_Utilities.Print_Multivector ("Multivectors.Unit_R Metric MV", MV);
         if theNorm = 0.0 then
             raise MV_Exception with "Multivectors.Unit_R Metric encountered a null multivector";
         end if;

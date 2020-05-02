@@ -2,7 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
+--  with GA_Utilities;
 
 package body Multivector_Type is
 
@@ -109,7 +109,7 @@ package body Multivector_Type is
 
             Versor_Inv := Versor_Inverse (MV, aMetric);
             Grade_Inv := Grade_Inversion (MV);
-            GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
+--              GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init Grade_Inv", Grade_Inv);
             VG_Inv := Geometric_Product (Versor_Inv, Grade_Inv, aMetric);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init VG_Inv", VG_Inv);
@@ -138,6 +138,7 @@ package body Multivector_Type is
     end Init;
 
     --  -------------------------------------------------------------------------
+
     function MV_Kind (MV : MV_Type_Record) return MV_Type is
     begin
         return MV.MV_Kind;
