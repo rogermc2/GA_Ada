@@ -106,7 +106,7 @@ package body Multivector_Analyze is
       use GL.Types;
       use Multivector_Type;
    begin
-      Put_Line (Name);
+      Put_Line (Name & " Analysis");
       Put_Line ("Valid Flag    " & boolean'Image (Analysis.M_Flags.Valid));
       Put_Line ("Dual Flag     " & boolean'Image (Analysis.M_Flags.Dual));
       Print_Multivector_Info (Name & " M_MV_Type data", Analysis.M_MV_Type);

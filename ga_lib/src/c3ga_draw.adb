@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Utilities;
+
 with C3GA;
 with GA_Draw;
 with GA_Maths;
@@ -119,10 +121,12 @@ package body C3GA_Draw is
                        C3GA.To_VectorE3GA (Analysis.Points (1));
         Scale      : Float;
     begin
+        Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Analysis.Points", Analysis.Points (1));
         case Analysis.M_Type.Blade_Subclass is
             when Line_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Line.");
                 --  Draw_Line doesn't use method
+                Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Point_Pos", Point_Pos);
                 GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
                                    Point_Pos, Direction);
             when Plane_Subclass =>

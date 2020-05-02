@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
---  with Utilities;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -54,7 +54,6 @@ package body Multivector_Analyze_C3GA is
          IP_NiX     : Boolean;
          Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
       begin
---           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
          Product := Outer_Product (C3GA.ni, MV_X);
          OP_NiX := not Multivectors.Is_Null (Product);
          if OP_NiX then
@@ -80,7 +79,9 @@ package body Multivector_Analyze_C3GA is
             Analyze_Free (Analysis, MV_X);
          elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
+            GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
             Analyze_Flat (Analysis, MV_X, Metric.C3_Metric, Probe);
+            GA_Utilities.Print_Multivector_Info ("Multivector_Analyze_C3GA.Classify Analysis", Analysis.M_MV_Type);
          elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
             Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
@@ -175,28 +176,38 @@ package body Multivector_Analyze_C3GA is
          Grade := 5 - Grade;
       end if;
 
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat calling General_Inverse MV",
-                                      MV);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV", MV);
       MV_Inverse := General_Inverse (MV, Met);
       --  MV_Location is a normalized dual sphere
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
                                       MV_Inverse);
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV)",
-                                      Left_Contraction (Probe, MV));
-      MV_Location := Left_Contraction (Left_Contraction (Probe, MV), MV_Inverse, Met);
+                                      Left_Contraction (Probe, MV, Met));
+      MV_Location := Left_Contraction (Left_Contraction (Probe, MV, Met), MV_Inverse, Met);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1",
+                                      MV_Location);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
+                                     Float'Image (Scalar_Product (C3GA.ni, MV_Location, Met)));
+      MV_Location := Geometric_Product (MV_Location,
+                                        Inverse (-New_Scalar (Scalar_Product (C3GA.ni, MV_Location, Met))));
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
                                       MV_Location);
-      MV_Location := Geometric_Product (MV_Location,
-                                        -1.0 / Scalar_Product (C3GA.ni, MV_Location, Met));
       if Grade = 0 then
          Weight := Scalar_Product (MV, C3GA.no, Met);
       else
          Weight := Abs (Norm_Esq (MV, Met));
       end if;
 
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 3",
+                                      MV_Location);
       Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
       theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
       theAnalysis.Scalors (1) := Weight;
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
+                               Location);
+
+      Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Points (1)",
+                               theAnalysis.Points (1));
       --  Grade indications are taken from Geometric Algebra and its Application to Computer Graphics
       --  by Hildenbrand, Fontijne, Perwass and Dorst, Eurographics 2004.
       --  "the representation of a point is simply a sphere of radius zero".
@@ -207,9 +218,15 @@ package body Multivector_Analyze_C3GA is
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
          when 3 =>  --  Line
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
+            GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 MV", MV);
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
               To_Vector (Unit_E (Left_Contraction (C3GA.no, MV)));
+            GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
+                   theAnalysis.M_Vectors (1));
+            Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3", theAnalysis);
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
@@ -223,7 +240,7 @@ package body Multivector_Analyze_C3GA is
                      theAnalysis.M_Vectors (2)));
          when others => null;
       end case;
-      Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat", theAnalysis);
+--        Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat", theAnalysis);
 
    exception
       when others =>
@@ -324,12 +341,12 @@ package body Multivector_Analyze_C3GA is
          --              GA_Utilities.Print_Multivector
          --                ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
 
-         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
+--           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
          LC_NI_MV_Inverse := General_Inverse (LC_NI_MV, Metric.C3_Metric);
-         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 1");
+--           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 1");
          --  location is normalized dual sphere
          Location := Geometric_Product (MV_X, LC_NI_MV_Inverse, Metric.C3_Metric);  --  _location
-         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 2");
+--           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 2");
          Location := Geometric_Product
            (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Metric.C3_Metric));
          --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
@@ -338,7 +355,7 @@ package body Multivector_Analyze_C3GA is
          --                    ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
 
          NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Metric.C3_Metric);
-         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 3");
+--           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 3");
          Radius_Sq := Scalar_Part
            (Geometric_Product (MV_X, Grade_Inversion (MV_X), Metric.C3_Metric)) / NI_Xsq;
          if Radius_Sq < 0.0 then
