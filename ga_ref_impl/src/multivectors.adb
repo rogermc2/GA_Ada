@@ -1018,7 +1018,16 @@ package body Multivectors is
     end Inner_Product;
 
     --  -------------------------------------------------------------------------
+    --  Inverse based on c3ga.h inline scalar inverse
+    function Inverse (theScalar : Scalar) return Scalar is
+        use Blade;
+        S_Weight    : constant float := Weight (theScalar.Blades.First_Element);
+        Inv_Weight  : constant float := 1.0 / S_Weight ** 2;
+    begin
+        return New_Scalar (S_Weight * Inv_Weight);
+    end Inverse;
 
+    --  -------------------------------------------------------------------------
     function Is_Null (MV : Multivector) return Boolean is
         M : Multivector := MV;
     begin
@@ -1340,6 +1349,16 @@ package body Multivectors is
     end New_Rotor;
 
     --  -------------------------------------------------------------------------
+
+    function New_Scalar  (Scalar_Weight : Float) return Scalar is
+        S : Scalar;
+    begin
+        S.Type_Of_MV := MV_Scalar;
+        S.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
+        return S;
+    end New_Scalar;
+
+    --  ------------------------------------------------------------------------
 
     function New_Vector return Vector is
         V : Vector;

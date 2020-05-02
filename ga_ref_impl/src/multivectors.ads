@@ -80,6 +80,7 @@ package Multivectors is
                            return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
                            Cont : Blade.Contraction_Type) return Multivector;
+   function Inverse (theScalar : Scalar) return Scalar;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -109,6 +110,7 @@ package Multivectors is
    function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
+   function New_Scalar  (Scalar_Weight : Float) return Scalar;
    function New_Vector return Vector;
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;

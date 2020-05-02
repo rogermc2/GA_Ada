@@ -2,7 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
+--  with GA_Utilities;
 
 package body Blade is
 
@@ -31,7 +31,7 @@ package body Blade is
     function "*" (S : Float; BB : Basis_Blade) return Basis_Blade is
 
     begin
-        return (BB.Bitmap, Float (S) * BB.Weight);
+        return (BB.Bitmap, S * BB.Weight);
     end "*";
 
     --  ------------------------------------------------------------------------
@@ -230,9 +230,8 @@ package body Blade is
                                 return Basis_Blade is
     --  Eigen_Vals gives the metric for each basis vector
     --  BM is the meet (bitmap of annihilated vectors)
-    --  Only retain vectors commomt to both blades
+    --  Only retain vectors common to both blades
         BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-        Vals_Length : constant Integer := Eigen_Vals'Length;
         Index       : Integer := 1;
         Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
@@ -240,7 +239,7 @@ package body Blade is
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
-                Result.Weight := Result.Weight * Float (Eigen_Vals (Index));
+                Result.Weight := Result.Weight * Eigen_Vals (Index);
             end if;
             --  Move right to next basis vector indicator
             --           BM := BM / 2;
@@ -270,7 +269,7 @@ package body Blade is
             --  else xor > 0 so Outer product part of MV
             Sign := Canonical_Reordering_Sign (BA.Bitmap, BB.Bitmap);
             OP_Blade := New_Blade
-              (BA.Bitmap xor BB.Bitmap, Float (Sign) * BA.Weight * BB.Weight);
+              (BA.Bitmap xor BB.Bitmap, Sign * BA.Weight * BB.Weight);
         end if;
 
         return OP_Blade;
@@ -404,7 +403,7 @@ package body Blade is
     begin
         if Bitmap < 32 then
             Blade.Bitmap := Bitmap;
-            Blade.Weight := Float (Weight);
+            Blade.Weight := Weight;
         else
             raise Blade_Exception with
               "Blade.New_Basis_Blade, invalid Bitmap" & Unsigned_32'Image (Bitmap);
@@ -418,7 +417,7 @@ package body Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := 0;
-        Blade.Weight := Float (Weight);
+        Blade.Weight := Weight;
         return Blade;
     end New_Basis_Blade;
 
@@ -426,14 +425,14 @@ package body Blade is
 
     function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Float (Weight));
+        return (Index'Enum_Rep, Weight);
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Float (Weight));
+        return (Index'Enum_Rep, Weight);
 
     exception
         when others =>
@@ -445,14 +444,14 @@ package body Blade is
 
     function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Float (Weight));
+        return (Index'Enum_Rep, Weight);
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
 
     function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade is
     begin
-        return (Index'Enum_Rep, Float (Weight));
+        return (Index'Enum_Rep, Weight);
     end New_Basis_Blade;
 
     --  ------------------------------------------------------------------------
@@ -470,7 +469,7 @@ package body Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := 0;
-        Blade.Weight := Float (Weight);
+        Blade.Weight := Weight;
         return Blade;
     end New_Scalar_Blade;
 
