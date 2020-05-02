@@ -1022,8 +1022,12 @@ package body Multivectors is
     function Inverse (theScalar : Scalar) return Scalar is
         use Blade;
         S_Weight    : constant float := Weight (theScalar.Blades.First_Element);
-        Inv_Weight  : constant float := 1.0 / S_Weight ** 2;
+        Inv_Weight  : float;
     begin
+        if S_Weight = 0.0 then
+            raise MV_Exception with "Multivectors.Inverse called with zero weight blade";
+        end if;
+        Inv_Weight := 1.0 / S_Weight ** 2;
         return New_Scalar (S_Weight * Inv_Weight);
     end Inverse;
 
@@ -1350,7 +1354,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function New_Scalar  (Scalar_Weight : Float) return Scalar is
+    function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar is
         S : Scalar;
     begin
         S.Type_Of_MV := MV_Scalar;

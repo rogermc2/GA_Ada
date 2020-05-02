@@ -110,7 +110,7 @@ package Multivectors is
    function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
-   function New_Scalar  (Scalar_Weight : Float) return Scalar;
+   function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar;
    function New_Vector return Vector;
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;
