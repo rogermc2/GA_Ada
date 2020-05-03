@@ -189,7 +189,6 @@ package body Blade is
         use Blade_List_Package;
         List_A     : constant Blade_List := To_Eigen_Basis (BA, Met);
         List_B     : constant Blade_List := To_Eigen_Basis (BB, Met);
-        Eigen_Vals : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
         LA_Cursor  : Cursor := List_A.First;
         LB_Cursor  : Cursor;
         GP         : Basis_Blade;
@@ -201,7 +200,7 @@ package body Blade is
             LB_Cursor := List_B.First;
             while Has_Element (LB_Cursor) loop
                 GP := Geometric_Product
-                  (Element (LA_Cursor), Element (LB_Cursor), Eigen_Vals);
+                  (Element (LA_Cursor), Element (LB_Cursor), Met);
                 --              GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric blade GP:", GP);
                 Add_Blade (Result, (GP));
                 Next (LB_Cursor);
@@ -226,12 +225,14 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function Geometric_Product (BA, BB : Basis_Blade; Eigen_Vals : Real_Vector)
+    function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record)
                                 return Basis_Blade is
     --  Eigen_Vals gives the metric for each basis vector
     --  BM is the meet (bitmap of annihilated vectors)
     --  Only retain vectors common to both blades
+        use GA_Maths.Float_Array_Package;
         BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
+        Eigen_Vals  : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
         Index       : Integer := 1;
         Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
@@ -307,7 +308,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function Inner_Product (BA, BB : Basis_Blade; Met : Real_Vector;
+    function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record;
                             Cont   : Contraction_Type) return Basis_Blade is
     begin
         return Inner_Product_Filter (Grade (BA), Grade (BB),

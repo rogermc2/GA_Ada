@@ -12,7 +12,6 @@ with Metric;
 package Blade is
 
     use Ada.Strings.Unbounded;
-    use GA_Maths.Float_Array_Package;
 
     type Basis_Blade is record
         Bitmap : Interfaces.Unsigned_32 := 0;
@@ -58,7 +57,7 @@ package Blade is
     function Canonical_Reordering_Sign (Map_A, Map_B : Unsigned_32) return Float;
     function Geometric_Product (BA, BB : Basis_Blade) return Basis_Blade;
     function Geometric_Product (BB : Basis_Blade; Sc : Float) return Basis_Blade;
-    function Geometric_Product (BA, BB : Basis_Blade; Eigen_Vals : Real_Vector)
+    function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record)
                                return Basis_Blade;
     function Geometric_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record)
                                return Blade_List;
@@ -66,7 +65,7 @@ package Blade is
     function Grade_Inversion (B : Basis_Blade) return Basis_Blade;
     function Inner_Product (BA, BB : Basis_Blade; Cont : Contraction_Type)
                            return Basis_Blade;
-    function Inner_Product (BA, BB : Basis_Blade; Met : Real_Vector;
+    function Inner_Product (BA, BB : Basis_Blade; Met : Metric.Metric_Record;
                             Cont   : Contraction_Type) return Basis_Blade;
     function List_Length (Blades : Blade_List) return Integer;
     function Minus_1_Power (Power : Integer) return Integer;

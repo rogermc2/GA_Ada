@@ -999,7 +999,7 @@ package body Multivectors is
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                Blades_IP := Blade.Inner_Product (B1, B2, Metric.Eigen_Values (Met), Cont);
+                Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
                 if Blade.Weight (Blades_IP) /= 0.0 then
                     MV.Blades.Append (Blades_IP);
                 end if;
@@ -1537,7 +1537,7 @@ package body Multivectors is
         Rev_MV     : Multivector;
     begin
         while Has_Element (B_Cursor) loop
-            Rev_Blades.Append (Blade.Reverse_Blade (Element (B_Cursor)));
+            Rev_Blades.Append (Reverse_Blade (Element (B_Cursor)));
             Next (B_Cursor);
         end loop;
         Rev_MV.Blades := Rev_Blades;
@@ -1821,13 +1821,13 @@ package body Multivectors is
 
     function Unit_R (MV : Multivector) return Multivector is
         use GA_Maths.Float_Functions;
-        theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
+        Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
     begin
-        if theNorm = 0.0 then
+        if Norm_Sq = 0.0 then
             raise MV_Exception with "Multivectors.Unit_R encountered a null multivector";
         end if;
 
-        return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
+        return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
 
     exception
         when others =>
@@ -1839,13 +1839,13 @@ package body Multivectors is
 
     function Unit_R (MV : Multivector; Met : Metric.Metric_Record) return Multivector is
         use GA_Maths.Float_Functions;
-        theNorm  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
+        Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
-        if theNorm = 0.0 then
+        if Norm_Sq = 0.0 then
             raise MV_Exception with "Multivectors.Unit_R Metric encountered a null multivector";
         end if;
 
-        return Geometric_Product (MV, 1.0 / Sqrt (Abs (theNorm)));
+        return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
 
     exception
         when others =>

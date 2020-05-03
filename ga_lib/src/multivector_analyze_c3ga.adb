@@ -181,7 +181,10 @@ package body Multivector_Analyze_C3GA is
       --  MV_Location is a normalized dual sphere
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
                                       MV_Inverse);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV)",
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
+                                      MV_Inverse);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
                                       Left_Contraction (Probe, MV, Met));
       MV_Location := Left_Contraction (Left_Contraction (Probe, MV, Met), MV_Inverse, Met);
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1",
