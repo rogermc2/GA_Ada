@@ -1534,14 +1534,12 @@ package body Multivectors is
         Blades     : constant Blade_List := MV.Blades;
         B_Cursor   : Cursor := Blades.First;
         Rev_Blades : Blade_List;
-        Rev_MV     : Multivector;
     begin
         while Has_Element (B_Cursor) loop
             Rev_Blades.Append (Reverse_Blade (Element (B_Cursor)));
             Next (B_Cursor);
         end loop;
-        Rev_MV.Blades := Rev_Blades;
-        return Rev_MV;
+        return New_Multivector (Rev_Blades);
     end Reverse_MV;
 
     --  -------------------------------------------------------------------------
