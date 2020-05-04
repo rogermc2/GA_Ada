@@ -184,10 +184,11 @@ package body Multivector_Analyze_C3GA is
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
                                       MV_Inverse);
 --        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
+      MV_Location := Left_Contraction (Probe, MV, Met);
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
-                                      Left_Contraction (Probe, MV, Met));
-      MV_Location := Left_Contraction (Left_Contraction (Probe, MV, Met), MV_Inverse, Met);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 1",
+                                      MV_Location);
+      MV_Location := Left_Contraction (MV_Location, MV_Inverse, Met);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat _Location",
                                       MV_Location);
       Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
                                      Float'Image (Scalar_Product (C3GA.ni, MV_Location, Met)));
