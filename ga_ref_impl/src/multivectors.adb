@@ -1535,6 +1535,7 @@ package body Multivectors is
         B_Cursor   : Cursor := Blades.First;
         Rev_Blades : Blade_List;
     begin
+        --  loop over all basis lades, reverse each one and add to result
         while Has_Element (B_Cursor) loop
             Rev_Blades.Append (Reverse_Blade (Element (B_Cursor)));
             Next (B_Cursor);
