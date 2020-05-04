@@ -494,7 +494,7 @@ package body Blade is
     function Reverse_Blade (B : Basis_Blade) return Basis_Blade is
         G   : constant Integer := Grade (B); -- Bit_Count (B.Bitmap)
         W   : constant Float
-          := Float (Minus_1_Power (G * (G - 1) / 2)) * B.Weight;
+          := Float (Minus_1_Power ((G * (G - 1)) / 2)) * B.Weight;
     begin
         return (B.Bitmap, W);
     end Reverse_Blade;
