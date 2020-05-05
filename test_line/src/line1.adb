@@ -18,6 +18,6 @@ procedure Line1 is
 begin
     GA_Utilities.Print_Multivector ("line 1", Line1);
     GA_Utilities.Print_Multivector ("line 2", Line2);
-   GA_Utilities.Print_Multivector ("line 3", Line3);
-   Put_Line (Float'Image (5.77350E-01**2 + 5.77350E-01**2 + 5.77350E-01**2));
+    GA_Utilities.Print_Multivector ("line 3", Line3);
+    Put_Line (Float'Image (5.77350E-01 ** 2 + 5.77350E-01 ** 2 + 5.77350E-01 ** 2));
 end Line1;

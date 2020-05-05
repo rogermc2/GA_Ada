@@ -165,7 +165,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             --                              Model_View_Matrix, Point_Position, Palet_Data);
         end loop;
             GA_Utilities.Print_Multivector ("Display, Point_Position 1:", Points.Normalized_Points (1));
-            GA_Utilities.Print_Multivector ("Display, Point_Position 1:", Points.Normalized_Points (2));
+            GA_Utilities.Print_Multivector ("Display, Point_Position 2:", Points.Normalized_Points (2));
 --          GA_Utilities.Print_Multivector ("Display, L1.L1 ", Dot (Points.L1, Points.L1));
 --          GA_Utilities.Print_Multivector ("Display, L2.L2 ", Dot (Points.L1, Points.L2));
 --          GA_Utilities.Print_Multivector ("Display, L1 ", Points.L1);
