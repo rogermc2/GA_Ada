@@ -87,7 +87,7 @@ package Multivector_Analyze is
       --  (analysis dependent) points, scalars and vectors.
      --  Only Points (1) seeems to be used
       Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
-      Scalors          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
+      Scalars          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
       M_Vectors        : Vector_Array;  --  m_vc Multivectors.Vector array
    end record;
 

@@ -173,7 +173,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         if not Pick_Manager.Pick_Active then
             aLine := C3GA.Set_Line (Points.L1, Points.L2);
             GA_Utilities.Print_Multivector ("Display, aLine:", aLine);
-            Put_Line ("Display, aLine norm:" & Float'Image (Norm_E (aLine)));
 
             aCircle := Multivectors.Outer_Product (Points.C1, Points.C2);
             aCircle := Multivectors.Outer_Product (aCircle, Points.C3);

@@ -162,7 +162,7 @@ package body C3GA_Draw is
                 Put_Line ("C3GA_Draw.Draw_Free Vector.");
                 GA_Draw.Draw_Vector (Render_Program, Model_View_Matrix,
                                      Tail, To_VectorE3GA (Analysis.M_Vectors (1)),
-                                     Analysis.Scalors (1));
+                                     Analysis.Scalars (1));
             when Bivector_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Free Bivector.");
             GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
@@ -172,14 +172,14 @@ package body C3GA_Draw is
                                    Ortho_1           => To_VectorE3GA (Analysis.M_Vectors (1)),
                                    Ortho_2           => To_VectorE3GA (Analysis.M_Vectors (2)),
                                    Palet_Type        => Palet_Type,
-                                   Scale             => Sqrt (Analysis.Scalors (1) / GA_Maths.Pi),
+                                   Scale             => Sqrt (Analysis.Scalars (1) / GA_Maths.Pi),
                                    Method            => GA_Draw.Draw_Bivector_Circle);
             when Trivector_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Free Trivector.");
             GA_Draw.Draw_Trivector (Render_Program    => Render_Program,
                                     Model_View_Matrix => Model_View_Matrix,
                                     Base              => Tail,
-                                    Scale             => Analysis.Scalors (1),
+                                    Scale             => Analysis.Scalars (1),
                                     V                 => Analysis.M_Vectors);
             when others => null;
         end case;
@@ -245,7 +245,7 @@ package body C3GA_Draw is
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
-        Radius     : constant Single := Single (Analysis.Scalors (1));
+        Radius     : constant Single := Single (Analysis.Scalars (1));
     begin
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
