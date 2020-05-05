@@ -459,6 +459,7 @@ package body GA_Draw is
                                   (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
     begin
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
+        Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
