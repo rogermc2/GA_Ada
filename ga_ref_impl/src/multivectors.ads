@@ -121,6 +121,8 @@ package Multivectors is
    function Reverse_MV (MV : Multivector) return Multivector;
 --     function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
+   function Right_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+                               return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
