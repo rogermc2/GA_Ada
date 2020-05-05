@@ -25,7 +25,7 @@ with E3GA;
 with C3GA;
 with C3GA_Draw;
 with Geosphere;
-with GL_Util;
+--  with GL_Util;
 with Multivectors;
 with Palet;
 with Pick_Manager;
@@ -48,7 +48,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     --  rotor g_modelRotor(_rotor(1.0f))
-    Model_Rotor              : constant Multivectors.Rotor := Multivectors.New_Rotor (1.0);
+--      Model_Rotor              : constant Multivectors.Rotor := Multivectors.New_Rotor (1.0);
     --      Rotate_Model    : boolean := False;
     --      Rotate_Model_Out_Of_Plane  : boolean := False;
     --      Pick            : GL_Util.GL_Pick;
@@ -96,8 +96,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --          Pick                : GL_Util.GL_Pick;
         Width               : GL.Types.Single;
         Height              : GL.Types.Single;
-        Translation_Matrix  : Matrix4;
-        Projection_Matrix   : Matrix4;
+        Translation_Matrix  : Matrix4 := Identity4;
+        Projection_Matrix   : Matrix4 := Identity4;
         Model_View_Matrix   : Matrix4 := Identity4;
         View_Angle          : constant Maths.Degree := 50.0;
         View_Matrix         : GL.Types.Singles.Matrix4 := Identity4;
@@ -124,15 +124,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 GL.Types.Int (Window_Height));
         Width := Single (Window_Width);
         Height := Single (Window_Height);
-        Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
+--          Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
 
-        Maths.Init_Perspective_Transform
-          (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
+--          Maths.Init_Perspective_Transform
+--            (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
-        Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14  more negative z move farther back
-        Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+--          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14  more negative z move farther back
+--          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
         --  View and model matrices are initilized to identity by shader initialization.
 
@@ -142,7 +141,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Toggles.Enable (GL.Toggles.Cull_Face);
         GL.Culling.Set_Cull_Face (GL.Culling.Back);
 
-        GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+--          GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
 
         Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
         Shader_Manager.Set_Drawing_Colour (Red);
@@ -294,7 +293,8 @@ begin
             Key_Pressed := True;
         else
             Key_Pressed := Key_Now = Glfw.Input.Pressed;
-        end if;
+   end if;
+   Delay (3.0);
 --          Running := Running and then
 --            not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
 --          Running := Running and then not Main_Window.Should_Close;
