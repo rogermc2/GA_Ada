@@ -115,14 +115,14 @@ package Multivectors is
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;
    function Norm_E (MV : Multivector) return Float;
-   function Norm_E (MV : Multivector; Met : Metric.Metric_Record) return Float;
    function Norm_Esq (MV : Multivector) return Float;
-   function Norm_Esq (MV : Multivector; Met : Metric.Metric_Record) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
    function Random_Blade (Dim, Grade : Integer; Scale : Float) return Multivector;
    function Reverse_MV (MV : Multivector) return Multivector;
 --     function Rotor_Inverse (R : Rotor; IR : out Rotor) return Boolean;
    function Right_Contraction (MV1, MV2 : Multivector) return Multivector;
+   function Right_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+                               return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)

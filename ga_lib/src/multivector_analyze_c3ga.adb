@@ -57,16 +57,16 @@ package body Multivector_Analyze_C3GA is
          Product := Outer_Product (C3GA.ni, MV_X);
          OP_NiX := not Multivectors.Is_Null (Product);
          if OP_NiX then
-            OP_NiX_Val := Norm_E (Product, Metric.C3_Metric);
+            OP_NiX_Val := Norm_E (Product);
             OP_NiX := Abs (OP_Nix_Val) > Epsilon;
          end if;
          Product := Left_Contraction (C3GA.ni, MV_X);
          IP_NiX := not Multivectors.Is_Null (Product);
          if IP_NiX then
-            IP_NiX_Val := Norm_E (Product, Metric.C3_Metric);
+            IP_NiX_Val := Norm_E (Product);
             IP_NiX := Abs (IP_Nix_Val) > Epsilon;
          end if;
-         Xsq_Val := Norm_Esq (MV_X, Metric.C3_Metric);
+         Xsq_Val := Norm_Esq (MV_X);
 
          Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
                      Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
@@ -183,6 +183,8 @@ package body Multivector_Analyze_C3GA is
                                       MV_Inverse);
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
                                       MV_Inverse);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV gp MV_Inverse",
+                                      Geometric_Product (MV, MV_Inverse, Met));
 --        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
       MV_Location := Left_Contraction (Probe, MV, Met);
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
@@ -199,7 +201,7 @@ package body Multivector_Analyze_C3GA is
       if Grade = 0 then
          Weight := Scalar_Product (MV, C3GA.no, Met);
       else
-         Weight := Abs (Norm_Esq (MV, Met));
+         Weight := Abs (Norm_Esq (MV));
       end if;
 
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 3",
