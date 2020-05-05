@@ -172,7 +172,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
         if not Pick_Manager.Pick_Active then
             aLine := C3GA.Set_Line (Points.L1, Points.L2);
-            GA_Utilities.Print_Multivector ("Display, aLine aLine:", aLine);
+            GA_Utilities.Print_Multivector ("Display, aLine:", aLine);
+            Put_Line ("Display, aLine norm:" & Float'Image (Norm_E (aLine)));
 
             aCircle := Multivectors.Outer_Product (Points.C1, Points.C2);
             aCircle := Multivectors.Outer_Product (aCircle, Points.C3);
@@ -274,7 +275,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     use Glfw.Input;
     Render_Graphic_Program : GL.Objects.Programs.Program;
     --     Render_Text_Program : GL.Objects.Programs.Program;
-    Running : Boolean := True;
+--      Running : Boolean := True;
     Key_Now : Button_State;
 begin
     Utilities.Clear_Background_Colour_And_Depth (White);
@@ -282,7 +283,7 @@ begin
     Glfw.Input.Poll_Events;
     Setup_Graphic (Render_Graphic_Program);
     --     Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
-    while Running loop
+--      while Running loop
         --  Swap_Buffers first to display background colour on start up.
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Display (Main_Window, Render_Graphic_Program);
@@ -295,8 +296,8 @@ begin
         else
             Key_Pressed := Key_Now = Glfw.Input.Pressed;
         end if;
-        Running := Running and then
-          not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
-        Running := Running and then not Main_Window.Should_Close;
-    end loop;
+--          Running := Running and then
+--            not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+--          Running := Running and then not Main_Window.Should_Close;
+--      end loop;
 end Main_Loop;
