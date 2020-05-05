@@ -90,10 +90,8 @@ package body E3GA_Utilities is
    end Rotor_To_Matrix;
 
    --  ------------------------------------------------------------------------
-   --  Rotor Utheta = ba = b.a + b^a = cos theta + i sin theta = e**i theta
-   --                                = bx        + i by  (with respect to a)
-   --  for theta = angle from a to b.
-   function Rotor_Vector_To_Vector (From, To : Multivectors.Vector)
+   --  Based on rotorFromVectorToVector
+   function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.Vector)
                                     return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
       S      : float;
@@ -104,27 +102,31 @@ package body E3GA_Utilities is
       R      : Rotor;
       Result : Rotor;
    begin
-      if (Norm_Esq (From) = 0.0 or Norm_Esq (To) = 0.0) or else (Scalar_Product (From, To) < -0.9) then
-         w0 := Left_Contraction (From, Outer_Product (From, To));
+      if Scalar_Product (From_V1, To_V2) < -0.9 then
+         --  "near" 180 degree rotation :
+	 --  v1 factor in returning blade regardless of any loss of precision
+         --  v1 << (v1^v2) means c3ga::lcont(v1, (v1^v2)), lcont means Left_Contraction
+         w0 := Left_Contraction (From_V1, Outer_Product (From_V1, To_V2));
+         GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector w0: ", w0);
          Nsq := Norm_Esq (w0);
 
          if Nsq = 0.0 then
-            w1 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e1)));
-            w2 := Left_Contraction (From, Outer_Product (From, Basis_Vector (Blade_Types.E3_e2)));
+            w1 := Left_Contraction (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e1)));
+            w2 := Left_Contraction (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e2)));
             if Norm_Esq (w1) > Norm_Esq (w2) then
-               Result := Outer_Product (From, Unit_e (w1));
+               Result := Outer_Product (From_V1, Unit_e (w1));
             else
-               Result := Outer_Product (From, Unit_e (w2));
+               Result := Outer_Product (From_V1, Unit_e (w2));
             end if;
          else  --  Nsq /= 0.0
-            --  Replace V1 with -V1 and additional 180 degree rotation.
-            S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To, From))));
+            --  Replace V1 with -V1 and an additional 180 degree rotation.
+            S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To_V2, From_V1))));
             Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector S: " &
                         float'Image (S));
-            R := (1.0 - Geometric_Product (To, From)) / S;
+            R := (1.0 - Geometric_Product (To_V2, From_V1)) / S;
             GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R: ",
                                             R);
-            Result := Geometric_Product (R, Outer_Product (From, Unit_e (w0)));
+            Result := Geometric_Product (R, Outer_Product (From_V1, Unit_e (w0)));
             GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result: ",
                                             Result);
          end if;
@@ -134,8 +136,8 @@ package body E3GA_Utilities is
          --                   = 2 + 2a.b + a^b - a^b
          --                   = 2(1 + a.b)
          --  Geometric Algebra fot Computer Science, Equation (10.13)
-         S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To, From))));
-         Result :=  To_Rotor ((1.0 + Geometric_Product (To, From)) / S);
+         S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To_V2, From_V1))));
+         Result :=  To_Rotor ((1.0 + Geometric_Product (To_V2, From_V1)) / S);
       end if;
       Simplify (Result);
 
