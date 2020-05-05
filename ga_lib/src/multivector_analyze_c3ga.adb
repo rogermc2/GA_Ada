@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -203,8 +203,8 @@ package body Multivector_Analyze_C3GA is
          Weight := Abs (Norm_Esq (MV));
       end if;
 
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 3",
-                                      MV_Location);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 3",
+--                                        MV_Location);
       --  ************* format of flat ***************
       --  theAnalysis.Points    m_pt[0] = location
       --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
@@ -212,11 +212,11 @@ package body Multivector_Analyze_C3GA is
       --  ************* END format of flat ***************
       theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
       theAnalysis.Scalars (1) := Weight;
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
-                               Location);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
+--                                 Location);
 
-      Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Points (1)",
-                               theAnalysis.Points (1));
+--        Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Points (1)",
+--                                 theAnalysis.Points (1));
       --  Grade indications are taken from Geometric Algebra and its Application to Computer Graphics
       --  by Hildenbrand, Fontijne, Perwass and Dorst, Eurographics 2004.
       --  "the representation of a point is simply a sphere of radius zero".
@@ -227,8 +227,8 @@ package body Multivector_Analyze_C3GA is
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
          when 3 =>  --  Line
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
-            GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 MV", MV);
+--              GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 MV", MV);
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
               To_Vector (Unit_E (Left_Contraction (C3GA.no, MV)));

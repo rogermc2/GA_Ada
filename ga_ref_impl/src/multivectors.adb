@@ -1093,13 +1093,13 @@ package body Multivectors is
    --  Universite Paris-Est, 2018. English. NNT : 2018PESC1142.
    --  tel-02085820
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector is
-      G1 : Integer;
-      G2 : Integer;
+      G1     : Integer;
+      G2     : Integer;
       Result : Multivector;
    begin
       If not Grade (MV1, G1) or not Grade (MV2, G2) then
          raise MV_Exception with
-           "Multivectors.Left_Contraction called with invalid multivecgtor";
+           "Multivectors.Left_Contraction called with invalid multivector";
       elsif G2 >= G1 then
            Result := Extract_Grade (Geometric_Product (MV1, MV2), G2 - G1);
       end if;
