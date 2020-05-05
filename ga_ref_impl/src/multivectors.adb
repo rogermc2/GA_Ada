@@ -1405,29 +1405,10 @@ package body Multivectors is
     end Norm_E;
 
     --  -------------------------------------------------------------------------
-
-    function Norm_E (MV : Multivector; Met : Metric.Metric_Record) return Float is
-        use GA_Maths.Float_Functions;
-    begin
-        return Sqrt (Norm_Esq (MV, Met));
-    end Norm_E;
-
-    --  -------------------------------------------------------------------------
     --  Based on Geometric Algebra for Computer Science section 3.1.3, eq (3.4)
     --  and ga_ref_impl.Multivector.java norm_e2()
     function Norm_Esq (MV : Multivector) return Float is
         S : Float := Scalar_Product (MV, Reverse_MV (MV));
-    begin
-        if S < 0.0 then
-            S := 0.0;
-        end if;
-        return S;
-    end Norm_Esq;
-
-    --  -------------------------------------------------------------------------
-
-    function Norm_Esq (MV : Multivector; Met : Metric.Metric_Record) return Float is
-        S : Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
         if S < 0.0 then
             S := 0.0;

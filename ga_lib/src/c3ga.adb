@@ -6,7 +6,7 @@ with Maths;
 
 with Blade;
 with Blade_Types; use Blade_Types;
-with GA_Utilities;
+--  with GA_Utilities;
 with Metric;
 
 package body C3GA is
@@ -1014,9 +1014,9 @@ package body C3GA is
                     Unit_R (Outer_Product (P1, Outer_Product (P2, ni)), Metric.C3_Metric);
       theLine : Multivectors.Line :=  Multivectors.New_MV_Line;
    begin
-      GA_Utilities.Print_Multivector
-      ("C3GA.Set_Line P1 ^ P2 ^ ni ", Outer_Product (P1, Outer_Product (P2, ni)));
-      GA_Utilities.Print_Multivector ("C3GA.Set_Line UR ", UR);
+--        GA_Utilities.Print_Multivector
+--        ("C3GA.Set_Line P1 ^ P2 ^ ni ", Outer_Product (P1, Outer_Product (P2, ni)));
+--        GA_Utilities.Print_Multivector ("C3GA.Set_Line UR ", UR);
       Multivectors.Update (theLine, Get_Blade_List (UR));
       return theLine;
    end Set_Line;
