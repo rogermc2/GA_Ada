@@ -467,12 +467,9 @@ package body GA_Draw is
         Translation_Matrix := Maths.Translation_Matrix
           (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
         --  rotate e3 to vector direction
-        Put_Line ("GA_Draw.Draw_Line calling Rotor_Vector_To_Vector");
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-        Put_Line ("GA_Draw.Draw_Line calling Rotor_GL_Multiply");
         GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
-        Put_Line ("GA_Draw.Draw_Line calling Rotor_GL_Multiply");
         MV_Matrix := Scale_Matrix * MV_Matrix * Model_View_Matrix;
 
         Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
