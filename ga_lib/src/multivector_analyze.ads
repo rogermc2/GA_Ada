@@ -88,7 +88,7 @@ package Multivector_Analyze is
      --  Only Points (1) seeems to be used
       Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
       Scalars          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
-      M_Vectors        : E3_Vector_Array;
+      M_Vectors        : E3_Vector_Array := (others => (others => 0.0));
    end record;
 
    MVA_Exception : Exception;
