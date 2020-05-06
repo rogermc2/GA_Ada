@@ -38,7 +38,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
       GL.Objects.Programs.Use_Program (Rendering_Program);
---        GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (GL.Types.Points, 0, 1);
 
    exception
       when others =>
