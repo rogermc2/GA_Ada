@@ -124,14 +124,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 GL.Types.Int (Window_Height));
         Width := Single (Window_Width);
         Height := Single (Window_Height);
---          Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
+        Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
 
---          Maths.Init_Perspective_Transform
---            (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
+        Maths.Init_Perspective_Transform
+          (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
 
---          Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14  more negative z move farther back
---          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14  more negative z move farther back
+        Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
         --  View and model matrices are initilized to identity by shader initialization.
 
@@ -293,7 +293,7 @@ begin
             Key_Pressed := True;
         else
             Key_Pressed := Key_Now = Glfw.Input.Pressed;
-   end if;
+        end if;
    Delay (3.0);
 --          Running := Running and then
 --            not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);

@@ -6,7 +6,6 @@ with Utilities;
 with C3GA;
 with GA_Draw;
 with GA_Maths;
-with GA_Utilities;
 
 package body C3GA_Draw is
     use GA_Draw;
@@ -42,8 +41,9 @@ package body C3GA_Draw is
         Integer'Image (Multivector_Analyze.Max_Vectors) & " maximum vectors:");
         Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
         for index in 1 .. Multivector_Analyze.Max_Vectors loop
-        GA_Utilities.Print_Multivector ("Analyzed M_Vector",
-                                        Analyzed_MV.M_Vectors (index));
+            Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
+            GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Y)) & "  " &
+            GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Z)));
         end loop;
 
 --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points, " &
@@ -251,7 +251,7 @@ package body C3GA_Draw is
         use C3GA;
         Point_Pos  : constant Vector_E3GA := Analysis.Points (1);
         P_Scale    : Float;
-        M_Vectors  : constant Vector_Array := Analysis.M_Vectors;
+        M_Vectors  : constant E3_Vector_Array := Analysis.M_Vectors;
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));

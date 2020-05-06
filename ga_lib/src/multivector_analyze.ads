@@ -72,7 +72,7 @@ package Multivector_Analyze is
 
    type Point_Array is array (1 .. Max_Points) of E3GA.E3_Vector;
    type Scalar_Array is array (1 .. Max_Scalars) of float;
-   type Vector_Array is array (1 .. Max_Vectors) of Multivectors.Vector;
+   type E3_Vector_Array is array (1 .. Max_Vectors) of E3GA.E3_Vector;
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
@@ -88,7 +88,7 @@ package Multivector_Analyze is
      --  Only Points (1) seeems to be used
       Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
       Scalars          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
-      M_Vectors        : Vector_Array;  --  m_vc Multivectors.Vector array
+      M_Vectors        : E3_Vector_Array;
    end record;
 
    MVA_Exception : Exception;

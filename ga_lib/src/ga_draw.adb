@@ -495,12 +495,12 @@ package body GA_Draw is
 
     procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
                                    Model_View_Matrix : GL.Types.Singles.Matrix4;
-                                   MVC               : Multivector_Analyze.Vector_Array;
+                                   MVC               : Multivector_Analyze.E3_Vector_Array;
                                    Scale             : Float;
                                    Method            : Method_Type) is
         use GL.Objects.Buffers;
         use Singles;
-        VC                   : Vector3_Array (1 .. MVC'Length);
+--          VC                   : Multivector_Analyze.Vector_Array;
         Scale_Matrix         : Matrix4;
         Scale_Sign           : GL.Types.Single;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
@@ -534,9 +534,9 @@ package body GA_Draw is
         V3                   : E3GA.E3_Vector;
         Stride               : constant Int := 0;
     begin
-        for index in 1 .. MVC'Length loop
-            VC (Int (index)) := E3GA.Get_Coords (MVC (index));
-        end loop;
+--          for index in 1 .. MVC'Length loop
+--              VC (Int (index)) := E3GA.Get_Coords (MVC (index));
+--          end loop;
         if Scale >= 0.0 then
             Scale_Sign := 1.0;
         else
@@ -551,7 +551,7 @@ package body GA_Draw is
             for Col in GL.Index_Homogeneous range GL.X .. GL.Z loop
                 Vertex_Index := Vertex_Vectors (Row) (Col);
                 if Vertex_Index >= 0 then
-                    aVertex := aVertex + VC (Vertex_Index);
+                    aVertex := aVertex + MVC (Integer (Vertex_Index));
                     Vertex (Row) := aVertex;
                 end if;
             end loop;
@@ -736,7 +736,7 @@ package body GA_Draw is
     procedure Draw_Trivector (Render_Program    : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base              : C3GA.Vector_E3GA; Scale : float := 1.0;
-                              V                 : Multivector_Analyze.Vector_Array;
+                              V                 : Multivector_Analyze.E3_Vector_Array;
                               --                               Palet_Type        : Palet.Colour_Palet;
                               Method            : Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;

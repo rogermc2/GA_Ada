@@ -1091,11 +1091,11 @@ package body C3GA is
       GU        : constant Grade_Usage := Multivectors.Grade_Use (MV);
       Index     : Unsigned_32 := 0;
    begin
-      if (GU and GU_0) /= 0 then
+      if (GU and 1) /= 0 then
          Index := Index + 1;
       end if;
 
-      if (GU and GU_1) /= 0 then
+      if (GU and 2) /= 0 then
          theVector (GL.X) := Single (Multivectors.Component (MV, Index + 1));
          theVector (GL.Y) := Single (Multivectors.Component (MV, Index + 2));
          theVector (GL.Z) := Single (Multivectors.Component (MV, Index + 3));
