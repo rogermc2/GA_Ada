@@ -26,7 +26,8 @@ package GA_Draw is
                              Method : Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-                         aPoint, Direction : C3GA.Vector_E3GA; Weight : Float);
+                         aPoint, Direction : C3GA.Vector_E3GA;
+                         Weight            : Float := 1.0);
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base : C3GA.Vector_E3GA; Scale : float := 1.0;
