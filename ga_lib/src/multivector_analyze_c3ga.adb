@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -69,8 +69,8 @@ package body Multivector_Analyze_C3GA is
          end if;
          Xsq_Val := Norm_Esq (MV_X);
 
-         Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
-                     Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
+--           Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
+--                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
          --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
          --              GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
          --              Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
@@ -80,9 +80,9 @@ package body Multivector_Analyze_C3GA is
             Analyze_Free (Analysis, MV_X);
          elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
-            GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
+--              GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
             Analyze_Flat (Analysis, MV_X, Probe);
-            GA_Utilities.Print_Multivector_Info ("Multivector_Analyze_C3GA.Classify Analysis", Analysis.M_MV_Type);
+--              GA_Utilities.Print_Multivector_Info ("Multivector_Analyze_C3GA.Classify Analysis", Analysis.M_MV_Type);
          elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
             Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
@@ -113,8 +113,8 @@ package body Multivector_Analyze_C3GA is
 
       MV_Info := Init (MV_X, Met);
       Analysis.M_MV_Type := MV_Info;
-      Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
-      New_Line;
+--        Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
+--        New_Line;
 
       --  Check for zero blade
       if Zero (Analysis.M_MV_Type) then
@@ -231,10 +231,10 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
               C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, MV, Met)));
-            Utilities.Print_Vector
-                  ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
-                   theAnalysis.M_Vectors (1));
-            Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3", theAnalysis);
+--              Utilities.Print_Vector
+--                    ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
+--                     theAnalysis.M_Vectors (1));
+--              Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3", theAnalysis);
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;

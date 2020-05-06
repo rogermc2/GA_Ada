@@ -441,7 +441,7 @@ package body GA_Draw is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
         use  Multivectors;
-        Translation_Matrix   : Matrix4;
+        Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
         --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
         Dir_e1               : constant Single := Direction (GL.X);
