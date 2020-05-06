@@ -5,7 +5,6 @@ with GL.Buffers;
 with GL.Toggles;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
-with GL.Objects.Shaders;
 with GL.Types;
 with GL.Types.Colors;
 
@@ -19,6 +18,8 @@ with Utilities;
 with C3GA;
 with GA_Draw;
 
+with Shader_Manager;
+
 --  ------------------------------------------------------------------------
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
@@ -27,18 +28,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Array       :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
    procedure Test_Draw_Line is
+      use GL.Types;
       use GL.Types.Singles;
       Back_Colour : constant GL.Types.Colors.Color := (0.7 , 0.7, 0.0, 1.0);
       MV_Matrix   : constant Matrix4 := Identity4;
-      aPoint      : constant C3GA.Vector_E3GA := (0.0 , 0.0, 0.0);
+      aPoint      : constant C3GA.Vector_E3GA := (-0.5 , -0.7, 0.0);
       Direction   : constant C3GA.Vector_E3GA := (0.5 , 0.5, 0.0);
-      Weight      : constant Float := 1.0;
+      Weight      : constant Float := 2.0;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
       GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
-      GL.Objects.Programs.Use_Program (Rendering_Program);
-      GL.Objects.Vertex_Arrays.Draw_Arrays (GL.Types.Points, 0, 1);
+--        GL.Objects.Programs.Use_Program (Rendering_Program);
+--        GL.Objects.Vertex_Arrays.Draw_Arrays (GL.Types.Points, 0, 1);
 
    exception
       when others =>
@@ -49,13 +51,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ----------------------------------------------------------------------------
 
    procedure Setup_Graphic is
-      use Program_Loader;
-      use GL.Objects.Shaders;
    begin
-      Rendering_Program := Program_From (
-                                         (Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-                                         Src ("src/shaders/fragment_shader.glsl", Fragment_Shader))
-                                        );
+      Shader_Manager.Init (Rendering_Program);
+
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
       GL.Buffers.Set_Depth_Function (GL.Types.Less);
       Vertex_Array.Initialize_Id;
