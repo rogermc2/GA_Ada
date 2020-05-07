@@ -60,7 +60,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       aLine          : Multivectors.Line := New_MV_Line;
       MV_Matrix      : constant Matrix4 := Identity4;
       Palet_Data     : Palet.Colour_Palet;
-      aPoint         : constant C3GA.Vector_E3GA := (1.0 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
+      aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
       Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
 --        aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.0, -0.2);
 --        Direction      : constant C3GA.Vector_E3GA := (0.1 , 0.1, 0.8);

@@ -399,12 +399,12 @@ package body GA_Draw is
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
---          Translation_Matrix := Maths.Translation_Matrix
---            (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
+        Translation_Matrix := Maths.Translation_Matrix
+          (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
         --  rotate e3 to line direction
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-      --          GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+              GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
         MV_Matrix := Translation_Matrix * Scale_Matrix * MV_Matrix;
 
 --          Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
