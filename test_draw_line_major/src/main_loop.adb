@@ -23,7 +23,7 @@ with Utilities;
 with C3GA;
 with
 C3GA_Draw;
-with GA_Draw;
+--  with GA_Draw;
 with Multivectors;
 with Palet;
 
@@ -60,15 +60,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       aLine          : Multivectors.Line := New_MV_Line;
       MV_Matrix      : constant Matrix4 := Identity4;
       Palet_Data     : Palet.Colour_Palet;
-      aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
-      Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
+--        aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
+--        Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
 --        aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.0, -0.2);
 --        Direction      : constant C3GA.Vector_E3GA := (0.1 , 0.1, 0.8);
-      Weight         : constant Float := 1.0;
-      P1             : constant Normalized_Point :=
-                         C3GA.Set_Normalized_Point (0.0 , 0.0, -0.2);
-      P2             : constant Normalized_Point :=
-                         C3GA.Set_Normalized_Point (0.9 , 0.9, -0.2);
+--        Weight         : constant Float := 1.0;
+--        P1             : constant Normalized_Point :=
+--                           C3GA.Set_Normalized_Point (0.0 , 0.0, -0.2);
+--        P2             : constant Normalized_Point :=
+--                           C3GA.Set_Normalized_Point (0.9 , 0.9, -0.2);
    begin
       Main_Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       --          View_Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
@@ -93,13 +93,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       for count in 1 .. Points.Num_Points loop
          Point_Position := Points.Normalized_Points (count);
       end loop;
---        aLine := C3GA.Set_Line (Points.L1, Points.L2);
-      aLine := C3GA.Set_Line (P1, P2);
+      aLine := C3GA.Set_Line (Points.L1, Points.L2);
+--        aLine := C3GA.Set_Line (P1, P2);
 
---        C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
-      GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
-      --        GL.Objects.Programs.Use_Program (Rendering_Program);
-      --        GL.Objects.Vertex_Arrays.Draw_Arrays (GL.Types.Points, 0, 1);
+      C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
+--        GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
 
    exception
       when others =>
