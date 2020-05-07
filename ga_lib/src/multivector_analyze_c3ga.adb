@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
---  with Utilities;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -192,10 +192,14 @@ package body Multivector_Analyze_C3GA is
 --        Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
 --                                       Float'Image (Scalar_Product (C3GA.ni, MV_Location, Met)));
       MV_Location := Geometric_Product (MV_Location,
-                                        Inverse (-New_Scalar (Scalar_Product (C3GA.ni, MV_Location, Met))));
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
---                                        MV_Location);
+                                        Inverse (-New_Scalar (Scalar_Product (C3GA.ni, MV_Location, Met))), Met);
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
+                                      MV_Location);
+      Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Vector Location",
+                               C3GA.To_VectorE3GA (MV_Location));
       Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
+      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
+                                      Location);
       if Grade = 0 then
          Weight := Scalar_Product (MV, C3GA.no, Met);
       else

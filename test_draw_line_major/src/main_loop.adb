@@ -16,7 +16,7 @@ with Glfw.Input.Keys;
 with GL.Window;
 with Glfw.Windows.Context;
 
---  with Maths;
+with Maths;
 with Program_Loader;
 with Utilities;
 
@@ -56,10 +56,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Horizontal_Angle    : constant Single := Ada.Numerics.Pi;
       --          Vertical_Angle      : constant Single := 0.0;
 
-      Point_Position : Normalized_Point := New_Normalized_Point;
-      aLine          : Multivectors.Line := New_MV_Line;
-      MV_Matrix      : constant Matrix4 := Identity4;
-      Palet_Data     : Palet.Colour_Palet;
+      Point_Position     : Normalized_Point := New_Normalized_Point;
+      aLine              : Multivectors.Line := New_MV_Line;
+      MV_Matrix          : Matrix4 := Identity4;
+      Trans_Matrix       : constant Matrix4 := Maths.Translation_Matrix ((0.0 , 0.0, -14.0));
+      Palet_Data         : Palet.Colour_Palet;
 --        aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
 --        Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
 --        aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.0, -0.2);
@@ -95,7 +96,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       end loop;
       aLine := C3GA.Set_Line (Points.L1, Points.L2);
 --        aLine := C3GA.Set_Line (P1, P2);
-
+      MV_Matrix := Trans_Matrix * MV_Matrix;
       C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
 --        GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
 
