@@ -130,7 +130,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
 
-        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));  --  -14  more negative z move farther back
+        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -0.2));  --  -14  more negative z move farther back
         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
         --  View and model matrices are initilized to identity by shader initialization.
@@ -273,7 +273,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     use Glfw.Input;
     Render_Graphic_Program : GL.Objects.Programs.Program;
     --     Render_Text_Program : GL.Objects.Programs.Program;
---      Running : Boolean := True;
+    Running : Boolean := True;
     Key_Now : Button_State;
 begin
     Utilities.Clear_Background_Colour_And_Depth (White);
@@ -281,7 +281,7 @@ begin
     Glfw.Input.Poll_Events;
     Setup_Graphic (Render_Graphic_Program);
     --     Setup_Graphic (Main_Window, Render_Graphic_Program, Render_Text_Program);
---      while Running loop
+    while Running loop
         --  Swap_Buffers first to display background colour on start up.
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Display (Main_Window, Render_Graphic_Program);
@@ -294,9 +294,9 @@ begin
         else
             Key_Pressed := Key_Now = Glfw.Input.Pressed;
         end if;
-   Delay (3.0);
---          Running := Running and then
---            not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
---          Running := Running and then not Main_Window.Should_Close;
---      end loop;
+--     Delay (3.0);
+        Running := Running and then
+          not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+        Running := Running and then not Main_Window.Should_Close;
+    end loop;
 end Main_Loop;
