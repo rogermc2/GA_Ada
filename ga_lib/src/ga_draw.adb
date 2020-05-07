@@ -364,77 +364,6 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
 
-    --     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-    --                          Model_View_Matrix : GL.Types.Singles.Matrix4;
-    --                          aPoint            : C3GA.Vector_E3GA; Direction : Multivectors.Vector;
-    --                          Colour            : GL.Types.Colors.Color) is
-    --        --                           Weight : Float; Colour : GL.Types.Colors.Color) is
-    --
-    --        use GL.Objects.Buffers;
-    --        use GL.Types.Singles;
-    --        use Maths;
-    --        use C3GA;
-    --        use Multivectors;
-    --        Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-    --        MV_Matrix_ID         : GL.Uniforms.Uniform;
-    --        Colour_Location      : GL.Uniforms.Uniform;
-    --        Scale                : constant Single := Single (GA_Draw.Get_Line_Length);
-    --        Step                 : constant Single := 0.5;
-    --        Num_Points           : constant Int := Int (2.0 * Scale / Step);
-    --        aRotor               : Rotor;
-    --        MV_Matrix            : Matrix4 := Model_View_Matrix;
-    --        Point_Pos            : constant E3GA.Vector := Vector_To_E3GA (aPoint);
-    --        Translate            : constant Vector3 :=
-    --                                 (Single (Point_Pos (1)), Single (Point_Pos (2)),
-    --                                  Single (Point_Pos (3)));
-    --        Vertices             : Singles.Vector3_Array (1 .. Num_Points);
-    --        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-    --        Pos                  : Single := - Scale;
-    --     begin
-    --        --          GA_Utilities.Print_Multivector ("C3GA_Draw.Draw_Line aPoint", aPoint);
-    --        Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Initial MV_Matrix", MV_Matrix);
-    --        Utilities.Print_Vector ("C3GA_Draw.Draw_Line Translate", Translate);
-    --        GL.Objects.Programs.Use_Program (Render_Program);
-    --        Vertex_Array.Initialize_Id;
-    --        Vertex_Array.Bind;
-    --        Vertex_Buffer.Initialize_Id;
-    --        Array_Buffer.Bind (Vertex_Buffer);
-    --
-    --        for Index in 1 .. Num_Points loop
-    --           --           Put_Line ("C3GA_Draw.Draw_Line Pos  " & Single'Image (Pos));
-    --           Vertices (Index) := (0.0, 0.0, Pos);
-    --           Pos := Pos + Step * Scale;
-    --        end loop;
-    --        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-    --
-    --        MV_Matrix := Translation_Matrix (Translate) * MV_Matrix;
-    --        --          Utilities.Print_Matrix ("C3GA_Draw.Draw_Line Translated MV_Matrix", MV_Matrix);
-    --        --  rotate e3 to line direction
-    --        aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-    --          (Basis_Vector (Blade_Types.E3_e3), To_Vector (Unit_e (Direction)));
-    --        if GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix) then
-    --           Utilities.Print_Matrix ("C3GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
-    --           GL.Uniforms.Set_Single (Colour_Location, Colour (R), Colour (G), Colour (B));
-    --           GL.Uniforms.Set_Single (MV_Matrix_ID, MV_Matrix);
-    --
-    --           GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-    --           GL.Attributes.Enable_Vertex_Attrib_Array (0);
-    --           GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
-    --                                                 First => 0,
-    --                                                 Count => Num_Points);
-    --           GL.Attributes.Disable_Vertex_Attrib_Array (0);
-    --        else
-    --           Put_Line ("C3GA_Draw.Draw_Line MV_Matrix, aRotor is not invertable");
-    --        end if;
-    --
-    --     exception
-    --        when  others =>
-    --           Put_Line ("An exception occurred in C3GA_Draw.Draw_Line.");
-    --           raise;
-    --     end Draw_Line;
-
-    --  ------------------------------------------------------------------------
-
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
                          Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint, Direction : C3GA.Vector_E3GA;
@@ -462,23 +391,25 @@ package body GA_Draw is
                                  ((0.0, 0.0, 0.0),
                                   (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
     begin
---          Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
---          Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
+      --  aPoint, Direction are model coordinates
+        GL.Objects.Programs.Use_Program (Render_Program);
+        Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
+        Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-        GL.Objects.Programs.Use_Program (Render_Program);
-        Translation_Matrix := Maths.Translation_Matrix
-          (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
+--          Translation_Matrix := Maths.Translation_Matrix
+--            (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
         --  rotate e3 to line direction
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-        GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
-        MV_Matrix := Scale_Matrix * MV_Matrix * Model_View_Matrix;
+      --          GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+        MV_Matrix := Translation_Matrix * Scale_Matrix * MV_Matrix;
 
 --          Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
-        Shader_Manager.Set_Model_View_Matrix (Translation_Matrix * MV_Matrix);
+        Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
+      Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
