@@ -371,13 +371,15 @@ package body GA_Draw is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
         use  Multivectors;
---          Scale_Constant and Step_Size are used for building Line_Strip
+        --          Scale_Constant and Step_Size are used for building Line_Strip
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
         Step_Size            : constant Single := 0.1;
         Step_Length          : constant Single := Scale_Constant * Step_Size;
         Num_Steps            : constant Int := Int (2.0 / Step_Size + 0.5) + 1;
+        C_Steps              : constant Int := Int (1.0 / Step_Size + 0.5) + 1;
+        C_Rotation_Matrix    : Matrix4 := Identity4;
         Translation_Matrix   : Matrix4 := Identity4;
-        Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
+        Scale_Matrix         : Matrix4 := Maths.Scaling_Matrix (Single (Weight));
         Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
         MV_Dir               : constant Multivectors.Vector := New_Vector
           (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
@@ -385,32 +387,38 @@ package body GA_Draw is
         aRotor               : Rotor;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Z                    : Single := -Scale_Constant;
+        C                    : Single := 0.0;
         Num_Vertices         : constant Int := Num_Steps + 1;
-        Vertices             : Singles.Vector3_Array (1 .. Num_Steps);
+        Length_Vertices      : Singles.Vector3_Array (1 .. Num_Steps);
+        Num_C_Vertices       : constant Int := 3 * C_Steps + 1;
+        C_Vertices           : Singles.Vector3_Array (1 .. Num_C_Vertices);
+        C_Index              : Int := 0;
+        C_Vertex1            : constant Singles.Vector3 := (-0.25, 0.0, -1.0);
+	C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
+	C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
     begin
-      --  aPoint, Direction are model coordinates
+        --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
         for index in 1 .. Num_Steps  loop
-            Vertices (index) := (0.0, 0.0, Z);
+            Length_Vertices (index) := (0.0, 0.0, Z);
             Z := Z + Step_Length;
         end loop;
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
         Translation_Matrix :=
           Maths.Translation_Matrix (GL_Util.To_GL (C3GA.Get_Coords (aPoint)));
         --  rotate e3 to line direction
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-              GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+        GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
         MV_Matrix := Translation_Matrix * Scale_Matrix * MV_Matrix;
 
---          Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
-      Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -418,6 +426,42 @@ package body GA_Draw is
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
                                               First => 0, Count => Num_Vertices);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+        if Palet.Get_Draw_Mode.Orientation then
+            Translation_Matrix :=
+              Maths.Translation_Matrix ((0.0, 0.0, -Scale_Constant));
+            if Palet.Get_Draw_Mode.Magnitude then
+                Scale_Matrix :=
+                  Maths.Scaling_Matrix (Single (0.5 * Abs (Weight)));
+            else
+                Scale_Matrix := Maths.Scaling_Matrix (0.5);
+            end if;
+
+            while C < 1.0  loop
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex1;
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex2;
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex3;
+                C := C + Step_Size;
+
+                Utilities.Load_Vertex_Buffer (Array_Buffer, C_Vertices, Static_Draw);
+                MV_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
+
+                GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+                GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
+                                                      First => 0, Count => Num_C_Vertices);
+                GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+                C_Rotation_Matrix :=
+                  Maths.Rotation_Matrix (Maths.Degree (90.0), (0.0, 0.0, 1.0));
+                Translation_Matrix :=
+                  Maths.Translation_Matrix ((0.0, 0.0, 2.0 * Step_Length));
+            end loop;
+        end if;
 
     exception
         when  others =>
@@ -434,7 +478,7 @@ package body GA_Draw is
                                    Method            : Method_Type) is
         use GL.Objects.Buffers;
         use Singles;
---          VC                   : Multivector_Analyze.Vector_Array;
+        --          VC                   : Multivector_Analyze.Vector_Array;
         Scale_Matrix         : Matrix4;
         Scale_Sign           : GL.Types.Single;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
@@ -468,9 +512,9 @@ package body GA_Draw is
         V3                   : E3GA.E3_Vector;
         Stride               : constant Int := 0;
     begin
---          for index in 1 .. MVC'Length loop
---              VC (Int (index)) := E3GA.Get_Coords (MVC (index));
---          end loop;
+        --          for index in 1 .. MVC'Length loop
+        --              VC (Int (index)) := E3GA.Get_Coords (MVC (index));
+        --          end loop;
         if Scale >= 0.0 then
             Scale_Sign := 1.0;
         else
