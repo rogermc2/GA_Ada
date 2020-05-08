@@ -21,10 +21,10 @@ with Program_Loader;
 with Utilities;
 
 with C3GA;
---  with C3GA_Draw;
+with C3GA_Draw;
 with GA_Draw;
 with Multivectors;
---  with Palet;
+with Palet;
 
 with Points;
 with Shader_Manager;
@@ -58,7 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Point_Position : Normalized_Point := New_Normalized_Point;
       aLine          : Multivectors.Line := New_MV_Line;
       MV_Matrix      : constant Matrix4 := Identity4;
---        Palet_Data     : Palet.Colour_Palet;
+      Palet_Data     : Palet.Colour_Palet;
       aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
       Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
 --        aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.0, -0.2);
@@ -95,7 +95,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       aLine := C3GA.Set_Line (Points.L1, Points.L2);
 --        aLine := C3GA.Set_Line (P1, P2);
 
---        C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
+      C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
       GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction);
 
    exception
