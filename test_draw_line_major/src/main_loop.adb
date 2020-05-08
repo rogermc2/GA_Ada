@@ -21,8 +21,7 @@ with Program_Loader;
 with Utilities;
 
 with C3GA;
-with
-C3GA_Draw;
+with C3GA_Draw;
 with GA_Draw;
 with Multivectors;
 with Palet;
@@ -96,7 +95,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       aLine := C3GA.Set_Line (Points.L1, Points.L2);
 --        aLine := C3GA.Set_Line (P1, P2);
 
-      C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
+--        C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
       GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction);
 
    exception
