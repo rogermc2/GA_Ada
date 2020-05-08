@@ -374,7 +374,9 @@ package body GA_Draw is
 --          Scale_Constant and Step_Size are used for building Line_Strip
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
         Step_Size            : constant Single := 0.1;
-        Num_Steps            : constant Int := 2 * Int (Scale_Constant * Step_Size);
+        Step_Length          : constant Single := Scale_Constant * Step_Size;
+--          Num_Steps            : constant Int := Int (2.0 / Step_Size + 0.5) + 1;
+        Num_Steps            : constant Int := 2;
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
         --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
@@ -398,9 +400,9 @@ package body GA_Draw is
         GL.Objects.Programs.Use_Program (Render_Program);
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
-        for index in 1 .. Num_Steps loop
+        for index in 1 .. Num_Steps  loop
             Vertices (index) := (0.0, 0.0, Z);
-            Z := Z + Scale_Constant * Step_Size;
+            Z := Z + Step_Length;
         end loop;
         Put_Line ("GA_Draw.Draw_Line Vertices'Range" & Int'Image (Vertices'Length));
         Utilities.Print_GL_Array3 ("GA_Draw.Draw_Line Vertices", Vertices);
@@ -424,8 +426,7 @@ package body GA_Draw is
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
-                                              First => 0,
-                                              Count => 3);
+                                              First => 0, Count => 3);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
