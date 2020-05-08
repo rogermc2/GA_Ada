@@ -371,15 +371,16 @@ package body GA_Draw is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
         use  Multivectors;
---          Scalar_Constant and Step_Size are used for building Line_Strip
---          Scalar_Constant      : constant Float := Palet.Line_Length;
---          Step_Size            : constant Float := 0.1;
+--          Scale_Constant and Step_Size are used for building Line_Strip
+        Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
+        Step_Size            : constant Single := 0.1;
+        Num_Steps            : constant Int := 2 * Int (Scale_Constant * Step_Size);
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
         --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-        Dir_e1               : constant Single := Direction (GL.X);
-        Dir_e2               : constant Single := Direction (GL.Y);
-        Dir_e3               : constant Single := Direction (GL.Z);
+--          Dir_e1               : constant Single := Direction (GL.X);
+--          Dir_e2               : constant Single := Direction (GL.Y);
+--          Dir_e3               : constant Single := Direction (GL.Z);
         Dir_Coords           : constant GA_Maths.Array_3D :=
                                  C3GA.Get_Coords (Direction);
         MV_Dir               : constant Multivectors.Vector := New_Vector
@@ -387,14 +388,22 @@ package body GA_Draw is
         MV_Matrix            : Matrix4 := Model_View_Matrix;
         aRotor               : Rotor;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-        Vertices             : constant Singles.Vector3_Array (1 .. 2) :=
-                                 ((0.0, 0.0, 0.0),
-                                  (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
+        Z                    : Single := -Scale_Constant;
+        Vertices             : Singles.Vector3_Array (1 .. Num_Steps);
+--          Vertices             : constant Singles.Vector3_Array (1 .. 2) :=
+--                                   ((0.0, 0.0, 0.0),
+--                                    (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
     begin
       --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
+        for index in 1 .. Num_Steps loop
+            Vertices (index) := (0.0, 0.0, Z);
+            Z := Z + Scale_Constant * Step_Size;
+        end loop;
+        Put_Line ("GA_Draw.Draw_Line Vertices'Range" & Int'Image (Vertices'Length));
+        Utilities.Print_GL_Array3 ("GA_Draw.Draw_Line Vertices", Vertices);
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
