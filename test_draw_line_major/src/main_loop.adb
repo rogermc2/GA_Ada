@@ -23,7 +23,7 @@ with Utilities;
 with C3GA;
 with
 C3GA_Draw;
---  with GA_Draw;
+with GA_Draw;
 with Multivectors;
 with Palet;
 
@@ -60,8 +60,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       aLine          : Multivectors.Line := New_MV_Line;
       MV_Matrix      : constant Matrix4 := Identity4;
       Palet_Data     : Palet.Colour_Palet;
---        aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
---        Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
+      aPoint         : constant C3GA.Vector_E3GA := (0.5 , 0.25, 0.0);  --  1.0 , 0.25, 0.0
+      Direction      : constant C3GA.Vector_E3GA := (0.25 , 0.0, 0.0);  --  0.25 , 0.0, 0.0
 --        aPoint         : constant C3GA.Vector_E3GA := (0.0 , 0.0, -0.2);
 --        Direction      : constant C3GA.Vector_E3GA := (0.1 , 0.1, 0.8);
 --        Weight         : constant Float := 1.0;
@@ -97,7 +97,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        aLine := C3GA.Set_Line (P1, P2);
 
       C3GA_Draw.Draw (Rendering_Program, MV_Matrix, aLine, Palet_Data);
---        GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction, Weight);
+      GA_Draw.Draw_Line (Rendering_Program, MV_Matrix, aPoint, Direction);
 
    exception
       when others =>
