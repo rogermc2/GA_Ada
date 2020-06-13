@@ -1,6 +1,6 @@
-with "/Ada_Source/OpenGLAda/examples/common/common.gpr";
+with "/../../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
 with "../ada-lapack/ada_lapack.gpr";
-limited with "/Ada_Source/OpenGLAda/opengl-glfw.gpr";
+limited with "/System/Volumes/Data/Ada_Source/OpenGLAda/opengl-glfw.gpr";
 
 project Test_Draw_Line2 is
 
