@@ -11,7 +11,7 @@ layout(location = 0) in vec3 vertex_position;
 //uniform mat4  view_matrix;
 //uniform mat4  model_matrix;
 uniform mat4  mv_matrix;
-//uniform mat4  projection_matrix;
+uniform mat4  projection_matrix;
 //uniform vec3  light_position;
 
 void main()
@@ -29,6 +29,6 @@ void main()
 //    Light_Direction = Light_Direction + Eye_Direction;
 //
 //    Camera_Normal = (view_matrix * model_matrix * normal).xyz;
-//        gl_Position = projection_matrix * mv_matrix * position;
-    gl_Position = mv_matrix * position;
+    gl_Position = projection_matrix * mv_matrix * position;
+//    gl_Position = mv_matrix * position;
     }

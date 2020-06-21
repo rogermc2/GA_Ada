@@ -10,9 +10,9 @@
 out vec4 fragment_colour;
 
 //uniform vec3 Light_Position_Worldspace;
-//uniform vec4 Ambient_Colour;
-//uniform vec4 Diffuse_Colour;
-//uniform vec4 Drawing_Colour;
+uniform vec4 Ambient_Colour;
+uniform vec4 Diffuse_Colour;
+uniform vec4 Drawing_Colour;
 
 void main()
     {
@@ -33,6 +33,6 @@ void main()
 //
 //    vec3 LightColour = (Drawing_Colour + Ambient_Colour + Diffuse_Colour * LightPower * cosTheta / (distance * distance)).xyz;
 //    colour = LightColour;
-        fragment_colour = vec4(0.5, 0.0, 0.5, 1.0);
-
+//   fragment_colour = vec4(1.0, 0.0, 0.0, 1.0);
+    fragment_colour = Drawing_Colour + Ambient_Colour + Diffuse_Colour;
     }
