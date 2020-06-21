@@ -1,4 +1,4 @@
-with "../../../../Ada_Source/OpenGLAda-Examples/common/common.gpr";
+with "common/common.gpr";
 with "../ada-lapack/ada_lapack.gpr";
 limited with "opengl-glfw.gpr";
 
