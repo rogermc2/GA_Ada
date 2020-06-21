@@ -1,6 +1,6 @@
-with "../../../../OpenGLAda/examples/common/common.gpr";
+with "../../../../OpenGLAda-Examples/common/common.gpr";
 with "../ada-lapack/ada_lapack.gpr";
-limited with "../../../../OpenGLAda/opengl-glfw.gpr";
+limited with "opengl-glfw.gpr";
 
 project Example_2_1_Project is
 
