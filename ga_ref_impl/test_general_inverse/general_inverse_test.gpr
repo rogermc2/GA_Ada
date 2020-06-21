@@ -1,4 +1,4 @@
-with "../../../../Ada_Source/OpenGLAda/examples/common/common.gpr";
+with "../../../../Ada_Source/OpenGLAda-Examples/common/common.gpr";
 with "../../ada-lapack/ada_lapack.gpr";
 
 project General_Inverse_Test is
