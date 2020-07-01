@@ -71,28 +71,32 @@ package body GL_Util is
         use GL.Types.Singles;
         IR        : constant Rotor := General_Inverse (R);
         E_Rot     : Multivectors.Multivector;
+        E1_IR     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
         VC        : Vector3;
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
     begin
-        --  compute the images of all OpenGL basis vectors
-        E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
-        Image (1) := To_GL (E_Rot);
-        E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
-        Image (2) := To_GL (E_Rot);
-        E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
-        Image (3) := To_GL (E_Rot);
-        Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
-        --  Transfer the coordinates to the OpenGL matrix
-        for row in GL.Index_Homogeneous loop
-            Image_Row := Image_Row + 1;
-            VC := Image (Image_Row);
-            Matrix (row, X) := VC (X);
-            Matrix (row, Y) := VC (Y);
-            Matrix (row, Z) := VC (Z);
-        end loop;
-        GL_Matrix := Matrix * GL_Matrix;
+        E1_IR := Geometric_Product (e1, IR);
+        if not Is_Null (E1_IR ) then
+            --  compute the images of all OpenGL basis vectors
+            E_Rot := Geometric_Product (R, E1_IR);
+            Image (1) := To_GL (E_Rot);
+            E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
+            Image (2) := To_GL (E_Rot);
+            E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
+            Image (3) := To_GL (E_Rot);
+            Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
+            --  Transfer the coordinates to the OpenGL matrix
+            for row in GL.Index_Homogeneous loop
+                Image_Row := Image_Row + 1;
+                VC := Image (Image_Row);
+                Matrix (row, X) := VC (X);
+                Matrix (row, Y) := VC (Y);
+                Matrix (row, Z) := VC (Z);
+            end loop;
+            GL_Matrix := Matrix * GL_Matrix;
+        end if;
 
     exception
         when others =>
