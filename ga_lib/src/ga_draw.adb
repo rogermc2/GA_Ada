@@ -412,6 +412,7 @@ package body GA_Draw is
             Length_Vertices (index) := (0.0, 0.0, Z);
             Z := Z + Step_Length;
         end loop;
+        Utilities.Print_GL_Array3 ("GA_Draw.Draw_Line Vertex_Buffer", Length_Vertices);
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
