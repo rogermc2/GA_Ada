@@ -71,7 +71,7 @@ package Blade is
     function Minus_1_Power (Power : Integer) return Integer;
     function New_Basis_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
                              return Basis_Blade;
-    function New_Basis_Blade (Weight : Float) return Basis_Blade;
+    function New_Basis_Blade (Weight : Float := 0.0) return Basis_Blade;
 
     function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade;
     function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;

@@ -11,4 +11,6 @@ package Multivector_Analyze_C3GA is
                       Flags   : Flag_Type := (Flag_Invalid, false);
                       Epsilon : float := Default_Epsilon);
 
+   Analyze_C3GA_Exception : Exception;
+
 end Multivector_Analyze_C3GA;

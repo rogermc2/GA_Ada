@@ -105,7 +105,7 @@ package C3GA is
    function e2 return Multivectors.Multivector;
    function e3 return Multivectors.Multivector;
    function ni return Multivectors.Multivector;
-   function no return Multivectors.Normalized_Point;
+   function no return Multivectors.Multivector;
 
    --  Component getters
    function e1 (MV :  Multivectors.Multivector) return float;

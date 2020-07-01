@@ -425,9 +425,12 @@ package body GA_Draw is
         aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
           (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
         MV_Matrix := Scale_Matrix * MV_Matrix;
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line Scale_Matrix * MV_Matrix", MV_Matrix);
         GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line Rotor * MV_Matrix", MV_Matrix);
         MV_Matrix := Translation_Matrix * MV_Matrix;
 
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line Translation_Matrix * MV_Matrix", MV_Matrix);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
         Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
 

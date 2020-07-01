@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Maths;
 
 with Bits;
-with GA_Utilities;
+--  with GA_Utilities;
 with SVD;
 
 package body Multivectors is
@@ -622,8 +622,6 @@ package body Multivectors is
                 BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
             end loop;
 
-            GA_Utilities.Print_Multivector ("Multivectors.Geometric_Product, MV", MV);
-
             --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
             --  the coordinates of another multivector 'x' (stored in a vector)
             --  would result in the geometric product of 'Mat' and 'x'
@@ -735,9 +733,8 @@ package body Multivectors is
         New_MV    : Multivector;
     begin
         if Is_Empty (Blades) then
-            raise MV_Exception with "Geometric_Product, MV * scalar, MV is null.";
-        end if;
-        if Sc /= 0.0 then
+            New_MV := MV;
+        elsif Sc /= 0.0 then
             while Has_Element (Curs) loop
                 New_MV.Blades.Append (New_Blade (Bitmap (Element (Curs)),
                                       Sc * Weight (Element (Curs))));
@@ -813,16 +810,15 @@ package body Multivectors is
             raise MV_Exception with "Multivectors.Geometric_Product with Metric, MV2 is null.";
         end if;
 
-        Put_Line ("Multivectors.Geometric_Product with Metric.");
         while Has_Element (Curs_1) loop
             Blade_1 := Element (Curs_1);
             Curs_2 := Blades_2.First;
             while Has_Element (Curs_2) loop
                 Blade_2 := Element (Curs_2);
-                GA_Utilities.Print_Blade ("Multivectors.Geometric_Product with Metric, Blade_1", Blade_1);
-                GA_Utilities.Print_Blade ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2);
+--                  GA_Utilities.Print_Blade ("Multivectors.Geometric_Product with Metric, Blade_1", Blade_1);
+--                  GA_Utilities.Print_Blade ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2);
                 Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
-                GA_Utilities.Print_Blade_List ("Multivectors.Geometric_Product with Metric, Blades_GP", Blades_GP);
+--                  GA_Utilities.Print_Blade_List ("Multivectors.Geometric_Product with Metric, Blades_GP", Blades_GP);
                 Add_Blades (GP.Blades, Blades_GP);
                 Next (Curs_2);
             end loop;
@@ -1015,9 +1011,12 @@ package body Multivectors is
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
             Cursor_2 := List_2.First;
+--              GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric B1", B1);
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
+--                  GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric B2", B2);
                 Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
+--                  GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric Blades_IP", Blades_IP);
                 if Blade.Weight (Blades_IP) /= 0.0 then
                     MV.Blades.Append (Blades_IP);
                 end if;

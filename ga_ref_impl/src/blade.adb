@@ -2,7 +2,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
---  with GA_Utilities;
 
 package body Blade is
 
@@ -234,13 +233,13 @@ package body Blade is
         BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
         Eigen_Vals  : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
         Index       : Integer := 1;
-        Result      : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
+        New_Blade   : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
-        --        GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric Result", Result);
+--          GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric, initial Result", Result);
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
-                Result.Weight := Result.Weight * Eigen_Vals (Index);
+                New_Blade.Weight := New_Blade.Weight * Eigen_Vals (Index);
             end if;
             --  Move right to next basis vector indicator
             --           BM := BM / 2;
@@ -248,7 +247,10 @@ package body Blade is
             Index := Index + 1;
         end loop;
 
-        return Result;
+        if New_Blade.Weight = 0.0 then
+            New_Blade := New_Basis_Blade;
+        end if;
+        return New_Blade;
 
     exception
         when others =>
@@ -272,7 +274,6 @@ package body Blade is
             OP_Blade := New_Blade
               (BA.Bitmap xor BB.Bitmap, Sign * BA.Weight * BB.Weight);
         end if;
-
         return OP_Blade;
 
     exception
@@ -414,7 +415,7 @@ package body Blade is
 
     --  ------------------------------------------------------------------------
 
-    function New_Basis_Blade (Weight : Float) return Basis_Blade is
+    function New_Basis_Blade (Weight : Float := 0.0) return Basis_Blade is
         Blade : Basis_Blade;
     begin
         Blade.Bitmap := 0;

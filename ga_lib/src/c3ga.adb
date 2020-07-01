@@ -1010,13 +1010,11 @@ package body C3GA is
 
    function Set_Line (P1, P2 : Multivectors.Normalized_Point) return  Multivectors.Line is
       use Multivectors;
-      UR      : constant Multivector :=
-                    Unit_R (Outer_Product (P1, Outer_Product (P2, ni)), Metric.C3_Metric);
+      MV_X : constant Multivector := Outer_Product (P1, Outer_Product (P2, ni));
    begin
 --        GA_Utilities.Print_Multivector
 --        ("C3GA.Set_Line P1 ^ P2 ^ ni ", Outer_Product (P1, Outer_Product (P2, ni)));
---        GA_Utilities.Print_Multivector ("C3GA.Set_Line UR ", UR);
-      return UR;
+      return Unit_R (MV_X, Metric.C3_Metric);
    end Set_Line;
 
    --  ------------------------------------------------------------------------
