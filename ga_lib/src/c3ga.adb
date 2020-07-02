@@ -1092,9 +1092,9 @@ package body C3GA is
       end if;
 
       if (GU and 2) /= 0 then
-         theVector (GL.X) := Single (Multivectors.Component (MV, Index + 1));
-         theVector (GL.Y) := Single (Multivectors.Component (MV, Index + 2));
-         theVector (GL.Z) := Single (Multivectors.Component (MV, Index + 3));
+         theVector (GL.X) := Single (Multivectors.Component (MV, Index + 2));
+         theVector (GL.Y) := Single (Multivectors.Component (MV, Index + 3));
+         theVector (GL.Z) := Single (Multivectors.Component (MV, Index + 4));
       end if;
       return theVector;
    end To_VectorE3GA;

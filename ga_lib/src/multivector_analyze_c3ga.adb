@@ -155,7 +155,8 @@ package body Multivector_Analyze_C3GA is
    --  ----------------------------------------------------------------------------
    --  format of flat
    --  theAnalysis.M_Vectors (1)  m_pt[0] = location
-   --  theAnalysis.M_Vectors (2)  m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
+   --  theAnalysis.M_Vectors (2)  m_vc[0] .. m_vc[1]
+   --                             unit 3D vector basis for attitude (direction)
    --  theAnalysis.M_Vectors (3)  m_sc[0] = weight
    procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                            MV_X        : Multivectors.Multivector;
@@ -241,9 +242,12 @@ package body Multivector_Analyze_C3GA is
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
          when 3 =>  --  Line
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
-            GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Flat Attitude", Attitude);
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
+--              GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Flat Attitude", Attitude);
+--              GA_Utilities.Print_Multivector
+--                    ("Analyze_Flat Unit_E (Left_Contraction (C3GA.no, Attitude, Met))",
+--                     Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
             theAnalysis.M_Vectors (1) :=
               C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
             Utilities.Print_Vector
