@@ -153,7 +153,10 @@ package body Multivector_Analyze_C3GA is
    end Analyze;
 
    --  ----------------------------------------------------------------------------
-
+   --  format of flat
+   --  m_pt[0] = location
+   --  m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
+   --  m_sc[0] = weight
    procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                            MV_X        : Multivectors.Multivector;
                            Probe       : Multivectors.Normalized_Point) is
@@ -176,33 +179,33 @@ package body Multivector_Analyze_C3GA is
          Grade := 5 - Grade;
       end if;
 
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_X", MV_X);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_X", MV_X);
       MV_Inverse := General_Inverse (MV_X, Met);
       --  MV_Location is a normalized dual sphere
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
-                                      MV_Inverse);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
+--                                        MV_Inverse);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
       MV_Location := Left_Contraction (Probe, MV_X, Met);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
-                                      MV_Location);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
+--                                        MV_Location);
       MV_Location := Left_Contraction (MV_Location, MV_Inverse, Met);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location",
-                                      MV_Location);
+--        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location",
+--                                        MV_Location);
       SP := Scalar_Product (C3GA.ni, MV_Location, Met);
       if SP = 0.0 then
-            raise Analyze_C3GA_Exception with
-              "Multivector_Analyze_C3GA.Analyze_Flat has zero Scalar_Product.";
+            Location := C3GA.Set_Normalized_Point (E1 => 0.0, E2 => 0.0, E3 => 0.0);
+      else
+--              Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
+--                          Float'Image (SP));
+            --        MV_Location := Geometric_Product (MV_Location,
+            --                                          General_Inverse (-New_Scalar (SP), Met));
+            MV_Location := Geometric_Product (MV_Location, -New_Scalar (1.0 / SP), Met);
+--              GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
+--                                              MV_Location);
+--              Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Vector Location",
+--                                      C3GA.To_VectorE3GA (MV_Location));
+            Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
       end if;
-      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
-                                     Float'Image (SP));
---        MV_Location := Geometric_Product (MV_Location,
---                                          General_Inverse (-New_Scalar (SP), Met));
-      MV_Location := Geometric_Product (MV_Location, -New_Scalar (1.0 / SP), Met);
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
-                                      MV_Location);
-      Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Vector Location",
-                               C3GA.To_VectorE3GA (MV_Location));
-      Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
                                       Location);
       if Grade = 1 then

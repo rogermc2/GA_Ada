@@ -85,7 +85,6 @@ package Multivector_Analyze is
       Versor_Kind      : Versor_Subclass_Type := Not_A_Versor;
       --  Each analyzed multivector is decomposed into
       --  (analysis dependent) points, scalars and vectors.
-     --  Only Points (1) seeems to be used
       Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
       Scalars          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
       M_Vectors        : E3_Vector_Array := (others => (others => 0.0));
