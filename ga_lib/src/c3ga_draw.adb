@@ -46,12 +46,13 @@ package body C3GA_Draw is
 --              GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Z)));
 --          end loop;
 
-        Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points, " &
-        Integer'Image (Multivector_Analyze.Max_Points) & " maximum points:");
+        Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points:");
         for index in 1 .. Multivector_Analyze.Max_Points loop
-            Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X)) & "  " &
-            GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y)) & "  " &
-            GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
+            Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X))
+                      & "  " &
+                      GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y))
+                      & "  " &
+                      GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
         end loop;
         Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 

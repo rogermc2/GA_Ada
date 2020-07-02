@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -42,14 +42,14 @@ package body Multivector_Analyze_C3GA is
       procedure Classify is
          use Multivectors;
          --  C3GA.ni weight = 1.0
-         --              OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Met);
-         --              IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Met);
-         --              Xsq_Val    : constant Float := Norm_Esq (MV_X, Met);
+         --  OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Met);
+         --  IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Met);
+         --  Xsq_Val    : constant Float := Norm_Esq (MV_X, Met);
          OP_NiX_Val : Float := 0.0;
          IP_NiX_Val : Float := 0.0;
-         Xsq_Val    : Float := 0.0;
+--           Xsq_Val    : Float := 0.0;
          Product    : Multivectors.Multivector;
-         --              Xsq_Val    : constant Float := Norm_Esq_NP (MV_X);
+         Xsq_Val    : constant Float := Norm_Esq (MV_X);
          OP_NiX     : Boolean;
          IP_NiX     : Boolean;
          Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
@@ -66,7 +66,7 @@ package body Multivector_Analyze_C3GA is
             IP_NiX_Val := Norm_E (Product);
             IP_NiX := Abs (IP_Nix_Val) > Epsilon;
          end if;
-         Xsq_Val := Norm_Esq (MV_X);  --  norm_r
+--           Xsq_Val := Norm_Esq (MV_X);  --  norm_r
 
 --           Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
 --                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
@@ -154,9 +154,9 @@ package body Multivector_Analyze_C3GA is
 
    --  ----------------------------------------------------------------------------
    --  format of flat
-   --  m_pt[0] = location
-   --  m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
-   --  m_sc[0] = weight
+   --  theAnalysis.M_Vectors (1)  m_pt[0] = location
+   --  theAnalysis.M_Vectors (2)  m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
+   --  theAnalysis.M_Vectors (3)  m_sc[0] = weight
    procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
                            MV_X        : Multivectors.Multivector;
                            Probe       : Multivectors.Normalized_Point) is

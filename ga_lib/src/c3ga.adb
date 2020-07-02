@@ -1112,9 +1112,9 @@ package body C3GA is
       use GL.Types;
       theVector : Vector_E3GA;
    begin
-      theVector (GL.X) := Single (Multivectors.Component (NP, 1));
-      theVector (GL.Y) := Single (Multivectors.Component (NP, 2));
-      theVector (GL.Z) := Single (Multivectors.Component (NP, 3));
+      theVector (GL.X) := Single (Multivectors.Component (NP, 2));
+      theVector (GL.Y) := Single (Multivectors.Component (NP, 3));
+      theVector (GL.Z) := Single (Multivectors.Component (NP, 4));
       return theVector;
    end NP_To_VectorE3GA;
 
