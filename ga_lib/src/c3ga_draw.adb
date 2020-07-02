@@ -1,7 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with Utilities;
+with Utilities;
 
 with C3GA;
 with GA_Draw;
@@ -136,8 +136,8 @@ package body C3GA_Draw is
             when Line_Subclass =>
                 Put_Line ("C3GA_Draw.Draw_Flat Line.");
                 --  Draw_Line doesn't use method
---                  Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Point_Pos", Point_Pos);
---                  Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Direction", Direction);
+                Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Point_Pos", Point_Pos);
+                Utilities.Print_Vector ("C3GA_Draw.Draw_Flat Direction", Direction);
                 GA_Draw.Draw_Line (Render_Program, Model_View_Matrix,
                                    Point_Pos, Direction, Scale);
             when Plane_Subclass =>

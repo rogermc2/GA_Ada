@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
---  with Utilities;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -165,7 +165,8 @@ package body Multivector_Analyze_C3GA is
       Grade         : Unsigned_32 :=
                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
       --  Attitude is a free N-vector
-      Attitude      : constant Multivector := Negate (Left_Contraction (C3GA.ni, MV_X, Met));
+      Attitude      : constant Multivector :=
+                          Negate (Left_Contraction (C3GA.ni, MV_X, Met));
       MV_Inverse    : Multivector;
       MV_Location   : Multivector;
       Location      : Multivectors.Normalized_Point;
@@ -228,24 +229,26 @@ package body Multivector_Analyze_C3GA is
 
 --        Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Points (1)",
 --                                 theAnalysis.Points (1));
-      --  Grade indications are taken from Geometric Algebra and its Application to Computer Graphics
-      --  by Hildenbrand, Fontijne, Perwass and Dorst, Eurographics 2004.
+      --  Grade indications are taken from Geometric Algebra and its
+      --  Application to Computer Graphics by Hildenbrand, Fontijne, Perwass and
+      --  Dorst, Eurographics 2004.
       --  "the representation of a point is simply a sphere of radius zero".
+      --  factor attitude:
       case Grade is
-         when 0 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
+         when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Scalar_Subclass.");
-         when 1 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
+         when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
          when 3 =>  --  Line
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
---              GA_Utilities.Print_Multivector
---                    ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 MV", MV);
+            GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Flat Attitude", Attitude);
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
-              C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, MV_X, Met)));
---              Utilities.Print_Vector
---                    ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
---                     theAnalysis.M_Vectors (1));
+              C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
+            Utilities.Print_Vector
+                  ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
+                   theAnalysis.M_Vectors (1));
 --              Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3", theAnalysis);
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
