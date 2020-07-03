@@ -1080,22 +1080,12 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3GA is
-      use Interfaces;
       use GL.Types;
-      use GA_Maths;
       theVector : Vector_E3GA;
-      GU        : constant Grade_Usage := Multivectors.Grade_Use (MV);
-      Index     : Unsigned_32 := 0;
    begin
-      if (GU and 1) /= 0 then
-         Index := Index + 1;
-      end if;
-
-      if (GU and 2) /= 0 then
-         theVector (GL.X) := Single (Multivectors.Component (MV, Index + 2));
-         theVector (GL.Y) := Single (Multivectors.Component (MV, Index + 3));
-         theVector (GL.Z) := Single (Multivectors.Component (MV, Index + 4));
-      end if;
+         theVector (GL.X) := Single (Multivectors.Component (MV, C3_e1'Enum_Rep));
+         theVector (GL.Y) := Single (Multivectors.Component (MV, C3_e2'Enum_Rep));
+         theVector (GL.Z) := Single (Multivectors.Component (MV, C3_e3'Enum_Rep));
       return theVector;
    end To_VectorE3GA;
 
