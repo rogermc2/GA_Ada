@@ -105,14 +105,16 @@ package body E3GA_Utilities is
       if Scalar_Product (From_V1, To_V2) < -0.9 then
          --  "near" 180 degree rotation :
 	 --  v1 factor in returning blade regardless of any loss of precision
-         --  v1 << (v1^v2) means c3ga::lcont(v1, (v1^v2)), lcont means Left_Contraction
+         --  v1 << (v1^v2) means c3ga::lcont(v1, (v1^v2)),
+         --  lcont Left_Contraction
          w0 := Left_Contraction (From_V1, Outer_Product (From_V1, To_V2));
-         GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector w0: ", w0);
          Nsq := Norm_Esq (w0);
 
          if Nsq = 0.0 then
-            w1 := Left_Contraction (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e1)));
-            w2 := Left_Contraction (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e2)));
+            w1 := Left_Contraction
+                  (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e1)));
+            w2 := Left_Contraction
+                  (From_V1, Outer_Product (From_V1, Basis_Vector (Blade_Types.E3_e2)));
             if Norm_Esq (w1) > Norm_Esq (w2) then
                Result := Outer_Product (From_V1, Unit_e (w1));
             else
@@ -121,21 +123,15 @@ package body E3GA_Utilities is
          else  --  Nsq /= 0.0
             --  Replace V1 with -V1 and an additional 180 degree rotation.
             S := Sqrt (2.0 * (1.0 - Scalar_Part (Left_Contraction (To_V2, From_V1))));
-            Put_Line ("E3GA_Utilities.Rotor_Vector_To_Vector S: " &
-                        float'Image (S));
             R := (1.0 - Geometric_Product (To_V2, From_V1)) / S;
-            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector R: ",
-                                            R);
             Result := Geometric_Product (R, Outer_Product (From_V1, Unit_e (w0)));
-            GA_Utilities.Print_Multivector ("E3GA_Utilities.Rotor_Vector_To_Vector Result: ",
-                                            Result);
          end if;
-      else
+      else  --  normal case, not "near" 180 degree rotation.
          --  (1 + ba)(1 + ab) = 1 + ab + ba + baab
          --                   = 1 + a.b + a^b + b.a + b^a + 1
          --                   = 2 + 2a.b + a^b - a^b
          --                   = 2(1 + a.b)
-         --  Geometric Algebra fot Computer Science, Equation (10.13)
+         --  Geometric Algebra for Computer Science, Equation (10.13)
          S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To_V2, From_V1))));
          Result :=  To_Rotor ((1.0 + Geometric_Product (To_V2, From_V1)) / S);
       end if;
