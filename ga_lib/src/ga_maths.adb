@@ -182,15 +182,13 @@ package body GA_Maths is
       use GL.Types;
       use GL.Types.Singles;
       use Maths;
---        use Maths.Single_Math_Functions;
       Norm_From : constant Vector3 := Normalized (From);
       Norm_To   : constant Vector3 := Normalized (To);
       Cross     : constant Vector3 := Cross_Product (Norm_From, Norm_To);
---        Sin       : constant Single := Norm (Cross);
       Cos       : Single := Dot_Product (Norm_From, Norm_To);
-      Vx        : constant Matrix3 := ((-Cross (GL.Z), 0.0, Cross (GL.Y)),
+      Vx        : constant Matrix3 := ((0.0, -Cross (GL.Z), Cross (GL.Y)),
                                        (Cross (GL.Z), 0.0, -Cross (GL.X)),
-                                       (-Cross (GL.Y), 0.0, Cross (GL.X)));
+                                       (-Cross (GL.Y), Cross (GL.X), 0.0));
       Vx_Sq     : constant Matrix3 := Vx * Vx;
       Rot_3     : Matrix3;
       Rot_4     : Matrix4 := Identity4;

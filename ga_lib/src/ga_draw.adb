@@ -371,7 +371,7 @@ package body GA_Draw is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
 --          use GA_Maths.Float_Functions;
-        use  Multivectors;
+--          use  Multivectors;
         --          Scale_Constant and Step_Size are used for building Line_Strip
 --          Scale_Constant       : constant Single := 4.0 * Single (Sqrt (2.0));
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
@@ -384,11 +384,11 @@ package body GA_Draw is
 --          C_Rotation_Matrix    : Matrix4 := Identity4;
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
-        Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
-        MV_Dir               : constant Multivectors.Vector := New_Vector
-          (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
+--          Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
+--          MV_Dir               : constant Multivectors.Vector := New_Vector
+--            (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
         MV_Matrix            : Matrix4 := Model_View_Matrix;
-        aRotor               : Rotor;
+--          aRotor               : Rotor;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Z                    : Single := -Scale_Constant;
 --          C                    : Single := 0.0;
@@ -417,18 +417,22 @@ package body GA_Draw is
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
+        --  rotate e3 to line direction
+        MV_Matrix := Model_View_Matrix *
+          GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
+              GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
+        MV_Matrix := Scale_Matrix * MV_Matrix;
+        Utilities.Print_Matrix ("GA_Draw.Draw_Line Scale_Matrix * MV_Matrix", MV_Matrix);
         --  translate to point on line
         Translation_Matrix :=
           Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
---          Translation_Matrix:= Identity4;
-        --  rotate e3 to line direction
-        aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
-          (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
-        MV_Matrix := Scale_Matrix * MV_Matrix;
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Scale_Matrix * MV_Matrix", MV_Matrix);
-        GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Rotor * MV_Matrix", MV_Matrix);
         MV_Matrix := Translation_Matrix * MV_Matrix;
+--          Translation_Matrix:= Identity4;
+--          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
+--            (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
+--          GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Line Rotor * MV_Matrix", MV_Matrix);
 
         Utilities.Print_Matrix ("GA_Draw.Draw_Line Translation_Matrix * MV_Matrix", MV_Matrix);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
