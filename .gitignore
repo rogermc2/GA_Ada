@@ -16,7 +16,6 @@ bin
 *.stderr
 *.stdout
 *copy.gpr
-*.lyx#
 bivectors
 circle
 removal
