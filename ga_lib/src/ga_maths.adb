@@ -193,7 +193,7 @@ package body GA_Maths is
       Rot_3     : Matrix3;
       Rot_4     : Matrix4 := Identity4;
    begin
-      if Cos = -1.0 then
+      if Cos <= -1.0 then
          Cos := -0.999999;
       end if;
       Rot_3 := Identity3 + Vx + 1.0 / (1.0 + Cos) * Vx_Sq;
