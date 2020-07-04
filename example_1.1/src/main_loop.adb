@@ -164,15 +164,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --              C3GA_Draw.Draw (Render_Graphic_Program,
 --                              Model_View_Matrix, Point_Position, Palet_Data);
         end loop;
-            GA_Utilities.Print_Multivector ("Display, Point_Position 1:", Points.L0_Normalized_Points (1));
-            GA_Utilities.Print_Multivector ("Display, Point_Position 2:", Points.L0_Normalized_Points (2));
+--              GA_Utilities.Print_Multivector ("Display, Point_Position 1:", Points.L0_Normalized_Points (1));
+--              GA_Utilities.Print_Multivector ("Display, Point_Position 2:", Points.L0_Normalized_Points (2));
 --          GA_Utilities.Print_Multivector ("Display, L1.L1 ", Dot (Points.L1, Points.L1));
 --          GA_Utilities.Print_Multivector ("Display, L2.L2 ", Dot (Points.L1, Points.L2));
 --          GA_Utilities.Print_Multivector ("Display, L1 ", Points.L1);
 --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
         if not Pick_Manager.Pick_Active then
---              aLine := C3GA.Set_Line (Points.L1, Points.L2);
-            aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
+            aLine := C3GA.Set_Line (Points.L1, Points.L2);
+--              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
             GA_Utilities.Print_Multivector ("Display, aLine:", aLine);
 
             aCircle := Multivectors.Outer_Product (Points.C1, Points.C2);
