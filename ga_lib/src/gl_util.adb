@@ -95,6 +95,8 @@ package body GL_Util is
                 Matrix (row, Y) := VC (Y);
                 Matrix (row, Z) := VC (Z);
             end loop;
+            Utilities.Print_Matrix
+              ("GL_Util.Rotor_GL_Multiply Matrix", Matrix);
             GL_Matrix := Matrix * GL_Matrix;
         end if;
 
@@ -114,7 +116,8 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-    function Rotor_To_GL_Matrix (R : Multivectors.Rotor) return  GL.Types.Singles.Matrix4 is
+    function Rotor_To_GL_Matrix (R : Multivectors.Rotor)
+                                 return  GL.Types.Singles.Matrix4 is
         use GL;
         M3        : GA_Maths.GA_Matrix3;
         GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -237,6 +240,7 @@ package body GL_Util is
     end To_GL;
 
     --  ---------------------------------------------------------------------
+
     procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
                                     Model_View_Matrix,
                                     Projection_Matrix : GL.Types.Singles.Matrix4;
