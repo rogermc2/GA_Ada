@@ -20,7 +20,6 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
-with GA_Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
@@ -173,10 +172,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         if not Pick_Manager.Pick_Active then
             aLine := C3GA.Set_Line (Points.L1, Points.L2);
 --              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
-            GA_Utilities.Print_Multivector ("Display, aLine:", aLine);
 
-            aCircle := Multivectors.Outer_Product (Points.C1, Points.C2);
-            aCircle := Multivectors.Outer_Product (aCircle, Points.C3);
+            aCircle := Multivectors.Outer_Product (Points.C2, Points.C3);
+            aCircle := Multivectors.Outer_Product (Points.C1, aCircle);
             Multivectors.To_Circle (aCircle);
 
             --  N_E3_Vec is a direction vector
@@ -186,10 +184,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Multivectors.To_Dual_Plane (aDual_Plane);
 
             Shader_Manager.Set_Ambient_Colour (Red);
-            --              GA_Utilities.Print_Multivector ("Main_Loop.Display aLine:", aLine);
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, aLine, Palet_Data);
-        end if;
+
+            Shader_Manager.Set_Ambient_Colour (Green);
+            C3GA_Draw.Draw (Render_Graphic_Program,
+                            Model_View_Matrix, aCircle, Palet_Data);
+       end if;
 
     exception
         when others =>
