@@ -370,10 +370,7 @@ package body GA_Draw is
                          Weight            : Float := 1.0) is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
---          use GA_Maths.Float_Functions;
---          use  Multivectors;
         --          Scale_Constant and Step_Size are used for building Line_Strip
---          Scale_Constant       : constant Single := 4.0 * Single (Sqrt (2.0));
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
         Step_Size            : constant Single := 0.1;
         Step_Length          : constant Single := Scale_Constant * Step_Size;
@@ -384,11 +381,7 @@ package body GA_Draw is
 --          C_Rotation_Matrix    : Matrix4 := Identity4;
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
---          Dir_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Direction);
---          MV_Dir               : constant Multivectors.Vector := New_Vector
---            (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
         MV_Matrix            : Matrix4 := Model_View_Matrix;
---          aRotor               : Rotor;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Z                    : Single := -Scale_Constant;
 --          C                    : Single := 0.0;
@@ -402,17 +395,14 @@ package body GA_Draw is
     begin
         --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Model_View_Matrix", Model_View_Matrix);
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
-        Put_Line ("GA_Draw.Draw_Line Num_Steps" & Int'Image (Num_Steps));
-        Put_Line ("GA_Draw.Draw_Line Scale_Constant" & Single'Image (Scale_Constant));
-        Put_Line ("GA_Draw.Draw_Line Step_Length" & Single'Image (Step_Length));
+--          Put_Line ("GA_Draw.Draw_Line Scale_Constant" & Single'Image (Scale_Constant));
+--          Put_Line ("GA_Draw.Draw_Line Step_Length" & Single'Image (Step_Length));
         for index in 1 .. Num_Steps  loop
             Length_Vertices (index) := (0.0, 0.0, Z);
             Z := Z + Step_Length;
         end loop;
-        Utilities.Print_GL_Array3 ("GA_Draw.Draw_Line Vertex_Buffer", Length_Vertices);
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
@@ -423,20 +413,13 @@ package body GA_Draw is
         Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
               GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
         MV_Matrix := Scale_Matrix * MV_Matrix;
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Scale_Matrix * MV_Matrix", MV_Matrix);
         --  translate to point on line
         Translation_Matrix :=
           Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
         MV_Matrix := Translation_Matrix * MV_Matrix;
---          Translation_Matrix:= Identity4;
---          aRotor := E3GA_Utilities.Rotor_Vector_To_Vector
---            (Basis_Vector (Blade_Types.E3_e3), MV_Dir);
---          GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
---          Utilities.Print_Matrix ("GA_Draw.Draw_Line Rotor * MV_Matrix", MV_Matrix);
 
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Translation_Matrix * MV_Matrix", MV_Matrix);
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);

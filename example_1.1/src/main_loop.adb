@@ -131,9 +131,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, 14.0));  --  -14  more negative z move farther back
+        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-        --  View and model matrices are initilized to identity by shader initialization.
+        --  View and model matrices are initilized to identity by
+        --  shader initialization.
 
         Utilities.Clear_Background_Colour_And_Depth (White);
 
