@@ -8,6 +8,8 @@ with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics.Generic_Real_Arrays;
 with Ada.Numerics;
 
+with GL.Types;
+
 package GA_Maths is
 
    package Float_List_Package is new Ada.Containers.Doubly_Linked_Lists
@@ -98,5 +100,7 @@ package GA_Maths is
    function Minimum (I1, I2 : Integer) return Integer;
    function Minimum (F1, F2 : Float) return Float;
    function Minimum (F1, F2 : Long_Float) return Long_Float;
+   function Vector_Rotation_Matrix (From, To : GL.Types.Singles.Vector3)
+                                    return GL.Types.Singles.Matrix4;
 
 end GA_Maths;
