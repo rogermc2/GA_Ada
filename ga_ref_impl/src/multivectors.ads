@@ -53,7 +53,6 @@ package Multivectors is
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
-   function Dual (MV : Multivector) return Multivector;
    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
