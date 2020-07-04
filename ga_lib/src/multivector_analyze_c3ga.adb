@@ -181,31 +181,15 @@ package body Multivector_Analyze_C3GA is
          Grade := 5 - Grade;
       end if;
 
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_X", MV_X);
       MV_Inverse := General_Inverse (MV_X, Met);
       --  MV_Location is a normalized dual sphere
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Inverse",
---                                        MV_Inverse);
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Probe)", Probe);
       MV_Location := Left_Contraction (Probe, MV_X, Met);
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Left_Contraction (Probe, MV, Met)",
---                                        MV_Location);
       MV_Location := Left_Contraction (MV_Location, MV_Inverse, Met);
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location",
---                                        MV_Location);
       SP := Scalar_Product (C3GA.ni, MV_Location, Met);
       if SP = 0.0 then
             Location := C3GA.Set_Normalized_Point (E1 => 0.0, E2 => 0.0, E3 => 0.0);
       else
---              Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat Scalar_Product (C3GA.ni, MV_Location, Met)" &
---                          Float'Image (SP));
-            --        MV_Location := Geometric_Product (MV_Location,
-            --                                          General_Inverse (-New_Scalar (SP), Met));
             MV_Location := Geometric_Product (MV_Location, -New_Scalar (1.0 / SP), Met);
---              GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 2",
---                                              MV_Location);
---              Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Vector Location",
---                                      C3GA.To_VectorE3GA (MV_Location));
             Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
       end if;
       GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
@@ -216,8 +200,6 @@ package body Multivector_Analyze_C3GA is
          Weight := Abs (Norm_Esq (MV_X));   --  Norm_Esq is norm_r
       end if;
 
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat MV_Location 3",
---                                        MV_Location);
       --  ************* format of flat ***************
       --  theAnalysis.Points    m_pt[0] = location
       --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
@@ -225,11 +207,6 @@ package body Multivector_Analyze_C3GA is
       --  ************* END format of flat ***************
       theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
       theAnalysis.Scalars (1) := Weight;
---        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
---                                 Location);
-
---        Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Flat Points (1)",
---                                 theAnalysis.Points (1));
       --  Grade indications are taken from Geometric Algebra and its
       --  Application to Computer Graphics by Hildenbrand, Fontijne, Perwass and
       --  Dorst, Eurographics 2004.
@@ -243,17 +220,11 @@ package body Multivector_Analyze_C3GA is
          when 3 =>  --  Line
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
---              GA_Utilities.Print_Multivector
---                    ("Multivector_Analyze_C3GA.Analyze_Flat Attitude", Attitude);
---              GA_Utilities.Print_Multivector
---                    ("Analyze_Flat Unit_E (Left_Contraction (C3GA.no, Attitude, Met))",
---                     Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
             theAnalysis.M_Vectors (1) :=
               C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
             Utilities.Print_Vector
                   ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
                    theAnalysis.M_Vectors (1));
---              Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3", theAnalysis);
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
