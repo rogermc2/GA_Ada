@@ -175,4 +175,27 @@ package body GA_Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Vector_Rotation_Matrix (From, To : GL.Types.Singles.Vector3)
+                                   return GL.Types.Singles.Matrix4 is
+      use GL.Types.Singles;
+      Norm_From : constant Vector3 := Normalized (From);
+      Norm_To   : constant Vector3 := Normalized (To);
+      Cross     : constant Vector3 := Cross_Product (Norm_From, Norm_To);
+      Sin       : constant Single := Norm (Cross);
+      Cos       : Single := Dot_Product (Norm_From, Norm_To);
+      Vx        : constant Matrix3 := ((-Cross (GL.Z), 0.0, Cross (GL.Y)),
+                                       (Cross (GL.Z), 0.0, -Cross (GL.X)),
+                                       (-Cross (GL.Y), 0.0, Cross (GL.X)));
+      Rot_3     : Matrix3;
+      Rot_4     : Matrix4 := Identity4;
+   begin
+      if Cos = -1.0 then
+         Cos := -0.999999;
+      end if;
+      Rot_3 := Identity3 + Vx + Dot_Product (Vx,Vx) / (1.0 + Cos);
+      return Rot_4;
+   end Vector_Rotation_Matrix;
+
+   --  ------------------------------------------------------------------------
+
 end GA_Maths;
