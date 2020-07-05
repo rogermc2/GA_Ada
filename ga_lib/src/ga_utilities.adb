@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Utilities;
+
 package body GA_Utilities is
 
    function Multivector_Size (MV : Multivectors.Multivector) return Integer is
@@ -67,7 +69,15 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Float_Array (Name : String; anArray : GA_Maths.Float_Vector) is
+   procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector) is
+   begin
+        Utilities.Print_Vector (Name, aVector);
+   end Print_E3_Vector;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Float_Array
+      (Name : String; anArray : GA_Maths.Float_Vector) is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
