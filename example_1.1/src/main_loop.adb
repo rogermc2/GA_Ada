@@ -97,6 +97,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Height              : GL.Types.Single;
         Translation_Matrix  : Matrix4 := Identity4;
         Projection_Matrix   : Matrix4 := Identity4;
+        Model_Matrix        : constant Matrix4 := Identity4;
+        View_Matrix         : constant Matrix4 := Identity4;
         Model_View_Matrix   : Matrix4 := Identity4;
         View_Angle          : constant Maths.Degree := 50.0;
 --          View_Matrix         : GL.Types.Singles.Matrix4 := Identity4;
@@ -109,7 +111,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --          Up                  : Vector3;
         Palet_Data          : Palet.Colour_Palet;
         N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
-        --        Test_MV             : Multivectors.Multivector (Multivectors.MV_Normalized_Point);
     begin
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
 --          Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
@@ -129,8 +130,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
         GL.Objects.Programs.Use_Program (Render_Graphic_Program);
         Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
+        Shader_Manager.Set_Light_Position_Vector ((0.0, 0.0, 10.0));
 
         Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+        Shader_Manager.Set_Model_Matrix (Model_Matrix);
+        Shader_Manager.Set_View_Matrix (View_Matrix);
         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
         --  View and model matrices are initilized to identity by
         --  shader initialization.
@@ -190,7 +194,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Shader_Manager.Set_Ambient_Colour (Green);
             C3GA_Draw.Draw (Render_Graphic_Program,
                             Model_View_Matrix, aCircle, Palet_Data);
-       end if;
+        end if;
 
     exception
         when others =>
