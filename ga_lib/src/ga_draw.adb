@@ -80,12 +80,12 @@ package body GA_Draw is
 
     --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
     --  The parameter names correspond of those in draw.h!
-    procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
-                             Model_View_Matrix              : GL.Types.Singles.Matrix4 ;
+    procedure Draw_Bivector (Render_Program  : GL.Objects.Programs.Program;
+                             Model_View_Matrix  : GL.Types.Singles.Matrix4 ;
                              Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3GA;
-                             Palet_Type                     : Palet.Colour_Palet;
-                             Scale                          : float := 1.0;
-                             Method                         : Method_Type := Draw_Bivector_Circle) is
+                             Palet_Type  : Palet.Colour_Palet;
+                             Scale  : float := 1.0;
+                             Method : Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
         use GL.Types.Singles;
         Vertex_Array_Object   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -94,24 +94,30 @@ package body GA_Draw is
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
         --          O2                   : Multivectors.Vector := Ortho_2;
         E2_Norm               : Float := C3GA.Norm_E2 (Base);
-        Base_Coords           : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
-        Normal_Coords         : constant GA_Maths.Array_3D := C3GA.Get_Coords (Normal);
-        Ortho_1_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_1);
-        Ortho_2_Coords        : constant GA_Maths.Array_3D := C3GA.Get_Coords (Ortho_2);
+        Base_Coords           : constant GA_Maths.Array_3D :=
+                                  C3GA.Get_Coords (Base);
+        Normal_Coords         : constant GA_Maths.Array_3D :=
+                                  C3GA.Get_Coords (Normal);
+        Ortho_1_Coords        : constant GA_Maths.Array_3D :=
+                                  C3GA.Get_Coords (Ortho_1);
+        Ortho_2_Coords        : constant GA_Maths.Array_3D :=
+                                  C3GA.Get_Coords (Ortho_2);
         Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
-        MV_Normal             : constant Multivectors.Vector := Multivectors.New_Vector
+        MV_Normal             : constant Multivectors.Vector :=
+                                  Multivectors.New_Vector
           (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
-        MV_Ortho_1            : constant Multivectors.Vector := Multivectors.New_Vector
+        MV_Ortho_1            : constant Multivectors.Vector :=
+                                  Multivectors.New_Vector
           (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
-        MV_Ortho_2            : constant Multivectors.Vector := Multivectors.New_Vector
+        MV_Ortho_2            : constant Multivectors.Vector :=
+                                  Multivectors.New_Vector
           (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
         MV_Matrix             : Matrix4 := Model_View_Matrix;
         Scaled                : GL.Types.Single;
         RT                    : Multivectors.Rotor;
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
-        Vertex_Array_Object.Initialize_Id;
-        Vertex_Array_Object.Bind;
+--          Vertex_Array_Object.Initialize_Id;
 
         Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
         if E2_Norm > 0.0 then
@@ -128,17 +134,21 @@ package body GA_Draw is
               (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
             GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
         else
-            E2_Norm := C3GA.Norm_E2 (C3GA.To_VectorE3GA
-                                     ((Multivectors.Outer_Product (MV_Ortho_1, MV_Ortho_2))));
-            Scaled := GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
-            MV_Matrix := Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
+            E2_Norm :=
+              C3GA.Norm_E2 (C3GA.To_VectorE3GA
+                            ((Multivectors.Outer_Product (MV_Ortho_1,
+                               MV_Ortho_2))));
+            Scaled :=
+              GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
+            MV_Matrix :=
+              Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
         end if;
 
+        Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
+        Vertex_Array_Object.Bind;
         case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
-            when Draw_TV_Sphere =>
                 Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
             when others => null;
         end case;
@@ -247,19 +257,22 @@ package body GA_Draw is
 
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
-        Angle                : float := 0.0;
-        Num_Steps            : constant int := 256;
-        Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
-        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-        Fan                  : Singles.Vector3_Array (1 .. Num_Steps);
-        Normal               : Singles.Vector3_Array (1 .. Num_Steps) :=
-                                 (others => (0.0, 0.0, 1.0));
+        Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer : GL.Objects.Buffers.Buffer;
+        Angle         : float := 0.0;
+        Num_Steps     : constant int := 256;
+        Rotor_Step    : constant float :=
+                          2.0 * Ada.Numerics.Pi / float (Num_Steps);
+        Fan           : Singles.Vector3_Array (1 .. Num_Steps);
+        Normal        : Singles.Vector3_Array (1 .. Num_Steps) :=
+                          (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
             use Palet;
             Norm_Z : Single;
         begin
-            Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " & Circle_Part'Image (Part));
+            Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
+                        Circle_Part'Image (Part));
             case Part is
             when Back_Part | Outline_Part =>
                 Norm_Z := 1.0;
@@ -277,12 +290,16 @@ package body GA_Draw is
                 Angle := Angle + Rotor_Step;
             end loop;
 
+            Vertex_Array.Bind;
+            Array_Buffer.Bind (Vertex_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             GL.Objects.Programs.Use_Program (Render_Program);
             Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-
+            Utilities.Print_Matrix
+              ("GA_Draw.Draw_Circle.Draw_Part, Model_View_Matrix",
+               Model_View_Matrix);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
             GL.Attributes.Enable_Vertex_Attrib_Array (1);
@@ -300,11 +317,13 @@ package body GA_Draw is
                                                       First => 0,
                                                       Count => Num_Steps);
             end if;
+            GL.Attributes.Disable_Vertex_Attrib_Array (0);
+            GL.Attributes.Disable_Vertex_Attrib_Array (1);
         end Draw_Part;
 
     begin
+        Vertex_Array.Initialize_Id;
         Vertex_Buffer.Initialize_Id;
-        Array_Buffer.Bind (Vertex_Buffer);
         if Method = Draw_Bivector_Circle or
           Palet.Foreground_Alpha (Palet_Type) > 0.0 then
             Draw_Part (Back_Part);
@@ -313,7 +332,6 @@ package body GA_Draw is
 
         Palet.Set_Ol_Colour (Palet_Type);
         Draw_Part (Outline_Part);
-        GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
     exception
         when  others =>
@@ -418,7 +436,6 @@ package body GA_Draw is
           Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
         MV_Matrix := Translation_Matrix * MV_Matrix;
 
---          Utilities.Print_Matrix ("GA_Draw.Draw_Line MV_Matrix", MV_Matrix);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);

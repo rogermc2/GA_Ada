@@ -94,14 +94,17 @@ package body C3GA_Draw is
             when Flat_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Flat.");
                --  Draw_Flat doesn't use method
-               Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
+               Draw_Flat (Render_Program, Model_View_Matrix, Analyzed_MV,
+                          Palet_Type);
             when Free_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Free.");
-              Draw_Free (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
+              Draw_Free (Render_Program, Model_View_Matrix, Analyzed_MV,
+                         Palet_Type);
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
                --  Draw_Round doesn't use method
-               Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
+               Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV,
+                           Palet_Type);
             when Tangent_Blade =>
                 Put_Line ("C3GA_Draw.Draw_C3GA Tangent.");
             when others =>
@@ -278,7 +281,8 @@ package body C3GA_Draw is
                                    Ortho_2           => M_Vec2,
                                    Palet_Type        => Palet_Type,
                                    Scale             => Float (Radius),
-                                   Method            => GA_Draw.Draw_Bivector_Circle_Outline);
+                                   Method            =>
+                                       GA_Draw.Draw_Bivector_Circle_Outline);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
             P_Scale := 4.0 / 3.0 * GA_Maths.PI * Float (Radius ** 3);
