@@ -42,13 +42,17 @@ package body GA_Draw is
 
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
+        Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer : GL.Objects.Buffers.Buffer;
         S_Scale              : constant Single := Single (5.0 / Scale);
         Z                    : float := 0.0;
         Num_Steps            : constant int := 32;
-        Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
-        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
+        Rotor_Step           : constant float :=
+                                 2.0 * Ada.Numerics.Pi / float (Num_Steps);
         Fan                  : Singles.Vector3_Array (1 .. Num_Steps + 1);
     begin
+        Vertex_Array.Initialize_Id;
+        Vertex_Array.Bind;
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Fan (1) := (S_Scale, 0.0, -0.25);
@@ -88,7 +92,6 @@ package body GA_Draw is
                              Method : Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
         use GL.Types.Singles;
-        Vertex_Array_Object   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         --          Cords                : Array_3D := (0.0, 0.0, 0.0);
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
@@ -117,12 +120,11 @@ package body GA_Draw is
         RT                    : Multivectors.Rotor;
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
---          Vertex_Array_Object.Initialize_Id;
-
         Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
         if E2_Norm > 0.0 then
-            Translation_Vector := (Single (Base_Coords (1)), Single (Base_Coords (2)),
-                                   Single (Base_Coords (3)));
+            Translation_Vector :=
+              (Single (Base_Coords (1)), Single (Base_Coords (2)),
+               Single (Base_Coords (3)));
             MV_Matrix := Maths.Translation_Matrix (Translation_Vector) * MV_Matrix;
         end if;
 
@@ -145,7 +147,6 @@ package body GA_Draw is
         end if;
 
         Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
-        Vertex_Array_Object.Bind;
         case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
@@ -254,7 +255,6 @@ package body GA_Draw is
         use GA_Maths;
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
-
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
         Angle         : float := 0.0;
@@ -262,14 +262,14 @@ package body GA_Draw is
         Rotor_Step    : constant float :=
                           2.0 * Ada.Numerics.Pi / float (Num_Steps);
         Fan           : Singles.Vector3_Array (1 .. Num_Steps);
-        Normal        : Singles.Vector3_Array (1 .. Num_Steps) :=
-                          (others => (0.0, 0.0, 1.0));
+--          Normal        : Singles.Vector3_Array (1 .. Num_Steps) :=
+--                            (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
             use Palet;
             Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
             Vertex_Buffer : GL.Objects.Buffers.Buffer;
-            Norm_Z : Single;
+--              Norm_Z : Single;
         begin
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
@@ -277,27 +277,27 @@ package body GA_Draw is
 
             Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
                         Circle_Part'Image (Part));
-            case Part is
-            when Back_Part | Outline_Part =>
-                Norm_Z := 1.0;
-            when Front_Part =>
-                Norm_Z := -1.0;
-            end case;
+--              case Part is
+--              when Back_Part | Outline_Part =>
+--                  Norm_Z := 1.0;
+--              when Front_Part =>
+--                  Norm_Z := -1.0;
+--              end case;
             --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
             --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
             Fan (1) := (0.0, 0.0, 0.0);
-            Normal (1) := (0.0, 0.0, Norm_Z);
+--              Normal (1) := (0.0, 0.0, Norm_Z);
             for Count in 2 .. Num_Steps loop
                 Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
-                Normal (Count) := (0.0, 0.0, Norm_Z);
+--                  Normal (Count) := (0.0, 0.0, Norm_Z);
                 Angle := Angle + Rotor_Step;
             end loop;
 
             Vertex_Array.Bind;
             Array_Buffer.Bind (Vertex_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
+--              Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             GL.Objects.Programs.Use_Program (Render_Program);
             Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
@@ -306,8 +306,8 @@ package body GA_Draw is
                Model_View_Matrix);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-            GL.Attributes.Enable_Vertex_Attrib_Array (1);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+--              GL.Attributes.Enable_Vertex_Attrib_Array (1);
+--              GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
             if Part = Back_Part or Part = Front_Part then
                 if Part = Back_Part and then Get_Draw_Mode.Orientation then
@@ -322,7 +322,7 @@ package body GA_Draw is
                                                       Count => Num_Steps);
             end if;
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
-            GL.Attributes.Disable_Vertex_Attrib_Array (1);
+--              GL.Attributes.Disable_Vertex_Attrib_Array (1);
         end Draw_Part;
 
     begin
@@ -348,21 +348,26 @@ package body GA_Draw is
                          Scale             : Float) is
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
-        S_Scale              : constant Single := Single (5.0 / Scale);
-        Z                    : float := 0.0;
-        Num_Steps            : constant int := 256;
-        Rotor_Step           : constant float := 2.0 * Ada.Numerics.Pi / float (Num_Steps);
-        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-        Fan                  : Singles.Vector3_Array (1 .. Num_Steps);
+        Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer : GL.Objects.Buffers.Buffer;
+        S_Scale       : constant Single := Single (5.0 / Scale);
+        Z             : float := 0.0;
+        Num_Steps     : constant int := 256;
+        Rotor_Step    : constant float :=
+                            2.0 * Ada.Numerics.Pi / float (Num_Steps);
+        Fan            : Singles.Vector3_Array (1 .. Num_Steps);
     begin
+        Vertex_Array.Initialize_Id;
+        Vertex_Array.Bind;
         Vertex_Buffer.Initialize_Id;
-        Array_Buffer.Bind (Vertex_Buffer);
+
         Fan (1) := (0.0, 0.0, 0.0);
         for Count in 2 .. Num_Steps loop
             Fan (Count) := (S_Scale * Single (Cos (Z)), S_Scale * Single (Sin (Z)), -0.25);
             Z := Z + Rotor_Step;
         end loop;
 
+        Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
         GL.Objects.Programs.Use_Program (Render_Program);
@@ -390,6 +395,8 @@ package body GA_Draw is
                          Weight            : Float := 1.0) is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
+        Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer : GL.Objects.Buffers.Buffer;
         --          Scale_Constant and Step_Size are used for building Line_Strip
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
         Step_Size            : constant Single := 0.1;
@@ -402,7 +409,6 @@ package body GA_Draw is
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
         MV_Matrix            : Matrix4 := Model_View_Matrix;
-        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         Z                    : Single := -Scale_Constant;
 --          C                    : Single := 0.0;
 --          Num_C_Vertices       : constant Int := 3 * C_Steps + 1;
@@ -424,6 +430,8 @@ package body GA_Draw is
             Z := Z + Step_Length;
         end loop;
 
+        Vertex_Array.Initialize_Id;
+        Vertex_Array.Bind;
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
@@ -498,24 +506,25 @@ package body GA_Draw is
                                    Method            : Method_Type) is
         use GL.Objects.Buffers;
         use Singles;
+        Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer  : GL.Objects.Buffers.Buffer;
+        Normals_Buffer : GL.Objects.Buffers.Buffer;
         --          VC                   : Multivector_Analyze.Vector_Array;
-        Scale_Matrix         : Matrix4;
-        Scale_Sign           : GL.Types.Single;
-        Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-        Normals_Buffer       : GL.Objects.Buffers.Buffer;
-        Polygon              : constant Ints.Vector4_Array (1 .. 6) :=
+        Scale_Matrix   : Matrix4;
+        Scale_Sign     : GL.Types.Single;
+        Polygon        : constant Ints.Vector4_Array (1 .. 6) :=
                                  ((0, 1, 5, 4),
                                   (0, 4, 7, 3),
                                   (4, 5, 6, 7),
                                   (1, 2, 6, 5),
                                   (6, 2, 3, 7),
                                   (0, 3, 2, 1));
-        Vertex               : Vector3_Array (1 .. 8) :=
+        Vertex          : Vector3_Array (1 .. 8) :=
                                  (others => (others => 0.0));
-        GL_Vertices          : Vector3_Array (1 .. 4) :=
+        GL_Vertices     : Vector3_Array (1 .. 4) :=
                                  (others => (others => 0.0));
-        aVertex              : Vector3;
-        Vertex_Vectors       : constant Ints.Vector3_Array (1 .. 8) :=
+        aVertex         : Vector3;
+        Vertex_Vectors  : constant Ints.Vector3_Array (1 .. 8) :=
                                  ((-1, -1, -1),  --  -
                                   (0, -1, -1),   --  0
                                   (0, 1, -1),    --  0 + 1
@@ -524,14 +533,16 @@ package body GA_Draw is
                                   (0, 2, -1),    --  0 + 2
                                   (0, 1, 2),     --  0 + 1 + 2
                                   (1, 2, -1));   --  1 + 2
-        Vertex_Index         : Int := 0;
-        GL_Normals           : Vector3_Array (1 .. 6) :=
+        Vertex_Index     : Int := 0;
+        GL_Normals       : Vector3_Array (1 .. 6) :=
                                  (others => (others => 0.0));
-        V1                   : E3GA.E3_Vector;
-        V2                   : E3GA.E3_Vector;
-        V3                   : E3GA.E3_Vector;
-        Stride               : constant Int := 0;
+        V1               : E3GA.E3_Vector;
+        V2               : E3GA.E3_Vector;
+        V3               : E3GA.E3_Vector;
+        Stride           : constant Int := 0;
     begin
+        Vertex_Array.Initialize_Id;
+        Vertex_Array.Bind;
         --          for index in 1 .. MVC'Length loop
         --              VC (Int (index)) := E3GA.Get_Coords (MVC (index));
         --          end loop;
@@ -565,12 +576,14 @@ package body GA_Draw is
             if Scale >= 0.0 then
                 for GL_Index in Int range 1 .. 3 loop
                     GL_Vertices (GL_Index) :=
-                      Vertex (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                      Vertex (Polygon (Index)
+                              (GL.Index_Homogeneous'Enum_Val (GL_Index)));
                 end loop;
             else
                 for GL_Index in reverse Int range  3 .. 1 loop
                     GL_Vertices (GL_Index) :=
-                      Vertex (Polygon (Index) (GL.Index_Homogeneous'Enum_Val (GL_Index)));
+                      Vertex (Polygon (Index)
+                              (GL.Index_Homogeneous'Enum_Val (GL_Index)));
                 end loop;
             end if;
         end loop;
@@ -614,7 +627,7 @@ package body GA_Draw is
                            MV_Matrix      : GL.Types.Singles.Matrix4;
                            Normal         : GL.Types.Single) is
         use Geosphere;
-        Sphere : constant Geosphere.Geosphere := Palet.Current_Sphere;
+        Sphere  : constant Geosphere.Geosphere := Palet.Current_Sphere;
     begin
         Count := Count + 1;
         Geosphere.New_Sphere_List (Sphere);

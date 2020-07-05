@@ -439,20 +439,25 @@ package body Geosphere is
                        Normal : GL.Types.Single := 0.0) is
         use GL.Objects.Buffers;
         use Face_Vectors;
-        Indices_List       : Indices_DL_List;
-        Vertices           : Singles.Vector3_Array (1 .. Int (Length (Sphere.Vertices)));
-        Vertex_Data_Bytes  : constant Int := Vertices'Size / 8;
-        Vertex_Buffer      : GL.Objects.Buffers.Buffer;
+        Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer  : GL.Objects.Buffers.Buffer;
         Indices_Buffer     : GL.Objects.Buffers.Buffer;
+        Indices_List       : Indices_DL_List;
+        Vertices           : Singles.Vector3_Array
+          (1 .. Int (Length (Sphere.Vertices)));
+        Vertex_Data_Bytes  : constant Int := Vertices'Size / 8;
 
         procedure Build_Indices_List (Face_Cursor : Cursor) is
             Face_Index : constant Integer := Face_Vectors.To_Index (Face_Cursor);
-            thisFace   : constant Geosphere_Face := Sphere.Faces.Element (Face_Index);
+            thisFace   : constant Geosphere_Face :=
+                           Sphere.Faces.Element (Face_Index);
         begin
             Add_Face_Indices (Sphere, thisFace, Indices_List);
         end Build_Indices_List;
 
     begin
+        Vertex_Array.Initialize_Id;
+        Vertex_Array.Bind;
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Get_Vertices (Sphere, Vertices);
