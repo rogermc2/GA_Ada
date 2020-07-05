@@ -257,8 +257,6 @@ package body GA_Draw is
 
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
-        Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-        Vertex_Buffer : GL.Objects.Buffers.Buffer;
         Angle         : float := 0.0;
         Num_Steps     : constant int := 256;
         Rotor_Step    : constant float :=
@@ -269,8 +267,14 @@ package body GA_Draw is
 
         procedure Draw_Part (Part : Circle_Part) is
             use Palet;
+            Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+            Vertex_Buffer : GL.Objects.Buffers.Buffer;
             Norm_Z : Single;
         begin
+            Vertex_Array.Initialize_Id;
+            Vertex_Array.Bind;
+            Vertex_Buffer.Initialize_Id;
+
             Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
                         Circle_Part'Image (Part));
             case Part is
@@ -322,8 +326,6 @@ package body GA_Draw is
         end Draw_Part;
 
     begin
-        Vertex_Array.Initialize_Id;
-        Vertex_Buffer.Initialize_Id;
         if Method = Draw_Bivector_Circle or
           Palet.Foreground_Alpha (Palet_Type) > 0.0 then
             Draw_Part (Back_Part);

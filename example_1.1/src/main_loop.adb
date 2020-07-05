@@ -1,6 +1,6 @@
 
 --  with Ada.Strings.Unbounded;
---  with Ada.Numerics;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
@@ -14,7 +14,6 @@ with GL.Types.Colors;
 with Glfw;
 with Glfw.Input;
 with Glfw.Input.Keys;
---  with GL.Window;
 with Glfw.Windows.Context;
 
 with Maths;

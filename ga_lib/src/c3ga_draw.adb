@@ -1,7 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with Utilities;
+with Utilities;
 
 with C3GA;
 with GA_Draw;
@@ -103,6 +103,7 @@ package body C3GA_Draw is
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
                --  Draw_Round doesn't use method
+               Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV,
                            Palet_Type);
             when Tangent_Blade =>
@@ -273,6 +274,7 @@ package body C3GA_Draw is
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
+            Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
             GA_Draw.Draw_Bivector (Render_Program => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Point_Pos,

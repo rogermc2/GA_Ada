@@ -245,7 +245,10 @@ package body Multivector_Analyze_C3GA is
    end Analyze_Flat;
 
    --  ----------------------------------------------------------------------------
-
+   --  format of free
+   --  m_pt[0] = no (or probe?)
+   --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude (direction)
+   --   m_sc[0] = weight
    procedure Analyze_Free (theAnalysis : in out MV_Analysis;
                            MV          : Multivectors.Multivector) is
       use Interfaces;
@@ -370,7 +373,7 @@ package body Multivector_Analyze_C3GA is
          --  m_pt[0] = location
          --  m_sc[0] = signed radius
          --  m_sc[1] = signed weight
-         --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude
+         --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude (direction)
          theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
          theAnalysis.Scalars (1) := Radius;
          theAnalysis.Scalars (2) := Weight;
@@ -386,6 +389,7 @@ package body Multivector_Analyze_C3GA is
             when 1 =>
                theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
+               --  direction
                theAnalysis.M_Vectors (1) :=
                  C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e1));
                theAnalysis.M_Vectors (2) :=
@@ -412,14 +416,18 @@ package body Multivector_Analyze_C3GA is
             when 3 =>
                theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
                Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
-               theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (MV_First (Blade_Factors));
-               Utilities.Print_Vector
-                 ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 M_Vectors (1)",
-               theAnalysis.M_Vectors (1));
-               theAnalysis.M_Vectors (2) := C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
-               Utilities.Print_Vector
-                 ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 M_Vectors (2)",
-                  theAnalysis.M_Vectors (2));
+               --  direction
+               theAnalysis.M_Vectors (1) :=
+                  C3GA.To_VectorE3GA (MV_First (Blade_Factors));
+--                 Utilities.Print_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
+--                 theAnalysis.M_Vectors (1));
+               --
+               theAnalysis.M_Vectors (2) :=
+                  C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
+--                 Utilities.Print_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
+--                    theAnalysis.M_Vectors (2));
                GA_Utilities.Print_Multivector
                  ("Multivector_Analyze_C3GA.Analyze_Round Outer_Product",
                   Outer_Product (MV_First (Blade_Factors),
@@ -427,9 +435,22 @@ package body Multivector_Analyze_C3GA is
                theAnalysis.M_Vectors (3) :=
                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
                                      MV_Item (Blade_Factors, 2)), Met));
-               Utilities.Print_Vector
-                 ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 M_Vectors (3)",
-               theAnalysis.M_Vectors (3));
+--                 Utilities.Print_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Z direction M_Vectors (3)",
+--                 theAnalysis.M_Vectors (3));
+
+               Print_E3_Vector_Array
+                 ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
+                  theAnalysis.M_Vectors);
+--                 GA_Utilities.Print_E3_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
+--                    theAnalysis.M_Vectors (1));
+--                 GA_Utilities.Print_E3_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
+--                    theAnalysis.M_Vectors (2));
+--                 GA_Utilities.Print_E3_Vector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
+--                    theAnalysis.M_Vectors (3));
             when 4 =>
                theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e1));
@@ -454,7 +475,10 @@ package body Multivector_Analyze_C3GA is
    end Analyze_Round;
 
    --  ----------------------------------------------------------------------------
-
+   --  format of tangent
+   --  m_pt[0] = location
+   --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude
+   --  m_sc[0] = weight
    procedure Analyze_Tangent (theAnalysis : in out MV_Analysis;
                               MV          : Multivectors.Multivector) is
       use Multivectors;
