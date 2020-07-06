@@ -286,9 +286,9 @@ package body GA_Draw is
             --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
             --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
 
-            Fan (1) := (0.0, 0.0, 0.0);
+--              Fan (1) := (0.0, 0.0, 0.0);
 --              Normal (1) := (0.0, 0.0, Norm_Z);
-            for Count in 2 .. Num_Steps loop
+            for Count in 1 .. Num_Steps loop
                 Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
 --                  Normal (Count) := (0.0, 0.0, Norm_Z);
                 Angle := Angle + Rotor_Step;
