@@ -262,41 +262,42 @@ package body GA_Draw is
         Rotor_Step    : constant float :=
                           2.0 * Ada.Numerics.Pi / float (Num_Steps);
         Fan           : Singles.Vector3_Array (1 .. Num_Steps);
---          Normal        : Singles.Vector3_Array (1 .. Num_Steps) :=
---                            (others => (0.0, 0.0, 1.0));
+        Normal        : Singles.Vector3_Array (1 .. Num_Steps) :=
+                          (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
             use Palet;
-            Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-            Vertex_Buffer : GL.Objects.Buffers.Buffer;
---              Norm_Z : Single;
+            Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+            Vertex_Buffer  : GL.Objects.Buffers.Buffer;
+            Normals_Buffer : GL.Objects.Buffers.Buffer;
+            Norm_Z         : Single;
         begin
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
             Vertex_Buffer.Initialize_Id;
+            Normals_Buffer.Initialize_Id;
 
             Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
                         Circle_Part'Image (Part));
---              case Part is
---              when Back_Part | Outline_Part =>
---                  Norm_Z := 1.0;
---              when Front_Part =>
---                  Norm_Z := -1.0;
---              end case;
-            --           Multivector.Add_Blade (Normal, Blade.E3_e3, Norm_Z);
-            --           E3GA.Set_Coords (Normal, 0.0, 0.0, Norm_Z);
+            case Part is
+            when Back_Part | Outline_Part =>
+                Norm_Z := 1.0;
+            when Front_Part =>
+                Norm_Z := -1.0;
+            end case;
 
---              Normal (1) := (0.0, 0.0, Norm_Z);
+            Normal (1) := (0.0, 0.0, Norm_Z);
             for Count in 1 .. Num_Steps loop
                 Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
---                  Normal (Count) := (0.0, 0.0, Norm_Z);
+                Normal (Count) := (0.0, 0.0, Norm_Z);
                 Angle := Angle + Rotor_Step;
             end loop;
 
             Vertex_Array.Bind;
             Array_Buffer.Bind (Vertex_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
---              Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
+            Array_Buffer.Bind (Normals_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             GL.Objects.Programs.Use_Program (Render_Program);
             Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
@@ -304,9 +305,12 @@ package body GA_Draw is
               ("GA_Draw.Draw_Circle.Draw_Part, Model_View_Matrix",
                Model_View_Matrix);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
+            Array_Buffer.Bind (Vertex_Buffer);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
---              GL.Attributes.Enable_Vertex_Attrib_Array (1);
---              GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+
+            GL.Attributes.Enable_Vertex_Attrib_Array (1);
+            Array_Buffer.Bind (Normals_Buffer);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
             if Part = Back_Part or Part = Front_Part then
                 if Part = Back_Part and then Get_Draw_Mode.Orientation then
@@ -321,7 +325,7 @@ package body GA_Draw is
                                                       Count => Num_Steps);
             end if;
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
---              GL.Attributes.Disable_Vertex_Attrib_Array (1);
+            GL.Attributes.Disable_Vertex_Attrib_Array (1);
         end Draw_Part;
 
     begin
