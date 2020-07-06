@@ -9,6 +9,7 @@ with GL.Objects.Programs;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
+with GL.Window;
 
 with Glfw;
 with Glfw.Input;
@@ -38,7 +39,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
     Red            : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
     Green          : constant GL.Types.Singles.Vector4  := (0.0, 0.5, 0.0, 1.0);
-    Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
+--      Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
     --      Yellow         : constant Colors.Color := (1.0, 1.0, 0.0, 1.0);
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
@@ -110,6 +111,24 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Palet_Data          : Palet.Colour_Palet;
         N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
     begin
+        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+        Width := Single (Window_Width);
+        Height := Single (Window_Height);
+        GL.Window.Set_Viewport (0, 0, Int (Width), Int (Height));
+
+--          GL_Util.Load_Pick_Matrix;
+
+        Maths.Init_Perspective_Transform
+          (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
+        Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
+
+        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+
+        Shader_Manager.Set_Model_Matrix (Model_Matrix);
+        Shader_Manager.Set_View_Matrix (View_Matrix);
+        Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+        --  View and model matrices are initilized to identity by
+        --  shader initialization.
         Utilities.Clear_Background_Colour_And_Depth (White);
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
         GL.Toggles.Enable (GL.Toggles.Cull_Face);
@@ -122,7 +141,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
         Palet.Set_Point_Size (0.1);
 
-        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+--          GL_Util.GL_Color_3fm (1.0, 0.0, 0.0);
+
 --          Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
 --                        Sin (Vertical_Angle),
 --                        Cos (Vertical_Angle) * Cos (Horizontal_Angle));
@@ -130,29 +150,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                    Cos (Horizontal_Angle - Half_Pi));
 --          Up := Singles.Cross_Product (Right, Direction);
 
---          GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
---                                  GL.Types.Int (Window_Height));
-        Width := Single (Window_Width);
-        Height := Single (Window_Height);
 --          Maths.Init_Lookat_Transform (Camera_Position, Direction, Up, View_Matrix);
 
-        Maths.Init_Perspective_Transform
-          (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
-        GL.Objects.Programs.Use_Program (Render_Graphic_Program);
-        Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
-        Shader_Manager.Set_Light_Position_Vector ((0.0, 0.0, 10.0));
+--          Shader_Manager.Set_Light_Position_Vector ((0.0, 0.0, 10.0));
+--          Shader_Manager.Set_Drawing_Colour (Red);
 
-        Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
-        Shader_Manager.Set_Model_Matrix (Model_Matrix);
-        Shader_Manager.Set_View_Matrix (View_Matrix);
-        Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-        --  View and model matrices are initilized to identity by
-        --  shader initialization.
-
-        Shader_Manager.Set_Drawing_Colour (Red);
-
-        Shader_Manager.Set_Ambient_Colour (Green);
-        Shader_Manager.Set_Diffuse_Colour (BLue);
+--          Shader_Manager.Set_Ambient_Colour (Green);
+--          Shader_Manager.Set_Diffuse_Colour (BLue);
         --           Test_MV := Multivectors.New_Vector;
         --           GA_Utilities.Print_Multivector ("Display, Test_MV:", Test_MV);
         for count in 1 .. Points.Num_Points loop

@@ -14,7 +14,8 @@ package Pick_Manager is
                     Positions         : GL.Types.Singles.Vector3_Array;
                     Orientations      : Orientation_Array;
                     Indices_Size      : GL.Types.Int;
-                    View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4);
+                    View_Matrix       : GL.Types.Singles.Matrix4;
+                    Projection_Matrix : GL.Types.Singles.Matrix4);
     function Pick_Active return Boolean;
 private
     type Orientation is record
