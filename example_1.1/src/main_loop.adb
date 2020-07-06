@@ -5,7 +5,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
 with GL.Objects.Programs;
-with GL.Objects.Vertex_Arrays;
 --  with GL.Text;
 with GL.Toggles;
 with GL.Types; use GL.Types;
@@ -23,7 +22,7 @@ with E3GA;
 with C3GA;
 with C3GA_Draw;
 with Geosphere;
---  with GL_Util;
+with GL_Util;
 with Multivectors;
 with Palet;
 with Pick_Manager;
@@ -44,9 +43,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
     Key_Pressed    : boolean := False;
 
-    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-    --  rotor g_modelRotor(_rotor(1.0f))
---      Model_Rotor              : constant Multivectors.Rotor := Multivectors.New_Rotor (1.0);
     --      Rotate_Model    : boolean := False;
     --      Rotate_Model_Out_Of_Plane  : boolean := False;
     --      Pick            : GL_Util.GL_Pick;
@@ -94,6 +90,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --          Pick                : GL_Util.GL_Pick;
         Width               : GL.Types.Single;
         Height              : GL.Types.Single;
+        --  rotor g_modelRotor(_rotor(1.0f))
+        Model_Rotor     : constant Multivectors.Rotor :=
+                            Multivectors.New_Rotor (1.0);
         Translation_Matrix  : Matrix4 := Identity4;
         Projection_Matrix   : Matrix4 := Identity4;
         Model_Matrix        : constant Matrix4 := Identity4;
@@ -111,6 +110,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Palet_Data          : Palet.Colour_Palet;
         N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
     begin
+        Utilities.Clear_Background_Colour_And_Depth (White);
+        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+        GL.Culling.Set_Cull_Face (GL.Culling.Back);
+
+        Shader_Manager.Set_Line_Width (2.0);
+
+        GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
+
+        Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
+        Palet.Set_Point_Size (0.1);
+
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
 --          Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
 --                        Sin (Vertical_Angle),
@@ -138,15 +149,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --  View and model matrices are initilized to identity by
         --  shader initialization.
 
-        Utilities.Clear_Background_Colour_And_Depth (White);
-
-        GL.Toggles.Enable (GL.Toggles.Depth_Test);
-        GL.Toggles.Enable (GL.Toggles.Cull_Face);
-        GL.Culling.Set_Cull_Face (GL.Culling.Back);
-
---          GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
-
-        Palet.Set_Draw_Mode_Off (Palet.OD_Magnitude);
         Shader_Manager.Set_Drawing_Colour (Red);
 
         Shader_Manager.Set_Ambient_Colour (Green);
@@ -239,8 +241,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Sphere : Geosphere.Geosphere;
         Depth  : constant integer := 3;
     begin
-        Vertices_Array_Object.Initialize_Id;
-        Vertices_Array_Object.Bind;
         Shader_Manager.Init (Render_Program);
         Palet.Set_Point_Size (1.0);
         Geosphere.GS_Compute (Sphere, Depth);

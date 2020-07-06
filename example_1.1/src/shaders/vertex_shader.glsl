@@ -8,6 +8,7 @@ out vec3 Camera_Normal;
 //out vec3 Eye_Direction;
 out vec3 Light_Direction;
 
+uniform float line_width;
 uniform mat4  view_matrix;
 uniform mat4  model_matrix;
 uniform mat4  mv_matrix;
@@ -18,6 +19,7 @@ void main()
     {
     vec4 position = vec4(vertex_position, 1);
     vec4 normal = vec4(vertex_normal, 0);
+    vec4 delta = vec4(vertex_normal * line_width, 0);
 //    Position_Worldspace = (model_matrix * position).xyz;
       // Vector that goes from the vertex to the camera in camera space.
       // In camera space the camera is at the origin (0,0,0).
@@ -30,6 +32,6 @@ void main()
     Light_Direction = Light_Direction;
 
     Camera_Normal = (view_matrix * model_matrix * normal).xyz;
-    gl_Position = projection_matrix * mv_matrix * position;
+    gl_Position = projection_matrix * mv_matrix * (position + delta);
 //    gl_Position = mv_matrix * position;
     }
