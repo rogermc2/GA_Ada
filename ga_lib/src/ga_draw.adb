@@ -255,6 +255,7 @@ package body GA_Draw is
         use GA_Maths;
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
+        use Palet;
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
         Angle         : float := 0.0;
@@ -266,7 +267,6 @@ package body GA_Draw is
                           (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
-            use Palet;
             Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Normals_Buffer : GL.Objects.Buffers.Buffer;
@@ -277,8 +277,8 @@ package body GA_Draw is
             Vertex_Buffer.Initialize_Id;
             Normals_Buffer.Initialize_Id;
 
-            Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
-                        Circle_Part'Image (Part));
+--              Put_Line ("GA_Draw.Draw_Circle.Draw_Part, drawing " &
+--                          Circle_Part'Image (Part));
             case Part is
             when Back_Part | Outline_Part =>
                 Norm_Z := 1.0;
@@ -319,7 +319,7 @@ package body GA_Draw is
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
                                                       First => 0,
                                                       Count => Num_Steps);
-            else
+            else  --  Outline part
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
                                                       First => 0,
                                                       Count => Num_Steps);
@@ -329,13 +329,13 @@ package body GA_Draw is
         end Draw_Part;
 
     begin
-        if Method = Draw_Bivector_Circle or
+        if Method = Draw_Bivector_Circle or Palet_Type = Null_Palet or
           Palet.Foreground_Alpha (Palet_Type) > 0.0 then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;
 
-        Palet.Set_Ol_Colour (Palet_Type);
+        Palet.Set_Outline_Colour (Palet_Type);
         Draw_Part (Outline_Part);
 
     exception

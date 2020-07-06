@@ -108,7 +108,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --          Direction           : Vector3;
 --          Right               : Vector3;
 --          Up                  : Vector3;
-        Palet_Data          : Palet.Colour_Palet;
         N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
     begin
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -194,11 +193,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
             Shader_Manager.Set_Ambient_Colour (Red);
             C3GA_Draw.Draw (Render_Graphic_Program,
-                            Model_View_Matrix, aLine, Palet_Data);
+                            Model_View_Matrix, aLine, Palet.Null_Palet);
 
             Shader_Manager.Set_Ambient_Colour (Green);
             C3GA_Draw.Draw (Render_Graphic_Program,
-                            Model_View_Matrix, aCircle, Palet_Data);
+                            Model_View_Matrix, aCircle, Palet.Null_Palet);
         end if;
 
     exception

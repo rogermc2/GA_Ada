@@ -30,7 +30,8 @@ package Palet is
    function Foreground_Red (Palet_Data : Colour_Palet) return Single;
    function Get_Draw_Mode return Draw_Mode;
    function Line_Length return Float;
-   function Ol_Colour (Palet_Data : Colour_Palet) return Color;
+   function Outline_Colour (Palet_Data : Colour_Palet) return Color;
+   function Null_Palet return Colour_Palet;
    function Point_Size return Float;
 
    procedure Set_Background_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
@@ -44,16 +45,18 @@ package Palet is
    procedure Set_Foreground_Colour (Palet_Data  : in out Colour_Palet;
                                     Fore_Colour : Color);
    procedure Set_Foreground_Colour (Palet_Data : Colour_Palet);
-   procedure Set_Ol_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
-   procedure Set_Ol_Colour (Palet_Data : in out Colour_Palet; Ol_Colour : Color);
-   procedure Set_Ol_Colour (Palet_Data : Colour_Palet);
+   procedure Set_Outline_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
+   procedure Set_Outline_Colour (Palet_Data : in out Colour_Palet;
+                                 Outline_Colour : Color);
+   procedure Set_Outline_Colour (Palet_Data : Colour_Palet);
    procedure Set_Point_Size (Point_Size : Float);
 
 private
    type Colour_Palet is record
+      Off               : Boolean := False;
       Foreground_Colour : Color := (1.0, 0.0, 0.0, 1.0);
       Background_Colour : Color := (0.0, 1.0, 0.0, 1.0);
-      Ol_Colour         : Color := (0.0, 0.0, 0.0, 1.0);
+      Outline_Colour    : Color := (0.0, 0.0, 0.0, 1.0);
    end record;
 
    type Draw_State is record

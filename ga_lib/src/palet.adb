@@ -89,13 +89,20 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   function Ol_Colour (Palet_Data : Colour_Palet) return Color is
+   function Outline_Colour (Palet_Data : Colour_Palet) return Color is
    begin
-      return Palet_Data.Ol_Colour;
-   end Ol_Colour;
+      return Palet_Data.Outline_Colour;
+   end Outline_Colour;
 
    --  ------------------------------------------------------------------------
 
+   function Null_Palet return Colour_Palet is
+      Null_Colour : constant Color := (0.0, 0.0, 0.0, 0.0);
+   begin
+      return (False, Null_Colour, Null_Colour, Null_Colour);
+   end Null_Palet;
+
+   --  ------------------------------------------------------------------------
    function Point_Size return Float is
    begin
       return G_Draw_State.Point_Size;
@@ -206,22 +213,23 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Ol_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float) is
+   procedure Set_Outline_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float) is
    begin
-      Palet_Data.Ol_Colour (A) := GL.Types.Single (Alpa);
-   end Set_Ol_Alpa;
+      Palet_Data.Outline_Colour (A) := GL.Types.Single (Alpa);
+   end Set_Outline_Alpa;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Ol_Colour (Palet_Data : in out Colour_Palet; Ol_Colour : Color) is
+   procedure Set_Outline_Colour (Palet_Data : in out Colour_Palet;
+                                 Outline_Colour : Color) is
    begin
-      Palet_Data.Ol_Colour := Ol_Colour;
-   end Set_Ol_Colour;
+      Palet_Data.Outline_Colour := Outline_Colour;
+   end Set_Outline_Colour;
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Ol_Colour (Palet_Data : Colour_Palet) is
-      Colour         : constant Color := Ol_Colour (Palet_Data);
+   procedure Set_Outline_Colour (Palet_Data : Colour_Palet) is
+      Colour         : constant Color := Outline_Colour (Palet_Data);
       A_State        : constant Single := Single (G_Draw_State.Ambient);
       D_State        : constant Single := Single (G_Draw_State.Diffuse);
       Ambient_Colour : constant Color :=
@@ -237,7 +245,7 @@ package body Palet is
       Shader_Manager.Set_Diffuse_Colour
         ((Diffuse_Colour (R), Diffuse_Colour (G), Diffuse_Colour (B),
          Diffuse_Colour (A)));
-   end Set_Ol_Colour;
+   end Set_Outline_Colour;
 
    --  ------------------------------------------------------------------------
 
