@@ -51,7 +51,8 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-    procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
+    procedure Print_GL_Int3_Array
+      (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
     begin
         Put_Line (Name & ": ");
         for Index in anArray'First .. anArray'Last loop
