@@ -14,7 +14,8 @@ package body Shader_Manager is
         use GL.Objects.Shaders;
         use GL.Types.Singles;
         use Program_Loader;
-        Light   : constant Singles.Vector3 := (0.0, 4.0, 1.0);
+        Light     : constant Singles.Vector3 := (0.0, 4.0, 1.0);
+        Direction : constant Singles.Vector3 := (0.0, 0.0, 1.0);
     begin
         Render_Program := Program_From
           ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
@@ -41,6 +42,7 @@ package body Shader_Manager is
           Uniform_Location (Render_Program, "Drawing_Colour");
 
         Use_Program (Render_Program);
+        GL.Uniforms.Set_Single (Render_Uniforms.Light_Direction_ID, Direction);
         GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
         GL.Uniforms.Set_Single (Render_Uniforms.Line_Width_ID, 1.0);
         GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Identity4);
@@ -79,6 +81,14 @@ package body Shader_Manager is
         GL.Uniforms.Set_Single
           (Render_Uniforms.Drawing_Colour_ID, Drawing_Colour);
     end Set_Drawing_Colour;
+
+    --  -------------------------------------------------------------------------
+
+    procedure Set_Light_Direction_Vector (Light_Direction : Singles.Vector3) is
+    begin
+        GL.Uniforms.Set_Single
+          (Render_Uniforms.Light_Direction_ID, Light_Direction);
+    end Set_Light_Direction_Vector;
 
     --  -------------------------------------------------------------------------
 

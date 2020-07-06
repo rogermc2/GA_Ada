@@ -14,6 +14,7 @@ uniform mat4  model_matrix;
 uniform mat4  mv_matrix;
 uniform mat4  projection_matrix;
 uniform vec3  light_position;
+uniform vec3  light_direction;
 
 void main()
     {
@@ -29,7 +30,7 @@ void main()
       // M is ommited because it's identity.
 //    vec3 LightPosition = (view_matrix * vec4(light_position, 1)).xyz;  // Not used?
 //    Light_Direction = Light_Direction + Eye_Direction;
-    Light_Direction = vec3(0.0, 0.0, 1.0);
+    Light_Direction = light_direction;
 
     Camera_Normal = (view_matrix * model_matrix * normal).xyz;
     gl_Position = projection_matrix * mv_matrix * (position + delta);
