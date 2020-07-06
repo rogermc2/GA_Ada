@@ -397,34 +397,33 @@ package body GA_Draw is
         use GL.Types.Singles;
         Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Vertex_Buffer : GL.Objects.Buffers.Buffer;
-        --          Scale_Constant and Step_Size are used for building Line_Strip
+        --  Scale_Constant and Step_Size are used for building Line_Strip
         Scale_Constant       : constant Single := Single (Palet.Line_Length);  --  6.0
         Step_Size            : constant Single := 0.1;
         Step_Length          : constant Single := Scale_Constant * Step_Size;
         Num_Steps            : constant Int := Int (2.0 / Step_Size + 0.5) + 1;
         Num_Vertices         : constant Int := Num_Steps + 1;
         Length_Vertices      : Singles.Vector3_Array (1 .. Num_Steps);
---          C_Steps              : constant Int := Int (1.0 / Step_Size + 0.5) + 1;
---          C_Rotation_Matrix    : Matrix4 := Identity4;
+        C_Steps              : constant Int := Int (1.0 / Step_Size + 0.5) + 1;
+        C_Rotation_Matrix    : Matrix4 := Identity4;
         Translation_Matrix   : Matrix4 := Identity4;
-        Scale_Matrix         : constant Matrix4 := Maths.Scaling_Matrix (Single (Weight));
+        Scale_Matrix         : Matrix4 :=
+                                 Maths.Scaling_Matrix (Single (Weight));
         MV_Matrix            : Matrix4 := Model_View_Matrix;
         Z                    : Single := -Scale_Constant;
---          C                    : Single := 0.0;
---          Num_C_Vertices       : constant Int := 3 * C_Steps + 1;
---          C_Vertices           : Singles.Vector3_Array (1 .. Num_C_Vertices);
---          C_Index              : Int := 0;
---          C_Vertex1            : constant Singles.Vector3 := (-0.25, 0.0, -1.0);
---  	C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
---  	C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
+        C                    : Single := 0.0;
+        Num_C_Vertices       : constant Int := 3 * C_Steps + 1;
+        C_Vertices           : Singles.Vector3_Array (1 .. Num_C_Vertices);
+        C_Index              : Int := 0;
+        C_Vertex1            : constant Singles.Vector3 := (-0.25, 0.0, -1.0);
+	C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
+	C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
         GL_Point             : constant Singles.Vector3 := GL_Util.To_GL (C3GA.Get_Coords (aPoint));
     begin
         --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
         Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
---          Put_Line ("GA_Draw.Draw_Line Scale_Constant" & Single'Image (Scale_Constant));
---          Put_Line ("GA_Draw.Draw_Line Step_Length" & Single'Image (Step_Length));
         for index in 1 .. Num_Steps  loop
             Length_Vertices (index) := (0.0, 0.0, Z);
             Z := Z + Step_Length;
@@ -455,41 +454,41 @@ package body GA_Draw is
                                               First => 0, Count => Num_Vertices);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
---          if Palet.Get_Draw_Mode.Orientation then
---              Translation_Matrix :=
---                Maths.Translation_Matrix ((0.0, 0.0, -Scale_Constant));
---              if Palet.Get_Draw_Mode.Magnitude then
---                  Scale_Matrix :=
---                    Maths.Scaling_Matrix (Single (0.5 * Abs (Weight)));
---              else
---                  Scale_Matrix := Maths.Scaling_Matrix (0.5);
---              end if;
---
---              while C < 1.0  loop
---                  C_Index := C_Index + 1;
---                  C_Vertices (C_Index) := C_Vertex1;
---                  C_Index := C_Index + 1;
---                  C_Vertices (C_Index) := C_Vertex2;
---                  C_Index := C_Index + 1;
---                  C_Vertices (C_Index) := C_Vertex3;
---                  C := C + Step_Size;
---
---                  Utilities.Load_Vertex_Buffer (Array_Buffer, C_Vertices, Static_Draw);
---                  MV_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
---
---                  GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
---                  GL.Attributes.Enable_Vertex_Attrib_Array (0);
---
---                  GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
---                                                        First => 0, Count => Num_C_Vertices);
---                  GL.Attributes.Disable_Vertex_Attrib_Array (0);
---
---                  C_Rotation_Matrix :=
---                    Maths.Rotation_Matrix (Maths.Degree (90.0), (0.0, 0.0, 1.0));
---                  Translation_Matrix :=
---                    Maths.Translation_Matrix ((0.0, 0.0, 2.0 * Step_Length));
---              end loop;
---          end if;
+        if Palet.Get_Draw_Mode.Orientation then
+            Translation_Matrix :=
+              Maths.Translation_Matrix ((0.0, 0.0, -Scale_Constant));
+            if Palet.Get_Draw_Mode.Magnitude then
+                Scale_Matrix :=
+                  Maths.Scaling_Matrix (Single (0.5 * Abs (Weight)));
+            else
+                Scale_Matrix := Maths.Scaling_Matrix (0.5);
+            end if;
+
+            while C < 1.0  loop
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex1;
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex2;
+                C_Index := C_Index + 1;
+                C_Vertices (C_Index) := C_Vertex3;
+                C := C + Step_Size;
+
+                Utilities.Load_Vertex_Buffer (Array_Buffer, C_Vertices, Static_Draw);
+                MV_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
+
+                GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+                GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+                GL.Objects.Vertex_Arrays.Draw_Arrays
+                  (Mode  => Line_Strip, First => 0, Count => Num_C_Vertices);
+                GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
+                C_Rotation_Matrix :=
+                  Maths.Rotation_Matrix (Maths.Degree (90.0), (0.0, 0.0, 1.0));
+                Translation_Matrix :=
+                  Maths.Translation_Matrix ((0.0, 0.0, 2.0 * Step_Length));
+            end loop;
+        end if;
 
     exception
         when  others =>
