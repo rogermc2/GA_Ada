@@ -96,8 +96,6 @@ package body GL_Util is
                 Matrix (row, Y) := VC (Y);
                 Matrix (row, Z) := VC (Z);
             end loop;
-            Utilities.Print_Matrix
-              ("GL_Util.Rotor_GL_Multiply Matrix", Matrix);
             GL_Matrix := Matrix * GL_Matrix;
         end if;
 

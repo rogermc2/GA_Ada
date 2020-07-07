@@ -22,8 +22,10 @@ with Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
+with Metric;
 with Multivectors;
 with Palet;
 with Pick_Manager;
@@ -100,8 +102,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix         : constant Matrix4 := Identity4;
       Model_View_Matrix   : Matrix4 := Identity4;
       View_Angle          : constant Maths.Degree := 50.0;
-      --          View_Matrix         : GL.Types.Singles.Matrix4 := Identity4;
-      --          Camera_Position     : constant GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
+      --          View_Matrix         : Matrix4 := Identity4;
+      --          Camera_Position     : constant Vector3 := (0.0, 0.0, 5.0);
       --          Half_Pi             : constant Single := 0.5 * Ada.Numerics.Pi;
       --          Horizontal_Angle    : constant Single := Ada.Numerics.Pi;
       --          Vertical_Angle      : constant Single := 0.0;
@@ -109,6 +111,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
+      GP                  : Multivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -199,9 +202,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
+         GP := General_Inverse (aDual_Plane, Metric.C3_Metric);
+         GP := Geometric_Product (aLine, GP, Metric.C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                          Geometric_Product (-aDual_Plane, Geometric_Product
-                            (aLine, General_Inverse (aDual_Plane))));
+                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
       end if;
 
    exception

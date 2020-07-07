@@ -46,14 +46,15 @@ package body C3GA_Draw is
 --              GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Z)));
 --          end loop;
 
-        Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points:");
-        for index in 1 .. Multivector_Analyze.Max_Points loop
-            Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X))
-                      & "  " &
-                      GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y))
-                      & "  " &
-                      GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
-        end loop;
+--          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points:");
+--          for index in 1 .. Multivector_Analyze.Max_Points loop
+--              Put_Line (GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.X))
+--                        & "  " &
+--                        GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Y))
+--                        & "  " &
+--                        GL.Types.Single'Image (Analyzed_MV.Points (index) (GL.Z)));
+--          end loop;
+
         Draw_C3GA (Render_Program, Model_View_Matrix, Analyzed_MV, Palet_Type);
 
     exception
@@ -103,7 +104,6 @@ package body C3GA_Draw is
             when Round_Blade =>
                Put_Line ("C3GA_Draw.Draw_C3GA Round.");
                --  Draw_Round doesn't use method
-               Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
                Draw_Round (Render_Program, Model_View_Matrix, Analyzed_MV,
                            Palet_Type);
             when Tangent_Blade =>
@@ -195,6 +195,7 @@ package body C3GA_Draw is
                                     V                 => Analysis.M_Vectors);
             when others => null;
         end case;
+        Put_Line ("GA_Draw.Draw_Free finished.");
 
     exception
         when others =>
@@ -293,6 +294,7 @@ package body C3GA_Draw is
                Point_Pos, P_Scale, Palet_Type, GA_Draw.Draw_TV_Sphere);
          when others => null;
       end case;
+      Put_Line ("C3GA_Draw.Draw_Round finished.");
 
     exception
       when others =>

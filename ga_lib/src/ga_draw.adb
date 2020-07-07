@@ -106,15 +106,15 @@ package body GA_Draw is
         Ortho_2_Coords        : constant GA_Maths.Array_3D :=
                                   C3GA.Get_Coords (Ortho_2);
         Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
-        MV_Normal             : constant Multivectors.Vector :=
-                                  Multivectors.New_Vector
-                                    (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
-        MV_Ortho_1            : constant Multivectors.Vector :=
-                                  Multivectors.New_Vector
-                                    (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
-        MV_Ortho_2            : constant Multivectors.Vector :=
-                                  Multivectors.New_Vector
-                                    (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
+        MV_Normal             : constant Multivectors.Vector
+          := Multivectors.New_Vector
+              (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
+        MV_Ortho_1            : constant Multivectors.Vector
+          := Multivectors.New_Vector
+               (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
+        MV_Ortho_2            : constant Multivectors.Vector
+          := Multivectors.New_Vector
+            (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
         MV_Matrix             : Matrix4 := Model_View_Matrix;
         Scaled                : GL.Types.Single;
         RT                    : Multivectors.Rotor;
@@ -144,7 +144,7 @@ package body GA_Draw is
               Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
         end if;
 
-        Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
         case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
@@ -301,9 +301,6 @@ package body GA_Draw is
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-            Utilities.Print_Matrix
-              ("GA_Draw.Draw_Circle.Draw_Part, Model_View_Matrix",
-               Model_View_Matrix);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             Array_Buffer.Bind (Vertex_Buffer);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
@@ -331,8 +328,8 @@ package body GA_Draw is
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
         if (Method = Draw_Bivector_Circle or Method = Draw_Bivector_Circle_Outline)
-          and then
-            (Palet_Type = Is_Null or Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
+          and then (Palet_Type = Is_Null or
+                      Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;
@@ -444,8 +441,8 @@ package body GA_Draw is
         --  rotate e3 to line direction
         MV_Matrix := Model_View_Matrix *
           GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
-        Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
-                                GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
+--                                  GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
         MV_Matrix := Scale_Matrix * MV_Matrix;
         --  translate to point on line
         Translation_Matrix :=
