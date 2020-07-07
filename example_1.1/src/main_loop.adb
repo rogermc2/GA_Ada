@@ -22,7 +22,7 @@ with Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
---  with GA_Utilities;
+with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Metric;
@@ -41,7 +41,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --      Black          : constant Colors.Color := (0.0, 0.0, 0.0, 1.0);
    Red            : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 0.0, 1.0);
    Green          : constant GL.Types.Singles.Vector4  := (0.0, 0.5, 0.0, 1.0);
-   --      Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
+   Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
    Magenta        : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 1.0, 1.0);
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
@@ -111,6 +111,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
+      GI                  : Multivector;
       GP                  : Multivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -202,8 +203,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         GP := General_Inverse (aDual_Plane, Metric.C3_Metric);
-         GP := Geometric_Product (aLine, GP, Metric.C3_Metric);
+         GI := General_Inverse (aDual_Plane, Metric.C3_Metric);
+         GP := Geometric_Product (aLine, GI, Metric.C3_Metric);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
+
+         --  draw reflected circle (blue)
+         Shader_Manager.Set_Ambient_Colour (Blue);
+         Put_Line ("Main_Loop.Display calling circle GP");
+         GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
+         GA_Utilities.Print_Multivector ("Main_Loop.Display GP", GP);
+         Put_Line ("Main_Loop.Display calling circle draw");
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
       end if;

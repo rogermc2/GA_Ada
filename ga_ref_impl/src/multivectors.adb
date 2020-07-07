@@ -1123,7 +1123,7 @@ package body Multivectors is
    begin
       If not Grade (MV1, G1) or not Grade (MV2, G2) then
          raise MV_Exception with
-           "Multivectors.Left_Contraction metric called with invalid multivecgtor";
+           "Multivectors.Left_Contraction metric called with invalid multivector";
       elsif G2 >= G1 then
          Result := Extract_Grade (Geometric_Product (MV1, MV2, Met), G2 - G1);
       end if;
