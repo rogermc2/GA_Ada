@@ -31,7 +31,7 @@ package body C3GA_Draw is
     procedure Draw (Render_Program : GL.Objects.Programs.Program;
                     Model_View_Matrix : GL.Types.Singles.Matrix4;
                     MV : Multivectors.Multivector;
-                    Palet_Type : Palet.Colour_Palet := Palet.Null_Palet) is
+                    Palet_Type : Palet.Colour_Palet := Palet.Is_Null) is
 --                      Method   : GA_Draw.Method_Type :=
 --                       GA_Draw.Draw_Method_Undefined) is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
@@ -225,7 +225,7 @@ package body C3GA_Draw is
     procedure Draw_Point (Render_Program : GL.Objects.Programs.Program;
                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                           Analysis : Multivector_Analyze.MV_Analysis;
-                          Palet_Type : Palet.Colour_Palet := Palet.Null_Palet) is
+                          Palet_Type : Palet.Colour_Palet := Palet.Is_Null) is
         Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
     begin
       GA_Draw.Draw_Trivector (Render_Program    => Render_Program,

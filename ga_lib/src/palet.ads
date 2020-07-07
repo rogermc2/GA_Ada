@@ -29,9 +29,9 @@ package Palet is
    function Foreground_Green (Palet_Data  : Colour_Palet) return Single;
    function Foreground_Red (Palet_Data : Colour_Palet) return Single;
    function Get_Draw_Mode return Draw_Mode;
+   function Is_Null return Colour_Palet;
    function Line_Length return Float;
    function Outline_Colour (Palet_Data : Colour_Palet) return Color;
-   function Null_Palet return Colour_Palet;
    function Point_Size return Float;
 
    procedure Set_Background_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);

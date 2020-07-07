@@ -82,6 +82,14 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
+   function Is_Null return Colour_Palet is
+      Null_Colour : constant Color := (0.0, 0.0, 0.0, 0.0);
+   begin
+      return (False, Null_Colour, Null_Colour, Null_Colour);
+   end Is_Null;
+
+   --  ------------------------------------------------------------------------
+
    function Line_Length return Float is
    begin
       return G_Draw_State.Line_Length;
@@ -96,13 +104,6 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
-   function Null_Palet return Colour_Palet is
-      Null_Colour : constant Color := (0.0, 0.0, 0.0, 0.0);
-   begin
-      return (False, Null_Colour, Null_Colour, Null_Colour);
-   end Null_Palet;
-
-   --  ------------------------------------------------------------------------
    function Point_Size return Float is
    begin
       return G_Draw_State.Point_Size;
