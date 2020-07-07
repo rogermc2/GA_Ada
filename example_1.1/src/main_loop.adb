@@ -192,12 +192,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Multivectors.To_Dual_Plane (aDual_Plane);
 
             Shader_Manager.Set_Ambient_Colour (Red);
-            C3GA_Draw.Draw (Render_Graphic_Program,
-                            Model_View_Matrix, aLine, Palet.Null_Palet);
+            C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aLine);
 
             Shader_Manager.Set_Ambient_Colour (Green);
-            C3GA_Draw.Draw (Render_Graphic_Program,
-                            Model_View_Matrix, aCircle, Palet.Null_Palet);
+            C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aCircle);
         end if;
 
     exception
