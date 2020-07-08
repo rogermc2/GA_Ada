@@ -5,7 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
-with Bits;
+--  with Bits;
 --  with GA_Utilities;
 with SVD;
 
@@ -13,6 +13,10 @@ package body Multivectors is
 
    type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
+   pragma Warnings (Off);
+   Geometry              : Geometry_Type := Geometry_Not_Set;
+   pragma Warnings (On);
+   Spatial_Dimension     : Natural := 0;
    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
    --  This array can be used to lookup the number of coordinates for
    --  the grade part of a general multivector
@@ -467,7 +471,7 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Dual (MV : Multivector; Met : Metric.Metric_Record)
-                   return Multivector is
+                  return Multivector is
       use Interfaces;
       Index   : constant Unsigned_32 :=
                   Shift_Left (1, Metric.Eigen_Values (Met)'Length) - 1;
@@ -591,10 +595,12 @@ package body Multivectors is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
-      Dim          : constant Natural := Space_Dimension (MV);
-      Max_Index    : constant Natural := 2 ** Dim;
-      Mat          : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
-      Mat_Inv      : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) := (others => (others => 0.0));
+      --        Dim          : constant Natural := Space_Dimension (MV);
+      Max_Index    : constant Natural := 2 ** Spatial_Dimension;
+      Mat          : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
+                       (others => (others => 0.0));
+      Mat_Inv      : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
+                       (others => (others => 0.0));
       BBs_L        : Basis_Blade_Array (1 .. Max_Index);
       Curs         : Cursor := MV.Blades.First;
       Cond         : Float;
@@ -660,7 +666,7 @@ package body Multivectors is
       use Blade;
       use GA_Maths;
       use Float_Array_Package;
-      Dim          : Natural;
+      --        Dim          : Natural;
       Cond         : Float;
       Value        : Float;
       Blades       : Blade_List;
@@ -669,12 +675,15 @@ package body Multivectors is
       if Is_Scalar (MV) or Is_Null (MV) then
          Result := MV;
       else
-         Dim := Space_Dimension (MV) ;
+         --           Dim := Space_Dimension (MV) ;
          declare
             --  cern.colt.matrix.DoubleFactory2D.dense.make(1 << dim, 1 << dim);
-            L_Max    : constant integer := 2 ** (Dim - 1);  --  1 << dim
-            Mat      : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
-            Mat_Inv  : Float_Matrix (1 .. L_Max, 1 .. L_Max) := (others => (others => 0.0));
+            --              L_Max    : constant integer := 2 ** (Dim - 1);  --  1 << dim
+            L_Max    : constant integer := 2 ** (Spatial_Dimension);
+            Mat      : Float_Matrix (1 .. L_Max, 1 .. L_Max) :=
+                         (others => (others => 0.0));
+            Mat_Inv  : Float_Matrix (1 .. L_Max, 1 .. L_Max) :=
+                         (others => (others => 0.0));
             BBs_L    : Basis_Blade_Array (1 .. L_Max);
             --                  Det      : Float;
          begin
@@ -889,7 +898,7 @@ package body Multivectors is
          while OK and Has_Element (Cursor_B) loop
             thisBlade := Element (Cursor_B);
             Put_Line ("Multivectors.Grade this Grade, : " &
-                  Integer'Image (Blade.Grade (thisBlade)));
+                        Integer'Image (Blade.Grade (thisBlade)));
             OK := Blade.Grade (thisBlade) = theGrade;
             Next (Cursor_B);
          end loop;
@@ -1128,11 +1137,11 @@ package body Multivectors is
       Result : Multivector;
    begin
       Put_Line ("Multivectors.Left_Contraction metric, G1_OK, G2_OK: " &
-               Boolean'Image (G1_OK) & "  " &
-               Boolean'Image (G2_OK));
+                  Boolean'Image (G1_OK) & "  " &
+                  Boolean'Image (G2_OK));
       Put_Line ("Multivectors.Left_Contraction metric, G1, G2: " &
-               Integer'Image (G1) & "  " &
-               Integer'Image (G2));
+                  Integer'Image (G1) & "  " &
+                  Integer'Image (G2));
       If not G1_OK or not G2_OK then
          raise MV_Exception with
            "Multivectors.Left_Contraction metric called with invalid multivector";
@@ -1228,6 +1237,13 @@ package body Multivectors is
    begin
       return Natural (Blades.Length);
    end MV_Size;
+
+   --  -------------------------------------------------------------------------
+
+   function Space_Dimension return Natural is
+   begin
+      return Spatial_Dimension;
+   end Space_Dimension;
 
    --  -------------------------------------------------------------------------
 
@@ -1657,6 +1673,22 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   procedure Set_Geometry (theGeometry : Geometry_Type) is
+   begin
+      Geometry := theGeometry;
+      case theGeometry is
+      when E1_Geometry => Spatial_Dimension:= 1;
+      when E2_Geometry => Spatial_Dimension:= 2;
+      when E3_Geometry => Spatial_Dimension:= 3;
+      when H3_Geometry => Spatial_Dimension:= 4;
+      when C3_Geometry => Spatial_Dimension:= 5;
+      when others =>
+         raise MV_Exception with
+           "Multivectors.Set_Geometry, invalid geometry.";
+      end case;
+   end Set_Geometry;
+
+   --  -------------------------------------------------------------------------
    procedure Simplify (MV : in out Multivector) is
       Blades : Blade.Blade_List := MV.Blades;
    begin
@@ -1725,20 +1757,20 @@ package body Multivectors is
 
    --  Space_Dimension returns the dimension of the space that this blade
    --  (apparently) lives in.
-   function Space_Dimension (MV : Multivector) return Natural is
-      use Blade;
-      use Blade_List_Package;
-      Max_D        : Natural := 0;
-      Blade_Cursor : Cursor := MV.Blades.First;
-   begin
-      while Has_Element (Blade_Cursor) loop
-         Max_D := GA_Maths.Maximum (Max_D,
-                                    Bits.Highest_One_Bit (Bitmap (Element (Blade_Cursor))));
-         Next (Blade_Cursor);
-      end loop;
-
-      return Max_D + 1;
-   end Space_Dimension;
+   --     function Space_Dimension (MV : Multivector) return Natural is
+   --        use Blade;
+   --        use Blade_List_Package;
+   --        Max_D        : Natural := 0;
+   --        Blade_Cursor : Cursor := MV.Blades.First;
+   --     begin
+   --        while Has_Element (Blade_Cursor) loop
+   --           Max_D := GA_Maths.Maximum (Max_D,
+   --                                      Bits.Highest_One_Bit (Bitmap (Element (Blade_Cursor))));
+   --           Next (Blade_Cursor);
+   --        end loop;
+   --
+   --        return Max_D + 1;
+   --     end Space_Dimension;
 
    --  -------------------------------------------------------------------------
    --  To_Geometric_Matrix constructs a matrix 'Matrix_AG' such that

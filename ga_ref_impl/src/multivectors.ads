@@ -9,6 +9,8 @@ with Metric;
 
 package Multivectors is
 
+   type Geometry_Type is (Geometry_Not_Set, E1_Geometry, E2_Geometry,
+                          E3_Geometry, H3_Geometry, C3_Geometry);
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
                     MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point, MV_Line,
                     MV_Circle, MV_Sphere, MV_Dual_Plane, MV_Dual_Sphere);
@@ -93,6 +95,7 @@ package Multivectors is
    function MV_First (MV_List : Multivector_List) return Multivector;
    function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector;
    function MV_Kind (MV : Multivector) return MV_Type;
+   function MV_Size (MV : Multivector) return Natural;
    function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
@@ -126,11 +129,12 @@ package Multivectors is
    function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                             return float;
+   procedure Set_Geometry (theGeometry : Geometry_Type);
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
-   function MV_Size (MV : Multivector) return Natural;
-   function Space_Dimension (MV : Multivector) return Natural;
+   function Space_Dimension return Natural;
+--     function Space_Dimension (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
