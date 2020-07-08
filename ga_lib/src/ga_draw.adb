@@ -426,8 +426,8 @@ package body GA_Draw is
     begin
         --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
-        Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
-        Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
+--          Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
+--          Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
         for index in 1 .. Num_Steps  loop
             Length_Vertices (index) := (0.0, 0.0, Z);
             Z := Z + Step_Length;

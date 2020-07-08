@@ -1119,15 +1119,22 @@ package body Multivectors is
                               return Multivector is
       G1     : Integer;
       G2     : Integer;
+      G1_OK  : constant Boolean := Grade (MV1, G1);
+      G2_OK  : constant Boolean := Grade (MV2, G2);
       Result : Multivector;
    begin
-      If not Grade (MV1, G1) or not Grade (MV2, G2) then
+      Put_Line ("Multivectors.Left_Contraction metric, G1_OK, G2_OK: " &
+               Boolean'Image (G1_OK) & "  " &
+               Boolean'Image (G2_OK));
+      Put_Line ("Multivectors.Left_Contraction metric, G1, G2: " &
+               Integer'Image (G1) & "  " &
+               Integer'Image (G2));
+      If not G1_OK or not G2_OK then
          raise MV_Exception with
            "Multivectors.Left_Contraction metric called with invalid multivector";
       elsif G2 >= G1 then
          Result := Extract_Grade (Geometric_Product (MV1, MV2, Met), G2 - G1);
       end if;
-
       return Result;
    end Left_Contraction;
 

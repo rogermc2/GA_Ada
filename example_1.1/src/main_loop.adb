@@ -212,10 +212,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          Put_Line ("Main_Loop.Display calling circle GP");
          GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
+         Put_Line ("Main_Loop.Display calling circle GP 2");
+         GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
          GA_Utilities.Print_Multivector ("Main_Loop.Display GP", GP);
          Put_Line ("Main_Loop.Display calling circle draw");
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
       end if;
 
    exception

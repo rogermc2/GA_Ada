@@ -10,6 +10,7 @@ with Utilities;
 
 with Blade_Types;
 with E3GA;
+with GA_Maths;
 with GA_Utilities;
 with Inner_Product_Types;
 with Metric;
@@ -66,8 +67,8 @@ package body Multivector_Analyze_C3GA is
          end if;
          --           Xsq_Val := Norm_Esq (MV_X);  --  norm_r
 
-         --           Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
-         --                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
+          Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
+                     Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
          --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
          --              GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
          --              Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
@@ -108,10 +109,11 @@ package body Multivector_Analyze_C3GA is
          MV_X := Multivectors.Dual (MV_X, Metric.C3_Metric);
       end if;
 
+     Put_Line ("Multivector_Analyze_C3GA.Analyze setting MV_Info");
       MV_Info := Init (MV_X, Metric.C3_Metric);
       Analysis.M_MV_Type := MV_Info;
-      --        Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
-      --        New_Line;
+      Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
+      New_Line;
 
       --  Check for zero blade
       if Zero (Analysis.M_MV_Type) then
@@ -125,6 +127,8 @@ package body Multivector_Analyze_C3GA is
          Analysis.M_Vectors (1) := C3GA.To_VectorE3GA (E3GA.e1);
 
       else
+         Put_Line ("Multivector_Analyze_C3GA.Analyze case Grade_Use: " &
+                  GA_Maths.Grade_Usage'Image (Grade_Use (Analysis.M_MV_Type)));
          case Grade_Use (Analysis.M_MV_Type) is
             when 0 =>  --  Grade 0 Scalar
                Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 1.");
@@ -143,6 +147,7 @@ package body Multivector_Analyze_C3GA is
          end case;
       end if;
       New_Line;
+      Put_Line ("Multivector_Analyze_C3GA.Analyze done.");
 
    exception
       when others =>
@@ -183,7 +188,13 @@ package body Multivector_Analyze_C3GA is
       MV_Inverse := General_Inverse (MV_X, Met);
       --  MV_Location is a normalized dual sphere
       MV_Location := Left_Contraction (Probe, MV_X, Met);
+      GA_Utilities.Print_Multivector
+          ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Location", MV_Location);
+      GA_Utilities.Print_Multivector
+          ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Inverse", MV_Inverse);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, setting MV_Location 2");
       MV_Location := Left_Contraction (MV_Location, MV_Inverse, Met);
+      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Location set");
       SP := Scalar_Product (C3GA.ni, MV_Location, Met);
       if SP = 0.0 then
          Location := C3GA.Set_Normalized_Point (E1 => 0.0, E2 => 0.0, E3 => 0.0);

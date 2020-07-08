@@ -26,6 +26,7 @@ package body Multivector_Analyze is
                        Flags : Flag_Type := (Flag_Invalid, False);
                        Epsilon : float := Default_Epsilon) is
     begin
+        Put_Line ("Multivector_Analyze.Analyze entered");
         Multivector_Analyze_C3GA.Analyze (theAnalysis, MV, Probe, Flags, Epsilon);
     end Analyze;
 

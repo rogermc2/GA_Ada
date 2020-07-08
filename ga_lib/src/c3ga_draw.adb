@@ -37,8 +37,8 @@ package body C3GA_Draw is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
---          Put_Line ("C3GA_Draw.Draw, Analyzed_MV., " &
---          Integer'Image (Multivector_Analyze.Max_Vectors) & " maximum vectors:");
+        Put_Line ("C3GA_Draw.Draw, Analyzed_MV., " &
+        Integer'Image (Multivector_Analyze.Max_Vectors) & " maximum vectors:");
 --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
 --          for index in 1 .. Multivector_Analyze.Max_Vectors loop
 --              Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
