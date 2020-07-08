@@ -883,9 +883,13 @@ package body Multivectors is
       if OK then
          thisBlade := Element (Cursor_B);   -- Blades.First
          theGrade := Blade.Grade (thisBlade);
+         Put_Line ("Multivectors.Grade theGrade, : " &
+                     Integer'Image (theGrade));
          Next (Cursor_B);
          while OK and Has_Element (Cursor_B) loop
             thisBlade := Element (Cursor_B);
+            Put_Line ("Multivectors.Grade this Grade, : " &
+                  Integer'Image (Blade.Grade (thisBlade)));
             OK := Blade.Grade (thisBlade) = theGrade;
             Next (Cursor_B);
          end loop;

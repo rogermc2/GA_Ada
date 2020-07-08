@@ -52,6 +52,8 @@ package body Multivector_Analyze_C3GA is
          OP_NiX     : Boolean;
          IP_NiX     : Boolean;
          Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
+         MV_X_OK    : Boolean;
+         MV_X_Grade : Integer;
       begin
          Product := Outer_Product (C3GA.ni, MV_X);
          OP_NiX := not Multivectors.Is_Null (Product);
@@ -59,7 +61,15 @@ package body Multivector_Analyze_C3GA is
             OP_NiX_Val := Norm_E (Product);
             OP_NiX := Abs (OP_Nix_Val) > Epsilon;
          end if;
+         GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X",
+                                         MV_X);
+         MV_X_OK := Grade (MV_X, MV_X_Grade);
+         Put_Line ("Multivector_Analyze_C3GA.Classify, MV_X_Grade: " &
+               Boolean'Image (MV_X_OK) & "  " &
+               Integer'Image (MV_X_Grade));
+         Put_Line ("Multivector_Analyze_C3GA.Classify setting Product.");
          Product := Left_Contraction (C3GA.ni, MV_X, Metric.C3_Metric);
+         Put_Line ("Multivector_Analyze_C3GA.Classify Product set.");
          IP_NiX := not Multivectors.Is_Null (Product);
          if IP_NiX then
             IP_NiX_Val := Norm_E (Product);
@@ -109,10 +119,8 @@ package body Multivector_Analyze_C3GA is
          MV_X := Multivectors.Dual (MV_X, Metric.C3_Metric);
       end if;
 
-     Put_Line ("Multivector_Analyze_C3GA.Analyze setting MV_Info");
       MV_Info := Init (MV_X, Metric.C3_Metric);
       Analysis.M_MV_Type := MV_Info;
-      Print_Multivector_Info ("Multivector_Analyze_C3GA.Analyze MV_Info:", MV_Info);
       New_Line;
 
       --  Check for zero blade
