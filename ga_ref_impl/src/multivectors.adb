@@ -904,6 +904,7 @@ package body Multivectors is
          end loop;
       end if;
 
+      Put_Line ("Multivectors.Grade OK: " & Boolean'Image (OK));
       if not OK then
          theGrade := 0;
       end if;
