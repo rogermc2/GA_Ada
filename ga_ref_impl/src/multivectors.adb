@@ -1757,7 +1757,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32 is
+   function Top_Grade_Index (MV : Multivector) return Integer is
       use Blade;
       use Blade_List_Package;
       use GA_Maths;
@@ -1772,8 +1772,8 @@ package body Multivectors is
          Max_Grade_Count := Maximum (Max_Grade_Count, Grade_Count);
          Next (Blade_Cursor);
       end loop;
-      --          Put_Line ("Multivectors.Top_Grade_Index Max Grade Count:" & Integer'Image (Max_Grade_Count));
-      return Interfaces.Unsigned_32 (Grade_Count);
+      return Grade_Count;
+--        return Interfaces.Unsigned_32 (Grade_Count);
    end Top_Grade_Index;
 
    --  -------------------------------------------------------------------------

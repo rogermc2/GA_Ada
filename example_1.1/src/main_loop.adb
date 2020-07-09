@@ -1,6 +1,5 @@
 
 --  with Ada.Strings.Unbounded;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Culling;
@@ -112,6 +111,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
       GI                  : Multivector;
       GP                  : Multivector;
+      theGrade            : Integer;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -201,14 +201,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Magenta);
          GI := General_Inverse (aDual_Plane, Metric.C3_Metric);
          GP := Geometric_Product (aLine, GI, Metric.C3_Metric);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
+--           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+--                           Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
 
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
          GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
          GA_Utilities.Print_Multivector ("Display, reflected circle GP ", GP);
+         theGrade := Multivectors.Top_Grade_Index (GP);
+         Put_Line ("Main_Loop.Display reflected circle, GP Grade:" &
+                  Integer'Image (theGrade));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
       end if;
 

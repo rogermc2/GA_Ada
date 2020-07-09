@@ -1,4 +1,6 @@
 
+with Interfaces;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
@@ -146,7 +148,7 @@ package body Multivector_Type is
 
     --  -------------------------------------------------------------------------
 
-    function MV_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32 is
+    function MV_Grade (MV : MV_Type_Record) return Integer is
     begin
         return MV.Grade;
     end MV_Grade;
@@ -175,8 +177,9 @@ package body Multivector_Type is
         Put_Line ("Type       " & MV_Type'Image (Info.MV_Kind));
         Put_Line ("Zero       " & boolean'Image (Info.Zero));
         Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
-        Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
-        Put_Line ("Grade      " & Interfaces.Unsigned_32'Image (Info.Grade));
+      Put_Line ("Grade Usage Bitmap " &
+                 GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+        Put_Line ("Grade      " & Integer'Image (Info.Grade));
 
     exception
         when others =>

@@ -216,7 +216,7 @@ package body GA_Utilities is
       Put_Line (Name);
       Put_Line ("Zero      " & boolean'Image (Zero (Info)));
       Put_Line ("MV Type   " & MV_Type'Image (MV_Kind (Info)));
-      Put_Line ("Grade     " & Interfaces.Unsigned_32'Image (MV_Grade (Info)));
+      Put_Line ("Grade     " & Integer'Image (MV_Grade (Info)));
       Put_Line ("Grade use " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
       Put_Line ("Parity    " & Parity_Type'Image (Parity (Info)));
    exception
