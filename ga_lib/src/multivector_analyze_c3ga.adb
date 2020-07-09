@@ -394,7 +394,7 @@ package body Multivector_Analyze_C3GA is
                      Float'Image (theAnalysis.Scalars (1)) &
                      Float'Image (theAnalysis.Scalars (2)));
          New_Line;
-
+         --  Factor attitude:
          case Grade is
             when 1 =>
                theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
@@ -424,6 +424,7 @@ package body Multivector_Analyze_C3GA is
                     "Grade 2 Left Contraction is zero.";
                end if;
             when 3 =>
+               --  circle explicit factorization required:
                theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
                Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
                --  direction
