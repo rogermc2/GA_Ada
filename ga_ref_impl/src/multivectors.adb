@@ -1113,6 +1113,7 @@ package body Multivectors is
     end Left_Contraction;
 
     --  -------------------------------------------------------------------------
+
     function List_Length (MV_List : Multivector_List) return Integer is
     begin
         return  Integer (MV_List.Length);
@@ -1545,36 +1546,16 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Right_Contraction (MV1, MV2 : Multivector) return Multivector is
-        G1     : Integer;
-        G2     : Integer;
-        Result : Multivector;
     begin
-        If not Grade (MV1, G1) or not Grade (MV2, G2) then
-            raise MV_Exception with
-              "Multivectors.Right_Contraction called with invalid multivecgtor";
-        elsif G1 >= G2 then
-            Result := Extract_Grade (Geometric_Product (MV1, MV2), G1 - G1);
-        end if;
-
-        return Result;
+        return Inner_Product (MV1, MV2, Blade.Right_Contraction);
     end Right_Contraction;
 
     --  -------------------------------------------------------------------------
 
     function Right_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                                return Multivector is
-        G1     : Integer;
-        G2     : Integer;
-        Result : Multivector;
     begin
-        If not Grade (MV1, G1) or not Grade (MV2, G2) then
-            raise MV_Exception with
-              "Multivectors.Right_Contraction metric called with invalid multivecgtor";
-        elsif G1 >= G2 then
-            Result := Extract_Grade (Geometric_Product (MV1, MV2, Met), G1 - G1);
-        end if;
-
-        return Result;
+        return Inner_Product (MV1, MV2, Met, Blade.Right_Contraction);
     end Right_Contraction;
 
     --  -------------------------------------------------------------------------
