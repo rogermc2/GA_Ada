@@ -45,8 +45,9 @@ package body Inner_Product_Types is
       B_Current  : Multivector;
       aFactor    : Multivector;
       Factors    : Multivector_List;
+      Homogenous : Boolean;
    begin
-      if not Grade (MV_B, K_Grade) then
+      if not Grade (MV_B, K_Grade, Homogenous) then
          raise Inner_Product_Types_Exception with
            "Inner_Product_Types.Factorize_Blades inhomogenous multivector detected.";
       else
@@ -128,8 +129,9 @@ package body Inner_Product_Types is
       Blades_Bj     : Basis_Blade;
       Factors       : Multivector_List;  --  F
       L_List        : Blade_List;
+      Homogenous    : Boolean;
    begin
-      if not Grade (MV_B, Integer (Grade_K)) then
+      if not Grade (MV_B, Integer (Grade_K), Homogenous) then
          raise Inner_Product_Types_Exception with
            "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
       else

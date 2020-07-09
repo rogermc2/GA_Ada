@@ -74,7 +74,8 @@ package Multivectors is
                        Index : Interfaces.Unsigned_32) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
-   function Grade (MV : Multivector; theGrade : out Integer) return Boolean;
+   function Grade (MV : Multivector; theGrade : out Integer;
+                   Is_Homogeneous : out Boolean) return Boolean;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
@@ -134,7 +135,6 @@ package Multivectors is
    function Sine (MV : Multivector) return Multivector;
    function Sine (MV : Multivector; Order : Integer) return Multivector;
    function Space_Dimension return Natural;
---     function Space_Dimension (MV : Multivector) return Natural;
    function Top_Grade_Index (MV : Multivector) return Interfaces.Unsigned_32;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
