@@ -167,7 +167,7 @@ package body Multivector_Analyze_C3GA is
       use Multivectors;
       Met           : constant Metric.Metric_Record := Metric.C3_Metric;
       Grade         : Unsigned_32 :=
-                        Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                        Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
       --  Attitude is a free N-vector
       Attitude      : constant Multivector :=
                         Negate (Left_Contraction (C3GA.ni, MV_X, Metric.C3_Metric));
@@ -264,7 +264,7 @@ package body Multivector_Analyze_C3GA is
       use Interfaces;
       use Multivectors;
       Grade         : constant Unsigned_32 :=
-                        Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                        Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
       Weight        : constant Float := Norm_E (MV);
       --        Attitude      : constant Multivector := MV;
       Blade_Factors : Multivectors.Multivector_List;
@@ -319,7 +319,7 @@ package body Multivector_Analyze_C3GA is
       Met              : constant Metric.Metric_Record :=  Metric.C3_Metric;
       MV_X             : Multivector := MV;
       Grade            : constant Interfaces.Unsigned_32 :=
-                           Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                           Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
       Blade_Factors    : Multivector_List;
       LC               : Multivector;
       LC_NI_MV         : Multivector;
@@ -433,7 +433,6 @@ package body Multivector_Analyze_C3GA is
 --                 Utilities.Print_Vector
 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
 --                 theAnalysis.M_Vectors (1));
-               --
                theAnalysis.M_Vectors (2) :=
                   C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
 --                 Utilities.Print_Vector
@@ -446,9 +445,6 @@ package body Multivector_Analyze_C3GA is
 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Z direction M_Vectors (3)",
 --                 theAnalysis.M_Vectors (3));
 
-               Print_E3_Vector_Array
-                 ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
-                  theAnalysis.M_Vectors);
 --                 GA_Utilities.Print_E3_Vector
 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors",
 --                    theAnalysis.M_Vectors (1));
@@ -467,6 +463,9 @@ package body Multivector_Analyze_C3GA is
          end case;
          --                  Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
          --                                  theAnalysis);
+         Print_E3_Vector_Array
+                 ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
+                  theAnalysis.M_Vectors);
          --                  GA_Utilities.Print_Multivector
          --                    ("theAnalysis.M_Vectors (1)", theAnalysis.M_Vectors (1));
          --                  GA_Utilities.Print_Multivector
@@ -491,7 +490,7 @@ package body Multivector_Analyze_C3GA is
       use Multivectors;
       Met            : constant Metric.Metric_Record :=  Metric.C3_Metric;
       Grade          : constant Interfaces.Unsigned_32 :=
-                         Multivector_Type.Top_Grade (theAnalysis.M_MV_Type);
+                         Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
       LC_NI_MV       : Multivector;
       LC_NI_MV_Inv   : Multivector;
       Attitude       : constant Multivector :=

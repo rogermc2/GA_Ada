@@ -146,10 +146,10 @@ package body Multivector_Type is
 
     --  -------------------------------------------------------------------------
 
-    function Top_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32 is
+    function MV_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32 is
     begin
         return MV.Grade;
-    end Top_Grade;
+    end MV_Grade;
 
     --  -------------------------------------------------------------------------
 

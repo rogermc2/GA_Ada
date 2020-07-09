@@ -214,11 +214,11 @@ package body GA_Utilities is
       use Multivector_Type;
    begin
       Put_Line (Name);
-      Put_Line ("Zero        " & boolean'Image (Zero (Info)));
-      Put_Line ("MV Type     " & MV_Type'Image (MV_Kind (Info)));
-      Put_Line ("Top_Grade   " & Interfaces.Unsigned_32'Image (Top_Grade (Info)));
-      Put_Line ("Grade use   " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
-      Put_Line ("Parity      " & Parity_Type'Image (Parity (Info)));
+      Put_Line ("Zero      " & boolean'Image (Zero (Info)));
+      Put_Line ("MV Type   " & MV_Type'Image (MV_Kind (Info)));
+      Put_Line ("Grade     " & Interfaces.Unsigned_32'Image (MV_Grade (Info)));
+      Put_Line ("Grade use " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
+      Put_Line ("Parity    " & Parity_Type'Image (Parity (Info)));
    exception
       when others =>
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_Info.");
