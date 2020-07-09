@@ -1,7 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Utilities;
+--  with Utilities;
 
 with C3GA;
 with GA_Draw;
@@ -37,8 +37,6 @@ package body C3GA_Draw is
         Analyzed_MV : Multivector_Analyze.MV_Analysis;
     begin
         Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
-        Put_Line ("C3GA_Draw.Draw, Analyzed_MV., " &
-        Integer'Image (Multivector_Analyze.Max_Vectors) & " maximum vectors:");
 --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
 --          for index in 1 .. Multivector_Analyze.Max_Vectors loop
 --              Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
@@ -275,7 +273,7 @@ package body C3GA_Draw is
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
-            Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
+--              Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
             GA_Draw.Draw_Bivector (Render_Program => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Point_Pos,
@@ -294,7 +292,6 @@ package body C3GA_Draw is
                Point_Pos, P_Scale, Palet_Type, GA_Draw.Draw_TV_Sphere);
          when others => null;
       end case;
-      Put_Line ("C3GA_Draw.Draw_Round finished.");
 
     exception
       when others =>

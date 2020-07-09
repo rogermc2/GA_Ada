@@ -52,8 +52,6 @@ package body Multivector_Analyze_C3GA is
          OP_NiX     : Boolean;
          IP_NiX     : Boolean;
          Xsq        : constant Boolean := Abs (Xsq_Val) > Epsilon;
-         MV_X_OK    : Boolean;
-         MV_X_Grade : Integer;
       begin
          Product := Outer_Product (C3GA.ni, MV_X);
          OP_NiX := not Multivectors.Is_Null (Product);
@@ -61,15 +59,9 @@ package body Multivector_Analyze_C3GA is
             OP_NiX_Val := Norm_E (Product);
             OP_NiX := Abs (OP_Nix_Val) > Epsilon;
          end if;
-         GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X",
-                                         MV_X);
-         MV_X_OK := Grade (MV_X, MV_X_Grade);
-         Put_Line ("Multivector_Analyze_C3GA.Classify, MV_X_Grade: " &
-               Boolean'Image (MV_X_OK) & "  " &
-               Integer'Image (MV_X_Grade));
-         Put_Line ("Multivector_Analyze_C3GA.Classify setting Product.");
+--           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X",
+--                                           MV_X);
          Product := Left_Contraction (C3GA.ni, MV_X, Metric.C3_Metric);
-         Put_Line ("Multivector_Analyze_C3GA.Classify Product set.");
          IP_NiX := not Multivectors.Is_Null (Product);
          if IP_NiX then
             IP_NiX_Val := Norm_E (Product);
@@ -77,8 +69,8 @@ package body Multivector_Analyze_C3GA is
          end if;
          --           Xsq_Val := Norm_Esq (MV_X);  --  norm_r
 
-          Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
-                     Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
+--            Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
+--                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
          --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
          --              GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
          --              Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
@@ -155,7 +147,6 @@ package body Multivector_Analyze_C3GA is
          end case;
       end if;
       New_Line;
-      Put_Line ("Multivector_Analyze_C3GA.Analyze done.");
 
    exception
       when others =>
@@ -447,10 +438,6 @@ package body Multivector_Analyze_C3GA is
 --                 Utilities.Print_Vector
 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
 --                    theAnalysis.M_Vectors (2));
-               GA_Utilities.Print_Multivector
-                 ("Multivector_Analyze_C3GA.Analyze_Round Outer_Product",
-                  Outer_Product (MV_First (Blade_Factors),
-                                     MV_Item (Blade_Factors, 2)));
                theAnalysis.M_Vectors (3) :=
                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
                                      MV_Item (Blade_Factors, 2)), Met));
