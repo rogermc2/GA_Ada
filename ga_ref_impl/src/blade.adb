@@ -200,20 +200,14 @@ package body Blade is
             while Has_Element (LB_Cursor) loop
                 GP := Geometric_Product
                   (Element (LA_Cursor), Element (LB_Cursor), Met);
-                --              GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric blade GP:", GP);
                 Add_Blade (Result, (GP));
                 Next (LB_Cursor);
             end loop;
             Next (LA_Cursor);
         end loop;
 
---          GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-simplify Result:", Result);
         Simplify (Result);
---                GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BA:", BA);
---                GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric BB:", BB);
---          GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric pre-transform Result:", Result);
         Result := To_Metric_Basis (Result, Met);
---          GA_Utilities.Print_Blade_List ("Blade.Geometric_Product with Metric Result:", Result);
         return Result;
 
     exception
@@ -235,7 +229,6 @@ package body Blade is
         Index       : Integer := 1;
         New_Blade   : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
---          GA_Utilities.Print_Blade ("Blade.Geometric_Product with Metric, initial Result", Result);
         while BM /= 0 loop
             if (BM and 1) /= 0 then
                 --  This basis vector is non-zero
@@ -632,18 +625,13 @@ package body Blade is
                     if Value /= 0.0 then
                         --  Wedge column Col of the matrix with List_A
                         Curs := List_A.First;
-                        --                    Put_Line ("Blade.Transform_Basis Row, I_Col, Value: " &
-                        --                                Integer'Image (Row) & Integer'Image (I_Col) & "  " &
-                        --                                Float'Image (Value));
-                        while Has_Element (Curs) loop
+                         while Has_Element (Curs) loop
                             --                       GA_Utilities.Print_Blade ("Blade.Transform_Basis Element (Curs)", Element (Curs));
                             OP := Outer_Product (Element (Curs),
                                                  New_Basis_Blade (2 ** (Row - 1), Value));
-                            --                       GA_Utilities.Print_Blade ("Blade.Transform_Basis OP", OP);
-                            Temp.Append (OP);
-                            --                       GA_Utilities.Print_Blade_List ("Blade.Transform_Basis Temp", Temp);
-                            Next (Curs);
-                        end loop;
+                             Temp.Append (OP);
+                             Next (Curs);
+                         end loop;
                     end if;
                 end loop;  --  Row
                 List_A := Temp;
@@ -651,7 +639,6 @@ package body Blade is
             BM := Shift_Right (BM, 1);
             I_Col := I_Col + 1;
         end loop;  --  BM /= 0
-        --        GA_Utilities.Print_Blade_List("Blade.Transform_Basis result", List_A);
         return List_A;
 
     exception

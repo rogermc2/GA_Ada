@@ -73,13 +73,19 @@ package Blade is
                              return Basis_Blade;
     function New_Basis_Blade (Weight : Float := 0.0) return Basis_Blade;
 
-    function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0) return Basis_Blade;
-    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0) return Basis_Blade;
-    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0) return Basis_Blade;
-    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0) return Basis_Blade;
-    function New_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0) return Basis_Blade;
+    function New_Basis_Blade (Index : BV_Base; Weight : Float := 1.0)
+                              return Basis_Blade;
+    function New_Basis_Blade (Index : E2_Base; Weight : Float := 1.0)
+                              return Basis_Blade;
+    function New_Basis_Blade (Index : E3_Base; Weight : Float := 1.0)
+                              return Basis_Blade;
+    function New_Basis_Blade (Index : C3_Base; Weight : Float := 1.0)
+                              return Basis_Blade;
+    function New_Blade (Bitmap : Unsigned_32; Weight : Float := 1.0)
+                        return Basis_Blade;
     function New_Complex_Basis_Blade (Index  : C3_Base;
-                                      Weight : GA_Maths.Complex_Types.Complex := (0.0, 1.0))
+                                      Weight : GA_Maths.Complex_Types.Complex
+                                      := (0.0, 1.0))
                                        return Complex_Basis_Blade;
     function New_Scalar_Blade (Weight : Float := 1.0) return Basis_Blade;
     function New_Zero_Blade return Basis_Blade;
