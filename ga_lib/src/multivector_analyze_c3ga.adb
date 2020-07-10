@@ -282,7 +282,8 @@ package body Multivector_Analyze_C3GA is
          when 3 =>  --  F Bivector
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3.");
             theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
-            Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
+            Blade_Factors :=
+              Multivector_Utilities.Factorize_Multivector (MV, Scale);
             theAnalysis.M_Vectors (1) :=
               C3GA.To_VectorE3GA (MV_First (Blade_Factors));
             theAnalysis.M_Vectors (2) :=
@@ -422,7 +423,8 @@ package body Multivector_Analyze_C3GA is
             when 3 | 5 =>
                --  circle explicit factorization required:
                theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
-               Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
+               Blade_Factors :=
+                 Multivector_Utilities.Factorize_Multivector (MV, Scale);
                --  direction
                theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (Blade_Factors));
@@ -519,13 +521,16 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
          when 2 =>
             theAnalysis.M_Type.Blade_Subclass := Vector_Subclass;
-            theAnalysis.M_Vectors (1) :=
-              C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
+            theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA
+              (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
          when 3 =>
             theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
-            Blade_Factors := Inner_Product_Types.Factorize_Blades (MV, Scale);
-            theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (MV_First (Blade_Factors));
-            theAnalysis.M_Vectors (2) := C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
+            Blade_Factors :=
+              Multivector_Utilities.Factorize_Multivector (MV, Scale);
+            theAnalysis.M_Vectors (1) :=
+              C3GA.To_VectorE3GA (MV_First (Blade_Factors));
+            theAnalysis.M_Vectors (2) :=
+              C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
             theAnalysis.M_Vectors (3) :=
               C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
                                   MV_Item (Blade_Factors, 2)), Metric.C3_Metric));

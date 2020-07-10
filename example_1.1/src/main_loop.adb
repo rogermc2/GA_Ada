@@ -183,7 +183,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          aCircle := Outer_Product (Points.C2, Points.C3);
          aCircle := Outer_Product (Points.C1, aCircle);
+         theGrade := Multivectors.Top_Grade_Index (aCircle);
+         Put_Line ("Main_Loop.Display circle, aCircle Grade:" &
+                  Integer'Image (theGrade));
          Multivectors.To_Circle (aCircle);
+         Put_Line ("Main_Loop.Display circle, aCircle Grade:" &
+                  Integer'Image (theGrade));
 
          --  N_E3_Vec is a direction vector
          aDual_Plane :=

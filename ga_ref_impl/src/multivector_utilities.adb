@@ -11,8 +11,9 @@ package body Multivector_Utilities is
 
    --  Factorize_Blades returns the k unit factors of the blade and
    --  the scale of the blade
-   function Factorize_Blades (MV_B : Multivectors.Multivector; Scale : out Float)
-                               return Multivectors.Multivector_List is
+   function Factorize_Multivector (MV_B  : Multivectors.Multivector;
+                                   Scale : out Float)
+                                   return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
@@ -81,15 +82,15 @@ package body Multivector_Utilities is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Blades");
+         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Multivector");
          raise;
-   end Factorize_Blades;
+   end Factorize_Multivector;
 
    --  --------------------------------------------------------------------
 
-   function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
-                                  Scale : out Float)
-                                   return Multivectors.Multivector_List is
+   function Factorize_Multivector_Fast (MV_B  : Multivectors.Multivector;
+                                        Scale : out Float)
+                                        return Multivectors.Multivector_List is
       use Interfaces;
       use Blade;
       use Blade_Types;
@@ -171,32 +172,32 @@ package body Multivector_Utilities is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Blade_Fast");
+         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Multivector_Fast");
          raise;
-   end Factorize_Blade_Fast;
+   end Factorize_Multivector_Fast;
 
    --  --------------------------------------------------------------------
 
-   function Factorize_Multivector (MV    : Multivectors.Multivector;
-                                   Scale : out Float)
-                                    return Multivectors.Multivector is
-      use Multivectors;
-      Factors_F : Multivector_List;
-      MV_R      : Multivector;
-   begin
-      Factors_F := Factorize_Blades (MV, Scale);
-      MV_R := New_Multivector (1.0);
-      for index in 1 .. List_Length (Factors_F) loop
-         MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
-      end loop;
-      return MV_R;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Multivector");
-         raise;
-
-   end Factorize_Multivector;
+--     function Factorize_Multivector (MV    : Multivectors.Multivector;
+--                                     Scale : out Float)
+--                                      return Multivectors.Multivector is
+--        use Multivectors;
+--        Factors_F : Multivector_List;
+--        MV_R      : Multivector;
+--     begin
+--        Factors_F := Factorize_Blades (MV, Scale);
+--        MV_R := New_Multivector (1.0);
+--        for index in 1 .. List_Length (Factors_F) loop
+--           MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
+--        end loop;
+--        return MV_R;
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Multivector");
+--           raise;
+--
+--     end Factorize_Multivector;
 
    --  --------------------------------------------------------------------
 end Multivector_Utilities;
