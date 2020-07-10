@@ -21,7 +21,7 @@ with Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
-with GA_Utilities;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Metric;
@@ -206,17 +206,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Magenta);
          GI := General_Inverse (aDual_Plane, Metric.C3_Metric);
          GP := Geometric_Product (aLine, GI, Metric.C3_Metric);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
---                           Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
 
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
          GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
-         GA_Utilities.Print_Multivector ("Display, reflected circle GP ", GP);
          theGrade := Multivectors.Top_Grade_Index (GP);
-         Put_Line ("Main_Loop.Display reflected circle, GP Grade:" &
-                  Integer'Image (theGrade));
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
       end if;
 
