@@ -7,30 +7,8 @@ with Bits;
 with Blade;
 with Blade_Types;
 
-package body Inner_Product_Types is
+package body Multivector_Utilities is
 
-   function Factorize_Multivector (MV    : Multivectors.Multivector;
-                                   Scale : out Float)
-                                    return Multivectors.Multivector is
-      use Multivectors;
-      Factors_F    : Multivector_List;
-      MV_R         : Multivector;
-   begin
-      Factors_F := Factorize_Blades (MV, Scale);
-      MV_R := New_Multivector (1.0);
-      for index in 1 .. List_Length (Factors_F) loop
-         MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
-      end loop;
-      return MV_R;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Multivector");
-         raise;
-
-   end Factorize_Multivector;
-
-   --  --------------------------------------------------------------------
    --  Factorize_Blades returns the k unit factors of the blade and
    --  the scale of the blade
    function Factorize_Blades (MV_B : Multivectors.Multivector; Scale : out Float)
@@ -39,18 +17,17 @@ package body Inner_Product_Types is
       use Blade;
       use Blade_Types;
       use Multivectors;
-      K_Grade    : Integer;
+      K_Grade    : constant Integer := Grade (Largest_Basis_Blade (MV_B));
       E_Largest  : Basis_Blade;
       Basis_Bit  : Unsigned_32;
       B_Current  : Multivector;
       aFactor    : Multivector;
       Factors    : Multivector_List;
-      Homogenous : Boolean;
    begin
-      if not Grade (MV_B, K_Grade, Homogenous) then
-         raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Factorize_Blades inhomogenous multivector detected.";
-      else
+--        if Grade (MV_B, K_Grade) /= Grade_OK then
+--           raise MV_Utilities_Exception with
+--             "Multivector_Utilities.Factorize_Blades inhomogenous multivector detected.";
+--        else
          --  set scale of output, no matter what
          if K_Grade = 0 then
             Scale := Scalar_Part (MV_B);
@@ -99,12 +76,12 @@ package body Inner_Product_Types is
             --  renormalize to remove any FP round-off error
             Add_Multivector (Factors, Unit_E (B_Current));
          end if;
-      end if;
+--        end if;
       return  Factors;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Blades");
+         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Blades");
          raise;
    end Factorize_Blades;
 
@@ -129,11 +106,10 @@ package body Inner_Product_Types is
       Blades_Bj     : Basis_Blade;
       Factors       : Multivector_List;  --  F
       L_List        : Blade_List;
-      Homogenous    : Boolean;
    begin
-      if not Grade (MV_B, Integer (Grade_K), Homogenous) then
-         raise Inner_Product_Types_Exception with
-           "Inner_Product_Types.Factorize_Blade inhomogenous multivector detected.";
+      if Grade (MV_B, Integer (Grade_K)) /= Grade_OK then
+         raise MV_Utilities_Exception with
+           "Multivector_Utilities.Factorize_Blade inhomogenous multivector detected.";
       else
          if Grade_K = 0 then
             Scale := Scalar_Part (MV_B);
@@ -195,10 +171,32 @@ package body Inner_Product_Types is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Blade_Fast");
+         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Blade_Fast");
          raise;
    end Factorize_Blade_Fast;
 
    --  --------------------------------------------------------------------
 
-end Inner_Product_Types;
+   function Factorize_Multivector (MV    : Multivectors.Multivector;
+                                   Scale : out Float)
+                                    return Multivectors.Multivector is
+      use Multivectors;
+      Factors_F : Multivector_List;
+      MV_R      : Multivector;
+   begin
+      Factors_F := Factorize_Blades (MV, Scale);
+      MV_R := New_Multivector (1.0);
+      for index in 1 .. List_Length (Factors_F) loop
+         MV_R := Outer_Product (MV_R, MV_Item (Factors_F, index));
+      end loop;
+      return MV_R;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Inner_Product_Types.Factorize_Multivector");
+         raise;
+
+   end Factorize_Multivector;
+
+   --  --------------------------------------------------------------------
+end Multivector_Utilities;

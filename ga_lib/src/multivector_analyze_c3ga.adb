@@ -10,7 +10,7 @@ with Blade_Types;
 with E3GA;
 with GA_Maths;
 with GA_Utilities;
-with Inner_Product_Types;
+with Multivector_Utilities;
 with Metric;
 with Multivector_Type;
 
@@ -234,8 +234,9 @@ package body Multivector_Analyze_C3GA is
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
-            Blade_Factors := Inner_Product_Types.Factorize_Blades
-              (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)), Scale);
+            Blade_Factors := Multivector_Utilities.Factorize_Multivector
+              (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
+               Scale);
 
             theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (MV_First (Blade_Factors));
             theAnalysis.M_Vectors (2) := C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
