@@ -14,6 +14,7 @@ package Multivectors is
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
                     MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point, MV_Line,
                     MV_Circle, MV_Sphere, MV_Dual_Plane, MV_Dual_Sphere);
+   type Grade_Status is (Grade_OK, Grade_Null, Grade_Inhomogeneous);
    type Multivector is private;
    type Multivector_List is private;
    subtype Bivector is Multivector;
@@ -74,8 +75,7 @@ package Multivectors is
                        Index : Interfaces.Unsigned_32) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
-   function Grade (MV : Multivector; theGrade : out Integer;
-                   Is_Homogeneous : out Boolean) return Boolean;
+   function Grade (MV : Multivector; theGrade : out Integer) return Grade_Status;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
@@ -143,7 +143,8 @@ package Multivectors is
    function To_Vector (MV : Multivector) return Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
-   function Unit_R (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
+   function Unit_R (MV : Multivector; Met : Metric.Metric_Record)
+                    return Multivector;
    procedure Update (MV : in out Multivector; Blades : Blade.Blade_List;
                      Sorted : Boolean := False);
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
