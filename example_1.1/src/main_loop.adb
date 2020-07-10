@@ -219,9 +219,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
 
---           Phi := GA_Maths.Pi / 2.0;
          R_Versor := TR_Versor (Exp (GA_Maths.Pi) *
                                 Dual (aLine, Metric.C3_Metric));
+         --  draw rotated circle
+         Shader_Manager.Set_Ambient_Colour (Green);
+         GI := General_Inverse (R_Versor, Metric.C3_Metric);
+         GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
+         GP := Geometric_Product (R_Versor, GP, Metric.C3_Metric);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+
       end if;
 
    exception
