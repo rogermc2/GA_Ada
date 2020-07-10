@@ -19,7 +19,7 @@ package body C3GA is
 
    --  This array can be used to lookup the number of coordinates for
    --  a grade part of a general multivector
-   --     MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
+      MV_Grade_Size : constant array (0 .. 5) of Integer := (1, 5, 10, 10, 5, 1 );
    --  This array can be used to lookup the number of coordinates
    --  based on a grade usage bitmap
    --     MV_Size       : constant array (1 .. 64) of Integer :=

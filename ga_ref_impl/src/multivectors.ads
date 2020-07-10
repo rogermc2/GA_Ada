@@ -12,8 +12,9 @@ package Multivectors is
    type Geometry_Type is (Geometry_Not_Set, E1_Geometry, E2_Geometry,
                           E3_Geometry, H3_Geometry, C3_Geometry);
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
-                    MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point, MV_Line,
-                    MV_Circle, MV_Sphere, MV_Dual_Plane, MV_Dual_Sphere);
+                    MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point,
+                    MV_Line, MV_Circle, MV_Sphere, MV_Dual_Plane,
+                    MV_Dual_Sphere, MV_TR_Versor);
    type Grade_Status is (Grade_OK, Grade_Null, Grade_Inhomogeneous);
    type Multivector is private;
    type Multivector_List is private;
@@ -24,6 +25,7 @@ package Multivectors is
    subtype Normalized_Point is Multivector;
    subtype Rotor is Multivector;
    subtype Scalar is Multivector;
+   subtype TR_Versor is Multivector;
    subtype Vector is Multivector;
 
    MV_Exception : Exception;
@@ -114,6 +116,7 @@ package Multivectors is
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar;
+   function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor;
    function New_Vector return Vector;
    function New_Vector (e1, e2 : Float) return Vector;
    function New_Vector (e1, e2, e3 : Float) return Vector;

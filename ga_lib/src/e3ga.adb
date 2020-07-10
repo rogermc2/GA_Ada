@@ -21,20 +21,20 @@ package body E3GA is
    --     MV_Basis_Vector_Names : constant array (1 .. 3) of string (1 .. 2) :=
    --       ("e1", "e2", "e3");
    --  MV_Basis_Elements contains the order of basis elements in the general multivector
-   --     MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
-   --       ((-1, 0, 0, 0),
-   --        (0, -1, 0, 0),
-   --        (1, -1, 0, 0),
-   --        (2, -1, 0, 0),
-   --        (0, 1, -1, 0),
-   --        (1, 2, -1, 0),
-   --        (0, 2, -1, 0),
-   --        (0, 1, 2, -1));
+--        MV_Basis_Elements : constant array (1 .. 8, 1 .. 4) of integer :=
+--          ((-1, 0, 0, 0),
+--           (0, -1, 0, 0),
+--           (1, -1, 0, 0),
+--           (2, -1, 0, 0),
+--           (0, 1, -1, 0),
+--           (1, 2, -1, 0),
+--           (0, 2, -1, 0),
+--           (0, 1, 2, -1));
    --  This array contains the 'sign' (even/odd permutation of the canonical order)
    --  of basis elements in the general multivector.
    --  This answers 'what is the permutation of the coordinate at index [x]'?
-   --     MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
-   --       (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
+--        MV_Basis_Element_Sign_By_Index : constant Array_F8 :=
+--          (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0);
    --  This answers 'what is the permutation of the coordinate at bitmap [x]'?
    --     MV_Basis_Element_Sign_By_Bitmap : constant Array_F8 :=
    --       (1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0);

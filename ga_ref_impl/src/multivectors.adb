@@ -1385,6 +1385,18 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
+   function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor is
+        V : TR_Versor;
+   begin
+        V.Type_Of_MV := MV_TR_Versor;
+        if Scalar_Weight /= 0.0 then
+            V.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
+        end if;
+        return V;
+   end New_TR_Versor;
+
+    --  ------------------------------------------------------------------------
+
     function New_Vector return Vector is
         V : Vector;
     begin

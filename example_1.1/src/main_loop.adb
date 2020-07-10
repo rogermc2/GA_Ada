@@ -21,6 +21,7 @@ with Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
+with GA_Maths;
 --  with GA_Utilities;
 with Geosphere;
 with GL_Util;
@@ -68,6 +69,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
       --        use GL.Toggles;
       --          use Maths.Single_Math_Functions;
+      use GA_Maths.Float_Functions;
       use Multivectors;
 
       --          Position_X        : integer := 0;
@@ -112,6 +114,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GI                  : Multivector;
       GP                  : Multivector;
       theGrade            : Integer;
+--        Phi                 : Float;
+      R_Versor            : TR_Versor;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -213,8 +217,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
          GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
-         theGrade := Multivectors.Top_Grade_Index (GP);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+
+--           Phi := GA_Maths.Pi / 2.0;
+         R_Versor := TR_Versor (Exp (GA_Maths.Pi) *
+                                Dual (aLine, Metric.C3_Metric));
       end if;
 
    exception
