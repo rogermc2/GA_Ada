@@ -22,7 +22,7 @@ with E3GA;
 with C3GA;
 with C3GA_Draw;
 with GA_Maths;
-with GA_Utilities;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Metric;
@@ -209,13 +209,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          GP := Geometric_Product (aCircle, GI, C3_Metric);
          GP := Geometric_Product (-aDual_Plane, GP, C3_Metric);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+--           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
 
          R_Versor := TR_Versor (Exp (GA_Maths.Pi / 4.0) *
                                 Dual (aLine, Metric.C3_Metric));
-         Put_Line ("Main_Loop.Display, e^Pi/4.0: " &
-                    Float'Image (Exp (GA_Maths.Pi / 4.0)));
-         GA_Utilities.Print_Multivector ("Main_Loop.Display, aCircle", aCircle);
+--           Put_Line ("Main_Loop.Display, e^Pi/4.0: " &
+--                      Float'Image (Exp (GA_Maths.Pi / 4.0)));
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display, aCircle", aCircle);
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
          Translation_Matrix := Maths.Translation_Matrix ((-4.0, 0.0, 0.0));
@@ -223,7 +223,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GI := General_Inverse (R_Versor,C3_Metric);
          GP := Geometric_Product (aCircle, GI, C3_Metric);
          GP := Geometric_Product (R_Versor, GP, C3_Metric);
-         GA_Utilities.Print_Multivector ("Main_Loop.Display, rotated aCircle", GP);
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display, rotated aCircle", GP);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
 
          --  draw reflected, rotated circle (blue)

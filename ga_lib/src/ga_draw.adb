@@ -31,6 +31,7 @@ package body GA_Draw is
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                            Model_View_Matrix : GL.Types.Singles.Matrix4;
+                           Scale             : Float;
                            Palet_Type        : Palet.Colour_Palet;
                            Method            : GA_Draw.Method_Type);
 
@@ -91,7 +92,6 @@ package body GA_Draw is
                              Scale  : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
-        use Float_Functions;
         use GL.Types.Singles;
         --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         --          Cords                : Array_3D := (0.0, 0.0, 0.0);
@@ -117,8 +117,7 @@ package body GA_Draw is
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
         MV_Matrix             : Matrix4 := Model_View_Matrix;
-        BV_Size               : Float;
-        BV_Scale              : GL.Types.Single;
+        BV_Scale              : Float := Scale;
         RT                    : Multivectors.Rotor;
     begin
         --  Set position
@@ -136,22 +135,22 @@ package body GA_Draw is
             RT := E3GA_Utilities.Rotor_Vector_To_Vector
               (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
             GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
-        else
+        else  --  Draw_Bivector_Parallelogram
             E2_Norm :=
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
                             ((Multivectors.Outer_Product (MV_Ortho_1,
                                MV_Ortho_2))));
-            BV_Size := Scale * Scale * Float_Functions.Sqrt (Pi / E2_Norm);
-            BV_Scale := GL.Types.Single (Sqrt (BV_Size));
-            MV_Matrix :=
-              Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale)) * MV_Matrix;
+            BV_Scale := Float_Functions.Sqrt (Pi / E2_Norm) * BV_Scale;
         end if;
 
+        Put_Line ("GA_Draw.Draw_Bivector E2_Norm: " & Float'Image (E2_Norm));
+        Put_Line ("GA_Draw.Draw_Bivector scale: " & Float'Image (Scale));
+        Put_Line ("GA_Draw.Draw_Bivector BV_Scale: " & Float'Image (BV_Scale));
 --          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
         case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Render_Program, MV_Matrix, Palet_Type, Method);
+                 Draw_Circle (Render_Program, MV_Matrix, BV_Scale, Palet_Type, Method);
             when others => null;
         end case;
 
@@ -251,6 +250,7 @@ package body GA_Draw is
 
     procedure Draw_Circle (Render_Program    : GL.Objects.Programs.Program;
                            Model_View_Matrix : GL.Types.Singles.Matrix4;
+                           Scale             : Float;
                            Palet_Type        : Palet.Colour_Palet;
                            Method            : GA_Draw.Method_Type) is
         use GA_Maths;
@@ -259,6 +259,7 @@ package body GA_Draw is
         use Palet;
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
 
+        S_Scale       : constant Single := Single (Scale);
         Angle         : float := 0.0;
         Num_Steps     : constant int := 256;
         Rotor_Step    : constant float :=
@@ -268,9 +269,12 @@ package body GA_Draw is
                           (others => (0.0, 0.0, 1.0));
 
         procedure Draw_Part (Part : Circle_Part) is
+            use GL.Types.Singles;
             Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Normals_Buffer : GL.Objects.Buffers.Buffer;
+            Scaling_Matrix : constant Singles.Matrix4 :=
+                               Maths.Scaling_Matrix ((S_Scale, S_Scale, S_Scale));
             Norm_Z         : Single;
         begin
             Vertex_Array.Initialize_Id;
@@ -302,8 +306,8 @@ package body GA_Draw is
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
-
-            Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+            Utilities.Print_Matrix ("GA_Draw.Draw_Circle Scaling_Matrix", Scaling_Matrix);
+            Shader_Manager.Set_Model_View_Matrix (Scaling_Matrix * Model_View_Matrix);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             Array_Buffer.Bind (Vertex_Buffer);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
@@ -330,7 +334,6 @@ package body GA_Draw is
 
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
---          if (Method = Draw_Bivector_Circle or Method = Draw_Bivector_Circle_Outline)
         if (Method = Draw_Bivector_Circle)  and then (Palet_Type = Is_Null or
             Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);

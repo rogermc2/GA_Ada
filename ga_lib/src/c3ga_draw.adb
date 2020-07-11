@@ -165,7 +165,8 @@ package body C3GA_Draw is
       use GA_Maths.Float_Functions;
       use Multivector_Analyze;
       use C3GA;
-      Tail  : constant Vector_E3GA := (0.0, 0.0, 0.0);
+      Tail     : constant Vector_E3GA := (0.0, 0.0, 0.0);
+      BV_Scale : float := 1.0;
     begin
         case Analysis.M_Type.Blade_Subclass is
             when Vector_Subclass =>
@@ -175,6 +176,7 @@ package body C3GA_Draw is
                                      Analysis.Scalars (1));
             when Bivector_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Free Bivector.");
+            BV_Scale := Sqrt (Analysis.Scalars (1) / GA_Maths.Pi);
             GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Tail,
@@ -182,7 +184,7 @@ package body C3GA_Draw is
                                    Ortho_1           => To_VectorE3GA (Analysis.M_Vectors (1)),
                                    Ortho_2           => To_VectorE3GA (Analysis.M_Vectors (2)),
                                    Palet_Type        => Palet_Type,
-                                   Scale             => Sqrt (Analysis.Scalars (1) / GA_Maths.Pi),
+                                   Scale             => BV_Scale,
                                    Method            => GA_Draw.Draw_Bivector_Circle);
             when Trivector_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Free Trivector.");
@@ -256,8 +258,9 @@ package body C3GA_Draw is
         M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
         M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
         M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
-        Radius     : constant Single := Single (Analysis.Scalars (1));
+        Radius     : constant Float := Analysis.Scalars (1);
     begin
+      Put_Line ("C3GA_Draw.Draw_Round Point scale: " & Float'Image (Radius));
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
@@ -273,7 +276,6 @@ package body C3GA_Draw is
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
---              Utilities.Print_Matrix ("with  Model_View_Matrix", Model_View_Matrix);
             GA_Draw.Draw_Bivector (Render_Program => Render_Program,
                                    Model_View_Matrix => Model_View_Matrix,
                                    Base              => Point_Pos,
@@ -281,12 +283,12 @@ package body C3GA_Draw is
                                    Ortho_1           => M_Vec1,
                                    Ortho_2           => M_Vec2,
                                    Palet_Type        => Palet_Type,
-                                   Scale             => Float (Radius),
+                                   Scale             => Radius,
                                    Method            =>
                                        GA_Draw.Draw_Bivector_Circle_Outline);
          when Sphere_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Sphere.");
-            P_Scale := 4.0 / 3.0 * GA_Maths.PI * Float (Radius ** 3);
+            P_Scale := 4.0 / 3.0 * GA_Maths.PI * Radius ** 3;
             GA_Draw.Draw_Trivector
               (Render_Program, Model_View_Matrix,
                Point_Pos, P_Scale, Palet_Type, GA_Draw.Draw_TV_Sphere);
