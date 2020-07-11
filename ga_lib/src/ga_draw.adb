@@ -327,9 +327,9 @@ package body GA_Draw is
 
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
-        if (Method = Draw_Bivector_Circle or Method = Draw_Bivector_Circle_Outline)
-          and then (Palet_Type = Is_Null or
-                      Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
+--          if (Method = Draw_Bivector_Circle or Method = Draw_Bivector_Circle_Outline)
+        if (Method = Draw_Bivector_Circle)  and then (Palet_Type = Is_Null or
+            Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;

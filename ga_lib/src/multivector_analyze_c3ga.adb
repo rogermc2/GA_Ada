@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -57,8 +57,7 @@ package body Multivector_Analyze_C3GA is
             OP_NiX_Val := Norm_E (Product);
             OP_NiX := Abs (OP_Nix_Val) > Epsilon;
          end if;
---           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X",
---                                           MV_X);
+
          Product := Left_Contraction (C3GA.ni, MV_X, Metric.C3_Metric);
          IP_NiX := not Multivectors.Is_Null (Product);
          if IP_NiX then
@@ -67,20 +66,12 @@ package body Multivector_Analyze_C3GA is
          end if;
          --           Xsq_Val := Norm_Esq (MV_X);  --  norm_r
 
---            Put_Line ("Multivector_Analyze_C3GA.Classify, OP_NiX_Val, IP_NiX_Val, Xsq_Val" &
---                       Float'Image (OP_NiX_Val) & Float'Image (IP_NiX_Val) & Float'Image (Xsq_Val));
-         --           GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
-         --              GA_Utilities.Print_Multivector ("OP (C3GA.ni, MV_X)", Outer_Product (C3GA.ni, MV_X));
-         --              Put_Line ("Multivector_Analyze_C3GA.Classify, Norm_E (OP (C3GA.ni, MV_X))" &
-         --                        Float'Image (Norm_E (Outer_Product (C3GA.ni, MV_X))));
          if (not OP_NiX) and (not IP_NiX) then  --  OP_NiX and IP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Free.");
             Analyze_Free (Analysis, MV_X);
          elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
-            --              GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Classify MV_X", MV_X);
             Analyze_Flat (Analysis, MV_X, Probe);
-            --              GA_Utilities.Print_Multivector_Info ("Multivector_Analyze_C3GA.Classify Analysis", Analysis.M_MV_Type);
          elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
             Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
             Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
@@ -184,13 +175,7 @@ package body Multivector_Analyze_C3GA is
       MV_Inverse := General_Inverse (MV_X, Met);
       --  MV_Location is a normalized dual sphere
       MV_Location := Left_Contraction (Probe, MV_X, Met);
-      GA_Utilities.Print_Multivector
-          ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Location", MV_Location);
-      GA_Utilities.Print_Multivector
-          ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Inverse", MV_Inverse);
-      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, setting MV_Location 2");
       MV_Location := Left_Contraction (MV_Location, MV_Inverse, Met);
-      Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, MV_Location set");
       SP := Scalar_Product (C3GA.ni, MV_Location, Met);
       if SP = 0.0 then
          Location := C3GA.Set_Normalized_Point (E1 => 0.0, E2 => 0.0, E3 => 0.0);
@@ -198,8 +183,7 @@ package body Multivector_Analyze_C3GA is
          MV_Location := Geometric_Product (MV_Location, -New_Scalar (1.0 / SP), Met);
          Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (MV_Location));
       end if;
-      GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze_Flat Location",
-                                      Location);
+
       if Grade = 1 then
          Weight := -Scalar_Product (MV_X, C3GA.no, Met);
       else
@@ -228,9 +212,6 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.M_Type.Blade_Subclass := Line_Subclass;
             theAnalysis.M_Vectors (1) :=
               C3GA.To_VectorE3GA (Unit_E (Left_Contraction (C3GA.no, Attitude, Met)));
-            Utilities.Print_Vector
-              ("Multivector_Analyze_C3GA.Analyze_Flat Grade 3 M_Vectors (1)",
-               theAnalysis.M_Vectors (1));
          when 4 =>  --  Plane
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
             theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
@@ -384,13 +365,13 @@ package body Multivector_Analyze_C3GA is
          theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
          theAnalysis.Scalars (1) := Radius;
          theAnalysis.Scalars (2) := Weight;
-         New_Line;
-         Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
-                                 theAnalysis.Points (1));
-         Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
-                     Float'Image (theAnalysis.Scalars (1)) &
-                     Float'Image (theAnalysis.Scalars (2)));
-         New_Line;
+--           New_Line;
+--           Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
+--                                   theAnalysis.Points (1));
+--           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
+--                       Float'Image (theAnalysis.Scalars (1)) &
+--                       Float'Image (theAnalysis.Scalars (2)));
+--           New_Line;
          --  Factor attitude:
          case Grade is
             when 1 =>
@@ -461,9 +442,9 @@ package body Multivector_Analyze_C3GA is
          end case;
          --                  Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
          --                                  theAnalysis);
-         Print_E3_Vector_Array
-                 ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
-                  theAnalysis.M_Vectors);
+--           Print_E3_Vector_Array
+--                   ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
+--                    theAnalysis.M_Vectors);
          --                  GA_Utilities.Print_Multivector
          --                    ("theAnalysis.M_Vectors (1)", theAnalysis.M_Vectors (1));
          --                  GA_Utilities.Print_Multivector

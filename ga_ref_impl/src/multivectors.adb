@@ -1912,7 +1912,8 @@ package body Multivectors is
         S_Product    : constant Float := Scalar_Product (MV, Rev);
     begin
         if S_Product = 0.0 then
-            Put_Line ("Multivector.Versor_Inverse encountered a non-invertible multivector");
+            Put_Line
+            ("Multivector.Versor_Inverse encountered a non-invertible multivector");
             raise MV_Exception;
         end if;
 
