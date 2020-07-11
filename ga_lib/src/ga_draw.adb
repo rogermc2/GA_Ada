@@ -91,6 +91,7 @@ package body GA_Draw is
                              Scale  : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle) is
         use GA_Maths;
+        use Float_Functions;
         use GL.Types.Singles;
         --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         --          Cords                : Array_3D := (0.0, 0.0, 0.0);
@@ -116,9 +117,11 @@ package body GA_Draw is
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
         MV_Matrix             : Matrix4 := Model_View_Matrix;
-        Scaled                : GL.Types.Single;
+        BV_Size               : Float;
+        BV_Scale              : GL.Types.Single;
         RT                    : Multivectors.Rotor;
     begin
+        --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
               (Single (Base_Coords (1)), Single (Base_Coords (2)),
@@ -138,10 +141,10 @@ package body GA_Draw is
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
                             ((Multivectors.Outer_Product (MV_Ortho_1,
                                MV_Ortho_2))));
-            Scaled :=
-              GL.Types.Single (Scale * Float_Functions.Sqrt (Pi / E2_Norm));
+            BV_Size := Scale * Scale * Float_Functions.Sqrt (Pi / E2_Norm);
+            BV_Scale := GL.Types.Single (Sqrt (BV_Size));
             MV_Matrix :=
-              Maths.Scaling_Matrix ((Scaled, Scaled, Scaled)) * MV_Matrix;
+              Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale)) * MV_Matrix;
         end if;
 
 --          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
