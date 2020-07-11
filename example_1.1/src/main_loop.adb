@@ -70,6 +70,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --        use GL.Toggles;
       --          use Maths.Single_Math_Functions;
       use GA_Maths.Float_Functions;
+      use Metric;
       use Multivectors;
 
       --          Position_X        : integer := 0;
@@ -113,8 +114,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
       GI                  : Multivector;
       GP                  : Multivector;
-      theGrade            : Integer;
---        Phi                 : Float;
       R_Versor            : TR_Versor;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -187,12 +186,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          aCircle := Outer_Product (Points.C2, Points.C3);
          aCircle := Outer_Product (Points.C1, aCircle);
-         theGrade := Multivectors.Top_Grade_Index (aCircle);
-         Put_Line ("Main_Loop.Display circle, aCircle Grade:" &
-                  Integer'Image (theGrade));
-         Multivectors.To_Circle (aCircle);
-         Put_Line ("Main_Loop.Display circle, aCircle Grade:" &
-                  Integer'Image (theGrade));
 
          --  N_E3_Vec is a direction vector
          aDual_Plane :=
@@ -208,26 +201,39 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         GI := General_Inverse (aDual_Plane, Metric.C3_Metric);
-         GP := Geometric_Product (aLine, GI, Metric.C3_Metric);
+         GI := General_Inverse (aDual_Plane, C3_Metric);
+         GP := Geometric_Product (aLine, GI, C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric));
+                         Geometric_Product (-aDual_Plane, GP, C3_Metric));
 
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-         GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
-         GP := Geometric_Product (-aDual_Plane, GP, Metric.C3_Metric);
+         GP := Geometric_Product (aCircle, GI, C3_Metric);
+         GP := Geometric_Product (-aDual_Plane, GP, C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
 
          R_Versor := TR_Versor (Exp (GA_Maths.Pi) *
                                 Dual (aLine, Metric.C3_Metric));
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         GI := General_Inverse (R_Versor, Metric.C3_Metric);
-         GP := Geometric_Product (aCircle, GI, Metric.C3_Metric);
-         GP := Geometric_Product (R_Versor, GP, Metric.C3_Metric);
+         Translation_Matrix := Maths.Translation_Matrix ((-4.0, 0.0, 0.0));
+         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+         GI := General_Inverse (R_Versor,C3_Metric);
+         GP := Geometric_Product (aCircle, GI, C3_Metric);
+         GP := Geometric_Product (R_Versor, GP, C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
 
+         --  draw reflected, rotated circle (blue)
+         Shader_Manager.Set_Ambient_Colour (Blue);
+         Translation_Matrix := Maths.Translation_Matrix ((8.0, 0.0, 0.0));
+         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+         GI := General_Inverse (aDual_Plane, C3_Metric);
+         GI := Geometric_Product (General_Inverse (R_Versor, C3_Metric),
+                                 GI, C3_Metric);
+         GP := Geometric_Product (aCircle, GI, C3_Metric);
+         GP := Geometric_Product (R_Versor, GP, C3_Metric);
+         GP := Geometric_Product (-aDual_Plane, GP, C3_Metric);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
       end if;
 
    exception
