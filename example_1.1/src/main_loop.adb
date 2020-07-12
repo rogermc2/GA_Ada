@@ -202,15 +202,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         GI := General_Inverse (aDual_Plane, C3_Metric);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Reflect (aLine, aDual_Plane));
 
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-         GP := Geometric_Product (aCircle, GI, C3_Metric);
-         GP := Geometric_Product (-aDual_Plane, GP, C3_Metric);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+                         Reflect (aCircle, aDual_Plane));
 
          R_Versor := TR_Versor (Exp (GA_Maths.Pi / 4.0) *
                                 Dual (aLine, Metric.C3_Metric));
@@ -219,8 +217,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display, aCircle", aCircle);
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
---           Translation_Matrix := Maths.Translation_Matrix ((-4.0, 0.0, 0.0));
-         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+--           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          GI := General_Inverse (R_Versor,C3_Metric);
          GP := Geometric_Product (aCircle, GI, C3_Metric);
          GP := Geometric_Product (R_Versor, GP, C3_Metric);
@@ -230,7 +227,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
 --           Translation_Matrix := Maths.Translation_Matrix ((8.0, 0.0, 0.0));
-         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+--           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          GI := General_Inverse (aDual_Plane, C3_Metric);
          GI := Geometric_Product (General_Inverse (R_Versor, C3_Metric),
                                  GI, C3_Metric);
