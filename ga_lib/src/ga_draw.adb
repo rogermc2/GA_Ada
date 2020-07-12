@@ -434,6 +434,7 @@ package body GA_Draw is
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
+
         --  rotate e3 to line direction
         MV_Matrix := Model_View_Matrix *
           GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);

@@ -88,8 +88,8 @@ package body Multivector_Analyze_C3GA is
         end Classify;
 
     begin
-        --        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
-        --        New_Line;
+--          GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
+--          New_Line;
         Analysis.M_Flags.Valid := True;
         Analysis.Epsilon := Epsilon;
         Analysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
@@ -102,7 +102,6 @@ package body Multivector_Analyze_C3GA is
 
         MV_Info := Init (MV_X, Metric.C3_Metric);
         Analysis.M_MV_Type := MV_Info;
-        New_Line;
 
         --  Check for zero blade
         if Zero (Analysis.M_MV_Type) then
