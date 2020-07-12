@@ -116,10 +116,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
-      GI                  : Multivector;
-      GP                  : Multivector;
+--        GI                  : Multivector;
+--        GP                  : Multivector;
       R_Versor            : TR_Versor;
       Rotated_Circle      : Multivector;
+      R_R_Circle          : Multivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -226,14 +227,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-
-         GI := General_Inverse (aDual_Plane, C3_Metric);
-         GI := Geometric_Product (General_Inverse (R_Versor, C3_Metric),
-                                 GI, C3_Metric);
-         GP := Geometric_Product (aCircle, GI, C3_Metric);
-         GP := Geometric_Product (R_Versor, GP, C3_Metric);
-         GP := Geometric_Product (-aDual_Plane, GP, C3_Metric);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+         R_R_Circle := Reflect (Rotated_Circle, aDual_Plane);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, R_R_Circle);
       end if;
 
    exception
