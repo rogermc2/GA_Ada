@@ -60,6 +60,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --                                      Colour_ID : out GL.Uniforms.Uniform);
    function Reflect (MV, DP: Multivectors.Multivector)
                      return Multivectors.Multivector;
+   function Rotate (MV, aVersor: Multivectors.Multivector)
+                     return Multivectors.Multivector;
 
    --  -------------------------------------------------------------------------
 
@@ -117,6 +119,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GI                  : Multivector;
       GP                  : Multivector;
       R_Versor            : TR_Versor;
+      Rotated_Circle      : Multivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -210,24 +213,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Reflect (aCircle, aDual_Plane));
 
-         R_Versor := TR_Versor (Exp (GA_Maths.Pi / 4.0) *
+--           R_Versor := TR_Versor (Exp (GA_Maths.Pi / 4.0) *
+         R_Versor := TR_Versor (Exp (GA_Maths.Pi / 3.0) *
                                 Dual (aLine, Metric.C3_Metric));
---           Put_Line ("Main_Loop.Display, e^Pi/4.0: " &
---                      Float'Image (Exp (GA_Maths.Pi / 4.0)));
---           GA_Utilities.Print_Multivector ("Main_Loop.Display, aCircle", aCircle);
+
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
---           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         GI := General_Inverse (R_Versor,C3_Metric);
-         GP := Geometric_Product (aCircle, GI, C3_Metric);
-         GP := Geometric_Product (R_Versor, GP, C3_Metric);
---           GA_Utilities.Print_Multivector ("Main_Loop.Display, rotated aCircle", GP);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, GP);
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.5, 0.0));
+         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+         Rotated_Circle := Rotate (aCircle, R_Versor);
+         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Rotated_Circle);
 
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
---           Translation_Matrix := Maths.Translation_Matrix ((8.0, 0.0, 0.0));
---           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+
          GI := General_Inverse (aDual_Plane, C3_Metric);
          GI := Geometric_Product (General_Inverse (R_Versor, C3_Metric),
                                  GI, C3_Metric);
@@ -286,6 +285,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+   function Rotate (MV, aVersor: Multivectors.Multivector)
+                     return Multivectors.Multivector is
+        use Metric;
+        use Multivectors;
+        IV : constant Multivector := General_Inverse (aVersor, C3_Metric);
+   begin
+        return Geometric_Product
+          (aVersor, Geometric_Product (MV, IV, C3_Metric), C3_Metric);
+   end Rotate;
+
+   --  ------------------------------------------------------------------------
    procedure Setup_Graphic (Render_Program : out GL.Objects.Programs.Program) is
       --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
       --          use GL.Objects.Buffers;
