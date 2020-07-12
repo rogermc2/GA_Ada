@@ -58,9 +58,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --     procedure Text_Shader_Locations (Render_Text_Program : GL.Objects.Programs.Program;
    --                                      Projection_Matrix_ID, Texture_ID, Text_Dimesions_ID,
    --                                      Colour_ID : out GL.Uniforms.Uniform);
-   function Reflect (MV, DP: Multivectors.Multivector)
+   function Reflect (MV : Multivectors.Multivector;
+                     DP: Multivectors.Dual_Plane)
                      return Multivectors.Multivector;
-   function Rotate (MV, aVersor: Multivectors.Multivector)
+   function Rotate (MV : Multivectors.Multivector;
+                    aVersor: Multivectors.TR_Versor)
                      return Multivectors.Multivector;
 
    --  -------------------------------------------------------------------------
@@ -118,9 +120,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
 --        GI                  : Multivector;
 --        GP                  : Multivector;
-      R_Versor            : TR_Versor;
-      Rotated_Circle      : Multivector;
-      R_R_Circle          : Multivector;
+      R_Versor            : TR_Versor := New_TR_Versor;
+      Rotated_Circle      : Circle :=  New_Circle;
+      R_R_Circle          : Circle :=  New_Circle;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -268,7 +270,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   function Reflect (MV, DP: Multivectors.Multivector)
+   function Reflect (MV : Multivectors.Multivector;
+                     DP: Multivectors.Dual_Plane)
                      return Multivectors.Multivector is
         use Metric;
         use Multivectors;
@@ -280,7 +283,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   function Rotate (MV, aVersor: Multivectors.Multivector)
+   function Rotate (MV : Multivectors.Multivector;
+                    aVersor : Multivectors.TR_Versor)
                      return Multivectors.Multivector is
         use Metric;
         use Multivectors;
@@ -291,6 +295,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    end Rotate;
 
    --  ------------------------------------------------------------------------
+
    procedure Setup_Graphic (Render_Program : out GL.Objects.Programs.Program) is
       --                              Render_Text_Program    : out GL.Objects.Programs.Program) is;
       --          use GL.Objects.Buffers;
