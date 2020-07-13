@@ -60,6 +60,7 @@ package Multivectors is
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
+   function Exp (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : Vector) return Multivector;
    function General_Inverse (MV : Multivector) return Multivector;

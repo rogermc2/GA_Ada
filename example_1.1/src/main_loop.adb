@@ -118,8 +118,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
---        GI                  : Multivector;
---        GP                  : Multivector;
+      Phi                 : constant Float := 0.5 * GA_Maths.Pi;
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle :=  New_Circle;
       R_R_Circle          : Circle :=  New_Circle;
@@ -216,9 +215,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Reflect (aCircle, aDual_Plane));
 
---           R_Versor := TR_Versor (Exp (GA_Maths.Pi / 4.0) *
-         R_Versor := TR_Versor (Exp (GA_Maths.Pi / 3.0) *
-                                Dual (aLine, Metric.C3_Metric));
+         R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric)));
 
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
