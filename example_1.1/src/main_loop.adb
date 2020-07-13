@@ -75,7 +75,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
       --        use GL.Toggles;
       --          use Maths.Single_Math_Functions;
-      use GA_Maths.Float_Functions;
       use Metric;
       use Multivectors;
 
@@ -130,6 +129,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       --          GL_Util.Load_Pick_Matrix;
 
+      Put_Line ("Main_Loop.Display calling Init_Perspective_Transform.");
       Maths.Init_Perspective_Transform
         (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
@@ -147,6 +147,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Culling.Set_Cull_Face (GL.Culling.Back);
 
       Shader_Manager.Set_Line_Width (2.0);
+      Put_Line ("Main_Loop.Display calling Rotor_GL_Multiply.");
 
       GL_Util.Rotor_GL_Multiply (Model_Rotor, Model_View_Matrix);
 
@@ -188,6 +189,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          GA_Utilities.Print_Multivector ("Display, L1 ", Points.L1);
       --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
       if not Pick_Manager.Pick_Active then
+         Put_Line ("Main_Loop.Display drawing aLine.");
          aLine := C3GA.Set_Line (Points.L1, Points.L2);
          --              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
 
@@ -215,7 +217,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Reflect (aCircle, aDual_Plane));
 
-         R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric)));
+         R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
 
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
@@ -302,7 +304,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       Shader_Manager.Init (Render_Program);
       Palet.Set_Point_Size (1.0);
+      Put_Line ("Main_Loop.Setup_Graphic calling GS_Compute.");
       Geosphere.GS_Compute (Sphere, Depth);
+      Put_Line ("Main_Loop.Setup_Graphic calling Set_Current_Sphere.");
       Palet.Set_Current_Sphere (Sphere);
 
       --        Render_Text_Program := Program_Loader.Program_From
@@ -310,6 +314,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
       --
       --        Text_Management.Setup (Font_File);
+      Put_Line ("Main_Loop.Setup_Graphic done.");
 
    exception
       when others =>

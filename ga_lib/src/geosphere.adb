@@ -9,15 +9,16 @@ with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 
 with E3GA;
+with GA_Utilities;
 with GL_Util;
 
 with Shader_Manager;
 
 package body Geosphere is
     use GL.Types;
-   package Indices_List_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => GL.Types.UInt);
-   type Indices_DL_List is new Indices_List_Package.List with null record;
+    package Indices_List_Package is new Ada.Containers.Doubly_Linked_Lists
+      (Element_Type => GL.Types.UInt);
+    type Indices_DL_List is new Indices_List_Package.List with null record;
 
     package Sphere_List_Package is new Ada.Containers.Doubly_Linked_Lists
       (Element_Type => Geosphere);
@@ -35,6 +36,7 @@ package body Geosphere is
                        Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
                        Indices_Buffer : GL.Objects.Buffers.Buffer;
                        Stride : GL.Types.Int; Num_Faces : GL.Types.Size);
+    procedure Print_MV_Vector (Name : String; MV : MV_Vector);
     procedure Refine_Face (Sphere : in out Geosphere; Face_Index, Depth : Natural);
 
     --  -------------------------------------------------------------------------
@@ -408,6 +410,7 @@ package body Geosphere is
 
         --  set initial geometry
         Sphere.Faces.Clear;
+        Put_Line ("Geosphere.GS_Compute loading New_Face.");
         New_Line;
         for face in 1 .. Num_Faces loop
             New_Face.Indices := Indices_Vector (Face_Indices (face));
@@ -419,11 +422,14 @@ package body Geosphere is
             Sphere.Vertices.Append (Vertices (vertex_index));
         end loop;
 
+        Print_MV_Vector ("Geosphere.GS_Compute Sphere Vertices", Sphere.Vertices);
         for face_index in 1 .. Num_Faces loop
+            Put_Line ("Geosphere.GS_Compute Refine Face " & Integer'Image (face_index));
             Refine_Face (Sphere, face_index, Depth);
         end loop;
         Sphere.Depth := Depth;
 
+        Put_Line ("Geosphere.GS_Compute done.");
     exception
         when others =>
             Put_Line ("An exception occurred in Geosphere.GS_Compute.");
@@ -510,6 +516,27 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
+    procedure Print_MV_Vector (Name : String; MV : MV_Vector) is
+        use Vertex_Vectors;
+        Vector_Cursor : Vertex_Vectors.Cursor := MV.First;
+        aVector       : Multivectors.Multivector;
+    begin
+        New_Line;
+        Put_Line (Name);
+        while Has_Element (Vector_Cursor) loop
+            aVector := Element (Vector_Cursor);
+            GA_Utilities.Print_Multivector ("", aVector);
+            Next (Vector_Cursor);
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Geosphere.Print_MV_Vector.");
+            raise;
+    end Print_MV_Vector;
+
+    --  ------------------------------------------------------------------------
+
     procedure Refine_Face (Sphere : in out Geosphere; Face_Index,
                            Depth  : Natural) is
         use Face_Vectors;
@@ -526,6 +553,8 @@ package body Geosphere is
         Vertex_2        : E3_Vector;
         New_Vertex      : E3_Vector;  --  V1
     begin
+        GA_Utilities.Print_Integer_Array ("Geosphere.Refine_Face Vertex_Indicies",
+                                          Vertex_Indicies);
         --  Refine_Face is recursive
         if Depth > 0 then
             --   create 3 new vertices
@@ -534,14 +563,23 @@ package body Geosphere is
                 if Index_2 > 3 then
                     Index_2 := 1;
                 end if;
+                Put_Line ("Geosphere.Refine_Face index and Index_2: " &
+                            Integer'Image (index) &  "  " & Integer'Image (Index_2));
                 Vertex_1 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (index)));
+                GA_Utilities.Print_E3_Vector
+                  ("Geosphere.Refine_Face Vertex_1", Vertex_1);
                 Vertex_2 := E3GA.Get_Coords (Vertices.Element (Vertex_Indicies (Index_2)));
+                GA_Utilities.Print_E3_Vector
+                  ("Geosphere.Refine_Face Vertex_2", Vertex_2);
                 New_Vertex := E3GA.Unit_E (Vertex_1 + Vertex_2);
+                GA_Utilities.Print_E3_Vector
+                  ("Geosphere.Refine_Face New_Vertex", New_Vertex);
                 Add_Vertex (Sphere,
                             New_Vector (Float (New_Vertex (GL.X)), Float (New_Vertex (GL.Y)),
                               Float (New_Vertex (GL.Z))), New_Indices (index));
             end loop;
 
+            Put_Line ("Geosphere.Refine_Face allocating four new faces");
             --  allocate four new faces
             New_Face (Sphere, this_Face.Indices (1), New_Indices (1),
                       New_Indices (3), this_Face.Depth);

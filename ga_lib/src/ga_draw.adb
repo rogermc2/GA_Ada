@@ -15,14 +15,15 @@ with GL.Toggles;
 with Utilities;
 
 with Maths;
-with GA_Maths;
 
 with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
-with Multivectors;
+with GA_Maths;
+with GA_Utilities;
 with Geosphere;
 with GL_Util;
+with Multivectors;
 with Shader_Manager;
 
 package body GA_Draw is
@@ -120,6 +121,8 @@ package body GA_Draw is
         BV_Scale              : Single := Single (Scale);
         RT                    : Multivectors.Rotor;
     begin
+        GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
+        GA_Utilities.Print_Multivector ("GA_Draw.Draw_Bivector MV_Normal", MV_Normal);
         --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
@@ -134,6 +137,7 @@ package body GA_Draw is
             --  Rotate e3 to normal direction
             RT := E3GA_Utilities.Rotor_Vector_To_Vector
               (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
+            GA_Utilities.Print_Multivector ("GA_Draw.Draw_Bivector RT", RT);
             GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
         else  --  Draw_Bivector_Parallelogram
             E2_Norm :=

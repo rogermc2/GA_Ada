@@ -1466,6 +1466,7 @@ package body Multivectors is
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
         Add_Blade (V, New_Basis_Blade (E3_e2, e2));
         Add_Blade (V, New_Basis_Blade (E3_e3, e3));
+        Simplify (V);
         return V;
     end New_Vector;
 
@@ -1683,11 +1684,14 @@ package body Multivectors is
     end Set_Geometry;
 
     --  -------------------------------------------------------------------------
+
     procedure Simplify (MV : in out Multivector) is
         Blades : Blade.Blade_List := MV.Blades;
     begin
-        Blade.Simplify (Blades);
-        MV.Blades := Blades;
+        if Blade.List_Length (Blades) > 0 then
+            Blade.Simplify (Blades);
+            MV.Blades := Blades;
+        end if;
     end Simplify;
 
     --  -------------------------------------------------------------------------
