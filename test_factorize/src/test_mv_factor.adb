@@ -32,6 +32,7 @@ procedure Test_MV_Factor is
    Factors      : Multivector_List;
 
 begin
+   Set_Geometry (C3_Geometry);
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("no"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e1"));
    BV_Names.Append (Ada.Strings.Unbounded.To_Unbounded_String ("e2"));
