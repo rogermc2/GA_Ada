@@ -24,7 +24,10 @@ package GA_Utilities is
                            Start, Last : GA_Maths.Array_I2);
    procedure Print_Metric (Name : String; aMetric : Metric.Metric_Record);
    procedure Print_Multivector (Name : String; MV : Multivectors.Multivector);
-   procedure Print_Multivector_Info (Name : String; Info : Multivector_Type.MV_Type_Record);
+   procedure Print_Multivector_Info (Name : String;
+                                     Info : Multivector_Type.MV_Type_Record);
+   procedure Print_Multivector_List (Name : String;
+                                     MV_List : Multivectors.Multivector_List);
    procedure Print_Vertex (Name : String; Vertex : Multivectors.Vector);
 
 end GA_Utilities;

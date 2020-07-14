@@ -188,8 +188,9 @@ package body GA_Utilities is
       aBlade    : Blade.Basis_Blade;
       Curs      : Cursor := theBlades.First;
    begin
-      New_Line;
-      Put_Line (Name);
+      if Name /= "" then
+         Put_Line (Name);
+      end if;
       Put_Line ("MV Type: " & MV_Type'Image (MV_Kind (MV)));
       Put_Line ("MV Size: " & Integer'Image (Multivector_Size (MV)));
       Put_Line ("Grade Use Bitmap: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
@@ -224,6 +225,25 @@ package body GA_Utilities is
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_Info.");
          raise;
    end Print_Multivector_Info;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Multivector_List (Name : String;
+                                     MV_List : Multivectors.Multivector_List) is
+      use Multivectors;
+      MV_List_Length : constant Integer := List_Length (MV_List);
+   begin
+      New_Line;
+      Put_Line (Name & ":");
+      for index in 1 .. MV_List_Length loop
+         Print_Multivector ("", MV_Item (MV_List, index));
+      end loop;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_List.");
+         raise;
+   end Print_Multivector_List;
 
    --  ------------------------------------------------------------------------
 
