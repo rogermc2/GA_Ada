@@ -88,8 +88,8 @@ package body Multivector_Analyze_C3GA is
         end Classify;
 
     begin
---          GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
---          New_Line;
+        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
+        New_Line;
         Analysis.M_Flags.Valid := True;
         Analysis.Epsilon := Epsilon;
         Analysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
@@ -305,7 +305,7 @@ package body Multivector_Analyze_C3GA is
         MV_X             : Multivector := MV;
         Grade            : constant Integer :=
                              Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
-        Blade_Factors    : Multivector_List;
+        MV_Factors       : Multivector_List;
         LC               : Multivector;
         LC_NI_MV         : Multivector;
         LC_NI_MV_Inverse : Multivector;
@@ -406,23 +406,29 @@ package body Multivector_Analyze_C3GA is
             when 3 | 5 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
+                MV_X := Reverse_MV (Left_Contraction (C3GA.no,
+                                    Reverse_MV (Attitude), Met));
+                GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
                 --  Returned scale not used
-                Blade_Factors :=
-                  Multivector_Utilities.Factorize_Multivector (MV, Scale);
+                MV_Factors :=
+                  Multivector_Utilities.Factorize_Multivector (MV_X, Scale);
+                GA_Utilities.Print_Multivector_List
+                  ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
                 --  direction
                 theAnalysis.M_Vectors (1) :=
-                  C3GA.To_VectorE3GA (MV_First (Blade_Factors));
+                  C3GA.To_VectorE3GA (MV_First (MV_Factors));
                 --                 Utilities.Print_Vector
                 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
                 --                 theAnalysis.M_Vectors (1));
                 theAnalysis.M_Vectors (2) :=
-                  C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
+                  C3GA.To_VectorE3GA (MV_Item (MV_Factors, 2));
                 --                 Utilities.Print_Vector
                 --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
                 --                    theAnalysis.M_Vectors (2));
                 theAnalysis.M_Vectors (3) :=
-                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
-                                      MV_Item (Blade_Factors, 2)), Met));
+                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (MV_Factors),
+                                      MV_Item (MV_Factors, 2)), Met));
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                 theAnalysis.M_Vectors (1) :=

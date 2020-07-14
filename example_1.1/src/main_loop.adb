@@ -300,13 +300,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          use GL.Objects.Buffers;
       --        Font_File : string := "../fonts/Helvetica.ttc";
       Sphere : Geosphere.Geosphere;
-      Depth  : constant integer := 3;
+--        Depth  : constant integer := 3;
    begin
       Shader_Manager.Init (Render_Program);
       Palet.Set_Point_Size (1.0);
-      Put_Line ("Main_Loop.Setup_Graphic calling GS_Compute.");
-      Geosphere.GS_Compute (Sphere, Depth);
-      Put_Line ("Main_Loop.Setup_Graphic calling Set_Current_Sphere.");
+--        Put_Line ("Main_Loop.Setup_Graphic calling GS_Compute.");
+--        Geosphere.GS_Compute (Sphere, Depth);
+--        Put_Line ("Main_Loop.Setup_Graphic calling Set_Current_Sphere.");
       Palet.Set_Current_Sphere (Sphere);
 
       --        Render_Text_Program := Program_Loader.Program_From

@@ -6,6 +6,7 @@ with Interfaces;
 with Bits;
 with Blade;
 with Blade_Types;
+with GA_Utilities;
 
 package body Multivector_Utilities is
 
@@ -18,9 +19,11 @@ package body Multivector_Utilities is
       use Blade;
       use Blade_Types;
       use Multivectors;
-      K_Grade    : constant Integer := Grade (Largest_Basis_Blade (MV_B));
+      K_Grade    : constant Integer := Grade (Bitmap (Largest_Basis_Blade (MV_B)));
       E_Largest  : Basis_Blade;
-      Basis_Bit  : Unsigned_32;
+      New_Blade  : Basis_Blade;
+      Basis_Bit  : Integer;
+--        Basis_Bit  : Unsigned_32;
       B_Current  : Multivector;
       aFactor    : Multivector;
       Factors    : Multivector_List;
@@ -29,25 +32,31 @@ package body Multivector_Utilities is
 --           raise MV_Utilities_Exception with
 --             "Multivector_Utilities.Factorize_Blades inhomogenous multivector detected.";
 --        else
-         --  set scale of output, no matter what
+         --  set scale of output
          if K_Grade = 0 then
             Scale := Scalar_Part (MV_B);
          else
             Scale := Norm_E (MV_B);
          end if;
-
+        GA_Utilities.Print_Multivector
+          ("Multivector_Utilities.Factorize_Multivector MV_B", MV_B);
          if K_Grade > 0 and Scale /= 0.0 then
             --  not a scalar-blade or a null-blade
             E_Largest := Largest_Basis_Blade (MV_B);
+            Put_Line ("Multivector_Utilities.Factorize_Multivector K_Grade" &
+            Integer'Image (K_Grade));
             declare
                E_Array : array (0 .. K_Grade - 1) of Basis_Blade;
                Idx     : Integer := 0;
             begin
                E_Array (0) := New_Basis_Blade (Unsigned_32 (K_Grade));
-               for Index_G in 0 .. K_Grade - 1 loop
-                  Basis_Bit := Shift_Left (1, Index_G);
+--                 for Index_G in 0 .. K_Grade - 1 loop
+               for Index_G in 0 .. Space_Dimension - 1 loop
+                  Basis_Bit := 2 * Index_G;
+--                    Basis_Bit := Shift_Left (Index_G, 1);
                   if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
-                     E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
+                     New_Blade := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
+                     E_Array (Idx) := New_Blade;
                      Idx := Idx + 1;
                   end if;
                end loop;
@@ -82,7 +91,8 @@ package body Multivector_Utilities is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Multivector_Utilities.Factorize_Multivector");
+         Put_Line
+              ("An exception occurred in Multivector_Utilities.Factorize_Multivector");
          raise;
    end Factorize_Multivector;
 
