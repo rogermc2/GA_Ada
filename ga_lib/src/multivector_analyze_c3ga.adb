@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
---  with Utilities;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -406,9 +406,11 @@ package body Multivector_Analyze_C3GA is
             when 3 | 5 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
---                  MV_X := Reverse_MV (Left_Contraction (C3GA.no,
---                                      Reverse_MV (Attitude), Met));
-                MV_X := MV;
+                GA_Utilities.Print_Multivector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Reverse Attitude: ",
+                   Reverse_MV (Attitude));
+                MV_X := Reverse_MV (Left_Contraction (C3GA.no,
+                                    Reverse_MV (Attitude), Met));
                 GA_Utilities.Print_Multivector
                   ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
                 --  Returned scale not used
@@ -419,14 +421,14 @@ package body Multivector_Analyze_C3GA is
                 --  direction
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (MV_Factors));
-                --                 Utilities.Print_Vector
-                --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
-                --                 theAnalysis.M_Vectors (1));
+                Utilities.Print_Vector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
+                   theAnalysis.M_Vectors (1));
                 theAnalysis.M_Vectors (2) :=
                   C3GA.To_VectorE3GA (MV_Item (MV_Factors, 2));
-                --                 Utilities.Print_Vector
-                --                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
-                --                    theAnalysis.M_Vectors (2));
+                Utilities.Print_Vector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
+                   theAnalysis.M_Vectors (2));
                 theAnalysis.M_Vectors (3) :=
                   C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (MV_Factors),
                                       MV_Item (MV_Factors, 2)), Met));
