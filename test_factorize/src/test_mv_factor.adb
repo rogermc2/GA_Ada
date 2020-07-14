@@ -50,6 +50,7 @@ begin
    Factors := Multivector_Utilities.Factorize_Blades (B_MV, Scale);
    GA_Utilities.Print_Multivector_List("Factors", Factors);
 
+   --  Reconstruct original
    R_MV := New_Multivector (Scale);
    for index in 1 .. List_Length (Factors) loop
         R_MV := Outer_Product (R_MV, MV_Item (Factors, index));
