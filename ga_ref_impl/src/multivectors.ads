@@ -78,6 +78,8 @@ package Multivectors is
                        Index : Interfaces.Unsigned_32) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
+   function Get_Random_Blade (Dim, Grade : Integer; Scale : Float)
+                              return Multivector;
    function Get_Random_Vector (Dim : Integer; Scale : Float)   return Multivector;
    function Grade (MV : Multivector; theGrade : out Integer) return Grade_Status;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
