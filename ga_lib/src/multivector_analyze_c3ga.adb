@@ -419,6 +419,12 @@ package body Multivector_Analyze_C3GA is
                 GA_Utilities.Print_Multivector_List
                   ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
                 --  direction
+                GA_Utilities.Print_Multivector
+                 ("Multivector_Analyze_C3GA.Analyze_Round MV_First (MV_Factors)",
+                  MV_First (MV_Factors));
+                GA_Utilities.Print_Multivector
+                 ("Multivector_Analyze_C3GA.Analyze_Round MV_Item (MV_Factors, 2)",
+                  MV_Item (MV_Factors, 2));
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (MV_Factors));
                 Utilities.Print_Vector

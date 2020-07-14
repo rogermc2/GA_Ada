@@ -47,6 +47,7 @@ package body Multivector_Utilities is
                E_Array : array (0 .. Space_Dimension - 1) of Basis_Blade;
                Idx     : Integer := 0;
             begin
+               --  get largest basis blade, basis vectors
                E_Array (0) := New_Basis_Blade (Unsigned_32 (K_Grade));
                for Index_G in 0 .. Space_Dimension - 1 loop
                   Basis_Bit := Shift_Left (1, Index_G);
@@ -56,6 +57,7 @@ package body Multivector_Utilities is
                   end if;
                end loop;
 
+               --  setup the 'current input blade'
                B_Current := Geometric_Product (MV_B, 1.0 / Scale);
 
                --  for all but one of the E_Array basis vectors:
@@ -78,7 +80,7 @@ package body Multivector_Utilities is
             end;  --  declare block
             --  last factor = what is left of the input blade
             --  B_Current is already normalized but
-            --  renormalize to remove any FP round-off error
+            --  renormalize to remove any floating point round-off error
             Add_Multivector (Factors, Unit_E (B_Current));
          end if;
       end if;
