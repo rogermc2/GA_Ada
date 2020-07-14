@@ -214,7 +214,7 @@ package body Multivector_Analyze_C3GA is
             when 4 =>  --  Plane
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
                 theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
-                Blade_Factors := Multivector_Utilities.Factorize_Multivector
+                Blade_Factors := Multivector_Utilities.Factorize_Blades
                   (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
                    Scale);
 
@@ -264,7 +264,7 @@ package body Multivector_Analyze_C3GA is
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 3.");
                 theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
                 Blade_Factors :=
-                  Multivector_Utilities.Factorize_Multivector (MV, Scale);
+                  Multivector_Utilities.Factorize_Blades (MV, Scale);
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (Blade_Factors));
                 theAnalysis.M_Vectors (2) :=
@@ -406,13 +406,14 @@ package body Multivector_Analyze_C3GA is
             when 3 | 5 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
-                MV_X := Reverse_MV (Left_Contraction (C3GA.no,
-                                    Reverse_MV (Attitude), Met));
+--                  MV_X := Reverse_MV (Left_Contraction (C3GA.no,
+--                                      Reverse_MV (Attitude), Met));
+                MV_X := MV;
                 GA_Utilities.Print_Multivector
                   ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
                 --  Returned scale not used
                 MV_Factors :=
-                  Multivector_Utilities.Factorize_Multivector (MV_X, Scale);
+                  Multivector_Utilities.Factorize_Blades (MV_X, Scale);
                 GA_Utilities.Print_Multivector_List
                   ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
                 --  direction
@@ -500,7 +501,7 @@ package body Multivector_Analyze_C3GA is
             when 3 =>
                 theAnalysis.M_Type.Blade_Subclass := Bivector_Subclass;
                 Blade_Factors :=
-                  Multivector_Utilities.Factorize_Multivector (MV, Scale);
+                  Multivector_Utilities.Factorize_Blades (MV, Scale);
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (Blade_Factors));
                 theAnalysis.M_Vectors (2) :=
