@@ -913,6 +913,35 @@ package body Multivectors is
     end Get_Blade;
 
     --  -------------------------------------------------------------------------
+
+    function Get_Random_Blade (Dim, Grade : Integer; Scale : Float)
+                               return Multivector is
+        Result : Multivector :=
+                   New_Multivector (Scale * Float (Maths.Random_Float));
+    begin
+        for  index in 1 .. Grade loop
+            Result := Outer_Product (Result, Get_Random_Vector (Dim, Scale));
+        end loop;
+        return Result;
+    end Get_Random_Blade;
+
+    --  -------------------------------------------------------------------------
+
+    function Get_Random_Vector (Dim : Integer; Scale : Float)
+                                return Multivector is
+        use Blade;
+        Blades     : Blade_List;
+        Base_Index : C3_Base;
+    begin
+        for index in 1 .. Dim loop
+            Base_Index := C3_Base'Enum_Val (2 * (index - 1));
+            Blades.Add_Blade (New_Basis_Blade (Base_Index,
+                              Scale * Float (Maths.Random_Float)));
+        end loop;
+        return New_Multivector (Blades);
+    end Get_Random_Vector;
+
+    --  -------------------------------------------------------------------------
     --  Grade returns the grade (bit count) of an homogeneous Multivector.
     --  0 is returned for null Multivectors.
     --  Is_Homogeneous False is returned if the Multivector is not homogeneous.
