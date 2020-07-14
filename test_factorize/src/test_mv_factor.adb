@@ -29,6 +29,8 @@ procedure Test_MV_Factor is
    BL           : Blade.Blade_List;
    B_MV         : Multivector;
    R_MV         : Multivector;
+   NP           : Normalized_Point :=
+                    New_Normalized_Point (-0.391495, -0.430912, 0.218277);
    Factors      : Multivector_List;
 
 begin
@@ -56,8 +58,11 @@ begin
    for index in 1 .. List_Length (Factors) loop
         R_MV := Outer_Product (R_MV, MV_Item (Factors, index));
    end loop;
-
    GA_Utilities.Print_Multivector ("R_MV", R_MV);
+
+   GA_Utilities.Print_Multivector ("NP", NP);
+   Factors := Multivector_Utilities.Factorize_Blades (NP, Scale);
+   GA_Utilities.Print_Multivector_List("Factors", Factors);
 
    exception
       when anError :  others =>
