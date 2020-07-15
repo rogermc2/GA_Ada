@@ -1097,12 +1097,9 @@ package body Multivectors is
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
             Cursor_2 := List_2.First;
-            --              GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric B1", B1);
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                --                  GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric B2", B2);
                 Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
-                --                  GA_Utilities.Print_Blade ("Multivectors.Inner_Product metric Blades_IP", Blades_IP);
                 if Blade.Weight (Blades_IP) /= 0.0 then
                     MV.Blades.Append (Blades_IP);
                 end if;
@@ -1128,7 +1125,8 @@ package body Multivectors is
         Inv_Weight  : float;
     begin
         if S_Weight = 0.0 then
-            raise MV_Exception with "Multivectors.Inverse called with zero weight blade";
+            raise MV_Exception with
+              "Multivectors.Inverse called with zero weight blade";
         end if;
         Inv_Weight := 1.0 / S_Weight ** 2;
         return New_Scalar (S_Weight * Inv_Weight);
@@ -1199,7 +1197,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                                   return Multivector is
+                               return Multivector is
     begin
         return Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
     end Left_Contraction;
@@ -1213,8 +1211,9 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
-                                     return Ada.Strings.Unbounded.Unbounded_String is
+    function Multivector_String (MV : Multivector;
+                                 BV_Names : Blade.Basis_Vector_Names)
+                                 return Ada.Strings.Unbounded.Unbounded_String is
         use Ada.Strings.Unbounded;
         use Blade;
         use Blade_List_Package;
@@ -1222,7 +1221,8 @@ package body Multivectors is
         Blade_Cursor  : Cursor := Blades.First;
         thisBlade     : Blade.Basis_Blade;
         Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
-        theString     : Ada.Strings.Unbounded.Unbounded_String := To_Unbounded_String ("0.0");
+        theString     : Ada.Strings.Unbounded.Unbounded_String :=
+                          To_Unbounded_String ("0.0");
     begin
         while Has_Element (Blade_Cursor) loop
             thisBlade := Element (Blade_Cursor);
@@ -1239,7 +1239,8 @@ package body Multivectors is
                         else
                             theString := theString & " + ";
                         end if;
-                        theString := theString & Blade_String (2 .. Blade_String'Length);
+                        theString :=
+                          theString & Blade_String (2 .. Blade_String'Length);
                     end if;
                 end;
             end if;
@@ -1271,7 +1272,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector is
+    function MV_Item (MV_List : Multivector_List; Index : Integer)
+                      return Multivector is
         use MV_List_Package;
         Curs : Cursor := MV_List.First;
     begin
@@ -1317,7 +1319,7 @@ package body Multivectors is
         return Negated_MV;
     end Negate;
 
-    --  -----------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function New_Bivector (V1, V2 : Vector) return Bivector is
     begin
@@ -1712,7 +1714,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                                 return float is
+                             return float is
     begin
         return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
     end Scalar_Product;
@@ -1878,7 +1880,6 @@ package body Multivectors is
             Next (Blade_Cursor);
         end loop;
         return Grade_Count;
-        --        return Interfaces.Unsigned_32 (Grade_Count);
     end Top_Grade_Index;
 
     --  -------------------------------------------------------------------------
@@ -1953,7 +1954,8 @@ package body Multivectors is
         Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
     begin
         if Norm_Sq = 0.0 then
-            raise MV_Exception with "Multivectors.Unit_R encountered a null multivector";
+            raise MV_Exception with
+              "Multivectors.Unit_R encountered a null multivector";
         end if;
 
         return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
@@ -1971,7 +1973,8 @@ package body Multivectors is
         Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
     begin
         if Norm_Sq = 0.0 then
-            raise MV_Exception with "Multivectors.Unit_R Metric encountered a null multivector";
+            raise MV_Exception with
+              "Multivectors.Unit_R Metric encountered a null multivector";
         end if;
 
         return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
@@ -2027,7 +2030,8 @@ package body Multivectors is
         S_Product    : constant Float := Scalar_Product (MV, Rev, Met);
     begin
         if S_Product = 0.0 then
-            Put_Line ("Multivector.Versor_Inverse encountered a non-invertible multivector");
+            Put_Line
+              ("Multivector.Versor_Inverse encountered a non-invertible multivector");
             raise MV_Exception;
         end if;
 
