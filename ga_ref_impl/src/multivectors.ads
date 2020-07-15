@@ -80,10 +80,11 @@ package Multivectors is
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
    function Get_Random_Blade (Dim, Grade : Integer; Scale : Float)
                               return Multivector;
-   function Get_Random_Vector (Dim : Integer; Scale : Float)   return Multivector;
+   function Get_Random_Vector (Dim : Integer; Scale : Float)  return Multivector;
    function Grade (MV : Multivector; theGrade : out Integer) return Grade_Status;
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage;
    function Grade_Inversion (MV : Multivector) return Multivector;
+   function Highest_Grade (MV : Multivector) return Integer;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;

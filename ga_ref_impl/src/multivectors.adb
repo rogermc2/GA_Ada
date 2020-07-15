@@ -1018,6 +1018,27 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function Highest_Grade (MV : Multivector) return Integer is
+
+        use Blade;
+        use Blade_List_Package;
+        Blades     : constant Blade_List := Multivectors.Get_Blade_List (MV);
+        Curs       : Cursor := Blades.First;
+        aGrade     : Integer;
+        High_Grade : Integer := 0;
+    begin
+        while Has_Element (Curs) loop
+            aGrade := Grade (Element (Curs));
+            if aGrade > High_Grade then
+                High_Grade := aGrade;
+            end if;
+            Next (Curs);
+        end loop;
+        return High_Grade;
+
+    end Highest_Grade;
+
+    --  -------------------------------------------------------------------------
     function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                                 return Multivector is
         use Blade;
