@@ -520,6 +520,7 @@ package body Multivectors is
                 ABlade := Blade.New_Basis_Blade (Cosh (Alpha));
                 Multivectors.Add_Blade (Result, ABlade);
             end if;
+        else
             Result := Exp_Series (MV, Met, Order);
         end if;
         return Result;
