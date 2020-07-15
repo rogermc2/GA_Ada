@@ -106,6 +106,7 @@ package E3GA is
 --     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32;
 --     function Inverse (aRotor : Rotor) return Rotor;
 --     function Inverse (V : Vector) return Vector;
+       function Is_Zero (V : E3_Vector) return Boolean;
 --     function Left_Contraction (BV1, BV2 : Bivector) return Scalar;
 --     function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
 --     function Left_Contraction (V : Vector; BV : Bivector) return Vector;
