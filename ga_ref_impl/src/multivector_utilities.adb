@@ -13,10 +13,11 @@ package body Multivector_Utilities is
     --  Factorize_Blades returns the k unit factors of the blade and
     --  the scale of the blade
     function Factorize_Blades (MV_B : Multivectors.Multivector; Scale : out Float)
-                              return Multivectors.Multivector_List is
+                               return Multivectors.Multivector_List is
         use Interfaces;
         use Blade;
-        use Blade_Types;        use Multivectors;
+--          use Blade_Types;
+        use Multivectors;
         K_Grade     : Integer := 0;
         Grade_Valid : Grade_Status;
         E_Largest   : Basis_Blade;
@@ -24,6 +25,8 @@ package body Multivector_Utilities is
         B_Current   : Multivector;
         aFactor     : Multivector;
         Factors     : Multivector_List;
+        E_Array     : array (1 .. Space_Dimension) of Basis_Blade;
+        Idx         : Integer := 0;
     begin
         if Space_Dimension < 1 then
             raise MV_Utilities_Exception with
@@ -46,42 +49,39 @@ package body Multivector_Utilities is
 
         if K_Grade > 0 and Scale /= 0.0 then
             --  not a scalar-blade or a null-blade
+            --  get largest basis blade
             E_Largest := Largest_Basis_Blade (MV_B);
-            declare
-                E_Array : array (0 .. Space_Dimension - 1) of Basis_Blade;
-                Idx     : Integer := 0;
-            begin
-                --  get largest basis blade, basis vectors
-                E_Array (0) := New_Basis_Blade (Unsigned_32 (K_Grade));
-                for Index_G in 0 .. Space_Dimension - 1 loop
-                    Basis_Bit := Shift_Left (1, Index_G);
-                    if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
-                        E_Array (Idx) := New_Basis_Blade (C3_Base'Enum_Val (Basis_Bit), 1.0);
-                        Idx := Idx + 1;
-                    end if;
-                end loop;
+            --  get basis vectors
+            for Index_G in 0 .. Space_Dimension - 1 loop
+                Basis_Bit := Unsigned_32 (2 * Index_G);  --  Shift_Left (Index_G, 1)
+                if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
+                    Idx := Idx + 1;
+                    E_Array (Idx) :=
+                      New_Basis_Blade (Basis_Bit);
+                end if;
+            end loop;
 
-                --  setup the 'current input blade'
-                B_Current := Geometric_Product (MV_B, 1.0 / Scale);
+            --  setup the 'current input blade'
+            B_Current := Geometric_Product (MV_B, 1.0 / Scale);
 
-                --  for all but one of the E_Array basis vectors:
-                for index in 0 .. Space_Dimension - 2 loop
-                    --  Project basis vector E_Array (index) onto B_Current
-                    --  (E(i) lc B_Current) inv(B_Current) but
-                    --  inv(B_Current) not required because Bc is a unit vector
-                    aFactor := New_Multivector (E_Array (index));
-                    aFactor := Inner_Product
-                      (Inner_Product (aFactor, B_Current, Left_Contraction),
-                       B_Current, Left_Contraction);
-                    if not Is_Null (aFactor) then
-                        --  Normalize aFactor
-                        aFactor := Unit_E (aFactor);
-                        Add_Multivector (Factors, aFactor);
-                        --  Remove aFactor from B_Current
-                        B_Current := Inner_Product (aFactor, B_Current, Left_Contraction);
-                    end if;
-                end loop;
-            end;  --  declare block
+            --  for all but one of the E_Array basis vectors:
+            for index in 1 .. Space_Dimension - 1 loop
+                --  Project basis vector E_Array (index) onto B_Current
+                --  (E(i) lc B_Current) inv(B_Current) but
+                --  inv(B_Current) not required because Bc is a unit vector
+                aFactor := New_Multivector (E_Array (index));
+                aFactor := Inner_Product
+                  (Inner_Product (aFactor, B_Current, Left_Contraction),
+                   B_Current, Left_Contraction);
+                if not Is_Null (aFactor) then
+                    --  Normalize aFactor
+                    aFactor := Unit_E (aFactor);
+                    Add_Multivector (Factors, aFactor);
+                    --  Remove aFactor from B_Current
+                    B_Current :=
+                      Inner_Product (aFactor, B_Current, Left_Contraction);
+                end if;
+            end loop;
             --  last factor = what is left of the input blade
             --  B_Current is already normalized but
             --  renormalize to remove any floating point round-off error
@@ -99,7 +99,7 @@ package body Multivector_Utilities is
 
     function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
                                    Scale : out Float)
-                                  return Multivectors.Multivector_List is
+                                   return Multivectors.Multivector_List is
         use Interfaces;
         use Blade;
         use Blade_Types;
