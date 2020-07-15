@@ -99,16 +99,16 @@ package body GA_Draw is
         E2_Norm               : Float := C3GA.Norm_E2 (Base);
         Base_Coords           : constant GA_Maths.Array_3D :=
                                   C3GA.Get_Coords (Base);
-        Normal_Coords         : constant GA_Maths.Array_3D :=
-                                  C3GA.Get_Coords (Normal);
+--          Normal_Coords         : constant GA_Maths.Array_3D :=
+--                                    C3GA.Get_Coords (Normal);
         Ortho_1_Coords        : constant GA_Maths.Array_3D :=
                                   C3GA.Get_Coords (Ortho_1);
         Ortho_2_Coords        : constant GA_Maths.Array_3D :=
                                   C3GA.Get_Coords (Ortho_2);
         Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
-        MV_Normal             : constant Multivectors.Vector
-          := Multivectors.New_Vector
-              (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
+--          MV_Normal             : constant Multivectors.Vector
+--            := Multivectors.New_Vector
+--                (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
         MV_Ortho_1            : constant Multivectors.Vector
           := Multivectors.New_Vector
                (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
@@ -119,10 +119,9 @@ package body GA_Draw is
         Scaling_Matrix        : Singles.Matrix4;
         Translation_Matrix    : Matrix4 := Identity4;
         BV_Scale              : Single := Single (Scale);
-        RT                    : Multivectors.Rotor;
+--          RT                    : Multivectors.Rotor;
     begin
         GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
-        GA_Utilities.Print_Multivector ("GA_Draw.Draw_Bivector MV_Normal", MV_Normal);
         --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
@@ -135,10 +134,11 @@ package body GA_Draw is
           Method /= Draw_Bivector_Parallelogram_No_Vectors then
 
             --  Rotate e3 to normal direction
-            RT := E3GA_Utilities.Rotor_Vector_To_Vector
-              (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-            GA_Utilities.Print_Multivector ("GA_Draw.Draw_Bivector RT", RT);
-            GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
+            MV_Matrix := Model_View_Matrix *
+              GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
+--              RT := E3GA_Utilities.Rotor_Vector_To_Vector
+--                (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
+--              GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
         else  --  Draw_Bivector_Parallelogram
             E2_Norm :=
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
@@ -149,6 +149,7 @@ package body GA_Draw is
 
         Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
         MV_Matrix := Translation_Matrix * Scaling_Matrix * MV_Matrix;
+        Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 

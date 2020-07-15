@@ -420,11 +420,11 @@ package body Multivector_Analyze_C3GA is
                   ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
                 --  direction
                 GA_Utilities.Print_Multivector
-                 ("Multivector_Analyze_C3GA.Analyze_Round MV_First (MV_Factors)",
-                  MV_First (MV_Factors));
+                  ("Multivector_Analyze_C3GA.Analyze_Round MV_First (MV_Factors)",
+                   MV_First (MV_Factors));
                 GA_Utilities.Print_Multivector
-                 ("Multivector_Analyze_C3GA.Analyze_Round MV_Item (MV_Factors, 2)",
-                  MV_Item (MV_Factors, 2));
+                  ("Multivector_Analyze_C3GA.Analyze_Round MV_Item (MV_Factors, 2)",
+                   MV_Item (MV_Factors, 2));
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (MV_Factors));
                 Utilities.Print_Vector
@@ -435,9 +435,14 @@ package body Multivector_Analyze_C3GA is
                 Utilities.Print_Vector
                   ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
                    theAnalysis.M_Vectors (2));
-                theAnalysis.M_Vectors (3) :=
-                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (MV_Factors),
-                                      MV_Item (MV_Factors, 2)), Met));
+                if E3GA.Is_Zero (theAnalysis.M_Vectors (1)) or
+                  E3GA.Is_Zero (theAnalysis.M_Vectors (2)) then
+                    theAnalysis.M_Vectors (3) := (0.0, 0.0, 1.0);
+                else
+                    theAnalysis.M_Vectors (3) :=
+                      C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (MV_Factors),
+                                          MV_Item (MV_Factors, 2)), Met));
+                end if;
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                 theAnalysis.M_Vectors (1) :=

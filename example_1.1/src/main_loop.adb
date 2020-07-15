@@ -207,6 +207,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Green);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aCircle);
 
+         Put_Line ("Main_Loop.Display drawing reflected line.");
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
@@ -217,8 +218,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Reflect (aCircle, aDual_Plane));
 
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
+--                                            Dual (aLine, C3_Metric));
+--           Put_Line ("Main_Loop.Display setting R_Versor.");
          R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
 
+         Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.5, 0.0));
