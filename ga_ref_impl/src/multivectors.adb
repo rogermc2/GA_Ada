@@ -1352,6 +1352,14 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function New_Dual_Line return Dual_Line is
+        DL : Dual_Plane;
+    begin
+        DL.Type_Of_MV := MV_Dual_Line;
+        return DL;
+    end New_Dual_Line;
+
+    --  -------------------------------------------------------------------------
     function New_Dual_Plane return Dual_Plane is
         DP : Dual_Plane;
     begin

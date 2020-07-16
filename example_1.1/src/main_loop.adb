@@ -114,6 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle :=  New_Circle;
       R_R_Circle          : Circle :=  New_Circle;
+      LR                  : Dual_Plane
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);

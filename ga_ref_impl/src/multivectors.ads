@@ -13,13 +13,14 @@ package Multivectors is
                           E3_Geometry, H3_Geometry, C3_Geometry);
    type MV_Type is (MV_Multivector, MV_Scalar, MV_Vector, MV_Bivector,
                     MV_Trivector, MV_Rotor, MV_Point, MV_Normalized_Point,
-                    MV_Line, MV_Circle, MV_Sphere, MV_Dual_Plane,
+                    MV_Line, MV_Circle, MV_Sphere, MV_Dual_Line, MV_Dual_Plane,
                     MV_Dual_Sphere, MV_TR_Versor);
    type Grade_Status is (Grade_OK, Grade_Null, Grade_Inhomogeneous);
    type Multivector is private;
    type Multivector_List is private;
    subtype Bivector is Multivector;
    subtype Circle is Multivector;
+   subtype Dual_Line is Multivector;
    subtype Dual_Plane is Multivector;
    subtype Line is Multivector;
    subtype Normalized_Point is Multivector;
@@ -108,6 +109,7 @@ package Multivectors is
    function New_Bivector (V1, V2 : Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    function New_Circle return Circle;
+   function New_Dual_Line return Dual_Line;
    function New_Dual_Plane return Dual_Plane;
    function New_MV_Line return Line;
    --  New_Multivector returns a multivector with a scalar blade only
