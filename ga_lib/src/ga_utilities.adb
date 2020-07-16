@@ -76,6 +76,21 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D) is
+   begin
+      if Name = "" then
+         Put ("  ");
+      else
+         Put (Name & ":  ");
+      end if;
+      for Index in aVector'Range loop
+         Put (Float'Image (aVector (Index)) & "   ");
+      end loop;
+      New_Line;
+   end Print_Float_3D;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Float_Array
       (Name : String; anArray : GA_Maths.Float_Vector) is
    begin
