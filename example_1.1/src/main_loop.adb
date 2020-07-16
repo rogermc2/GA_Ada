@@ -114,7 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle :=  New_Circle;
       R_R_Circle          : Circle :=  New_Circle;
-      LR                  : Dual_Plane
+      LR                  : Dual_Plane;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -230,6 +230,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          R_R_Circle := Multivector_Utilities.Reflect (Rotated_Circle, aDual_Plane);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, R_R_Circle);
+
+         LR := Multivectors.Log (R_Versor);
       end if;
 
    exception
