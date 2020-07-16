@@ -7,6 +7,7 @@ with Bits;
 with Blade;
 with Blade_Types;
 --  with GA_Utilities;
+with Metric;
 with Multivector_Type;
 
 package body Multivector_Utilities is
@@ -194,5 +195,31 @@ package body Multivector_Utilities is
     end Factorize_Blade_Fast;
 
     --  --------------------------------------------------------------------
+
+   function Reflect (MV : Multivectors.Multivector;
+                     DP: Multivectors.Dual_Plane)
+                     return Multivectors.Multivector is
+        use Metric;
+        use Multivectors;
+        IDP : constant Multivector := General_Inverse (DP, C3_Metric);
+   begin
+        return Geometric_Product
+          (-DP, Geometric_Product (MV, IDP, C3_Metric), C3_Metric);
+   end Reflect;
+
+   --  ------------------------------------------------------------------------
+
+   function Rotate (MV : Multivectors.Multivector;
+                    aVersor : Multivectors.TR_Versor)
+                     return Multivectors.Multivector is
+        use Metric;
+        use Multivectors;
+        IV : constant Multivector := General_Inverse (aVersor, C3_Metric);
+   begin
+        return Geometric_Product
+          (aVersor, Geometric_Product (MV, IV, C3_Metric), C3_Metric);
+   end Rotate;
+
+   --  ------------------------------------------------------------------------
 
 end Multivector_Utilities;
