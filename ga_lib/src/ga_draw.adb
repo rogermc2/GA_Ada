@@ -93,17 +93,17 @@ package body GA_Draw is
       use Float_Functions;
         use GL.Types.Singles;
         --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
-        --          Cords                : Array_3D := (0.0, 0.0, 0.0);
+        --          Cords                : Float_3D := (0.0, 0.0, 0.0);
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
         --          O2                   : Multivectors.Vector := Ortho_2;
         E2_Norm               : Float := C3GA.Norm_E2 (Base);
-        Base_Coords           : constant GA_Maths.Array_3D :=
+        Base_Coords           : constant GA_Maths.Float_3D :=
                                   C3GA.Get_Coords (Base);
 --          Normal_Coords         : constant GA_Maths.Array_3D :=
 --                                    C3GA.Get_Coords (Normal);
-        Ortho_1_Coords        : constant GA_Maths.Array_3D :=
+        Ortho_1_Coords        : constant GA_Maths.Float_3D :=
                                   C3GA.Get_Coords (Ortho_1);
-        Ortho_2_Coords        : constant GA_Maths.Array_3D :=
+        Ortho_2_Coords        : constant GA_Maths.Float_3D :=
                                   C3GA.Get_Coords (Ortho_2);
         Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
 --          MV_Normal             : constant Multivectors.Vector
@@ -122,6 +122,7 @@ package body GA_Draw is
 --          RT                    : Multivectors.Rotor;
     begin
         GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
+--          GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Base_Coords", Base_Coords);
         --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
@@ -683,7 +684,7 @@ package body GA_Draw is
         Scale_Sign        : Float;
         P_Scale           : Float;
         Normal            : Single;
-        Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+        Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
         Translation       : Singles.Vector3;
         MV_Matrix         : Matrix4 := Model_View_Matrix;
     begin
@@ -761,7 +762,7 @@ package body GA_Draw is
         Scale_Sign        : Float;
         P_Scale           : Float;
         Normal            : Single;
-        Base_Coords       : constant GA_Maths.Array_3D := C3GA.Get_Coords (Base);
+        Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
         Translation       : Singles.Vector3;
         MV_Matrix         : Matrix4 := Model_View_Matrix;
     begin
@@ -834,7 +835,7 @@ package body GA_Draw is
 
         Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         MV_Matrix            : Matrix4 := Model_View_Matrix;
-        Dir_Coords           : constant GA_Maths.Array_3D :=
+        Dir_Coords           : constant GA_Maths.Float_3D :=
                                  C3GA.Get_Coords (Direction);
         --        GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
         --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);

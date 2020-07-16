@@ -121,7 +121,7 @@ package C3GA is
 --     function E1_E2_E3 (C :  Multivectors.Circle) return float;
    function E1_E3_NI (C :  Multivectors.Circle) return float;
    function E2_E3_NI (C :  Multivectors.Circle) return float;
-   function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D;
+   function Get_Coords (V : Vector_E3GA) return GA_Maths.Float_3D;
 --     function Get_Coords (NP : Normalized_Point) return Vector;
    function Get_Coords (NP : Multivectors.Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array;
@@ -185,7 +185,7 @@ package C3GA is
    function Set_Line (P1, P2 : Multivectors.Normalized_Point) return  Multivectors.Line;
    function Set_Normalized_Point (E1, E2, E3 : Float) return Multivectors.Normalized_Point;
    function Set_Normalized_Point (V : Vector_E3GA) return Multivectors.Normalized_Point;
-   function Set_Normalized_Point (Point : GA_Maths.Array_3D) return Multivectors.Normalized_Point;
+   function Set_Normalized_Point (Point : GA_Maths.Float_3D) return Multivectors.Normalized_Point;
 --     function Outer_Product (MV1, MV2 : Multivectors.Multivector) return Multivectors.Multivector;
 --     function Unit_R (L :  Multivectors.Line) return  Multivectors.Line;
 

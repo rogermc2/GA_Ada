@@ -76,9 +76,9 @@ package GA_Maths is
       C3_e3   : Interfaces.Unsigned_64;
    end record;
 
-   type Array_2D is array (1 .. 2) of float;
-   type Array_3D is array (1 .. 3) of float;
-   type Array_4D is array (1 .. 4) of float;
+   type Float_2D is array (1 .. 2) of float;
+   type Float_3D is array (1 .. 3) of float;
+   type Float_4D is array (1 .. 4) of float;
    type Coord4_Array is  Array (1 .. 4) of float;
 
    Infinity : constant Safe_Float := Safe_Float'Last;

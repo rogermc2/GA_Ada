@@ -379,7 +379,7 @@ package body C3GA is
       return Element (C, C3_e2_e3_ni);
    end E2_E3_NI;
 
-   function Get_Coords (V : Vector_E3GA) return GA_Maths.Array_3D is
+   function Get_Coords (V : Vector_E3GA) return GA_Maths.Float_3D is
    begin
       return (Float (V (GL.X)), Float (V (GL.Y)), Float (V (GL.Z)));
    end Get_Coords;
@@ -1060,7 +1060,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Normalized_Point (Point : GA_Maths.Array_3D)
+   function Set_Normalized_Point (Point : GA_Maths.Float_3D)
                                   return Multivectors.Normalized_Point is
       use GL.Types;
       use Blade;

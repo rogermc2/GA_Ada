@@ -73,8 +73,9 @@ package body E3GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Rotor_To_Matrix (R : Multivectors.Rotor;  M : out GA_Maths.GA_Matrix3) is
-      Rot : constant GA_Maths.Array_4D := E3GA.Get_Coords (R);
+   procedure Rotor_To_Matrix (R : Multivectors.Rotor;
+                              M : out GA_Maths.GA_Matrix3) is
+      Rot : constant GA_Maths.Float_4D := E3GA.Get_Coords (R);
    begin
       M (1, 1) := 1.0 - 2.0 * (Rot (3) * Rot (3) + Rot (4) * Rot (4));
       M (2, 1) := 2.0 * (Rot (2) * Rot (3) + Rot (4) * Rot (1));

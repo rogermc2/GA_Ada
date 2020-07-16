@@ -739,7 +739,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (R : Rotor) return Array_4D is
+    function Get_Coords (R : Rotor) return Float_4D is
         use Interfaces;
         use Blade;
         use Blade_Types;
@@ -747,7 +747,7 @@ package body E3GA is
         Blades  : constant Blade_List := Get_Blade_List (R);
         Curs    : Cursor := Blades.First;
         BM      : Unsigned_32;
-        Result  : Array_4D := (others => 0.0);
+        Result  : Float_4D := (others => 0.0);
     begin
         Result (1) := Scalar_Part (R);
         while Has_Element (Curs) loop

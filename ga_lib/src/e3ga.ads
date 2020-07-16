@@ -86,7 +86,7 @@ package E3GA is
 --      function Get_Coord (S : Scalar) return float;
 --     function Get_Coords (BV : Bivector) return Array_3D;
    function Get_Coords (MV : Multivector) return MV_Coordinate_Array;
-   function Get_Coords (R : Rotor) return Array_4D;
+   function Get_Coords (R : Rotor) return Float_4D;
 --      function Get_Coord_1 (V : Vector) return float;
 --      function Get_Coord_2 (V : Vector) return float;
 --      function Get_Coord_3 (V : Vector) return float;

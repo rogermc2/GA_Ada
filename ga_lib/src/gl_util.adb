@@ -233,14 +233,14 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3 is
+    function To_GL (V3 : GA_Maths.Float_3D) return GL.Types.Singles.Vector3 is
     begin
         return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
     end To_GL;
 
     --  ---------------------------------------------------------------------
 
-    procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
+    procedure Viewport_Coordinates (Pt_World : GA_Maths.Float_3D;
                                     Model_View_Matrix,
                                     Projection_Matrix : GL.Types.Singles.Matrix4;
                                     Coords : out GL.Types.Singles.Vector2) is
