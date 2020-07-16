@@ -7,8 +7,7 @@ package Multivector_Utilities is
 
     function Factorize_Blades (MV_B : Multivectors.Multivector; Scale : out Float)
                               return Multivectors.Multivector_List;
-   function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
-                                  Scale : out Float)
-                                        return Multivectors.Multivector_List;
-
+    function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
+                                   Scale : out Float)
+                                   return Multivectors.Multivector_List;
 end Multivector_Utilities;

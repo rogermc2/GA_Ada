@@ -7,6 +7,7 @@ with Bits;
 with Blade;
 with Blade_Types;
 --  with GA_Utilities;
+with Multivector_Type;
 
 package body Multivector_Utilities is
 
@@ -16,8 +17,8 @@ package body Multivector_Utilities is
                                return Multivectors.Multivector_List is
         use Interfaces;
         use Blade;
---          use Blade_Types;
         use Multivectors;
+        MV_Type_Rec : Multivector_Type.MV_Type_Record;
         K_Grade     : Integer := 0;
         Grade_Valid : Grade_Status;
         E_Largest   : Basis_Blade;
@@ -34,10 +35,11 @@ package body Multivector_Utilities is
         end if;
         Grade_Valid := Grade (MV_B, K_Grade);
         if Grade_Valid = Grade_Inhomogeneous then
-            K_Grade := Highest_Grade (MV_B);
+            MV_Type_Rec := Multivector_Type.Init (MV_B);
+            K_Grade := Multivector_Type.MV_Grade (MV_Type_Rec);
         elsif Grade_Valid = Grade_Null then
             raise MV_Utilities_Exception with
-              "Multivector_Utilities.Factorize_Blades inhomogenous multivector detected.";
+              "Multivector_Utilities.Factorize_Blades null grade multivector detected.";
         end if;
 
         --  set scale of output
@@ -53,8 +55,9 @@ package body Multivector_Utilities is
             E_Largest := Largest_Basis_Blade (MV_B);
             --  get basis vectors
             for Index_G in 0 .. Space_Dimension - 1 loop
-                Basis_Bit := Unsigned_32 (2 * Index_G);  --  Shift_Left (Index_G, 1)
-                if Bitmap (E_Largest) > 0 and Basis_Bit /= 0 then
+                --  Shift 1 left by Index_G bits
+                Basis_Bit := Shift_Left (1, Index_G);
+                if (Bitmap (E_Largest) and Basis_Bit) /= 0 then
                     Idx := Idx + 1;
                     E_Array (Idx) :=
                       New_Basis_Blade (Basis_Bit);
@@ -95,7 +98,7 @@ package body Multivector_Utilities is
             raise;
     end Factorize_Blades;
 
-    --  --------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function Factorize_Blade_Fast (MV_B  : Multivectors.Multivector;
                                    Scale : out Float)
