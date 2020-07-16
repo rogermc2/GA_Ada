@@ -122,7 +122,7 @@ package body GA_Draw is
 --          RT                    : Multivectors.Rotor;
     begin
         GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
---          GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Base_Coords", Base_Coords);
+        GA_Utilities.Print_Float_3D ("GA_Draw.Draw_Bivector Base_Coords", Base_Coords);
         --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
@@ -150,7 +150,7 @@ package body GA_Draw is
 
         Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
         MV_Matrix := Translation_Matrix * Scaling_Matrix * MV_Matrix;
-        Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
@@ -451,7 +451,6 @@ package body GA_Draw is
         Translation_Matrix :=
           Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
         MV_Matrix := Translation_Matrix * MV_Matrix;
-
         Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);

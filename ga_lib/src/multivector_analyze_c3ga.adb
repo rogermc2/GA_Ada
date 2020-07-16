@@ -4,7 +4,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with Maths;
-with Utilities;
+--  with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -88,8 +88,8 @@ package body Multivector_Analyze_C3GA is
         end Classify;
 
     begin
-        GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
-        New_Line;
+--          GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
+--          New_Line;
         Analysis.M_Flags.Valid := True;
         Analysis.Epsilon := Epsilon;
         Analysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
@@ -318,8 +318,8 @@ package body Multivector_Analyze_C3GA is
         Weight           : Float;
         Scale            : Float := 1.0;
     begin
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
-                    Integer'Image (Grade));
+--          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
+--                      Integer'Image (Grade));
         if Grade = 0 then
             theAnalysis.M_Type.Blade_Class := Scalar_Blade;
             theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
@@ -350,8 +350,8 @@ package body Multivector_Analyze_C3GA is
               (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Met));
             --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
             Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
-            --                  GA_Utilities.Print_Multivector
-            --                    ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
+--              GA_Utilities.Print_Multivector
+--                   ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Met);
             --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 3");
@@ -406,35 +406,35 @@ package body Multivector_Analyze_C3GA is
             when 3 | 5 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
-                GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Reverse Attitude: ",
-                   Reverse_MV (Attitude));
+--                  GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round Reverse Attitude: ",
+--                     Reverse_MV (Attitude));
                 MV_X := Reverse_MV (Left_Contraction (C3GA.no,
                                     Reverse_MV (Attitude), Met));
-                GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
+--                  GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
                 --  Returned scale not used
                 MV_Factors :=
                   Multivector_Utilities.Factorize_Blades (MV_X, Scale);
-                GA_Utilities.Print_Multivector_List
-                  ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
+--                  GA_Utilities.Print_Multivector_List
+--                    ("Multivector_Analyze_C3GA.Analyze_Round MV Factors", MV_Factors);
                 --  direction
-                GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Round MV_First (MV_Factors)",
-                   MV_First (MV_Factors));
-                GA_Utilities.Print_Multivector
-                  ("Multivector_Analyze_C3GA.Analyze_Round MV_Item (MV_Factors, 2)",
-                   MV_Item (MV_Factors, 2));
+--                  GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round MV_First (MV_Factors)",
+--                     MV_First (MV_Factors));
+--                  GA_Utilities.Print_Multivector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round MV_Item (MV_Factors, 2)",
+--                     MV_Item (MV_Factors, 2));
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (MV_Factors));
-                Utilities.Print_Vector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
-                   theAnalysis.M_Vectors (1));
+--                  Utilities.Print_Vector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
+--                     theAnalysis.M_Vectors (1));
                 theAnalysis.M_Vectors (2) :=
                   C3GA.To_VectorE3GA (MV_Item (MV_Factors, 2));
-                Utilities.Print_Vector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
-                   theAnalysis.M_Vectors (2));
+--                  Utilities.Print_Vector
+--                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
+--                     theAnalysis.M_Vectors (2));
                 if E3GA.Is_Zero (theAnalysis.M_Vectors (1)) or
                   E3GA.Is_Zero (theAnalysis.M_Vectors (2)) then
                     theAnalysis.M_Vectors (3) := (0.0, 0.0, 1.0);
@@ -455,9 +455,9 @@ package body Multivector_Analyze_C3GA is
             end case;
             --                  Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
             --                                  theAnalysis);
-            Print_E3_Vector_Array
-              ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
-               theAnalysis.M_Vectors);
+--              Print_E3_Vector_Array
+--                ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
+--                 theAnalysis.M_Vectors);
         end if;
 
     exception
