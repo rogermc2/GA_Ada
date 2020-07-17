@@ -159,34 +159,39 @@ package body C3GA_Utilities is
       use Interfaces;
       use Blade_Types;
       use E3GA;
-      no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
+      use Metric;
+--        no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
 --        ni       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_ni));
       Rot      : Rotor;
       Trans    : E3_Vector;
-      R2       : float;
+      BV_Norm  : float;
       R1       : float;
       BV       : Bivector;
+      BV_I     : Bivector;
       Result   : Dual_Line;
    begin
       --  isolate the rotation and translation parts
       Rot := To_Rotor (-Left_Contraction
-          (C3GA.no, (Geometric_Product (V, C3GA.ni, Metric.C3_Metric))));
+          (C3GA.no, (Geometric_Product (V, C3GA.ni, C3_Metric))));
       Trans := -2.0 * C3GA.To_VectorE3GA (Geometric_Product
-          (Left_Contraction (C3GA.no, V), Inverse (Rot), Metric.C3_Metric));
+          (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric));
       --  get the bivector 2-blade part of R
       BV := New_Bivector (e1_e2 (V), e2_e3 (V), e3_e1 (V));
       --  compute the 'reverse norm' of the bivector part of R
-      R2 := Norm_E (BV);
+      BV_Norm := Norm_E (BV);
       --        R2 := Norm_R (BV);
-      if R2 > 0.0 then
-         --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
-         R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (Rot)) / R2;
-         Result := R1 * BV;
+      if BV_Norm < epsilon then
+            if Scalar_Part (Rot) < 0.0 then
+                --  The versor has a rotation over 360 degrees.
+                BV_I := New_Bivector
+                  (Unit_E (Left_Contraction (Trans,  (0.0, 0.0, 1.0), C3_Metric)));
+                Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
+                --  return _bivector(B * ((float)atan2(BV_Norm, _Float(R)) / BV_Norm));
+                R1 := GA_Maths.Float_Functions.Arctan (BV_Norm, Scalar_Part (Rot)) / BV_Norm;
 
-         --  otherwise, avoid divide-by-zero (and below zero due to FP roundoff)
-      elsif Scalar_Part (Rot) < 0.0 then
-         --  Return a 360 degree rotation in an arbitrary plane
-         Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
+            else
+                Result := R1 * BV;
+            end if;
       else
          BV := New_Bivector (0.0, 0.0, 0.0);
       end if;
