@@ -163,7 +163,10 @@ package body C3GA_Utilities is
 --        no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
 --        ni       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_ni));
       Rot      : Rotor;
-      Trans    : E3_Vector;
+--        Trans    : E3_Vector;
+      Trans    : Multivector;
+      I3_Blade : constant Blade.Basis_Blade := Blade.New_Basis_Blade (C3_e3, 1.0);
+      I3       : constant Multivector := New_Multivector (I3_Blade);
       BV_Norm  : float;
       R1       : float;
       BV       : Bivector;
@@ -173,8 +176,10 @@ package body C3GA_Utilities is
       --  isolate the rotation and translation parts
       Rot := To_Rotor (-Left_Contraction
           (C3GA.no, (Geometric_Product (V, C3GA.ni, C3_Metric))));
-      Trans := -2.0 * C3GA.To_VectorE3GA (Geometric_Product
-          (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric));
+--        Trans := -2.0 * C3GA.To_VectorE3GA (Geometric_Product
+--            (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric));
+      Trans := -2.0 * Geometric_Product
+          (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric);
       --  get the bivector 2-blade part of R
       BV := New_Bivector (e1_e2 (V), e2_e3 (V), e3_e1 (V));
       --  compute the 'reverse norm' of the bivector part of R
@@ -184,7 +189,7 @@ package body C3GA_Utilities is
             if Scalar_Part (Rot) < 0.0 then
                 --  The versor has a rotation over 360 degrees.
                 BV_I := New_Bivector
-                  (Unit_E (Left_Contraction (Trans,  (0.0, 0.0, 1.0), C3_Metric)));
+                  (Unit_E (Left_Contraction (Trans,  I3, C3_Metric)));
                 Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
                 --  return _bivector(B * ((float)atan2(BV_Norm, _Float(R)) / BV_Norm));
                 R1 := GA_Maths.Float_Functions.Arctan (BV_Norm, Scalar_Part (Rot)) / BV_Norm;
