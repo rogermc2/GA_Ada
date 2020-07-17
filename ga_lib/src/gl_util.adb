@@ -23,7 +23,7 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
+    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3 is
     --      begin
     --          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
     --                                  Float (V3 (GL.Y)));
@@ -216,7 +216,7 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    --      function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
+    --      function To_GL (V3 : C3GA.Vector_E3) return GL.Types.Singles.Vector3 is
     --          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
     --      begin
     --

@@ -65,7 +65,7 @@ package body C3GA_Draw is
 
 --      procedure Draw (Render_Program : GL.Objects.Programs.Program;
 --                      Model_View_Matrix : GL.Types.Singles.Matrix4;
---                      aVector : C3GA.Vector_E3GA; Colour : GL.Types.Colors.Color) is
+--                      aVector : C3GA.Vector_E3; Colour : GL.Types.Colors.Color) is
 --          use Multivectors;
 --          Vec_3D  : constant Vector := New_Vector (C3GA.Get_Coord_1 (aVector),
 --                                          C3GA.Get_Coord_2 (aVector), 0.0);
@@ -127,9 +127,9 @@ package body C3GA_Draw is
                          Analysis : Multivector_Analyze.MV_Analysis;
                          Palet_Type : Palet.Colour_Palet) is
         use Multivector_Analyze;
-        Point_Pos  : constant C3GA.Vector_E3GA :=
+        Point_Pos  : constant C3GA.Vector_E3 :=
                        C3GA.To_VectorE3GA (Analysis.Points (1));
-        Direction  : constant C3GA.Vector_E3GA :=
+        Direction  : constant C3GA.Vector_E3 :=
                        C3GA.To_VectorE3GA (Analysis.M_Vectors (1));
         Scale      : Float := Analysis.Scalars (1);
     begin
@@ -165,7 +165,7 @@ package body C3GA_Draw is
       use GA_Maths.Float_Functions;
       use Multivector_Analyze;
       use C3GA;
-      Tail     : constant Vector_E3GA := (0.0, 0.0, 0.0);
+      Tail     : constant Vector_E3 := (0.0, 0.0, 0.0);
       BV_Scale : float := 1.0;
     begin
         case Analysis.M_Type.Blade_Subclass is
@@ -210,7 +210,7 @@ package body C3GA_Draw is
 --                           L : Multivectors.Vector;
 --                           Colour : GL.Types.Colors.Color) is
 --          Scale : constant Float := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
---          V     : C3GA.Vector_E3GA;
+--          V     : C3GA.Vector_E3;
 --      begin
 --          GA_Draw.Draw_Trivector (Render_Program, Model_View_Matrix,
 --                                  C3GA.To_VectorE3GA (L), Scale, V, Colour);
@@ -252,12 +252,12 @@ package body C3GA_Draw is
         use GL.Types.Singles;
         use Multivector_Analyze;
         use C3GA;
-        Point_Pos  : constant Vector_E3GA := Analysis.Points (1);
+        Point_Pos  : constant Vector_E3 := Analysis.Points (1);
         P_Scale    : Float;
         M_Vectors  : constant E3_Vector_Array := Analysis.M_Vectors;
-        M_Vec1     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(1));
-        M_Vec2     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(2));
-        M_Vec3     : constant Vector_E3GA := To_VectorE3GA (M_Vectors(3));
+        M_Vec1     : constant Vector_E3 := To_VectorE3GA (M_Vectors(1));
+        M_Vec2     : constant Vector_E3 := To_VectorE3GA (M_Vectors(2));
+        M_Vec3     : constant Vector_E3 := To_VectorE3GA (M_Vectors(3));
         Radius     : constant Float := Analysis.Scalars (1);
     begin
       Put_Line ("C3GA_Draw.Draw_Round Point scale: " & Float'Image (Radius));

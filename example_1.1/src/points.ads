@@ -11,7 +11,7 @@ package Points is
    type Normalized_Points_Array is array (int range <>) of Normalized_Point;
    Num_Points : constant Int := 6;
 
-   Point_Data : constant Vector_E3GA_Array (1 .. Num_Points) :=
+   Point_Data : constant Vector_E3_Array (1 .. Num_Points) :=
                      --   E1         E2        E3
                     ((-0.356756, -0.881980,  0.0),         -- L1
                      (-0.725786,  0.934177, -0.366154),    -- L2
@@ -20,7 +20,7 @@ package Points is
                      (0.865897,   0.629159, -1.438985),    -- C3
                      (2.846445,  -1.112365, -0.366769));   -- P1
 
-   L0_Points : constant Vector_E3GA_Array (1 .. 2) :=
+   L0_Points : constant Vector_E3_Array (1 .. 2) :=
                      --   E1   E2    E3
                       ((0.0, -0.9, 0.0),  -- L0L
                        (0.0,  0.9, 0.0)); -- L0R
