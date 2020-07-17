@@ -44,7 +44,7 @@ package E3GA is
    function "+" (V1, V2 : E3_Vector) return E3_Vector;
 --     function "-" (V : Vector) return Vector;
 --     function "-" (VL, VR : Vector) return Vector;
---     function "*" (Weight : float; V : Vector) return Vector;
+   function "*" (Weight : float; V : E3_Vector) return E3_Vector;
 
 --     function "*" (Weight : float; BV : Bivector) return Bivector;
    function "*" (R1, R2 : Rotor) return Rotor;

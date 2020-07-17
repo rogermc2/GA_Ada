@@ -95,14 +95,12 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --      function "*" (Weight : float; V : Vector) return Vector is
-    --        theVector : Vector;
-    --      begin
-    --          theVector.Coordinates (1) := Weight * V.Coordinates (1);
-    --          theVector.Coordinates (2) := Weight * V.Coordinates (2);
-    --          theVector.Coordinates (3) := Weight * V.Coordinates (3);
-    --          return theVector;
-    --      end "*";
+    function "*" (Weight : float; V : E3_Vector) return E3_Vector is
+        use GL.Types;
+        S_Weight  : constant Single := Single(Weight);
+    begin
+        return (S_Weight * V (GL.X), S_Weight * V (GL.Y), S_Weight * V (GL.Z));
+    end "*";
 
     --  ------------------------------------------------------------------------
 
@@ -780,7 +778,7 @@ package body E3GA is
         use GL;
         use GL.Types;
     begin
-        return (V(X) = 0.0 and V(Y) = 0.0 and V(Z) = 0.0);
+        return (V (X) = 0.0 and V (Y) = 0.0 and V (Z) = 0.0);
     end Is_Zero;
 
     --  ------------------------------------------------------------------------
