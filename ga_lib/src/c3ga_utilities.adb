@@ -19,7 +19,7 @@ package body C3GA_Utilities is
    --  -------------------------------------------------------------------------
 
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
-      V          :  constant Multivectors.Vector :=
+      V          :  constant Multivectors.M_Vector :=
                      Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := C3GA.e1_e2 (V);
       Half_Angle : float;
@@ -99,13 +99,13 @@ package body C3GA_Utilities is
 
    --  ------------------------------------------------------------------------
    --  Based on rotorFromVectorToVector
-   function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.Vector)
+   function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.M_Vector)
                                     return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
       S      : float;
-      w0     : Vector;
-      w1     : Vector;
-      w2     : Vector;
+      w0     : M_Vector;
+      w1     : M_Vector;
+      w2     : M_Vector;
       Nsq    : Float;
       R      : Rotor;
       Result : Rotor;

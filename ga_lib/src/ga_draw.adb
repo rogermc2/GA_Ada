@@ -95,7 +95,7 @@ package body GA_Draw is
         --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
         --          Cords                : Float_3D := (0.0, 0.0, 0.0);
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
-        --          O2                   : Multivectors.Vector := Ortho_2;
+        --          O2                   : Multivectors.M_Vector := Ortho_2;
         E2_Norm               : Float := C3GA.Norm_E2 (Base);
         Base_Coords           : constant GA_Maths.Float_3D :=
                                   C3GA.Get_Coords (Base);
@@ -106,13 +106,13 @@ package body GA_Draw is
         Ortho_2_Coords        : constant GA_Maths.Float_3D :=
                                   C3GA.Get_Coords (Ortho_2);
         Translation_Vector    : Vector3 :=  (0.0, 0.0, 0.0);
---          MV_Normal             : constant Multivectors.Vector
+--          MV_Normal             : constant Multivectors.M_Vector
 --            := Multivectors.New_Vector
 --                (Normal_Coords (1), Normal_Coords (2), Normal_Coords (3));
-        MV_Ortho_1            : constant Multivectors.Vector
+        MV_Ortho_1            : constant Multivectors.M_Vector
           := Multivectors.New_Vector
                (Ortho_1_Coords (1), Ortho_1_Coords (2), Ortho_1_Coords (3));
-        MV_Ortho_2            : constant Multivectors.Vector
+        MV_Ortho_2            : constant Multivectors.M_Vector
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
         MV_Matrix             : Matrix4 := Model_View_Matrix;
@@ -170,7 +170,7 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     --     procedure Draw_Bivector (Render_Program         : GL.Objects.Programs.Program;
-    --                              Base, Ortho_1, Ortho_2 : Multivectors.Vector;
+    --                              Base, Ortho_1, Ortho_2 : Multivectors.M_Vector;
     --                              Palet_Type             : Palet.Colour_Palet;
     --                              Scale                  : float := 1.0;
     --                              Method                 : Method_Type := Draw_Bivector_Circle) is
@@ -181,7 +181,7 @@ package body GA_Draw is
     --        --          Rotor_Step           : float := 2.0 * Ada.Numerics.Pi / 64.0;
     --        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
     --        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
-    --        --          O2                   : Multivectors.Vector := Ortho_2;
+    --        --          O2                   : Multivectors.M_Vector := Ortho_2;
     --        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
     --        MVP_Matrix           : Matrix4 := Singles.Identity4;
     --        Scaled               : GL.Types.Single;
@@ -838,7 +838,7 @@ package body GA_Draw is
                                  C3GA.Get_Coords (Direction);
         --        GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
         --        GL_Dir               : constant Vector3 := GL_Util.To_GL (Direction);
-        MV_Dir               : constant Multivectors.Vector :=
+        MV_Dir               : constant Multivectors.M_Vector :=
                                  New_Vector (Dir_Coords (1), Dir_Coords (2), Dir_Coords (3));
         aRotor               : Rotor;
         Saved_Cull_Face      : constant Face_Selector := Cull_Face;

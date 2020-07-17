@@ -288,8 +288,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Basis_Vector (Index : BV_Base) return Vector is
-        MV : Vector;
+    function Basis_Vector (Index : BV_Base) return M_Vector is
+        MV : M_Vector;
     begin
         MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
@@ -297,8 +297,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Basis_Vector (Index : E2_Base) return Vector is
-        MV : Vector;
+    function Basis_Vector (Index : E2_Base) return M_Vector is
+        MV : M_Vector;
     begin
         MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
@@ -306,8 +306,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Basis_Vector (Index : E3_Base) return Vector is
-        MV : Vector;
+    function Basis_Vector (Index : E3_Base) return M_Vector is
+        MV : M_Vector;
     begin
         MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
@@ -320,8 +320,8 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function Basis_Vector (Index : C3_Base) return Vector is
-        MV : Vector;
+    function Basis_Vector (Index : C3_Base) return M_Vector is
+        MV : M_Vector;
     begin
         MV.Blades.Append (Blade.New_Basis_Blade (Index));
         return MV;
@@ -610,7 +610,7 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function From_Vector (V : Vector) return Multivector is
+    function From_Vector (V : M_Vector) return Multivector is
         use Blade;
         use Blade_List_Package;
         Blades : constant Blade_List := V.Blades;
@@ -655,7 +655,7 @@ package body Multivectors is
             end loop;
 
             --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
-            --  the coordinates of another multivector 'x' (stored in a vector)
+            --  the coordinates of another multivector 'x' (stored in a M_Vector)
             --  would result in the geometric product of 'Mat' and 'x'
             while Has_Element (Curs) loop
                 aBlade := Element (Curs);
@@ -1322,7 +1322,7 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function New_Bivector (V1, V2 : Vector) return Bivector is
+    function New_Bivector (V1, V2 : M_Vector) return Bivector is
     begin
         return Bivector (Outer_Product (V1, V2));
     end New_Bivector;
@@ -1498,8 +1498,8 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function New_Vector return Vector is
-        V : Vector;
+    function New_Vector return M_Vector is
+        V : M_Vector;
     begin
         V.Type_Of_MV := MV_Vector;
         return V;
@@ -1507,9 +1507,9 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function New_Vector (e1, e2 : Float) return Vector is
+    function New_Vector (e1, e2 : Float) return M_Vector is
         use Blade;
-        V : Vector;
+        V : M_Vector;
     begin
         V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E2_e1, e1));
@@ -1519,9 +1519,9 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function New_Vector (e1, e2, e3 : Float) return Vector is
+    function New_Vector (e1, e2, e3 : Float) return M_Vector is
         use Blade;
-        V : Vector;
+        V : M_Vector;
     begin
         V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
@@ -1834,7 +1834,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
     --  To_Geometric_Matrix constructs a matrix 'Matrix_AG' such that
     --  matrix multiplication of 'Matrix_AG' with the coordinates of another
-    --  multivector 'x' (stored in a vector) would result in the
+    --  multivector 'x' (stored in a M_Vector) would result in the
     --  geometric product of 'Matrix_AG' and 'x'
     --  Metric version:
     function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
@@ -1930,12 +1930,12 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function To_Vector (MV : Multivector) return Vector is
+    function To_Vector (MV : Multivector) return M_Vector is
         use Blade;
         use Blade_List_Package;
         Blades     : constant Blade_List := MV.Blades;
         Curs       : Cursor := Blades.First;
-        Vec        : Vector;
+        Vec        : M_Vector;
     begin
         while Has_Element (Curs) loop
             Add_Blade (Vec, Element (Curs));

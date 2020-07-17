@@ -29,6 +29,6 @@ package GA_Utilities is
                                      Info : Multivector_Type.MV_Type_Record);
    procedure Print_Multivector_List (Name : String;
                                      MV_List : Multivectors.Multivector_List);
-   procedure Print_Vertex (Name : String; Vertex : Multivectors.Vector);
+   procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector);
 
 end GA_Utilities;

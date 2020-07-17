@@ -367,8 +367,8 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function e1 return Multivectors.Vector is
-        Basis   : Multivectors.Vector;
+    function e1 return Multivectors.M_Vector is
+        Basis   : Multivectors.M_Vector;
     begin
         Multivectors.Add_Blade (Basis, Blade_Types.E3_e1, 1.0);
         return Basis;
@@ -384,9 +384,9 @@ package body E3GA is
 
     --  -------------------------------------------------------------------------
 
-    function e2 return Multivectors.Vector is
+    function e2 return Multivectors.M_Vector is
         use Blade_Types;
-        Basis   : Multivectors.Vector;
+        Basis   : Multivectors.M_Vector;
     begin
         Multivectors.Add_Blade (Basis, E3_e2, 1.0);
         return Basis;
@@ -402,9 +402,9 @@ package body E3GA is
 
     --  -------------------------------------------------------------------------
 
-    function e3 return Multivectors.Vector is
+    function e3 return Multivectors.M_Vector is
         use Blade_Types;
-        Basis   : Multivectors.Vector;
+        Basis   : Multivectors.M_Vector;
     begin
         Multivectors.Add_Blade (Basis, E3_e3, 1.0);
         return Basis;
@@ -540,7 +540,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --     function Get_Coord_1 (V : Multivector.Vector) return float is
+    --     function Get_Coord_1 (V : Multivector.M_Vector) return float is
     --        use Multivector.Blade_List_Package;
     --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
     --     begin
@@ -549,7 +549,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --     function Get_Coord_2 (V : Multivector.Vector) return float is
+    --     function Get_Coord_2 (V : Multivector.M_Vector) return float is
     --        use Multivector.Blade_List_Package;
     --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
     --        Curs   : Cursor := Blades.First;
@@ -560,7 +560,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    --     function Get_Coord_3 (V : Multivector.Vector) return float is
+    --     function Get_Coord_3 (V : Multivector.M_Vector) return float is
     --        use Multivector.Blade_List_Package;
     --        Blades : Multivector.Blade_List := Multivector.Get_Blade_List (V);
     --     begin
@@ -718,7 +718,7 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function Get_Coords (Vec : Multivectors.Vector) return E3_Vector is
+    function Get_Coords (Vec : Multivectors.M_Vector) return E3_Vector is
         use Blade.Blade_List_Package;
         Blades : constant Blade.Blade_List := Multivectors.Get_Blade_List (Vec);
         Curs   : Cursor := Blades.First;
@@ -1238,9 +1238,9 @@ package body E3GA is
 
     --  ------------------------------------------------------------------------
 
-    function To_MV_Vector (V : E3_Vector) return Multivectors.Vector is
+    function To_MV_Vector (V : E3_Vector) return Multivectors.M_Vector is
         use Blade_Types;
-        MVV : Multivectors.Vector := Multivectors.New_Vector;
+        MVV : Multivectors.M_Vector := Multivectors.New_Vector;
     begin
         Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e1, Float (V (GL.X))));
         Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e2, Float (V (GL.Y))));

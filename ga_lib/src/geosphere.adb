@@ -25,7 +25,7 @@ package body Geosphere is
     type Sphere_DL_List is new Sphere_List_Package.List with null record;
 
     type Indices_Array is array (Integer range <>) of Indices;
-    type Vertices_Array is array (Integer range <>) of Multivectors.Vector;
+    type Vertices_Array is array (Integer range <>) of Multivectors.M_Vector;
     Sphere_List   : Sphere_DL_List;
 
     procedure Get_Vertices (Sphere   : Geosphere;
@@ -73,10 +73,10 @@ package body Geosphere is
 
     --  -------------------------------------------------------------------------
 
-    procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Multivectors.Vector;
+    procedure Add_Vertex (Sphere    : in out Geosphere; Pos : Multivectors.M_Vector;
                           V_Index   : out Integer) is
         Vertices : constant MV_Vector := Sphere.Vertices;
-        MV       : Multivectors.Vector;
+        MV       : Multivectors.M_Vector;
         Index    : Integer := 0;
         Found    : Boolean := False;
     begin
@@ -244,7 +244,7 @@ package body Geosphere is
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
                          return GL.Types.Singles.Vector3 is
         theVertex : Singles.Vector3;
-        GA_Vector : constant Multivectors.Vector :=
+        GA_Vector : constant Multivectors.M_Vector :=
                       Sphere.Vertices.Element (Vertex_Index);
     begin
         theVertex (GL.X) := Single (E3GA.e1 (GA_Vector));
@@ -261,8 +261,8 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     function Get_Vertex (Sphere : Geosphere; Vertex_Index : Natural)
-                         return Multivectors.Vector is
-        GA_Vector : constant Multivectors.Vector :=
+                         return Multivectors.M_Vector is
+        GA_Vector : constant Multivectors.M_Vector :=
                       Sphere.Vertices.Element (Vertex_Index);
     begin
         Put_Line ("Geosphere.Get_Vertex 2 Vertex_Index." & Natural'Image (Vertex_Index));
@@ -303,7 +303,7 @@ package body Geosphere is
 
         procedure Add_Vertex (C : Vertex_Vectors.Cursor) is
             Vertex_Index     : constant Natural := Vertex_Vectors.To_Index (C);
-            thisVertex       : constant Multivectors.Vector :=
+            thisVertex       : constant Multivectors.M_Vector :=
                                  Sphere.Vertices.Element (Vertex_Index);
         begin
             Index := Index + 1;
@@ -335,7 +335,7 @@ package body Geosphere is
         use GL.Types.Singles;
         Lines             : Singles.Vector3_Array (1 .. 6) := (others => (0.0, 0.0, 0.0));
         V1                : Singles.Vector3 := (0.0, 0.0, 0.0);
-        V1_MV             : Multivectors.Vector;
+        V1_MV             : Multivectors.M_Vector;
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);

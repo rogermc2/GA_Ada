@@ -34,11 +34,11 @@ package body C3GA is
    --       (0, 1, 2, 6, 3, 7, 9, 24, 4, 8, 11, 23, 10, 22, 25, 30,
    --        5, 15, 12, 20, 13, 21, 18, 29, 14, 19, 17, 28, 16, 27, 26, 31);
 
-   --     no_basis : constant Vector := (0.0, 0.0, 0.0, 0.0, 1.0);
-   --     e1_basis : constant Vector := (0.0, 1.0, 0.0, 0.0, 0.0);
-   --     e2_basis : constant Vector := (0.0, 0.0, 1.0, 0.0, 0.0);
-   --     e3_basis : constant Vector := (0.0, 0.0, 0.0, 1.0, 0.0);
-   --     ni_basis : constant Vector := (1.0, 0.0, 0.0, 0.0, 0.0);
+   --     no_basis : constant Vector_C3GA := (0.0, 0.0, 0.0, 0.0, 1.0);
+   --     e1_basis : constant Vector_C3GA := (0.0, 1.0, 0.0, 0.0, 0.0);
+   --     e2_basis : constant Vector_C3GA := (0.0, 0.0, 1.0, 0.0, 0.0);
+   --     e3_basis : constant Vector_C3GA := (0.0, 0.0, 0.0, 1.0, 0.0);
+   --     ni_basis : constant Vector_C3GA := (1.0, 0.0, 0.0, 0.0, 0.0);
 
    --     no_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.no);
    --     e1_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.e1);
@@ -52,7 +52,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   --     function "+" (V1 : Vector; V2 : Vector) return Vector is
+   --     function "+" (V1 : Vector_C3GA; V2 : Vector_C3GA) return Vector_C3GA is
    --     begin
    --        return (V1 (1) + V2 (1), V1 (2) + V2 (2), V1 (3) + V2 (3),
    --                V1 (4) + V2 (4), V1 (5) + V2 (5));
@@ -168,7 +168,7 @@ package body C3GA is
 
    function e1 return Multivectors.Multivector is
       use Multivectors;
-      Basis   : Multivectors.Vector;
+      Basis   : Multivectors.M_Vector;
    begin
       Add_Blade (Basis, C3_e1, 1.0);
       return Basis;
@@ -185,7 +185,7 @@ package body C3GA is
 
    function e2 return Multivectors.Multivector is
       use Multivectors;
-      Basis   : Multivectors.Vector;
+      Basis   : Multivectors.M_Vector;
    begin
       Add_Blade (Basis, C3_e2, 1.0);
       return Basis;
@@ -202,7 +202,7 @@ package body C3GA is
 
    function e3 return Multivectors.Multivector is
       use Multivectors;
-      Basis   : Multivectors.Vector;
+      Basis   : Multivectors.M_Vector;
    begin
       Add_Blade (Basis, C3_e3, 1.0);
       return Basis;
@@ -386,7 +386,7 @@ package body C3GA is
 
    --  ------------------------------------------------------------------------
 
-   --     function Get_Coords (NP : Normalized_Point) return Vector is
+   --     function Get_Coords (NP : Normalized_Point) return M_Vector is
    --     begin
    --        return (1.0, NP.E1, NP.E2, NP.E3, NP.Inf);
    --     end Get_Coords;
@@ -413,7 +413,7 @@ package body C3GA is
 
    function ni return Multivectors.Multivector is
       use Multivectors;
-      Basis : Multivectors.Vector := Multivectors.New_Vector;
+      Basis : Multivectors.M_Vector := Multivectors.New_Vector;
    begin
       Add_Blade (Basis, C3_ni, 1.0);
       return Basis;
@@ -980,7 +980,7 @@ package body C3GA is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.Vector)
+   function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.M_Vector)
                             return Multivectors.Dual_Plane is
       use Multivectors;
       LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));

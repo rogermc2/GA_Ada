@@ -27,7 +27,7 @@ package Multivectors is
    subtype Rotor is Multivector;
    subtype Scalar is Multivector;
    subtype TR_Versor is Multivector;
-   subtype Vector is Multivector;
+   subtype M_Vector is Multivector;
 
    MV_Exception : Exception;
 
@@ -48,10 +48,10 @@ package Multivectors is
 --     procedure Add_Complex_Blade (MV     : in out Multivector; Index : C3_Base;
 --                                  Value : GA_Maths.Complex_Types.Complex);
    procedure Add_Multivector (MV_List : in out Multivector_List; MV : Multivector);
-   function Basis_Vector (Index : BV_Base) return Vector;
-   function Basis_Vector (Index : E2_Base) return Vector;
-   function Basis_Vector (Index : E3_Base) return Vector;
-   function Basis_Vector (Index : C3_Base) return Vector;
+   function Basis_Vector (Index : BV_Base) return M_Vector;
+   function Basis_Vector (Index : E2_Base) return M_Vector;
+   function Basis_Vector (Index : E3_Base) return M_Vector;
+   function Basis_Vector (Index : C3_Base) return M_Vector;
    function Blades (MV : Multivector) return Blade.Blade_List;
    function Component  (MV : Multivector; BM : Interfaces.Unsigned_32)
                         return Float;
@@ -63,7 +63,7 @@ package Multivectors is
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Exp (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
-   function From_Vector (V : Vector) return Multivector;
+   function From_Vector (V : M_Vector) return Multivector;
    function General_Inverse (MV : Multivector) return Multivector;
    function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
                              return Multivector;
@@ -106,7 +106,7 @@ package Multivectors is
    function MV_Kind (MV : Multivector) return MV_Type;
    function MV_Size (MV : Multivector) return Natural;
    function Negate (MV : Multivector) return Multivector;
-   function New_Bivector (V1, V2 : Vector) return Bivector;
+   function New_Bivector (V1, V2 : M_Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
    function New_Circle return Circle;
    function New_Dual_Line return Dual_Line;
@@ -124,9 +124,9 @@ package Multivectors is
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar;
    function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor;
-   function New_Vector return Vector;
-   function New_Vector (e1, e2 : Float) return Vector;
-   function New_Vector (e1, e2, e3 : Float) return Vector;
+   function New_Vector return M_Vector;
+   function New_Vector (e1, e2 : Float) return M_Vector;
+   function New_Vector (e1, e2, e3 : Float) return M_Vector;
    function Norm_E (MV : Multivector) return Float;
    function Norm_Esq (MV : Multivector) return Float;
    function Outer_Product (MV1, MV2 : Multivector) return Multivector;
@@ -150,7 +150,7 @@ package Multivectors is
    procedure To_Dual_Plane (MV : in out Multivector);
    procedure To_Line (MV : in out Multivector);
    function To_Rotor (MV : Multivector) return Rotor;
-   function To_Vector (MV : Multivector) return Vector;
+   function To_Vector (MV : Multivector) return M_Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector; Met : Metric.Metric_Record)

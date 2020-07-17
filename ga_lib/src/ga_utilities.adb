@@ -262,7 +262,7 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Vertex (Name : String; Vertex : Multivectors.Vector) is
+   procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector) is
       use Blade;
       use Multivectors;
       use Blade_List_Package;

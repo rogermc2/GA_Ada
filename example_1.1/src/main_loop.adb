@@ -80,8 +80,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --        E12               : constant float := E3GA.Get_Coord_2 (E3GA.e1);
       --        E21               : constant float := E3GA.Get_Coord_1 (E3GA.e2);
       --        E22               : constant float := E3GA.Get_Coord_2 (E3GA.e2);
-      --          V1                : Multivectors.Vector; --  2D vector (0, 0), (1, 0)
-      --          V2                : Multivectors.Vector;
+      --          V1                : Multivectors.M_Vector; --  2D M_Vector (0, 0), (1, 0)
+      --          V2                : Multivectors.M_Vector;
 
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
       aLine               : Multivectors.Line :=  New_MV_Line;
@@ -114,7 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle :=  New_Circle;
       R_R_Circle          : Circle :=  New_Circle;
-      LR                  : Dual_Plane;
+--        LR                  : Dual_Plane;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -231,7 +231,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          R_R_Circle := Multivector_Utilities.Reflect (Rotated_Circle, aDual_Plane);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, R_R_Circle);
 
-         LR := Multivectors.Log (R_Versor);
+--           LR := Multivectors.Log (R_Versor);
       end if;
 
    exception
