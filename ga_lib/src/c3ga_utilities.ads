@@ -8,12 +8,12 @@ package C3GA_Utilities is
    function exp (BV : Bivector) return Rotor;
    --  special log() for 3D rotors
    function log (R : Rotor) return Bivector;
+   function Log_TR_Versor (V : TR_Versor) return Dual_Line;
    procedure Print_Rotor (Name : String; R : Rotor);
 --     procedure Print_Vector (Name : String; aVector : E2GA.Vector);
 --     procedure Print_Vector (Name : String; aVector : E3GA.Vector);
    procedure Rotor_To_Matrix (R : Rotor; M : out GA_Maths.GA_Matrix3);
-   function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.Vector)
+   function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.M_Vector)
                                     return Rotor;
-   function TR_Versor_log (V : TR_Versor) return Dual_Line;
 
 end C3GA_Utilities;
