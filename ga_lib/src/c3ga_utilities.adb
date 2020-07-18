@@ -2,6 +2,7 @@
 --  with Interfaces;
 
 with Ada.Numerics;
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Blade;
@@ -52,8 +53,10 @@ package body C3GA_Utilities is
       Log_R : Bivector;
    begin
       GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, R", R);
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_Rotor, R", R, Blade_Types.Basis_Names_C3GA);
+      Put_Line ("C3GA_Utilities.Log_Rotor, R: " & Ada.Strings.Unbounded.To_String
+                (Multivectors.Multivector_String (R, Blade_Types.Basis_Names_C3GA)));
+--        GA_Utilities.Print_Multivector_String
+--            ("C3GA_Utilities.Log_Rotor, R", R, Blade_Types.Basis_Names_C3GA);
       --  get the bivector 2-blade part of R
 --        BV := New_Bivector (Multivectors.e1_e2 (R), C3GA.e1_e3 (R), C3GA.e2_e3 (R));
       GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, BV", BV);
