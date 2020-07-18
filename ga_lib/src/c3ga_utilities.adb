@@ -74,11 +74,11 @@ package body C3GA_Utilities is
    --  ------------------------------------------------------------------------
 
    function Log_TR_Versor (V : TR_Versor) return Dual_Line is
---        use Interfaces;
+      --        use Interfaces;
       use Blade_Types;
       use Metric;
---        no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
---        ni       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_ni));
+      --        no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
+      --        ni       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_ni));
       Rot      : Rotor;
       Rot_I    : Rotor;
       --        Trans    : E3_Vector;
@@ -93,7 +93,7 @@ package body C3GA_Utilities is
       DL_1     : Dual_Line;
       DL_2     : Dual_Line;
       I_R2     : Dual_Line;
-      Result   : Dual_Line;
+      Log_V    : Dual_Line;
    begin
       --  isolate the rotation and translation parts
       Rot := To_Rotor (-Left_Contraction
@@ -118,21 +118,26 @@ package body C3GA_Utilities is
          DL_2 := Geometric_Product (DL_2, C3GA.ni, C3_Metric);
          I_R2 := Inverse (1.0 - Multivectors.Geometric_Product (Rot, Rot, C3_Metric));
          DL_2 := Geometric_Product (I_R2, DL_2, C3_Metric);
-         Result := 0.5 * (DL_1 - DL_2 - BV_I_Phi);
-      else
+         Log_V := 0.5 * (DL_1 - DL_2 - BV_I_Phi);
+      else  --  BV_Norm <= epsilon
          if Scalar_Part (Rot) < 0.0 then
             --  The versor has a rotation over 360 degrees.
-            BV_I :=
-              Multivectors.Unit_E (Left_Contraction (Trans,  I3, C3_Metric));
-            Result := Ada.Numerics.Pi * Outer_Product (E3GA.e1, E3GA.e2);
-            --  return _bivector(B * ((float)atan2(BV_Norm, _Float(R)) / BV_Norm));
-            R1 := GA_Maths.Float_Functions.Arctan (BV_Norm, Scalar_Part (Rot)) / BV_Norm;
-
-         else
-            Result := R1 * BV;
+            if Norm_E (Trans) > epsilon then
+               BV_I :=
+                 Multivectors.Unit_E (Left_Contraction (Trans,  I3, C3_Metric));
+               Log_V := Ada.Numerics.Pi * Outer_Product (E3GA.e1, E3GA.e2);
+               --  return _bivector(B * ((float)atan2(BV_Norm, _Float(R)) / BV_Norm));
+               R1 := GA_Maths.Float_Functions.Arctan (BV_Norm, Scalar_Part (Rot)) / BV_Norm;
+            else
+               BV_I := Outer_Product (E3GA.e1, E3GA.e2);
+            end if;
+            DL_1 := Geometric_Product (Trans, C3GA.ni, C3_Metric);
+            Log_V := 0.5 * (2.0 * GA_Maths.Pi * BV_I - DL_1);
+         else  --  Scalar_Part (Rot) >= 0.0
+            Log_V := R1 * BV;
          end if;
       end if;
-      return Result;
+      return Log_V;
    end Log_TR_Versor;
 
    --  ------------------------------------------------------------------------
@@ -164,7 +169,7 @@ package body C3GA_Utilities is
    --  ------------------------------------------------------------------------
    --  Based on rotorFromVectorToVector
    function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.M_Vector)
-                                     return Multivectors.Rotor is
+                                    return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
       S      : float;
       w0     : M_Vector;
