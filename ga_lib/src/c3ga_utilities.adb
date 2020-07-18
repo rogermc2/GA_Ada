@@ -46,29 +46,40 @@ package body C3GA_Utilities is
    --  special log() for 3D rotors
    function Log_Rotor (R : Multivectors.Rotor) return Multivectors.Bivector is
       use E3GA;
-      R2       : float;
-      R1       : float;
-      BV       : Bivector;
-      Result   : Bivector;
+      R2    : float;
+      R1    : float;
+      BV    : Bivector;
+      Log_R : Bivector;
    begin
+      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, R", R);
+      GA_Utilities.Print_Multivector_String
+          ("C3GA_Utilities.Log_Rotor, R", R, Blade_Types.Basis_Names_C3GA);
       --  get the bivector 2-blade part of R
-      BV := New_Bivector (e1_e2 (R), e2_e3 (R), e3_e1 (R));
+--        BV := New_Bivector (Multivectors.e1_e2 (R), C3GA.e1_e3 (R), C3GA.e2_e3 (R));
+      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, BV", BV);
       --  compute the 'reverse norm' of the bivector part of R
       R2 := Norm_E (BV);
-      --        R2 := Norm_R (BV);
+        Put_Line ("C3GA_Utilities.Log_Rotor, R2" & Float'Image (R2));
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
-         Result := R1 * BV;
+         Log_R := R1 * BV;
 
          --  otherwise, avoid divide-by-zero (and below zero due to FP roundoff)
       elsif Scalar_Part (R) < 0.0 then
          --  Return a 360 degree rotation in an arbitrary plane
-         Result := Ada.Numerics.Pi * Outer_Product (e1, e2);
+         Log_R := Ada.Numerics.Pi * Outer_Product (e1, e2);
       else
-         BV := New_Bivector (0.0, 0.0, 0.0);
+         Put_Line ("C3GA_Utilities.Log_Rotor Log_R = 0.");
+         Log_R := New_Bivector (0.0, 0.0, 0.0);
       end if;
-      return Result;
+
+      return Log_R;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in C3GA_Utilities.Log_Rotor.");
+         raise;
    end Log_Rotor;
 
    --  ------------------------------------------------------------------------
@@ -102,10 +113,14 @@ package body C3GA_Utilities is
       --  get the bivector 2-blade part of R
       BV := New_Bivector (E3GA.e1_e2 (V), E3GA.e2_e3 (V), E3GA.e3_e1 (V));
       --  'reverse norm' of the bivector part of R
+      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Trans", Trans);
+      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor BV", BV);
       BV_Norm := Norm_E (BV);
       if BV_Norm > epsilon then
          --  Logarithm of rotation part
          BV_I_Phi := -2.0 * Log_Rotor (Rot);
+         GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Rot", Rot);
+         GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor BV_I_Phi", BV_I_Phi);
          --  Rotation plane:
          Rot_I := Multivectors.Unit_E (BV_I_Phi);
          DL_1 := Geometric_Product (Inverse (Rot_I), C3GA.ni, C3_Metric);
@@ -124,13 +139,18 @@ package body C3GA_Utilities is
             else
                BV_I := Outer_Product (E3GA.e1, E3GA.e2);
             end if;
-            DL_1 :=Outer_Product (Trans, C3GA.ni);
+            DL_1 := Outer_Product (Trans, C3GA.ni);
             Log_V := 0.5 * (2.0 * GA_Maths.Pi * BV_I - DL_1);
          else  --  Scalar_Part (Rot) >= 0.0
             Log_V := -0.5 * Outer_Product (Trans, C3GA.ni);
          end if;
       end if;
       return Log_V;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in C3GA_Utilities.Log_TR_Versor.");
+         raise;
    end Log_TR_Versor;
 
    --  ------------------------------------------------------------------------

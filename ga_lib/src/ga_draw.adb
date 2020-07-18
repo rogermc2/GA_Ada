@@ -137,6 +137,7 @@ package body GA_Draw is
             --  Rotate e3 to normal direction
             MV_Matrix := Model_View_Matrix *
               GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
+              Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
 --              RT := E3GA_Utilities.Rotor_Vector_To_Vector
 --                (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
 --              GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);

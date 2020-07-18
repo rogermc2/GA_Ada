@@ -91,7 +91,7 @@ package body E3GA_Utilities is
    end Rotor_To_Matrix;
 
    --  ------------------------------------------------------------------------
-   --  Based on rotorFromVectorToVector
+   --  Based on e3ga.util.rotorFromVectorToVector
    function Rotor_Vector_To_Vector (From_V1, To_V2 : Multivectors.M_Vector)
                                     return Multivectors.Rotor is
       use GA_Maths.Float_Functions;
@@ -133,7 +133,8 @@ package body E3GA_Utilities is
          --                   = 2 + 2a.b + a^b - a^b
          --                   = 2(1 + a.b)
          --  Geometric Algebra for Computer Science, Equation (10.13)
-         S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To_V2, From_V1))));
+         --   S := Sqrt (2.0 * (1.0 + Scalar_Part (Dot (To_V2, From_V1))));
+         S := Sqrt (2.0 * (1.0 + Scalar_Part (Left_Contraction (To_V2, From_V1))));
          Result :=  To_Rotor ((1.0 + Geometric_Product (To_V2, From_V1)) / S);
       end if;
       Simplify (Result);

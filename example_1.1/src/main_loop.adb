@@ -21,8 +21,9 @@ with Utilities;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
+with C3GA_Utilities;
 with GA_Maths;
---  with GA_Utilities;
+with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Metric;
@@ -114,7 +115,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle :=  New_Circle;
       R_R_Circle          : Circle :=  New_Circle;
---        LR                  : Dual_Plane;
+      LR                  : Dual_Plane;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -123,7 +124,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       --          GL_Util.Load_Pick_Matrix;
 
-      Put_Line ("Main_Loop.Display calling Init_Perspective_Transform.");
       Maths.Init_Perspective_Transform
         (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
@@ -197,7 +197,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aLine);
 
          Shader_Manager.Set_Ambient_Colour (Green);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aCircle);
+--           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aCircle);
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display aCircle.",
 --                                            aCircle);
 
@@ -206,32 +206,34 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
                          Multivector_Utilities.Reflect (aLine, aDual_Plane));
 
+--          Utilities.Print_Matrix ("Main_Loop.Display Model_View_Matrix", Model_View_Matrix);
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Multivector_Utilities.Reflect (aCircle, aDual_Plane));
+--           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+--                           Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
 --                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
 --                                            Dual (aLine, C3_Metric));
---           Put_Line ("Main_Loop.Display setting R_Versor.");
+         Put_Line ("Main_Loop.Display setting R_Versor.");
          R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
 
---           Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.5, 0.0));
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          Rotated_Circle := Multivector_Utilities.Rotate (aCircle, R_Versor);
+         Put_Line ("Main_Loop.Display drawing rotated circle.");
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Rotated_Circle);
 
+         Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          R_R_Circle := Multivector_Utilities.Reflect (Rotated_Circle, aDual_Plane);
          C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, R_R_Circle);
 
---           LR := Multivectors.Log (R_Versor);
+         GA_Utilities.Print_Multivector ("Main_Loop.Display R_Versor", R_Versor);
+         LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;
 
    exception
@@ -290,7 +292,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
       --
       --        Text_Management.Setup (Font_File);
-      Put_Line ("Main_Loop.Setup_Graphic done.");
 
    exception
       when others =>
