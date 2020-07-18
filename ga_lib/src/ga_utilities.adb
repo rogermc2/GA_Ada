@@ -1,4 +1,5 @@
 
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Utilities;
@@ -226,7 +227,8 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Multivector_Info (Name : String; Info : Multivector_Type.MV_Type_Record) is
+   procedure Print_Multivector_Info (Name : String;
+                                     Info : Multivector_Type.MV_Type_Record) is
       use Multivector_Type;
    begin
       Put_Line (Name);
@@ -262,6 +264,19 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Multivector_String (Name : String; MV : Multivectors.Multivector;
+                                       MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Ada.Strings.Unbounded;
+   begin
+      Put_Line (Name);
+      Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_String.");
+         raise;
+   end Print_Multivector_String;
+
+   --  ------------------------------------------------------------------------
    procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector) is
       use Blade;
       use Multivectors;

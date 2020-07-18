@@ -13,7 +13,7 @@ package body Multivectors is
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
     Spatial_Dimension     : Natural := 0;
-    MV_Basis_Vector_Names : Blade.Basis_Vector_Names;
+    MV_Basis_Vector_Names : Blade_Types.Basis_Vector_Names;
     --  This array can be used to lookup the number of coordinates for
     --  the grade part of a general multivector
 
@@ -1213,7 +1213,7 @@ package body Multivectors is
     --  -------------------------------------------------------------------------
 
     function Multivector_String (MV : Multivector;
-                                 BV_Names : Blade.Basis_Vector_Names)
+                                 BV_Names : Blade_Types.Basis_Vector_Names)
                                  return Ada.Strings.Unbounded.Unbounded_String is
         use Ada.Strings.Unbounded;
         use Blade;

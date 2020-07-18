@@ -2,6 +2,7 @@
 with Interfaces;
 
 with Blade;
+with Blade_Types;
 with E3GA;
 with GA_Maths;
 with Metric;
@@ -29,6 +30,8 @@ package GA_Utilities is
                                      Info : Multivector_Type.MV_Type_Record);
    procedure Print_Multivector_List (Name : String;
                                      MV_List : Multivectors.Multivector_List);
+   procedure Print_Multivector_String (Name : String; MV : Multivectors.Multivector;
+                                       MV_Names : Blade_Types.Basis_Vector_Names);
    procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector);
 
 end GA_Utilities;

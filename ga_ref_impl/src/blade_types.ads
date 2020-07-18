@@ -1,5 +1,12 @@
 
+with Ada.Containers.Vectors;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 package Blade_Types is
+
+    package Names_Package is new
+      Ada.Containers.Vectors (Natural, Unbounded_String);
+    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type BV_Base is (BV_e1e2, BV_e2e3, BV_e3e1);
    type E2_Base is (E2_1, E2_e1, E2_e2, E2_e1_e2);
@@ -13,6 +20,9 @@ package Blade_Types is
                     C3_e1_no_ni, C3_e2_no_ni, C3_e3_no_ni, C3_e1_e2_e3_ni,
                     C3_e1_e2_e3_no, C3_e1_e2_no_ni,C3_e1_e3_no_ni,
                     C3_e2_e3_no_ni, C3_e1_e2_e3_no_ni);
+
+    function Basis_Names_C3GA return Basis_Vector_Names;
+
 private
    for BV_Base use (BV_e1e2 => 1, BV_e2e3 => 2, BV_e3e1 => 4);
    for E2_Base use (E2_1 => 0, E2_e1 => 1, E2_e2 => 2, E2_e1_e2 => 4);

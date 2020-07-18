@@ -99,7 +99,8 @@ package Multivectors is
    function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
                               return Multivector;
    function List_Length (MV_List : Multivector_List) return Integer;
-   function Multivector_String (MV : Multivector; BV_Names : Blade.Basis_Vector_Names)
+   function Multivector_String (MV : Multivector;
+                                BV_Names : Blade_Types.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
    function MV_First (MV_List : Multivector_List) return Multivector;
    function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector;

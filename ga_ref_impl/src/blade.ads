@@ -28,10 +28,6 @@ package Blade is
       (Index_Type => Natural, Element_Type => Basis_Blade);
     type Blade_Vector is new Blade_Vector_Package.Vector with null record;
 
-    package Names_Package is new
-      Ada.Containers.Vectors (Natural, Unbounded_String);
-    type Basis_Vector_Names is new Names_Package.Vector with null record;
-
     function "<" (Left, Right : Blade.Basis_Blade) return Boolean;
 
     package Blade_Sort_Package is new
