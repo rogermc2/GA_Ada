@@ -86,7 +86,6 @@ package body C3GA_Utilities is
       I3_Blade : constant Blade.Basis_Blade := Blade.New_Basis_Blade (C3_e3, 1.0);
       I3       : constant Multivector := New_Multivector (I3_Blade);
       BV_Norm  : float;
-      R1       : float;
       BV       : Bivector;
       BV_I     : Bivector;
       BV_I_Phi : Bivector;
@@ -98,15 +97,12 @@ package body C3GA_Utilities is
       --  isolate the rotation and translation parts
       Rot := To_Rotor (-Left_Contraction
                        (C3GA.no, (Geometric_Product (V, C3GA.ni, C3_Metric))));
-      --        Trans := -2.0 * C3GA.To_VectorE3GA (Geometric_Product
-      --            (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric));
       Trans := -2.0 * Geometric_Product
         (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric);
       --  get the bivector 2-blade part of R
       BV := New_Bivector (E3GA.e1_e2 (V), E3GA.e2_e3 (V), E3GA.e3_e1 (V));
       --  'reverse norm' of the bivector part of R
       BV_Norm := Norm_E (BV);
-      --        R2 := Norm_R (BV);
       if BV_Norm > epsilon then
          --  Logarithm of rotation part
          BV_I_Phi := -2.0 * Log_Rotor (Rot);
@@ -124,17 +120,14 @@ package body C3GA_Utilities is
             --  The versor has a rotation over 360 degrees.
             if Norm_E (Trans) > epsilon then
                BV_I :=
-                 Multivectors.Unit_E (Left_Contraction (Trans,  I3, C3_Metric));
-               Log_V := Ada.Numerics.Pi * Outer_Product (E3GA.e1, E3GA.e2);
-               --  return _bivector(B * ((float)atan2(BV_Norm, _Float(R)) / BV_Norm));
-               R1 := GA_Maths.Float_Functions.Arctan (BV_Norm, Scalar_Part (Rot)) / BV_Norm;
+                 Multivectors.Unit_E (Left_Contraction (Trans, I3, C3_Metric));
             else
                BV_I := Outer_Product (E3GA.e1, E3GA.e2);
             end if;
-            DL_1 := Geometric_Product (Trans, C3GA.ni, C3_Metric);
+            DL_1 :=Outer_Product (Trans, C3GA.ni);
             Log_V := 0.5 * (2.0 * GA_Maths.Pi * BV_I - DL_1);
          else  --  Scalar_Part (Rot) >= 0.0
-            Log_V := R1 * BV;
+            Log_V := -0.5 * Outer_Product (Trans, C3GA.ni);
          end if;
       end if;
       return Log_V;
