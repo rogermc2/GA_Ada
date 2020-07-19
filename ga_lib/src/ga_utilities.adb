@@ -268,7 +268,7 @@ package body GA_Utilities is
                                        MV_Names : Blade_Types.Basis_Vector_Names) is
       use Ada.Strings.Unbounded;
    begin
-      Put_Line (Name);
+      Put_Line (Name & ":");
       Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
    exception
       when others =>
