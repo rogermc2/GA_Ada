@@ -147,6 +147,7 @@ package Multivectors is
    function Sine (MV : Multivector; Order : Integer) return Multivector;
    function Space_Dimension return Natural;
    function Top_Grade_Index (MV : Multivector) return Integer;
+   function To_Bivector (R : Rotor) return Bivector;
    procedure To_Circle (MV : in out Multivector);
    procedure To_Dual_Plane (MV : in out Multivector);
    procedure To_Line (MV : in out Multivector);

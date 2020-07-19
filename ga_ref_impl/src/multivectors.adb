@@ -1893,6 +1893,30 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function To_Bivector (R : Rotor) return Bivector is
+      use Interfaces;
+      use Blade;
+      use Blade_List_Package;
+      Blades : constant Blade_List := R.Blades;
+      Curs   : Cursor := Blades.First;
+      aBlade : Basis_Blade;
+      BM     : Unsigned_32;
+      BV     : Bivector;
+   begin
+      while Has_Element (Curs) loop
+         aBlade := Element (Curs);
+         BM := aBlade.Bitmap;
+         if BM = C3_Base'Enum_Rep (C3_e1_e2) or
+            BM = C3_Base'Enum_Rep (C3_e1_e3) or
+            BM = C3_Base'Enum_Rep (C3_e2_e3) then
+            Add_Blade (BV, aBlade);
+         end if;
+         Next (Curs);
+      end loop;
+      return BV;
+   end To_Bivector;
+
+   --  -------------------------------------------------------------------------
    procedure To_Circle (MV : in out Multivector) is
    begin
       MV.Type_Of_MV := MV_Circle;
