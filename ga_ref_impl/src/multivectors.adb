@@ -471,14 +471,13 @@ package body Multivectors is
    function Dual (MV : Multivector; Met : Metric.Metric_Record)
                    return Multivector is
       use Interfaces;
-      Index   : constant Unsigned_32 :=
+      Index  : constant Unsigned_32 :=
                   Shift_Left (1, Metric.Eigen_Values (Met)'Length) - 1;
-      Dual_MV : Multivector;
+      MV_I   : Multivector;
    begin
-      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
-      Dual_MV := Versor_Inverse (Dual_MV);
-      Dual_MV := Inner_Product (MV, Dual_MV, Met, Blade.Left_Contraction);
-      return Dual_MV;
+      MV_I.Blades.Append (Blade.New_Basis_Blade (Index));
+      MV_I := Versor_Inverse (MV_I);
+      return Inner_Product (MV, MV_I, Met, Blade.Left_Contraction);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -486,12 +485,11 @@ package body Multivectors is
    function Dual (MV : Multivector; Dim : Integer) return Multivector is
       use Interfaces;
       Index   : constant Unsigned_32 := Shift_Left (1, Dim) - 1;
-      Dual_MV : Multivector;
+      MV_I : Multivector;
    begin
-      Dual_MV.Blades.Append (Blade.New_Basis_Blade (Index));
-      Dual_MV := Versor_Inverse (Dual_MV);
-      Dual_MV := Inner_Product (MV, Dual_MV, Blade.Left_Contraction);
-      return Dual_MV;
+      MV_I.Blades.Append (Blade.New_Basis_Blade (Index));
+      MV_I := Versor_Inverse (MV_I);
+      return Inner_Product (MV, MV_I, Blade.Left_Contraction);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -2046,37 +2044,32 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
    --  Geometric ALgebra for Computer Scientists, Section 21.1
    function Versor_Inverse (MV : Multivector) return Multivector is
-      Rev          : constant Multivector := Reverse_MV (MV);
-      S_Product    : constant Float := Scalar_Product (MV, Rev);
+      Rev    : constant Multivector := Reverse_MV (MV);
+      Weight : constant Float := Scalar_Product (MV, Rev);
    begin
-      if S_Product = 0.0 then
-         Put_Line
-           ("Multivector.Versor_Inverse encountered a non-invertible multivector");
-         raise MV_Exception;
+      if Weight = 0.0 then
+         raise MV_Exception with
+              "Multivector.Versor_Inverse encountered a non-invertible multivector" ;
       end if;
 
-      return Rev / S_Product;
+      return Rev / Weight;
 
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Multivector.Versor_Inverse.");
-         raise;
    end Versor_Inverse;
 
    --  -------------------------------------------------------------------------
 
    function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
                              return Multivector is
-      Rev          : constant Multivector := Reverse_MV (MV);
-      S_Product    : constant Float := Scalar_Product (MV, Rev, Met);
+      Rev    : constant Multivector := Reverse_MV (MV);
+      Weight : constant Float := Scalar_Product (MV, Rev, Met);
    begin
-      if S_Product = 0.0 then
+      if Weight = 0.0 then
          Put_Line
            ("Multivector.Versor_Inverse encountered a non-invertible multivector");
          raise MV_Exception;
       end if;
 
-      return Rev / S_Product;
+      return Rev / Weight;
 
    exception
       when others =>
