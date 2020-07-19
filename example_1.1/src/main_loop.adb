@@ -18,6 +18,7 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
+with Blade_Types;
 with E3GA;
 with C3GA;
 with C3GA_Draw;
@@ -85,9 +86,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          V2                : Multivectors.M_Vector;
 
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
-      aLine               : Multivectors.Line :=  New_MV_Line;
-      aCircle             : Circle :=  New_Circle;
-      aDual_Plane         : Dual_Plane := New_Dual_Plane;
+      aLine               : Multivectors.Line;
+      aCircle             : Circle;
+      aDual_Plane         : Dual_Plane;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
@@ -183,6 +184,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing aLine.");
          aLine := C3GA.Set_Line (Points.L1, Points.L2);
          --              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aline.",
+                                          aLine, Blade_Types.Basis_Names_C3GA);
 
          aCircle := Outer_Product (Points.C1, Outer_Product (Points.C2, Points.C3));
 
@@ -213,9 +216,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
 --                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 
---           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
---                                            Dual (aLine, C3_Metric));
-         Put_Line ("Main_Loop.Display setting R_Versor.");
+         GA_Utilities.Print_Multivector ("Main_Loop.Display aline.", aLine);
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aline.",
+                                          aLine, Blade_Types.Basis_Names_C3GA);
+
+         GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
+                                          Dual (aLine, C3_Metric));
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display dual line.",
+                  Dual (aLine, C3_Metric), Blade_Types.Basis_Names_C3GA);
          R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
 
          --  draw rotated circle
