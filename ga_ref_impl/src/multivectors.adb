@@ -1228,7 +1228,9 @@ package body Multivectors is
    begin
       while Has_Element (Blade_Cursor) loop
          thisBlade := Element (Blade_Cursor);
+--           GA_Utilities.Print_Blade ("Multivectors.Multivector_String thisBlade", thisBlade);
          Blade_UBS := Blade.Blade_String (thisBlade, BV_Names);
+--           Put_Line ("Multivectors.Multivector_String, " & To_String (Blade_UBS));
          if Length (Blade_UBS) > 0 then
             declare
                Blade_String : constant String := To_String (Blade_UBS);

@@ -5,7 +5,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 package Blade_Types is
 
     package Names_Package is new
-      Ada.Containers.Vectors (Natural, Unbounded_String);
+      Ada.Containers.Vectors (Positive, Unbounded_String);
    type Basis_Vector_Names is new Names_Package.Vector with null record;
 
    type BV_Base is (BV_e1e2, BV_e2e3, BV_e3e1);

@@ -7,7 +7,7 @@ package body Blade is
 
    function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
    function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
-                                  BB               : Basis_Blade; Cont : Contraction_Type)
+                                  BB : Basis_Blade; Cont : Contraction_Type)
                                    return Basis_Blade;
 
    function New_Blade (Weight : Float := 1.0) return Basis_Blade;
@@ -91,10 +91,10 @@ package body Blade is
    --  -------------------------------------------------------------------------
 
    function Blade_String (aBlade : Basis_Blade; BV_Names : Basis_Vector_Names)
-                           return Ada.Strings.Unbounded.Unbounded_String is
+                          return Ada.Strings.Unbounded.Unbounded_String is
       use Names_Package;
       BM        : Unsigned_32 := aBlade.Bitmap;
-      Index     : Natural := 1;
+      Bit_Num   : Natural := 1;
       Scale     : constant GA_Maths.float_3 := GA_Maths.float_3 (Weight (aBlade));
       Name      : Unbounded_String;
       Val       : Unbounded_String;
@@ -105,29 +105,29 @@ package body Blade is
          theString := To_Unbounded_String (GA_Maths.float_3'Image (Scale));
       else
          while BM /= 0 loop
---              Put_Line ("Blade.Blade_String, BM, index: " & Unsigned_32'Image (BM) &
---                          ",   " & Natural'Image (Index));
+--              Put_Line ("Blade.Blade_String, BM, Bit_Num: " & Unsigned_32'Image (BM) &
+--                          ",   " & Natural'Image (Bit_Num));
             if (BM and 1) /= 0 then
---                 Put_Line ("Blade.Blade_String, BM: " & Unsigned_32'Image (BM));
+--                 Put_Line ("Blade.Blade_String, BM bit detected: " & Unsigned_32'Image (BM));
                if Length (theString) > 0 then
                   theString := theString & "^";
                end if;
 
                if Is_Empty (Vector (BV_Names)) or
-                 (Index > Natural (Length (Vector (BV_Names))) or
-                      (Index - 1) < 1) then
+                 (Bit_Num > Natural (Length (Vector (BV_Names))) or
+                      (Bit_Num) < 1) then
                   theString := theString & "e";
-                  Val := To_Unbounded_String (Natural'Image (Index));
+                  Val := To_Unbounded_String (Natural'Image (Bit_Num));
                   Val := Trim (Val, Ada.Strings.Left);
                   theString := theString & Val;
                else
-                  Name := Element (BV_Names, Index - 1);
+                  Name := Element (BV_Names, Bit_Num);
                   theString := theString & Name;
                end if;
 --                 Put_Line ("Blade.Blade_String, theString:  " & To_String (theString));
             end if;
             BM := BM / 2;  --  BM >>= 1;
-            Index := Index + 1;
+            Bit_Num := Bit_Num + 1;
          end loop;
 
          if Length (theString) > 0 then
