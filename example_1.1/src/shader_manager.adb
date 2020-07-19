@@ -9,7 +9,7 @@ package body Shader_Manager is
     Black           : constant GL.Types.Singles.Vector4 := (0.0, 0.0, 0.0, 0.0);
     Render_Uniforms : Shader_Uniforms;
 
-    procedure Init (Render_Program  : in out GL.Objects.Programs.Program) is
+    procedure Init (Render_Program : in out GL.Objects.Programs.Program) is
         use GL.Objects.Programs;
         use GL.Objects.Shaders;
         use GL.Types.Singles;
@@ -29,6 +29,8 @@ package body Shader_Manager is
           Uniform_Location (Render_Program, "projection_matrix");
         Render_Uniforms.Model_View_Matrix_ID :=
           Uniform_Location (Render_Program, "mv_matrix");
+        Render_Uniforms.Light_Direction_ID :=
+          Uniform_Location (Render_Program, "light_direction");
         Render_Uniforms.Light_Position_ID :=
           Uniform_Location (Render_Program, "light_position");
         Render_Uniforms.Line_Width_ID :=
