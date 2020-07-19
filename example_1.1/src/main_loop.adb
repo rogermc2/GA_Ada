@@ -181,11 +181,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          GA_Utilities.Print_Multivector ("Display, L1 ", Points.L1);
       --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
       if not Pick_Manager.Pick_Active then
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display Points.L1.", Points.L1);
          Put_Line ("Main_Loop.Display drawing aLine.");
          aLine := C3GA.Set_Line (Points.L1, Points.L2);
          --              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
-         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aline.",
-                                          aLine, Blade_Types.Basis_Names_C3GA);
 
          aCircle := Outer_Product (Points.C1, Outer_Product (Points.C2, Points.C3));
 
@@ -216,12 +215,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
 --                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 
-         GA_Utilities.Print_Multivector ("Main_Loop.Display aline.", aLine);
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display aline.", aLine);
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display L1.",
+                                          Points.L1, Blade_Types.Basis_Names_C3GA);
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display L2.",
+                                          Points.L2, Blade_Types.Basis_Names_C3GA);
          GA_Utilities.Print_Multivector_String ("Main_Loop.Display aline.",
                                           aLine, Blade_Types.Basis_Names_C3GA);
 
-         GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
-                                          Dual (aLine, C3_Metric));
+--           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
+--                                            Dual (aLine, C3_Metric));
          GA_Utilities.Print_Multivector_String ("Main_Loop.Display dual line.",
                   Dual (aLine, C3_Metric), Blade_Types.Basis_Names_C3GA);
          R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
