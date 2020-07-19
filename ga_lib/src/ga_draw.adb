@@ -12,6 +12,7 @@ with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 with GL.Rasterization;
 with GL.Toggles;
+with GL.Types; use GL.Types;
 with Utilities;
 
 with Maths;
@@ -36,9 +37,7 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Base (Render_Program    : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Scale             : Float) is
-
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
         Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -61,9 +60,7 @@ package body GA_Draw is
         end loop;
 
         Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
@@ -84,7 +81,6 @@ package body GA_Draw is
     --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
     --  The parameter names correspond of those in draw.h!
     procedure Draw_Bivector (Render_Program  : GL.Objects.Programs.Program;
-                             Model_View_Matrix  : GL.Types.Singles.Matrix4 ;
                              Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3;
                              Palet_Type  : Palet.Colour_Palet;
                              Scale  : float := 1.0;
@@ -115,7 +111,7 @@ package body GA_Draw is
         MV_Ortho_2            : constant Multivectors.M_Vector
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
-        MV_Matrix             : Matrix4 := Model_View_Matrix;
+        Model_Matrix          : Matrix4 := Identity4;
         Scaling_Matrix        : Singles.Matrix4;
         Translation_Matrix    : Matrix4 := Identity4;
         BV_Scale              : Single := Single (Scale);
@@ -135,12 +131,11 @@ package body GA_Draw is
           Method /= Draw_Bivector_Parallelogram_No_Vectors then
 
             --  Rotate e3 to normal direction
-            MV_Matrix := Model_View_Matrix *
-              GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
-              Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
+            Model_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
+--                Utilities.Print_Matrix ("GA_Draw.Draw_Bivector Model_Matrix", Model_Matrix);
 --              RT := E3GA_Utilities.Rotor_Vector_To_Vector
 --                (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
---              GL_Util.Rotor_GL_Multiply (RT, MV_Matrix);
+--              GL_Util.Rotor_GL_Multiply (RT, Model_Matrix);
         else  --  Draw_Bivector_Parallelogram
             E2_Norm :=
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
@@ -150,10 +145,10 @@ package body GA_Draw is
         end if;
 
         Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
-        MV_Matrix := Translation_Matrix * Scaling_Matrix * MV_Matrix;
---          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector MV_Matrix", MV_Matrix);
+        Model_Matrix := Translation_Matrix * Scaling_Matrix * Model_Matrix;
+--          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector Model_Matrix", MV_MaModel_Matrixtrix);
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
+        Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         case Method is
             when Draw_Bivector_Circle |
@@ -183,7 +178,7 @@ package body GA_Draw is
     --        Scale_S              : constant GL.Types.Single := GL.Types.Single (Scale);
     --        Translate            : Vector3 :=  (0.0, 0.0, 0.0);
     --        --          O2                   : Multivectors.M_Vector := Ortho_2;
-    --        --          Model_View_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+    --        --          Model_Matrix    : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
     --        MVP_Matrix           : Matrix4 := Singles.Identity4;
     --        Scaled               : GL.Types.Single;
     --        E2_Norm              : Float;
@@ -194,7 +189,7 @@ package body GA_Draw is
     --
     --        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
     --
-    --        --          MVP_Matrix := Model_View_Matrix;
+    --        --          MVP_Matrix := Model_Matrix;
     --        Translate := (Single (C3GA.e1 (Base)),
     --                      Single (C3GA.e2 (Base)),
     --                      Single (C3GA.e3 (Base)));
@@ -228,7 +223,7 @@ package body GA_Draw is
     --  ----------------------------------------------------------------------
 
     --      procedure Draw_Multivector (Render_Program : GL.Objects.Programs.Program;
-    --               Model_View_Matrix : GL.Types.Singles.Matrix4;
+    --               Model_Matrix : GL.Types.Singles.Matrix4;
     --               MV             : E2GA.Multivector;
     --               Colour         : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
     --               Scale          : GL.Types.Single) is
@@ -351,7 +346,6 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Cone (Render_Program    : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                          Scale             : Float) is
         use GL.Objects.Buffers;
         use GA_Maths.Float_Functions;
@@ -378,7 +372,7 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
 
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+--          Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
@@ -397,7 +391,6 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-                         Model_View_Matrix : GL.Types.Singles.Matrix4;
                          aPoint, Direction : C3GA.Vector_E3;
                          Weight            : Float := 1.0) is
         use GL.Objects.Buffers;
@@ -416,7 +409,7 @@ package body GA_Draw is
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : Matrix4 :=
                                  Maths.Scaling_Matrix (Single (Weight));
-        MV_Matrix            : Matrix4 := Model_View_Matrix;
+        Model_Matrix         : Matrix4 := Identity4;
         Z                    : Single := -Scale_Constant;
         C                    : Single := 0.0;
         Num_C_Vertices       : constant Int := 3 * C_Steps + 1;
@@ -425,7 +418,8 @@ package body GA_Draw is
         C_Vertex1            : constant Singles.Vector3 := (-0.25, 0.0, -1.0);
         C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
         C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
-        GL_Point             : constant Singles.Vector3 := GL_Util.To_GL (C3GA.Get_Coords (aPoint));
+        GL_Point             : constant Singles.Vector3 :=
+                                 GL_Util.To_GL (C3GA.Get_Coords (aPoint));
     begin
         --  aPoint, Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
@@ -443,16 +437,16 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
 
         --  rotate e3 to line direction
-        MV_Matrix := Model_View_Matrix *
+        Model_Matrix :=
           GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
 --          Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
 --                                  GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
-        MV_Matrix := Scale_Matrix * MV_Matrix;
+        Model_Matrix := Scale_Matrix * Model_Matrix;
         --  translate to point on line
         Translation_Matrix :=
           Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
-        MV_Matrix := Translation_Matrix * MV_Matrix;
-        Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
+        Model_Matrix := Translation_Matrix * Model_Matrix;
+        Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -481,7 +475,7 @@ package body GA_Draw is
                 C := C + Step_Size;
 
                 Utilities.Load_Vertex_Buffer (Array_Buffer, C_Vertices, Static_Draw);
-                MV_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
+                Model_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
 
                 GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
                 GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -506,7 +500,7 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Parallelepiped (Render_Program    : GL.Objects.Programs.Program;
-                                   Model_View_Matrix : GL.Types.Singles.Matrix4;
+                                   Model_Matrix : GL.Types.Singles.Matrix4;
                                    MVC               : Multivector_Analyze.E3_Vector_Array;
                                    Scale             : Float;
                                    Method            : Method_Type) is
@@ -604,12 +598,12 @@ package body GA_Draw is
 
         if Method = Draw_TV_Parellelepiped then
             Draw_Parallelepiped
-              (Render_Program, Model_View_Matrix, MVC, Scale, Method);
+              (Render_Program, Model_Matrix, MVC, Scale, Method);
         end if;
 
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
-        Shader_Manager.Set_Model_View_Matrix (Scale_Matrix * Model_View_Matrix);
+        Shader_Manager.Set_Model_Matrix (Scale_Matrix * Model_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -673,8 +667,8 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
     --  Based on draw.cpp drawTriVector
     procedure Draw_Trivector (Render_Program    : GL.Objects.Programs.Program;
-                              Model_View_Matrix : GL.Types.Singles.Matrix4;
-                              Base              : C3GA.Vector_E3; Scale : float := 1.0;
+                              Base              : C3GA.Vector_E3;
+                              Scale : float := 1.0;
                               Palet_Type        : Palet.Colour_Palet;
                               Method            : Method_Type := Draw_TV_Sphere) is
         use GL.Types.Singles;
@@ -686,7 +680,7 @@ package body GA_Draw is
         Normal            : Single;
         Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
         Translation       : Singles.Vector3;
-        MV_Matrix         : Matrix4 := Model_View_Matrix;
+        MV_Matrix         : Matrix4 := Identity4;
     begin
         if Scale >= 0.0 then
             Scale_Sign := 1.0;
@@ -697,7 +691,7 @@ package body GA_Draw is
         if Method = Draw_TV_Parellelepiped or
           Method = Draw_TV_Parellelepiped_No_Vectors then
             Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
-            Draw_Trivector (Render_Program, MV_Matrix, Base, Scale,
+            Draw_Trivector (Render_Program, Base, Scale,
                             Palet_Type, Draw_TV_Sphere) ;
             P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
         else
@@ -730,7 +724,7 @@ package body GA_Draw is
             when Draw_TV_Parellelepiped =>
                 Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
                 --              Draw_Vector (Render_Program    => Render_Program,
-                --                           Model_View_Matrix => MV_Matrix,
+                --                           Model_Matrix => MV_Matrix,
                 --                           Tail              => Vector_Base,
                 --                           Direction         => ,
                 --                           Scale             => );
@@ -751,7 +745,6 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Trivector (Render_Program    : GL.Objects.Programs.Program;
-                              Model_View_Matrix : GL.Types.Singles.Matrix4;
                               Base              : C3GA.Vector_E3; Scale : float := 1.0;
                               V                 : Multivector_Analyze.E3_Vector_Array;
                               --                               Palet_Type        : Palet.Colour_Palet;
@@ -764,7 +757,7 @@ package body GA_Draw is
         Normal            : Single;
         Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
         Translation       : Singles.Vector3;
-        MV_Matrix         : Matrix4 := Model_View_Matrix;
+        MV_Matrix         : Matrix4 := Identity4;
     begin
         if Scale >= 0.0 then
             Scale_Sign := 1.0;
@@ -824,7 +817,6 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Vector (Render_Program    : GL.Objects.Programs.Program;
-                           Model_View_Matrix : GL.Types.Singles.Matrix4;
                            Tail, Direction   : C3GA.Vector_E3;
                            Scale             : float := 1.0) is
         use GL.Culling;
@@ -834,7 +826,7 @@ package body GA_Draw is
         use Maths.Single_Math_Functions;
 
         Vertex_Array_Object  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-        MV_Matrix            : Matrix4 := Model_View_Matrix;
+        MV_Matrix            : Matrix4 := Identity4;
         Dir_Coords           : constant GA_Maths.Float_3D :=
                                  C3GA.Get_Coords (Direction);
         --        GL_Tail              : constant Vector3 := GL_Util.To_GL (Tail);
@@ -856,8 +848,8 @@ package body GA_Draw is
             end if;
             MV_Matrix := Maths.Scaling_Matrix (Single (Scale)) * MV_Matrix;
 
-            Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
-            Draw_Line (Render_Program, Model_View_Matrix,
+--              Shader_Manager.Set_Model_Matrix (Model_Matrix);
+            Draw_Line (Render_Program,
                        (0.0, 0.0, 0.0), (0.98 * Direction (GL.X),
                          0.98 * Direction (GL.Y),
                          0.98 * Direction (GL.Z)), Scale);
@@ -873,7 +865,6 @@ package body GA_Draw is
             end if;
 
             GL_Util.Rotor_GL_Multiply (aRotor, MV_Matrix);
-            MV_Matrix := Model_View_Matrix;
 
             if C3GA.Norm_e2 (Tail) /= 0.0 then
                 MV_Matrix := Maths.Translation_Matrix (Tail) * MV_Matrix;
@@ -881,14 +872,14 @@ package body GA_Draw is
             --  Translate to head of vector
             MV_Matrix := Maths.Translation_Matrix
               (Single (Scale) * Direction) * MV_Matrix;
-            Shader_Manager.Set_Model_View_Matrix (MV_Matrix);
+            Shader_Manager.Set_Model_Matrix (MV_Matrix);
 
             Enable (Cull_Face);
             Set_Front_Face (GL.Types.Clockwise);
             Set_Cull_Face (Front);
 
-            Draw_Cone (Render_Program, Model_View_Matrix, Scale);
-            Draw_Base (Render_Program, Model_View_Matrix, Scale);
+            Draw_Cone (Render_Program, Scale);
+            Draw_Base (Render_Program, Scale);
 
             Set_Front_Face (Saved_Front_Face);
             Set_Cull_Face (Saved_Cull_Face);

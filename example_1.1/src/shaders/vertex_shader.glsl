@@ -18,6 +18,7 @@ uniform vec3  light_direction;
 
 void main()
     {
+    mat4 mvp_matrix = projection_matrix * mv_matrix * model_matrix;
     vec4 position = vec4(vertex_position, 1);
     vec4 normal = vec4(vertex_normal, 0);
     vec4 delta = vec4(vertex_normal * line_width, 0);
@@ -33,6 +34,6 @@ void main()
     Light_Direction = light_direction;
 
     Camera_Normal = (view_matrix * model_matrix * normal).xyz;
-    gl_Position = projection_matrix * mv_matrix * (position + delta);
-    gl_Position = projection_matrix * mv_matrix * position;
+    gl_Position = mvp_matrix * (position + delta);
+    gl_Position = mvp_matrix * position;
     }

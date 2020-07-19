@@ -98,7 +98,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Model_Rotor         : constant Rotor := New_Rotor (1.0);
       Translation_Matrix  : Matrix4 := Identity4;
       Projection_Matrix   : Matrix4 := Identity4;
-      Model_Matrix        : constant Matrix4 := Identity4;
       View_Matrix         : constant Matrix4 := Identity4;
       Model_View_Matrix   : Matrix4 := Identity4;
       View_Angle          : constant Maths.Degree := 50.0;
@@ -130,9 +129,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
 
-      Shader_Manager.Set_Model_Matrix (Model_Matrix);
       Shader_Manager.Set_View_Matrix (View_Matrix);
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+      Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
       --  View and model matrices are initilized to identity by
       --  shader initialization.
       Utilities.Clear_Background_Colour_And_Depth (White);
@@ -194,22 +193,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          To_Dual_Plane (aDual_Plane);
 
          Shader_Manager.Set_Ambient_Colour (Red);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aLine);
+         C3GA_Draw.Draw (Render_Graphic_Program, aLine);
 
          Shader_Manager.Set_Ambient_Colour (Green);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, aCircle);
+--           C3GA_Draw.Draw (Render_Graphic_Program, aCircle);
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display aCircle.",
 --                                            aCircle);
 
          --  draw reflected line (magenta)
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
-                         Multivector_Utilities.Reflect (aLine, aDual_Plane));
+--           C3GA_Draw.Draw (Render_Graphic_Program,
+--                           Multivector_Utilities.Reflect (aLine, aDual_Plane));
 
 --          Utilities.Print_Matrix ("Main_Loop.Display Model_View_Matrix", Model_View_Matrix);
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix,
+--           C3GA_Draw.Draw (Render_Graphic_Program,
 --                           Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
 --                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
@@ -221,16 +220,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+--           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          Rotated_Circle := Multivector_Utilities.Rotate (aCircle, R_Versor);
-         Put_Line ("Main_Loop.Display drawing rotated circle.");
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, Rotated_Circle);
+--           Put_Line ("Main_Loop.Display drawing rotated circle.");
+--           C3GA_Draw.Draw (Render_Graphic_Program, Rotated_Circle);
 
-         Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
+--           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          R_R_Circle := Multivector_Utilities.Reflect (Rotated_Circle, aDual_Plane);
-         C3GA_Draw.Draw (Render_Graphic_Program, Model_View_Matrix, R_R_Circle);
+--           C3GA_Draw.Draw (Render_Graphic_Program, R_R_Circle);
 
          GA_Utilities.Print_Multivector ("Main_Loop.Display R_Versor", R_Versor);
          LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
