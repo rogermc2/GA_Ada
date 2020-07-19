@@ -1224,6 +1224,7 @@ package body Multivectors is
       Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
       theString     : Ada.Strings.Unbounded.Unbounded_String :=
                         To_Unbounded_String ("0.0");
+      String_Length : Integer := 0;
    begin
       while Has_Element (Blade_Cursor) loop
          thisBlade := Element (Blade_Cursor);
@@ -1242,6 +1243,11 @@ package body Multivectors is
                   end if;
                   theString :=
                     theString & Blade_String (2 .. Blade_String'Length);
+               end if;
+
+               if Length (theString) - String_Length > 50 then
+                  theString := theString & ASCII.LF;
+                  String_Length := Length (theString);
                end if;
             end;
          end if;
