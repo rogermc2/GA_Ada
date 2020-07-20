@@ -403,7 +403,7 @@ package body Multivector_Analyze_C3GA is
                       "Multivector_Analyze_C3GA.Analyze_Round, " &
                       "Grade 2 Left Contraction is zero.";
                 end if;
-            when 3 | 5 =>
+            when 3 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
 --                  GA_Utilities.Print_Multivector
