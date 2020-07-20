@@ -16,18 +16,18 @@ package Multivectors is
                     MV_Line, MV_Circle, MV_Sphere, MV_Dual_Line, MV_Dual_Plane,
                     MV_Dual_Sphere, MV_TR_Versor);
    type Grade_Status is (Grade_OK, Grade_Null, Grade_Inhomogeneous);
-   type Multivector is private;
+   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is private;
    type Multivector_List is private;
-   subtype Bivector is Multivector;
-   subtype Circle is Multivector;
-   subtype Dual_Line is Multivector;
-   subtype Dual_Plane is Multivector;
-   subtype Line is Multivector;
-   subtype Normalized_Point is Multivector;
-   subtype Rotor is Multivector;
-   subtype Scalar is Multivector;
-   subtype TR_Versor is Multivector;
-   subtype M_Vector is Multivector;
+   subtype Bivector is Multivector (Type_Of_MV => MV_Bivector);
+   subtype Circle is Multivector (Type_Of_MV => MV_Circle);
+   subtype Dual_Line is Multivector (Type_Of_MV => MV_Dual_Line);
+   subtype Dual_Plane is Multivector (Type_Of_MV => MV_Dual_Plane);
+   subtype Line is Multivector (Type_Of_MV => MV_Line);
+   subtype Normalized_Point is Multivector (Type_Of_MV => MV_Normalized_Point);
+   subtype Rotor is Multivector (Type_Of_MV => MV_Rotor);
+   subtype Scalar is Multivector (Type_Of_MV => MV_Scalar);
+   subtype TR_Versor is Multivector (Type_Of_MV => MV_TR_Versor);
+   subtype M_Vector is Multivector (Type_Of_MV => MV_Vector);
 
    MV_Exception : Exception;
 
@@ -90,7 +90,8 @@ package Multivectors is
                            return Multivector;
    function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
                            Cont : Blade.Contraction_Type) return Multivector;
-   function Inverse (theScalar : Scalar) return Scalar;
+   function Inverse_Scalar (theScalar : Scalar) return Scalar;
+   function Inverse_Rotor (R : Rotor) return Rotor;
    function Is_Null (MV : Multivector) return Boolean;
    function Is_Null (MV : Multivector; Epsilon : Float) return Boolean;
    function Is_Scalar (MV : Multivector) return Boolean;
@@ -109,23 +110,23 @@ package Multivectors is
    function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : M_Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
-   function New_Circle return Circle;
-   function New_Dual_Line return Dual_Line;
-   function New_Dual_Plane return Dual_Plane;
-   function New_MV_Line return Line;
+--     function New_Circle return Circle;
+--     function New_Dual_Line return Dual_Line;
+--     function New_Dual_Plane return Dual_Plane;
+--     function New_MV_Line return Line;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;
    function New_Multivector (Blades : Blade.Blade_List) return Multivector;
-   function New_Normalized_Point return Normalized_Point;
+--     function New_Normalized_Point return Normalized_Point;
    function New_Normalized_Point (e1, e2, e3 : Float) return Normalized_Point;
-   function New_Rotor return Rotor;
+--     function New_Rotor return Rotor;
    function New_Rotor (Scalar_Weight : Float) return Rotor;
    function New_Rotor (Scalar_Weight : Float; BV : Bivector) return Rotor;
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar;
    function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor;
-   function New_Vector return M_Vector;
+--     function New_Vector return M_Vector;
    function New_Vector (e1, e2 : Float) return M_Vector;
    function New_Vector (e1, e2, e3 : Float) return M_Vector;
    function Norm_E (MV : Multivector) return Float;
@@ -148,9 +149,9 @@ package Multivectors is
    function Space_Dimension return Natural;
    function Top_Grade_Index (MV : Multivector) return Integer;
    function To_Bivector (R : Rotor) return Bivector;
-   procedure To_Circle (MV : in out Multivector);
-   procedure To_Dual_Plane (MV : in out Multivector);
-   procedure To_Line (MV : in out Multivector);
+   function To_Circle (MV : in out Multivector) return Circle;
+   function To_Dual_Plane (MV : in out Multivector) return Dual_Plane;
+   function To_Line (MV : in out Multivector) return Line;
    function To_Rotor (MV : Multivector) return Rotor;
    function To_Vector (MV : Multivector) return M_Vector;
    function Unit_E (MV : Multivector) return Multivector;
@@ -165,8 +166,7 @@ package Multivectors is
                             return Multivector;
 
 private
-   type Multivector is record
-      Type_Of_MV : MV_Type := MV_Multivector;
+   type Multivector (Type_Of_MV : MV_Type := MV_Multivector) is record
       Blades     : Blade.Blade_List;
       Sorted     : Boolean := False;
    end record;

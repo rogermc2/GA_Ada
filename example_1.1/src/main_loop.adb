@@ -112,10 +112,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
       Phi                 : constant Float := 0.5 * GA_Maths.Pi;
+      OP                  : Multivector;
       R_Versor            : TR_Versor := New_TR_Versor;
-      Rotated_Circle      : Circle :=  New_Circle;
-      R_R_Circle          : Circle :=  New_Circle;
-      LR                  : Dual_Plane;
+      Rotated_Circle      : Circle;
+      R_R_Circle          : Circle;
+      LR                  : Dual_Line;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -188,13 +189,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
 --           GA_Utilities.Print_Multivector_String ("Main_Loop.Display aLine",
 --                                                  aLine, Blade_Types.Basis_Names_C3GA);
-         aCircle := Outer_Product (Points.C1, Outer_Product (Points.C2, Points.C3));
+         OP := Outer_Product (Points.C1, Outer_Product (Points.C2, Points.C3));
+         aCircle := To_Circle (OP);
 
          --  N_E3_Vec is a direction vector
          aDual_Plane :=
            Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
          aDual_Plane := Left_Contraction (Points.P1, aDual_Plane);
-         To_Dual_Plane (aDual_Plane);
+--           To_Dual_Plane (aDual_Plane);
 
          Shader_Manager.Set_Ambient_Colour (Red);
          C3GA_Draw.Draw (Render_Graphic_Program, aLine);

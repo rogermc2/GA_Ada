@@ -1240,7 +1240,7 @@ package body E3GA is
 
     function To_MV_Vector (V : E3_Vector) return Multivectors.M_Vector is
         use Blade_Types;
-        MVV : Multivectors.M_Vector := Multivectors.New_Vector;
+        MVV : Multivectors.M_Vector;
     begin
         Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e1, Float (V (GL.X))));
         Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e2, Float (V (GL.Y))));

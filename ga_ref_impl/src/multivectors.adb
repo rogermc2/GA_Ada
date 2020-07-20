@@ -475,13 +475,13 @@ package body Multivectors is
                    Shift_Left (1, Metric.Eigen_Values (Met)'Length) - 1;
         MV_I   : Multivector;
     begin
-        case MV.Type_Of_MV is
-        when MV_Line => MV_I.Type_Of_MV := MV_Dual_Line;
-        when MV_Sphere => MV_I.Type_Of_MV := MV_Dual_Sphere;
-        when others => raise MV_Exception with
-              "Multivectors.DualMet called with invalid Type_Of_MV: " &
-              MV_Type'Image (MV.Type_Of_MV);
-        end case;
+--          case MV.Type_Of_MV is
+--          when MV_Line => MV_I.Type_Of_MV := MV_Dual_Line;
+--          when MV_Sphere => MV_I.Type_Of_MV := MV_Dual_Sphere;
+--          when others => raise MV_Exception with
+--                "Multivectors.DualMet called with invalid Type_Of_MV: " &
+--                MV_Type'Image (MV.Type_Of_MV);
+--          end case;
 
         MV_I.Blades.Append (Blade.New_Basis_Blade (Index));
         MV_I := Versor_Inverse (MV_I);
@@ -1125,19 +1125,26 @@ package body Multivectors is
     end Inner_Product;
 
     --  -------------------------------------------------------------------------
+
+    function Inverse_Rotor (R : Rotor) return Rotor is
+    begin
+        return To_Rotor (General_Inverse (R));
+    end Inverse_Rotor;
+
+    --  -------------------------------------------------------------------------
     --  Inverse based on c3ga.h inline scalar inverse
-    function Inverse (theScalar : Scalar) return Scalar is
+    function Inverse_Scalar (theScalar : Scalar) return Scalar is
         use Blade;
         S_Weight    : constant float := Weight (theScalar.Blades.First_Element);
         Inv_Weight  : float;
     begin
         if S_Weight = 0.0 then
             raise MV_Exception with
-              "Multivectors.Inverse called with zero weight blade";
+              "Multivectors.Inverse_Scalar called with zero weight blade";
         end if;
         Inv_Weight := 1.0 / S_Weight ** 2;
         return New_Scalar (S_Weight * Inv_Weight);
-    end Inverse;
+    end Inverse_Scalar;
 
     --  -------------------------------------------------------------------------
 
@@ -1347,7 +1354,7 @@ package body Multivectors is
         use Blade;
         BV : Bivector;
     begin
-        BV.Type_Of_MV := MV_Bivector;
+--          BV.Type_Of_MV := MV_Bivector;
         BV.Blades.Append (New_Basis_Blade (BV_e1e2, e1e2));
         BV.Blades.Append (New_Basis_Blade (BV_e2e3, e2e3));
         BV.Blades.Append (New_Basis_Blade (BV_e3e1, e3e1));
@@ -1357,38 +1364,39 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function New_Circle return Circle is
-        C : Circle;
-    begin
-        C.Type_Of_MV := MV_Circle;
-        return C;
-    end New_Circle;
+--      function New_Circle return Circle is
+--          C : Circle;
+--      begin
+--          C.Type_Of_MV := MV_Circle;
+--          return C;
+--      end New_Circle;
 
     --  -------------------------------------------------------------------------
 
-    function New_Dual_Line return Dual_Line is
-        DL : Dual_Plane;
-    begin
-        DL.Type_Of_MV := MV_Dual_Line;
-        return DL;
-    end New_Dual_Line;
-
-    --  -------------------------------------------------------------------------
-    function New_Dual_Plane return Dual_Plane is
-        DP : Dual_Plane;
-    begin
-        DP.Type_Of_MV := MV_Dual_Plane;
-        return DP;
-    end New_Dual_Plane;
+--      function New_Dual_Line return Dual_Line is
+--          DL : Dual_Plane;
+--      begin
+--          DL.Type_Of_MV := MV_Dual_Line;
+--          return DL;
+--      end New_Dual_Line;
 
     --  -------------------------------------------------------------------------
 
-    function New_MV_Line return Line is
-        L : Line;
-    begin
-        L.Type_Of_MV := MV_Line;
-        return L;
-    end New_MV_Line;
+--      function New_Dual_Plane return Dual_Plane is
+--          DP : Dual_Plane;
+--      begin
+--          DP.Type_Of_MV := MV_Dual_Plane;
+--          return DP;
+--      end New_Dual_Plane;
+
+    --  -------------------------------------------------------------------------
+
+--      function New_MV_Line return Line is
+--          L : Line;
+--      begin
+--          L.Type_Of_MV := MV_Line;
+--          return L;
+--      end New_MV_Line;
 
     --  -------------------------------------------------------------------------
 
@@ -1419,12 +1427,12 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function New_Normalized_Point return Normalized_Point is
-        NP : Normalized_Point;
-    begin
-        NP.Type_Of_MV := MV_Normalized_Point;
-        return NP;
-    end New_Normalized_Point;
+--      function New_Normalized_Point return Normalized_Point is
+--          NP : Normalized_Point;
+--      begin
+--          NP.Type_Of_MV := MV_Normalized_Point;
+--          return NP;
+--      end New_Normalized_Point;
 
     --  -------------------------------------------------------------------------
 
@@ -1432,7 +1440,7 @@ package body Multivectors is
         use Blade;
         NP     : Normalized_Point;
     begin
-        NP.Type_Of_MV := MV_Normalized_Point;
+--          NP.Type_Of_MV := MV_Normalized_Point;
         NP.Blades.Append (New_Basis_Blade (C3_no, 1.0));
         NP.Blades.Append (New_Basis_Blade (C3_e1, e1));
         NP.Blades.Append (New_Basis_Blade (C3_e2, e2));
@@ -1444,10 +1452,10 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    function New_Rotor return Rotor is
-    begin
-        return  New_Rotor (1.0);
-    end New_Rotor;
+--      function New_Rotor return Rotor is
+--      begin
+--          return  New_Rotor (1.0);
+--      end New_Rotor;
 
     --  -------------------------------------------------------------------------
 
@@ -1455,7 +1463,7 @@ package body Multivectors is
         use Blade;
         R : Rotor;
     begin
-        R.Type_Of_MV := MV_Rotor;
+--          R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         return R;
     end New_Rotor;
@@ -1466,7 +1474,7 @@ package body Multivectors is
         use Blade;
         R : Rotor;
     begin
-        R.Type_Of_MV := MV_Rotor;
+--          R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
         R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e1e2)));
         R.Blades.Append (Get_Blade (BV, BV_Base'Enum_Rep (BV_e2e3)));
@@ -1480,7 +1488,7 @@ package body Multivectors is
         use Blade;
         R : Rotor;
     begin
-        R.Type_Of_MV := MV_Rotor;
+--          R.Type_Of_MV := MV_Rotor;
         R.Blades.Append (New_Scalar_Blade (Scalar_Weight));
         R.Blades.Append (New_Basis_Blade (E3_e1, e1));
         R.Blades.Append (New_Basis_Blade (E3_e2, e2));
@@ -1493,7 +1501,7 @@ package body Multivectors is
     function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar is
         S : Scalar;
     begin
-        S.Type_Of_MV := MV_Scalar;
+--          S.Type_Of_MV := MV_Scalar;
         S.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         return S;
     end New_Scalar;
@@ -1503,7 +1511,7 @@ package body Multivectors is
     function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor is
         V : TR_Versor;
     begin
-        V.Type_Of_MV := MV_TR_Versor;
+--          V.Type_Of_MV := MV_TR_Versor;
         if Scalar_Weight /= 0.0 then
             V.Blades.Append (Blade.New_Scalar_Blade (Scalar_Weight));
         end if;
@@ -1512,12 +1520,12 @@ package body Multivectors is
 
     --  ------------------------------------------------------------------------
 
-    function New_Vector return M_Vector is
-        V : M_Vector;
-    begin
-        V.Type_Of_MV := MV_Vector;
-        return V;
-    end New_Vector;
+--      function New_Vector return M_Vector is
+--          V : M_Vector;
+--      begin
+--          V.Type_Of_MV := MV_Vector;
+--          return V;
+--      end New_Vector;
 
     --  ------------------------------------------------------------------------
 
@@ -1525,7 +1533,7 @@ package body Multivectors is
         use Blade;
         V : M_Vector;
     begin
-        V.Type_Of_MV := MV_Vector;
+--          V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E2_e1, e1));
         Add_Blade (V, New_Basis_Blade (E2_e2, e2));
         return V;
@@ -1537,7 +1545,7 @@ package body Multivectors is
         use Blade;
         V : M_Vector;
     begin
-        V.Type_Of_MV := MV_Vector;
+--          V.Type_Of_MV := MV_Vector;
         Add_Blade (V, New_Basis_Blade (E3_e1, e1));
         Add_Blade (V, New_Basis_Blade (E3_e2, e2));
         Add_Blade (V, New_Basis_Blade (E3_e3, e3));
@@ -1931,23 +1939,33 @@ package body Multivectors is
     end To_Bivector;
 
     --  -------------------------------------------------------------------------
-    procedure To_Circle (MV : in out Multivector) is
+
+    function To_Circle (MV : in out Multivector) return Circle is
+       theCircle : Circle;
     begin
-        MV.Type_Of_MV := MV_Circle;
+        theCircle.Blades := MV.Blades;
+        theCircle.Sorted := MV.Sorted;
+        return theCircle;
     end To_Circle;
 
     --  -------------------------------------------------------------------------
 
-    procedure To_Dual_Plane (MV : in out Multivector) is
+    function To_Dual_Plane (MV : in out Multivector) return Dual_Plane is
+       theDual_Plane : Dual_Plane;
     begin
-        MV.Type_Of_MV := MV_Dual_Plane;
+        theDual_Plane.Blades := MV.Blades;
+        theDual_Plane.Sorted := MV.Sorted;
+        return theDual_Plane;
     end To_Dual_Plane;
 
     --  -------------------------------------------------------------------------
 
-    procedure To_Line (MV : in out Multivector) is
+    function To_Line (MV : in out Multivector) return Line is
+       theLine : Line;
     begin
-        MV.Type_Of_MV := MV_Line;
+        theLine.Blades := MV.Blades;
+        theLine.Sorted := MV.Sorted;
+        return theLine;
     end To_Line;
 
     --  -------------------------------------------------------------------------

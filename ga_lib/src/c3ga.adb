@@ -413,7 +413,7 @@ package body C3GA is
 
     function ni return Multivectors.Multivector is
         use Multivectors;
-        Basis : Multivectors.M_Vector := Multivectors.New_Vector;
+        Basis : Multivectors.M_Vector;
     begin
         Add_Blade (Basis, C3_ni, 1.0);
         return Basis;
@@ -421,9 +421,9 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
     --  no is based on C3GA set to no_t
-    function no return Multivectors.Normalized_Point is
+    function no return Multivectors.Multivector is
         use Multivectors;
-        Basis  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
+        Basis  : Multivectors.Normalized_Point;
     begin
         Add_Blade (Basis, C3_no, 1.0);
         return Basis;
@@ -930,7 +930,7 @@ package body C3GA is
     --  ------------------------------------------------------------------------
 
     function Probe (Pr : C3_Base) return Multivectors.Normalized_Point is
-        NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
+        NP  : Multivectors.Normalized_Point;
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
         Multivectors.Add_Blade (NP, Blade.New_Basis_Blade (Pr, 1.0));
@@ -942,7 +942,7 @@ package body C3GA is
     function Set_Circle (P1, P2, P3 : Multivectors.Normalized_Point) return  Multivectors.Circle is
         use Multivectors;
         OP        : Multivector;
-        theCircle :  Multivectors.Circle :=  Multivectors.New_Circle;
+        theCircle :  Multivectors.Circle;
     begin
         OP := Outer_Product (Multivector (P1), Outer_Product (Multivector (P2),
                              Multivector (P3)));
@@ -984,7 +984,7 @@ package body C3GA is
                             return Multivectors.Dual_Plane is
         use Multivectors;
         LC       : constant Multivector := Left_Contraction (P1, Outer_Product (Dir, ni));
-        D_Plane  : Multivectors.Dual_Plane := Multivectors.New_Dual_Plane;
+        D_Plane  : Multivectors.Dual_Plane;
     begin
         Multivectors.Update (D_Plane, Get_Blade_List (LC));
         return D_Plane;
@@ -1011,10 +1011,11 @@ package body C3GA is
     function Set_Line (P1, P2 : Multivectors.Normalized_Point)
                       return  Multivectors.Line is
         use Multivectors;
-        MV_X : constant Multivector :=
-                 Outer_Product (P1, Outer_Product (P2, ni));
+        OP   : constant Multivector :=
+               Outer_Product (P1, Outer_Product (P2, ni));
+        MV_X : Multivector := Unit_R (OP, Metric.C3_Metric);
     begin
-        return Unit_R (MV_X, Metric.C3_Metric);
+        return To_Line (MV_X);
     end Set_Line;
 
     --  ------------------------------------------------------------------------
@@ -1027,7 +1028,7 @@ package body C3GA is
     --        use GA_Maths.Complex_Types;
         use Multivectors;
         use Blade;
-        NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
+        NP  : Multivectors.Normalized_Point;
         --        NI  : constant Complex := (0.0, 1.0);
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
@@ -1046,7 +1047,7 @@ package body C3GA is
         use GL.Types;
         use Blade;
         use Multivectors;
-        NP  : Multivectors.Normalized_Point := Multivectors.New_Normalized_Point;
+        NP  : Multivectors.Normalized_Point;
     begin
         --  thePoint.Origin of a Normalized_Point is a constant 1.0
         Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
@@ -1065,7 +1066,7 @@ package body C3GA is
         use GL.Types;
         use Blade;
         use Multivectors;
-        NP : Normalized_Point := Multivectors.New_Normalized_Point;
+        NP : Normalized_Point;
     begin
         Add_Blade (NP, Blade.New_Basis_Blade (C3_no, 1.0));
         Add_Blade (NP, Blade.New_Basis_Blade (C3_e1, Point (1)));

@@ -102,7 +102,7 @@ package body C3GA_Utilities is
       BV_I_Phi : Bivector;
       DL_1     : Dual_Line;
       DL_2     : Dual_Line;
-      I_R2     : Dual_Line;
+      I_R2     : Rotor;
       Log_V    : Dual_Line;
    begin
       --  isolate the rotation and translation parts
@@ -115,8 +115,9 @@ package body C3GA_Utilities is
       Rot := To_Rotor (-Left_Contraction
                        (C3GA.no, (Geometric_Product (V, C3GA.ni, C3_Metric))));
       GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Rot", Rot);
+      Rot_I := Inverse_Rotor (Rot);
       Trans := -2.0 * Geometric_Product
-        (Left_Contraction (C3GA.no, V), Inverse (Rot), C3_Metric);
+        (Left_Contraction (C3GA.no, V), Rot_I, C3_Metric);
       --  get the bivector 2-blade part of R
       BV := New_Bivector (E3GA.e1_e2 (V), E3GA.e2_e3 (V), E3GA.e3_e1 (V));
       --  'reverse norm' of the bivector part of R
@@ -130,11 +131,12 @@ package body C3GA_Utilities is
          GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor BV_I_Phi", BV_I_Phi);
          --  Rotation plane:
          Rot_I := Multivectors.Unit_E (BV_I_Phi);
-         DL_1 := Geometric_Product (Inverse (Rot_I), C3GA.ni, C3_Metric);
+         DL_1 := Geometric_Product (Inverse_Rotor (Rot_I), C3GA.ni, C3_Metric);
          DL_1 := Geometric_Product (Outer_Product (Trans, Rot_I), DL_1, C3_Metric);
          DL_2 := Left_Contraction (Trans, BV_I_Phi, C3_Metric);
          DL_2 := Geometric_Product (DL_2, C3GA.ni, C3_Metric);
-         I_R2 := Inverse (1.0 - Multivectors.Geometric_Product (Rot, Rot, C3_Metric));
+         I_R2 := Inverse_Rotor
+              (1.0 - Multivectors.Geometric_Product (Rot, Rot, C3_Metric));
          DL_2 := Geometric_Product (I_R2, DL_2, C3_Metric);
          Log_V := 0.5 * (DL_1 - DL_2 - BV_I_Phi);
       else  --  BV_Norm <= epsilon
