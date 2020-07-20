@@ -113,6 +113,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
       Phi                 : constant Float := 0.5 * GA_Maths.Pi;
       OP                  : Multivector;
+      Exp_MV              : Multivector;
       R_Versor            : TR_Versor := New_TR_Versor;
       Rotated_Circle      : Circle;
       R_R_Circle          : Circle;
@@ -222,7 +223,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                                            Dual (aLine, C3_Metric));
          GA_Utilities.Print_Multivector_String ("Main_Loop.Display dual line.",
                   Dual (aLine, C3_Metric), Blade_Types.Basis_Names_C3GA);
-         R_Versor := TR_Versor (Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric));
+         Exp_MV := Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric);
+         LR := To_Dual_Line (Exp_MV);
+         R_Versor := To_TRversor (LR);
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display R_Versor", R_Versor, Blade_Types.Basis_Names_C3GA);
 

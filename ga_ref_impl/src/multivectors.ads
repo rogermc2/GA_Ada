@@ -62,6 +62,8 @@ package Multivectors is
    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
    function Exp (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
+--     function Exp_Dual_Line (DL : Dual_Line; Met : Metric.Metric_Record)
+--                             return Dual_Line;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : M_Vector) return Multivector;
    function General_Inverse (MV : Multivector) return Multivector;
@@ -110,10 +112,6 @@ package Multivectors is
    function Negate (MV : Multivector) return Multivector;
    function New_Bivector (V1, V2 : M_Vector) return Bivector;
    function New_Bivector (e1e2, e2e3, e3e1 : Float) return Bivector;
---     function New_Circle return Circle;
---     function New_Dual_Line return Dual_Line;
---     function New_Dual_Plane return Dual_Plane;
---     function New_MV_Line return Line;
    --  New_Multivector returns a multivector with a scalar blade only
    function New_Multivector (Scalar_Weight : Float) return Multivector;
    function New_Multivector (aBlade : Blade.Basis_Blade) return Multivector;
@@ -126,7 +124,6 @@ package Multivectors is
    function New_Rotor (Scalar_Weight, e1, e2, e3 : Float) return Rotor;
    function New_Scalar  (Scalar_Weight : Float := 0.0) return Scalar;
    function New_TR_Versor (Scalar_Weight : Float := 0.0) return TR_Versor;
---     function New_Vector return M_Vector;
    function New_Vector (e1, e2 : Float) return M_Vector;
    function New_Vector (e1, e2, e3 : Float) return M_Vector;
    function Norm_E (MV : Multivector) return Float;
@@ -150,9 +147,11 @@ package Multivectors is
    function Top_Grade_Index (MV : Multivector) return Integer;
    function To_Bivector (R : Rotor) return Bivector;
    function To_Circle (MV : in out Multivector) return Circle;
+   function To_Dual_Line (MV : in out Multivector) return Dual_Line;
    function To_Dual_Plane (MV : in out Multivector) return Dual_Plane;
    function To_Line (MV : in out Multivector) return Line;
    function To_Rotor (MV : Multivector) return Rotor;
+   function To_TRversor (MV : Multivector) return TR_Versor;
    function To_Vector (MV : Multivector) return M_Vector;
    function Unit_E (MV : Multivector) return Multivector;
    function Unit_R (MV : Multivector) return Multivector;

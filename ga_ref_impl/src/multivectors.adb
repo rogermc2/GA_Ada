@@ -541,6 +541,25 @@ package body Multivectors is
     end Exp;
 
     --  -------------------------------------------------------------------------
+
+--      function Exp_Dual_Line (DL : Dual_Line; Met : Metric.Metric_Record)
+--                             return Dual_Line is
+--
+--          use Blade;
+--          use Blade_List_Package;
+--          Blades     : constant Blade_List := DL.Blades;
+--          Curs       : Cursor := Blades.First;
+--          MV        : Multivector;
+--      begin
+--          while Has_Element (Curs) loop
+--              Add_Blade (MV, Element (Curs));
+--              Next (Curs);
+--          end loop;
+--          MV := Exp (MV, Met);
+--          return To_Dual_Line (MV);
+--      end Exp_Dual_Line;
+
+    --  -------------------------------------------------------------------------
     --  Possibly imprecise
     function Exp_Series (MV    : Multivector;  Met : Metric.Metric_Record;
                          Order : Integer) return Multivector is
@@ -1364,42 +1383,6 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
-    --      function New_Circle return Circle is
-    --          C : Circle;
-    --      begin
-    --          C.Type_Of_MV := MV_Circle;
-    --          return C;
-    --      end New_Circle;
-
-    --  -------------------------------------------------------------------------
-
-    --      function New_Dual_Line return Dual_Line is
-    --          DL : Dual_Plane;
-    --      begin
-    --          DL.Type_Of_MV := MV_Dual_Line;
-    --          return DL;
-    --      end New_Dual_Line;
-
-    --  -------------------------------------------------------------------------
-
-    --      function New_Dual_Plane return Dual_Plane is
-    --          DP : Dual_Plane;
-    --      begin
-    --          DP.Type_Of_MV := MV_Dual_Plane;
-    --          return DP;
-    --      end New_Dual_Plane;
-
-    --  -------------------------------------------------------------------------
-
-    --      function New_MV_Line return Line is
-    --          L : Line;
-    --      begin
-    --          L.Type_Of_MV := MV_Line;
-    --          return L;
-    --      end New_MV_Line;
-
-    --  -------------------------------------------------------------------------
-
     function New_Multivector (Scalar_Weight : Float) return Multivector is
         MV : Multivector;
     begin
@@ -1925,6 +1908,16 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function To_Dual_Line (MV : in out Multivector) return Dual_Line is
+        DL : Dual_Line;
+    begin
+        DL.Blades := MV.Blades;
+        DL.Sorted := MV.Sorted;
+        return DL;
+    end To_Dual_Line;
+
+    --  -------------------------------------------------------------------------
+
     function To_Dual_Plane (MV : in out Multivector) return Dual_Plane is
         theDual_Plane : Dual_Plane;
     begin
@@ -1961,6 +1954,21 @@ package body Multivectors is
 
     --  -------------------------------------------------------------------------
 
+    function To_TRversor (MV : Multivector) return TR_Versor is
+        use Blade;
+        use Blade_List_Package;
+        Blades : constant Blade_List := MV.Blades;
+        Curs   : Cursor := Blades.First;
+        TRV    : TR_Versor;
+    begin
+        while Has_Element (Curs) loop
+            Add_Blade (TRV, Element (Curs));
+            Next (Curs);
+        end loop;
+        return TRV;
+    end To_TRversor;
+
+    --  -------------------------------------------------------------------------
     function To_Vector (MV : Multivector) return M_Vector is
         use Blade;
         use Blade_List_Package;
