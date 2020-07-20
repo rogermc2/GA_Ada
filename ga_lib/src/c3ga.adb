@@ -6,6 +6,7 @@ with Maths;
 
 with Blade;
 with Blade_Types; use Blade_Types;
+--  with GA_Utilities;
 with Metric;
 
 package body C3GA is
@@ -1010,7 +1011,8 @@ package body C3GA is
     function Set_Line (P1, P2 : Multivectors.Normalized_Point)
                       return  Multivectors.Line is
         use Multivectors;
-        MV_X : constant Multivector := Outer_Product (P1, Outer_Product (P2, ni));
+        MV_X : constant Multivector :=
+                 Outer_Product (P1, Outer_Product (P2, ni));
     begin
         return Unit_R (MV_X, Metric.C3_Metric);
     end Set_Line;

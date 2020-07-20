@@ -186,6 +186,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          aLine := C3GA.Set_Line (Points.L1, Points.L2);
          --              aLine := C3GA.Set_Line (Points.L0L, Points.L0R);
 
+--           GA_Utilities.Print_Multivector_String ("Main_Loop.Display aLine",
+--                                                  aLine, Blade_Types.Basis_Names_C3GA);
          aCircle := Outer_Product (Points.C1, Outer_Product (Points.C2, Points.C3));
 
          --  N_E3_Vec is a direction vector
@@ -214,14 +216,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                           Multivector_Utilities.Reflect (aCircle, aDual_Plane));
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
 --                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
-
---           GA_Utilities.Print_Multivector ("Main_Loop.Display aline.", aLine);
---           GA_Utilities.Print_Multivector_String ("Main_Loop.Display L1.",
---                                            Points.L1, Blade_Types.Basis_Names_C3GA);
---           GA_Utilities.Print_Multivector_String ("Main_Loop.Display L2.",
---                                            Points.L2, Blade_Types.Basis_Names_C3GA);
-         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aline.",
-                                          aLine, Blade_Types.Basis_Names_C3GA);
 
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
 --                                            Dual (aLine, C3_Metric));
