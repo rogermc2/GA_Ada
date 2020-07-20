@@ -193,10 +193,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          aCircle := To_Circle (OP);
 
          --  N_E3_Vec is a direction vector
-         aDual_Plane :=
-           Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
-         aDual_Plane := Left_Contraction (Points.P1, aDual_Plane);
---           To_Dual_Plane (aDual_Plane);
+         OP := Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
+         OP := Left_Contraction (Points.P1, OP);
+         aDual_Plane := To_Dual_Plane (OP);
 
          Shader_Manager.Set_Ambient_Colour (Red);
          C3GA_Draw.Draw (Render_Graphic_Program, aLine);
