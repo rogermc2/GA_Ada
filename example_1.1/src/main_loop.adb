@@ -19,7 +19,7 @@ with Maths;
 with Utilities;
 
 with Blade_Types;
---  with E3GA;
+with E3GA;
 --  with C3GA;
 --  with C3GA_Utilities;
 --  with GA_Maths;
@@ -88,7 +88,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
       aLine               : Multivectors.Line;
       aCircle             : Circle;
---        aDual_Plane         : Dual_Plane;
+      aDual_Plane         : Dual_Plane;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
       Window_Height       : Glfw.Size;
@@ -110,7 +110,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Direction           : Vector3;
       --          Right               : Vector3;
       --          Up                  : Vector3;
---        N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
+      N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
 --        Phi                 : constant Float := 0.5 * GA_Maths.Pi;
 --        OP                  : Multivector;
 --        Exp_MV              : Multivector;
@@ -196,17 +196,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                   aCircle, Blade_Types.Basis_Names_C3GA);
 
          --  N_E3_Vec is a direction vector
---           OP := Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);
---           OP := Left_Contraction (Points.P1, OP);
---           aDual_Plane := To_Dual_Plane (OP);
+         aDual_Plane := Draw_1_1.New_Dual_Plane (Points.P1, N_E3_Vec);
 
          --  draw reflected line (magenta)
          Put_Line ("Main_Loop.Display drawing reflected line.");
          Shader_Manager.Set_Ambient_Colour (Magenta);
---           C3GA_Draw.Draw (Render_Graphic_Program,
---                           Multivector_Utilities.Reflect (aLine, aDual_Plane));
+         Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
 
---          Utilities.Print_Matrix ("Main_Loop.Display Model_View_Matrix", Model_View_Matrix);
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
 --           C3GA_Draw.Draw (Render_Graphic_Program,
