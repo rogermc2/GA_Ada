@@ -18,12 +18,12 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
---  with Blade_Types;
+with Blade_Types;
 --  with E3GA;
 --  with C3GA;
 --  with C3GA_Utilities;
 --  with GA_Maths;
---  with GA_Utilities;
+with GA_Utilities;
 with Geosphere;
 with GL_Util;
 --  with Metric;
@@ -192,6 +192,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Green);
          aCircle := Draw_1_1.Draw_Circle (Render_Graphic_Program,
                                           Points.C1, Points.C2, Points.C3);
+         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aCircle",
+                  aCircle, Blade_Types.Basis_Names_C3GA);
 
          --  N_E3_Vec is a direction vector
 --           OP := Outer_Product (E3GA.To_MV_Vector (N_E3_Vec), C3GA.ni);

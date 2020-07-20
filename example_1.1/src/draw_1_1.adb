@@ -1,6 +1,8 @@
 
+--  with Blade_Types;
 with C3GA;
 with C3GA_Draw;
+--  with GA_Utilities;
 
 package body Draw_1_1 is
 
@@ -20,6 +22,7 @@ package body Draw_1_1 is
       aCircle : Circle;
    begin
       OP := Outer_Product (C1, Outer_Product (C2, C3));
+      Simplify (OP);
       aCircle := To_Circle (OP);
       C3GA_Draw.Draw (Render_Program, aCircle);
       return aCircle;

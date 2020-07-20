@@ -1586,6 +1586,7 @@ package body Multivectors is
             Next (Cursor_1);
         end loop;
 
+        Simplify (OP);
         return OP;
     end Outer_Product;
 
