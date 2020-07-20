@@ -1593,7 +1593,7 @@ package body Multivectors is
    begin
       if MV1.Type_Of_MV = MV_Vector and then MV1.Type_Of_MV = MV_Vector then
          declare
-            OP : Bivector;
+            OP : Bivector := MV1;
          begin
             OP.Blades := Product (MV1.Blades, MV2.Blades);
             Simplify (OP);
@@ -1601,7 +1601,7 @@ package body Multivectors is
          end;
       else
          declare
-            OP : Multivector;
+            OP : Multivector := MV1;
          begin
             OP.Blades := Product (MV1.Blades, MV2.Blades);
             Simplify (OP);
