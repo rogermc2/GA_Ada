@@ -70,6 +70,18 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Blade_String (Name : String; B : Blade.Basis_Blade;
+                                 MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Ada.Strings.Unbounded;
+      use Multivectors;
+      MV : constant Multivector := New_Multivector (B);
+   begin
+      Put_Line (Name & ":");
+      Put_Line (To_String (Multivector_String (MV, MV_Names)));
+   end Print_Blade_String;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector) is
    begin
         Utilities.Print_Vector (Name, aVector);
@@ -277,6 +289,7 @@ package body GA_Utilities is
    end Print_Multivector_String;
 
    --  ------------------------------------------------------------------------
+
    procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector) is
       use Blade;
       use Multivectors;

@@ -22,7 +22,7 @@ with Blade_Types;
 with E3GA;
 --  with C3GA;
 --  with C3GA_Draw;
---  with C3GA_Utilities;
+with C3GA_Utilities;
 --  with GA_Maths;
 with GA_Utilities;
 with Geosphere;
@@ -117,7 +117,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R_Versor            : TR_Versor;
 --        Rotated_Circle      : Circle;
 --        R_R_Circle          : Circle;
---        LR                  : Dual_Line;
+      LR                  : Dual_Line;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -220,13 +220,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
            (Render_Graphic_Program, aCircle, R_Versor);
 
---           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
+         Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          Draw_1_1.Draw_Reflected_Circle
            (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
---           LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
+         LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;
 
    exception
