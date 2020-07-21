@@ -213,8 +213,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
          Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
-         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
-         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+         Shader_Manager.Set_Model_View_Matrix
+              (Translation_Matrix * Model_View_Matrix);
          Draw_1_1.Draw_Rotated_Circle (Render_Graphic_Program, aCircle, R_Versor);
 
 --           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
