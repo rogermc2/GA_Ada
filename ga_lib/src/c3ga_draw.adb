@@ -273,7 +273,9 @@ package body C3GA_Draw is
             GA_Draw.Draw_Trivector
               (Render_Program, Point_Pos, P_Scale, Palet_Type,
                GA_Draw.Draw_TV_Sphere);
-         when others => null;
+         when others =>
+            Put_Line ("C3GA_Draw.Draw_Round, unprocessed Blade_Subclass: " &
+                     Blade_Subclass_Type'Image (Analysis.M_Type.Blade_Subclass));
       end case;
 
     exception

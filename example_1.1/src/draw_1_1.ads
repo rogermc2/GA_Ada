@@ -10,6 +10,8 @@ package Draw_1_1 is
                          C1, C2, C3     : Normalized_Point) return Circle;
    function Draw_Line (Render_Program : GL.Objects.Programs.Program;
                        P1, P2         : Normalized_Point) return Line;
+   procedure Draw_Reflected_Circle (Render_Program : GL.Objects.Programs.Program;
+                                     C: Circle; DP : Dual_Plane);
    procedure Draw_Reflected_Line (Render_Program : GL.Objects.Programs.Program;
                                   L: Line; DP : Dual_Plane);
    function New_Dual_Plane (P1 : Normalized_Point; Normal : E3GA.E3_Vector)

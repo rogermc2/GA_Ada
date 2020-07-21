@@ -14,7 +14,6 @@ package body Draw_1_1 is
         aCircle : Circle;
     begin
         OP := Outer_Product (C1, Outer_Product (C2, C3));
-        Simplify (OP);
         aCircle := To_Circle (OP);
         C3GA_Draw.Draw (Render_Program, aCircle);
         return aCircle;
@@ -29,6 +28,14 @@ package body Draw_1_1 is
         C3GA_Draw.Draw (Render_Program, aLine);
         return aLine;
     end Draw_Line;
+
+    --  ---------------------------------------------------------------------
+
+    procedure Draw_Reflected_Circle (Render_Program : GL.Objects.Programs.Program;
+                                     C: Circle; DP : Dual_Plane)  is
+    begin
+        C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (C, DP));
+    end Draw_Reflected_Circle;
 
     --  ---------------------------------------------------------------------
 

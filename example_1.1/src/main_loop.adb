@@ -21,6 +21,7 @@ with Utilities;
 with Blade_Types;
 with E3GA;
 --  with C3GA;
+--  with C3GA_Draw;
 --  with C3GA_Utilities;
 --  with GA_Maths;
 with GA_Utilities;
@@ -205,10 +206,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
---           C3GA_Draw.Draw (Render_Graphic_Program,
---                           Multivector_Utilities.Reflect (aCircle, aDual_Plane));
---           GA_Utilities.Print_Multivector ("Main_Loop.Display  reflected Circle.",
---                                            Multivector_Utilities.Reflect (aCircle, aDual_Plane));
+         Draw_1_1.Draw_Reflected_Circle (Render_Graphic_Program, aCircle, aDual_Plane);
 
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
 --                                            Dual (aLine, C3_Metric));

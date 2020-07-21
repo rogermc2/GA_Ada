@@ -82,6 +82,8 @@ package body Multivector_Analyze_C3GA is
                     Analyze_Tangent (Analysis, MV_X);
                 else
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Round.");
+                    GA_Utilities.Print_Multivector_String
+                      ("MV_X", MV_X, Blade_Types.Basis_Names_C3GA);
                     Analyze_Round (Analysis, MV_X);
                 end if;
             end if;
