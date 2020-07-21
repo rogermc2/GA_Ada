@@ -283,7 +283,7 @@ package body Multivector_Analyze_C3GA is
                   C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e2));
                 theAnalysis.M_Vectors (3) :=
                   C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e3));
-            when others => null;
+            when others =>
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade others.");
         end case;
 
@@ -453,7 +453,10 @@ package body Multivector_Analyze_C3GA is
                   C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e2));
                 theAnalysis.M_Vectors (3) :=
                   C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e3));
-            when others => null;
+            when others =>
+               Put_Line
+                 ("Multivector_Analyze_C3GA.Analyze_Round, unprocessed Grade: " &
+                  Integer'Image (Grade));
             end case;
             --                  Print_Analysis ("Multivector_Analyze_C3GA.Analyze_Round,",
             --                                  theAnalysis);
