@@ -112,10 +112,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
---        Phi                 : constant Float := 0.5 * GA_Maths.Pi;
 --        OP                  : Multivector;
---        Exp_MV              : Multivector;
---        R_Versor            : TR_Versor := New_TR_Versor;
+      R_Versor            : TR_Versor;
 --        Rotated_Circle      : Circle;
 --        R_R_Circle          : Circle;
 --        LR                  : Dual_Line;
@@ -209,22 +207,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          Draw_1_1.Draw_Reflected_Circle (Render_Graphic_Program, aCircle, aDual_Plane);
 
---           GA_Utilities.Print_Multivector ("Main_Loop.Display dual line.",
---                                            Dual (aLine, C3_Metric));
---           GA_Utilities.Print_Multivector_String ("Main_Loop.Display dual line.",
---                    Dual (aLine, C3_Metric), Blade_Types.Basis_Names_C3GA);
---           Exp_MV := Exp (0.5 * Phi * Dual (aLine, C3_Metric), C3_Metric);
---           LR := To_Dual_Line (Exp_MV);
---           R_Versor := To_TRversor (LR);
---           GA_Utilities.Print_Multivector_String
---                ("Main_Loop.Display R_Versor", R_Versor, Blade_Types.Basis_Names_C3GA);
+         R_Versor := To_TRversor (aLine);
 
+         Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
---           Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
---           Rotated_Circle := Multivector_Utilities.Rotate (aCircle, R_Versor);
---           Put_Line ("Main_Loop.Display drawing rotated circle.");
---           C3GA_Draw.Draw (Render_Graphic_Program, Rotated_Circle);
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
+         Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
+         Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+         Draw_1_1.Draw_Rotated_Circle (Render_Graphic_Program, aCircle, R_Versor);
 
 --           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)

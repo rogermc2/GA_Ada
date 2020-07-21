@@ -1,6 +1,8 @@
 
 with C3GA;
 with C3GA_Draw;
+with GA_Maths;
+with Metric;
 with Multivector_Utilities;
 
 package body Draw_1_1 is
@@ -39,13 +41,22 @@ package body Draw_1_1 is
     --  ---------------------------------------------------------------------
 
     procedure Draw_Reflected_Line (Render_Program : GL.Objects.Programs.Program;
-                                  L: Line; DP : Dual_Plane)  is
+                                   L: Line; DP : Dual_Plane)  is
     begin
         C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (L, DP));
     end Draw_Reflected_Line;
 
     --  ---------------------------------------------------------------------
 
+    procedure Draw_Rotated_Circle (Render_Program : GL.Objects.Programs.Program;
+                                   C: Circle;  RV : TR_Versor) is
+        MV : Multivector := Multivector_Utilities.Rotate (Multivector (C), RV);
+        RC : constant Circle := To_Circle (MV);
+    begin
+        C3GA_Draw.Draw (Render_Program, RC);
+    end Draw_Rotated_Circle;
+
+    --  --------------------------------------------------------------------
     function New_Dual_Plane (P1 : Normalized_Point; Normal : E3GA.E3_Vector)
                              return Dual_Plane is
         OP : Multivector := Outer_Product (E3GA.To_MV_Vector (Normal), C3GA.ni);
@@ -56,4 +67,15 @@ package body Draw_1_1 is
 
     --  ---------------------------------------------------------------------
 
+    function New_TR_Versor (L1 : Line) return TR_Versor is
+       use Metric;
+       Phi    : constant Float := 0.5 * GA_Maths.Pi;
+       Exp_MV : Multivector :=
+                   Exp (0.5 * Phi * Dual (L1, C3_Metric), C3_Metric);
+       LR     :  constant Dual_Line := To_Dual_Line (Exp_MV);
+    begin
+        return To_TRversor (LR);
+    end New_TR_Versor;
+
+    --  ---------------------------------------------------------------------
 end Draw_1_1;
