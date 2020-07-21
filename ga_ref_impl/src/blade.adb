@@ -530,7 +530,7 @@ package body Blade is
                     New_Blade (Bitmap (Current_Blade),
                                Weight (Current_Blade) + Weight (Blade_B));
                else
-                  if Abs (Weight (Current_Blade)) > 10.0**(-7) then
+                  if Abs (Weight (Current_Blade)) > 10.0**(-6) then
                      Result.Append (Current_Blade);
                   end if;
                   Current_Blade := Blade_B;
@@ -538,7 +538,7 @@ package body Blade is
                Next (Blade_Cursor);
             end loop;
 
-            if Abs (Weight (Current_Blade)) > 10.0**(-7) then
+            if Abs (Weight (Current_Blade)) > 10.0**(-6) then
                Result.Append (Current_Blade);
             end if;
             Blades := Result;

@@ -1,7 +1,6 @@
 
 with C3GA;
 with C3GA_Draw;
---  with GA_Utilities;
 with Multivector_Utilities;
 
 package body Draw_1_1 is

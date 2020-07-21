@@ -38,10 +38,6 @@ package body Multivector_Analyze_C3GA is
 
         procedure Classify is
             use Multivectors;
-            --  C3GA.ni weight = 1.0
-            --  OP_NiX_Val : constant Float := Norm_E (Outer_Product (C3GA.ni, MV_X), Met);
-            --  IP_NiX_Val : constant Float := Norm_E (Left_Contraction (C3GA.ni, MV_X), Met);
-            --  Xsq_Val    : constant Float := Norm_Esq (MV_X, Metric.C3_Metric);
             OP_NiX_Val : Float := 0.0;
             IP_NiX_Val : Float := 0.0;
             --           Xsq_Val    : Float := 0.0;
@@ -82,8 +78,6 @@ package body Multivector_Analyze_C3GA is
                     Analyze_Tangent (Analysis, MV_X);
                 else
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Round.");
-                    GA_Utilities.Print_Multivector_String
-                      ("MV_X", MV_X, Blade_Types.Basis_Names_C3GA);
                     Analyze_Round (Analysis, MV_X);
                 end if;
             end if;
