@@ -5,7 +5,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
-with GA_Utilities;
 with SVD;
 
 package body Multivectors is
@@ -1224,6 +1223,26 @@ package body Multivectors is
       end loop;
       return  Largest_Blade;
    end Largest_Basis_Blade;
+
+   --  -------------------------------------------------------------------------
+
+   function Largest_Coordinate (MV : Multivector) return Float is
+      use Blade;
+      use Blade_List_Package;
+      theMV    : Multivector := MV;
+      Blades   : constant Blade_List := theMV.Blades;
+      Cursor_B : Cursor := Blades.First;
+      aBlade   : Blade.Basis_Blade;
+      Largest  : Float := 0.0;
+   begin
+      Simplify (theMV);
+      while Has_Element (Cursor_B) loop
+         aBlade := Element (Cursor_B);
+         Largest := GA_Maths.Maximum (Largest, Abs (Blade.Weight (aBlade)));
+         Next (Cursor_B);
+      end loop;
+      return Largest;
+   end Largest_Coordinate;
 
    --  -------------------------------------------------------------------------
 

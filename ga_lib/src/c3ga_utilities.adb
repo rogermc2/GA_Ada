@@ -20,38 +20,55 @@ package body C3GA_Utilities is
 
    function exp (MV_X : Multivector; Order : Integer := 9) return Multivector is
      use GA_Maths.Float_Functions;
---        V          :  constant Multivectors.M_Vector :=
---                       Inner_Product (MV, MV, Blade.Left_Contraction);
-      X          : constant float := Scalar_Part (MV_X);
-      X2         : constant Multivector := Geometric_Product (MV_X, MV_X);
-      S_X2       : constant float := Scalar_Part (X2);
-      A          : Float;
-      Result     : Multivector;
+      X      : constant float := Scalar_Part (MV_X);
+--        X2         : constant Multivector := Geometric_Product (MV_X, MV_X);
+      Max       : Integer := Integer (Largest_Coordinate (MV_X));
+      Scale     : Integer := 1;
+      Scaled_MV : Multivector;
+      Tmp       : Multivector;
+      Result    : Multivector;
    begin
 
---        if Norm_Esq (X2) - S_X2 * S_X2 < 10.0 ** (-6) then
-      if Is_Scalar (X2) then
-         if S_X2 < 0.0 then
-            A := Sqrt (-S_X2);
-            Result := New_Scalar (Cos (A) + Sin (A) * X / A);
-         elsif S_X2 > 0.0 then
-            A := Sqrt (S_X2);
-            Result := New_Scalar (Cosh (A) + Sinh (A) * X / A);
-         else  --  S_X2 = 0.0
-            Result := New_Scalar (1.0 + X);
-         end if;
-      else
-         If Order = 0 then
+      if Is_Scalar (MV_X) then
+            Result := New_Scalar (Exp (X));
+      elsif Order = 0 then
             Result := New_Scalar (1.0);
+      else
+         --  scale by power of 2 so that its norm is < 1
+         if Max > 1 then
+            Scale := 2 * Scale;
          end if;
+         while Max > 0 loop
+            Max := Max / 2;
+            Scale := 2 * Scale;
+         end loop;
+         Scaled_MV := (1.0 / Float (Scale)) * MV_X;
+         --  taylor approximation
+         Result := New_Multivector (1.0);
+         Tmp := New_Multivector (1.0);
+         for count in 1 .. Order loop
+            Tmp := (1.0 / Float (count)) * Geometric_Product (Tmp, Scaled_MV);
+            Result := Result + Tmp;
+         end loop;
+         --  undo scaling
+
+         while Scale > 1 loop
+            Result := Geometric_Product (Result, Result);
+            Scale := Scale / 2;
+         end loop;
       end if;
 
       return Result;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in C3GA_Utilities.exp.");
+         raise;
    end exp;
 
    --  ----------------------------------------------------------------------------
 
-   function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
+   function exp_BV (BV : Multivectors.Bivector) return Multivectors.Rotor is
       V          :  constant Multivectors.M_Vector :=
                      Inner_Product (BV, BV, Blade.Left_Contraction);
       X2         : float := C3GA.e1_e2 (V);
@@ -72,7 +89,12 @@ package body C3GA_Utilities is
          Result := New_Rotor (0.0, Cos_HA + Sin_HA * BV);
       end if;
       return Result;
-   end exp;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in C3GA_Utilities.exp_BV.");
+         raise;
+   end exp_BV;
 
    --  ----------------------------------------------------------------------------
 
