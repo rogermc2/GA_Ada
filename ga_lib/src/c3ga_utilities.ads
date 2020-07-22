@@ -4,6 +4,7 @@ with Multivectors; use Multivectors;
 
 package C3GA_Utilities is
 
+   function exp (MV_X : Multivector; Order : Integer := 9) return Multivector;
    --  special exp() for 3D bivectors
    function exp (BV : Bivector) return Rotor;
    --  special log() for 3D rotors

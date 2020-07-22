@@ -18,6 +18,39 @@ package body C3GA_Utilities is
 
    --  -------------------------------------------------------------------------
 
+   function exp (MV_X : Multivector; Order : Integer := 9) return Multivector is
+     use GA_Maths.Float_Functions;
+--        V          :  constant Multivectors.M_Vector :=
+--                       Inner_Product (MV, MV, Blade.Left_Contraction);
+      X          : constant float := Scalar_Part (MV_X);
+      X2         : constant Multivector := Geometric_Product (MV_X, MV_X);
+      S_X2       : constant float := Scalar_Part (X2);
+      A          : Float;
+      Result     : Multivector;
+   begin
+
+--        if Norm_Esq (X2) - S_X2 * S_X2 < 10.0 ** (-6) then
+      if Is_Scalar (X2) then
+         if S_X2 < 0.0 then
+            A := Sqrt (-S_X2);
+            Result := New_Scalar (Cos (A) + Sin (A) * X / A);
+         elsif S_X2 > 0.0 then
+            A := Sqrt (S_X2);
+            Result := New_Scalar (Cosh (A) + Sinh (A) * X / A);
+         else  --  S_X2 = 0.0
+            Result := New_Scalar (1.0 + X);
+         end if;
+      else
+         If Order = 0 then
+            Result := New_Scalar (1.0);
+         end if;
+      end if;
+
+      return Result;
+   end exp;
+
+   --  ----------------------------------------------------------------------------
+
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
       V          :  constant Multivectors.M_Vector :=
                      Inner_Product (BV, BV, Blade.Left_Contraction);
