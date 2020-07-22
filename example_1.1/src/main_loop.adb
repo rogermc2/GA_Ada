@@ -23,11 +23,11 @@ with E3GA;
 --  with C3GA;
 --  with C3GA_Draw;
 with C3GA_Utilities;
---  with GA_Maths;
+with GA_Maths;
 with GA_Utilities;
 with Geosphere;
 with GL_Util;
---  with Metric;
+with Metric;
 with Multivectors;
 --  with Multivector_Utilities;
 with Palet;
@@ -89,7 +89,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
       aLine               : Multivectors.Line;
       aCircle             : Circle;
-      Circle_Rotated      : Circle;
+--        Circle_Rotated      : Circle;
       aDual_Plane         : Dual_Plane;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
@@ -113,11 +113,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          Right               : Vector3;
       --          Up                  : Vector3;
       N_E3_Vec            : constant E3GA.E3_Vector := (0.0, 1.0, 0.0);
---        OP                  : Multivector;
+      Phi                 : constant Float := 0.5 * GA_Maths.Pi;
       R_Versor            : TR_Versor;
 --        Rotated_Circle      : Circle;
 --        R_R_Circle          : Circle;
-      LR                  : Dual_Line;
+      DL                  : Dual_Line;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -209,24 +209,30 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Draw_1_1.Draw_Reflected_Circle
            (Render_Graphic_Program, aCircle, aDual_Plane);
 
-         R_Versor := To_TRversor (aLine);
+         --  compute rotation versor
+         DL := 0.5 * Phi * Dual (aLine, Metric.C3_Metric);
+         R_Versor := To_TRversor (DL);
+         R_Versor := C3GA_Utilities.Exp (DL);
+         GA_Utilities.Print_Multivector_String
+              ("Main_Loop.Display R_Versor",
+                R_Versor, Blade_Types.Basis_Names_C3GA);
 
-         Put_Line ("Main_Loop.Display drawing rotated circle.");
-         --  draw rotated circle
-         Shader_Manager.Set_Ambient_Colour (Green);
-         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
-         Shader_Manager.Set_Model_View_Matrix
-              (Translation_Matrix * Model_View_Matrix);
-         Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
-           (Render_Graphic_Program, aCircle, R_Versor);
+--           Put_Line ("Main_Loop.Display drawing rotated circle.");
+--           --  draw rotated circle
+--           Shader_Manager.Set_Ambient_Colour (Green);
+--           Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
+--           Shader_Manager.Set_Model_View_Matrix
+--                (Translation_Matrix * Model_View_Matrix);
+--           Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+--             (Render_Graphic_Program, aCircle, R_Versor);
+--
+--           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
+--           --  draw reflected, rotated circle (blue)
+--           Shader_Manager.Set_Ambient_Colour (Blue);
+--           Draw_1_1.Draw_Reflected_Circle
+--             (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
-         Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
-         --  draw reflected, rotated circle (blue)
-         Shader_Manager.Set_Ambient_Colour (Blue);
-         Draw_1_1.Draw_Reflected_Circle
-           (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
-
-         LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
+--           LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;
 
    exception

@@ -873,17 +873,17 @@ package body Multivectors is
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
          Curs_2 := Blades_2.First;
-         GA_Utilities.Print_Blade_String
-           ("Multivectors.Geometric_Product with Metric, Blade_1",
-            Blade_1, Blade_Types.Basis_Names_C3GA);
+--           GA_Utilities.Print_Blade_String
+--             ("Multivectors.Geometric_Product with Metric, Blade_1",
+--              Blade_1, Blade_Types.Basis_Names_C3GA);
          while Has_Element (Curs_2) loop
             Blade_2 := Element (Curs_2);
-            GA_Utilities.Print_Blade_String
-              ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2,
-               Blade_Types.Basis_Names_C3GA);
+--              GA_Utilities.Print_Blade_String
+--                ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2,
+--                 Blade_Types.Basis_Names_C3GA);
             Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
-            GA_Utilities.Print_Blade_List
-              ("Multivectors.Geometric_Product with Metric, Blades_GP", Blades_GP);
+--              GA_Utilities.Print_Blade_List
+--                ("Multivectors.Geometric_Product with Metric, Blades_GP", Blades_GP);
             Add_Blades (GP.Blades, Blades_GP);
             Next (Curs_2);
          end loop;
