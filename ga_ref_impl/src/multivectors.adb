@@ -1004,6 +1004,7 @@ package body Multivectors is
    end Grade_Inversion;
 
    --  -------------------------------------------------------------------------
+
    --  Grade_Use returns a bitmap of grades that are in use in MV
    --  Bit 1: Scalar, Bit 2 etc non-scalar grades
    function Grade_Use (MV : Multivector) return GA_Maths.Grade_Usage is
@@ -1941,6 +1942,15 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
+   function To_Normalized_Point (MV :  Multivector) return Normalized_Point is
+      thePoint : Normalized_Point;
+   begin
+      thePoint.Blades := MV.Blades;
+      thePoint.Sorted := MV.Sorted;
+      return thePoint;
+   end To_Normalized_Point;
+
+   --  -------------------------------------------------------------------------
    function To_Rotor (MV : Multivector) return Rotor is
       use Blade;
       use Blade_List_Package;

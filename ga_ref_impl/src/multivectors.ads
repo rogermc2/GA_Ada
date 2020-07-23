@@ -152,6 +152,7 @@ package Multivectors is
    function To_Dual_Line (MV : Multivector) return Dual_Line;
    function To_Dual_Plane (MV : Multivector) return Dual_Plane;
    function To_Line (MV :  Multivector) return Line;
+   function To_Normalized_Point (MV :  Multivector) return Normalized_Point;
    function To_Rotor (MV : Multivector) return Rotor;
    function To_TRversor (MV : Multivector) return TR_Versor;
    function To_Vector (MV : Multivector) return M_Vector;
