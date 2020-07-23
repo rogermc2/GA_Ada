@@ -88,7 +88,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
       aLine               : Multivectors.Line;
       aCircle             : Circle;
---        Circle_Rotated      : Circle;
+      Circle_Rotated      : Circle;
       aDual_Plane         : Dual_Plane;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
@@ -183,25 +183,31 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
       if not Pick_Manager.Pick_Active then
 --           GA_Utilities.Print_Multivector ("Main_Loop.Display Points.L1.", Points.L1);
+
+         New_Line;
          Put_Line ("Main_Loop.Display drawing aLine.");
          Shader_Manager.Set_Ambient_Colour (Red);
          aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
                                       Points.L1, Points.L2);
+         New_Line;
          Put_Line ("Main_Loop.Display drawing aCircle.");
          Shader_Manager.Set_Ambient_Colour (Green);
          aCircle := Draw_1_1.Draw_Circle (Render_Graphic_Program,
                                           Points.C1, Points.C2, Points.C3);
-         GA_Utilities.Print_Multivector_String ("Main_Loop.Display aCircle",
-                  aCircle, Blade_Types.Basis_Names_C3GA);
+         --  aCircle checked OK against C++ version
+--           GA_Utilities.Print_Multivector_String ("Main_Loop.Display aCircle",
+--                    aCircle, Blade_Types.Basis_Names_C3GA);
 
          --  N_E3_Vec is a direction vector
          aDual_Plane := Draw_1_1.New_Dual_Plane (Points.P1, N_E3_Vec);
 
          --  draw reflected line (magenta)
+         New_Line;
          Put_Line ("Main_Loop.Display drawing reflected line.");
          Shader_Manager.Set_Ambient_Colour (Magenta);
          Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
 
+         New_Line;
          Put_Line ("Main_Loop.Display drawing reflected circle.");
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
@@ -209,27 +215,28 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            (Render_Graphic_Program, aCircle, aDual_Plane);
 
          --  compute rotation versor
-         DL := 0.5 * Phi * Dual (aLine, Metric.C3_Metric);
-         R_Versor := To_TRversor (DL);
-         R_Versor := Multivectors.Exp (DL, Metric.C3_Metric);
+         DL := 0.5 * Phi * To_Dual_Line (Dual (aLine, Metric.C3_Metric));
+         R_Versor := To_TRversor (Multivectors.Exp (DL, Metric.C3_Metric));
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display R_Versor",
                 R_Versor, Blade_Types.Basis_Names_C3GA);
 
---           Put_Line ("Main_Loop.Display drawing rotated circle.");
---           --  draw rotated circle
---           Shader_Manager.Set_Ambient_Colour (Green);
---           Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
---           Shader_Manager.Set_Model_View_Matrix
---                (Translation_Matrix * Model_View_Matrix);
---           Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
---             (Render_Graphic_Program, aCircle, R_Versor);
---
---           Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
---           --  draw reflected, rotated circle (blue)
---           Shader_Manager.Set_Ambient_Colour (Blue);
---           Draw_1_1.Draw_Reflected_Circle
---             (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+         New_Line;
+         Put_Line ("Main_Loop.Display drawing rotated circle.");
+         --  draw rotated circle
+         Shader_Manager.Set_Ambient_Colour (Green);
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
+         Shader_Manager.Set_Model_View_Matrix
+              (Translation_Matrix * Model_View_Matrix);
+         Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+           (Render_Graphic_Program, aCircle, R_Versor);
+
+         New_Line;
+         Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
+         --  draw reflected, rotated circle (blue)
+         Shader_Manager.Set_Ambient_Colour (Blue);
+         Draw_1_1.Draw_Reflected_Circle
+           (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
 --           LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;

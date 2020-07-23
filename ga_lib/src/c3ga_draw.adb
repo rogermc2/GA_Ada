@@ -7,6 +7,7 @@ with GL.Types;
 with C3GA;
 with GA_Draw;
 with GA_Maths;
+--  with GA_Utilities;
 
 package body C3GA_Draw is
    use GA_Draw;
@@ -182,7 +183,6 @@ package body C3GA_Draw is
                                     V                 => Analysis.M_Vectors);
          when others => null;
       end case;
-      Put_Line ("GA_Draw.Draw_Free finished.");
 
    exception
       when others =>
@@ -237,14 +237,15 @@ package body C3GA_Draw is
       use Multivector_Analyze;
       use C3GA;
       Point_Pos  : constant Vector_E3 := Analysis.Points (1);
+      Radius     : constant Float := Analysis.Scalars (1);
+--        Weight     : Float := Analysis.Scalars (2);
       P_Scale    : Float;
       M_Vectors  : constant E3_Vector_Array := Analysis.M_Vectors;
       M_Vec1     : constant Vector_E3 := To_VectorE3GA (M_Vectors(1));
       M_Vec2     : constant Vector_E3 := To_VectorE3GA (M_Vectors(2));
       M_Vec3     : constant Vector_E3 := To_VectorE3GA (M_Vectors(3));
-      Radius     : constant Float := Analysis.Scalars (1);
    begin
-      Put_Line ("C3GA_Draw.Draw_Round Point scale: " & Float'Image (Radius));
+--        Put_Line ("C3GA_Draw.Draw_Round Point scale: " & Float'Image (Radius));
       case Analysis.M_Type.Blade_Subclass is
          when Point_Pair_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Point Pair.");
@@ -258,6 +259,13 @@ package body C3GA_Draw is
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
+--              GA_Utilities.Print_E3_Vector
+--                    ("C3GA_Draw.Draw_Round Normal, M_Vectors(3)", M_Vectors (3));
+--              GA_Utilities.Print_E3_Vector
+--                    ("C3GA_Draw.Draw_Round Position, Analysis.Points (1)",
+--                      Analysis.Points (1));
+--              Put_Line ("C3GA_Draw.Draw_Round Scale, Analysis.Scalars (1)" &
+--                          Float'Image (Analysis.Scalars (1)));
             GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
                                    Base              => Point_Pos,
                                    Normal            => M_Vec3,

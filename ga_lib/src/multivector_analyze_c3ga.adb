@@ -439,6 +439,17 @@ package body Multivector_Analyze_C3GA is
                       C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (MV_Factors),
                                           MV_Item (MV_Factors, 2)), Met));
                 end if;
+
+                GA_Utilities.Print_E3_Vector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Normal, M_Vectors(3)",
+                    theAnalysis.M_Vectors (3));
+                    GA_Utilities.Print_E3_Vector
+                  ("Multivector_Analyze_C3GA.Analyze_Round Position, Analysis.Points (1)",
+                     theAnalysis.Points (1));
+                    Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Radius, Analysis.Scalars (1)" &
+                       Float'Image (theAnalysis.Scalars (1)));
+                    Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Scale, Analysis.Scalars (2)" &
+                       Float'Image (theAnalysis.Scalars (2)));
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                 theAnalysis.M_Vectors (1) :=
@@ -489,12 +500,9 @@ package body Multivector_Analyze_C3GA is
         theAnalysis.M_Type.Blade_Class := Tangent_Blade;
 
         LC_NI_MV := Left_Contraction (C3GA.ni, MV, Met);
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling General_Inverse");
         LC_NI_MV_Inv := General_Inverse (LC_NI_MV, Met);
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling Geometric_Product 1");
         Location :=
           Geometric_Product (MV, LC_NI_MV_Inv, Met);
-        Put_Line ("Multivector_Analyze_C3GA.Analyze_Tangent calling Geometric_Product 2");
         Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Met));
         Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
         Weight := Norm_E (Left_Contraction (C3GA.no, Attitude, Met));

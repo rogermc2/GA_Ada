@@ -21,6 +21,8 @@ package Multivector_Analyze is
       Dual  : boolean := false;
    end record;
 
+   type Analysis_Type is (Unspecified_Analysis, Free_Analysis, Flat_Analysis,
+                          Round_Analysis, Tangent_Analysis);
    type Blade_Type is (Non_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
                        Tangent_Blade, Free_Blade, Pseudo_Scalar_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Unspecified_Subclass, Point_Subclass,
@@ -73,6 +75,10 @@ package Multivector_Analyze is
    type Point_Array is array (1 .. Max_Points) of E3GA.E3_Vector;
    type Scalar_Array is array (1 .. Max_Scalars) of float;
    type E3_Vector_Array is array (1 .. Max_Vectors) of E3GA.E3_Vector;
+   type Scalar_Data (Analyze : Analysis_Type) is record
+        Radius : Float := 0.0;
+        Weight : Float := 0.0;
+   end record;
 
    type MV_Analysis is record
       M_Flags          : Flag_Type := (Flag_Valid, False);

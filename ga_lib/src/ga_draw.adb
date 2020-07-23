@@ -118,7 +118,8 @@ package body GA_Draw is
 --          RT                    : Multivectors.Rotor;
     begin
         GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
-        GA_Utilities.Print_Float_3D ("GA_Draw.Draw_Bivector Base_Coords", Base_Coords);
+        GA_Utilities.Print_Float_3D ("GA_Draw.Draw_Bivector Position", Base_Coords);
+        Put_Line ("GA_Draw.Draw_Bivector Scale" & Float'Image (Scale));
         --  Set position
         if E2_Norm > 0.0 then
             Translation_Vector :=
