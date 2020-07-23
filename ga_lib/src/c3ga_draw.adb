@@ -33,7 +33,7 @@ package body C3GA_Draw is
       --                       GA_Draw.Draw_Method_Undefined) is
       Analyzed_MV : Multivector_Analyze.MV_Analysis;
    begin
-      Multivector_Analyze.Analyze (Analyzed_MV, MV, C3GA.no);
+      Analyzed_MV := Multivector_Analyze.Analyze (MV, C3GA.no);
       --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
       --          for index in 1 .. Multivector_Analyze.Max_Vectors loop
       --              Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
@@ -123,7 +123,7 @@ package body C3GA_Draw is
                      C3GA.To_VectorE3GA (Analysis.Points (1));
       Direction  : constant C3GA.Vector_E3 :=
                      C3GA.To_VectorE3GA (Analysis.M_Vectors (1));
-      Scale      : Float := Analysis.Scalars (1);
+      Scale      : Float := Analysis.Weight;
    begin
       case Analysis.M_Type.Blade_Subclass is
          when Line_Subclass =>
@@ -163,10 +163,10 @@ package body C3GA_Draw is
             Put_Line ("C3GA_Draw.Draw_Free Vector.");
             GA_Draw.Draw_Vector (Render_Program, Tail,
                                  To_VectorE3GA (Analysis.M_Vectors (1)),
-                                 Analysis.Scalars (1));
+                                 Analysis.Weight);
          when Bivector_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Free Bivector.");
-            BV_Scale := Sqrt (Analysis.Scalars (1) / GA_Maths.Pi);
+            BV_Scale := Sqrt (Analysis.Weight / GA_Maths.Pi);
             GA_Draw.Draw_Bivector (Render_Program    => Render_Program,
                                    Base              => Tail,
                                    Normal            => To_VectorE3GA (Analysis.M_Vectors (3)),
@@ -179,7 +179,7 @@ package body C3GA_Draw is
             Put_Line ("C3GA_Draw.Draw_Free Trivector.");
             GA_Draw.Draw_Trivector (Render_Program    => Render_Program,
                                     Base              => Tail,
-                                    Scale             => Analysis.Scalars (1),
+                                    Scale             => Analysis.Weight,
                                     V                 => Analysis.M_Vectors);
          when others => null;
       end case;
@@ -237,7 +237,7 @@ package body C3GA_Draw is
       use Multivector_Analyze;
       use C3GA;
       Point_Pos  : constant Vector_E3 := Analysis.Points (1);
-      Radius     : constant Float := Analysis.Scalars (1);
+      Radius     : constant Float := Analysis.Radius;
 --        Weight     : Float := Analysis.Scalars (2);
       P_Scale    : Float;
       M_Vectors  : constant E3_Vector_Array := Analysis.M_Vectors;

@@ -22,7 +22,7 @@ package Multivector_Analyze is
    end record;
 
    type Analysis_Type is (Unspecified_Analysis, Free_Analysis, Flat_Analysis,
-                          Round_Analysis, Tangent_Analysis);
+                          Round_Analysis, Scalar_Analysis, Tangent_Analysis);
    type Blade_Type is (Non_Blade, Scalar_Blade, Flat_Blade, Round_Blade,
                        Tangent_Blade, Free_Blade, Pseudo_Scalar_Blade, Zero_Blade);
    type Blade_Subclass_Type is (Unspecified_Subclass, Point_Subclass,
@@ -75,12 +75,8 @@ package Multivector_Analyze is
    type Point_Array is array (1 .. Max_Points) of E3GA.E3_Vector;
    type Scalar_Array is array (1 .. Max_Scalars) of float;
    type E3_Vector_Array is array (1 .. Max_Vectors) of E3GA.E3_Vector;
-   type Scalar_Data (Analyze : Analysis_Type) is record
-        Radius : Float := 0.0;
-        Weight : Float := 0.0;
-   end record;
 
-   type MV_Analysis is record
+   type MV_Analysis (Analyze : Analysis_Type := Unspecified_Analysis) is record
       M_Flags          : Flag_Type := (Flag_Valid, False);
       --  MV_Type is Multivector_Type_Base.Type_Base; --  m_mvType
       M_MV_Type        : Multivector_Type.MV_Type_Record;
@@ -92,8 +88,15 @@ package Multivector_Analyze is
       --  Each analyzed multivector is decomposed into
       --  (analysis dependent) points, scalars and vectors.
       Points           : Point_Array := (others => (0.0, 0.0, 0.0));  --  m_pt
-      Scalars          : Scalar_Array := (others => (0.0));  --  m_sc  Float array
       M_Vectors        : E3_Vector_Array := (others => (others => 0.0));
+      --  m_sc  Float array
+      Weight : Float := 0.0;
+      case Analyze is
+         when Round_Analysis =>
+            Radius : Float := 0.0;
+         when others =>
+              null;
+      end case;
    end record;
 
    MVA_Exception : Exception;
@@ -101,10 +104,11 @@ package Multivector_Analyze is
 --     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
 --                       Flags : Flag_Type := (Flag_Invalid, False);
 --                       Epsilon : float := Default_Epsilon);
-   procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                      Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
-                      Flags : Flag_Type := (Flag_Invalid, False);
-                      Epsilon : float := Default_Epsilon);
+--     procedure Analyze (theAnalysis : in out MV_Analysis; MV : Multivectors.Multivector;
+   function Analyze (MV : Multivectors.Multivector;
+                     Probe : Multivectors.Normalized_Point := C3GA.Probe (Blade_Types.C3_no);
+                     Flags : Flag_Type := (Flag_Invalid, False);
+                     Epsilon : float := Default_Epsilon) return MV_Analysis;
    function Blade_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
    function isValid (A : MV_Analysis) return Boolean;
    function isDual (A : MV_Analysis) return Boolean;

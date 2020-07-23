@@ -16,25 +16,31 @@ with Multivector_Type;
 
 package body Multivector_Analyze_C3GA is
 
-    procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
-                            MV_X        : Multivectors.Multivector;
-                            Probe       : Multivectors.Normalized_Point);
-    procedure Analyze_Free (theAnalysis : in out MV_Analysis;
-                            MV          : Multivectors.Multivector);
-    procedure Analyze_Round (theAnalysis : in out MV_Analysis;
-                             MV          : Multivectors.Multivector);
-    procedure Analyze_Tangent (theAnalysis : in out MV_Analysis;
-                               MV          : Multivectors.Multivector);
+    function Analyze_Flat (Analysis_In : MV_Analysis;
+                           MV_X        : Multivectors.Multivector;
+                           Probe       : Multivectors.Normalized_Point)
+                           return MV_Analysis;
+    function Analyze_Free (Analysis_In : MV_Analysis;
+                           MV          : Multivectors.Multivector)
+                           return MV_Analysis;
+    function Analyze_Round (Analysis_In : MV_Analysis;
+                            MV          : Multivectors.Multivector)
+                           return MV_Analysis;
+    function Analyze_Tangent (Analysis_In : MV_Analysis;
+                              MV          : Multivectors.Multivector)
+                           return MV_Analysis;
 
     --  -------------------------------------------------------------------------
 
-    procedure Analyze (Analysis : in out MV_Analysis; MV : Multivectors.Multivector;
-                       Probe    : Multivectors.Normalized_Point := C3GA.no;
-                       Flags    : Flag_Type := (Flag_Invalid, false);
-                       Epsilon  : float := Default_Epsilon) is
+    function Analyze (MV      : Multivectors.Multivector;
+                      Probe   : Multivectors.Normalized_Point := C3GA.no;
+                      Flags   : Flag_Type := (Flag_Invalid, false);
+                      Epsilon : float := Default_Epsilon)
+                      return MV_Analysis is
         use Multivector_Type;
-        MV_X      : Multivectors.Multivector := MV;
-        MV_Info   : Multivector_Type.MV_Type_Record;
+        MV_X        : Multivectors.Multivector := MV;
+        MV_Info     : Multivector_Type.MV_Type_Record;
+        theAnalysis : MV_Analysis;
 
         procedure Classify is
             use Multivectors;
@@ -64,21 +70,21 @@ package body Multivector_Analyze_C3GA is
 
             if (not OP_NiX) and (not IP_NiX) then  --  OP_NiX and IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Free.");
-                Analyze_Free (Analysis, MV_X);
+                theAnalysis := Analyze_Free (theAnalysis, MV_X);
             elsif (not OP_NiX) and IP_NiX then  --  OP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Flat.");
-                Analyze_Flat (Analysis, MV_X, Probe);
+                theAnalysis := Analyze_Flat (theAnalysis, MV_X, Probe);
             elsif OP_Nix and (not IP_NiX) then  --  IP_NiX approx 0.0
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
-                Analysis.M_Flags.Dual := not Analysis.M_Flags.Dual;
-                Analyze_Flat (Analysis, Dual (MV_X, Metric.C3_Metric), Probe);
+                theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
+                theAnalysis := Analyze_Flat (theAnalysis, Dual (MV_X, Metric.C3_Metric), Probe);
             elsif OP_NiX and IP_NiX then
                 if not Xsq then
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
-                    Analyze_Tangent (Analysis, MV_X);
+                    theAnalysis := Analyze_Tangent (theAnalysis, MV_X);
                 else
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Round.");
-                    Analyze_Round (Analysis, MV_X);
+                    theAnalysis := Analyze_Round (theAnalysis, MV_X);
                 end if;
             end if;
         end Classify;
@@ -86,51 +92,52 @@ package body Multivector_Analyze_C3GA is
     begin
 --          GA_Utilities.Print_Multivector ("Multivector_Analyze_C3GA.Analyze MV_X:", MV_X);
 --          New_Line;
-        Analysis.M_Flags.Valid := True;
-        Analysis.Epsilon := Epsilon;
-        Analysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
+        theAnalysis.M_Flags.Valid := True;
+        theAnalysis.Epsilon := Epsilon;
+        theAnalysis.M_Type.Model_Kind := Multivector_Analyze.Conformal_Model;
 
         if Flags.Dual then
             Put_Line ("Multivector_Analyze_C3GA.Analyze Is Dual.");
-            Analysis.M_Flags.Dual := True;
+            theAnalysis.M_Flags.Dual := True;
             MV_X := Multivectors.Dual (MV_X, Metric.C3_Metric);
         end if;
 
         MV_Info := Init (MV_X, Metric.C3_Metric);
-        Analysis.M_MV_Type := MV_Info;
+        theAnalysis.M_MV_Type := MV_Info;
 
         --  Check for zero blade
-        if Zero (Analysis.M_MV_Type) then
+        if Zero (theAnalysis.M_MV_Type) then
             Put_Line ("Multivector_Analyze_C3GA.Analyze Zero_Blade.");
-            Analysis.M_Type.Blade_Class := Zero_Blade;
-            Analysis.Scalars (1) := 0.0;
+            theAnalysis.M_Type.Blade_Class := Zero_Blade;
+            theAnalysis.Weight := 0.0;
 
-        elsif MV_Kind (Analysis.M_MV_Type) = Versor_MV then
+        elsif MV_Kind (theAnalysis.M_MV_Type) = Versor_MV then
             Put_Line ("Multivector_Analyze_C3GA.Analyze Versor_Object 2.");
-            Analysis.M_Type.Versor_Subclass := Even_Versor;
-            Analysis.M_Vectors (1) := C3GA.To_VectorE3GA (E3GA.e1);
+            theAnalysis.M_Type.Versor_Subclass := Even_Versor;
+            theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (E3GA.e1);
 
         else
             Put_Line ("Multivector_Analyze_C3GA.Analyze case Grade_Use: " &
-                        GA_Maths.Grade_Usage'Image (Grade_Use (Analysis.M_MV_Type)));
-            case Grade_Use (Analysis.M_MV_Type) is
+                        GA_Maths.Grade_Usage'Image (Grade_Use (theAnalysis.M_MV_Type)));
+            case Grade_Use (theAnalysis.M_MV_Type) is
             when 0 =>  --  Grade 0 Scalar
                 Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 1.");
-                Analysis.M_Type.Blade_Class := Scalar_Blade;
-                Analysis.M_Type.Blade_Subclass := Scalar_Subclass;
-                Analysis.M_Type.M_Grade := 1;
-                Analysis.Scalars (1) := Multivectors.Scalar_Part (MV_X);
+                theAnalysis.M_Type.Blade_Class := Scalar_Blade;
+                theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
+                theAnalysis.M_Type.M_Grade := 1;
+                theAnalysis.Weight := Multivectors.Scalar_Part (MV_X);
 
             when 5 =>  --  Grade 5 Pseudo scalar
                 Put_Line ("Multivector_Analyze_C3GA.Analyze Grade_Use = 6.");
-                Analysis.M_Type.Blade_Class := Pseudo_Scalar_Blade;
-                Analysis.M_Type.Blade_Subclass := Pseudo_Scalar_Subclass;
-                Analysis.M_Type.M_Grade := 6;
-                Analysis.Scalars (1) := C3GA.NO_E1_E2_E3_NI (MV_X);
+                theAnalysis.M_Type.Blade_Class := Pseudo_Scalar_Blade;
+                theAnalysis.M_Type.Blade_Subclass := Pseudo_Scalar_Subclass;
+                theAnalysis.M_Type.M_Grade := 6;
+                theAnalysis.Weight := C3GA.NO_E1_E2_E3_NI (MV_X);
             when others => Classify;
             end case;
         end if;
         New_Line;
+        return theAnalysis;
 
     exception
         when others =>
@@ -144,13 +151,14 @@ package body Multivector_Analyze_C3GA is
     --  theAnalysis.M_Vectors (2)  m_vc[0] .. m_vc[1]
     --                             unit 3D vector basis for attitude (direction)
     --  theAnalysis.M_Vectors (3)  m_sc[0] = weight
-    procedure Analyze_Flat (theAnalysis : in out MV_Analysis;
+    function Analyze_Flat (Analysis_In : MV_Analysis;
                             MV_X        : Multivectors.Multivector;
-                            Probe       : Multivectors.Normalized_Point) is
+                            Probe       : Multivectors.Normalized_Point)
+                            return MV_Analysis is
         use Multivectors;
         Met           : constant Metric.Metric_Record := Metric.C3_Metric;
         Grade         : Integer :=
-                          Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
+                          Multivector_Type.MV_Grade (Analysis_In.M_MV_Type);
         --  Attitude is a free N-vector
         Attitude      : constant Multivector :=
                           Negate (Left_Contraction (C3GA.ni, MV_X, Metric.C3_Metric));
@@ -161,6 +169,7 @@ package body Multivector_Analyze_C3GA is
         SP            : Float;
         Scale         : Float;
         Weight        : Float;
+        theAnalysis   : MV_Analysis (Flat_Analysis);
     begin
         theAnalysis.M_Type.Blade_Class := Flat_Blade;
         if theAnalysis.M_Flags.Dual then
@@ -191,7 +200,7 @@ package body Multivector_Analyze_C3GA is
         --  theAnalysis.Scalars   m_sc[0] = weight
         --  ************* END format of flat ***************
         theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
-        theAnalysis.Scalars (1) := Weight;
+        theAnalysis.Weight := Weight;
         --  Grade indications are taken from Geometric Algebra and its
         --  Application to Computer Graphics by Hildenbrand, Fontijne, Perwass and
         --  Dorst, Eurographics 2004.
@@ -221,6 +230,7 @@ package body Multivector_Analyze_C3GA is
                                       MV_Item (Blade_Factors, 2)), Metric.C3_Metric));
             when others => null;
         end case;
+       return theAnalysis;
 
     exception
         when others =>
@@ -233,20 +243,22 @@ package body Multivector_Analyze_C3GA is
     --  m_pt[0] = no (or probe?)
     --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude (direction)
     --   m_sc[0] = weight
-    procedure Analyze_Free (theAnalysis : in out MV_Analysis;
-                            MV          : Multivectors.Multivector) is
+    function Analyze_Free (Analysis_In : MV_Analysis;
+                           MV          : Multivectors.Multivector)
+                           return MV_Analysis is
         use Metric;
         use Multivectors;
         Grade         : constant Integer :=
-                          Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
+                          Multivector_Type.MV_Grade (Analysis_In.M_MV_Type);
         Weight        : constant Float := Norm_E (MV);
         --        Attitude      : constant Multivector := MV;
         Blade_Factors : Multivectors.Multivector_List;
         Scale         : Float := 1.0;
+        theAnalysis   : MV_Analysis (Free_Analysis);
     begin
         theAnalysis.M_Type.Blade_Class := Free_Blade;
         theAnalysis.Points (1) := (0.0, 0.0, 0.0);
-        theAnalysis.Scalars (1) := Weight;
+        theAnalysis.Weight := Weight;
         case Grade is
             when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade 1.");
@@ -280,6 +292,7 @@ package body Multivector_Analyze_C3GA is
             when others =>
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Free Grade others.");
         end case;
+        return theAnalysis;
 
     exception
         when others =>
@@ -293,14 +306,15 @@ package body Multivector_Analyze_C3GA is
     --  m_sc[0] = signed radius
     --  m_sc[1] = signed weight
     --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude (direction)
-    procedure Analyze_Round (theAnalysis : in out MV_Analysis;
-                             MV          : Multivectors.Multivector) is
+    function Analyze_Round (Analysis_In : MV_Analysis;
+                            MV          : Multivectors.Multivector)
+                            return MV_Analysis is
         use Maths.Single_Math_Functions;
         use Multivectors;
         Met              : constant Metric.Metric_Record :=  Metric.C3_Metric;
         MV_X             : Multivector := MV;
         Grade            : constant Integer :=
-                             Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
+                             Multivector_Type.MV_Grade (Analysis_In.M_MV_Type);
         MV_Factors       : Multivector_List;
         LC               : Multivector;
         LC_NI_MV         : Multivector;
@@ -313,13 +327,14 @@ package body Multivector_Analyze_C3GA is
         Radius_Sq        : Float;
         Weight           : Float;
         Scale            : Float := 1.0;
+        theAnalysis      : MV_Analysis (Round_Analysis);
     begin
 --          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
 --                      Integer'Image (Grade));
         if Grade = 0 then
             theAnalysis.M_Type.Blade_Class := Scalar_Blade;
             theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
-            theAnalysis.Scalars (1) := Scalar_Part (MV_X);  --  signed weight
+            theAnalysis.Weight := Scalar_Part (MV_X);  --  signed weight
         else
             theAnalysis.M_Type.Blade_Class := Round_Blade;
             if Grade = 1 then
@@ -361,8 +376,8 @@ package body Multivector_Analyze_C3GA is
             Weight := Norm_E (Left_Contraction (C3GA.no, Attitude, Met));
 
             theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
-            theAnalysis.Scalars (1) := Radius;
-            theAnalysis.Scalars (2) := Weight;
+            theAnalysis.Radius := Radius;
+            theAnalysis.Weight := Weight;
             --           New_Line;
             --           Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
             --                                   theAnalysis.Points (1));
@@ -447,9 +462,9 @@ package body Multivector_Analyze_C3GA is
                   ("Multivector_Analyze_C3GA.Analyze_Round Position, Analysis.Points (1)",
                      theAnalysis.Points (1));
                     Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Radius, Analysis.Scalars (1)" &
-                       Float'Image (theAnalysis.Scalars (1)));
+                       Float'Image (theAnalysis.Radius));
                     Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Scale, Analysis.Scalars (2)" &
-                       Float'Image (theAnalysis.Scalars (2)));
+                       Float'Image (theAnalysis.Weight));
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                 theAnalysis.M_Vectors (1) :=
@@ -469,6 +484,7 @@ package body Multivector_Analyze_C3GA is
 --                ("Multivector_Analyze_C3GA.Analyze_Round direction M_Vectors",
 --                 theAnalysis.M_Vectors);
         end if;
+        return theAnalysis;
 
     exception
         when others =>
@@ -481,12 +497,13 @@ package body Multivector_Analyze_C3GA is
     --  m_pt[0] = location
     --  m_vc[0] .. m_vc[2] = unit 3D vector basis for attitude
     --  m_sc[0] = weight
-    procedure Analyze_Tangent (theAnalysis : in out MV_Analysis;
-                               MV          : Multivectors.Multivector) is
+    function Analyze_Tangent (Analysis_In : MV_Analysis;
+                              MV          : Multivectors.Multivector)
+                              return MV_Analysis is
         use Multivectors;
         Met            : constant Metric.Metric_Record :=  Metric.C3_Metric;
         Grade          : constant Integer :=
-                           Multivector_Type.MV_Grade (theAnalysis.M_MV_Type);
+                           Multivector_Type.MV_Grade (Analysis_In.M_MV_Type);
         LC_NI_MV       : Multivector;
         LC_NI_MV_Inv   : Multivector;
         Attitude       : constant Multivector :=
@@ -496,6 +513,7 @@ package body Multivector_Analyze_C3GA is
         Point_Location : Multivectors.Normalized_Point;
         Scale          : Float;
         Weight         : Float;
+        theAnalysis    : MV_Analysis (Tangent_Analysis);
     begin
         theAnalysis.M_Type.Blade_Class := Tangent_Blade;
 
@@ -508,7 +526,7 @@ package body Multivector_Analyze_C3GA is
         Weight := Norm_E (Left_Contraction (C3GA.no, Attitude, Met));
 
         theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
-        theAnalysis.Scalars (1) := Weight;
+        theAnalysis.Weight := Weight;
 
         case Grade is
             when 1 =>
@@ -536,6 +554,7 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Vectors (3) := C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e3));
             when others => null;
         end case;
+      return theAnalysis;
 
     end Analyze_Tangent;
 
