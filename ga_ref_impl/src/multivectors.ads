@@ -93,8 +93,8 @@ package Multivectors is
    function Highest_Grade (MV : Multivector) return Integer;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
-   function Inner_Product (MV1, MV2 : Multivector; Met : Metric_Record;
-                           Cont : Blade.Contraction_Type) return Multivector;
+   function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type;
+                           Met : Metric_Record) return Multivector;
    function Inverse_Scalar (theScalar : Scalar) return Scalar;
    function Inverse_Rotor (R : Rotor) return Rotor;
    function Is_Null (MV : Multivector) return Boolean;

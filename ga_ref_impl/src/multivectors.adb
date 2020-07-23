@@ -485,7 +485,7 @@ package body Multivectors is
 
       MV_I.Blades.Append (Blade.New_Basis_Blade (Index));
       MV_I := Versor_Inverse (MV_I);
-      return Inner_Product (MV, MV_I, Met, Blade.Left_Contraction);
+      return Inner_Product (MV, MV_I, Blade.Left_Contraction, Met);
    end Dual;
 
    --  -------------------------------------------------------------------------
@@ -1049,6 +1049,7 @@ package body Multivectors is
    end Highest_Grade;
 
    --  -------------------------------------------------------------------------
+
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                             return Multivector is
       use Blade;
@@ -1087,8 +1088,8 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Inner_Product (MV1, MV2 : Multivector; Met : Metric_Record;
-                           Cont     : Blade.Contraction_Type) return Multivector is
+   function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type;
+                           Met : Metric_Record) return Multivector is
       use Blade;
       use Blade_List_Package;
       B1        : Blade.Basis_Blade;
@@ -1236,7 +1237,7 @@ package body Multivectors is
    function Left_Contraction (MV1, MV2 : Multivector; Met : Metric_Record)
                                return Multivector is
    begin
-      return Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
+      return Inner_Product (MV1, MV2, Blade.Left_Contraction, Met);
    end Left_Contraction;
 
    --  -------------------------------------------------------------------------
@@ -1656,7 +1657,7 @@ package body Multivectors is
    function Right_Contraction (MV1, MV2 : Multivector; Met : Metric_Record)
                                 return Multivector is
    begin
-      return Inner_Product (MV1, MV2, Met, Blade.Right_Contraction);
+      return Inner_Product (MV1, MV2, Blade.Right_Contraction, Met);
    end Right_Contraction;
 
    --  -------------------------------------------------------------------------
@@ -1710,7 +1711,7 @@ package body Multivectors is
    function Scalar_Product (MV1, MV2 : Multivector;
                             Met : Metric_Record := C3_Metric) return float is
    begin
-      return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
+      return Scalar_Part (Inner_Product (MV1, MV2, Blade.Left_Contraction, Met));
    end Scalar_Product;
 
    --  -------------------------------------------------------------------------
