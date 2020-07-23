@@ -22,7 +22,6 @@ with Blade_Types;
 with E3GA;
 --  with C3GA;
 --  with C3GA_Draw;
-with C3GA_Utilities;
 with GA_Maths;
 with GA_Utilities;
 with Geosphere;
@@ -212,7 +211,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  compute rotation versor
          DL := 0.5 * Phi * Dual (aLine, Metric.C3_Metric);
          R_Versor := To_TRversor (DL);
-         R_Versor := C3GA_Utilities.Exp (DL);
+         R_Versor := Multivectors.Exp (DL, Metric.C3_Metric);
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display R_Versor",
                 R_Versor, Blade_Types.Basis_Names_C3GA);

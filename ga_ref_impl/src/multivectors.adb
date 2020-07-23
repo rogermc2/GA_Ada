@@ -502,41 +502,19 @@ package body Multivectors is
    --  -------------------------------------------------------------------------
 
    function Exp (MV    : Multivector; Met : Metric.Metric_Record;
-                 Order : Integer) return Multivector is
+                 Order : Integer := 12) return Multivector is
       use GA_Maths.Float_Functions;
       A2     : constant Multivector := Geometric_Product (MV, MV, Met);
-      A2_SP  : Float;
-      Alpha  : Float;
-      ABlade : Blade.Basis_Blade;
       Result : Multivector;
    begin
       if Is_Null (A2, 10.0 ** (-8)) then
          Result := New_Multivector (1.0);
       elsif Is_Scalar (A2) then
-         A2_SP := Scalar_Part (A2);
-         if A2_SP < 0.0 then
-            Alpha := Sqrt (-A2_SP);
-            Result := Geometric_Product (MV, Sin (Alpha) / Alpha);
-            ABlade := Blade.New_Basis_Blade (Cos (Alpha));
-            Multivectors.Add_Blade (Result, ABlade);
-         elsif A2_SP > 0.0 then
-            Alpha := Sqrt (A2_SP);
-            Result := Geometric_Product (MV, Sinh (Alpha) / Alpha);
-            ABlade := Blade.New_Basis_Blade (Cosh (Alpha));
-            Multivectors.Add_Blade (Result, ABlade);
-         end if;
+         Result := New_Multivector (Exp (Scalar_Part (A2)));
       else
          Result := Exp_Series (MV, Met, Order);
       end if;
       return Result;
-   end Exp;
-
-   --  -------------------------------------------------------------------------
-
-   function Exp (MV : Multivector; Met : Metric.Metric_Record)
-                  return Multivector is
-   begin
-      return Exp (MV, Met, 12);
    end Exp;
 
    --  -------------------------------------------------------------------------

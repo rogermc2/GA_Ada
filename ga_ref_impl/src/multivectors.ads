@@ -61,7 +61,8 @@ package Multivectors is
    function Dot (MV1, MV2 : Multivector) return Multivector;
    function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
-   function Exp (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
+   function Exp (MV : Multivector; Met : Metric.Metric_Record;
+                 Order : Integer := 12) return Multivector;
 --     function Exp_Dual_Line (DL : Dual_Line; Met : Metric.Metric_Record)
 --                             return Dual_Line;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
