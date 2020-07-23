@@ -93,7 +93,7 @@ package Multivectors is
    function Highest_Grade (MV : Multivector) return Integer;
    function Inner_Product (MV1, MV2 : Multivector; Cont : Blade.Contraction_Type)
                            return Multivector;
-   function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
+   function Inner_Product (MV1, MV2 : Multivector; Met : Metric_Record;
                            Cont : Blade.Contraction_Type) return Multivector;
    function Inverse_Scalar (theScalar : Scalar) return Scalar;
    function Inverse_Rotor (R : Rotor) return Rotor;
@@ -103,7 +103,7 @@ package Multivectors is
    function Largest_Basis_Blade (MV : Multivector) return Blade.Basis_Blade;
    function Largest_Coordinate (MV : Multivector) return Float;
    function Left_Contraction (MV1, MV2 : Multivector) return Multivector;
-   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric_Record)
                               return Multivector;
    function List_Length (MV_List : Multivector_List) return Integer;
    function Multivector_String (MV : Multivector;

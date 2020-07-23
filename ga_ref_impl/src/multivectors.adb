@@ -18,12 +18,12 @@ package body Multivectors is
 
    procedure Compress (MV : in out Multivector);
    function Cosine_Series (MV : Multivector; Order : Integer) return Multivector;
-   function Exp_Series (MV    : Multivector; Met : Metric.Metric_Record;
+   function Exp_Series (MV    : Multivector; Met : Metric_Record;
                         Order : Integer)  return Multivector;
    function Random_Vector (Dim : Integer; Scale : Float) return Multivector;
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
    function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
-                                 Met : Metric.Metric_Record)
+                                 Met : Metric_Record)
                                   return GA_Maths.Float_Matrix;
 
    --  -------------------------------------------------------------------------
@@ -471,7 +471,7 @@ package body Multivectors is
                    return Multivector is
       use Interfaces;
       Index  : constant Unsigned_32 :=
-                 Shift_Left (1, Metric.Eigen_Values (Met)'Length) - 1;
+                 Shift_Left (1, Eigen_Values (Met)'Length) - 1;
       MV_I   : Multivector;
    begin
       --          case MV.Type_Of_MV is
@@ -1086,7 +1086,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Inner_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record;
+   function Inner_Product (MV1, MV2 : Multivector; Met : Metric_Record;
                            Cont     : Blade.Contraction_Type) return Multivector is
       use Blade;
       use Blade_List_Package;
@@ -1232,7 +1232,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+   function Left_Contraction (MV1, MV2 : Multivector; Met : Metric_Record)
                                return Multivector is
    begin
       return Inner_Product (MV1, MV2, Met, Blade.Left_Contraction);
@@ -1652,7 +1652,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Right_Contraction (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+   function Right_Contraction (MV1, MV2 : Multivector; Met : Metric_Record)
                                 return Multivector is
    begin
       return Inner_Product (MV1, MV2, Met, Blade.Right_Contraction);
@@ -1706,7 +1706,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric_Record)
                              return float is
    begin
       return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
@@ -1822,8 +1822,8 @@ package body Multivectors is
    --  geometric product of 'Matrix_AG' and 'x'
    --  Metric version:
    function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
-                                 Met : Metric.Metric_Record)
-                                  return GA_Maths.Float_Matrix is
+                                 Met : Metric_Record)
+                                 return GA_Maths.Float_Matrix is
       use Blade;
       use GA_Maths;
       use Blade_List_Package;
