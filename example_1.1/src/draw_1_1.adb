@@ -51,7 +51,8 @@ package body Draw_1_1 is
    function Draw_Rotated_Circle
      (Render_Program : GL.Objects.Programs.Program; C: Circle;
       RV             : TR_Versor) return Circle is
-      MV : constant Multivector := Multivector_Utilities.Rotate (Multivector (C), RV);
+      MV : constant Multivector :=
+             Multivector_Utilities.Rotate (Multivector (C), RV);
       RC : constant Circle := To_Circle (MV);
    begin
       C3GA_Draw.Draw (Render_Program, RC);
@@ -64,7 +65,7 @@ package body Draw_1_1 is
                              return Dual_Plane is
       OP : Multivector := Outer_Product (E3GA.To_MV_Vector (Normal), C3GA.ni);
    begin
-      OP := Left_Contraction (P1, OP);
+      OP := Left_Contraction (P1, OP, Metric.C3_Metric);
       return To_Dual_Plane (OP);
    end New_Dual_Plane;
 
