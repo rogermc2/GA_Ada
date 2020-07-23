@@ -21,6 +21,7 @@ package body Multivectors is
    function Exp_Series (MV    : Multivector; Met : Metric_Record;
                         Order : Integer)  return Multivector;
    function Random_Vector (Dim : Integer; Scale : Float) return Multivector;
+   function Scalar_Product_Local (MV1, MV2 : Multivector) return float;
    function Sine_Series (MV : Multivector; Order : Integer) return Multivector;
    function To_Geometric_Matrix (MV  : Multivector; BBs_L : Basis_Blade_Array;
                                  Met : Metric_Record)
@@ -1551,7 +1552,7 @@ package body Multivectors is
    --  Based on Geometric Algebra for Computer Science section 3.1.3, eq (3.4)
    --  and ga_ref_impl.Multivector.java norm_e2()
    function Norm_Esq (MV : Multivector) return Float is
-      S : Float := Scalar_Product (MV, Reverse_MV (MV));
+      S : Float := Scalar_Product_Local (MV, Reverse_MV (MV));
    begin
       if S < 0.0 then
          S := 0.0;
@@ -1699,15 +1700,15 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Scalar_Product (MV1, MV2 : Multivector) return float is
+   function Scalar_Product_Local (MV1, MV2 : Multivector) return float is
    begin
       return Scalar_Part (Inner_Product (MV1, MV2, Blade.Left_Contraction));
-   end Scalar_Product;
+   end Scalar_Product_Local;
 
    --  -------------------------------------------------------------------------
 
-   function Scalar_Product (MV1, MV2 : Multivector; Met : Metric_Record)
-                             return float is
+   function Scalar_Product (MV1, MV2 : Multivector;
+                            Met : Metric_Record := C3_Metric) return float is
    begin
       return Scalar_Part (Inner_Product (MV1, MV2, Met, Blade.Left_Contraction));
    end Scalar_Product;

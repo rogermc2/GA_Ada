@@ -141,10 +141,9 @@ package Multivectors is
                                Met      : Metric_Record)
                                return Multivector;
    function Scalar_Part (MV : Multivector) return Float;
-   function Scalar_Product (MV1, MV2 : Multivector) return float;
+--     function Scalar_Product (MV1, MV2 : Multivector) return float;
    function Scalar_Product (MV1, MV2 : Multivector;
-                            Met      : Metric_Record)
-                            return float;
+                            Met      : Metric_Record := C3_Metric) return float;
    procedure Set_Geometry (theGeometry : Geometry_Type);
    procedure Simplify (MV : in out Multivector);
    function Sine (MV : Multivector) return Multivector;
