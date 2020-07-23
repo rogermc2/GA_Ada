@@ -467,7 +467,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Dual (MV : Multivector; Met : Metric.Metric_Record)
+   function Dual (MV : Multivector; Met : Metric_Record := C3_Metric)
                    return Multivector is
       use Interfaces;
       Index  : constant Unsigned_32 :=
@@ -501,7 +501,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Exp (MV    : Multivector; Met : Metric.Metric_Record;
+   function Exp (MV    : Multivector; Met : Metric_Record := C3_Metric;
                  Order : Integer := 12) return Multivector is
       use GA_Maths.Float_Functions;
       A2     : constant Multivector := Geometric_Product (MV, MV, Met);
@@ -628,78 +628,78 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
    --  Implements metric == null case of Multivector.java generalInverse
-   function General_Inverse (MV : Multivector) return Multivector is
-      use Interfaces;
-      use GA_Maths.Float_Array_Package;
-      use Blade;
-      use Blade_List_Package;
-      use GA_Maths;
-      --        Dim          : constant Natural := Space_Dimension (MV);
-      Max_Index    : constant Natural := 2 ** Spatial_Dimension;
-      Mat          : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
-                       (others => (others => 0.0));
-      Mat_Inv      : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
-                       (others => (others => 0.0));
-      BBs_L        : Basis_Blade_Array (1 .. Max_Index);
-      Curs         : Cursor := MV.Blades.First;
-      Cond         : Float;
-      aBlade       : Basis_Blade;
-      GP           : Basis_Blade;
-      Value        : Float;
-      Blades       : Blade_List;
-      Result       : Multivector;
-   begin
-      if Is_Scalar (MV) or Is_Null (MV) then
-         Result := MV;
-      else
-         for index in BBs_L'Range loop
-            BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
-         end loop;
-
-         --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
-         --  the coordinates of another multivector 'x' (stored in a M_Vector)
-         --  would result in the geometric product of 'Mat' and 'x'
-         while Has_Element (Curs) loop
-            aBlade := Element (Curs);
-            for index in BBs_L'Range loop
-               GP := Geometric_Product (aBlade, BBs_L (index));
-               if Weight (GP) /= 0.0 then
-                  Add_To_Matrix (Mat, BBs_L (index), GP);
-               end if;
-            end loop;
-            Next (Curs);
-         end loop;
-
-         Cond := SVD.Condition_Number (Mat);
-         if Cond < 1.0 / Float'Model_Epsilon then
-            Mat_Inv := Inverse (Mat);
-         else
-            raise MV_Exception with
-              "Multivectors.Geometric_Product, Mat is not invertible";
-         end if;
-         --  reconstruct multivector from first column of matrix
-         --  for Row in BBs'Range loop
-         for Row in Mat_Inv'Range (1) loop
-            Value := Mat_Inv (Row, 1);
-            if Value /= 0.0 then
-               Update_Blade (BBs_L (Row), Value);
-               Blades.Append (BBs_L (Row));
-            end if;
-         end loop;
-         Result := New_Multivector (Blades);
-      end if;
-
-      return Result;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Multivector.General_Inverse.");
-         raise;
-   end General_Inverse;
+--     function General_Inverse (MV : Multivector) return Multivector is
+--        use Interfaces;
+--        use GA_Maths.Float_Array_Package;
+--        use Blade;
+--        use Blade_List_Package;
+--        use GA_Maths;
+--        --        Dim          : constant Natural := Space_Dimension (MV);
+--        Max_Index    : constant Natural := 2 ** Spatial_Dimension;
+--        Mat          : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
+--                         (others => (others => 0.0));
+--        Mat_Inv      : Float_Matrix (1 .. Max_Index, 1 .. Max_Index) :=
+--                         (others => (others => 0.0));
+--        BBs_L        : Basis_Blade_Array (1 .. Max_Index);
+--        Curs         : Cursor := MV.Blades.First;
+--        Cond         : Float;
+--        aBlade       : Basis_Blade;
+--        GP           : Basis_Blade;
+--        Value        : Float;
+--        Blades       : Blade_List;
+--        Result       : Multivector;
+--     begin
+--        if Is_Scalar (MV) or Is_Null (MV) then
+--           Result := MV;
+--        else
+--           for index in BBs_L'Range loop
+--              BBs_L (index) := New_Basis_Blade (Interfaces.Unsigned_32 (index - 1));
+--           end loop;
+--
+--           --  Construct a matrix 'Mat' such that matrix multiplication of 'Mat' with
+--           --  the coordinates of another multivector 'x' (stored in a M_Vector)
+--           --  would result in the geometric product of 'Mat' and 'x'
+--           while Has_Element (Curs) loop
+--              aBlade := Element (Curs);
+--              for index in BBs_L'Range loop
+--                 GP := Geometric_Product (aBlade, BBs_L (index));
+--                 if Weight (GP) /= 0.0 then
+--                    Add_To_Matrix (Mat, BBs_L (index), GP);
+--                 end if;
+--              end loop;
+--              Next (Curs);
+--           end loop;
+--
+--           Cond := SVD.Condition_Number (Mat);
+--           if Cond < 1.0 / Float'Model_Epsilon then
+--              Mat_Inv := Inverse (Mat);
+--           else
+--              raise MV_Exception with
+--                "Multivectors.Geometric_Product, Mat is not invertible";
+--           end if;
+--           --  reconstruct multivector from first column of matrix
+--           --  for Row in BBs'Range loop
+--           for Row in Mat_Inv'Range (1) loop
+--              Value := Mat_Inv (Row, 1);
+--              if Value /= 0.0 then
+--                 Update_Blade (BBs_L (Row), Value);
+--                 Blades.Append (BBs_L (Row));
+--              end if;
+--           end loop;
+--           Result := New_Multivector (Blades);
+--        end if;
+--
+--        return Result;
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Multivector.General_Inverse.");
+--           raise;
+--     end General_Inverse;
 
    --  -------------------------------------------------------------------------
 
-   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
+   function General_Inverse (MV : Multivector;  Met : Metric_Record := C3_Metric)
                               return Multivector is
       use Interfaces;
       use Blade;
@@ -791,44 +791,44 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
-      use Blade;
-      use Blade_List_Package;
-      Blades_1  : constant Blade_List := MV1.Blades;
-      Blades_2  : constant Blade_List := MV2.Blades;
-      Curs_1    : Cursor := Blades_1.First;
-      Curs_2    : Cursor;
-      Blade_1   : Blade.Basis_Blade;
-      Blade_2   : Blade.Basis_Blade;
-      GP        : Multivector;
-   begin
-      if Is_Empty (List (Blades_1)) then
-         raise MV_Exception with "Multivectors.Geometric_Product, MV1 is null.";
-      end if;
-      if Is_Empty (List (Blades_2)) then
-         raise MV_Exception with "Multivectors.Geometric_Product, MV2 is null.";
-      end if;
-
-      while Has_Element (Curs_1) loop
-         Blade_1 := Element (Curs_1);
-         Curs_2 := Blades_2.First;
-         while Has_Element (Curs_2) loop
-            Blade_2 := Element (Curs_2);
-            GP.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
-            Next (Curs_2);
-         end loop;
-         Next (Curs_1);
-      end loop;
-      Simplify (GP);
-
-      return GP;
-
-   end Geometric_Product;
+--     function Geometric_Product (MV1, MV2 : Multivector) return Multivector is
+--        use Blade;
+--        use Blade_List_Package;
+--        Blades_1  : constant Blade_List := MV1.Blades;
+--        Blades_2  : constant Blade_List := MV2.Blades;
+--        Curs_1    : Cursor := Blades_1.First;
+--        Curs_2    : Cursor;
+--        Blade_1   : Blade.Basis_Blade;
+--        Blade_2   : Blade.Basis_Blade;
+--        GP        : Multivector;
+--     begin
+--        if Is_Empty (List (Blades_1)) then
+--           raise MV_Exception with "Multivectors.Geometric_Product, MV1 is null.";
+--        end if;
+--        if Is_Empty (List (Blades_2)) then
+--           raise MV_Exception with "Multivectors.Geometric_Product, MV2 is null.";
+--        end if;
+--
+--        while Has_Element (Curs_1) loop
+--           Blade_1 := Element (Curs_1);
+--           Curs_2 := Blades_2.First;
+--           while Has_Element (Curs_2) loop
+--              Blade_2 := Element (Curs_2);
+--              GP.Blades.Append (Blade.Geometric_Product (Blade_1, Blade_2));
+--              Next (Curs_2);
+--           end loop;
+--           Next (Curs_1);
+--        end loop;
+--        Simplify (GP);
+--
+--        return GP;
+--
+--     end Geometric_Product;
 
    --  -------------------------------------------------------------------------
 
-   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
-                                return Multivector is
+   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric_Record := C3_Metric)
+                               return Multivector is
       use Blade;
       use Blade_List_Package;
       Blades_1  : constant Blade_List := MV1.Blades;
@@ -2010,26 +2010,27 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Unit_R (MV : Multivector) return Multivector is
-      use GA_Maths.Float_Functions;
-      Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
-   begin
-      if Norm_Sq = 0.0 then
-         raise MV_Exception with
-           "Multivectors.Unit_R encountered a null multivector";
-      end if;
-
-      return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Multivectors.Unit_R.");
-         raise;
-   end Unit_R;
+--     function Unit_R (MV : Multivector) return Multivector is
+--        use GA_Maths.Float_Functions;
+--        Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV));
+--     begin
+--        if Norm_Sq = 0.0 then
+--           raise MV_Exception with
+--             "Multivectors.Unit_R encountered a null multivector";
+--        end if;
+--
+--        return Geometric_Product (MV, 1.0 / Sqrt (Abs (Norm_Sq)));
+--
+--     exception
+--        when others =>
+--           Put_Line ("An exception occurred in Multivectors.Unit_R.");
+--           raise;
+--     end Unit_R;
 
    --  -------------------------------------------------------------------------
 
-   function Unit_R (MV : Multivector; Met : Metric.Metric_Record) return Multivector is
+   function Unit_R (MV : Multivector; Met : Metric_Record := C3_Metric)
+                    return Multivector is
       use GA_Maths.Float_Functions;
       Norm_Sq  : constant Float := Scalar_Product (MV, Reverse_MV (MV), Met);
    begin
@@ -2065,22 +2066,22 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
    --  Geometric ALgebra for Computer Scientists, Section 21.1
-   function Versor_Inverse (MV : Multivector) return Multivector is
-      Rev    : constant Multivector := Reverse_MV (MV);
-      Weight : constant Float := Scalar_Product (MV, Rev);
-   begin
-      if Weight = 0.0 then
-         raise MV_Exception with
-           "Multivector.Versor_Inverse encountered a non-invertible multivector" ;
-      end if;
-
-      return Rev / Weight;
-
-   end Versor_Inverse;
+--     function Versor_Inverse (MV : Multivector) return Multivector is
+--        Rev    : constant Multivector := Reverse_MV (MV);
+--        Weight : constant Float := Scalar_Product (MV, Rev);
+--     begin
+--        if Weight = 0.0 then
+--           raise MV_Exception with
+--             "Multivector.Versor_Inverse encountered a non-invertible multivector" ;
+--        end if;
+--
+--        return Rev / Weight;
+--
+--     end Versor_Inverse;
 
    --  -------------------------------------------------------------------------
 
-   function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
+   function Versor_Inverse (MV : Multivector; Met : Metric_Record := C3_Metric)
                              return Multivector is
       Rev    : constant Multivector := Reverse_MV (MV);
       Weight : constant Float := Scalar_Product (MV, Rev, Met);

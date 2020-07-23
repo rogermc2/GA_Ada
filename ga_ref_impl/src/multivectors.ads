@@ -5,7 +5,7 @@ with Ada.Strings.Unbounded;
 with Blade;
 with Blade_Types; use Blade_Types;
 with GA_Maths;
-with Metric;
+with Metric; use Metric;
 
 package Multivectors is
 
@@ -59,19 +59,21 @@ package Multivectors is
    function Cosine (MV : Multivector) return Multivector;
    function Cosine (MV : Multivector; Order : Integer) return Multivector;
    function Dot (MV1, MV2 : Multivector) return Multivector;
-   function Dual (MV : Multivector; Met : Metric.Metric_Record) return Multivector;
+   function Dual (MV : Multivector; Met : Metric_Record := C3_Metric)
+                  return Multivector;
    function Dual (MV : Multivector; Dim : Integer) return Multivector;
-   function Exp (MV : Multivector; Met : Metric.Metric_Record;
+   function Exp (MV : Multivector; Met : Metric_Record := C3_Metric;
                  Order : Integer := 12) return Multivector;
 --     function Exp_Dual_Line (DL : Dual_Line; Met : Metric.Metric_Record)
 --                             return Dual_Line;
    function Extract_Grade (MV : Multivector; Index : integer) return Multivector;
    function From_Vector (V : M_Vector) return Multivector;
-   function General_Inverse (MV : Multivector) return Multivector;
-   function General_Inverse (MV : Multivector;  Met : Metric.Metric_Record)
+--     function General_Inverse (MV : Multivector) return Multivector;
+   function General_Inverse (MV : Multivector;  Met : Metric_Record := C3_Metric)
                              return Multivector;
-   function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
-   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric.Metric_Record)
+--     function Geometric_Product (MV1, MV2 : Multivector) return Multivector;
+   function Geometric_Product (MV1, MV2 : Multivector;
+                               Met      : Metric_Record := C3_Metric)
                                return Multivector;
    function Geometric_Product (Sc : Float; MV : Multivector) return Multivector;
    function Geometric_Product (MV : Multivector; Sc : Float) return Multivector;
@@ -157,14 +159,14 @@ package Multivectors is
    function To_TRversor (MV : Multivector) return TR_Versor;
    function To_Vector (MV : Multivector) return M_Vector;
    function Unit_E (MV : Multivector) return Multivector;
-   function Unit_R (MV : Multivector) return Multivector;
-   function Unit_R (MV : Multivector; Met : Metric.Metric_Record)
+--     function Unit_R (MV : Multivector) return Multivector;
+   function Unit_R (MV : Multivector; Met : Metric_Record := C3_Metric)
                     return Multivector;
    procedure Update (MV : in out Multivector; Blades : Blade.Blade_List;
                      Sorted : Boolean := False);
    procedure Update_Scalar_Part (MV : in out Multivector; Value : Float);
-   function Versor_Inverse (MV : Multivector) return Multivector;
-   function Versor_Inverse (MV : Multivector; Met : Metric.Metric_Record)
+--     function Versor_Inverse (MV : Multivector) return Multivector;
+   function Versor_Inverse (MV : Multivector; Met : Metric_Record := C3_Metric)
                             return Multivector;
 
 private
