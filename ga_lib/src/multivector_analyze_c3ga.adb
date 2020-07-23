@@ -30,6 +30,9 @@ package body Multivector_Analyze_C3GA is
                               MV          : Multivectors.Multivector)
                            return MV_Analysis;
 
+    procedure Init_Analysis_Type (Analysis_In : MV_Analysis;
+                                  theAnalysis : in out MV_Analysis);
+
     --  -------------------------------------------------------------------------
 
     function Analyze (MV      : Multivectors.Multivector;
@@ -171,6 +174,7 @@ package body Multivector_Analyze_C3GA is
         Weight        : Float;
         theAnalysis   : MV_Analysis (Flat_Analysis);
     begin
+        Init_Analysis_Type (Analysis_In, theAnalysis);
         theAnalysis.M_Type.Blade_Class := Flat_Blade;
         if theAnalysis.M_Flags.Dual then
             Grade := 5 - Grade;
@@ -256,6 +260,7 @@ package body Multivector_Analyze_C3GA is
         Scale         : Float := 1.0;
         theAnalysis   : MV_Analysis (Free_Analysis);
     begin
+        Init_Analysis_Type (Analysis_In, theAnalysis);
         theAnalysis.M_Type.Blade_Class := Free_Blade;
         theAnalysis.Points (1) := (0.0, 0.0, 0.0);
         theAnalysis.Weight := Weight;
@@ -331,6 +336,7 @@ package body Multivector_Analyze_C3GA is
     begin
 --          Put_Line ("Multivector_Analyze_C3GA.Analyze_Round, Grade:" &
 --                      Integer'Image (Grade));
+        Init_Analysis_Type (Analysis_In, theAnalysis);
         if Grade = 0 then
             theAnalysis.M_Type.Blade_Class := Scalar_Blade;
             theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
@@ -515,13 +521,15 @@ package body Multivector_Analyze_C3GA is
         Weight         : Float;
         theAnalysis    : MV_Analysis (Tangent_Analysis);
     begin
+        Init_Analysis_Type (Analysis_In, theAnalysis);
         theAnalysis.M_Type.Blade_Class := Tangent_Blade;
 
         LC_NI_MV := Left_Contraction (C3GA.ni, MV, Met);
         LC_NI_MV_Inv := General_Inverse (LC_NI_MV, Met);
         Location :=
           Geometric_Product (MV, LC_NI_MV_Inv, Met);
-        Location := Geometric_Product (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Met));
+        Location := Geometric_Product
+          (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Met));
         Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
         Weight := Norm_E (Left_Contraction (C3GA.no, Attitude, Met));
 
@@ -557,6 +565,16 @@ package body Multivector_Analyze_C3GA is
       return theAnalysis;
 
     end Analyze_Tangent;
+
+    --  ----------------------------------------------------------------------------
+
+    procedure Init_Analysis_Type (Analysis_In : MV_Analysis;
+                                  theAnalysis : in out MV_Analysis) is
+    begin
+        theAnalysis.Epsilon := Analysis_In.Epsilon;
+        theAnalysis.M_Type := Analysis_In.M_Type;
+        theAnalysis.M_Flags := Analysis_In.M_Flags;
+    end Init_Analysis_Type;
 
     --  ----------------------------------------------------------------------------
 
