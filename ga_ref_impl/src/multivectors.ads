@@ -148,10 +148,10 @@ package Multivectors is
    function Space_Dimension return Natural;
    function Top_Grade_Index (MV : Multivector) return Integer;
    function To_Bivector (R : Rotor) return Bivector;
-   function To_Circle (MV : in out Multivector) return Circle;
-   function To_Dual_Line (MV : in out Multivector) return Dual_Line;
-   function To_Dual_Plane (MV : in out Multivector) return Dual_Plane;
-   function To_Line (MV : in out Multivector) return Line;
+   function To_Circle (MV : Multivector) return Circle;
+   function To_Dual_Line (MV : Multivector) return Dual_Line;
+   function To_Dual_Plane (MV : Multivector) return Dual_Plane;
+   function To_Line (MV :  Multivector) return Line;
    function To_Rotor (MV : Multivector) return Rotor;
    function To_TRversor (MV : Multivector) return TR_Versor;
    function To_Vector (MV : Multivector) return M_Vector;

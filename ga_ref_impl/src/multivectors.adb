@@ -1901,7 +1901,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function To_Circle (MV : in out Multivector) return Circle is
+   function To_Circle (MV : Multivector) return Circle is
       theCircle : Circle;
    begin
       theCircle.Blades := MV.Blades;
@@ -1911,7 +1911,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function To_Dual_Line (MV : in out Multivector) return Dual_Line is
+   function To_Dual_Line (MV : Multivector) return Dual_Line is
       DL : Dual_Line;
    begin
       DL.Blades := MV.Blades;
@@ -1921,7 +1921,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function To_Dual_Plane (MV : in out Multivector) return Dual_Plane is
+   function To_Dual_Plane (MV : Multivector) return Dual_Plane is
       theDual_Plane : Dual_Plane;
    begin
       theDual_Plane.Blades := MV.Blades;
@@ -1931,7 +1931,7 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function To_Line (MV : in out Multivector) return Line is
+   function To_Line (MV : Multivector) return Line is
       theLine : Line;
    begin
       theLine.Blades := MV.Blades;
