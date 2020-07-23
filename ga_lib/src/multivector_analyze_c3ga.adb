@@ -324,6 +324,7 @@ package body Multivector_Analyze_C3GA is
         LC               : Multivector;
         LC_NI_MV         : Multivector;
         LC_NI_MV_Inverse : Multivector;
+        SCP_Inverse      : Float;
         Attitude         : Multivector;
         Location         : Multivector;
         Point_Location   : Multivectors.Normalized_Point;
@@ -363,15 +364,20 @@ package body Multivector_Analyze_C3GA is
             --  location is normalized dual sphere
             Location := Geometric_Product (MV_X, LC_NI_MV_Inverse, Met);  --  _location
             --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 2");
-            Location := Geometric_Product
-              (Location, -1.0 / Scalar_Product (C3GA.ni, Location, Met));
+            SCP_Inverse := -1.0 / Scalar_Product (C3GA.ni, Location, Met);
+            Location := Geometric_Product (Location, SCP_Inverse);
             --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
-            Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
---              GA_Utilities.Print_Multivector
---                   ("Multivector_Analyze_C3GA.Analyze_Round Point_Location", Point_Location);
+            Point_Location := To_Normalized_Point (Location);
+--              Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
+
+            GA_Utilities.Print_Multivector_String
+                 ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
+                  Blade_Types.Basis_Names_C3GA);
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Met);
-            --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 3");
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round NI_Xsq:" &
+                       Float'Image (NI_Xsq) );
+            --  Grade_Inversion is eqivalent to Grade_Involution
             Radius_Sq := Scalar_Part
               (Geometric_Product (MV_X, Grade_Inversion (MV_X), Met)) / NI_Xsq;
             if Radius_Sq < 0.0 then
@@ -387,10 +393,9 @@ package body Multivector_Analyze_C3GA is
             --           New_Line;
             --           Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
             --                                   theAnalysis.Points (1));
-            --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
-            --                       Float'Image (theAnalysis.Scalars (1)) &
-            --                       Float'Image (theAnalysis.Scalars (2)));
-            --           New_Line;
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
+                       Float'Image (theAnalysis.Radius) & "  " &
+                       Float'Image (theAnalysis.Weight));
             --  Factor attitude:
             case Grade is
             when 1 =>

@@ -1013,7 +1013,7 @@ package body C3GA is
         use Multivectors;
         OP   : constant Multivector :=
                Outer_Product (P1, Outer_Product (P2, ni));
-        MV_X : Multivector := Unit_R (OP, Metric.C3_Metric);
+        MV_X : constant Multivector := Unit_R (OP, Metric.C3_Metric);
     begin
         return To_Line (MV_X);
     end Set_Line;
