@@ -1984,6 +1984,7 @@ package body Multivectors is
    end To_TRversor;
 
    --  -------------------------------------------------------------------------
+
    function To_Vector (MV : Multivector) return M_Vector is
       use Blade;
       use Blade_List_Package;
