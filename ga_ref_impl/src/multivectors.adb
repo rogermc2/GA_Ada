@@ -5,6 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
+with GA_Utilities;
 with SVD;
 
 package body Multivectors is
@@ -1111,8 +1112,13 @@ package body Multivectors is
          while Has_Element (Cursor_2) loop
             B2 := Element (Cursor_2);
             Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
+--              Put_Line ("Multivectors.Inner_Product grades, B1, B2"
+--                       & Integer'Image (Blade.Grade (B1)) & "  " &
+--                         Integer'Image (Blade.Grade (B2)));
             if Blade.Weight (Blades_IP) /= 0.0 then
-               MV.Blades.Append (Blades_IP);
+               GA_Utilities.Print_Blade ("Multivectors.Inner_Product adding blade",
+                                         Blades_IP);
+                  MV.Blades.Append (Blades_IP);
             end if;
             Next (Cursor_2);
          end loop;
@@ -1120,6 +1126,8 @@ package body Multivectors is
       end loop;
 
       Simplify (MV);
+      GA_Utilities.Print_Multivector_String ("Multivectors.Inner_Product MV",
+                                             MV, Blade_Types.Basis_Names_C3GA);
       return MV;
 
    exception

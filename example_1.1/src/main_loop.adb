@@ -186,8 +186,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing aLine.");
          Shader_Manager.Set_Ambient_Colour (Red);
-         aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
-                                      Points.L1, Points.L2);
+--           aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
+--                                        Points.L1, Points.L2);
          New_Line;
          Put_Line ("Main_Loop.Display drawing aCircle.");
          Shader_Manager.Set_Ambient_Colour (Green);
@@ -204,14 +204,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected line.");
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
+--           Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
 
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected circle.");
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-         Draw_1_1.Draw_Reflected_Circle
-           (Render_Graphic_Program, aCircle, aDual_Plane);
+--           Draw_1_1.Draw_Reflected_Circle
+--             (Render_Graphic_Program, aCircle, aDual_Plane);
 
          --  compute rotation versor
          DL := 0.5 * Phi * To_Dual_Line (Dual (aLine));
@@ -234,8 +234,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
-         Draw_1_1.Draw_Reflected_Circle
-           (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+--           Draw_1_1.Draw_Reflected_Circle
+--             (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
 --           LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;

@@ -350,13 +350,20 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
             end if;
 
+            --  MV_X checked OK against C++ version
+            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round setting LC_NI_MV");
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X,  Metric.C3_Metric);
             --              GA_Utilities.Print_Multivector
             --                ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
+            GA_Utilities.Print_Multivector_String
+                 ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
+                  Blade_Types.Basis_Names_C3GA);
+
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
-            --              GA_Utilities.Print_Multivector
-            --                ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
+            GA_Utilities.Print_Multivector_String
+                 ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude,
+                  Blade_Types.Basis_Names_C3GA);
 
             --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
             LC_NI_MV_Inverse := General_Inverse (LC_NI_MV, Met);
@@ -369,10 +376,6 @@ package body Multivector_Analyze_C3GA is
             --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
             Point_Location := To_Normalized_Point (Location);
 --              Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
-
-            GA_Utilities.Print_Multivector_String
-                 ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
-                  Blade_Types.Basis_Names_C3GA);
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Met);
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Round NI_Xsq:" &
