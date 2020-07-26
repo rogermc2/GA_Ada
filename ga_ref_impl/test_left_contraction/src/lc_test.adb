@@ -53,18 +53,19 @@ begin
 --     GA_Utilities.Print_Multivector_String ("LC_Test MV_A", MV_A, Basis_Names_C3GA);
 
    MV_A1 := Left_Contraction (e3_bv, e2_bv, Met);
-   MV_A2 := Left_Contraction (ni_bv, e2_bv, Met);
    GA_Utilities.Print_Multivector_String ("LC_Test LC (e3, e2)", MV_A1, Basis_Names_C3GA);
-   GA_Utilities.Print_Multivector_String ("LC_Test LC (n1, e2)", MV_A2, Basis_Names_C3GA);
+   New_Line;
+   MV_A2 := Left_Contraction (ni_bv, e2_bv, Met);
+   GA_Utilities.Print_Multivector_String ("LC_Test LC (ni, e2)", MV_A2, Basis_Names_C3GA);
 
    MV_A1 := Left_Contraction (e3_bv, Geometric_Product (e2_bv, e3_bv, Met), Met);
-   MV_A2 := Left_Contraction (ni_bv, Geometric_Product (e2_bv, ni_bv, Met), Met);
    GA_Utilities.Print_Multivector_String ("LC_Test LC (e3, GP (e2, e3))", MV_A1, Basis_Names_C3GA);
+   MV_A2 := Left_Contraction (ni_bv, Geometric_Product (e2_bv, ni_bv, Met), Met);
    GA_Utilities.Print_Multivector_String ("LC_Test (ni, GP (e2, ni))", MV_A2, Basis_Names_C3GA);
 
    MV_A1 := Left_Contraction (e3_bv, Geometric_Product (e3_bv, e2_bv, Met), Met);
-   MV_A2 := Left_Contraction (ni_bv, Geometric_Product (ni_bv, e2_bv, Met), Met);
    GA_Utilities.Print_Multivector_String ("LC_Test (e3, GP (e3, e2))", MV_A1, Basis_Names_C3GA);
+   MV_A2 := Left_Contraction (ni_bv, Geometric_Product (ni_bv, e2_bv, Met), Met);
    GA_Utilities.Print_Multivector_String ("LC_Test (ni, GP (ni, e2))", MV_A2, Basis_Names_C3GA);
 --     MV_A_Inv := General_Inverse (MV_A);
 --     GA_Utilities.Print_Multivector ("LC_Test MV_A_Inv", MV_A_Inv);
