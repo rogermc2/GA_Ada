@@ -1078,15 +1078,23 @@ package body Multivectors is
                             return Multivector is
       use Blade;
       use Blade_List_Package;
+      MV1s     : Multivector := MV1;
+      MV2s     : Multivector := MV2;
       B1       : Basis_Blade;
       B2       : Basis_Blade;
-      List_1   : constant Blade_List := MV1.Blades;
-      List_2   : constant Blade_List := MV2.Blades;
-      Cursor_1 : Cursor := List_1.First;
+      List_1   : Blade_List;
+      List_2   : Blade_List;
+      Cursor_1 : Cursor;
       Cursor_2 : Cursor;
       IP       : Blade.Basis_Blade;
       MV       : Multivector;
    begin
+      Simplify (MV1s);
+      Simplify (MV2s);
+      List_1 := MV1s.Blades;
+      List_2 := MV2s.Blades;
+      Cursor_1 := List_1.First;
+
       while Has_Element (Cursor_1) loop
          B1 := Element (Cursor_1);
          Cursor_2 := List_2.First;
@@ -1116,6 +1124,8 @@ package body Multivectors is
                            Met : Metric_Record) return Multivector is
       use Blade;
       use Blade_List_Package;
+      MV1s      : Multivector := MV1;
+      MV2s      : Multivector := MV2;
       B1        : Blade.Basis_Blade;
       B2        : Blade.Basis_Blade;
       List_1    : Blade_List;
@@ -1125,8 +1135,10 @@ package body Multivectors is
       Blades_IP : Blade.Basis_Blade;
       MV        : Multivector;
    begin
-      List_1 := MV1.Blades;
-      List_2 := MV2.Blades;
+      Simplify (MV1s);
+      Simplify (MV2s);
+      List_1 := MV1s.Blades;
+      List_2 := MV2s.Blades;
       Cursor_1 := List_1.First;
 
       while Has_Element (Cursor_1) loop
@@ -1597,15 +1609,23 @@ package body Multivectors is
    function Outer_Product (MV1, MV2 : Multivector) return Multivector is
       use Blade;
       use Blade_List_Package;
-      List_1     : constant Blade_List := MV1.Blades;
-      List_2     : constant Blade_List := MV2.Blades;
-      Cursor_1   : Cursor := List_1.First;
-      Cursor_2   : Cursor;
-      Blade_OP   : Blade.Basis_Blade;
-      B1         : Blade.Basis_Blade;
-      B2         : Blade.Basis_Blade;
-      OP         : Multivector;
+      MV1s     : Multivector := MV1;
+      MV2s     : Multivector := MV2;
+      List_1   :Blade_List;
+      List_2   : Blade_List;
+      Cursor_1 : Cursor;
+      Cursor_2 : Cursor;
+      Blade_OP : Blade.Basis_Blade;
+      B1       : Blade.Basis_Blade;
+      B2       : Blade.Basis_Blade;
+      OP       : Multivector;
    begin
+      Simplify (MV1s);
+      Simplify (MV2s);
+      List_1 := MV1s.Blades;
+      List_2 := MV2s.Blades;
+      Cursor_1 := List_1.First;
+
       --  For each element of List_1
       --     For  each element of List_1
       --        Calculate the outer product of these two elements
