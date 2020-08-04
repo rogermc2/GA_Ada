@@ -829,25 +829,41 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Geometric_Product (MV1, MV2 : Multivector; Met : Metric_Record := C3_Metric)
+   function Geometric_Product (MV1, MV2 : Multivector;
+                               Met : Metric_Record := C3_Metric)
                                return Multivector is
       use Blade;
       use Blade_List_Package;
-      Blades_1  : constant Blade_List := MV1.Blades;
-      Blades_2  : constant Blade_List := MV2.Blades;
+      MV1s      : Multivector := MV1;
+      MV2s      : Multivector := MV2;
+      Blades_1  : Blade_List;
+      Blades_2  : Blade_List;
       Blades_GP : Blade_List;
-      Curs_1    : Cursor := Blades_1.First;
+      Curs_1    : Cursor;
       Curs_2    : Cursor;
       Blade_1   : Blade.Basis_Blade;
       Blade_2   : Blade.Basis_Blade;
       GP        : Multivector;
    begin
-      if Is_Empty (List (MV1.Blades)) then
-         raise MV_Exception with "Multivectors.Geometric_Product with Metric, MV1 is null.";
+      Simplify (MV1s);
+      Simplify (MV2s);
+      if Is_Empty (List (MV1s.Blades)) then
+         raise MV_Exception with
+              "Multivectors.Geometric_Product with Metric, MV1 is null.";
       end if;
-      if Is_Empty (List (MV2.Blades)) then
-         raise MV_Exception with "Multivectors.Geometric_Product with Metric, MV2 is null.";
+      if Is_Empty (List (MV2s.Blades)) then
+         raise MV_Exception with
+              "Multivectors.Geometric_Product with Metric, MV2 is null.";
       end if;
+      Blades_1 := MV1s.Blades;
+      Blades_2 := MV2s.Blades;
+      Curs_1 := Blades_1.First;
+
+      New_Line;
+      GA_Utilities.Print_Multivector_String
+          ("Multivectors.Geometric_Product with Metric, MV1s", MV1s, Basis_Names_C3GA);
+      GA_Utilities.Print_Multivector_String
+          ("Multivectors.Geometric_Product with Metric, MV2s", MV2s, Basis_Names_C3GA);
 
       while Has_Element (Curs_1) loop
          Blade_1 := Element (Curs_1);
@@ -872,10 +888,10 @@ package body Multivectors is
          Next (Curs_1);
       end loop;
       GA_Utilities.Print_Multivector
-                 ("Multivectors.Geometric_Product with Metric, pre simplify GP", GP);
+          ("Multivectors.Geometric_Product with Metric, pre simplify GP", GP);
       Simplify (GP);
       GA_Utilities.Print_Multivector
-                 ("Multivectors.Geometric_Product with Metric, GP", GP);
+          ("Multivectors.Geometric_Product with Metric, GP", GP);
       return GP;
 
    end Geometric_Product;
