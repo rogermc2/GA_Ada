@@ -26,10 +26,17 @@ procedure LC_Test is
    MV_A1        : Multivector;
    MV_A2        : Multivector;
    MV_A         : Multivector;
-   MV_A_Inv    : Multivector;
+   MV_A_Inv     : Multivector;
 
-   NP_1         : constant Multivector :=
+   NP_1         : constant Normalized_Point :=
+                    New_Normalized_Point (1.0, 0.0, 0.0);
+   C1           : constant Normalized_Point :=
+                    New_Normalized_Point (0.707, 0.707, 0.0);
+   C2           : constant Normalized_Point :=
+                    New_Normalized_Point (0.0, 1.0, 0.0);
+   C3           : constant Normalized_Point :=
                     New_Normalized_Point (-0.356756, -0.881980, 0.0);
+   Circle       : constant Multivector := Outer_Product (C1, Outer_Product (C2, C3));
    NP_1_OP      : Multivector;
    NP_1_IP      : Multivector;
    NP_1_GP_Met  : Multivector;
@@ -67,12 +74,15 @@ begin
    GA_Utilities.Print_Multivector_String ("LC_Test (e3, GP (e3, e2))", MV_A1, Basis_Names_C3GA);
    MV_A2 := Left_Contraction (ni_bv, Geometric_Product (ni_bv, e2_bv, Met), Met);
    GA_Utilities.Print_Multivector_String ("LC_Test (ni, GP (ni, e2))", MV_A2, Basis_Names_C3GA);
---     MV_A_Inv := General_Inverse (MV_A);
---     GA_Utilities.Print_Multivector ("LC_Test MV_A_Inv", MV_A_Inv);
---
---     GA_Utilities.Print_Multivector ("LC_Test", NP_1);
---     NP_1_OP := Outer_Product (NP_1, NP_1);
---     GA_Utilities.Print_Multivector ("LC_Test NP_1_OP", NP_1_OP);
+   GA_Utilities.Print_Multivector_String ("LC_Test Circle", Circle, Basis_Names_C3GA);
+
+   GA_Utilities.Print_Multivector_String ("LC_Test NP_1", NP_1, Basis_Names_C3GA);
+   NP_1_OP := Outer_Product (NP_1, NP_1);
+   NP_1_IP := Inner_Product (NP_1, NP_1, Blade.Left_Contraction, Met);
+   NP_1_GP := Geometric_Product (NP_1, NP_1, Met);
+   GA_Utilities.Print_Multivector_String ("LC_Test Inner Product (NP_1, NP_1)", NP_1_IP, Basis_Names_C3GA);
+   GA_Utilities.Print_Multivector_String ("LC_Test Outer Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
+   GA_Utilities.Print_Multivector_String ("LC_Test Geometric Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1", NP_1);
 --     NP_1_OP := Outer_Product (NP_1, NP_1);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_OP", NP_1_OP);

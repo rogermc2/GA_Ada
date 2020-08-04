@@ -861,14 +861,21 @@ package body Multivectors is
 --                ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2,
 --                 Blade_Types.Basis_Names_C3GA);
             Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
---              GA_Utilities.Print_Blade_List
---                ("Multivectors.Geometric_Product with Metric, Blades_GP", Blades_GP);
-            Add_Blades (GP.Blades, Blades_GP);
+            if not Blades_GP.Is_Empty then
+               GA_Utilities.Print_Blade_List
+                 ("Multivectors.Geometric_Product with Metric, adding Blades_GP",
+                  Blades_GP);
+               Add_Blades (GP.Blades, Blades_GP);
+            end if;
             Next (Curs_2);
          end loop;
          Next (Curs_1);
       end loop;
+      GA_Utilities.Print_Multivector
+                 ("Multivectors.Geometric_Product with Metric, pre simplify GP", GP);
       Simplify (GP);
+      GA_Utilities.Print_Multivector
+                 ("Multivectors.Geometric_Product with Metric, GP", GP);
       return GP;
 
    end Geometric_Product;
