@@ -861,28 +861,28 @@ package body Multivectors is
         Blades_2 := MV2s.Blades;
         Curs_1 := Blades_1.First;
 
-        New_Line;
-        GA_Utilities.Print_Multivector_String
-          ("Multivectors.Geometric_Product with Metric, MV1s", MV1s, Basis_Names_C3GA);
-        GA_Utilities.Print_Multivector_String
-          ("Multivectors.Geometric_Product with Metric, MV2s", MV2s, Basis_Names_C3GA);
-        New_Line;
+--          New_Line;
+--          GA_Utilities.Print_Multivector_String
+--            ("Multivectors.Geometric_Product with Metric, MV1s", MV1s, Basis_Names_C3GA);
+--          GA_Utilities.Print_Multivector_String
+--            ("Multivectors.Geometric_Product with Metric, MV2s", MV2s, Basis_Names_C3GA);
+--          New_Line;
 
         while Has_Element (Curs_1) loop
             Blade_1 := Element (Curs_1);
             Curs_2 := Blades_2.First;
-            GA_Utilities.Print_Blade_String
-              ("Multivectors.Geometric_Product with Metric, Blade_1",
-               Blade_1, Blade_Types.Basis_Names_C3GA);
+--              GA_Utilities.Print_Blade_String
+--                ("Multivectors.Geometric_Product with Metric, Blade_1",
+--                 Blade_1, Blade_Types.Basis_Names_C3GA);
             while Has_Element (Curs_2) loop
                 Blade_2 := Element (Curs_2);
-                GA_Utilities.Print_Blade_String
-                  ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2,
-                   Blade_Types.Basis_Names_C3GA);
+--                  GA_Utilities.Print_Blade_String
+--                    ("Multivectors.Geometric_Product with Metric, Blade_2", Blade_2,
+--                     Blade_Types.Basis_Names_C3GA);
                 Blades_GP := Blade.Geometric_Product (Blade_1, Blade_2, Met);
-                GA_Utilities.Print_Blade_List
-                  ("Multivectors.Geometric_Product with Metric, adding Blades_GP",
-                   Blades_GP);
+--                  GA_Utilities.Print_Blade_List
+--                    ("Multivectors.Geometric_Product with Metric, adding Blades_GP",
+--                     Blades_GP);
                 if not Blades_GP.Is_Empty then
                     --                 GA_Utilities.Print_Blade_List
                     --                   ("Multivectors.Geometric_Product with Metric, adding Blades_GP",
@@ -893,11 +893,11 @@ package body Multivectors is
             end loop;
             Next (Curs_1);
         end loop;
-        GA_Utilities.Print_Multivector
-          ("Multivectors.Geometric_Product with Metric, pre simplify GP", GP);
+--          GA_Utilities.Print_Multivector
+--            ("Multivectors.Geometric_Product with Metric, pre simplify GP", GP);
         Simplify (GP);
-        GA_Utilities.Print_Multivector
-          ("Multivectors.Geometric_Product with Metric, GP", GP);
+--          GA_Utilities.Print_Multivector
+--            ("Multivectors.Geometric_Product with Metric, GP", GP);
         return GP;
 
     end Geometric_Product;
@@ -1627,6 +1627,13 @@ package body Multivectors is
     begin
         Simplify (MV1s);
         Simplify (MV2s);
+--          New_Line;
+--          GA_Utilities.Print_Multivector_String
+--            ("Multivectors.Outer_Product, MV1s", MV1s, Basis_Names_C3GA);
+--          GA_Utilities.Print_Multivector_String
+--            ("Multivectors.Outer_Product, MV2s", MV2s, Basis_Names_C3GA);
+--          New_Line;
+
         List_1 := MV1s.Blades;
         List_2 := MV2s.Blades;
         Cursor_1 := List_1.First;
@@ -1637,17 +1644,30 @@ package body Multivectors is
         --        Append the resultant element to the Result list.
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
+--              GA_Utilities.Print_Blade_String
+--                 ("Multivectors.Outer_Product, B1", B1, Basis_Names_C3GA);
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
                 Blade_OP := Outer_Product (B1, B2);
-                OP.Blades.Append (Blade_OP);
+--                  GA_Utilities.Print_Blade_String
+--                    ("Multivectors.Outer_Product, B2", B2, Basis_Names_C3GA);
+--                  GA_Utilities.Print_Blade_String
+--                    ("Multivectors.Outer_Product, OP (B1, B2)",
+--                     Blade_OP, Basis_Names_C3GA);
+                if Weight (Blade_OP) /= 0.0 then
+                  OP.Blades.Append (Blade_OP);
+                end if;
                 Next (Cursor_2);
             end loop;
             Next (Cursor_1);
         end loop;
 
+--          GA_Utilities.Print_Multivector
+--            ("Multivectors.Outer_Product, pre-simplify OP", OP);
         Simplify (OP);
+--          GA_Utilities.Print_Multivector_String
+--            ("Multivectors.Outer_Product, OP", OP, Basis_Names_C3GA);
         return OP;
     end Outer_Product;
 
