@@ -5,7 +5,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with Maths;
 
-with GA_Utilities;
+--  with GA_Utilities;
 with SVD;
 
 package body Multivectors is
