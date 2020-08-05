@@ -60,12 +60,16 @@ package body Blade is
 
     --  -------------------------------------------------------------------------
 
-    procedure Add_Blades (Blades : in out Blade_List; More_Blades : Blade_List)is
+    procedure Add_Blades (Blades : in out Blade_List; More_Blades : Blade_List) is
         use Blade_List_Package;
-        Curs : Cursor := More_Blades.First;
+        Curs   : Cursor := More_Blades.First;
+        aBlade : Basis_Blade;
     begin
         while Has_Element (Curs) loop
-            Blades.Append (Element (Curs));
+            aBlade := Element (Curs);
+            if Weight (aBlade) /= 0.0 then
+                Blades.Append (aBlade);
+            end if;
             Next (Curs);
         end loop;
     end Add_Blades;

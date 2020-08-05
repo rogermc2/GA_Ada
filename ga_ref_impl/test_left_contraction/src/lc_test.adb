@@ -76,15 +76,14 @@ begin
    GA_Utilities.Print_Multivector_String ("LC_Test (ni, GP (ni, e2))", MV_A2, Basis_Names_C3GA);
    GA_Utilities.Print_Multivector_String ("LC_Test Circle", Circle, Basis_Names_C3GA);
 
-   GA_Utilities.Print_Multivector_String ("LC_Test NP_1", NP_1, Basis_Names_C3GA);
---     NP_1_OP := Outer_Product (NP_1, NP_1);
+   GA_Utilities.Print_Multivector_String ("LC_Tests NP_1", NP_1, Basis_Names_C3GA);
    NP_1_IP := Inner_Product (NP_1, NP_1, Blade.Left_Contraction, Met);
---     NP_1_GP := Geometric_Product (NP_1, NP_1, Met);
+   NP_1_OP := Outer_Product (NP_1, NP_1);
+   NP_1_GP := Geometric_Product (NP_1, NP_1, Met);
    GA_Utilities.Print_Multivector_String ("LC_Test Inner Product (NP_1, NP_1)", NP_1_IP, Basis_Names_C3GA);
---     GA_Utilities.Print_Multivector_String ("LC_Test Outer Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
---     GA_Utilities.Print_Multivector_String ("LC_Test Geometric Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
+   GA_Utilities.Print_Multivector_String ("LC_Test Outer Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
+   GA_Utilities.Print_Multivector_String ("LC_Test Geometric Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1", NP_1);
---     NP_1_OP := Outer_Product (NP_1, NP_1);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_OP", NP_1_OP);
 --     NP_1_GP := Geometric_Product (NP_1, NP_1);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_GP", NP_1_GP);
