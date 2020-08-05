@@ -5,6 +5,8 @@ with Bits;
 
 package body Blade is
 
+    epsilon : constant Float := 10.0 ** (-6);
+
     function GP_OP (BA, BB : Basis_Blade; Outer : Boolean) return Basis_Blade;
     function Inner_Product_Filter (Grade_1, Grade_2 : Integer;
                                    Blades : Blade_List; Cont : Contraction_Type)
@@ -566,7 +568,7 @@ package body Blade is
                           New_Blade (Bitmap (Current_Blade),
                                      Weight (Current_Blade) + Weight (Blade_B));
                     else
-                        if Abs (Weight (Current_Blade)) > 10.0 ** (-6) then
+                        if Abs (Weight (Current_Blade)) > epsilon then
                             Result.Append (Current_Blade);
                         end if;
                         Current_Blade := Blade_B;
@@ -574,7 +576,7 @@ package body Blade is
                     Next (Blade_Cursor);
                 end loop;
 
-                if Abs (Weight (Current_Blade)) > 10.0 ** (-6) then
+                if Abs (Weight (Current_Blade)) > epsilon then
                     Result.Append (Current_Blade);
                 end if;
                 Blades := Result;

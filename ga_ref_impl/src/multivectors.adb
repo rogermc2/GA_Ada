@@ -12,6 +12,7 @@ package body Multivectors is
 
     type Basis_Blade_Array is array (integer range <>) of Blade.Basis_Blade;
 
+    epsilon : constant Float := 10.0 ** (-6);
     Spatial_Dimension     : Natural := 0;
     MV_Basis_Vector_Names : Blade_Types.Basis_Vector_Names;
     --  This array can be used to lookup the number of coordinates for
@@ -400,7 +401,8 @@ package body Multivectors is
 
     procedure Compress (MV : in out Multivector) is
     begin
-        Compress (MV, 10.0 ** (-13));
+        Compress (MV, epsilon);
+--          Compress (MV, 10.0 ** (-13));
     end Compress;
 
     --  -------------------------------------------------------------------------
@@ -420,7 +422,7 @@ package body Multivectors is
         Result    : Multivector;
     begin
         Compress (A2);
-        if Is_Null (A2, 10.0 ** (-8)) then
+        if Is_Null (A2, epsilon) then
             Result := New_Multivector (1.0);
         elsif Is_Scalar (A2) then
             A2_Scalar := Scalar_Part (A2);
@@ -509,7 +511,7 @@ package body Multivectors is
         A2     : constant Multivector := Geometric_Product (MV, MV, Met);
         Result : Multivector;
     begin
-        if Is_Null (A2, 10.0 ** (-8)) then
+        if Is_Null (A2, epsilon) then
             Result := New_Multivector (1.0);
         elsif Is_Scalar (A2) then
             Result := New_Multivector (Exp (Scalar_Part (A2)));
@@ -1812,7 +1814,7 @@ package body Multivectors is
         Result    : Multivector;
     begin
         Compress (A2);
-        if Is_Null (A2, 10.0 ** (-8)) then
+        if Is_Null (A2, epsilon) then
             Result := MV;
         elsif Is_Scalar (A2) then
             A2_Scalar := Scalar_Part (A2);
