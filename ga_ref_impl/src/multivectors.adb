@@ -1144,18 +1144,18 @@ package body Multivectors is
         List_1 := MV1s.Blades;
         List_2 := MV2s.Blades;
         Cursor_1 := List_1.First;
-        New_Line;
-        Put_Line ("Multivectors.Inner_Product metric, Contraction Type: " &
-                    Blade.Contraction_Type'Image (Cont));
+--          New_Line;
+--          Put_Line ("Multivectors.Inner_Product metric, Contraction Type: " &
+--                      Blade.Contraction_Type'Image (Cont));
         while Has_Element (Cursor_1) loop
             B1 := Element (Cursor_1);
-            GA_Utilities.Print_Blade_String ("Multivectors.Inner_Product B1",
-                                             B1, Blade_Types.Basis_Names_C3GA);
+--              GA_Utilities.Print_Blade_String ("Multivectors.Inner_Product B1",
+--                                               B1, Blade_Types.Basis_Names_C3GA);
             Cursor_2 := List_2.First;
             while Has_Element (Cursor_2) loop
                 B2 := Element (Cursor_2);
-                GA_Utilities.Print_Blade_String ("Multivectors.Inner_Product B2",
-                                                 B2, Blade_Types.Basis_Names_C3GA);
+--                  GA_Utilities.Print_Blade_String ("Multivectors.Inner_Product B2",
+--                                                   B2, Blade_Types.Basis_Names_C3GA);
                 Blades_IP := Blade.Inner_Product (B1, B2, Met, Cont);
                 Add_Blades (MV.Blades, Blades_IP);
                 Next (Cursor_2);

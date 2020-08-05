@@ -82,7 +82,7 @@ begin
    NP_1_GP := Geometric_Product (NP_1, NP_1, Met);
    GA_Utilities.Print_Multivector_String ("LC_Test Inner Product (NP_1, NP_1)", NP_1_IP, Basis_Names_C3GA);
    GA_Utilities.Print_Multivector_String ("LC_Test Outer Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
-   GA_Utilities.Print_Multivector_String ("LC_Test Geometric Product (NP_1, NP_1)", NP_1_OP, Basis_Names_C3GA);
+   GA_Utilities.Print_Multivector_String ("LC_Test Geometric Product (NP_1, NP_1)", NP_1_GP, Basis_Names_C3GA);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1", NP_1);
 --     GA_Utilities.Print_Multivector ("General_Inverse_Test NP_1_OP", NP_1_OP);
 --     NP_1_GP := Geometric_Product (NP_1, NP_1);

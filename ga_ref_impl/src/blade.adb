@@ -237,9 +237,7 @@ package body Blade is
     --  Eigen_Vals gives the metric for each basis vector
     --  BM is the meet (bitmap of annihilated vectors)
     --  Only retain vectors common to both blades
-        use GA_Maths.Float_Array_Package;
-        BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB);
-        --        Eigen_Vals  : constant Real_Vector := Metric.Eigen_Values (Met);  --  M.getEigenMetric
+        BM          : Unsigned_32 := Bitmap (BA) and Bitmap (BB); --  M.getEigenMetric
         Index       : Integer := 1;
         New_Blade   : Basis_Blade := Geometric_Product (BA, BB); --  Euclidean metric
     begin
