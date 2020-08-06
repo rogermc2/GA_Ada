@@ -43,6 +43,7 @@ procedure LC_Test is
    Circle       : constant Multivector := Outer_Product (C1, Outer_Product (C2, C3));
    NP_1_OP      : Multivector;
    NP_1_IP      : Multivector;
+   NP_1_LC      : Multivector;
    NP_1_GP_Met  : Multivector;
    NP_1_IP_Met  : Multivector;
    NP_1_Inv     : Multivector;
@@ -103,6 +104,12 @@ begin
    GA_Utilities.Print_Multivector_String ("Inner Product (NP_1, NP_2)", NP_1_IP, Basis_Names_C3GA);
    GA_Utilities.Print_Multivector_String ("Outer Product (NP_1, NP_2)", NP_1_OP, Basis_Names_C3GA);
    GA_Utilities.Print_Multivector_String ("Geometric Product (NP_1, NP_2)", NP_1_GP, Basis_Names_C3GA);
+
+   New_Line;
+   NP_1_IP := Left_Contraction (NP_1, NP_2, Met);
+   GA_Utilities.Print_Multivector_String ("Left Contraction (NP_1, NP_2)", NP_1_IP, Basis_Names_C3GA);
+   NP_1_IP := Left_Contraction (NP_1, NP_123, Met);
+   GA_Utilities.Print_Multivector_String ("Left Contraction (NP_1, NP_123)", NP_1_IP, Basis_Names_C3GA);
 
 exception
    when anError :  others =>
