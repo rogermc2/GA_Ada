@@ -6,7 +6,7 @@ with Maths;
 
 with Blade;
 with Blade_Types; use Blade_Types;
-with GA_Utilities;
+--  with GA_Utilities;
 with Metric;
 
 package body C3GA is
@@ -556,24 +556,15 @@ package body C3GA is
    --  -------------------------------------------------------------------------
 
    function To_VectorE3GA (MV : Multivectors.Multivector) return Vector_E3 is
-      use Interfaces;
       use GL.Types;
---        use GA_Maths.Float_Functions;
       theVector : Vector_E3;
    begin
-      GA_Utilities.Print_Multivector_String ("C3GA.To_VectorE3GA MV", MV,
-                                             Blade_Types.Basis_Names_C3GA);
-      GA_Utilities.Print_Multivector ("C3GA.To_VectorE3GA MV", MV);
-      Put_Line ("C3GA.To_VectorE3GA C3_e3'Enum_Rep " &
-               Unsigned_32'Image (C3_e3'Enum_Rep));
       theVector (GL.X) := Single (Multivectors.Component (MV, C3_e1'Enum_Rep) +
                                  Multivectors.Component (MV, C3_e1_no_ni'Enum_Rep));
       theVector (GL.Y) := Single (Multivectors.Component (MV, C3_e2'Enum_Rep) +
                                   Multivectors.Component (MV, C3_e2_no_ni'Enum_Rep));
       theVector (GL.Z) := Single (Multivectors.Component (MV, C3_e3'Enum_Rep) +
                                   Multivectors.Component (MV, C3_e3_no_ni'Enum_Rep));
-      GA_Utilities.Print_E3_Vector
-        ("C3GA.To_VectorE3GA theVector", theVector);
       return theVector;
    end To_VectorE3GA;
 
