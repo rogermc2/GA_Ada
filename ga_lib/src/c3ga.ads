@@ -115,35 +115,20 @@ package C3GA is
    function e1_e2 (MV : Multivectors.Multivector) return float;
    function e1_e3 (MV : Multivectors.Multivector) return float;
    function e2_e3 (MV : Multivectors.Multivector) return float;
-   function e1_e2_e3 (MV : Multivectors.Multivector ) return float;
 
-   function E1_E2_NI (C : Multivectors.Circle) return float;
---     function E1_E2_E3 (C :  Multivectors.Circle) return float;
-   function E1_E3_NI (C :  Multivectors.Circle) return float;
-   function E2_E3_NI (C :  Multivectors.Circle) return float;
+   function E1_E2_NI (C : Multivectors.Multivector) return float;
+   function E1_E2_E3 (MV :  Multivectors.Multivector) return float;
+   function E1_E3_NI (C :  Multivectors.Multivector) return float;
+   function E2_E3_NI (C :  Multivectors.Multivector) return float;
    function Get_Coords (V : Vector_E3) return GA_Maths.Float_3D;
---     function Get_Coords (NP : Normalized_Point) return M_Vector;
    function Get_Coords (NP : Multivectors.Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array;
-   function NO_E1_E2 (C :  Multivectors.Circle) return float;
-   function NO_E1_E3 (C :  Multivectors.Circle) return float;
-   function NO_E1_NI (C :  Multivectors.Circle) return float;
-   function NO_E2_E3 (C :  Multivectors.Circle) return float;
-   function NO_E2_NI (C :  Multivectors.Circle) return float;
-   function NO_E3_NI (C :  Multivectors.Circle) return float;
-
---     function E1b (DP :  Multivectors.Dual_Plane) return float;
---     function E2b (DP :  Multivectors.Dual_Plane) return float;
---     function E3b (DP :  Multivectors.Dual_Plane) return float;
---     function NIb (DP :  Multivectors.Dual_Plane) return GA_Base_Types.NI_T;
-
---     function E1_E2_NI (L :  Multivectors.Line) return float;
---     function E1_E3_NI (L :  Multivectors.Line) return float;
---     function E2_E3_NI (L :  Multivectors.Line) return float;
-   function E1_NO_NI (L :  Multivectors.Line) return float;
-   function E2_NO_NI (L :  Multivectors.Line) return float;
-   function E3_NO_NI (L :  Multivectors.Line) return float;
-
+   function NO_E1_E2 (C :  Multivectors.Multivector) return float;
+   function NO_E1_E3 (C :  Multivectors.Multivector) return float;
+   function NO_E1_NI (C :  Multivectors.Multivector) return float;
+   function NO_E2_E3 (C :  Multivectors.Multivector) return float;
+   function NO_E2_NI (C :  Multivectors.Multivector) return float;
+   function NO_E3_NI (C :  Multivectors.Multivector) return float;
    function NO_E1_E2_E3_NI (MV : Multivectors.Multivector) return float;
 
    function E1b (NP : Multivectors.Normalized_Point) return float;
@@ -152,30 +137,16 @@ package C3GA is
    function NIb (NP : Multivectors.Normalized_Point) return Float;
    function NOb (NP : Multivectors.Normalized_Point) return Float;
 
-   function E1_E2_E3_NI (S : Sphere) return float;
-   function E1_E2_NO_NI (S : Sphere) return float;
-   function E1_E3_NO_NI (S : Sphere) return float;
-   function E2_E3_NO_NI (S : Sphere) return float;
-   function E1_E2_E3_NO (S : Sphere) return float;
-
    function C3GA_Point (V : Vector_E3) return C3GA_Normalized_Point;
    function Multivector_String (MV : Multivectors.Multivector) return String;
---     function Outer_Product (NP1, NP2 : Normalized_Point) return Line;
---     function Outer_Product (NP : Normalized_Point; MV : Multivectors.Multivector)
---                             return Normalized_Point;
---     function Outer_Product (L1, L2 : Line) return Line;
    function Norm_E2 (V : Vector_E3) return Float;
    function Norm_R (V : Vector_E3) return Float;
    function Norm_R2 (V : Vector_E3) return Float;
---     function Norm_R (MV : Multivectors.Multivector) return Float;
---     function Norm_Rsq (MV : Multivectors.Multivector) return Float;
    function Probe (Pr : Blade_Types.C3_Base) return Multivectors.Normalized_Point;
 
    function Set_Circle (P1, P2, P3 : Multivectors.Normalized_Point)
                         return  Multivectors.Circle;
---     procedure Set_Coords (P : out Multivectors.Point; Origin, C1, C2, C3, Inf : float);
    procedure Set_Coords (V : out Vector_E3; C1, C2, C3 : float);
---     function Set_Coords (C1, C2, C3 : float) return Vector_E3;
    function Set_Dual_Plane (P1  : Multivectors.Normalized_Point;
                             Dir : Multivectors.M_Vector)
                             return Multivectors.Dual_Plane;

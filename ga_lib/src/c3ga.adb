@@ -6,7 +6,7 @@ with Maths;
 
 with Blade;
 with Blade_Types; use Blade_Types;
---  with GA_Utilities;
+with GA_Utilities;
 with Metric;
 
 package body C3GA is
@@ -248,119 +248,45 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function e1_e2_e3 (MV : Multivectors.Multivector) return float is
+    function E1_E2_E3 (MV : Multivectors.Multivector) return float is
         use Interfaces;
         BM   : constant Unsigned_32 :=
                  Unsigned_32 (E3_Base'Enum_Rep (E3_e1)) or
           Unsigned_32 (E3_Base'Enum_Rep (E3_e2)) or Unsigned_32 (E3_Base'Enum_Rep (E3_e3));
     begin
         return Multivectors.Component (MV, BM);
-    end e1_e2_e3;
+    end E1_E2_E3;
 
     --  -------------------------------------------------------------------------
 
-    --     function Grade_Use (MV : Multivector) return GA_Maths.Unsigned_32  is
-    --     begin
-    --        return MV.Grade_Use;
-    --     end Grade_Use;
-
-    --  ------------------------------------------------------------------------
-
-    --     function Init (MV : Multivector; Epsilon : float := 0.0) return MV_Type is
-    --        use Interfaces;
-    --        use GA_Maths;
-    --        use  Multivector_Type_Base;
-    --        MV_Info            : MV_Type;
-    --        GU                 : GA_Maths.Grade_Usage := Grade_Use (MV);
-    --        Count              : array (Unsigned_32 range 1 .. 2) of Integer := (0, 0);
-    --        Count_Index        : Unsigned_32 := 0;
-    --        Index              : Unsigned_32 := 0;
-    --        Done               : Boolean := False;
-    --     begin
-    --        MV_Info.M_Type := Multivector_Object;
-    --        MV_Info.M_Grade_Use := GU;
-    --        --  count grade part usage
-    --        while GU /= 0 loop
-    --           if (GU and GU_1) /= 0 then  --  c3ga.cpp line 21731
-    --              Index := Count_Index and US_1;
-    --              Count (Index) := Count (Index) + 1;
-    --           end if;
-    --           GU := Unsigned_32 (Shift_Right (Unsigned_32 (GU), 1));
-    --           MV_Info.M_Grade := Integer (Count_Index);
-    --           Count_Index := Count_Index + 1;
-    --        end loop;
-    --
-    --        --  if no grade part in use: zero blade
-    --        if Count (1) = 0 and then Count (2) = 0  then  --  this is a zero blade
-    --           Put_Line ("C3GA.Init 1 Setting zero blade.");
-    --           Set_Type_Base (MV_Info, True, Blade_MV, 0, GU, Even_Parity);
-    --           Done := True;
-    --        else
-    --           --  Base.M_Zero = False by default
-    --           if Count (1) /= 0 and then Count (2) /= 0  then
-    --              --  Base.M_Parity = No_Parity by default
-    --              Done := True;
-    --           else
-    --              if Count (1) = 0 then
-    --                 Put_Line ("C3GA.Init 1 Setting even parity.");
-    --                 MV_Info.M_Parity := Even_Parity;
-    --              else
-    --                 --                 Put_Line ("C3GA.Init 1 Setting odd parity.");
-    --                 MV_Info.M_Parity := Odd_Parity;
-    --              end if;
-    --           end if;
-    --        end if;
-    --        if not Done then
-    --           MV_Info := Init (MV, Epsilon, True, Count (1) + Count (2));
-    --        end if;
-    --        return MV_Info;
-    --     exception
-    --        when anError :  others =>
-    --           Put_Line ("An exception occurred in C3GA.Init 1.");
-    --           raise;
-    --     end Init;
-
-    -------------------------------------------------------------------------
-
-    --     function Init (MV : C3GA.Multivector; Epsilon : float;
-    --                    Use_Algebra_Metric : Boolean;
-    --                    GU_Count : Integer) return MV_Type is
-    --        MV_Info : MV_Type;
-    --     begin
-    --        --  To be completed.
-    --        return MV_Info;
-    --     end Init;
-
-    --  -------------------------------------------------------------------------
-
-    function Element (C :  Multivectors.Circle; E : C3_Base) return float is
+       function Element (C :  Multivectors.Circle; E : C3_Base) return float is
         use Multivectors;
         theBlade : constant Blade.Basis_Blade  :=
                      Get_Blade (Multivector (C), C3_Base'Enum_Rep (E));
-    begin
+       begin
         return Blade.Weight (theBlade);
-    end Element;
+       end Element;
 
     --  -------------------------------------------------------------------------
 
-    function Line_Element (L :  Multivectors.Line; E : C3_Base) return float is
-        use Multivectors;
-        theBlade : constant Blade.Basis_Blade  :=
-                     Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
-    begin
-        return Blade.Weight (theBlade);
-    end Line_Element;
+--      function Line_Element (L : Multivectors.Line; E : C3_Base) return float is
+--          use Multivectors;
+--          theBlade : constant Blade.Basis_Blade  :=
+--                       Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
+--      begin
+--          return Blade.Weight (theBlade);
+--      end Line_Element;
 
     --  -------------------------------------------------------------------------
 
-    function E1_E2_NI (C :  Multivectors.Circle) return float is
+    function E1_E2_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_e2_ni);
     end E1_E2_NI;
 
     --  -------------------------------------------------------------------------
 
-    function E1_E3_NI (C :  Multivectors.Circle) return float is
+    function E1_E3_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_e3_ni);
     end E1_E3_NI;
@@ -374,7 +300,7 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function E2_E3_NI (C :  Multivectors.Circle) return float is
+    function E2_E3_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e2_e3_ni);
     end E2_E3_NI;
@@ -431,42 +357,42 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    function NO_E1_E2 (C :  Multivectors.Circle) return float is
+    function NO_E1_E2 (C :  Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_e2_no);
     end NO_E1_E2;
 
     --  -------------------------------------------------------------------------
 
-    function NO_E1_E3 (C :  Multivectors.Circle) return float is
+    function NO_E1_E3 (C :  Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_e3_no);
     end NO_E1_E3;
 
     --  -------------------------------------------------------------------------
 
-    function NO_E1_NI (C :  Multivectors.Circle) return float is
+    function NO_E1_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_no_ni);
     end NO_E1_NI;
 
     --  -------------------------------------------------------------------------
 
-    function NO_E2_E3 (C :  Multivectors.Circle) return float is
+    function NO_E2_E3 (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e2_e3_no);
     end NO_E2_E3;
 
     --  -------------------------------------------------------------------------
 
-    function NO_E2_NI (C :  Multivectors.Circle) return float is
+    function NO_E2_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e2_no_ni);
     end NO_E2_NI;
 
     --  -------------------------------------------------------------------------
 
-    function NO_E3_NI (C :  Multivectors.Circle) return float is
+    function NO_E3_NI (C :  Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e3_no_ni);
     end NO_E3_NI;
@@ -498,70 +424,6 @@ package body C3GA is
     --     begin
     --        return DP.Inf;
     --     end NIb;
-
-    --  -------------------------------------------------------------------------
-
-    --     function Element (L : Line; E : C3_Base) return float is
-    --        use Blade_Types;
-    --        use Multivectors;
-    --        theBlade : constant Blade.Basis_Blade  :=
-    --          Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
-    --     begin
-    --        return Blade.Weight (theBlade);
-    --     end Element;
-
-    --  -------------------------------------------------------------------------
-
-    --     function E1_E2_NI (L :  Multivectors.Line) return float is
-    --     begin
-    --        return Element (L, C3_e1_e2_ni);
-    --     end E1_E2_NI;
-
-    --  -------------------------------------------------------------------------
-
-    --     function E1_E3_NI (L :  Multivectors.Line) return float is
-    --     begin
-    --        return Element (L, C3_e1_e3_ni);
-    --     end E1_E3_NI;
-
-    --  -------------------------------------------------------------------------
-
-    --     function E2_E3_NI (L :  Multivectors.Line) return float is
-    --     begin
-    --        return Element (L, C3_e2_e3_ni);
-    --     end E2_E3_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E1_NO_NI (L :  Multivectors.Line) return float is
-    begin
-        return Line_Element (L, C3_e1_no_ni);
-    end E1_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E2_NO_NI (L :  Multivectors.Line) return float is
-    begin
-        return Line_Element (L, C3_e2_no_ni);
-    end E2_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E3_NO_NI (L :  Multivectors.Line) return float is
-    begin
-        return Line_Element (L, C3_e3_no_ni);
-    end E3_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    --     function Element (MV : Multivectors.Multivector; E : C3_Base) return float is
-    --        use Blade_Types;
-    --        use Multivectors;
-    --        theBlade : constant Blade.Basis_Blade  :=
-    --          Get_Blade (Multivector (MV), C3_Base'Enum_Rep (E));
-    --     begin
-    --        return Blade.Weight (theBlade);
-    --     end Element;
 
     --  -------------------------------------------------------------------------
 
@@ -633,51 +495,6 @@ package body C3GA is
     begin
         return 1.0;
     end NOb;
-
-    --  -------------------------------------------------------------------------
-
-    function Sphere_Element (S : Sphere; E : C3_Base) return float is
-        use Multivectors;
-        theBlade : constant Blade.Basis_Blade  :=
-                     Get_Blade (Multivector (S), C3_Base'Enum_Rep (E));
-    begin
-        return Blade.Weight (theBlade);
-    end Sphere_Element;
-
-    --  -------------------------------------------------------------------------
-
-    function E1_E2_E3_NI (S : Sphere) return float is
-    begin
-        return Sphere_Element (S, C3_e1_e2_e3_ni);
-    end E1_E2_E3_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E1_E2_NO_NI (S : Sphere) return float is
-    begin
-        return Sphere_Element (S, C3_e1_e2_no_ni);
-    end E1_E2_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E1_E3_NO_NI (S : Sphere) return float is
-    begin
-        return Sphere_Element (S, C3_e1_e3_no_ni);
-    end E1_E3_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E2_E3_NO_NI (S : Sphere) return float is
-    begin
-        return Sphere_Element (S, C3_e2_e3_no_ni);
-    end E2_E3_NO_NI;
-
-    --  -------------------------------------------------------------------------
-
-    function E1_E2_E3_NO (S : Sphere) return float is
-    begin
-        return Sphere_Element (S, C3_e1_e2_e3_no);
-    end E1_E2_E3_NO;
 
     --  -------------------------------------------------------------------------
 
@@ -1084,9 +901,14 @@ package body C3GA is
         use GL.Types;
         theVector : Vector_E3;
     begin
-        theVector (GL.X) := Single (Multivectors.Component (MV, C3_e1'Enum_Rep));
-        theVector (GL.Y) := Single (Multivectors.Component (MV, C3_e2'Enum_Rep));
-        theVector (GL.Z) := Single (Multivectors.Component (MV, C3_e3'Enum_Rep));
+       GA_Utilities.Print_Multivector_String
+                    ("C3GA.To_VectorE3GA MV", MV, Blade_Types.Basis_Names_C3GA);
+        theVector (GL.X) := Single (Multivectors.Component (MV, C3_e1'Enum_Rep) +
+                                    Multivectors.Component (MV, C3_e1_no_ni'Enum_Rep));
+        theVector (GL.Y) := Single (Multivectors.Component (MV, C3_e2'Enum_Rep) +
+                                    Multivectors.Component (MV, C3_e2_no_ni'Enum_Rep));
+        theVector (GL.Z) := Single (Multivectors.Component (MV, C3_e3'Enum_Rep) +
+                                    Multivectors.Component (MV, C3_e3_no_ni'Enum_Rep));
         return theVector;
     end To_VectorE3GA;
 
