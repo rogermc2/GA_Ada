@@ -70,7 +70,7 @@ package body GL_Util is
         use Multivectors;
         use GL;
         use GL.Types.Singles;
-        IR        : constant Rotor := General_Inverse (R);
+        IR        : constant Rotor := To_Rotor (General_Inverse (R));
         E_Rot     : Multivectors.Multivector;
         E1_IR     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
