@@ -46,125 +46,13 @@ package body C3GA is
     --     e3_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.e3);
     --     ni_BV : constant C3GA.Multivector := Get_Basis_Vector (Blade.ni);
 
-    --     function Init (MV : Multivector.Multivector; Epsilon : float;
-    --                    Use_Algebra_Metric : Boolean;
-    --                    GU_Count : Integer) return MV_Type;
-
-    --  -------------------------------------------------------------------------
-
-    --     function "+" (V1 : Vector_C3GA; V2 : Vector_C3GA) return Vector_C3GA is
-    --     begin
-    --        return (V1 (1) + V2 (1), V1 (2) + V2 (2), V1 (3) + V2 (3),
-    --                V1 (4) + V2 (4), V1 (5) + V2 (5));
-    --     end  "+";
-
-    --  -------------------------------------------------------------------------
-
     function "*" (L : Float; R : Vector_E3) return Vector_E3 is
         use GL.Types;
     begin
         return (Single (L) * R (GL.X), Single (L) * R (GL.Y), Single (L) * R (GL.Z));
     end  "*";
 
-    --  -------------------------------------------------------------------------
-
-    --     function "*" (L : Line; S : Float) return Line is
-    --        use Multivectors;
-    --        use Multivectors.Blade_List_Package;
-    --        Blades   : constant Blade_List := Get_Blade_List (L);
-    --        Curs     : Cursor := Blades.First;
-    --        aBlade   : Blade.Basis_Blade;
-    --        New_List : Blade_List;
-    --        theLine  : Multivector;
-    --     begin
-    --        while Has_Element (Curs) loop
-    --           aBlade := Element (Curs);
-    --           Blade.Update_Blade (aBlade, S * Blade.Weight (aBlade));
-    --           Add_Blade (theLine, aBlade);
-    --           Next (Curs);
-    --        end loop;
-    --        Update (theLine, New_List);
-    --        return Line (theLine);
-    --     end  "*";
-
-    --  -------------------------------------------------------------------------
-
-    --     function "*" (S : Float; L : Line) return Line is
-    --     begin
-    --        return L * S;
-    --     end  "*";
-
-    --  -------------------------------------------------------------------------
-
-    --     function C3GA_Point (V : Vector_E3) return Normalized_Point is
-    --        thePoint : Normalized_Point := Multivectors.New_Normalized_Point;
-    --     begin
-    --        --  thePoint.Origin of a Normalized_Point is a constant 1.0
-    --        thePoint.E1 := V.Coordinates (1);
-    --        thePoint.E2 := V.Coordinates (2);
-    --        thePoint.E3 := V.Coordinates (3);
-    --        thePoint.Inf := 0.5 * Norm_E2(V).Coordinates (1) * GA_Base_Types.NI;
-    --        return thePoint;
-    --     end C3GA_Point;
-
-    --  ------------------------------------------------------------------------
-    --
-    --     function "+" (L, R : Vector_E3) return Vector_E3 is
-    --          L_Coords : constant E3GA.Vector := L.Coordinates;
-    --          R_Coords : constant E3GA.Vector := R.Coordinates;
-    --          Result   : Vector_E3;
-    --     begin
-    --        Result.Coordinates (1) := L_Coords (1) + R_Coords (1);
-    --        Result.Coordinates (2) := L_Coords (2) + R_Coords (2);
-    --        Result.Coordinates (3) := L_Coords (3) + R_Coords (3);
-    --        return Result;
-    --     end "+";
-
-    --  -------------------------------------------------------------------------
-
-    --     function "-" (L, R : Vector_E3) return Vector_E3 is
-    --          L_Coords : constant E3GA.Vector := L.Coordinates;
-    --          R_Coords : constant E3GA.Vector := R.Coordinates;
-    --          Result   : Vector_E3;
-    --     begin
-    --        Result.Coordinates (1) := L_Coords (1) - R_Coords (1);
-    --        Result.Coordinates (2) := L_Coords (2) - R_Coords (2);
-    --        Result.Coordinates (3) := L_Coords (3) - R_Coords (3);
-    --        return Result;
-    --     end "-";
-
-    --  -------------------------------------------------------------------------
-
-    --     function "*" (L : float; R : Vector_E3) return Vector_E3 is
-    --          R_Coords : constant E3GA.Vector := R.Coordinates;
-    --          Result   : Vector_E3;
-    --     begin
-    --        Result.Coordinates (1) := L * R_Coords (1);
-    --        Result.Coordinates (2) := L * R_Coords (2);
-    --        Result.Coordinates (3) := L * R_Coords (3);
-    --        return Result;
-    --     end "*";
-
-    --  -------------------------------------------------------------------------
-
-    --     function "*" (L : Vector_E3; R : float) return Vector_E3 is
-    --          L_Coords : constant E3GA.Vector := L.Coordinates;
-    --          Result   : Vector_E3;
-    --     begin
-    --        Result.Coordinates (1) := R * L_Coords (1);
-    --        Result.Coordinates (2) := R * L_Coords (2);
-    --        Result.Coordinates (3) := R * L_Coords (3);
-    --        return Result;
-    --     end "*";
-
-    --  -------------------------------------------------------------------------
-
-    --     function Coord (S : Multivectors.Scalar) return float is
-    --     begin
-    --        return Multivectors.Scalar_Part (S);
-    --     end Coord;
-
-    --  -------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------    --          R_Coords : constant E3GA.Vector := R.Coordinates;
 
     function e1 return Multivectors.Multivector is
         use Multivectors;
@@ -269,16 +157,6 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
---      function Line_Element (L : Multivectors.Line; E : C3_Base) return float is
---          use Multivectors;
---          theBlade : constant Blade.Basis_Blade  :=
---                       Get_Blade (Multivector (L), C3_Base'Enum_Rep (E));
---      begin
---          return Blade.Weight (theBlade);
---      end Line_Element;
-
-    --  -------------------------------------------------------------------------
-
     function E1_E2_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e1_e2_ni);
@@ -293,13 +171,6 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    --     function E1_E2_E3 (C : Circle) return float is
-    --     begin
-    --        return Element (C, C3_e1_e2_e3);
-    --     end E1_E2_E3;
-
-    --  -------------------------------------------------------------------------
-
     function E2_E3_NI (C : Multivectors.Multivector) return float is
     begin
         return Element (C, C3_e2_e3_ni);
@@ -311,13 +182,6 @@ package body C3GA is
     end Get_Coords;
 
     --  ------------------------------------------------------------------------
-
-    --     function Get_Coords (NP : Normalized_Point) return M_Vector is
-    --     begin
-    --        return (1.0, NP.E1, NP.E2, NP.E3, NP.Inf);
-    --     end Get_Coords;
-
-    ------------------------------------------------------------------------
 
     function Get_Coords (NP : Multivectors.Normalized_Point)
                         return GA_Maths.Coords_Continuous_Array is
@@ -399,56 +263,10 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    --     function E1b (DP : Dual_Plane) return float is
-    --     begin
-    --        return DP.E1;
-    --     end E1b;
-
-    --  -------------------------------------------------------------------------
-
-    --     function E2b (DP : Dual_Plane) return float is
-    --     begin
-    --        return DP.E2;
-    --     end E2b;
-
-    --  -------------------------------------------------------------------------
-
-    --     function E3b (DP : Dual_Plane) return float is
-    --     begin
-    --        return DP.E3;
-    --     end E3b;
-
-    --  -------------------------------------------------------------------------
-
-    --     function NIb (DP : Dual_Plane) return GA_Base_Types.NI_T is
-    --     begin
-    --        return DP.Inf;
-    --     end NIb;
-
-    --  -------------------------------------------------------------------------
-
     function NO_E1_E2_E3_NI (MV : Multivectors.Multivector) return float is
     begin
         return Element (MV, C3_e1_e2_e3_no_ni);
     end NO_E1_E2_E3_NI;
-
-    --  -------------------------------------------------------------------------
-
-    --     function NO_E1_E2_E3_NI (MV : Multivectors.Multivector) return float is
-    --        use GA_Maths;
-    --        GU         : Grade_Usage := Multivectors.Grade_Use (MV);
-    --        GU_32      : constant Grade_Usage := 32;
-    --        Grade_Size : Integer;
-    --        MV2        : Multivectors.Multivector;
-    --     begin
-    --        if (GU and GU_32) = 0 then
-    --           return 0.0;
-    --        else
-    --           Grade_Size := MV_Grade_Size (Integer(GU and GU_32));
-    --           --              MV2 := Multivectors.Get_Basis_Vector (Blade.Base'Enum_Val (Grade_Size));
-    --           return 0.0;
-    --        end if;
-    --     end NO_E1_E2_E3_NI;
 
     --  -------------------------------------------------------------------------
 
@@ -582,44 +400,6 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    --        function Norm_E (MV : Multivector) return Scalar is
-    --           use GA_Maths;
-    --           GU  : Grade_Usage :=  Grade_Use (MV);
-    --           Sum : Float := 0.0;
-    --           E2  : Scalar;
-    --        begin
-    --           if (GU and GU_0) /= 0 then
-    --              Sum := MV.Coordinates (1) * MV.Coordinates (1);
-    --           end if;
-    --           if (GU and GU_1) /= 0 then
-    --              For index in 2 .. 6 loop
-    --                 Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
-    --              end loop;
-    --           end if;
-    --           if (GU and GU_2) /= 0 then
-    --              For index in 7 .. 16 loop
-    --                 Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
-    --              end loop;
-    --           end if;
-    --           if (GU and GU_4) /= 0 then
-    --              For index in 17 .. 26 loop
-    --                 Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
-    --              end loop;
-    --           end if;
-    --           if (GU and GU_8) /= 0 then
-    --              For index in 27 .. 31 loop
-    --                 Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
-    --              end loop;
-    --           end if;
-    --           if (GU and GU_16) /= 0 then
-    --              Sum := Sum + MV.Coordinates (32) * MV.Coordinates (32);
-    --           end if;
-    --           E2.Coordinates (1) := Sum;
-    --           return E2;
-    --        end Norm_E;
-
-    --  -------------------------------------------------------------------------
-
     function Norm_E2 (V : Vector_E3) return Float is
         use GL.Types;
     begin
@@ -637,24 +417,6 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    --      function Norm_R (MV : Multivectors.Multivector) return Float is
-    --          use GA_Maths.Float_Functions;
-    --          use Multivectors;
-    --          DP     : constant float := Scalar_Part (Dot (MV, MV));
-    --          Result : Float := 0.0;
-    --      begin
-    --          if DP /= 0.0 then
-    --              if DP < 0.0 then
-    --                  Result := -Sqrt (-DP);
-    --              else
-    --                  Result := Sqrt (DP);
-    --              end if;
-    --          end if;
-    --          return Result;
-    --      end Norm_R;
-
-    --  ------------------------------------------------------------------------
-
     function Norm_R2 (V : Vector_E3) return Float is
         use GL.Types;
         theNorm : Single;
@@ -665,86 +427,6 @@ package body C3GA is
     end Norm_R2;
 
     --  -------------------------------------------------------------------------
-
-    --      function Norm_Rsq (MV : Multivectors.Multivector) return Float is
-    --          use GA_Maths;
-    --          use Multivectors;
-    --          GU  : constant Grade_Usage :=  Grade_Use (MV);
-    --          Sum : Float := 0.0;
-    --      begin
-    --          if (GU and GU_0) /= 0 then
-    --              Sum := Component (MV, 1) * Component (MV, 1);
-    --          end if;
-    --          if (GU and GU_1) /= 0 then
-    --  --              For index in 2 .. 6 loop
-    --               Sum := Sum - 2.0 * Component (MV, 2) * Component (MV, 6) +
-    --               Component (MV, 3) * Component (MV, 3) +
-    --               Component (MV, 4) * Component (MV, 4) +
-    --               Component (MV, 5) * Component (MV, 5);
-    --  --              end loop;
-    --          end if;
-    --          if (GU and GU_2) /= 0 then
-    --  --              For index in 7 .. 16 loop
-    --               Sum := Sum + 2.0 + Component (MV, 7) * Component (MV, 13) +
-    --               2.0 * Component (MV, 8) * Component (MV, 14) +
-    --               Component (MV, 9) * Component (MV, 15) +
-    --               Component (MV, 10) * Component (MV, 10) +
-    --               Component (MV, 11) * Component (MV, 11) +
-    --               Component (MV, 12) * Component (MV, 12) +
-    --               Component (MV, 16) * Component (MV, 16);
-    --  --              end loop;
-    --          end if;
-    --          if (GU and GU_4) /= 0 then
-    --  --              For index in 17 .. 26 loop
-    --               Sum := Sum +
-    --               2.0 * Component (MV, 17) * Component (MV, 23) +
-    --               2.0 * Component (MV, 18) * Component (MV, 24) +
-    --               2.0 * Component (MV, 19) * Component (MV, 25) +
-    --               Component (MV, 20) * Component (MV, 20) +
-    --               Component (MV, 21) * Component (MV, 21) +
-    --               Component (MV, 22) * Component (MV, 22) -
-    --               Component (MV, 26) * Component (MV, 26);
-    --  --              end loop;
-    --          end if;
-    --  --          if (GU and GU_8) /= 0 then
-    --  --              For index in 27 .. 31 loop
-    --  --                  Sum := Sum + MV.Coordinates (index) * MV.Coordinates (index);
-    --  --              end loop;
-    --  --          end if;
-    --  --          if (GU and GU_16) /= 0 then
-    --  --              Sum := Sum + MV.Coordinates (32) * MV.Coordinates (32);
-    --  --          end if;
-    --  --          E2.Coordinates (1) := Sum;
-    --          return Sum;
-    --
-    --      end Norm_Rsq;
-
-    --  ------------------------------------------------------------------------
-
-    --     function Outer_Product (NP1, NP2 : Normalized_Point) return Line is
-    --        use Multivectors;
-    --     begin
-    --        return Line (Outer_Product (Multivector (NP1), Multivector (NP2)));
-    --     end Outer_Product;
-
-    --  ------------------------------------------------------------------------
-
-    --     function Outer_Product (L1, L2 : Line) return Line is
-    --        use Multivectors;
-    --     begin
-    --        return Line (Outer_Product (Multivector (L1), Multivector (L2)));
-    --     end Outer_Product;
-
-    --  ------------------------------------------------------------------------
-
-    --     function Outer_Product (NP : Normalized_Point; MV : Multivectors.Multivector)
-    --                             return Normalized_Point is
-    --        use Multivectors;
-    --     begin
-    --        return Normalized_Point (Outer_Product (Multivector (NP), MV));
-    --     end Outer_Product;
-
-    --  ------------------------------------------------------------------------
 
     function Probe (Pr : C3_Base) return Multivectors.Normalized_Point is
         NP  : Multivectors.Normalized_Point;
@@ -777,26 +459,6 @@ package body C3GA is
 
     --  -------------------------------------------------------------------------
 
-    --     function Set_Coords (C1, C2, C3 : float) return Vector_E3 is
-    --        use GL.Types;
-    --     begin
-    --        return (Single (C1), Single (C2), Single (C3));
-    --     end Set_Coords;
-
-    --  -------------------------------------------------------------------------
-
-    --     procedure Set_Coords (P : out Point; Origin, C1, C2, C3, Inf : float) is
-    --        use GA_Base_Types;
-    --     begin
-    --        Set_NO (P.Origin, Origin);
-    --        P.E1 := C1;
-    --        P.E2 := C2;
-    --        P.E3 := C3;
-    --        P.Inf := Inf;
-    --     end Set_Coords;
-
-    --  -------------------------------------------------------------------------
-
     function Set_Dual_Plane (P1 : Multivectors.Normalized_Point; Dir : Multivectors.M_Vector)
                             return Multivectors.Dual_Plane is
         use Multivectors;
@@ -808,22 +470,6 @@ package body C3GA is
     end Set_Dual_Plane;
 
     --  ------------------------------------------------------------------------
-
-    --     function Set_Line (E1_E2_NI, E1_E3_NI, E2_E3_NI,
-    --                        E1_NO_NI, E2_NO_NI, E3_NO_NI : Float) return Line is
-    --        use Blade;
-    --        theLine : Line;
-    --     begin
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e1_e2_ni, E1_E2_NI));
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e1_e3_ni, E1_E3_NI));
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e2_e3_ni, E2_E3_NI));
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e1_no_ni, E1_NO_NI));
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e2_no_ni, E2_NO_NI));
-    --        Add_Blade (theLine, Blade.New_Basis_Blade (C3_e3_no_ni, E3_NO_NI));
-    --        return theLine;
-    --     end Set_Line;
-
-    --  -------------------------------------------------------------------------
 
     function Set_Line (P1, P2 : Multivectors.Normalized_Point)
                       return  Multivectors.Line is
@@ -930,164 +576,6 @@ package body C3GA is
         theVector (GL.Z) := Single (Multivectors.Component (NP, 4));
         return theVector;
     end NP_To_VectorE3GA;
-
-    --  -------------------------------------------------------------------------
-
-    --     function Outer_Product (MV1, MV2 : Multivector) return Multivector is
-    --        use GA_Maths;
-    --        Coords  : GA_Maths.Coords_Continuous_Array (1 .. 32);
-    --        GU1     : Grade_Usage := MV1.Grade_Use;
-    --        GU2     : Grade_Usage := MV2.Grade_Use;
-    --        Size_1  : integer := MV_Size (Integer (MV1.Grade_Use));
-    --        Size_2  : integer := MV_Size (Integer (MV2.Grade_Use));
-    --        MV_GU   : Grade_Usage := GU1 or GU2;
-    --        Sum     : Float := 0.0;
-    --        Product : Multivector (MV_GU);
-    --
-    --        function Grade_Used (MV : Multivector; Index : Integer) return Boolean is
-    --           GU     : Grade_Usage := MV1.Grade_Use;
-    --           Result : Boolean := False;
-    --        begin
-    --           case Index is
-    --                 when 0 => Result := (GU and GU_0) /= 0;
-    --                 when 1 => Result := (GU and GU_1) /= 0;
-    --                 when 2 => Result := (GU and GU_2) /= 0;
-    --                 when 3 => Result := (GU and GU_4) /= 0;
-    --                 when 4 => Result := (GU and GU_8) /= 0;
-    --                 when 5 => Result := (GU and GU_16) /= 0;
-    --                 when others =>
-    --                     Put_Line ("C3GA.Outer_Product Invalid Index");
-    --           end case;
-    --           return Result;
-    --        end Grade_Used;
-    --
-    --     begin
-    --           for Index2 in 1 ..32 loop
-    --              if Grade_Used (MV2, Integer (GU1)) then
-    --                 for Index1 in 1 .. 32 loop
-    --                    null;
-    --                 end loop;
-    --              end if;
-    --           end loop;
-    --
-    --           if (GU2 and GU_0) /= 0 then
-    --              if (GU1 and GU_1) /= 0 then
-    --                 Coords (1) := MV1.Coordinates (1) * MV2.Coordinates (1);
-    --              end if;
-    --              if (GU1 and GU_1) /= 0 then
-    --                 For index in 2 .. 6 loop
-    --                    Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
-    --                 end loop;
-    --              end if;
-    --              if (GU1 and GU_2) /= 0 then
-    --                 For index in 7 .. 16 loop
-    --                    Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
-    --                 end loop;
-    --              end if;
-    --              if (GU1 and GU_4) /= 0 then
-    --                 For index in 17 .. 26 loop
-    --                    Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
-    --                 end loop;
-    --              end if;
-    --              if (GU1 and GU_8) /= 0 then
-    --                 For index in 27 .. 31 loop
-    --                    Coords (index) := MV1.Coordinates (index) * MV2.Coordinates (1);
-    --                 end loop;
-    --              end if;
-    --              if (GU1 and GU_16) /= 0 then
-    --                 Coords (32) := MV1.Coordinates (32) * MV2.Coordinates (1);
-    --              end if;
-    --           end if;
-    --
-    --           if (GU2 and GU_1) /= 0 then
-    --              if (GU1 and GU_1) /= 0 then
-    --                 For index in 2 .. 6 loop
-    --                    Coords (index) := Coords (index) +
-    --                      MV1.Coordinates (1) * MV2.Coordinates (index);
-    --                 end loop;
-    --              end if;
-    --
-    --              if (GU1 and GU_2) /= 0 then
-    --                 Coords (7) := Coords (7) +
-    --                   MV1.Coordinates (2) * MV2.Coordinates (3) -
-    --                   MV1.Coordinates (3) * MV2.Coordinates (2);
-    --                 Coords (8) := Coords (8) +
-    --                   MV1.Coordinates (2) * MV2.Coordinates (4) -
-    --                   MV1.Coordinates (4) * MV2.Coordinates (2);
-    --                 Coords (9) := Coords (9) +
-    --                   MV1.Coordinates (2) * MV2.Coordinates (5) -
-    --                   MV1.Coordinates (5) * MV2.Coordinates (2);
-    --                 Coords (10) := Coords (10) +
-    --                   MV1.Coordinates (3) * MV2.Coordinates (4) -
-    --                   MV1.Coordinates (4) * MV2.Coordinates (3);
-    --                 Coords (11) := Coords (11) +
-    --                   MV1.Coordinates (4) * MV2.Coordinates (5) -
-    --                   MV1.Coordinates (5) * MV2.Coordinates (4);
-    --                 Coords (12) := Coords (12) +
-    --                   MV1.Coordinates (5) * MV2.Coordinates (3) -
-    --                   MV1.Coordinates (3) * MV2.Coordinates (5);
-    --                 Coords (13) := Coords (13) +
-    --                   MV1.Coordinates (3) * MV2.Coordinates (6) -
-    --                   MV1.Coordinates (6) * MV2.Coordinates (3);
-    --              end if;
-    --           end if;
-    --           return Product;
-    --     end Outer_Product;
-
-    --  -------------------------------------------------------------------------
-
-    --     function Unit_R (L : Line) return Line is
-    --        use Blade;
-    --        use Blade_Types;
-    --        use GA_Maths.Float_Functions;
-    --        use Multivectors;
-    --        Blade_1 : constant Basis_Blade :=
-    --          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e1_no_ni));
-    --        Blade_2 : constant Basis_Blade :=
-    --          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e2_no_ni));
-    --        Blade_3 : constant Basis_Blade :=
-    --          Get_Blade (Multivector (L), C3_Base'Enum_Rep (C3_e3_no_ni));
-    --        R_Sq : constant float := -(Weight (Blade_1) * Weight (Blade_1) +
-    --                                   Weight (Blade_2) * Weight (Blade_2) +
-    --                                   Weight (Blade_3) * Weight (Blade_3));
-    --        Inv  : constant float := 1.0 / Sqrt (Abs (R_Sq));
-    --     begin
-    --
-    --        return L * Inv;
-    --     end Unit_R;
-
-    --  -------------------------------------------------------------------------
-
-    --     function US_Normalized_Point (N : Normalized_Point) return Normalized_Point is
-    --        thePoint : Normalized_Point := N;
-    --     begin
-    --        thePoint.Inf := 0.0;
-    --        return thePoint;
-    --     end US_Normalized_Point;
-    --
-    --     --  -------------------------------------------------------------------------
-    --
-    --     function US_Set_Normalized_Point (E1, E2, E3 : Float) return Normalized_Point is
-    --        NP : Normalized_Point;
-    --     begin
-    --        NP.E1 := E1;
-    --        NP.E2 := E2;
-    --        NP.E3 := E3;
-    --        NP.Inf := 0.0;
-    --        return NP;
-    --     end US_Set_Normalized_Point;
-    --
-    --     --  -------------------------------------------------------------------------
-    --
-    --     function US_Set_Normalized_Point (Point : Vector_E3) return Normalized_Point is
-    --        NP : Normalized_Point;
-    --     begin
-    --        NP.E1 := Point.Coordinates (1);
-    --        NP.E2 := Point.Coordinates (2);
-    --        NP.E3 := Point.Coordinates (3);
-    --        NP.Inf := 0.0;
-    --        return NP;
-    --     end US_Set_Normalized_Point;
 
     --  -------------------------------------------------------------------------
 
