@@ -7,7 +7,7 @@ with GL.Types;
 with C3GA;
 with GA_Draw;
 with GA_Maths;
---  with GA_Utilities;
+with GA_Utilities;
 
 package body C3GA_Draw is
    use GA_Draw;
@@ -259,8 +259,8 @@ package body C3GA_Draw is
                                     GA_Draw.Draw_TV_Sphere);
          when Circle_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Round Circle.");
---              GA_Utilities.Print_E3_Vector
---                    ("C3GA_Draw.Draw_Round Normal, M_Vectors(3)", M_Vectors (3));
+            GA_Utilities.Print_E3_Vector
+                  ("C3GA_Draw.Draw_Round Normal, M_Vectors(3)", M_Vectors (3));
 --              GA_Utilities.Print_E3_Vector
 --                    ("C3GA_Draw.Draw_Round Position, Analysis.Points (1)",
 --                      Analysis.Points (1));

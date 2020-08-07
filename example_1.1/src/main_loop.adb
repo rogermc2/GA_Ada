@@ -128,7 +128,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -44.0));  --  -14.0
 
       Shader_Manager.Set_View_Matrix (View_Matrix);
       Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
@@ -186,8 +186,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing aLine.");
          Shader_Manager.Set_Ambient_Colour (Red);
---           aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
---                                        Points.L1, Points.L2);
+         aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
+                                      Points.L1, Points.L2);
          New_Line;
          Put_Line ("Main_Loop.Display drawing aCircle.");
          Shader_Manager.Set_Ambient_Colour (Green);
@@ -204,17 +204,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected line.");
          Shader_Manager.Set_Ambient_Colour (Magenta);
---           Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
+         Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
 
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected circle.");
          --  draw reflected circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
---           Draw_1_1.Draw_Reflected_Circle
---             (Render_Graphic_Program, aCircle, aDual_Plane);
+         Draw_1_1.Draw_Reflected_Circle
+           (Render_Graphic_Program, aCircle, aDual_Plane);
 
          --  compute rotation versor
+         GA_Utilities.Print_Multivector_String
+              ("Main_Loop.Display aLine",
+                aLine, Blade_Types.Basis_Names_C3GA);
+         DL := To_Dual_Line (Dual (aLine));
+         GA_Utilities.Print_Multivector_String
+              ("Main_Loop.Display DL",
+                DL, Blade_Types.Basis_Names_C3GA);
          DL := 0.5 * Phi * To_Dual_Line (Dual (aLine));
+         GA_Utilities.Print_Multivector_String
+              ("Main_Loop.Display DL",
+                DL, Blade_Types.Basis_Names_C3GA);
          R_Versor := To_TRversor (Multivectors.Exp (DL));
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display R_Versor",

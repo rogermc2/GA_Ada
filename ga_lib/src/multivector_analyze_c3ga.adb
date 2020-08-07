@@ -351,13 +351,12 @@ package body Multivector_Analyze_C3GA is
             end if;
 
             --  MV_X checked OK against C++ version
-            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round setting LC_NI_MV");
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X,  Metric.C3_Metric);
             --              GA_Utilities.Print_Multivector
             --                ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
-            GA_Utilities.Print_Multivector_String
-                 ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
-                  Blade_Types.Basis_Names_C3GA);
+--              GA_Utilities.Print_Multivector_String
+--                   ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
+--                    Blade_Types.Basis_Names_C3GA);
 
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
@@ -375,7 +374,6 @@ package body Multivector_Analyze_C3GA is
             Location := Geometric_Product (Location, SCP_Inverse);
             --  normalizedPoint location = c3gaPoint(_vectorE3GA(_location));
             Point_Location := To_Normalized_Point (Location);
---              Point_Location := C3GA.Set_Normalized_Point (C3GA.To_VectorE3GA (Location));
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Met);
             Put_Line ("Multivector_Analyze_C3GA.Analyze_Round NI_Xsq:" &
@@ -465,7 +463,7 @@ package body Multivector_Analyze_C3GA is
                     ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Dual (OP))",
                     Dual (Outer_Product (MV_First (MV_Factors),
                                    MV_Item (MV_Factors, 2)), Met), Blade_Types.Basis_Names_C3GA);
-                 theAnalysis.M_Vectors (3) :=
+                   theAnalysis.M_Vectors (3) :=
                       C3GA.To_VectorE3GA (Dual (Outer_Product (MV_First (MV_Factors),
                                           MV_Item (MV_Factors, 2)), Met));
                 end if;
