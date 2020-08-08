@@ -44,6 +44,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Green          : constant GL.Types.Singles.Vector4  := (0.0, 0.5, 0.0, 1.0);
    Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
    Magenta        : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 1.0, 1.0);
+   Yellow         : constant GL.Types.Singles.Vector4 := (1.0, 1.0, 0.0, 0.5);
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
 
@@ -255,6 +256,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
+
+         --  Draw plane (yellow)
+         Shader_Manager.Set_Ambient_Colour (Yellow);
+         Draw_1_1.Draw_Plane
+           (Render_Graphic_Program, aDual_Plane);
       end if;
 
    exception
