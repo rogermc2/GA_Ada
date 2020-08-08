@@ -116,6 +116,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        R_R_Circle          : Circle;
       DL                  : Dual_Line;
       LR                  : Multivector;
+      Alpha               : Float;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -250,10 +251,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Draw_1_1.Draw_Reflected_Circle
            (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
-         GA_Utilities.Print_Multivector_String
-              ("Main_Loop.Display R_Versor", R_Versor,
-               Blade_Types.Basis_Names_C3GA);
+--           GA_Utilities.Print_Multivector_String
+--                ("Main_Loop.Display R_Versor", R_Versor,
+--                 Blade_Types.Basis_Names_C3GA);
+         --  Draw interpolated circles
          LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
+         Alpha := 0.0;
+         while Alpha < 1.0 loop
+             --   compute interpolated rotor
+             null;
+             --  draw rotated circle (light green)
+             Shader_Manager.Set_Ambient_Colour ((0.5, 1.0, 0.5, 1.0));
+             --  draw reflected, rotated circle (light blue)
+             Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
+             Alpha := Alpha + 0.1;
+         end loop;
       end if;
 
    exception
