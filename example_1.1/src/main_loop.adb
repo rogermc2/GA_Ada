@@ -20,8 +20,7 @@ with Utilities;
 
 with Blade_Types;
 with E3GA;
---  with C3GA;
---  with C3GA_Draw;
+with C3GA_Utilities;
 with GA_Maths;
 with GA_Utilities;
 with Geosphere;
@@ -116,6 +115,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        Rotated_Circle      : Circle;
 --        R_R_Circle          : Circle;
       DL                  : Dual_Line;
+      LR                  : Multivector;
    begin
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       Width := Single (Window_Width);
@@ -225,6 +225,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display DL",
                 DL, Blade_Types.Basis_Names_C3GA);
+         GA_Utilities.Print_Multivector_String
+              ("Main_Loop.Display Exp (DL)",
+                Multivectors.Exp (DL), Blade_Types.Basis_Names_C3GA);
          R_Versor := To_TRversor (Multivectors.Exp (DL));
          GA_Utilities.Print_Multivector_String
               ("Main_Loop.Display R_Versor",
@@ -244,10 +247,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
---           Draw_1_1.Draw_Reflected_Circle
---             (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+         Draw_1_1.Draw_Reflected_Circle
+           (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
---           LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
+         GA_Utilities.Print_Multivector_String
+              ("C3GA_Utilities.Log_TR_Versor R_Versor)", R_Versor,
+               Blade_Types.Basis_Names_C3GA);
+         LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;
 
    exception

@@ -164,30 +164,42 @@ package body C3GA_Utilities is
       GA_Utilities.Print_Multivector_String
           ("C3GA_Utilities.Log_TR_Versor MV)", MV, Blade_Types.Basis_Names_C3GA);
       GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor C3GA.ni)", C3GA.ni, Blade_Types.Basis_Names_C3GA);
+          ("C3GA_Utilities.Log_TR_Versor C3GA.ni", C3GA.ni, Blade_Types.Basis_Names_C3GA);
       GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor Geometric_Product (MV, C3GA.ni, C3_Metric))",
+          ("C3GA_Utilities.Log_TR_Versor GP (MV, C3GA.ni, C3_Metric)",
            Geometric_Product (MV, C3GA.ni, C3_Metric), Blade_Types.Basis_Names_C3GA);
       LC := Left_Contraction
         (C3GA.no, (Geometric_Product (MV, C3GA.ni, C3_Metric)), C3_Metric);
       GA_Utilities.Print_Multivector_String
         ("C3GA_Utilities.Log_TR_Versor LC", LC, Blade_Types.Basis_Names_C3GA);
       Rot := To_Rotor (-LC);
---        GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Rot", Rot);
+--        GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot",
+--                                               Rot, Blade_Types.Basis_Names_C3GA);
       Rot_I := Inverse_Rotor (Rot);
-      Trans := -2.0 * Geometric_Product
-        (Left_Contraction (C3GA.no, MV), Rot_I, C3_Metric);
+--        GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot_I",
+--                                               Rot_I, Blade_Types.Basis_Names_C3GA);
+      LC := Left_Contraction (C3GA.no, MV, C3_Metric);
+      GA_Utilities.Print_Multivector_String
+          ("C3GA_Utilities.Log_TR_Versor MV)", MV, Blade_Types.Basis_Names_C3GA);
+      GA_Utilities.Print_Multivector_String
+      ("C3GA_Utilities.Log_TR_Versor LC (C3GA.no, MV)",
+                                             LC, Blade_Types.Basis_Names_C3GA);
+      Trans := -2.0 * Geometric_Product (LC, Rot_I, C3_Metric);
+      GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Trans",
+                                             Trans, Blade_Types.Basis_Names_C3GA);
       --  get the bivector 2-blade part of R
       BV := New_Bivector (E3GA.e1_e2 (MV), E3GA.e2_e3 (MV), E3GA.e3_e1 (MV));
       --  'reverse norm' of the bivector part of R
-      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Trans", Trans);
-      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor BV", BV);
+      GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor BV",
+                                             BV, Blade_Types.Basis_Names_C3GA);
       BV_Norm := Norm_E (BV);
       if BV_Norm > epsilon then
          --  Logarithm of rotation part
          BV_I_Phi := -2.0 * Log_Rotor (Rot);
-         GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor Rot", Rot);
-         GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_TR_Versor BV_I_Phi", BV_I_Phi);
+         GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot",
+                                                Rot, Blade_Types.Basis_Names_C3GA);
+         GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor BV_I_Phi",
+                                                BV_I_Phi, Blade_Types.Basis_Names_C3GA);
          --  Rotation plane:
          Rot_I := Multivectors.Unit_E (BV_I_Phi);
          DL_1 := Geometric_Product (Inverse_Rotor (Rot_I), C3GA.ni, C3_Metric);
