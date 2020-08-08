@@ -16,55 +16,9 @@ package body C3GA_Utilities is
 
    epsilon : constant Float := 10.0 ** (-6);
 
-   --  -------------------------------------------------------------------------
---     function exp is implemented in the Multivectors package
---     function exp (MV_X : Multivector; Order : Integer := 9) return Multivector is
---       use GA_Maths.Float_Functions;
---        X      : constant float := Scalar_Part (MV_X);
---        Max       : Integer := Integer (Largest_Coordinate (MV_X));
---        Scale     : Integer := 1;
---        Scaled_MV : Multivector;
---        Tmp       : Multivector;
---        Result    : Multivector;
---     begin
---        if Is_Scalar (MV_X) then
---              Result := New_Scalar (Exp (X));
---        elsif Order = 0 then
---              Result := New_Scalar (1.0);
---        else
---           --  scale by power of 2 so that its norm is < 1
---           if Max > 1 then
---              Scale := 2 * Scale;
---           end if;
---           while Max > 0 loop
---              Max := Max / 2;
---              Scale := 2 * Scale;
---           end loop;
---           Scaled_MV := (1.0 / Float (Scale)) * MV_X;
---           --  taylor approximation
---           Result := New_Multivector (1.0);
---           Tmp := New_Multivector (1.0);
---           for count in 1 .. Order loop
---              Tmp := (1.0 / Float (count)) * Geometric_Product (Tmp, Scaled_MV);
---              Result := Result + Tmp;
---           end loop;
---           --  undo scaling
---
---           while Scale > 1 loop
---              Result := Geometric_Product (Result, Result);
---              Scale := Scale / 2;
---           end loop;
---        end if;
---
---        return Result;
---
---     exception
---        when others =>
---           Put_Line ("An exception occurred in C3GA_Utilities.exp.");
---           raise;
---     end exp;
+--   Multivector function exp is implemented in the Multivectors package
 
-   --  ----------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    function exp (BV : Multivectors.Bivector) return Multivectors.Rotor is
       V          :  constant Multivectors.M_Vector :=
@@ -104,15 +58,10 @@ package body C3GA_Utilities is
       BV    : Bivector;
       Log_R : Bivector;
    begin
-      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, R", R);
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_Rotor, R", R, Blade_Types.Basis_Names_C3GA);
       --  get the bivector 2-blade part of R
       BV := To_Bivector (R);
-      GA_Utilities.Print_Multivector ("C3GA_Utilities.Log_Rotor, BV", BV);
       --  compute the 'reverse norm' of the bivector part of R
       R2 := Norm_E (BV);
-      Put_Line ("C3GA_Utilities.Log_Rotor, R2" & Float'Image (R2));
       if R2 > 0.0 then
          --  return _bivector(B * ((float)atan2(R2, _Float(R)) / R2));
          R1 := GA_Maths.Float_Functions.Arctan (R2, Scalar_Part (R)) / R2;
@@ -123,7 +72,6 @@ package body C3GA_Utilities is
          --  Return a 360 degree rotation in an arbitrary plane
          Log_R := Ada.Numerics.Pi * Outer_Product (e1, e2);
       else
-         Put_Line ("C3GA_Utilities.Log_Rotor Log_R = 0.");
          Log_R := New_Bivector (0.0, 0.0, 0.0);
       end if;
 
@@ -154,6 +102,7 @@ package body C3GA_Utilities is
       BV       : Bivector;
       BV_I     : Bivector;
       BV_I_Phi : Bivector;
+      GP       : Multivector;
       DL_1     : Dual_Line;
       DL_2     : Dual_Line;
       I_R2     : Rotor;
@@ -161,51 +110,28 @@ package body C3GA_Utilities is
       LC       : Multivector;
    begin
       --  isolate the rotation and translation parts
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor MV)", MV, Blade_Types.Basis_Names_C3GA);
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor C3GA.ni", C3GA.ni, Blade_Types.Basis_Names_C3GA);
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor GP (MV, C3GA.ni, C3_Metric)",
-           Geometric_Product (MV, C3GA.ni, C3_Metric), Blade_Types.Basis_Names_C3GA);
       LC := Left_Contraction
         (C3GA.no, (Geometric_Product (MV, C3GA.ni, C3_Metric)), C3_Metric);
-      GA_Utilities.Print_Multivector_String
-        ("C3GA_Utilities.Log_TR_Versor LC", LC, Blade_Types.Basis_Names_C3GA);
       Rot := To_Rotor (-LC);
---        GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot",
---                                               Rot, Blade_Types.Basis_Names_C3GA);
       Rot_I := Inverse_Rotor (Rot);
---        GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot_I",
---                                               Rot_I, Blade_Types.Basis_Names_C3GA);
       LC := Left_Contraction (C3GA.no, MV, C3_Metric);
-      GA_Utilities.Print_Multivector_String
-          ("C3GA_Utilities.Log_TR_Versor MV)", MV, Blade_Types.Basis_Names_C3GA);
-      GA_Utilities.Print_Multivector_String
-      ("C3GA_Utilities.Log_TR_Versor LC (C3GA.no, MV)",
-                                             LC, Blade_Types.Basis_Names_C3GA);
       Trans := -2.0 * Geometric_Product (LC, Rot_I, C3_Metric);
-      GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Trans",
-                                             Trans, Blade_Types.Basis_Names_C3GA);
       --  get the bivector 2-blade part of R
       BV := New_Bivector (E3GA.e1_e2 (MV), E3GA.e2_e3 (MV), E3GA.e3_e1 (MV));
+
       --  'reverse norm' of the bivector part of R
-      GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor BV",
-                                             BV, Blade_Types.Basis_Names_C3GA);
       BV_Norm := Norm_E (BV);
       if BV_Norm > epsilon then
          --  Logarithm of rotation part
          BV_I_Phi := -2.0 * Log_Rotor (Rot);
-         GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor Rot",
-                                                Rot, Blade_Types.Basis_Names_C3GA);
-         GA_Utilities.Print_Multivector_String ("C3GA_Utilities.Log_TR_Versor BV_I_Phi",
-                                                BV_I_Phi, Blade_Types.Basis_Names_C3GA);
+
          --  Rotation plane:
-         Rot_I := Multivectors.Unit_E (BV_I_Phi);
-         DL_1 := Geometric_Product (Inverse_Rotor (Rot_I), C3GA.ni, C3_Metric);
-         DL_1 := Geometric_Product (Outer_Product (Trans, Rot_I), DL_1, C3_Metric);
-         DL_2 := Left_Contraction (Trans, BV_I_Phi, C3_Metric);
-         DL_2 := Geometric_Product (DL_2, C3GA.ni, C3_Metric);
+         Rot_I := To_Rotor (Multivectors.Unit_E (BV_I_Phi));
+         GP := Geometric_Product (Inverse_Rotor (Rot_I), C3GA.ni, C3_Metric);
+         DL_1 := To_Dual_Line
+              (Geometric_Product (Outer_Product (Trans, Rot_I), GP, C3_Metric));
+         LC := Left_Contraction (Trans, BV_I_Phi, C3_Metric);
+         DL_2 := To_Dual_Line (Geometric_Product (LC, C3GA.ni, C3_Metric));
          I_R2 := Inverse_Rotor
               (1.0 - Multivectors.Geometric_Product (Rot, Rot, C3_Metric));
          DL_2 := Geometric_Product (I_R2, DL_2, C3_Metric);

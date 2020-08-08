@@ -360,14 +360,9 @@ package body Multivector_Analyze_C3GA is
 
             Attitude :=
               Negate (Outer_Product (LC_NI_MV, C3GA.ni));
-            GA_Utilities.Print_Multivector_String
-                 ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude,
-                  Blade_Types.Basis_Names_C3GA);
 
-            --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling General_Inverse");
             LC_NI_MV_Inverse := General_Inverse (LC_NI_MV, Met);
-            --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 1");
-            --  location is normalized dual sphere
+             --  location is normalized dual sphere
             Location := Geometric_Product (MV_X, LC_NI_MV_Inverse, Met);  --  _location
             --           Put_Line ("Multivector_Analyze_C3GA.Analyze_Round calling Geometric_Product 2");
             SCP_Inverse := -1.0 / Scalar_Product (C3GA.ni, Location, Met);
@@ -376,8 +371,6 @@ package body Multivector_Analyze_C3GA is
             Point_Location := To_Normalized_Point (Location);
 
             NI_Xsq := Scalar_Product (LC_NI_MV, LC_NI_MV, Met);
-            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round NI_Xsq:" &
-                       Float'Image (NI_Xsq) );
             --  Grade_Inversion is eqivalent to Grade_Involution
             Radius_Sq := Scalar_Part
               (Geometric_Product (MV_X, Grade_Inversion (MV_X), Met)) / NI_Xsq;
@@ -391,13 +384,7 @@ package body Multivector_Analyze_C3GA is
             theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Point_Location);
             theAnalysis.Radius := Radius;
             theAnalysis.Weight := Weight;
-            --           New_Line;
-            --           Utilities.Print_Vector ("Multivector_Analyze_C3GA.Analyze_Round, Point vector",
-            --                                   theAnalysis.Points (1));
-            Put_Line ("Multivector_Analyze_C3GA.Analyze_Round radius and weight:" &
-                       Float'Image (theAnalysis.Radius) & "  " &
-                       Float'Image (theAnalysis.Weight));
-            --  Factor attitude (direction):
+             --  Factor attitude (direction):
             case Grade is
             when 1 =>  --  (dual) sphere
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
@@ -411,14 +398,7 @@ package body Multivector_Analyze_C3GA is
                   C3GA.To_VectorE3GA (Basis_Vector (Blade_Types.E3_e3));
             when 2 =>  --  point pair
                 theAnalysis.M_Type.Blade_Subclass := Point_Pair_Subclass;
-                --                      GA_Utilities.Print_Multivector
-                --                        ("Multivector_Analyze_C3GA.Analyze_Round C3GA.no", C3GA.no);
-                --                      GA_Utilities.Print_Multivector
-                --                        ("Multivector_Analyze_C3GA.Analyze_Round Attitude", Attitude);
-                --                      GA_Utilities.Print_Multivector
-                --                        ("Multivector_Analyze_C3GA.Analyze_Round Left_Contraction",
-                --                         Left_Contraction (C3GA.no, Attitude, Met));
-                LC := Left_Contraction (C3GA.no, Attitude, Met);
+                 LC := Left_Contraction (C3GA.no, Attitude, Met);
                 if GA_Utilities.Multivector_Size (LC) > 0 then
                     theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (Unit_E (LC));
                 else
@@ -429,55 +409,23 @@ package body Multivector_Analyze_C3GA is
             when 3 =>
                 --  circle explicit factorization required:
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
---                  GA_Utilities.Print_Multivector
---                    ("Multivector_Analyze_C3GA.Analyze_Round Reverse Attitude: ",
---                     Reverse_MV (Attitude));
                 MV_X := Reverse_MV (Left_Contraction (C3GA.no,
                                     Reverse_MV (Attitude), Met));
---                  GA_Utilities.Print_Multivector
---                    ("Multivector_Analyze_C3GA.Analyze_Round MV_X", MV_X);
                 --  Returned scale not used
                 MV_Factors :=
                   Multivector_Utilities.Factorize_Blades (MV_X, Scale);
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (MV_First (MV_Factors));
---                  Utilities.Print_Vector
---                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 X direction M_Vectors (1)",
---                     theAnalysis.M_Vectors (1));
                 theAnalysis.M_Vectors (2) :=
                   C3GA.To_VectorE3GA (MV_Item (MV_Factors, 2));
---                  Utilities.Print_Vector
---                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Y direction M_Vectors (2)",
---                     theAnalysis.M_Vectors (2));
                 if E3GA.Is_Zero (theAnalysis.M_Vectors (1)) or
                  E3GA.Is_Zero (theAnalysis.M_Vectors (2)) then
-                    Put_Line("Multivector_Analyze_C3GA.Analyze_Round Grade 3 M_Vectors (1) and (2) are 0.");
                     theAnalysis.M_Vectors (3) := (0.0, 0.0, 1.0);
                 else
-                  Put_Line("Multivector_Analyze_C3GA.Analyze_Round Grade 3 M_Vectors (1) and (2) are not 0.");
-                  GA_Utilities.Print_Multivector_String
-                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 OP (MV_First (MV_Factors), MV_Item (MV_Factors, 2))",
-                    Outer_Product (MV_First (MV_Factors),
-                                   MV_Item (MV_Factors, 2)), Blade_Types.Basis_Names_C3GA);
-                   GA_Utilities.Print_Multivector_String
-                    ("Multivector_Analyze_C3GA.Analyze_Round Grade 3 Dual (OP))",
-                    Dual (Outer_Product (MV_First (MV_Factors),
-                                   MV_Item (MV_Factors, 2)), Met), Blade_Types.Basis_Names_C3GA);
                    theAnalysis.M_Vectors (3) :=
                       C3GA.To_VectorE3GA (Dual (Outer_Product (MV_First (MV_Factors),
                                           MV_Item (MV_Factors, 2)), Met));
                 end if;
-
-                GA_Utilities.Print_E3_Vector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Normal, M_Vectors(3)",
-                    theAnalysis.M_Vectors (3));
-                    GA_Utilities.Print_E3_Vector
-                  ("Multivector_Analyze_C3GA.Analyze_Round Position, Analysis.Points (1)",
-                     theAnalysis.Points (1));
-                    Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Radius, Analysis.Scalars (1)" &
-                       Float'Image (theAnalysis.Radius));
-                    Put_Line ("Multivector_Analyze_C3GA.Analyze_Round Scale, Analysis.Scalars (2)" &
-                       Float'Image (theAnalysis.Weight));
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;
                 theAnalysis.M_Vectors (1) :=
