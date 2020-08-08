@@ -251,9 +251,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Draw_1_1.Draw_Reflected_Circle
            (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
---           GA_Utilities.Print_Multivector_String
---                ("Main_Loop.Display R_Versor", R_Versor,
---                 Blade_Types.Basis_Names_C3GA);
          --  Draw interpolated circles
          LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
          Alpha := 0.0;
