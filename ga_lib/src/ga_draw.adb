@@ -21,7 +21,7 @@ with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
 with GA_Maths;
-with GA_Utilities;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Multivectors;
@@ -118,9 +118,6 @@ package body GA_Draw is
       BV_Scale              : Single := Single (Scale);
       RT                    : Multivectors.Rotor;
    begin
-      GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Bivector Normal", Normal);
-      GA_Utilities.Print_Float_3D ("GA_Draw.Draw_Bivector Position", Base_Coords);
-      Put_Line ("GA_Draw.Draw_Bivector Scale" & Float'Image (Scale));
       --  Set position
       if Position_Norm > 0.0 then
          Translation_Vector :=
@@ -136,17 +133,9 @@ package body GA_Draw is
 
          if Normal_Norm > 0.0 then
             Model_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
-            Utilities.Print_Matrix ("GA_Draw.Draw_Bivector Model_Matrix", Model_Matrix);
          end if;
-
-         GA_Utilities.Print_Multivector_String ("GA_Draw.Draw_Bivector MV_Normal",
-                                                MV_Normal,
-                                                Blade_Types.Basis_Names_C3GA);
-         Put_Line ("GA_Draw.Draw_Bivector setting RT.");
          RT := E3GA_Utilities.Rotor_Vector_To_Vector
            (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-         GA_Utilities.Print_Multivector_String ("GA_Draw.Draw_Bivector RT", RT,
-                                                 Blade_Types.Basis_Names_C3GA);
          GL_Util.Rotor_GL_Multiply (RT, Model_Matrix);
       else  --  Draw_Bivector_Parallelogram
          Position_Norm :=

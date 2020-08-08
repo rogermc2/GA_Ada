@@ -89,12 +89,9 @@ package body C3GA_Utilities is
       --        use Interfaces;
       use Blade_Types;
       use Metric;
-      --        no       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_no));
-      --        ni       : constant Unsigned_32 := Unsigned_32 (C3_Base'Enum_Rep (C3_ni));
       MV       : constant Multivector := V;
       Rot      : Rotor;
       Rot_I    : Rotor;
-      --        Trans    : E3_Vector;
       Trans    : Multivector;
       I3_Blade : constant Blade.Basis_Blade := Blade.New_Basis_Blade (C3_e3, 1.0);
       I3       : constant Multivector := New_Multivector (I3_Blade);

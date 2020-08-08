@@ -251,7 +251,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
 
          GA_Utilities.Print_Multivector_String
-              ("C3GA_Utilities.Log_TR_Versor R_Versor)", R_Versor,
+              ("Main_Loop.Display R_Versor", R_Versor,
                Blade_Types.Basis_Names_C3GA);
          LR := C3GA_Utilities.Log_TR_Versor (R_Versor);
       end if;
