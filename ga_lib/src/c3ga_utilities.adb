@@ -125,19 +125,19 @@ package body C3GA_Utilities is
             BV_I_Phi := -2.0 * Log_Rotor (Rot);
 
             --  Rotation plane:
-            Rot_I := To_Rotor (Multivectors.Unit_E (BV_I_Phi));
+            Rot_I := To_Rotor (Unit_E (BV_I_Phi));
 
-            GOP_II := Multivectors.Geometric_Product
-              (Inverse_Rotor (Rot_I), C3GA.ni, C3_Metric);
+            GOP_II := Geometric_Product (Inverse_Rotor (Rot_I), C3GA.ni,
+                                         C3_Metric);
             OP := Outer_Product (Trans, Rot_I);
             if Norm_Esq (OP) = 0.0 then
                 GOP_II := New_Multivector (0.0);
             else
-                GOP_II := -Multivectors.Geometric_Product (OP, GOP_II, C3_Metric);
+                GOP_II := -Geometric_Product (OP, GOP_II, C3_Metric);
             end if;
 
             Rot_Sq := To_Rotor
-              (Multivectors.Geometric_Product (Rot, Rot, C3_Metric));
+              (Geometric_Product (Rot, Rot, C3_Metric));
             I_R2 := Inverse_Rotor (1.0 - Rot_Sq);
             LC := Left_Contraction (Trans, BV_I_Phi, C3_Metric);
             GP := Geometric_Product (LC, C3GA.ni, C3_Metric) - BV_I_Phi;
@@ -148,8 +148,7 @@ package body C3GA_Utilities is
             if Scalar_Part (Rot) < 0.0 then
                 --  The versor has a rotation over 360 degrees.
                 if Norm_E (Trans) > epsilon then
-                    BV_I :=
-                      Multivectors.Unit_E (Left_Contraction (Trans, I3, C3_Metric));
+                    BV_I := Unit_E (Left_Contraction (Trans, I3, C3_Metric));
                 else
                     BV_I := Outer_Product (E3GA.e1, E3GA.e2);
                 end if;
