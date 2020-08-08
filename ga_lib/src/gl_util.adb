@@ -23,7 +23,7 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3GA is
+    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3 is
     --      begin
     --          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
     --                                  Float (V3 (GL.Y)));
@@ -51,7 +51,8 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-    procedure Print_GL_Int3_Array (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
+    procedure Print_GL_Int3_Array
+      (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
     begin
         Put_Line (Name & ": ");
         for Index in anArray'First .. anArray'Last loop
@@ -69,30 +70,34 @@ package body GL_Util is
         use Multivectors;
         use GL;
         use GL.Types.Singles;
-        IR        : constant Rotor := General_Inverse (R);
+        IR        : constant Rotor := To_Rotor (General_Inverse (R));
         E_Rot     : Multivectors.Multivector;
+        E1_IR     : Multivectors.Multivector;
         Image     : Vector3_Array (1 .. 4);
         VC        : Vector3;
         Matrix    : Matrix4 := Identity4;
         Image_Row : Int := 0;
     begin
-        --  compute the images of all OpenGL basis vectors
-        E_Rot := Geometric_Product (R, Geometric_Product (e1, IR));
-        Image (1) := To_GL (E_Rot);
-        E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
-        Image (2) := To_GL (E_Rot);
-        E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
-        Image (3) := To_GL (E_Rot);
-        Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
-        --  Transfer the coordinates to the OpenGL matrix
-        for row in GL.Index_Homogeneous loop
-            Image_Row := Image_Row + 1;
-            VC := Image (Image_Row);
-            Matrix (row, X) := VC (X);
-            Matrix (row, Y) := VC (Y);
-            Matrix (row, Z) := VC (Z);
-        end loop;
-        GL_Matrix := Matrix * GL_Matrix;
+        E1_IR := Geometric_Product (e1, IR);
+        if not Is_Null (E1_IR ) then
+            --  compute the images of all OpenGL basis vectors
+            E_Rot := Geometric_Product (R, E1_IR);
+            Image (1) := To_GL (E_Rot);
+            E_Rot := Geometric_Product (R, Geometric_Product (e2, IR));
+            Image (2) := To_GL (E_Rot);
+            E_Rot := Geometric_Product (R, Geometric_Product (e3, IR));
+            Image (3) := To_GL (E_Rot);
+            Image (4) := (0.0, 0.0, 0.0);  -- Image of origin
+            --  Transfer the coordinates to the OpenGL matrix
+            for row in GL.Index_Homogeneous loop
+                Image_Row := Image_Row + 1;
+                VC := Image (Image_Row);
+                Matrix (row, X) := VC (X);
+                Matrix (row, Y) := VC (Y);
+                Matrix (row, Z) := VC (Z);
+            end loop;
+            GL_Matrix := Matrix * GL_Matrix;
+        end if;
 
     exception
         when others =>
@@ -110,7 +115,8 @@ package body GL_Util is
 
     --  ------------------------------------------------------------------
 
-    function Rotor_To_GL_Matrix (R : Multivectors.Rotor) return  GL.Types.Singles.Matrix4 is
+    function Rotor_To_GL_Matrix (R : Multivectors.Rotor)
+                                 return  GL.Types.Singles.Matrix4 is
         use GL;
         M3        : GA_Maths.GA_Matrix3;
         GL_Matrix : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -210,7 +216,7 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    --      function To_GL (V3 : C3GA.Vector_E3GA) return GL.Types.Singles.Vector3 is
+    --      function To_GL (V3 : C3GA.Vector_E3) return GL.Types.Singles.Vector3 is
     --          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
     --      begin
     --
@@ -227,13 +233,14 @@ package body GL_Util is
 
     --  -------------------------------------------------------------------------
 
-    function To_GL (V3 : GA_Maths.Array_3D) return GL.Types.Singles.Vector3 is
+    function To_GL (V3 : GA_Maths.Float_3D) return GL.Types.Singles.Vector3 is
     begin
         return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
     end To_GL;
 
     --  ---------------------------------------------------------------------
-    procedure Viewport_Coordinates (Pt_World : GA_Maths.Array_3D;
+
+    procedure Viewport_Coordinates (Pt_World : GA_Maths.Float_3D;
                                     Model_View_Matrix,
                                     Projection_Matrix : GL.Types.Singles.Matrix4;
                                     Coords : out GL.Types.Singles.Vector2) is

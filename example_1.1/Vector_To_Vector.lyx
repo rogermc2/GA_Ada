@@ -1,0 +1,301 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 15mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Derivation
+\end_layout
+
+\begin_layout Standard
+Given two unit column vectors, A and B (
+\begin_inset Formula $‖A‖=1$
+\end_inset
+
+ and 
+\begin_inset Formula $‖B‖=1$
+\end_inset
+
+ ).
+ The 
+\begin_inset Formula $‖∘‖$
+\end_inset
+
+ denotes the L-2 norm of 
+\begin_inset Formula $∘$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+First, note that the rotation from A to B is just a 2D rotation on a plane
+ with the normal 
+\begin_inset Formula $A×B$
+\end_inset
+
+ .
+ A 2D rotation by an angle 
+\begin_inset Formula $θ$
+\end_inset
+
+ is given by the following augmented matrix:
+\begin_inset Formula 
+\begin{eqnarray*}
+G & = & \begin{bmatrix}cosθ & −sinθ & 0\\
+sinθ & cosθ & 0\\
+0 & 0 & 1
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+Of course we don't want to actually compute any trig functions.
+ Given our unit vectors, we note that 
+\begin_inset Formula $cosθ=A\cdot B$
+\end_inset
+
+ and 
+\begin_inset Formula $sinθ=||A×B||$
+\end_inset
+
+ .
+ Thus 
+\begin_inset Formula 
+\begin{eqnarray*}
+G & = & \begin{bmatrix}A\cdot B & −||A×B|| & 0\\
+||A×B|| & A\cdot B & 0\\
+0 & 0 & 1
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This matrix represents the rotation from A to B in the base consisting of
+ the following column vectors:
+\end_layout
+
+\begin_layout Enumerate
+the normalized vector projection of B onto A : 
+\begin_inset Formula 
+\begin{eqnarray*}
+u & = & \frac{(A\cdot B)A}{‖(A\cdot B)A‖}=A
+\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+the normalized vector rejection of B onto A : 
+\begin_inset Formula 
+\begin{eqnarray*}
+v & = & \frac{B−(A\cdot B)A}{‖B−(A\cdot B)A‖}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+the cross product of B and A : 
+\begin_inset Formula 
+\begin{eqnarray*}
+w & = & B×A
+\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Those vectors are all orthogonal and form an orthogonal basis.
+ You could also normalize w and get an orthonormal basis, if you needed
+ one, but it doesn't seem necessary.
+\end_layout
+
+\begin_layout Standard
+The basis change matrix for this basis is:
+\begin_inset Formula 
+\begin{eqnarray*}
+F & = & (uvw)^{-1}\\
+ & = & (A\frac{B−(A\cdot B)A}{‖B−(A\cdot B)A‖}B×A)^{-1}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, in the original base, the rotation from A to B can be expressed as
+ the right-multiplication of a vector by the following matrix:
+\begin_inset Formula 
+\begin{eqnarray*}
+U & = & F^{−1}GF
+\end{eqnarray*}
+
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+One can easily show that 
+\begin_inset Formula $UA=B$
+\end_inset
+
+ and that 
+\begin_inset Formula $‖U‖_{2}=1$
+\end_inset
+
+.
+ Also, U is the same as the R matrix.
+\end_layout
+
+\begin_layout Section
+2D Case
+\end_layout
+
+\begin_layout Standard
+For the 2D case, given 
+\begin_inset Formula $A=(x_{1},y_{1},0)$
+\end_inset
+
+ and 
+\begin_inset Formula $B=(x_{2},y_{2},0)$
+\end_inset
+
+, the matrix G is the forward transformation matrix itself and can be simplify
+ further.
+ 
+\end_layout
+
+\begin_layout Standard
+As: 
+\begin_inset Formula 
+\begin{eqnarray*}
+cosθ & = & A\cdot B=x_{1}x_{2}+y_{1}y_{2}\\
+sinθ & = & ‖A×B‖=x_{1}y_{2}−x_{2}y_{1}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, 
+\begin_inset Formula 
+\begin{eqnarray*}
+U≡G & = & \begin{bmatrix}x_{1}x_{2}+y_{1}y_{2} & −(x_{1}y_{2}−x_{2}y_{1})\\
+x_{1}y_{2}−x_{2}y_{1} & x_{1}x_{2}+y_{1}y_{2}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+ and
+\begin_inset Formula 
+\begin{eqnarray*}
+U^{−1}≡G^{−1} & = & \begin{bmatrix}x_{1}x_{2}+y_{1}y_{2} & x_{1}y_{2}−x_{2}y_{1}\\
+-\left(x_{1}y_{2}−x_{2}y_{1}\right) & x_{1}x_{2}+y_{1}y_{2}
+\end{bmatrix}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

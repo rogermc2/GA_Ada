@@ -1,4 +1,6 @@
 
+with Maths;
+
 package body GA_Maths is
 
    function Is_Anti_Euclidean (aMatrix : Float_Matrix) return Boolean is
@@ -172,6 +174,36 @@ package body GA_Maths is
       end if;
       return Min;
    end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Vector_Rotation_Matrix (From, To : GL.Types.Singles.Vector3)
+                                    return GL.Types.Singles.Matrix4 is
+      use GL.Types;
+      use GL.Types.Singles;
+      use Maths;
+      Norm_From : constant Vector3 := Normalized (From);
+      Norm_To   : constant Vector3 := Normalized (To);
+      Cross     : constant Vector3 := Cross_Product (Norm_From, Norm_To);
+      Cos       : Single := Dot_Product (Norm_From, Norm_To);
+      Vx        : constant Matrix3 := ((0.0, -Cross (GL.Z), Cross (GL.Y)),
+                                       (Cross (GL.Z), 0.0, -Cross (GL.X)),
+                                       (-Cross (GL.Y), Cross (GL.X), 0.0));
+      Vx_Sq     : constant Matrix3 := Vx * Vx;
+      Rot_3     : Matrix3;
+      Rot_4     : Matrix4 := Identity4;
+   begin
+      if Cos <= -1.0 then
+         Cos := -0.999999;
+      end if;
+      Rot_3 := Identity3 + Vx + 1.0 / (1.0 + Cos) * Vx_Sq;
+      for row in Rot_3'Range loop
+            for col in Rot_3'Range (2) loop
+                Rot_4 (row, col) := Rot_3 (row, col);
+            end loop;
+      end loop;
+      return Rot_4;
+   end Vector_Rotation_Matrix;
 
    --  ------------------------------------------------------------------------
 

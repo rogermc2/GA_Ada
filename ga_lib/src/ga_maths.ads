@@ -8,6 +8,8 @@ with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics.Generic_Real_Arrays;
 with Ada.Numerics;
 
+with GL.Types;
+
 package GA_Maths is
 
    package Float_List_Package is new Ada.Containers.Doubly_Linked_Lists
@@ -18,10 +20,12 @@ package GA_Maths is
       Float_List_Package.Generic_Sorting ("<");
 
    package Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (float);
-   package Long_Float_Array_Package is new Ada.Numerics.Generic_Real_Arrays (Long_Float);
+   package Long_Float_Array_Package is new
+      Ada.Numerics.Generic_Real_Arrays (Long_Float);
    package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
    package Complex_Types is new Ada.Numerics.Generic_Complex_Types (Float);
-   package Complex_Functions is new Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
+   package Complex_Functions is new
+      Ada.Numerics.Generic_Complex_Elementary_Functions (Complex_Types);
    subtype Float_Matrix is Float_Array_Package.Real_Matrix;
    subtype Float_Vector is Float_Array_Package.Real_Vector;
    subtype Long_Float_Matrix is Long_Float_Array_Package.Real_Matrix;
@@ -72,9 +76,9 @@ package GA_Maths is
       C3_e3   : Interfaces.Unsigned_64;
    end record;
 
-   type Array_2D is array (1 .. 2) of float;
-   type Array_3D is array (1 .. 3) of float;
-   type Array_4D is array (1 .. 4) of float;
+   type Float_2D is array (1 .. 2) of float;
+   type Float_3D is array (1 .. 3) of float;
+   type Float_4D is array (1 .. 4) of float;
    type Coord4_Array is  Array (1 .. 4) of float;
 
    Infinity : constant Safe_Float := Safe_Float'Last;
@@ -98,5 +102,7 @@ package GA_Maths is
    function Minimum (I1, I2 : Integer) return Integer;
    function Minimum (F1, F2 : Float) return Float;
    function Minimum (F1, F2 : Long_Float) return Long_Float;
+   function Vector_Rotation_Matrix (From, To : GL.Types.Singles.Vector3)
+                                    return GL.Types.Singles.Matrix4;
 
 end GA_Maths;

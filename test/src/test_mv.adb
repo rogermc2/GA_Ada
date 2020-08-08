@@ -11,7 +11,6 @@ with Multivectors; use Multivectors;
 with Multivector_Type;
 
 procedure Test_MV is
---     use Blade.Names_Package;
    no_bv   : Multivector := Basis_Vector (Blade_Types.C3_no);
    e1_bv   : Multivector := Basis_Vector (Blade_Types.C3_e1);
    e2_bv   : Multivector := Basis_Vector (Blade_Types.C3_e2);

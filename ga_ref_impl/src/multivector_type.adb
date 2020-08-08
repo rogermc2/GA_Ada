@@ -1,8 +1,10 @@
 
+with Interfaces;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Bits;
-with GA_Utilities;
+--  with GA_Utilities;
 
 package body Multivector_Type is
 
@@ -109,7 +111,7 @@ package body Multivector_Type is
 
             Versor_Inv := Versor_Inverse (MV, aMetric);
             Grade_Inv := Grade_Inversion (MV);
-            GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
+--              GA_Utilities.Print_Multivector ("Multivector_Type.Init Versor_Inv", Versor_Inv);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init Grade_Inv", Grade_Inv);
             VG_Inv := Geometric_Product (Versor_Inv, Grade_Inv, aMetric);
 --              GA_Utilities.Print_Multivector ("Multivector_Type.Init VG_Inv", VG_Inv);
@@ -138,6 +140,7 @@ package body Multivector_Type is
     end Init;
 
     --  -------------------------------------------------------------------------
+
     function MV_Kind (MV : MV_Type_Record) return MV_Type is
     begin
         return MV.MV_Kind;
@@ -145,10 +148,10 @@ package body Multivector_Type is
 
     --  -------------------------------------------------------------------------
 
-    function Top_Grade (MV : MV_Type_Record) return Interfaces.Unsigned_32 is
+    function MV_Grade (MV : MV_Type_Record) return Integer is
     begin
         return MV.Grade;
-    end Top_Grade;
+    end MV_Grade;
 
     --  -------------------------------------------------------------------------
 
@@ -174,8 +177,9 @@ package body Multivector_Type is
         Put_Line ("Type       " & MV_Type'Image (Info.MV_Kind));
         Put_Line ("Zero       " & boolean'Image (Info.Zero));
         Put_Line ("Parity     " & Parity_Type'Image (Info.Parity));
-        Put_Line ("Grade Usage Bitmap " & GA_Maths.Grade_Usage'Image (Info.Grade_Use));
-        Put_Line ("Grade      " & Interfaces.Unsigned_32'Image (Info.Grade));
+      Put_Line ("Grade Usage Bitmap " &
+                 GA_Maths.Grade_Usage'Image (Info.Grade_Use));
+        Put_Line ("Grade      " & Integer'Image (Info.Grade));
 
     exception
         when others =>

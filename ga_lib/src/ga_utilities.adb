@@ -1,5 +1,8 @@
 
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
+
+with Utilities;
 
 package body GA_Utilities is
 
@@ -67,7 +70,42 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Float_Array (Name : String; anArray : GA_Maths.Float_Vector) is
+   procedure Print_Blade_String (Name : String; B : Blade.Basis_Blade;
+                                 MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Ada.Strings.Unbounded;
+      use Multivectors;
+      MV : constant Multivector := New_Multivector (B);
+   begin
+      Put_Line (Name & ":");
+      Put_Line (To_String (Multivector_String (MV, MV_Names)));
+   end Print_Blade_String;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector) is
+   begin
+        Utilities.Print_Vector (Name, aVector);
+   end Print_E3_Vector;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D) is
+   begin
+      if Name = "" then
+         Put ("  ");
+      else
+         Put (Name & ":  ");
+      end if;
+      for Index in aVector'Range loop
+         Put (Float'Image (aVector (Index)) & "   ");
+      end loop;
+      New_Line;
+   end Print_Float_3D;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Float_Array
+      (Name : String; anArray : GA_Maths.Float_Vector) is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -178,8 +216,9 @@ package body GA_Utilities is
       aBlade    : Blade.Basis_Blade;
       Curs      : Cursor := theBlades.First;
    begin
-      New_Line;
-      Put_Line (Name);
+      if Name /= "" then
+         Put_Line (Name);
+      end if;
       Put_Line ("MV Type: " & MV_Type'Image (MV_Kind (MV)));
       Put_Line ("MV Size: " & Integer'Image (Multivector_Size (MV)));
       Put_Line ("Grade Use Bitmap: " & GA_Maths.Grade_Usage'Image (Grade_Use (MV)));
@@ -200,15 +239,16 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Multivector_Info (Name : String; Info : Multivector_Type.MV_Type_Record) is
+   procedure Print_Multivector_Info (Name : String;
+                                     Info : Multivector_Type.MV_Type_Record) is
       use Multivector_Type;
    begin
       Put_Line (Name);
-      Put_Line ("Zero        " & boolean'Image (Zero (Info)));
-      Put_Line ("MV Type     " & MV_Type'Image (MV_Kind (Info)));
-      Put_Line ("Top_Grade   " & Interfaces.Unsigned_32'Image (Top_Grade (Info)));
-      Put_Line ("Grade use   " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
-      Put_Line ("Parity      " & Parity_Type'Image (Parity (Info)));
+      Put_Line ("Zero      " & boolean'Image (Zero (Info)));
+      Put_Line ("MV Type   " & MV_Type'Image (MV_Kind (Info)));
+      Put_Line ("Grade     " & Integer'Image (MV_Grade (Info)));
+      Put_Line ("Grade use " & Interfaces.Unsigned_32'Image (Grade_Use (Info)));
+      Put_Line ("Parity    " & Parity_Type'Image (Parity (Info)));
    exception
       when others =>
          Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_Info.");
@@ -217,7 +257,40 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Vertex (Name : String; Vertex : Multivectors.Vector) is
+   procedure Print_Multivector_List (Name : String;
+                                     MV_List : Multivectors.Multivector_List) is
+      use Multivectors;
+      MV_List_Length : constant Integer := List_Length (MV_List);
+   begin
+      New_Line;
+      Put_Line (Name & ":");
+      for index in 1 .. MV_List_Length loop
+         Print_Multivector ("", MV_Item (MV_List, index));
+      end loop;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_List.");
+         raise;
+   end Print_Multivector_List;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Multivector_String (Name : String; MV : Multivectors.Multivector;
+                                       MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Ada.Strings.Unbounded;
+   begin
+      Put_Line (Name & ":");
+      Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
+   exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_String.");
+         raise;
+   end Print_Multivector_String;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Vertex (Name : String; Vertex : Multivectors.M_Vector) is
       use Blade;
       use Multivectors;
       use Blade_List_Package;

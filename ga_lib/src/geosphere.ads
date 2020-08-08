@@ -49,7 +49,7 @@ private
    end record;
 
    package Vertex_Vectors is new Ada.Containers.Vectors
-     (Element_Type => Multivectors.Vector, Index_Type => Natural);
+     (Element_Type => Multivectors.M_Vector, Index_Type => Natural);
    type MV_Vector is new Vertex_Vectors.Vector with null record;
 
    package Face_Vectors is new Ada.Containers.Vectors

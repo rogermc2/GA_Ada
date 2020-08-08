@@ -32,10 +32,11 @@ with Program_Loader;
 with Utilities;
 
 with Blade;
+with Blade_Types;
 with GA_Draw;
 with GL_Util;
-with E2GA;
-with E2GA_Draw;
+--  with E2GA;
+--  with E2GA_Draw;
 with E3GA;
 with GA_Maths;
 with Multivectors;
@@ -79,6 +80,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Singles;     --  for matrix multiplication
 
       use Maths.Single_Math_Functions;
+      use Blade_Types;
       use GA_Maths;
       use GA_Maths.Float_Functions;
       use Multivectors;
@@ -100,7 +102,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       BV                : Bivector;
       Step              : constant float :=
         GA_Maths.Two_Pi / float (Num_Bivector_X * Num_Bivector_Y);
-      V1                    : constant Vector := E2GA.e1; --  2D vector (0, 0), (1, 0)
+      V1                    : constant Vector := Basis_Vector (E2_e1); --  2D vector (0, 0), (1, 0)
       V2                    : Vector;
 
       Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
@@ -126,11 +128,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         ((Entry_Width * Scale_S / 2.0,
          (Single (Num_Bivector_Y)) * Entry_Height * Scale_S / 2.0 - Position_Y, 0.0));
       Model_View_Matrix := Maths.Scaling_Matrix ((Scale_S, Scale_S, Scale_S));
-      GA_Draw.Init_Projection_Matrix (Projection_Matrix);
+      Maths.Init_Projection_Matrix (Projection_Matrix);
       --  The final MVP matrix is set up in the draw routines
 
       while A < Two_Pi - 0.1 loop
-         V2 := Cos (A) * E2GA.e1 + Sin (A) * E2GA.e2;
+         V2 := Cos (A) * E2_e1 + Sin (A) * E2_e2;
          Model_View_Matrix := Translation_Matrix * Model_View_Matrix;
          E2GA_Draw.Draw_Vector (Render_Graphic_Program, Model_View_Matrix,
                                 V1, Red, Scale);
