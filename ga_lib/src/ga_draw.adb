@@ -982,7 +982,7 @@ package body GA_Draw is
             end if;
             MV_Matrix := Maths.Scaling_Matrix (Single (Scale)) * MV_Matrix;
 
-            --              Shader_Manager.Set_Model_Matrix (Model_Matrix);
+            --  Draw the stick of the vector
             Draw_Line (Render_Program, (0.98 * Direction (GL.X),
                        0.98 * Direction (GL.Y), 0.98 * Direction (GL.Z)), Scale);
 
