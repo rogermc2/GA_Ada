@@ -419,7 +419,7 @@ package body GA_Draw is
         C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
         C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
     begin
-        --  aPoint, Direction are model coordinates
+        --  aPoint and Direction are model coordinates
         GL.Objects.Programs.Use_Program (Render_Program);
         --          Utilities.Print_Vector ("GA_Draw.Draw_Line aPoint", aPoint);
         --          Utilities.Print_Vector ("GA_Draw.Draw_Line Direction", Direction);
@@ -617,17 +617,18 @@ package body GA_Draw is
 
     --  ------------------------------------------------------------------------
 
-     procedure Display_Plane (Mode : Connection_Mode) is
-        Stride           : constant Int := 0;
+     procedure Display_Plane (Mode : Connection_Mode; Num_Vertices : Int;
+                              Index : GL.Attributes.Attribute ) is
      begin
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-        GL.Attributes.Enable_Vertex_Attrib_Array (0);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, Stride, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (Index);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
+
+        Put_Line ("GA_Draw.Display_Plane drawing arrays.");
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
                                               First => 0,
-                                              Count => 1 * 3);
-        GL.Attributes.Disable_Vertex_Attrib_Array (0);
-        GL.Attributes.Disable_Vertex_Attrib_Array (1);
+                                              Count => Num_Vertices);
+        Put_Line ("GA_Draw.Display_Plane arrays drawn.");
+        GL.Attributes.Disable_Vertex_Attrib_Array (Index);
 
     exception
         when  others =>
@@ -651,7 +652,7 @@ package body GA_Draw is
         Scale_Magnitude  : constant Single := Single (Weight);
         Step_Size        : constant Single := 0.1;
         Step_Size_Const  : constant Single := Step_Size * Scale_Const;
-        Num_Vertices     : constant Int := Int ((2.0 * Scale_Const) / Step_Size);
+        Num_Vertices     : constant Int := Int ((2.0 * Scale_Const) / Step_Size / 3.0);
         GL_Normal        : constant Vector3 := Vector3 (Normal);
         GL_Point         : constant Vector3 := Vector3 (Point);
         V_Index          : Int := 0;
@@ -691,7 +692,6 @@ package body GA_Draw is
                 X := -Scale_Const;
                 while X < Scale_Const - Step_Size_Const loop
                     V_Index := V_Index + 1;
-                    Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
                     Vertex (V_Index) := GL_Point + X * Ortho_1;
                     case s is
                     when 1 => --  front
@@ -712,11 +712,12 @@ package body GA_Draw is
                     end case;
                     X := X + Step_Size_Const;
                 end loop;
+                Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
 
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex, Static_Draw);
-                Display_Plane (Quad_Strip);
+                Display_Plane (Quad_Strip, 3, 0);
                 Y := Y + Step_Size_Const;
             end loop;
         end loop;
@@ -743,7 +744,7 @@ package body GA_Draw is
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
-            Display_Plane (Lines);
+            Display_Plane (Lines, 3, 0);
         end if;
 
     exception
