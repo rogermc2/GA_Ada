@@ -29,6 +29,7 @@ with Shader_Manager;
 
 package body GA_Draw is
 
+    type Surface_Type is (Back_Surface, Front_Surface);
     Count : Integer := 0;
 
     procedure Draw_Circle (Palet_Type : Palet.Colour_Palet;
@@ -674,11 +675,11 @@ package body GA_Draw is
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         --  draw both front and back side individually
-        for s in 1 .. 2 loop
-            case s is
-            when 1 => -- Draw front
+        for Surface in Surface_Type'Range loop
+            case Surface is
+            when Front_Surface =>
                 null;
-            when 2 => -- Draw back
+            when Back_Surface =>
                 for n in Int range 1..6 loop
                     GL_Normals (n) := -GL_Normals (n);
                 end loop;
@@ -693,21 +694,21 @@ package body GA_Draw is
                 while X < Scale_Const - Step_Size_Const loop
                     V_Index := V_Index + 1;
                     Vertex (V_Index) := GL_Point + X * Ortho_1;
-                    case s is
-                    when 1 => --  front
+                    case Surface is
+                    when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
-                    when 2 => --  back
+                    when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
                           Y * Step_Size_Const * Ortho_2;
                     end case;
 
                     V_Index := V_Index + 1;
                     Vertex (V_Index) := GL_Point + X * Ortho_1;
-                    case s is
-                    when 1 => --  front
+                    case Surface is
+                    when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
                           Y * Step_Size_Const * Ortho_2;
-                    when 2 => --  back
+                    when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
                     end case;
                     X := X + Step_Size_Const;
