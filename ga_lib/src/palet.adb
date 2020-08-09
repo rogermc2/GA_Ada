@@ -88,6 +88,7 @@ package body Palet is
    end Get_Plane_Size;
 
    --  ------------------------------------------------------------------------
+
    function Is_Null return Colour_Palet is
       Null_Colour : constant Color := (0.0, 0.0, 0.0, 0.0);
    begin

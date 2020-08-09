@@ -649,11 +649,12 @@ package body GA_Draw is
         Normals_Buffer   : GL.Objects.Buffers.Buffer;
         Scale_Matrix     : Matrix4;
         Model_Matrix     : constant Matrix4 := Identity4;
-        Scale_Const      : constant Single := Single (Palet.Get_Plane_Size);
+        Plane_Size       : constant Single := Single (Palet.Get_Plane_Size);  --  6.0
         Scale_Magnitude  : constant Single := Single (Weight);
         Step_Size        : constant Single := 0.1;
-        Step_Size_Const  : constant Single := Step_Size * Scale_Const;
-        Num_Vertices     : constant Int := Int ((2.0 * Scale_Const) / Step_Size / 3.0);
+        Scaled_Step_Size : constant Single := Step_Size * Plane_Size;
+        Num_Vertices     : constant Int :=
+                           Int ((4.0 * Plane_Size) / Scaled_Step_Size);
         GL_Normal        : constant Vector3 := Vector3 (Normal);
         GL_Point         : constant Vector3 := Vector3 (Point);
         V_Index          : Int := 0;
@@ -685,21 +686,22 @@ package body GA_Draw is
                 end loop;
             end case;
 
-            Put_Line ("GA_Draw.Draw_Plane,Num_Vertices " &
+            Put_Line ("GA_Draw.Draw_Plane, Num_Vertices " &
              Int'Image (Num_Vertices));
-            Y := -Scale_Const;
-            while Y < Scale_Const - Step_Size_Const loop
+            Y := -Plane_Size;
+            while Y < Plane_Size - Scaled_Step_Size loop
                 V_Index := 0;
-                X := -Scale_Const;
-                while X < Scale_Const - Step_Size_Const loop
+                X := -Plane_Size;
+                while X < Plane_Size - Scaled_Step_Size loop
                     V_Index := V_Index + 1;
+                    Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
                     Vertex (V_Index) := GL_Point + X * Ortho_1;
                     case Surface is
                     when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
                     when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Step_Size_Const * Ortho_2;
+                          Y * Scaled_Step_Size * Ortho_2;
                     end case;
 
                     V_Index := V_Index + 1;
@@ -707,11 +709,11 @@ package body GA_Draw is
                     case Surface is
                     when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Step_Size_Const * Ortho_2;
+                          Y * Scaled_Step_Size * Ortho_2;
                     when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
                     end case;
-                    X := X + Step_Size_Const;
+                    X := X + Scaled_Step_Size;
                 end loop;
                 Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
 
@@ -719,7 +721,7 @@ package body GA_Draw is
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex, Static_Draw);
                 Display_Plane (Quad_Strip, 3, 0);
-                Y := Y + Step_Size_Const;
+                Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
 
@@ -729,18 +731,18 @@ package body GA_Draw is
             Shader_Manager.Set_Model_Matrix (Scale_Matrix * Model_Matrix);
 
             V_Index := 0;
-            X := -Scale_Const;
-            Y := -Scale_Const;
-            while Y < Scale_Const loop
-                while X < Scale_Const loop
+            X := -Plane_Size;
+            Y := -Plane_Size;
+            while Y < Plane_Size loop
+                while X < Plane_Size loop
                     V_Index := V_Index + 1;
                     Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Ortho_2;
                     V_Index := V_Index + 1;
                     Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Ortho_2 -
                       Scale_Magnitude * Normal;
-                    X := X + Step_Size * Scale_Const;
+                    X := X + Step_Size * Plane_Size;
                 end loop;
-                Y := Y + Step_Size * Scale_Const;
+                Y := Y + Step_Size * Plane_Size;
             end loop;
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
