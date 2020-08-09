@@ -121,8 +121,12 @@ package body C3GA_Draw is
       use Multivector_Analyze;
       Point_Pos  : constant C3GA.Vector_E3 :=
                      C3GA.To_VectorE3GA (Analysis.Points (1));
-      Direction  : constant C3GA.Vector_E3 :=
+      Ortho_1    : constant C3GA.Vector_E3 :=
                      C3GA.To_VectorE3GA (Analysis.M_Vectors (1));
+      Ortho_2    : constant C3GA.Vector_E3 :=
+                     C3GA.To_VectorE3GA (Analysis.M_Vectors (2));
+      Direction  : constant C3GA.Vector_E3 :=
+                     C3GA.To_VectorE3GA (Analysis.M_Vectors (3));
       Scale      : Float := Analysis.Weight;
    begin
       case Analysis.M_Type.Blade_Subclass is
@@ -133,6 +137,8 @@ package body C3GA_Draw is
          when Plane_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             --  Draw_Line doesn't use method
+            GA_Draw.Draw_Plane (Render_Program, Point_Pos, Ortho_1, Ortho_2,
+                                Direction, Scale);
          when Point_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Point.");
             Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;

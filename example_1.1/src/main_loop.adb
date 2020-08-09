@@ -18,11 +18,11 @@ with Glfw.Windows.Context;
 with Maths;
 with Utilities;
 
-with Blade_Types;
+--  with Blade_Types;
 with E3GA;
 with C3GA_Utilities;
 with GA_Maths;
-with GA_Utilities;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Multivectors;
@@ -210,18 +210,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            (Render_Graphic_Program, aCircle, aDual_Plane);
 
          --  compute rotation versor
-         GA_Utilities.Print_Multivector_String
-              ("Main_Loop.Display aLine",
-                aLine, Blade_Types.Basis_Names_C3GA);
-         DL := To_Dual_Line (Dual (aLine));
-         GA_Utilities.Print_Multivector_String
-              ("Main_Loop.Display DL",
-                DL, Blade_Types.Basis_Names_C3GA);
          DL := 0.5 * Phi * To_Dual_Line (Dual (aLine));
          R_Versor := To_TRversor (Multivectors.Exp (DL));
-         GA_Utilities.Print_Multivector_String
-              ("Main_Loop.Display R_Versor",
-                R_Versor, Blade_Types.Basis_Names_C3GA);
 
          New_Line;
          Put_Line ("Main_Loop.Display drawing rotated circle.");
@@ -248,16 +238,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
              R_Versor := To_TRversor (Multivectors.Exp (Alpha * LR));
              --  draw rotated circle (light green)
              Shader_Manager.Set_Ambient_Colour ((0.5, 1.0, 0.5, 1.0));
-             Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
-               (Render_Graphic_Program, aCircle, R_Versor);
+--               Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+--                 (Render_Graphic_Program, aCircle, R_Versor);
              --  draw reflected, rotated circle (light blue)
              Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
-             Draw_1_1.Draw_Reflected_Circle
-               (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+--               Draw_1_1.Draw_Reflected_Circle
+--                 (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
 
          --  Draw plane (yellow)
+         New_Line;
+         Put_Line ("Main_Loop.Display drawing plane.");
          Shader_Manager.Set_Ambient_Colour (Yellow);
          Draw_1_1.Draw_Plane
            (Render_Graphic_Program, aDual_Plane);

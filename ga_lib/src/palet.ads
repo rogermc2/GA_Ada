@@ -29,6 +29,7 @@ package Palet is
    function Foreground_Green (Palet_Data  : Colour_Palet) return Single;
    function Foreground_Red (Palet_Data : Colour_Palet) return Single;
    function Get_Draw_Mode return Draw_Mode;
+   function Get_Plane_Size return Float;
    function Is_Null return Colour_Palet;
    function Line_Length return Float;
    function Outline_Colour (Palet_Data : Colour_Palet) return Color;
