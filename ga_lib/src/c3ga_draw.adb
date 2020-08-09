@@ -129,7 +129,7 @@ package body C3GA_Draw is
          when Line_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Line.");
             --  Draw_Line doesn't use method
-            GA_Draw.Draw_Line (Render_Program, Point_Pos, Direction, Scale);
+            GA_Draw.Draw_Line (Render_Program, Direction, Scale);
          when Plane_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             --  Draw_Line doesn't use method

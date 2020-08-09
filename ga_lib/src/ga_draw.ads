@@ -23,8 +23,7 @@ package GA_Draw is
                              Scale : float := 1.0;
                              Method : Method_Type := Draw_Bivector_Circle);
     procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
-                         aPoint, Direction : C3GA.Vector_E3;
-                         Weight            : Float := 1.0);
+                         Direction : C3GA.Vector_E3;  Weight : Float := 1.0);
     procedure Draw_Trivector (Render_Program : GL.Objects.Programs.Program;
                               Base : C3GA.Vector_E3; Scale : float := 1.0;
                               Palet_Type : Palet.Colour_Palet;

@@ -130,7 +130,6 @@ package body GA_Draw is
         Method /= Draw_Bivector_Parallelogram_No_Vectors then
 
          --  Rotate e3 to normal direction
-
          if Normal_Norm > 0.0 then
             Model_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
          end if;
@@ -391,9 +390,9 @@ package body GA_Draw is
 
    --  ------------------------------------------------------------------------
 
-   procedure Draw_Line (Render_Program    : GL.Objects.Programs.Program;
-                        aPoint, Direction : C3GA.Vector_E3;
-                        Weight            : Float := 1.0) is
+   procedure Draw_Line (Render_Program : GL.Objects.Programs.Program;
+                        Direction : C3GA.Vector_E3;
+                        Weight  : Float := 1.0) is
       use GL.Objects.Buffers;
       use GL.Types.Singles;
       Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -419,8 +418,6 @@ package body GA_Draw is
       C_Vertex1            : constant Singles.Vector3 := (-0.25, 0.0, -1.0);
       C_Vertex2            : constant Singles.Vector3 := (0.0, 0.0, 0.0);
       C_Vertex3            : constant Singles.Vector3 := (0.25, 0.0, -1.0);
-      GL_Point             : constant Singles.Vector3 :=
-                               GL_Util.To_GL (C3GA.Get_Coords (aPoint));
    begin
       --  aPoint, Direction are model coordinates
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -440,13 +437,11 @@ package body GA_Draw is
       --  rotate e3 to line direction
       Model_Matrix :=
         GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
-      --          Utilities.Print_Matrix ("GA_Draw.Draw_Line Vector_Rotation_Matrix",
-      --                                  GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction));
-      Model_Matrix := Scale_Matrix * Model_Matrix;
+       Model_Matrix := Scale_Matrix * Model_Matrix;
       --  translate to point on line
-      Translation_Matrix :=
-        Maths.Translation_Matrix ((GL_Point (GL.X), GL_Point (GL.Y), GL_Point (GL.Z)));
-      Model_Matrix := Translation_Matrix * Model_Matrix;
+--        Translation_Matrix :=
+--          Maths.Translation_Matrix ((aPoint (GL.X), aPoint (GL.Y), aPoint (GL.Z)));
+--        Model_Matrix := Translation_Matrix * Model_Matrix;
       Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
@@ -850,10 +845,8 @@ package body GA_Draw is
          MV_Matrix := Maths.Scaling_Matrix (Single (Scale)) * MV_Matrix;
 
          --              Shader_Manager.Set_Model_Matrix (Model_Matrix);
-         Draw_Line (Render_Program,
-                    (0.0, 0.0, 0.0), (0.98 * Direction (GL.X),
-                      0.98 * Direction (GL.Y),
-                      0.98 * Direction (GL.Z)), Scale);
+         Draw_Line (Render_Program, (0.98 * Direction (GL.X),
+                    0.98 * Direction (GL.Y), 0.98 * Direction (GL.Z)), Scale);
 
          --  Setup translation matrix for arrow head
          --  rotate e3 to vector direction
