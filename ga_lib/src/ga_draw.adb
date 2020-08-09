@@ -641,7 +641,8 @@ package body GA_Draw is
 
     procedure Draw_Plane (Render_Program : GL.Objects.Programs.Program;
                           Point, Ortho_1, Ortho_2, Normal : C3GA.Vector_E3;
-                          Weight : Float := 1.0) is
+                          Weight                          : Float := 1.0) is
+        --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
         use GL.Objects.Buffers;
         use Singles;
         Vertex_Array     : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
