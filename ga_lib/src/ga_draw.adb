@@ -21,7 +21,7 @@ with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
 with GA_Maths;
---  with GA_Utilities;
+with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Multivectors;
@@ -624,14 +624,14 @@ package body GA_Draw is
         GL.Attributes.Enable_Vertex_Attrib_Array (Index);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
 
-        Put_Line ("GA_Draw.Display_Plane drawing arrays.");
+--          Put_Line ("GA_Draw.Display_Plane drawing arrays.");
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
                                               First => 0,
                                               Count => Num_Vertices);
-        Put_Line ("GA_Draw.Display_Plane arrays drawn.");
+--          Put_Line ("GA_Draw.Display_Plane arrays drawn.");
         GL.Attributes.Disable_Vertex_Attrib_Array (Index);
 
-    exception
+     exception
         when  others =>
             Put_Line ("An exception occurred in GA_Draw.Draw_Parallelepiped.");
             raise;
@@ -668,6 +668,8 @@ package body GA_Draw is
         GL_Normals       : Vector3_Array (1 .. 6) := (others => Normal);
         X                : Single;
         Y                : Single;
+        X_Length         : Vector3;
+        Y_Width          : Vector3;
     begin
         Vertex_Array.Initialize_Id;
         Vertex_Array.Bind;
@@ -687,41 +689,48 @@ package body GA_Draw is
                 end loop;
             end case;
 
-            Put_Line ("GA_Draw.Draw_Plane, Num_Vertices " &
-             Int'Image (Num_Vertices));
+            GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Plane, point ", Point);
+            GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Plane, length ", Length);
+            GA_Utilities.Print_E3_Vector ("GA_Draw.Draw_Plane, width ", Width);
+            Put_Line ("GA_Draw.Draw_Plane, Scaled_Step_Size " & Single'Image (Scaled_Step_Size));
+
+--              Put_Line ("GA_Draw.Draw_Plane, Num_Vertices " &
+--               Int'Image (Num_Vertices));
             Y := -Plane_Size;
             while Y < Plane_Size - Scaled_Step_Size loop
                 V_Index := 0;
                 X := -Plane_Size;
+                Y_Width := Y * Width;
                 while X < Plane_Size - Scaled_Step_Size loop
                     V_Index := V_Index + 1;
-                    Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
-                    Vertex (V_Index) := GL_Point + X * Length;
+                    X_Length := X * Length;
+--                      Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
+                    Vertex (V_Index) := GL_Point + X_Length;
                     case Surface is
                     when Front_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + Y * Width;
+                        Vertex (V_Index) := Vertex (V_Index) + Y_Width;
                     when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Scaled_Step_Size * Width;
+                          Scaled_Step_Size * Y_Width;
                     end case;
 
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * Length;
+                    Vertex (V_Index) := GL_Point + X_Length;
                     case Surface is
                     when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Scaled_Step_Size * Width;
+                          Scaled_Step_Size * Y_Width;
                     when Back_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + Y * Width;
+                        Vertex (V_Index) := Vertex (V_Index) + Y_Width;
                     end case;
                     X := X + Scaled_Step_Size;
                 end loop;
-                Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
+--                  Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
 
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex, Static_Draw);
-                Display_Plane (Quad_Strip, 3, 0);
+                Display_Plane (Triangle_Strip, 3, 0);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
@@ -737,9 +746,9 @@ package body GA_Draw is
             while Y < Plane_Size loop
                 while X < Plane_Size loop
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Width;
+                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y_Width;
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Width -
+                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y_Width -
                       Scale_Magnitude * Normal;
                     X := X + Step_Size * Plane_Size;
                 end loop;
