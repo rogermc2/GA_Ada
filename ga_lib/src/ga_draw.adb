@@ -640,7 +640,7 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
 
     procedure Draw_Plane (Render_Program : GL.Objects.Programs.Program;
-                          Point, Ortho_1, Ortho_2, Normal : C3GA.Vector_E3;
+                          Point, Length, Width, Normal : C3GA.Vector_E3;
                           Weight                          : Float := 1.0) is
         --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
         use GL.Objects.Buffers;
@@ -696,23 +696,23 @@ package body GA_Draw is
                 while X < Plane_Size - Scaled_Step_Size loop
                     V_Index := V_Index + 1;
                     Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
-                    Vertex (V_Index) := GL_Point + X * Ortho_1;
+                    Vertex (V_Index) := GL_Point + X * Length;
                     case Surface is
                     when Front_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
+                        Vertex (V_Index) := Vertex (V_Index) + Y * Width;
                     when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Scaled_Step_Size * Ortho_2;
+                          Y * Scaled_Step_Size * Width;
                     end case;
 
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * Ortho_1;
+                    Vertex (V_Index) := GL_Point + X * Length;
                     case Surface is
                     when Front_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) +
-                          Y * Scaled_Step_Size * Ortho_2;
+                          Y * Scaled_Step_Size * Width;
                     when Back_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + Y * Ortho_2;
+                        Vertex (V_Index) := Vertex (V_Index) + Y * Width;
                     end case;
                     X := X + Scaled_Step_Size;
                 end loop;
@@ -737,9 +737,9 @@ package body GA_Draw is
             while Y < Plane_Size loop
                 while X < Plane_Size loop
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Ortho_2;
+                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Width;
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Ortho_2 -
+                    Vertex (V_Index) := GL_Point + X * GL_Normal + Y * Width -
                       Scale_Magnitude * Normal;
                     X := X + Step_Size * Plane_Size;
                 end loop;
