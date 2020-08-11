@@ -640,7 +640,7 @@ package body GA_Draw is
    --  ------------------------------------------------------------------------
 
    procedure Draw_Plane (Render_Program                  : GL.Objects.Programs.Program;
-                         Point, X_Dir, Y_Dir, Normal    : C3GA.Vector_E3;
+                         Point, X_Dir, Y_Dir, Normal     : C3GA.Vector_E3;
                          Weight                          : Float := 1.0) is
       --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
       use GL.Objects.Buffers;
@@ -661,14 +661,26 @@ package body GA_Draw is
       V_Index          : Int := 0;
       Vertex           : Vector3_Array (1 .. Num_Vertices) :=
                            (others => (others => 0.0));
-      --          GL_Vertices      : Vector3_Array (1 .. 4) :=
-      --                               (others => (others => 0.0));
       --          aVertex          : Vector3;
       --          Vertex_Index     : Int := 0;
       GL_Normals       : Vector3_Array (1 .. 6) := (others => Normal);
       X                : Single;
       Y                : Single;
       YY_Dir           : Vector3;
+      function Build_Quad_Vertices (X_Ref, Y_Ref : Single)
+                                    return Vector2_Array is
+         Quad_Vertices : constant Vector2_Array (1 .. 6) :=
+                           ((X_Ref,                    Y_Ref),
+                            (X_Ref,                    Y_Ref + Scaled_Step_Size),
+                            (X_Ref + Scaled_Step_Size, Y_Ref + Scaled_Step_Size),
+
+                            (X_Ref + Scaled_Step_Size, Y_Ref + Scaled_Step_Size),
+                            (X_Ref + Scaled_Step_Size, Y_Ref),
+                            (X_Ref,                    Y_Ref));
+      begin
+         return Quad_Vertices;
+      end Build_Quad_Vertices;
+
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
@@ -695,6 +707,11 @@ package body GA_Draw is
             V_Index := 0;
             YY_Dir := Y * Y_Dir;
             X := -Plane_Size;
+            --  for each Y value draw a triangle strip (rectangle) of
+            --  "length" 2 Plane_Size and "height" YY_Dir
+            --  The "length" in Scaled_Step_Size ^ 2 quad increments
+            --  with each quad drawn as 2 triangles
+            --  X_Dir and Y_Dir are orthogonal
             while X < Plane_Size - Scaled_Step_Size loop
                V_Index := V_Index + 1;
                Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
