@@ -713,6 +713,7 @@ package body GA_Draw is
                         Vertex (V_Index) := Vertex (V_Index) +
                           Scaled_Step_Size * Y_Width;
                     end case;
+                    Vertex (V_Index) := 0.5 * Vertex (V_Index);
 
                     V_Index := V_Index + 1;
                     Vertex (V_Index) := GL_Point + X_Length;
@@ -723,6 +724,7 @@ package body GA_Draw is
                     when Back_Surface =>
                         Vertex (V_Index) := Vertex (V_Index) + Y_Width;
                     end case;
+                    Vertex (V_Index) := 0.5 * Vertex (V_Index);
                     X := X + Scaled_Step_Size;
                 end loop;
 --                  Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
@@ -730,6 +732,7 @@ package body GA_Draw is
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex, Static_Draw);
+                Utilities.Print_GL_Array3 ("GA_Draw.Draw_Plane, Vertex", Vertex);
                 Display_Plane (Triangle_Strip, 3, 0);
                 Y := Y + Scaled_Step_Size;
             end loop;
