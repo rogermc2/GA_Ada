@@ -13,9 +13,10 @@ with GL.Objects.Vertex_Arrays;
 with GL.Rasterization;
 with GL.Toggles;
 with GL.Types; use GL.Types;
-with Utilities;
+with GL_Util;
 
 with Maths;
+with Utilities;
 
 with Blade_Types;
 with E3GA;
@@ -23,7 +24,6 @@ with E3GA_Utilities;
 with GA_Maths;
 --  with GA_Utilities;
 with Geosphere;
-with GL_Util;
 with Multivectors;
 with Shader_Manager;
 
@@ -667,19 +667,6 @@ package body GA_Draw is
       X                : Single;
       Y                : Single;
       YY_Dir           : Vector3;
-      function Build_Quad_Vertices (X_Ref, Y_Ref : Single)
-                                    return Vector2_Array is
-         Quad_Vertices : constant Vector2_Array (1 .. 6) :=
-                           ((X_Ref,                    Y_Ref),
-                            (X_Ref,                    Y_Ref + Scaled_Step_Size),
-                            (X_Ref + Scaled_Step_Size, Y_Ref + Scaled_Step_Size),
-
-                            (X_Ref + Scaled_Step_Size, Y_Ref + Scaled_Step_Size),
-                            (X_Ref + Scaled_Step_Size, Y_Ref),
-                            (X_Ref,                    Y_Ref));
-      begin
-         return Quad_Vertices;
-      end Build_Quad_Vertices;
 
    begin
       Vertex_Array.Initialize_Id;

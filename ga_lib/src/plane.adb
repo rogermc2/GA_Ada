@@ -22,16 +22,31 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    function Build_Quad_Vertices (X_Ref, Y_Ref, Step_Size : Single)
-                                      return Singles.Vector2_Array is
-        Quad_Vertices : constant Singles.Vector2_Array (1 .. 6) :=
-                          ((X_Ref,             Y_Ref),
-                           (X_Ref,             Y_Ref + Step_Size),
-                           (X_Ref + Step_Size, Y_Ref + Step_Size),
+    procedure Add_To_Array (theArray : in out Singles.Vector3_Array;
+                            Current_Index : Int;
+                            Addition : Singles.Vector3_Array) is
+    begin
+        for index in Int range 1 .. 6 loop
+            theArray (Current_Index + index) := Addition (index);
+        end loop;
 
-                           (X_Ref + Step_Size, Y_Ref + Step_Size),
-                           (X_Ref + Step_Size, Y_Ref),
-                           (X_Ref,             Y_Ref));
+    end Add_To_Array;
+
+    --  ------------------------------------------------------------------------
+
+    function Build_Quad_Vertices (Bottom_Left : Singles.Vector3; Step_Size : Single)
+                                  return Singles.Vector3_Array is
+        X : constant Single := Bottom_Left (GL.X);
+        Y : constant Single := Bottom_Left (GL.X);
+        Z : constant Single := Bottom_Left (GL.X);
+        Quad_Vertices : constant Singles.Vector3_Array (1 .. 6) :=
+                           (Bottom_Left,
+                           (X, Y + Step_Size, Z),
+                           (X + Step_Size, Y + Step_Size, Z),
+
+                           (X + Step_Size, Y + Step_Size, Z),
+                           (X + Step_Size, Y, Z),
+                           (Bottom_Left));
     begin
         return Quad_Vertices;
     end Build_Quad_Vertices;
@@ -44,16 +59,16 @@ package body Plane is
         GL.Attributes.Enable_Vertex_Attrib_Array (Index);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
 
-        Put_Line ("GA_Draw.Display_Plane drawing arrays.");
+        Put_Line ("Plane.Display_Plane drawing arrays.");
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
                                               First => 0,
                                               Count => Num_Vertices);
-        Put_Line ("GA_Draw.Display_Plane arrays drawn.");
+        Put_Line ("Plane.Display_Plane arrays drawn.");
         GL.Attributes.Disable_Vertex_Attrib_Array (Index);
 
     exception
         when  others =>
-            Put_Line ("An exception occurred in GA_Draw.Draw_Parallelepiped.");
+            Put_Line ("An exception occurred in Plane.Display_Plane.");
             raise;
     end Display_Plane;
 
@@ -75,19 +90,18 @@ package body Plane is
         Step_Size        : constant Single := 0.1;
         Scaled_Step_Size : constant Single := Step_Size * Plane_Size;
         Num_Vertices     : constant Int :=
-                             Int ((4.0 * Plane_Size) / Scaled_Step_Size);
+                             Int (2.0 * Plane_Size / Step_Size);
         GL_Normal        : constant Vector3 := Vector3 (Normal);
         GL_Point         : constant Vector3 := Vector3 (Point);
         V_Index          : Int := 0;
-        Vertex           : Vector3_Array (1 .. Num_Vertices) :=
+        Vertices         : Vector3_Array (1 .. Num_Vertices) :=
                              (others => (others => 0.0));
-        --          aVertex          : Vector3;
-        --          Vertex_Index     : Int := 0;
         GL_Normals       : Vector3_Array (1 .. 6) := (others => Normal);
         X                : Single;
         Y                : Single;
         YY_Dir           : Vector3;
-
+        QY               : Vector3;
+        Quad_Vertices    : Singles.Vector3_Array (1 .. 6);
 
     begin
         Vertex_Array.Initialize_Id;
@@ -108,8 +122,6 @@ package body Plane is
                 end loop;
             end case;
 
-            Put_Line ("GA_Draw.Draw_Plane, Num_Vertices " &
-                        Int'Image (Num_Vertices));
             Y := -Plane_Size;
             while Y < Plane_Size - Scaled_Step_Size loop
                 V_Index := 0;
@@ -121,37 +133,32 @@ package body Plane is
                 --  with each quad drawn as 2 triangles
                 --  X_Dir and Y_Dir are orthogonal
                 while X < Plane_Size - Scaled_Step_Size loop
-                    V_Index := V_Index + 1;
-                    Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
-                    Vertex (V_Index) := GL_Point + X * X_Dir;
+--                      Put_Line ("Plane.Draw_Plane, V_Index " & Int'Image (V_Index));
+
                     case Surface is
                     when Front_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + YY_Dir;
+                        QY := YY_Dir;
                     when Back_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) +
-                          Scaled_Step_Size * YY_Dir;
+                        QY := Scaled_Step_Size * YY_Dir;
                     end case;
 
-                    V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * X_Dir;
-                    case Surface is
-                    when Front_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) +
-                          Scaled_Step_Size * YY_Dir;
-                    when Back_Surface =>
-                        Vertex (V_Index) := Vertex (V_Index) + YY_Dir;
-                    end case;
+                    Quad_Vertices := Build_Quad_Vertices
+                      ((GL_Point + X * X_Dir + QY), Scaled_Step_Size);
+                    Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     X := X + Scaled_Step_Size;
+                    V_Index := V_Index + 6;
                 end loop;
-                Put_Line ("GA_Draw.Draw_Plane, V_Index " & Int'Image (V_Index));
+--                  Put_Line ("Plane.Draw_Plane, V_Index " & Int'Image (V_Index));
 
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
-                Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex, Static_Draw);
+                Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+                Utilities.Print_GL_Array3 ("Plane.Draw_Plane, Vertices", Vertices);
                 Display_Plane (Triangle_Strip, 6, 0);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
+--          Put_Line ("Plane.Draw_Plane, Num_Vertices " & Int'Image (Num_Vertices));
 
         if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
             Scale_Matrix := Maths.Scaling_Matrix
@@ -165,14 +172,15 @@ package body Plane is
                 YY_Dir := Y * Y_Dir;
                 while X < Plane_Size loop
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + YY_Dir;
+                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir;
                     V_Index := V_Index + 1;
-                    Vertex (V_Index) := GL_Point + X * GL_Normal + YY_Dir -
+                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir -
                       Scale_Magnitude * Normal;
                     X := X + Scaled_Step_Size;
                 end loop;
                 Y := Y + Scaled_Step_Size;
             end loop;
+
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
@@ -181,7 +189,7 @@ package body Plane is
 
     exception
         when  others =>
-            Put_Line ("An exception occurred in GA_Draw.Draw_Plane.");
+            Put_Line ("An exception occurred in Plane.Draw_Plane.");
             raise;
     end Draw_Plane;
 

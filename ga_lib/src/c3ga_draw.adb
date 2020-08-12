@@ -8,6 +8,7 @@ with C3GA;
 with GA_Draw;
 with GA_Maths;
 --  with GA_Utilities;
+with Plane;
 
 package body C3GA_Draw is
    use GA_Draw;
@@ -137,8 +138,10 @@ package body C3GA_Draw is
          when Plane_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             --  Draw_Line doesn't use method
-            GA_Draw.Draw_Plane (Render_Program, Point_Pos, Ortho_1, Ortho_2,
+            Plane.Draw_Plane (Render_Program, Point_Pos, Ortho_1, Ortho_2,
                                 Direction, Scale);
+--              GA_Draw.Draw_Plane (Render_Program, Point_Pos, Ortho_1, Ortho_2,
+--                                  Direction, Scale);
          when Point_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Point.");
             Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;
