@@ -44,7 +44,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Green          : constant GL.Types.Singles.Vector4  := (0.0, 0.5, 0.0, 1.0);
    Blue           : constant GL.Types.Singles.Vector4  := (0.0, 0.0, 0.5, 1.0);
    Magenta        : constant GL.Types.Singles.Vector4 := (1.0, 0.0, 1.0, 1.0);
---     Yellow         : constant GL.Types.Singles.Vector4 := (1.0, 1.0, 0.0, 0.5);
+   Yellow         : constant GL.Types.Singles.Vector4 := (1.0, 1.0, 0.0, 0.5);
    White          : constant Colors.Color := (1.0, 1.0, 1.0, 0.0);
    Key_Pressed    : boolean := False;
 
@@ -238,21 +238,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
              R_Versor := To_TRversor (Multivectors.Exp (Alpha * LR));
              --  draw rotated circle (light green)
              Shader_Manager.Set_Ambient_Colour ((0.5, 1.0, 0.5, 1.0));
---               Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
---                 (Render_Graphic_Program, aCircle, R_Versor);
+             Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+               (Render_Graphic_Program, aCircle, R_Versor);
              --  draw reflected, rotated circle (light blue)
              Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
---               Draw_1_1.Draw_Reflected_Circle
---                 (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+             Draw_1_1.Draw_Reflected_Circle
+               (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
 
          --  Draw plane (yellow)
---           New_Line;
---           Put_Line ("Main_Loop.Display drawing plane.");
---           Shader_Manager.Set_Ambient_Colour (Yellow);
---           Draw_1_1.Draw_Plane
---             (Render_Graphic_Program, aDual_Plane);
+         New_Line;
+         Put_Line ("Main_Loop.Display drawing plane.");
+         Shader_Manager.Set_Ambient_Colour (Yellow);
+         Draw_1_1.Draw_Plane (Render_Graphic_Program, aDual_Plane);
       end if;
 
    exception

@@ -34,11 +34,12 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    function Build_Quad_Vertices (Bottom_Left : Singles.Vector3; Step_Size : Single)
+    function Build_Quad_Vertices (Bottom_Left : Singles.Vector3;
+                                  Step_Size : Single)
                                   return Singles.Vector3_Array is
         X : constant Single := Bottom_Left (GL.X);
-        Y : constant Single := Bottom_Left (GL.X);
-        Z : constant Single := Bottom_Left (GL.X);
+        Y : constant Single := Bottom_Left (GL.Y);
+        Z : constant Single := Bottom_Left (GL.Z);
         Quad_Vertices : constant Singles.Vector3_Array (1 .. 6) :=
                            (Bottom_Left,
                            (X, Y + Step_Size, Z),
@@ -59,11 +60,9 @@ package body Plane is
         GL.Attributes.Enable_Vertex_Attrib_Array (Index);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
 
-        Put_Line ("Plane.Display_Plane drawing arrays.");
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
                                               First => 0,
                                               Count => Num_Vertices);
-        Put_Line ("Plane.Display_Plane arrays drawn.");
         GL.Attributes.Disable_Vertex_Attrib_Array (Index);
 
     exception
@@ -108,7 +107,6 @@ package body Plane is
         Vertex_Array.Bind;
 
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Ambient_Colour ((1.0, 1.0, 1.0, 1.0));
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         --  draw both front and back side individually
@@ -133,8 +131,6 @@ package body Plane is
                 --  with each quad drawn as 2 triangles
                 --  X_Dir and Y_Dir are orthogonal
                 while X < Plane_Size - Scaled_Step_Size loop
---                      Put_Line ("Plane.Draw_Plane, V_Index " & Int'Image (V_Index));
-
                     case Surface is
                     when Front_Surface =>
                         QY := YY_Dir;
@@ -148,17 +144,14 @@ package body Plane is
                     X := X + Scaled_Step_Size;
                     V_Index := V_Index + 6;
                 end loop;
---                  Put_Line ("Plane.Draw_Plane, V_Index " & Int'Image (V_Index));
 
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-                Utilities.Print_GL_Array3 ("Plane.Draw_Plane, Vertices", Vertices);
-                Display_Plane (Triangle_Strip, 6, 0);
+                Display_Plane (Triangle_Strip, Num_Vertices, 0);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
---          Put_Line ("Plane.Draw_Plane, Num_Vertices " & Int'Image (Num_Vertices));
 
         if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
             Scale_Matrix := Maths.Scaling_Matrix
@@ -184,7 +177,7 @@ package body Plane is
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
-            Display_Plane (Lines, 3, 0);
+            Display_Plane (Lines, 6, 0);
         end if;
 
     exception
