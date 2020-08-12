@@ -200,7 +200,8 @@ package body Multivector_Analyze_C3GA is
 
         --  ************* format of flat ***************
         --  theAnalysis.Points    m_pt[0] = location
-        --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
+        --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis
+        --  for attitude (direction)
         --  theAnalysis.Scalars   m_sc[0] = weight
         --  ************* END format of flat ***************
         theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
