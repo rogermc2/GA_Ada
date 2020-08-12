@@ -21,7 +21,7 @@ with Blade_Types;
 with E3GA;
 with E3GA_Utilities;
 with GA_Maths;
-with GA_Utilities;
+--  with GA_Utilities;
 with Geosphere;
 with GL_Util;
 with Multivectors;
