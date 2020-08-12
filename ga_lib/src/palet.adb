@@ -82,6 +82,13 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
+   function Get_Plane_Size return Float is
+   begin
+      return G_Draw_State.Plane_Size;
+   end Get_Plane_Size;
+
+   --  ------------------------------------------------------------------------
+
    function Is_Null return Colour_Palet is
       Null_Colour : constant Color := (0.0, 0.0, 0.0, 0.0);
    begin

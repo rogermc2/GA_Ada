@@ -200,7 +200,8 @@ package body Multivector_Analyze_C3GA is
 
         --  ************* format of flat ***************
         --  theAnalysis.Points    m_pt[0] = location
-        --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis for attitude
+        --  theAnalysis.M_Vectors m_vc[0] .. m_vc[1] = unit 3D vector basis
+        --  for attitude (direction)
         --  theAnalysis.Scalars   m_sc[0] = weight
         --  ************* END format of flat ***************
         theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
@@ -213,8 +214,10 @@ package body Multivector_Analyze_C3GA is
         case Grade is
             when 1 => theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Scalar_Subclass.");
+                theAnalysis.M_Type.Blade_Subclass := Scalar_Subclass;
             when 2 => theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Point_Subclass.");
+                theAnalysis.M_Type.Blade_Subclass := Point_Subclass;
             when 3 =>  --  Line
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Line_Subclass.");
                 theAnalysis.M_Type.Blade_Subclass := Line_Subclass;

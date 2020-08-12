@@ -35,5 +35,4 @@ void main()
 
     Camera_Normal = (view_matrix * model_matrix * normal).xyz;
     gl_Position = mvp_matrix * (position + delta);
-    gl_Position = mvp_matrix * position;
     }

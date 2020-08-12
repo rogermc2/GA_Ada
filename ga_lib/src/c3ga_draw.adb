@@ -8,6 +8,7 @@ with C3GA;
 with GA_Draw;
 with GA_Maths;
 --  with GA_Utilities;
+with Plane;
 
 package body C3GA_Draw is
    use GA_Draw;
@@ -34,12 +35,12 @@ package body C3GA_Draw is
       Analyzed_MV : Multivector_Analyze.MV_Analysis;
    begin
       Analyzed_MV := Multivector_Analyze.Analyze (MV, C3GA.no);
-      --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
-      --          for index in 1 .. Multivector_Analyze.Max_Vectors loop
-      --              Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
-      --              GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Y)) & "  " &
-      --              GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Z)));
-      --          end loop;
+--                Put_Line ("C3GA_Draw.Draw, Analyzed_MV.M_Vectors");
+--                for index in 1 .. Multivector_Analyze.Max_Vectors loop
+--                    Put_Line (GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.X)) & "  " &
+--                    GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Y)) & "  " &
+--                    GL.Types.Single'Image (Analyzed_MV.M_Vectors (index) (GL.Z)));
+--                end loop;
 
       --          Put_Line ("C3GA_Draw.Draw, Analyzed_MV.Points:");
       --          for index in 1 .. Multivector_Analyze.Max_Points loop
@@ -121,18 +122,26 @@ package body C3GA_Draw is
       use Multivector_Analyze;
       Point_Pos  : constant C3GA.Vector_E3 :=
                      C3GA.To_VectorE3GA (Analysis.Points (1));
-      Direction  : constant C3GA.Vector_E3 :=
+      M_Vector_1    : constant C3GA.Vector_E3 :=
                      C3GA.To_VectorE3GA (Analysis.M_Vectors (1));
+      M_Vector_2    : constant C3GA.Vector_E3 :=
+                     C3GA.To_VectorE3GA (Analysis.M_Vectors (2));
+      M_Vector_3  : constant C3GA.Vector_E3 :=
+                     C3GA.To_VectorE3GA (Analysis.M_Vectors (3));
       Scale      : Float := Analysis.Weight;
    begin
       case Analysis.M_Type.Blade_Subclass is
          when Line_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Line.");
             --  Draw_Line doesn't use method
-            GA_Draw.Draw_Line (Render_Program, Point_Pos, Direction, Scale);
+            GA_Draw.Draw_Line (Render_Program, M_Vector_1, Scale);
          when Plane_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Plane.");
             --  Draw_Line doesn't use method
+            Plane.Draw_Plane (Render_Program, Point_Pos, M_Vector_1, M_Vector_2,
+                              M_Vector_3, Scale);
+--              GA_Draw.Draw_Plane (Render_Program, Point_Pos, M_Vector_1, M_Vector_2,
+--                                  M_Vector_3, Scale);
          when Point_Subclass =>
             Put_Line ("C3GA_Draw.Draw_Flat Point.");
             Scale := 4.0 / 3.0 * GA_Maths.PI * Palet.Point_Size ** 3;

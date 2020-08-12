@@ -32,8 +32,16 @@ package body Draw_1_1 is
 
    --  ---------------------------------------------------------------------
 
+   procedure Draw_Plane (Render_Program : GL.Objects.Programs.Program;
+                         DP : Dual_Plane) is
+   begin
+      C3GA_Draw.Draw (Render_Program, DP);
+   end Draw_Plane;
+
+   --  ---------------------------------------------------------------------
+
    procedure Draw_Reflected_Circle (Render_Program : GL.Objects.Programs.Program;
-                                    C              : Circle; DP  : Dual_Plane)  is
+                                    C              : Circle; DP  : Dual_Plane) is
    begin
       C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (C, DP));
    end Draw_Reflected_Circle;
@@ -41,7 +49,7 @@ package body Draw_1_1 is
    --  ---------------------------------------------------------------------
 
    procedure Draw_Reflected_Line (Render_Program : GL.Objects.Programs.Program;
-                                  L              : Line; DP    : Dual_Plane)  is
+                                  L              : Line; DP    : Dual_Plane) is
    begin
       C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (L, DP));
    end Draw_Reflected_Line;
