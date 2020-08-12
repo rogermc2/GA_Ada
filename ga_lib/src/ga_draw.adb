@@ -77,7 +77,6 @@ package body GA_Draw is
     end Draw_Base;
 
     --  ------------------------------------------------------------------------
-
     --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
     --  The parameter names correspond of those in draw.h!
     procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
@@ -255,18 +254,50 @@ package body GA_Draw is
                            Method     : GA_Draw.Method_Type) is
         use GA_Maths.Float_Functions;
         use GL.Objects.Buffers;
+        use Singles;
         use Palet;
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
+        Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Angle          : float := 0.0;
         Num_Steps      : constant int := 256;
         Rotor_Step     : constant float :=
                            2.0 * Ada.Numerics.Pi / float (Num_Steps);
-        Fan            : Singles.Vector3_Array (1 .. Num_Steps);
-        Normal         : Singles.Vector3_Array (1 .. Num_Steps) :=
+        Fan            : Vector3_Array (1 .. Num_Steps);
+        Normal         : Vector3_Array (1 .. Num_Steps) :=
                            (others => (0.0, 0.0, 1.0));
 
+        procedure Draw_Hooks is
+            --  draw six 'hooks' along the edge of the circle
+            Hooks            : constant Vector2_Array (1 .. 2) :=
+                                 ((1.0, 0.0),
+                                  (1.0, -1.5));
+            Vertex_Buffer    : GL.Objects.Buffers.Buffer;
+            Model_Matrix     : Matrix4 := Identity4;
+            Rotation         : constant Matrix4 := Maths.Rotation_Matrix
+              (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
+        begin
+            Vertex_Array.Initialize_Id;
+            Vertex_Array.Bind;
+
+            Vertex_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Vertex_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Hooks, Static_Draw);
+
+            GL.Attributes.Enable_Vertex_Attrib_Array (0);
+            Array_Buffer.Bind (Vertex_Buffer);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
+
+            for index in Int range 1 ..6 loop
+                Shader_Manager.Set_Model_Matrix (Model_Matrix);
+                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                                      First => 0,
+                                                      Count => 2);
+                 Model_Matrix := Rotation * Model_Matrix;
+            end loop;
+            GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        end Draw_Hooks;
+
         procedure Draw_Part (Part : Circle_Part) is
-            Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Normals_Buffer : GL.Objects.Buffers.Buffer;
             Norm_Z         : Single;
@@ -327,7 +358,7 @@ package body GA_Draw is
 
     begin
         if (Method = Draw_Bivector_Circle)  and then (Palet_Type = Is_Null or
-                                                        Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
+          Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;
@@ -336,6 +367,11 @@ package body GA_Draw is
             Set_Outline_Colour (Palet_Type);
         end if;
         Draw_Part (Outline_Part);
+
+        if Get_Draw_Mode.Orientation then
+            --  draw six 'hooks' along the edge of the circle
+            Draw_Hooks;
+        end if;
 
     exception
         when  others =>
