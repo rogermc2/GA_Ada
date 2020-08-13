@@ -2,7 +2,6 @@
 --  Based on libgasandbox.draw.h
 
 with GL.Objects.Programs;
-with GL.Types;
 
 with C3GA;
 with Multivector_Analyze;
@@ -19,7 +18,6 @@ package GA_Draw is
                          Draw_TV_Parellelepiped,
                          Draw_TV_Parellelepiped_No_Vectors);
     procedure Draw_Bivector (Render_Program : GL.Objects.Programs.Program;
-                             Model_Matrix : GL.Types.Singles.Matrix4;
                              Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3;
                              Palet_Type               : Palet.Colour_Palet;
                              Scale : float := 1.0;

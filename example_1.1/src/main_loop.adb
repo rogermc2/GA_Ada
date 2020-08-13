@@ -174,8 +174,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
 --           Point_Position := Points.Normalized_Points (count);
          --  Point_Position (L1, L2, C1, C2, C3, P1)
---           C3GA_Draw.Draw (Render_Graphic_Program, Model_Matrix,
---                           Point_Position);
+--           C3GA_Draw.Draw (Render_Graphic_Program,  Point_Position);
 --        end loop;
       --              GA_Utilities.Print_Multivector ("Display, Point_Position 1:", Points.L0_Normalized_Points (1));
       --              GA_Utilities.Print_Multivector ("Display, Point_Position 2:", Points.L0_Normalized_Points (2));
@@ -187,13 +186,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing a Line.");
          Shader_Manager.Set_Ambient_Colour (Red);
-         aLine := Draw_1_1.Draw_Line (Render_Graphic_Program, Model_Matrix,
+         aLine := Draw_1_1.Draw_Line (Render_Graphic_Program,
                                       Points.L1, Points.L2);
          New_Line;
          Put_Line ("Main_Loop.Display drawing a Circle.");
          Shader_Manager.Set_Ambient_Colour (Green);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
-         aCircle := Draw_1_1.Draw_Circle (Render_Graphic_Program, Model_Matrix,
+         aCircle := Draw_1_1.Draw_Circle (Render_Graphic_Program,
                                           Points.C1, Points.C2, Points.C3);
          Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
          --  N_E3_Vec is a direction vector
@@ -203,8 +202,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing a reflected line.");
          Shader_Manager.Set_Ambient_Colour (Magenta);
-         Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, Model_Matrix,
-                                       aLine, aDual_Plane);
+         Draw_1_1.Draw_Reflected_Line (Render_Graphic_Program, aLine, aDual_Plane);
 
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected circle.");
@@ -212,7 +210,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Shader_Manager.Set_Ambient_Colour (Blue);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
 --           Draw_1_1.Draw_Reflected_Circle
---             (Render_Graphic_Program, Model_Matrix, aCircle, aDual_Plane);
+--             (Render_Graphic_Program, aCircle, aDual_Plane);
          Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
 
          --  compute rotation versor
@@ -228,14 +226,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
               (Translation_Matrix * Model_Matrix);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
 --           Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
---             (Render_Graphic_Program, Model_Matrix, aCircle, R_Versor);
+--             (Render_Graphic_Program, aCircle, R_Versor);
 
          New_Line;
          Put_Line ("Main_Loop.Display drawing reflected, rotated circle.");
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
 --           Draw_1_1.Draw_Reflected_Circle
---             (Render_Graphic_Program, Model_Matrix, Circle_Rotated, aDual_Plane);
+--             (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
          Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
 
          --  Draw interpolated circles
@@ -247,11 +245,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
              --  draw rotated circle (light green)
              Shader_Manager.Set_Ambient_Colour ((0.5, 1.0, 0.5, 1.0));
 --               Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
---                 (Render_Graphic_Program, Model_Matrix, aCircle, R_Versor);
+--                 (Render_Graphic_Program, aCircle, R_Versor);
              --  draw reflected, rotated circle (light blue)
              Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
 --               Draw_1_1.Draw_Reflected_Circle
---                 (Render_Graphic_Program, Model_Matrix, Circle_Rotated, aDual_Plane);
+--                 (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
 
@@ -259,7 +257,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing plane.");
          Shader_Manager.Set_Ambient_Colour (Yellow);
---           Draw_1_1.Draw_Plane (Render_Graphic_Program, Model_Matrix, aDual_Plane);
+--           Draw_1_1.Draw_Plane (Render_Graphic_Program, aDual_Plane);
       end if;
 
    exception

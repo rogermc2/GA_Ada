@@ -81,7 +81,6 @@ package body GA_Draw is
    --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
    --  The parameter names correspond of those in draw.h!
    procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
-                            Model_Matrix                   : GL.Types.Singles.Matrix4;
                             Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3;
                             Palet_Type                     : Palet.Colour_Palet;
                             Scale                          : float := 1.0;
@@ -94,7 +93,7 @@ package body GA_Draw is
       --          Cords                : Float_3D := (0.0, 0.0, 0.0);
       --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
       --          O2                   : Multivectors.M_Vector := Ortho_2;
-      Model                 : GL.Types.Singles.Matrix4 := Model_Matrix;
+      Model_Matrix          : GL.Types.Singles.Matrix4 := Identity4;
       Position_Norm         : Float := C3GA.Norm_E2 (Base);
       Normal_Norm           : constant Float := C3GA.Norm_E2 (Normal);
       Base_Coords           : constant GA_Maths.Float_3D :=
@@ -152,13 +151,13 @@ package body GA_Draw is
 
       Shader_Manager.Set_Rotation_Matrix (Rotation_Matrix);
       Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
-      Model := Scaling_Matrix * Model;
-      Shader_Manager.Set_Model_Matrix (Model);
+      Model_Matrix := Scaling_Matrix * Model_Matrix;
+      Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
       case Method is
          when Draw_Bivector_Circle |
               Draw_Bivector_Circle_Outline =>
-            Draw_Circle (Palet_Type, Model, Method);
+            Draw_Circle (Palet_Type, Model_Matrix, Method);
          when others => null;
       end case;
 
@@ -483,6 +482,7 @@ package body GA_Draw is
       Rotation_Matrix :=
         GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
       Set_Rotation_Matrix (Rotation_Matrix);
+      Set_Translation_Matrix (Translation_Matrix);
       Model_Matrix := Scale_Matrix * Model_Matrix;
       --  translate to point on line
       --        Translation_Matrix :=

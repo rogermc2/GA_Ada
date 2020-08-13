@@ -10,68 +10,60 @@ package body Draw_1_1 is
    --  ---------------------------------------------------------------------
 
    function Draw_Circle (Render_Program : GL.Objects.Programs.Program;
-                         Model_Matrix   : GL.Types.Singles.Matrix4;
                          C1, C2, C3     : Normalized_Point) return Circle is
       OP      : Multivector;
       aCircle : Circle;
    begin
       OP := Outer_Product (C1, Outer_Product (C2, C3));
       aCircle := To_Circle (OP);
-      C3GA_Draw.Draw (Render_Program, Model_Matrix, aCircle);
+      C3GA_Draw.Draw (Render_Program, aCircle);
       return aCircle;
    end Draw_Circle;
 
    --  ---------------------------------------------------------------------
 
    function Draw_Line (Render_Program  : GL.Objects.Programs.Program;
-                       Model_Matrix   : GL.Types.Singles.Matrix4;
                        P1, P2          : Normalized_Point) return Line is
       aLine : constant Line := C3GA.Set_Line (P1, P2);
    begin
-      C3GA_Draw.Draw (Render_Program, Model_Matrix, aLine);
+      C3GA_Draw.Draw (Render_Program, aLine);
       return aLine;
    end Draw_Line;
 
    --  ---------------------------------------------------------------------
 
    procedure Draw_Plane (Render_Program : GL.Objects.Programs.Program;
-                         Model_Matrix   : GL.Types.Singles.Matrix4;
                          DP : Dual_Plane) is
    begin
-      C3GA_Draw.Draw (Render_Program, Model_Matrix, DP);
+      C3GA_Draw.Draw (Render_Program, DP);
    end Draw_Plane;
 
    --  ---------------------------------------------------------------------
 
    procedure Draw_Reflected_Circle (Render_Program : GL.Objects.Programs.Program;
-                                    Model_Matrix   : GL.Types.Singles.Matrix4;
                                     C              : Circle; DP  : Dual_Plane) is
    begin
-      C3GA_Draw.Draw (Render_Program, Model_Matrix,
-                      Multivector_Utilities.Reflect (C, DP));
+      C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (C, DP));
    end Draw_Reflected_Circle;
 
    --  ---------------------------------------------------------------------
 
    procedure Draw_Reflected_Line (Render_Program : GL.Objects.Programs.Program;
-                                  Model_Matrix   : GL.Types.Singles.Matrix4;
                                   L              : Line; DP    : Dual_Plane) is
    begin
-      C3GA_Draw.Draw (Render_Program, Model_Matrix,
-                      Multivector_Utilities.Reflect (L, DP));
+      C3GA_Draw.Draw (Render_Program, Multivector_Utilities.Reflect (L, DP));
    end Draw_Reflected_Line;
 
    --  ---------------------------------------------------------------------
 
    function Draw_Rotated_Circle
      (Render_Program : GL.Objects.Programs.Program;
-                       Model_Matrix   : GL.Types.Singles.Matrix4;
                        C: Circle;  RV : TR_Versor) return Circle is
       MV : constant Multivector :=
              Multivector_Utilities.Rotate (Multivector (C), RV);
       RC : constant Circle := To_Circle (MV);
    begin
-      C3GA_Draw.Draw (Render_Program, Model_Matrix, RC);
+      C3GA_Draw.Draw (Render_Program, RC);
       return RC;
    end Draw_Rotated_Circle;
 
