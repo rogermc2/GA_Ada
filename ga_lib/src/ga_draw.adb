@@ -32,6 +32,7 @@ package body GA_Draw is
     Count : Integer := 0;
 
     procedure Draw_Circle (Palet_Type : Palet.Colour_Palet;
+                           Model_Matrix : GL.Types.Singles.Matrix4;
                            Method     : GA_Draw.Method_Type);
 
     --  ------------------------------------------------------------------------
@@ -80,10 +81,12 @@ package body GA_Draw is
     --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
     --  The parameter names correspond of those in draw.h!
     procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
+                             Model_Matrix : GL.Types.Singles.Matrix4;
                              Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3;
                              Palet_Type                     : Palet.Colour_Palet;
                              Scale                          : float := 1.0;
-                             Method                         : Method_Type := Draw_Bivector_Circle) is
+                             Method                         : Method_Type :=
+                               Draw_Bivector_Circle) is
         use GA_Maths;
         use Float_Functions;
         use GL.Types.Singles;
@@ -91,6 +94,7 @@ package body GA_Draw is
         --          Cords                : Float_3D := (0.0, 0.0, 0.0);
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
         --          O2                   : Multivectors.M_Vector := Ortho_2;
+        Model                 : GL.Types.Singles.Matrix4 := Model_Matrix;
         Position_Norm         : Float := C3GA.Norm_E2 (Base);
         Normal_Norm           : constant Float := C3GA.Norm_E2 (Normal);
         Base_Coords           : constant GA_Maths.Float_3D :=
@@ -111,7 +115,6 @@ package body GA_Draw is
         MV_Ortho_2            : constant Multivectors.M_Vector
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
-        Model_Matrix          : Matrix4 := Identity4;
         Scaling_Matrix        : Singles.Matrix4;
         Translation_Matrix    : Matrix4 := Identity4;
         BV_Scale              : Single := Single (Scale);
@@ -130,11 +133,11 @@ package body GA_Draw is
 
             --  Rotate e3 to normal direction
             if Normal_Norm > 0.0 then
-                Model_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
+                Model := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
             end if;
             RT := E3GA_Utilities.Rotor_Vector_To_Vector
               (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-            GL_Util.Rotor_GL_Multiply (RT, Model_Matrix);
+            GL_Util.Rotor_GL_Multiply (RT, Model);
         else  --  Draw_Bivector_Parallelogram
             Position_Norm :=
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
@@ -144,15 +147,14 @@ package body GA_Draw is
         end if;
 
         Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
-        Model_Matrix := Translation_Matrix * Scaling_Matrix * Model_Matrix;
-        --          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector Model_Matrix", MV_MaModel_Matrixtrix);
+        Model := Translation_Matrix * Scaling_Matrix * Model;
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_Matrix (Model_Matrix);
+        Shader_Manager.Set_Model_Matrix (Model);
 
         case Method is
             when Draw_Bivector_Circle |
                  Draw_Bivector_Circle_Outline =>
-                Draw_Circle (Palet_Type, Method);
+                Draw_Circle (Palet_Type, Model, Method);
             when others => null;
         end case;
 
@@ -250,8 +252,9 @@ package body GA_Draw is
 
     --  ----------------------------------------------------------------------
 
-    procedure Draw_Circle (Palet_Type : Palet.Colour_Palet;
-                           Method     : GA_Draw.Method_Type) is
+    procedure Draw_Circle (Palet_Type   : Palet.Colour_Palet;
+                           Model_Matrix : GL.Types.Singles.Matrix4;
+                           Method       : GA_Draw.Method_Type) is
         use GA_Maths.Float_Functions;
         use GL.Objects.Buffers;
         use Singles;
@@ -268,12 +271,12 @@ package body GA_Draw is
 
         procedure Draw_Hooks is
             --  draw six 'hooks' along the edge of the circle
-            Hooks            : constant Vector2_Array (1 .. 2) :=
+            Hooks          : constant Vector2_Array (1 .. 2) :=
                                  ((1.0, 0.0),
                                   (1.0, -1.5));
-            Vertex_Buffer    : GL.Objects.Buffers.Buffer;
-            Model_Matrix     : Matrix4 := Identity4;
-            Rotation         : constant Matrix4 := Maths.Rotation_Matrix
+            Vertex_Buffer  : GL.Objects.Buffers.Buffer;
+            Model          : Matrix4 := Model_Matrix;
+            Rotation       : constant Matrix4 := Maths.Rotation_Matrix
               (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
         begin
             Vertex_Array.Initialize_Id;
@@ -288,13 +291,12 @@ package body GA_Draw is
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
 
             for index in Int range 1 ..6 loop
-                Shader_Manager.Set_Model_Matrix (Model_Matrix);
+                Shader_Manager.Set_Model_Matrix (Model);
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
                                                       First => 0,
                                                       Count => 2);
-                 Model_Matrix := Rotation * Model_Matrix;
+                 Model := Rotation * Model;
             end loop;
-            GL.Attributes.Disable_Vertex_Attrib_Array (0);
         end Draw_Hooks;
 
         procedure Draw_Part (Part : Circle_Part) is
@@ -351,6 +353,10 @@ package body GA_Draw is
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
                                                       First => 0,
                                                       Count => Num_Steps);
+                if Get_Draw_Mode.Orientation then
+                    --  draw six 'hooks' along the edge of the circle
+                    Draw_Hooks;
+                end if;
             end if;
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
             GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -367,11 +373,6 @@ package body GA_Draw is
             Set_Outline_Colour (Palet_Type);
         end if;
         Draw_Part (Outline_Part);
-
-        if Get_Draw_Mode.Orientation then
-            --  draw six 'hooks' along the edge of the circle
-            Draw_Hooks;
-        end if;
 
     exception
         when  others =>
