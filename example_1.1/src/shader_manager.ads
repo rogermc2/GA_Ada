@@ -17,7 +17,6 @@ package Shader_Manager is
         Light_Position_ID    : GL.Uniforms.Uniform := 0;
         Line_Width_ID        : GL.Uniforms.Uniform := 0;
         Model_Matrix_ID      : GL.Uniforms.Uniform := 0;
-        Model_View_Matrix_ID : GL.Uniforms.Uniform := 0;
         Projection_Matrix_ID : GL.Uniforms.Uniform := 0;
         View_Matrix_ID       : GL.Uniforms.Uniform := 0;
     end record;
@@ -30,7 +29,6 @@ package Shader_Manager is
     procedure Set_Light_Position_Vector (Light_Position : Singles.Vector3);
     procedure Set_Line_Width (Width : Single);
     procedure Set_Model_Matrix (Model_Matrix : Singles.Matrix4);
-    procedure Set_Model_View_Matrix (Model_View_Matrix : Singles.Matrix4);
     procedure Set_Projection_Matrix (Projection_Matrix : Singles.Matrix4);
     procedure Set_View_Matrix (View_Matrix : Singles.Matrix4);
 

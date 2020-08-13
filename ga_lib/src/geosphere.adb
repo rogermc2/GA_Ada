@@ -31,7 +31,7 @@ package body Geosphere is
     procedure Get_Vertices (Sphere   : Geosphere;
                             Vertices : in out GL.Types.Singles.Vector3_Array);
     procedure GL_Draw (Render_Program  : GL.Objects.Programs.Program;
-                       Model_View_Matrix : GL.Types.Singles.Matrix4;
+                       Model_Matrix : GL.Types.Singles.Matrix4;
                        Sphere : Geosphere; Normal : GL.Types.Single;
                        Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
                        Indices_Buffer : GL.Objects.Buffers.Buffer;
@@ -326,7 +326,7 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     procedure GL_Draw (Render_Program : GL.Objects.Programs.Program;
-                       Model_View_Matrix : GL.Types.Singles.Matrix4;
+                       Model_Matrix : GL.Types.Singles.Matrix4;
                        Sphere : Geosphere; Normal : GL.Types.Single;
                        Vertex_Buffer : in out GL.Objects.Buffers.Buffer;
                        Indices_Buffer : GL.Objects.Buffers.Buffer;
@@ -338,7 +338,7 @@ package body Geosphere is
         V1_MV             : Multivectors.M_Vector;
     begin
         GL.Objects.Programs.Use_Program (Render_Program);
-        Shader_Manager.Set_Model_View_Matrix (Model_View_Matrix);
+        Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, GL.Types.Single_Type, Stride, 0);

@@ -27,8 +27,6 @@ package body Shader_Manager is
           Uniform_Location (Render_Program, "model_matrix");
         Render_Uniforms.Projection_Matrix_ID :=
           Uniform_Location (Render_Program, "projection_matrix");
-        Render_Uniforms.Model_View_Matrix_ID :=
-          Uniform_Location (Render_Program, "mv_matrix");
         Render_Uniforms.Light_Direction_ID :=
           Uniform_Location (Render_Program, "light_direction");
         Render_Uniforms.Light_Position_ID :=
@@ -48,7 +46,6 @@ package body Shader_Manager is
         GL.Uniforms.Set_Single (Render_Uniforms.Light_Position_ID, Light);
         GL.Uniforms.Set_Single (Render_Uniforms.Line_Width_ID, 1.0);
         GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Identity4);
-        GL.Uniforms.Set_Single (Render_Uniforms.Model_View_Matrix_ID, Identity4);
         GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
 
         GL.Uniforms.Set_Single (Render_Uniforms.Ambient_Colour_ID, Black);
@@ -121,14 +118,6 @@ package body Shader_Manager is
     begin
         GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, View_Matrix);
     end Set_View_Matrix;
-
-    --  -------------------------------------------------------------------------
-
-    procedure Set_Model_View_Matrix (Model_View_Matrix : Singles.Matrix4) is
-    begin
-        GL.Uniforms.Set_Single
-          (Render_Uniforms.Model_View_Matrix_ID, Model_View_Matrix);
-    end Set_Model_View_Matrix;
 
     --  -------------------------------------------------------------------------
 
