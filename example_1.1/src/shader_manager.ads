@@ -10,15 +10,17 @@ package Shader_Manager is
     end record;
 
     type Shader_Uniforms is record
-        Ambient_Colour_ID    : GL.Uniforms.Uniform := 0;
-        Diffuse_Colour_ID    : GL.Uniforms.Uniform := 0;
-        Drawing_Colour_ID    : GL.Uniforms.Uniform := 0;
-        Light_Direction_ID   : GL.Uniforms.Uniform := 0;
-        Light_Position_ID    : GL.Uniforms.Uniform := 0;
-        Line_Width_ID        : GL.Uniforms.Uniform := 0;
-        Model_Matrix_ID      : GL.Uniforms.Uniform := 0;
-        Projection_Matrix_ID : GL.Uniforms.Uniform := 0;
-        View_Matrix_ID       : GL.Uniforms.Uniform := 0;
+        Ambient_Colour_ID     : GL.Uniforms.Uniform := 0;
+        Diffuse_Colour_ID     : GL.Uniforms.Uniform := 0;
+        Drawing_Colour_ID     : GL.Uniforms.Uniform := 0;
+        Light_Direction_ID    : GL.Uniforms.Uniform := 0;
+        Light_Position_ID     : GL.Uniforms.Uniform := 0;
+        Line_Width_ID         : GL.Uniforms.Uniform := 0;
+        Model_Matrix_ID       : GL.Uniforms.Uniform := 0;
+        Projection_Matrix_ID  : GL.Uniforms.Uniform := 0;
+        Rotation_Matrix_ID    : GL.Uniforms.Uniform := 0;
+        Translation_Matrix_ID : GL.Uniforms.Uniform := 0;
+        View_Matrix_ID        : GL.Uniforms.Uniform := 0;
     end record;
 
     procedure Init (Render_Program : in out GL.Objects.Programs.Program);
@@ -30,6 +32,8 @@ package Shader_Manager is
     procedure Set_Line_Width (Width : Single);
     procedure Set_Model_Matrix (Model_Matrix : Singles.Matrix4);
     procedure Set_Projection_Matrix (Projection_Matrix : Singles.Matrix4);
+    procedure Set_Rotation_Matrix (Rotation_Matrix : Singles.Matrix4);
+    procedure Set_Translation_Matrix (Translation_Matrix : Singles.Matrix4);
     procedure Set_View_Matrix (View_Matrix : Singles.Matrix4);
 
 end Shader_Manager;

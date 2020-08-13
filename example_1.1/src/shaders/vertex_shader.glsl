@@ -12,11 +12,14 @@ uniform float line_width;
 uniform mat4  view_matrix;
 uniform mat4  model_matrix;
 uniform mat4  projection_matrix;
+uniform mat4  rotation_matrix;
+uniform mat4  translation_matrix;
 uniform vec3  light_position;
 uniform vec3  light_direction;
 
 void main()
     {
+    mat4 tr_model_matrix = translation_matrix * rotation_matrix * model_matrix;
     mat4 mvp_matrix = projection_matrix * view_matrix * model_matrix;
     vec4 position = vec4(vertex_position, 1);
     vec4 normal = vec4(vertex_normal, 0);

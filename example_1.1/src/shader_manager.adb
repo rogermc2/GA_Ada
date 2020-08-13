@@ -27,6 +27,10 @@ package body Shader_Manager is
           Uniform_Location (Render_Program, "model_matrix");
         Render_Uniforms.Projection_Matrix_ID :=
           Uniform_Location (Render_Program, "projection_matrix");
+        Render_Uniforms.Rotation_Matrix_ID :=
+          Uniform_Location (Render_Program, "rotation_matrix");
+        Render_Uniforms.Translation_Matrix_ID :=
+          Uniform_Location (Render_Program, "translation_matrix");
         Render_Uniforms.Light_Direction_ID :=
           Uniform_Location (Render_Program, "light_direction");
         Render_Uniforms.Light_Position_ID :=
@@ -47,6 +51,9 @@ package body Shader_Manager is
         GL.Uniforms.Set_Single (Render_Uniforms.Line_Width_ID, 1.0);
         GL.Uniforms.Set_Single (Render_Uniforms.Model_Matrix_ID, Identity4);
         GL.Uniforms.Set_Single (Render_Uniforms.View_Matrix_ID, Identity4);
+        GL.Uniforms.Set_Single (Render_Uniforms.Projection_Matrix_ID, Identity4);
+        GL.Uniforms.Set_Single (Render_Uniforms.Rotation_Matrix_ID, Identity4);
+        GL.Uniforms.Set_Single (Render_Uniforms.Translation_Matrix_ID, Identity4);
 
         GL.Uniforms.Set_Single (Render_Uniforms.Ambient_Colour_ID, Black);
         GL.Uniforms.Set_Single (Render_Uniforms.Diffuse_Colour_ID, Black);
@@ -126,6 +133,22 @@ package body Shader_Manager is
         GL.Uniforms.Set_Single
           (Render_Uniforms.Projection_Matrix_ID, Projection_Matrix);
     end Set_Projection_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+    procedure Set_Rotation_Matrix (Rotation_Matrix : Singles.Matrix4) is
+    begin
+        GL.Uniforms.Set_Single
+          (Render_Uniforms.Rotation_Matrix_ID, Rotation_Matrix);
+    end Set_Rotation_Matrix;
+
+   --  -------------------------------------------------------------------------
+
+    procedure Set_Translation_Matrix (Translation_Matrix : Singles.Matrix4) is
+    begin
+        GL.Uniforms.Set_Single
+          (Render_Uniforms.Translation_Matrix_ID, Translation_Matrix);
+    end Set_Translation_Matrix;
 
     --  -------------------------------------------------------------------------
 
