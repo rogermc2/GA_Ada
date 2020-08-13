@@ -291,12 +291,13 @@ package body GA_Draw is
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
 
             for index in Int range 1 ..6 loop
-                Shader_Manager.Set_Model_Matrix (Model);
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
                                                       First => 0,
                                                       Count => 2);
                  Model := Rotation * Model;
+                 Shader_Manager.Set_Model_Matrix (Model);
             end loop;
+            Shader_Manager.Set_Model_Matrix (Model_Matrix);
         end Draw_Hooks;
 
         procedure Draw_Part (Part : Circle_Part) is
@@ -331,6 +332,7 @@ package body GA_Draw is
             Vertex_Array.Bind;
             Array_Buffer.Bind (Vertex_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
+
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
