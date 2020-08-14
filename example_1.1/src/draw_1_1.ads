@@ -13,11 +13,11 @@ package Draw_1_1 is
    procedure Draw_Plane (Render_Program : GL.Objects.Programs.Program;
                          DP : Dual_Plane);
    procedure Draw_Reflected_Circle (Render_Program : GL.Objects.Programs.Program;
-                                     C : Circle; DP : Dual_Plane);
+                                    C : Circle; DP : Dual_Plane);
    procedure Draw_Reflected_Line (Render_Program : GL.Objects.Programs.Program;
                                   L : Line; DP : Dual_Plane);
    function Draw_Rotated_Circle (Render_Program : GL.Objects.Programs.Program;
-                                  C : Circle;  RV : TR_Versor) return Circle;
+                                 C : Circle;  RV : TR_Versor) return Circle;
    function New_Dual_Plane (P1 : Normalized_Point; Normal : E3GA.E3_Vector)
                             return Dual_Plane;
    function New_TR_Versor (L1 : Line) return TR_Versor;

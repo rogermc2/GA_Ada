@@ -1,6 +1,8 @@
 
 with Interfaces;
 
+with GL.Types;
+
 with Blade;
 with Blade_Types;
 with E3GA;
@@ -19,6 +21,8 @@ package GA_Utilities is
    procedure Print_Blade_String (Name : String; B : Blade.Basis_Blade;
                                  MV_Names : Blade_Types.Basis_Vector_Names);
    procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector);
+   procedure Print_E3_Vector_Array  (Name : String;
+                                     anArray : GL.Types.Singles.Vector3_Array);
    procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D);
    procedure Print_Float_Array (Name : String; anArray : GA_Maths.Float_Vector);
    procedure Print_Integer_Array (Name : String; anArray : GA_Maths.Integer_Array);

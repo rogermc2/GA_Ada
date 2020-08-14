@@ -57,8 +57,8 @@ package body Draw_1_1 is
    --  ---------------------------------------------------------------------
 
    function Draw_Rotated_Circle
-     (Render_Program : GL.Objects.Programs.Program; C: Circle;
-      RV             : TR_Versor) return Circle is
+     (Render_Program : GL.Objects.Programs.Program;
+                       C: Circle;  RV : TR_Versor) return Circle is
       MV : constant Multivector :=
              Multivector_Utilities.Rotate (Multivector (C), RV);
       RC : constant Circle := To_Circle (MV);

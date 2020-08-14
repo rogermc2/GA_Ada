@@ -158,9 +158,9 @@ package body C3GA_Draw is
 
    --  -------------------------------------------------------------------------
 
-   procedure Draw_Free (Render_Program    : GL.Objects.Programs.Program;
-                        Analysis          : Multivector_Analyze.MV_Analysis;
-                        Palet_Type        : Palet.Colour_Palet) is
+   procedure Draw_Free (Render_Program  : GL.Objects.Programs.Program;
+                        Analysis        : Multivector_Analyze.MV_Analysis;
+                        Palet_Type      : Palet.Colour_Palet) is
       use GA_Maths.Float_Functions;
       use Multivector_Analyze;
       use C3GA;

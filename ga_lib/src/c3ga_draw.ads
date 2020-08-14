@@ -6,10 +6,10 @@ with Multivectors;
 with Palet;
 
 package C3GA_Draw is
-   procedure Draw (Render_Program    : GL.Objects.Programs.Program;
-                   MV                : Multivectors.Multivector;
-                   Palet_Type        : Palet.Colour_Palet := Palet.Is_Null);
---                     Method            : GA_Draw.Method_Type :=
+   procedure Draw (Render_Program : GL.Objects.Programs.Program;
+                   MV             : Multivectors.Multivector;
+                   Palet_Type     : Palet.Colour_Palet := Palet.Is_Null);
+--                     Method     : GA_Draw.Method_Type :=
 --                       GA_Draw.Draw_Method_Undefined);
    procedure Draw_Point (Render_Program    : GL.Objects.Programs.Program;
                          Analysis          : Multivector_Analyze.MV_Analysis;

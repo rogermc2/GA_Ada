@@ -89,6 +89,22 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_E3_Vector_Array
+      (Name : String; anArray : GL.Types.Singles.Vector3_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put (Int'Image (Index) & ": ");
+         Print_E3_Vector (Name, anArray (Index));
+         if Index mod 10 = 0 then
+            New_Line;
+         end if;
+      end loop;
+      New_Line;
+   end Print_E3_Vector_Array;
+
+   --  ------------------------------------------------------------------------
    procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D) is
    begin
       if Name = "" then

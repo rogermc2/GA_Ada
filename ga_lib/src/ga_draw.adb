@@ -31,8 +31,8 @@ package body GA_Draw is
 
     Count : Integer := 0;
 
-    procedure Draw_Circle (Palet_Type : Palet.Colour_Palet;
-                           Method     : GA_Draw.Method_Type);
+    procedure Draw_Circle (Palet_Type          : Palet.Colour_Palet;
+                           Method              : GA_Draw.Method_Type);
 
     --  ------------------------------------------------------------------------
 
@@ -77,14 +77,14 @@ package body GA_Draw is
     end Draw_Base;
 
     --  ------------------------------------------------------------------------
-
     --  Draw_Bivector corresponds to draw.draw_Bivector of draw.cpp
     --  The parameter names correspond of those in draw.h!
     procedure Draw_Bivector (Render_Program                 : GL.Objects.Programs.Program;
                              Base, Normal, Ortho_1, Ortho_2 : C3GA.Vector_E3;
                              Palet_Type                     : Palet.Colour_Palet;
                              Scale                          : float := 1.0;
-                             Method                         : Method_Type := Draw_Bivector_Circle) is
+                             Method                         : Method_Type :=
+                               Draw_Bivector_Circle) is
         use GA_Maths;
         use Float_Functions;
         use GL.Types.Singles;
@@ -92,6 +92,7 @@ package body GA_Draw is
         --          Cords                : Float_3D := (0.0, 0.0, 0.0);
         --          Translate            : Vector3 :=  (0.0, 0.0, 0.0);
         --          O2                   : Multivectors.M_Vector := Ortho_2;
+        Model_Matrix          : GL.Types.Singles.Matrix4 := Identity4;
         Position_Norm         : Float := C3GA.Norm_E2 (Base);
         Normal_Norm           : constant Float := C3GA.Norm_E2 (Normal);
         Base_Coords           : constant GA_Maths.Float_3D :=
@@ -112,12 +113,13 @@ package body GA_Draw is
         MV_Ortho_2            : constant Multivectors.M_Vector
           := Multivectors.New_Vector
             (Ortho_2_Coords (1), Ortho_2_Coords (2), Ortho_2_Coords (3));
-        Model_Matrix          : Matrix4 := Identity4;
-        Scaling_Matrix        : Singles.Matrix4;
+        Rotation_Matrix       : Matrix4 := Identity4;
+        Scaling_Matrix        : Matrix4;
         Translation_Matrix    : Matrix4 := Identity4;
         BV_Scale              : Single := Single (Scale);
         RT                    : Multivectors.Rotor;
     begin
+        GL.Objects.Programs.Use_Program (Render_Program);
         --  Set position
         if Position_Norm > 0.0 then
             Translation_Vector :=
@@ -125,17 +127,19 @@ package body GA_Draw is
                Single (Base_Coords (3)));
             Translation_Matrix := Maths.Translation_Matrix (Translation_Vector);
         end if;
+        Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
 
         if Method /= Draw_Bivector_Parallelogram and then
           Method /= Draw_Bivector_Parallelogram_No_Vectors then
 
             --  Rotate e3 to normal direction
             if Normal_Norm > 0.0 then
-                Model_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
+                Rotation_Matrix := GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Normal);
             end if;
             RT := E3GA_Utilities.Rotor_Vector_To_Vector
               (Multivectors.Basis_Vector (Blade_Types.E3_e3), MV_Normal);
-            GL_Util.Rotor_GL_Multiply (RT, Model_Matrix);
+            GL_Util.Rotor_GL_Multiply (RT, Rotation_Matrix);
+
         else  --  Draw_Bivector_Parallelogram
             Position_Norm :=
               C3GA.Norm_E2 (C3GA.To_VectorE3GA
@@ -144,10 +148,9 @@ package body GA_Draw is
             BV_Scale := Single (Sqrt (Pi / Position_Norm)) * BV_Scale;
         end if;
 
+        Shader_Manager.Set_Rotation_Matrix (Rotation_Matrix);
         Scaling_Matrix := Maths.Scaling_Matrix ((BV_Scale, BV_Scale, BV_Scale));
-        Model_Matrix := Translation_Matrix * Scaling_Matrix * Model_Matrix;
-        --          Utilities.Print_Matrix ("GA_Draw.Draw_Bivector Model_Matrix", MV_MaModel_Matrixtrix);
-        GL.Objects.Programs.Use_Program (Render_Program);
+        Model_Matrix := Scaling_Matrix * Model_Matrix;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         case Method is
@@ -251,25 +254,27 @@ package body GA_Draw is
 
     --  ----------------------------------------------------------------------
 
-    procedure Draw_Circle (Palet_Type : Palet.Colour_Palet;
-                           Method     : GA_Draw.Method_Type) is
+    procedure Draw_Circle (Palet_Type          : Palet.Colour_Palet;
+                           Method              : GA_Draw.Method_Type) is
+        use GA_Maths;
         use GA_Maths.Float_Functions;
         use GL.Objects.Buffers;
+        use Singles;
         use Palet;
         type Circle_Part is (Back_Part, Front_Part, Outline_Part);
-        Angle          : float := 0.0;
-        Num_Steps      : constant int := 256;
-        Rotor_Step     : constant float :=
-                           2.0 * Ada.Numerics.Pi / float (Num_Steps);
-        Fan            : Singles.Vector3_Array (1 .. Num_Steps);
-        Normal         : Singles.Vector3_Array (1 .. Num_Steps) :=
-                           (others => (0.0, 0.0, 1.0));
+        Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
         procedure Draw_Part (Part : Circle_Part) is
-            Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
             Vertex_Buffer  : GL.Objects.Buffers.Buffer;
             Normals_Buffer : GL.Objects.Buffers.Buffer;
+            Num_Steps      : constant int := 256;
+            VB_Size        : Int := Num_Steps;
+            Angle          : float := 0.0;
+            Rotor_Step     : constant float :=
+                               2.0 * Ada.Numerics.Pi / float (Num_Steps);
             Norm_Z         : Single;
+            Draw_Hooks     : constant Boolean :=
+                               Part = Outline_Part and Get_Draw_Mode.Orientation;
         begin
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
@@ -277,57 +282,91 @@ package body GA_Draw is
             Normals_Buffer.Initialize_Id;
 
             case Part is
-            when Back_Part | Outline_Part =>
-                Norm_Z := 1.0;
-            when Front_Part =>
-                Norm_Z := -1.0;
+                when Back_Part | Outline_Part =>
+                    Norm_Z := 1.0;
+                when Front_Part =>
+                    Norm_Z := -1.0;
             end case;
 
-            Normal (1) := (0.0, 0.0, Norm_Z);
-            for Count in 1 .. Num_Steps loop
-                case Part is
-                when Back_Part | Outline_Part =>
-                    Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
-                when Front_Part =>
-                    Fan (Count) := (-Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
-                end case;
-                Normal (Count) := (0.0, 0.0, Norm_Z);
-                Angle := Angle + Rotor_Step;
-            end loop;
-
-            Vertex_Array.Bind;
-            Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-            Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
-
-            GL.Attributes.Enable_Vertex_Attrib_Array (0);
-            Array_Buffer.Bind (Vertex_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-
-            GL.Attributes.Enable_Vertex_Attrib_Array (1);
-            Array_Buffer.Bind (Normals_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
-
-            if Part = Back_Part or Part = Front_Part then
-                if Part = Back_Part and then Get_Draw_Mode.Orientation then
-                    GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
-                end if;
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
-                                                      First => 0,
-                                                      Count => Num_Steps);
-            else  --  Outline part
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
-                                                      First => 0,
-                                                      Count => Num_Steps);
+            if Draw_Hooks then
+                VB_Size := Num_Steps + 12;
             end if;
-            GL.Attributes.Disable_Vertex_Attrib_Array (0);
-            GL.Attributes.Disable_Vertex_Attrib_Array (1);
+
+            declare
+                Fan            : Vector3_Array (1 .. VB_Size);
+                Normal         : Vector3_Array (1 .. VB_Size) :=
+                                   (others => (0.0, 0.0, 1.0));
+                Hooks          : Vector3_Array (1 .. 2) := ((1.0, 0.0, 0.0),
+                                                            (1.0, -0.5, 0.0));
+                Hook_Rotation  : constant Matrix3 := Rotation_Matrix
+                  (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
+                Hook_Index     : Int := 1;
+            begin
+                for Count in 1 .. Num_Steps loop
+                    case Part is
+                    when Back_Part | Outline_Part =>
+                        Fan (Count) := (Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
+                    when Front_Part =>
+                        Fan (Count) := (-Single (Cos (Angle)), Single (Sin (Angle)), 0.0);
+                    end case;
+                    Normal (Count) := (0.0, 0.0, Norm_Z);
+                    Angle := Angle + Rotor_Step;
+                end loop;
+
+                if Draw_Hooks then
+                    --  draw six 'hooks' along the edge of the circle
+                    while Hook_Index < 12 loop
+                        Fan (Num_Steps + Hook_Index) := Hooks (1);
+                        Fan (Num_Steps + Hook_Index + 1) := Hooks (2);
+                        Normal (Num_Steps + Hook_Index) := (0.0, 0.0, Norm_Z);
+                        Normal (Num_Steps + Hook_Index + 1) := (0.0, 0.0, Norm_Z);
+                        Hooks (1) := Hook_Rotation * Hooks (1);
+                        Hooks (2) := Hook_Rotation * Hooks (2);
+                        Hook_Index := Hook_Index + 2;
+                    end loop;
+                end if;
+
+                Vertex_Array.Bind;
+                Array_Buffer.Bind (Vertex_Buffer);
+                Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
+
+                Array_Buffer.Bind (Normals_Buffer);
+                Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
+
+                GL.Attributes.Enable_Vertex_Attrib_Array (0);
+                Array_Buffer.Bind (Vertex_Buffer);
+                GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+
+                GL.Attributes.Enable_Vertex_Attrib_Array (1);
+                Array_Buffer.Bind (Normals_Buffer);
+                GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+
+                if Part = Back_Part or Part = Front_Part then
+                    if Part = Back_Part and then Get_Draw_Mode.Orientation then
+                        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+                    end if;
+                    GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
+                                                          First => 0,
+                                                          Count => VB_Size);
+                else  --  Outline part
+                    GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
+                                                          First => 0,
+                                                          Count => Num_Steps);
+                    if Draw_Hooks then
+                        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                                              First => Num_Steps,
+                                                              Count => 12);
+                    end if;
+                end if;
+                GL.Attributes.Disable_Vertex_Attrib_Array (0);
+                GL.Attributes.Disable_Vertex_Attrib_Array (1);
+            end;  --  declare block
         end Draw_Part;
 
     begin
-        if (Method = Draw_Bivector_Circle)  and then (Palet_Type = Is_Null or
-                                                        Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
+        if (Method = Draw_Bivector_Circle)  and then
+          (Palet_Type = Is_Null or
+             Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;
@@ -395,6 +434,7 @@ package body GA_Draw is
                          Weight         : Float := 1.0) is
         use GL.Objects.Buffers;
         use GL.Types.Singles;
+        use Shader_Manager;
         Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Vertex_Buffer        : GL.Objects.Buffers.Buffer;
         --  Scale_Constant and Step_Size are used for building Line_Strip
@@ -406,6 +446,7 @@ package body GA_Draw is
         Length_Vertices      : Singles.Vector3_Array (1 .. Num_Steps);
         C_Steps              : constant Int := Int (1.0 / Step_Size + 0.5) + 1;
         C_Rotation_Matrix    : Matrix4 := Identity4;
+        Rotation_Matrix      : Matrix4 := Identity4;
         Translation_Matrix   : Matrix4 := Identity4;
         Scale_Matrix         : Matrix4 :=
                                  Maths.Scaling_Matrix (Single (Weight));
@@ -435,14 +476,16 @@ package body GA_Draw is
         Utilities.Load_Vertex_Buffer (Array_Buffer, Length_Vertices, Static_Draw);
 
         --  rotate e3 to line direction
-        Model_Matrix :=
+        Rotation_Matrix :=
           GA_Maths.Vector_Rotation_Matrix ((0.0, 0.0, 1.0), Direction);
+        Set_Rotation_Matrix (Rotation_Matrix);
+        Set_Translation_Matrix (Translation_Matrix);
         Model_Matrix := Scale_Matrix * Model_Matrix;
         --  translate to point on line
         --        Translation_Matrix :=
         --          Maths.Translation_Matrix ((aPoint (GL.X), aPoint (GL.Y), aPoint (GL.Z)));
         --        Model_Matrix := Translation_Matrix * Model_Matrix;
-        Shader_Manager.Set_Model_Matrix (Model_Matrix);
+        Set_Model_Matrix (Model_Matrix);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -452,14 +495,16 @@ package body GA_Draw is
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
         if Palet.Get_Draw_Mode.Orientation then
-            Translation_Matrix :=
-              Maths.Translation_Matrix ((0.0, 0.0, -Scale_Constant));
             if Palet.Get_Draw_Mode.Magnitude then
                 Scale_Matrix :=
                   Maths.Scaling_Matrix (Single (0.5 * Abs (Weight)));
             else
                 Scale_Matrix := Maths.Scaling_Matrix (0.5);
             end if;
+            Set_Model_Matrix (Scale_Matrix);
+
+            Translation_Matrix :=
+              Maths.Translation_Matrix ((0.0, 0.0, -Scale_Constant));
 
             while C < 1.0  loop
                 C_Index := C_Index + 1;
@@ -471,7 +516,8 @@ package body GA_Draw is
                 C := C + Step_Size;
 
                 Utilities.Load_Vertex_Buffer (Array_Buffer, C_Vertices, Static_Draw);
-                Model_Matrix := Translation_Matrix * C_Rotation_Matrix * Scale_Matrix;
+                Set_Rotation_Matrix (C_Rotation_Matrix);
+                Set_Translation_Matrix (Translation_Matrix);
 
                 GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
                 GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -700,34 +746,34 @@ package body GA_Draw is
         MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
         case Method is
-            when Draw_TV_Sphere =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
-                if Palet.Get_Draw_Mode.Orientation then
-                    Normal := 0.1;
-                else
-                    Normal := 0.0;
-                end if;
-                --  g_drawState.drawSphere (s)
-                Draw_Sphere (Render_Program, MV_Matrix, Normal);
-            when Draw_TV_Cross =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
-                null;
-            when Draw_TV_Curly_Tail =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
-                null;
-            when Draw_TV_Parellelepiped =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
-                --              Draw_Vector (Render_Program    => Render_Program,
-                --                           Model_Matrix => MV_Matrix,
-                --                           Tail              => Vector_Base,
-                --                           Direction         => ,
-                --                           Scale             => );
-            when Draw_TV_Parellelepiped_No_Vectors =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
-                --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                --                                   Draw_TV_Parellelepiped_No_Vectors);
-            when others => null;
-                Put_Line ("GA_Draw.Draw_Trivector others.");
+        when Draw_TV_Sphere =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
+            if Palet.Get_Draw_Mode.Orientation then
+                Normal := 0.1;
+            else
+                Normal := 0.0;
+            end if;
+            --  g_drawState.drawSphere (s)
+            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+        when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
+            null;
+        when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
+            null;
+        when Draw_TV_Parellelepiped =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
+            --              Draw_Vector (Render_Program    => Render_Program,
+            --                           Model_Matrix => MV_Matrix,
+            --                           Tail              => Vector_Base,
+            --                           Direction         => ,
+            --                           Scale             => );
+        when Draw_TV_Parellelepiped_No_Vectors =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+        when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
         end case;
 
     exception
@@ -775,31 +821,31 @@ package body GA_Draw is
         MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
         case Method is
-            when Draw_TV_Sphere =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
-                if Palet.Get_Draw_Mode.Orientation then
-                    Normal := 0.1;
-                else
-                    Normal := 0.0;
-                end if;
-                --  g_drawState.drawSphere (s)
-                Draw_Sphere (Render_Program, MV_Matrix, Normal);
-            when Draw_TV_Cross =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
-                null;
-            when Draw_TV_Curly_Tail =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
-                null;
-            when Draw_TV_Parellelepiped =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
-                Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                                     Draw_TV_Parellelepiped);
-            when Draw_TV_Parellelepiped_No_Vectors =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
-                --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                --                                   Draw_TV_Parellelepiped_No_Vectors);
-            when others => null;
-                Put_Line ("GA_Draw.Draw_Trivector others.");
+        when Draw_TV_Sphere =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
+            if Palet.Get_Draw_Mode.Orientation then
+                Normal := 0.1;
+            else
+                Normal := 0.0;
+            end if;
+            --  g_drawState.drawSphere (s)
+            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+        when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
+            null;
+        when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
+            null;
+        when Draw_TV_Parellelepiped =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
+            Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+                                 Draw_TV_Parellelepiped);
+        when Draw_TV_Parellelepiped_No_Vectors =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+        when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
         end case;
 
     exception
