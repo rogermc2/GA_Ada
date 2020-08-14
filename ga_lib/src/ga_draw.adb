@@ -273,10 +273,8 @@ package body GA_Draw is
             Rotor_Step     : constant float :=
                                2.0 * Ada.Numerics.Pi / float (Num_Steps);
             Norm_Z         : Single;
-            Hooks          : Vector3_Array (1 .. 2) := ((1.0, 0.0, 0.0),
-                                                        (1.0, -0.05, 0.0));
-            Hook_Rotation  : constant Matrix3 := Rotation_Matrix
-              (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
+            Draw_Hooks     : constant Boolean :=
+                               Part = Outline_Part and Get_Draw_Mode.Orientation;
         begin
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
@@ -290,15 +288,19 @@ package body GA_Draw is
                     Norm_Z := -1.0;
             end case;
 
-            if Part = Outline_Part and then Get_Draw_Mode.Orientation then
+            if Draw_Hooks then
                 VB_Size := Num_Steps + 12;
             end if;
 
             declare
-                Fan    : Vector3_Array (1 .. VB_Size);
-                Normal : Vector3_Array (1 .. VB_Size) :=
-                               (others => (0.0, 0.0, 1.0));
-                Index : Int := 1;
+                Fan            : Vector3_Array (1 .. VB_Size);
+                Normal         : Vector3_Array (1 .. VB_Size) :=
+                                   (others => (0.0, 0.0, 1.0));
+                Hooks          : Vector3_Array (1 .. 2) := ((1.0, 0.0, 0.0),
+                                                            (1.0, -0.5, 0.0));
+                Hook_Rotation  : constant Matrix3 := Rotation_Matrix
+                  (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
+                Hook_Index     : Int := 1;
             begin
                 for Count in 1 .. Num_Steps loop
                     case Part is
@@ -311,18 +313,19 @@ package body GA_Draw is
                     Angle := Angle + Rotor_Step;
                 end loop;
 
-                if Part = Outline_Part and then Get_Draw_Mode.Orientation then
+                if Draw_Hooks then
                     --  draw six 'hooks' along the edge of the circle
-                    while index <= 12 loop
-                        Fan (Num_Steps + index) := Hooks (1);
-                        Fan (Num_Steps + index + 1) := Hooks (2);
-                        Normal (Num_Steps + index) := (0.0, 0.0, Norm_Z);
-                        Normal (Num_Steps + index + 1) := (0.0, 0.0, Norm_Z);
+                    while Hook_Index < 12 loop
+                        Fan (Num_Steps + Hook_Index) := Hooks (1);
+                        Fan (Num_Steps + Hook_Index + 1) := Hooks (2);
+                        Normal (Num_Steps + Hook_Index) := (0.0, 0.0, Norm_Z);
+                        Normal (Num_Steps + Hook_Index + 1) := (0.0, 0.0, Norm_Z);
                         Hooks (1) := Hook_Rotation * Hooks (1);
                         Hooks (2) := Hook_Rotation * Hooks (2);
-                        index := index + 2;
+                        Hook_Index := Hook_Index + 2;
                     end loop;
                 end if;
+
                 Vertex_Array.Bind;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
@@ -349,10 +352,12 @@ package body GA_Draw is
                     GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
                                                           First => 0,
                                                           Count => Num_Steps);
+                    if Draw_Hooks then
+                        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                                              First => Num_Steps,
+                                                              Count => 12);
+                    end if;
                 end if;
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
-                                                      First => Num_Steps + 1,
-                                                      Count => 12);
                 GL.Attributes.Disable_Vertex_Attrib_Array (0);
                 GL.Attributes.Disable_Vertex_Attrib_Array (1);
             end;  --  declare block
@@ -360,7 +365,8 @@ package body GA_Draw is
 
     begin
         if (Method = Draw_Bivector_Circle)  and then
-          (Palet_Type = Is_Null or Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
+          (Palet_Type = Is_Null or
+             Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
             Draw_Part (Back_Part);
             Draw_Part (Front_Part);
         end if;
@@ -740,34 +746,34 @@ package body GA_Draw is
         MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
         case Method is
-            when Draw_TV_Sphere =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
-                if Palet.Get_Draw_Mode.Orientation then
-                    Normal := 0.1;
-                else
-                    Normal := 0.0;
-                end if;
-                --  g_drawState.drawSphere (s)
-                Draw_Sphere (Render_Program, MV_Matrix, Normal);
-            when Draw_TV_Cross =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
-                null;
-            when Draw_TV_Curly_Tail =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
-                null;
-            when Draw_TV_Parellelepiped =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
-                --              Draw_Vector (Render_Program    => Render_Program,
-                --                           Model_Matrix => MV_Matrix,
-                --                           Tail              => Vector_Base,
-                --                           Direction         => ,
-                --                           Scale             => );
-            when Draw_TV_Parellelepiped_No_Vectors =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
-                --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                --                                   Draw_TV_Parellelepiped_No_Vectors);
-            when others => null;
-                Put_Line ("GA_Draw.Draw_Trivector others.");
+        when Draw_TV_Sphere =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
+            if Palet.Get_Draw_Mode.Orientation then
+                Normal := 0.1;
+            else
+                Normal := 0.0;
+            end if;
+            --  g_drawState.drawSphere (s)
+            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+        when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
+            null;
+        when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
+            null;
+        when Draw_TV_Parellelepiped =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
+            --              Draw_Vector (Render_Program    => Render_Program,
+            --                           Model_Matrix => MV_Matrix,
+            --                           Tail              => Vector_Base,
+            --                           Direction         => ,
+            --                           Scale             => );
+        when Draw_TV_Parellelepiped_No_Vectors =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+        when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
         end case;
 
     exception
@@ -815,31 +821,31 @@ package body GA_Draw is
         MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
         case Method is
-            when Draw_TV_Sphere =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
-                if Palet.Get_Draw_Mode.Orientation then
-                    Normal := 0.1;
-                else
-                    Normal := 0.0;
-                end if;
-                --  g_drawState.drawSphere (s)
-                Draw_Sphere (Render_Program, MV_Matrix, Normal);
-            when Draw_TV_Cross =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
-                null;
-            when Draw_TV_Curly_Tail =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
-                null;
-            when Draw_TV_Parellelepiped =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
-                Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                                     Draw_TV_Parellelepiped);
-            when Draw_TV_Parellelepiped_No_Vectors =>
-                Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
-                --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
-                --                                   Draw_TV_Parellelepiped_No_Vectors);
-            when others => null;
-                Put_Line ("GA_Draw.Draw_Trivector others.");
+        when Draw_TV_Sphere =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Sphere.");
+            if Palet.Get_Draw_Mode.Orientation then
+                Normal := 0.1;
+            else
+                Normal := 0.0;
+            end if;
+            --  g_drawState.drawSphere (s)
+            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+        when Draw_TV_Cross =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
+            null;
+        when Draw_TV_Curly_Tail =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Curly_Tail.");
+            null;
+        when Draw_TV_Parellelepiped =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped.");
+            Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+                                 Draw_TV_Parellelepiped);
+        when Draw_TV_Parellelepiped_No_Vectors =>
+            Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Parellelepiped_No_Vectors.");
+            --              Draw_Parallelepiped (Render_Program, MV_Matrix, V, Scale,
+            --                                   Draw_TV_Parellelepiped_No_Vectors);
+        when others => null;
+            Put_Line ("GA_Draw.Draw_Trivector others.");
         end case;
 
     exception
