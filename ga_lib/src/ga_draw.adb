@@ -272,32 +272,32 @@ package body GA_Draw is
             Angle          : float := 0.0;
             Rotor_Step     : constant float :=
                                2.0 * Ada.Numerics.Pi / float (Num_Steps);
-            Normal         : Vector3_Array (1 .. Num_Steps) :=
-                               (others => (0.0, 0.0, 1.0));
             Norm_Z         : Single;
-            Hooks          : Vector3_Array (1 .. 2) := ((0.1, 0.0, 0.0),
-                                                        (0.1, -0.15, 0.0));
+            Hooks          : Vector3_Array (1 .. 2) := ((1.0, 0.0, 0.0),
+                                                        (1.0, -0.05, 0.0));
             Hook_Rotation  : constant Matrix3 := Rotation_Matrix
-              (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 0.0));
+              (Maths.Radian (Ada.Numerics.Pi / 3.0), (0.0, 0.0, 1.0));
         begin
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
             Vertex_Buffer.Initialize_Id;
             Normals_Buffer.Initialize_Id;
+
             case Part is
                 when Back_Part | Outline_Part =>
                     Norm_Z := 1.0;
                 when Front_Part =>
                     Norm_Z := -1.0;
             end case;
-            Normal (1) := (0.0, 0.0, Norm_Z);
 
             if Part = Outline_Part and then Get_Draw_Mode.Orientation then
                 VB_Size := Num_Steps + 12;
             end if;
 
             declare
-                Fan   : Vector3_Array (1 .. VB_Size);
+                Fan    : Vector3_Array (1 .. VB_Size);
+                Normal : Vector3_Array (1 .. VB_Size) :=
+                               (others => (0.0, 0.0, 1.0));
                 Index : Int := 1;
             begin
                 for Count in 1 .. Num_Steps loop
@@ -316,19 +316,19 @@ package body GA_Draw is
                     while index <= 12 loop
                         Fan (Num_Steps + index) := Hooks (1);
                         Fan (Num_Steps + index + 1) := Hooks (2);
+                        Normal (Num_Steps + index) := (0.0, 0.0, Norm_Z);
+                        Normal (Num_Steps + index + 1) := (0.0, 0.0, Norm_Z);
                         Hooks (1) := Hook_Rotation * Hooks (1);
                         Hooks (2) := Hook_Rotation * Hooks (2);
                         index := index + 2;
                     end loop;
                 end if;
-                Utilities.Print_GL_Array3 ("GA_Draw.Draw_Circle.Draw_Part Fan", Fan);
                 Vertex_Array.Bind;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Fan, Static_Draw);
-            end;  --  declare block
 
-            Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
+                Array_Buffer.Bind (Normals_Buffer);
+                Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             Array_Buffer.Bind (Vertex_Buffer);
@@ -344,14 +344,15 @@ package body GA_Draw is
                 end if;
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
                                                       First => 0,
-                                                      Count => Num_Steps);
+                                                      Count => VB_Size);
             else  --  Outline part
                 GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
                                                       First => 0,
-                                                      Count => Num_Steps);
+                                                      Count => VB_Size);
             end if;
             GL.Attributes.Disable_Vertex_Attrib_Array (0);
             GL.Attributes.Disable_Vertex_Attrib_Array (1);
+            end;  --  declare block
         end Draw_Part;
 
     begin
