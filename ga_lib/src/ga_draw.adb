@@ -330,28 +330,31 @@ package body GA_Draw is
                 Array_Buffer.Bind (Normals_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Normal, Static_Draw);
 
-            GL.Attributes.Enable_Vertex_Attrib_Array (0);
-            Array_Buffer.Bind (Vertex_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+                GL.Attributes.Enable_Vertex_Attrib_Array (0);
+                Array_Buffer.Bind (Vertex_Buffer);
+                GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
-            GL.Attributes.Enable_Vertex_Attrib_Array (1);
-            Array_Buffer.Bind (Normals_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+                GL.Attributes.Enable_Vertex_Attrib_Array (1);
+                Array_Buffer.Bind (Normals_Buffer);
+                GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
-            if Part = Back_Part or Part = Front_Part then
-                if Part = Back_Part and then Get_Draw_Mode.Orientation then
-                    GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+                if Part = Back_Part or Part = Front_Part then
+                    if Part = Back_Part and then Get_Draw_Mode.Orientation then
+                        GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+                    end if;
+                    GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
+                                                          First => 0,
+                                                          Count => VB_Size);
+                else  --  Outline part
+                    GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
+                                                          First => 0,
+                                                          Count => Num_Steps);
                 end if;
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
-                                                      First => 0,
-                                                      Count => VB_Size);
-            else  --  Outline part
-                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Loop,
-                                                      First => 0,
-                                                      Count => VB_Size);
-            end if;
-            GL.Attributes.Disable_Vertex_Attrib_Array (0);
-            GL.Attributes.Disable_Vertex_Attrib_Array (1);
+                GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
+                                                      First => Num_Steps + 1,
+                                                      Count => 12);
+                GL.Attributes.Disable_Vertex_Attrib_Array (0);
+                GL.Attributes.Disable_Vertex_Attrib_Array (1);
             end;  --  declare block
         end Draw_Part;
 
