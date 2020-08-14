@@ -1,7 +1,9 @@
 
-with Maths;
+with Quaternions;
 
 package body GA_Maths is
+
+   package Single_Quaternion is new Quaternions (GL.Types.Single);
 
    function Is_Anti_Euclidean (aMatrix : Float_Matrix) return Boolean is
       epsilon : constant float := 10.0 ** (-9);
@@ -176,6 +178,60 @@ package body GA_Maths is
    end Minimum;
 
    --  ------------------------------------------------------------------------
+
+    function New_Quaternion (Angle : Maths.Radian; Axis : GL.Types.Singles.Vector3)
+                            return Single_Quaternion.Quaternion is
+        use GL.Types;
+        use Maths.Single_Math_Functions;
+        Half_Angle  : constant Single := 0.5 * Single (Angle);
+        Sine        : constant Single := Sin (Half_Angle);
+    begin
+        return (Cos (Half_Angle), Axis (GL.X) * Sine,
+                Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
+    end New_Quaternion;
+
+    --  ------------------------------------------------------------------------
+    --  Rotation_Matrix is based on "Quaternians and spatial rotation" by
+    --  en.m.wikipedia.org, with the matrix transposed
+
+    function Rotation_Matrix (Angle : Maths.Radian;
+                              Axis : GL.Types.Singles.Vector3)
+                             return GL.Types.Singles.Matrix3 is
+        use GL;
+        use GL.Types;
+        use Single_Quaternion;
+
+        aQuaternion : Quaternion;
+        theMatrix   : GL.Types.Singles.Matrix3 := GL.Types.Singles.Identity3;
+        NQ          : Quaternion;
+    begin
+        aQuaternion := New_Quaternion (Angle, Axis);
+        NQ := Normalized (aQuaternion);
+
+        theMatrix (X, X) := 1.0 - 2.0 * (NQ.C * NQ.C + NQ.D * NQ.D);
+        theMatrix (Y, X) := 2.0 * (NQ.B * NQ.C - NQ.A * NQ.D);
+        theMatrix (Z, X) := 2.0 * (NQ.B * NQ.D + NQ.A * NQ.C);
+
+        theMatrix (X, Y) := 2.0 * (NQ.B * NQ.C + NQ.A * NQ.D);
+        theMatrix (Y, Y) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.D * NQ.D);
+        theMatrix (Z, Y) := 2.0 * (NQ.C * NQ.D - NQ.A * NQ.B);
+
+        theMatrix (X, Z) := 2.0 * (NQ.B * NQ.D - NQ.A * NQ.C);
+        theMatrix (Y, Z) := 2.0 * (NQ.C * NQ.D + NQ.A * NQ.B);
+        theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
+        return theMatrix;
+    end Rotation_Matrix;
+
+    --  ------------------------------------------------------------------------
+
+    function Rotation_Matrix (Angle : Maths.Degree;
+                              Axis : GL.Types.Singles.Vector3)
+                             return GL.Types.Singles.Matrix3 is
+    begin
+        return Rotation_Matrix (Maths.Radians (Angle), Axis);
+    end Rotation_Matrix;
+
+    --  ------------------------------------------------------------------------
 
    function Vector_Rotation_Matrix (From, To : GL.Types.Singles.Vector3)
                                     return GL.Types.Singles.Matrix4 is
