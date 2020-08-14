@@ -1242,9 +1242,9 @@ package body E3GA is
         use Blade_Types;
         MVV : Multivectors.M_Vector;
     begin
-        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e1, Float (V (GL.X))));
-        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e2, Float (V (GL.Y))));
-        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (E3_e3, Float (V (GL.Z))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (C3_e1, Float (V (GL.X))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (C3_e2, Float (V (GL.Y))));
+        Multivectors.Add_Blade (MVV, Blade.New_Basis_Blade (C3_e3, Float (V (GL.Z))));
         return MVV;
     end To_MV_Vector;
 
