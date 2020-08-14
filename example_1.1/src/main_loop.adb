@@ -255,7 +255,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          New_Line;
          Put_Line ("Main_Loop.Display drawing plane.");
          Shader_Manager.Set_Ambient_Colour (Yellow);
---           Draw_1_1.Draw_Plane (Render_Graphic_Program, aDual_Plane);
+         Draw_1_1.Draw_Plane (Render_Graphic_Program, aDual_Plane);
       end if;
 
    exception
