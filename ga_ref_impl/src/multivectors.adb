@@ -1276,13 +1276,12 @@ package body Multivectors is
 
    --  -------------------------------------------------------------------------
 
-   function Multivector_String (MV       : Multivector;
-                                BV_Names : Blade_Types.Basis_Vector_Names)
-                                 return Ada.Strings.Unbounded.Unbounded_String is
+   function Multivector_List_String (Blades : Blade.Blade_List;
+                                     BV_Names : Blade_Types.Basis_Vector_Names)
+                                     return Ada.Strings.Unbounded.Unbounded_String is
       use Ada.Strings.Unbounded;
       use Blade;
       use Blade_List_Package;
-      Blades        : constant Blade_List := MV.Blades;
       Blade_Cursor  : Cursor := Blades.First;
       thisBlade     : Blade.Basis_Blade;
       Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
@@ -1324,10 +1323,65 @@ package body Multivectors is
 
    exception
       when anError : others =>
+         Put_Line ("An exception occurred in Multivectors.Multivector_List_String.");
+         Put_Line (Exception_Information (anError));
+         raise;
+   end Multivector_List_String;
+
+   --  -------------------------------------------------------------------------
+
+    function Multivector_String (MV       : Multivector;
+                                BV_Names : Blade_Types.Basis_Vector_Names)
+                                 return Ada.Strings.Unbounded.Unbounded_String is
+      use Ada.Strings.Unbounded;
+      use Blade;
+      use Blade_List_Package;
+      Blades        : constant Blade_List := MV.Blades;
+      Blade_Cursor  : Cursor := Blades.First;
+      thisBlade     : Blade.Basis_Blade;
+      Blade_UBS     : Ada.Strings.Unbounded.Unbounded_String;
+      theString     : Ada.Strings.Unbounded.Unbounded_String :=
+                        To_Unbounded_String ("0.0");
+      String_Length : Integer := 0;
+    begin
+      while Has_Element (Blade_Cursor) loop
+         thisBlade := Element (Blade_Cursor);
+         --           GA_Utilities.Print_Blade ("Multivectors.Multivector_String thisBlade", thisBlade);
+         Blade_UBS := Blade.Blade_String (thisBlade, BV_Names);
+         --           Put_Line ("Multivectors.Multivector_String, " & To_String (Blade_UBS));
+         if Length (Blade_UBS) > 0 then
+            declare
+               Blade_String : constant String := To_String (Blade_UBS);
+            begin
+               if Blade_Cursor = Blades.First then
+                  theString := To_Unbounded_String (Blade_String);
+               else
+                  if Blade_String (1) = '-' then
+                     theString := theString & " - ";
+                  else
+                     theString := theString & " + ";
+                  end if;
+                  theString :=
+                    theString & Blade_String (2 .. Blade_String'Length);
+               end if;
+
+               if Length (theString) - String_Length > 50 then
+                  theString := theString & ASCII.LF;
+                  String_Length := Length (theString);
+               end if;
+            end;
+         end if;
+         Next (Blade_Cursor);
+      end loop;
+
+      return theString;
+
+    exception
+      when anError : others =>
          Put_Line ("An exception occurred in Multivectors.Multivector_String.");
          Put_Line (Exception_Information (anError));
          raise;
-   end Multivector_String;
+    end Multivector_String;
 
    --  -------------------------------------------------------------------------
 
