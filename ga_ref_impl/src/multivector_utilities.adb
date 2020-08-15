@@ -55,7 +55,7 @@ package body Multivector_Utilities is
             --  get largest basis blade
             E_Largest := Largest_Basis_Blade (MV_B);
             --  get basis vectors
-            for Index_G in 0 .. Space_Dimension - 1 loop
+            for Index_G in 0 .. K_Grade - 1 loop
                 --  Shift 1 left by Index_G bits
                 Basis_Bit := Shift_Left (1, Index_G);
                 if (Bitmap (E_Largest) and Basis_Bit) /= 0 then
