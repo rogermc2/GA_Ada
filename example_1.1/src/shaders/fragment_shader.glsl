@@ -30,7 +30,6 @@ void main()
     //  - light is perpendicular to the triangle -> 0
     //  - light is behind the triangle -> 0
     float cosTheta = clamp(dot(norm, light_dir), 0, 1);
-//
 //    vec3 LightColour = (Drawing_Colour + Ambient_Colour + Diffuse_Colour * LightPower * cosTheta / (distance * distance)).xyz;
 //    colour = LightColour;
     fragment_colour = Drawing_Colour + Ambient_Colour + Diffuse_Colour;

@@ -147,6 +147,24 @@ package body Multivector_Analyze is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Analysis_M_Vectors (Name : String; Analysis : MV_Analysis) is
+        use GL.Types;
+    begin
+        Put_Line (Name & " Analysis M_Vectors");
+        for index in Analysis.M_Vectors'Range loop
+            Put_Line (GL.Types.Single'Image (Analysis.M_Vectors (index) (GL.X)) & "  " &
+                        GL.Types.Single'Image (Analysis.M_Vectors (index) (GL.Y)) & "  " &
+                        GL.Types.Single'Image (Analysis.M_Vectors (index) (GL.Z)));
+        end loop;
+
+    exception
+        when  others =>
+            Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis_M_Vectors.");
+            raise;
+    end Print_Analysis_M_Vectors;
+
+    --  ------------------------------------------------------------------------
+
     function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
     begin
         return Blade_Subclass (A);

@@ -103,6 +103,9 @@ package body Multivector_Analyze_C3GA is
             Put_Line ("Multivector_Analyze_C3GA.Analyze Is Dual.");
             theAnalysis.M_Flags.Dual := True;
             MV_X := Multivectors.Dual (MV_X, Metric.C3_Metric);
+            GA_Utilities.Print_Multivector_String
+              ("Multivector_Analyze_C3GA.Analyze Dual MV_X", MV_X,
+              Blade_Types.Basis_Names_C3GA);
         end if;
 
         MV_Info := Init (MV_X, Metric.C3_Metric);
@@ -226,15 +229,24 @@ package body Multivector_Analyze_C3GA is
             when 4 =>  --  Plane
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
                 theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
+                 GA_Utilities.Print_Multivector_String
+                  ("Multivector_Analyze_C3GA.Analyze_Flat, " &
+                    "Plane Subclass Reverse_MV (LC (C3GA.no, Reverse_MV (Attitude)",
+                   Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
+                     Blade_Types.Basis_Names_C3GA);
                 Blade_Factors := Multivector_Utilities.Factorize_Blades
                   (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
                    Scale);
-
+                GA_Utilities.Print_Multivector_List_String
+                  ("Multivector_Analyze_C3GA.Analyze_Flat, " &
+                    "Plane Subclass Blade_Factors", Blade_Factors, Blade_Types.Basis_Names_C3GA);
                 theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (MV_First (Blade_Factors));
                 theAnalysis.M_Vectors (2) := C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
                 theAnalysis.M_Vectors (3) :=
-                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
+                 C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
                                       MV_Item (Blade_Factors, 2)), Metric.C3_Metric));
+                Print_Analysis_M_Vectors ("Multivector_Analyze_C3GA.Analyze_Flat, Plane Subclass",
+                                          theAnalysis);
             when others => null;
         end case;
        return theAnalysis;

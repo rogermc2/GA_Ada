@@ -12,7 +12,7 @@ with Utilities;
 
 with Maths;
 
---  with GA_Utilities;
+with GA_Utilities;
 with Palet;
 with Shader_Manager;
 
@@ -54,16 +54,18 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    procedure Display_Plane (Mode  : Connection_Mode; Num_Vertices : Int;
-                             Index : GL.Attributes.Attribute ) is
+    procedure Display_Plane (Mode  : Connection_Mode; Num_Vertices : Int) is
     begin
-        GL.Attributes.Enable_Vertex_Attrib_Array (Index);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (1);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
                                               First => 0,
                                               Count => Num_Vertices);
-        GL.Attributes.Disable_Vertex_Attrib_Array (Index);
+        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        GL.Attributes.Disable_Vertex_Attrib_Array (1);
 
     exception
         when  others =>
@@ -90,12 +92,10 @@ package body Plane is
         Scaled_Step_Size : constant Single := Step_Size * Plane_Size;
         Num_Vertices     : constant Int :=
                              Int (2.0 * Plane_Size / Step_Size);
-        GL_Normal        : constant Vector3 := Vector3 (Normal);
-        GL_Point         : constant Vector3 := Vector3 (Point);
         V_Index          : Int := 0;
         Vertices         : Vector3_Array (1 .. Num_Vertices) :=
                              (others => (others => 0.0));
-        GL_Normals       : Vector3_Array (1 .. 6) := (others => Normal);
+        Normals          : Vector3_Array (1 .. 6) := (others => Normal);
         X                : Single;
         Y                : Single;
         YY_Dir           : Vector3;
@@ -109,6 +109,10 @@ package body Plane is
         GL.Objects.Programs.Use_Program (Render_Program);
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
+        GA_Utilities.Print_E3_Vector ("Plane Point", Point);
+        GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
+
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
             case Surface is
@@ -116,7 +120,7 @@ package body Plane is
                 null;
             when Back_Surface =>
                 for n in Int range 1 .. 6 loop
-                    GL_Normals (n) := -GL_Normals (n);
+                    Normals (n) := -Normals (n);
                 end loop;
             end case;
 
@@ -139,7 +143,7 @@ package body Plane is
                     end case;
 
                     Quad_Vertices := Build_Quad_Vertices
-                      ((GL_Point + X * X_Dir + QY), Scaled_Step_Size);
+                      ((Point + X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     X := X + Scaled_Step_Size;
                     V_Index := V_Index + 6;
@@ -148,7 +152,8 @@ package body Plane is
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-                Display_Plane (Triangle_Strip, Num_Vertices, 0);
+
+                Display_Plane (Triangle_Strip, Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
@@ -165,9 +170,9 @@ package body Plane is
                 YY_Dir := Y * Y_Dir;
                 while X < Plane_Size loop
                     V_Index := V_Index + 1;
-                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir;
+                    Vertices (V_Index) := Point + X * Normal + YY_Dir;
                     V_Index := V_Index + 1;
-                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir -
+                    Vertices (V_Index) := Point + X * Normal + YY_Dir -
                       Scale_Magnitude * Normal;
                     X := X + Scaled_Step_Size;
                 end loop;
@@ -176,8 +181,9 @@ package body Plane is
 
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
-            Display_Plane (Lines, 6, 0);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
+
+            Display_Plane (Lines, 6);
         end if;
 
     exception

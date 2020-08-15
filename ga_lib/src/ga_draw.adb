@@ -364,6 +364,7 @@ package body GA_Draw is
         end Draw_Part;
 
     begin
+        Shader_Manager.Set_Model_Matrix (Identity4);
         if (Method = Draw_Bivector_Circle)  and then
           (Palet_Type = Is_Null or
              Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
@@ -532,6 +533,7 @@ package body GA_Draw is
                   Maths.Translation_Matrix ((0.0, 0.0, 2.0 * Step_Length));
             end loop;
         end if;
+        Shader_Manager.Set_Model_Matrix (Identity4);
 
     exception
         when  others =>
