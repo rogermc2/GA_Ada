@@ -81,6 +81,7 @@ package body Multivector_Analyze_C3GA is
                 Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Dual.");
                 theAnalysis.M_Flags.Dual := not theAnalysis.M_Flags.Dual;
                 theAnalysis := Analyze_Flat (theAnalysis, Dual (MV_X, Metric.C3_Metric), Probe);
+
             elsif OP_NiX and IP_NiX then
                 if not Xsq then
                     Put_Line ("Multivector_Analyze_C3GA.Classify, classification: Tangent.");
@@ -210,8 +211,8 @@ package body Multivector_Analyze_C3GA is
         theAnalysis.Points (1) := C3GA.NP_To_VectorE3GA (Location);
         theAnalysis.Weight := Weight;
         --  Grade indications are taken from Geometric Algebra and its
-        --  Application to Computer Graphics by Hildenbrand, Fontijne, Perwass and
-        --  Dorst, Eurographics 2004.
+        --  Application to Computer Graphics by Hildenbrand, Fontijne,
+        --  Perwass and Dorst, Eurographics 2004.
         --  "the representation of a point is simply a sphere of radius zero".
         --  factor attitude:
         case Grade is
@@ -229,24 +230,24 @@ package body Multivector_Analyze_C3GA is
             when 4 =>  --  Plane
                 Put_Line ("Multivector_Analyze_C3GA.Analyze_Flat, Plane_Subclass.");
                 theAnalysis.M_Type.Blade_Subclass := Plane_Subclass;
-                 GA_Utilities.Print_Multivector_String
-                  ("Multivector_Analyze_C3GA.Analyze_Flat, " &
-                    "Plane Subclass Reverse_MV (LC (C3GA.no, Reverse_MV (Attitude)",
-                   Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
-                     Blade_Types.Basis_Names_C3GA);
+--                   GA_Utilities.Print_Multivector_String
+--                    ("Multivector_Analyze_C3GA.Analyze_Flat, " &
+--                      "Plane Subclass Reverse_MV (LC (C3GA.no, Reverse_MV (Attitude)",
+--                     Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
+--                       Blade_Types.Basis_Names_C3GA);
                 Blade_Factors := Multivector_Utilities.Factorize_Blades
                   (Reverse_MV (Left_Contraction (C3GA.no, Reverse_MV (Attitude), Met)),
                    Scale);
-                GA_Utilities.Print_Multivector_List_String
-                  ("Multivector_Analyze_C3GA.Analyze_Flat, " &
-                    "Plane Subclass Blade_Factors", Blade_Factors, Blade_Types.Basis_Names_C3GA);
+                --  Blade_Factors agrees with C++: -1.00E+00 * e1 -1.00E+00 * e3
+--                  GA_Utilities.Print_Multivector_List_String
+--                    ("Multivector_Analyze_C3GA.Analyze_Flat, " &
+--                      "Plane Subclass Blade_Factors", Blade_Factors, Blade_Types.Basis_Names_C3GA);
                 theAnalysis.M_Vectors (1) := C3GA.To_VectorE3GA (MV_First (Blade_Factors));
                 theAnalysis.M_Vectors (2) := C3GA.To_VectorE3GA (MV_Item (Blade_Factors, 2));
                 theAnalysis.M_Vectors (3) :=
                  C3GA.To_VectorE3GA (-Dual (Outer_Product (MV_First (Blade_Factors),
                                       MV_Item (Blade_Factors, 2)), Metric.C3_Metric));
-                Print_Analysis_M_Vectors ("Multivector_Analyze_C3GA.Analyze_Flat, Plane Subclass",
-                                          theAnalysis);
+                --  M_Vectors agrees with C++: -1.00E+00 * e1 -1.00E+00 * e2 1.00E+00 * e3
             when others => null;
         end case;
        return theAnalysis;

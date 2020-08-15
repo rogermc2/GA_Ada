@@ -165,6 +165,26 @@ package body Multivector_Analyze is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Analysis_Points (Name : String; Analysis : MV_Analysis) is
+        use GL.Types;
+    begin
+        Put_Line (Name & " Analysis Points");
+        for index in 1 .. Multivector_Analyze.Max_Points loop
+            Put_Line (GL.Types.Single'Image (Analysis.Points (index) (GL.X))
+                      & "  " &
+                        GL.Types.Single'Image (Analysis.Points (index) (GL.Y))
+                      & "  " &
+                        GL.Types.Single'Image (Analysis.Points (index) (GL.Z)));
+        end loop;
+
+    exception
+        when  others =>
+            Put_Line ("An exception occurred in Multivector_Analyze.Print_Analysis_Points.");
+            raise;
+    end Print_Analysis_Points;
+
+    --  ------------------------------------------------------------------------
+
     function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type is
     begin
         return Blade_Subclass (A);

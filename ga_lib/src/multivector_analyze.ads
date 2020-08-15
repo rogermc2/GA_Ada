@@ -123,6 +123,7 @@ package Multivector_Analyze is
    procedure Print_Analysis (Name : String;
                              Analysis : MV_Analysis);
    procedure Print_Analysis_M_Vectors (Name : String; Analysis : MV_Analysis);
+   procedure Print_Analysis_Points (Name : String; Analysis : MV_Analysis);
    procedure Print_E3_Vector_Array (Name : String; anArray : E3_Vector_Array);
    function Versor_Subclass (A : MV_Analysis) return Blade_Subclass_Type;
 
