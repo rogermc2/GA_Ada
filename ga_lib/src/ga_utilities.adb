@@ -292,11 +292,32 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Multivector_List_String (Name : String; MV_List : Multivectors.Multivector_List;
+                                            MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Multivectors;
+      MV_List_Length : constant Integer := List_Length (MV_List);
+   begin
+      New_Line;
+      Put_Line (Name & ":");
+      for index in 1 .. MV_List_Length loop
+         Print_Multivector_String ("", MV_Item (MV_List, index), MV_Names);
+      end loop;
+
+exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_List_String.");
+         raise;
+   end Print_Multivector_List_String;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Multivector_String (Name : String; MV : Multivectors.Multivector;
                                        MV_Names : Blade_Types.Basis_Vector_Names) is
       use Ada.Strings.Unbounded;
    begin
-      Put_Line (Name & ":");
+      if Name /= "" then
+            Put_Line (Name & ":");
+      end if;
       Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
    exception
       when others =>
