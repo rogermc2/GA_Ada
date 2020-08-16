@@ -96,13 +96,14 @@ package body Plane is
         V_Index          : Int := 0;
         Vertices         : Vector3_Array (1 .. Num_Vertices) :=
                              (others => (others => 0.0));
-        Normals          : Vector3_Array (1 .. 6) := (others => Normal);
+        Normals          : Vector3_Array (1 .. Num_Vertices) :=
+                             (others => (others => 0.0));
         X                : Single;
         Y                : Single;
         YY_Dir           : Vector3;
         QY               : Vector3;
         Quad_Vertices    : Singles.Vector3_Array (1 .. 6);
-        Quad_Normals    : Singles.Vector3_Array (1 .. 6);
+        Quad_Normals     : Singles.Vector3_Array (1 .. 6);
 
     begin
         Vertex_Array.Initialize_Id;
