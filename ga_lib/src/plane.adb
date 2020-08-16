@@ -170,9 +170,9 @@ package body Plane is
                 YY_Dir := Y * Y_Dir;
                 while X < Plane_Size loop
                     V_Index := V_Index + 1;
-                    Vertices (V_Index) := Point + X * Normal + YY_Dir;
+                    Normals (V_Index) := Point + X * Normal + YY_Dir;
                     V_Index := V_Index + 1;
-                    Vertices (V_Index) := Point + X * Normal + YY_Dir -
+                    Normals (V_Index) := Point + X * Normal + YY_Dir -
                       Scale_Magnitude * Normal;
                     X := X + Scaled_Step_Size;
                 end loop;
@@ -183,7 +183,7 @@ package body Plane is
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
 
-            Display_Plane (Lines, 6);
+--              Display_Plane (Lines, 6);
         end if;
 
     exception
