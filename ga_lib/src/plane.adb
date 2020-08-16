@@ -84,14 +84,15 @@ package body Plane is
         Vertex_Array     : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Vertex_Buffer    : GL.Objects.Buffers.Buffer;
         Normals_Buffer   : GL.Objects.Buffers.Buffer;
-        Scale_Matrix     : Matrix4;
-        Model_Matrix     : constant Matrix4 := Identity4;
+        Model_Matrix     : Matrix4 := Identity4;
         Plane_Size       : constant Single := Single (Palet.Get_Plane_Size);  --  6.0
         Scale_Magnitude  : constant Single := Single (Weight);
         Step_Size        : constant Single := 0.1;
         Scaled_Step_Size : constant Single := Step_Size * Plane_Size;
         Num_Vertices     : constant Int :=
                              Int (2.0 * Plane_Size / Step_Size);
+        Scale_Matrix     : constant Matrix4 := Maths.Scaling_Matrix
+          ((Scale_Magnitude, Scale_Magnitude, Scale_Magnitude));
         V_Index          : Int := 0;
         Vertices         : Vector3_Array (1 .. Num_Vertices) :=
                              (others => (others => 0.0));
@@ -101,12 +102,16 @@ package body Plane is
         YY_Dir           : Vector3;
         QY               : Vector3;
         Quad_Vertices    : Singles.Vector3_Array (1 .. 6);
+        Quad_Normals    : Singles.Vector3_Array (1 .. 6);
 
     begin
         Vertex_Array.Initialize_Id;
         Vertex_Array.Bind;
 
         GL.Objects.Programs.Use_Program (Render_Program);
+        if Palet.Get_Draw_Mode.Magnitude then
+            Model_Matrix := Scale_Matrix * Model_Matrix;
+        end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
         GA_Utilities.Print_E3_Vector ("Plane Point", Point);
@@ -143,48 +148,32 @@ package body Plane is
                     end case;
 
                     Quad_Vertices := Build_Quad_Vertices
-                      ((Point + X * X_Dir + QY), Scaled_Step_Size);
+                      (0.1 * (Point + X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
+                    if Palet.Get_Draw_Mode.Magnitude then
+                        Quad_Normals := Build_Quad_Vertices
+                          (Point + X * Normal + YY_Dir, Scaled_Step_Size);
+                        Add_To_Array (Normals, V_Index, Quad_Normals);
+                    end if;
                     X := X + Scaled_Step_Size;
                     V_Index := V_Index + 6;
                 end loop;
 
+                Utilities.Print_GL_Array3 ("Plane.Draw_Plane, Vertices", Vertices);
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+
+                if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
+                    Normals_Buffer.Initialize_Id;
+                    Array_Buffer.Bind (Normals_Buffer);
+                    Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
+                end if;
 
                 Display_Plane (Triangle_Strip, Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
-
-        if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
-            Scale_Matrix := Maths.Scaling_Matrix
-              ((Scale_Magnitude, Scale_Magnitude, Scale_Magnitude));
-            Shader_Manager.Set_Model_Matrix (Scale_Matrix * Model_Matrix);
-
-            V_Index := 0;
-            X := -Plane_Size;
-            Y := -Plane_Size;
-            while Y < Plane_Size loop
-                YY_Dir := Y * Y_Dir;
-                while X < Plane_Size loop
-                    V_Index := V_Index + 1;
-                    Normals (V_Index) := Point + X * Normal + YY_Dir;
-                    V_Index := V_Index + 1;
-                    Normals (V_Index) := Point + X * Normal + YY_Dir -
-                      Scale_Magnitude * Normal;
-                    X := X + Scaled_Step_Size;
-                end loop;
-                Y := Y + Scaled_Step_Size;
-            end loop;
-
-            Normals_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
-
---              Display_Plane (Lines, 6);
-        end if;
 
     exception
         when  others =>
