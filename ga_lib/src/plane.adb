@@ -41,7 +41,7 @@ package body Plane is
         Y : constant Single := Bottom_Left (GL.Y);
         Z : constant Single := Bottom_Left (GL.Z);
         Quad_Vertices : constant Singles.Vector3_Array (1 .. 6) :=
-                           (Bottom_Left,
+                          (Bottom_Left,
                            (X, Y + Step_Size, Z),
                            (X + Step_Size, Y + Step_Size, Z),
 
@@ -54,14 +54,14 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    procedure Display_Plane (Mode  : Connection_Mode; Num_Vertices : Int) is
+    procedure Display_Plane (Num_Vertices : Int) is
     begin
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False, 0, 0);
 
-        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
+        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Strip,
                                               First => 0,
                                               Count => Num_Vertices);
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
@@ -75,9 +75,10 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    procedure Draw_Plane (Render_Program              : GL.Objects.Programs.Program;
-                          Point, X_Dir, Y_Dir, Normal : C3GA.Vector_E3;
-                          Weight                      : Float := 1.0) is
+    procedure Draw_Plane (Render_Program       : GL.Objects.Programs.Program;
+                          Point,
+                          X_Dir, Y_Dir, Normal : C3GA.Vector_E3;
+                          Weight               : Float := 1.0) is
     --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
         use GL.Objects.Buffers;
         use Singles;
@@ -147,9 +148,8 @@ package body Plane is
                     when Back_Surface =>
                         QY := Scaled_Step_Size * YY_Dir;
                     end case;
-
                     Quad_Vertices := Build_Quad_Vertices
-                      (0.1 * (Point + X * X_Dir + QY), Scaled_Step_Size);
+                      (0.2 * (Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     if Palet.Get_Draw_Mode.Magnitude then
                         Quad_Normals := Build_Quad_Vertices
@@ -168,10 +168,12 @@ package body Plane is
                 if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
                     Normals_Buffer.Initialize_Id;
                     Array_Buffer.Bind (Normals_Buffer);
-                    Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
+                    Utilities.Load_Vertex_Buffer (Array_Buffer, Normals,
+                                                  Static_Draw);
                 end if;
 
-                Display_Plane (Triangle_Strip, Num_Vertices);
+--                  Display_Plane (6);
+                Display_Plane (Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
