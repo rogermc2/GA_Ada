@@ -1403,7 +1403,7 @@ package body Multivectors is
                       return Multivector is
         use MV_List_Package;
         Curs : Cursor := MV_List.First;
-        Count : Integer := 0;
+        Count : Integer := 1;
         Found : Boolean := False;
     begin
         if not Is_Empty (MV_List) then

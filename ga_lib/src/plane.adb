@@ -12,7 +12,7 @@ with Utilities;
 
 with Maths;
 
-with GA_Utilities;
+--  with GA_Utilities;
 with Palet;
 with Shader_Manager;
 
@@ -116,9 +116,9 @@ package body Plane is
         end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
-        GA_Utilities.Print_E3_Vector ("Plane Point", Point);
-        GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
-        GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
+--          GA_Utilities.Print_E3_Vector ("Plane Point", Point);
+--          GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
+--          GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
@@ -160,7 +160,6 @@ package body Plane is
                     V_Index := V_Index + 6;
                 end loop;
 
-                Utilities.Print_GL_Array3 ("Plane.Draw_Plane, Vertices", Vertices);
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
