@@ -46,8 +46,8 @@ package body Plane is
                            (X + Step_Size, Y + Step_Size, Z),
 
                            (Bottom_Left),
-                           (X + Step_Size, Y + Step_Size, Z),
-                           (X + Step_Size, Y, Z));
+                           (X + Step_Size, Y, Z),
+                           (X + Step_Size, Y + Step_Size, Z));
     begin
         return Quad_Vertices;
     end Build_Quad_Vertices;
