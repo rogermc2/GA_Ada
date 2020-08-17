@@ -12,7 +12,7 @@ with Utilities;
 
 with Maths;
 
---  with GA_Utilities;
+with GA_Utilities;
 with Palet;
 with Shader_Manager;
 
@@ -116,9 +116,9 @@ package body Plane is
         end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
---          GA_Utilities.Print_E3_Vector ("Plane Point", Point);
---          GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
---          GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane Point", Point);
+        GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
@@ -149,7 +149,7 @@ package body Plane is
                         QY := Scaled_Step_Size * YY_Dir;
                     end case;
                     Quad_Vertices := Build_Quad_Vertices
-                      ((Point - X * X_Dir + QY), Scaled_Step_Size);
+                      (0.8 * (Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     if Palet.Get_Draw_Mode.Magnitude then
                         Quad_Normals := Build_Quad_Vertices
