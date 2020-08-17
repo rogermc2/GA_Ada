@@ -929,6 +929,20 @@ package body Multivectors is
         return Found;
     end Get_Blade;
 
+   --  -------------------------------------------------------------------------
+
+   function Get_Multivector (MV_List : Multivector_List; Index : Positive)
+                             return Multivector is
+      MV : Multivector;
+   begin
+      if not MV_List.Is_Empty then
+         MV := MV_List.Element (Index);
+      else
+         raise MV_Exception with "Multivectors.Get_Multivector, MV_List is empty.";
+      end if;
+      return MV;
+   end Get_Multivector;
+
     --  -------------------------------------------------------------------------
 
     function Get_Random_Blade (Dim, Grade : Integer; Scale : Float)
@@ -1389,37 +1403,6 @@ package body Multivectors is
     begin
         return MV.Type_Of_MV;
     end MV_Kind;
-
-    --  -------------------------------------------------------------------------
-
-    function MV_First (MV_List : Multivector_List) return Multivector is
-    begin
-        return MV_List.First_Element;
-    end MV_First;
-
-    --  -------------------------------------------------------------------------
-
-    function MV_Item (MV_List : Multivector_List; Index : Integer)
-                      return Multivector is
-        use MV_List_Package;
-        Curs : Cursor := MV_List.First;
-        Count : Integer := 1;
-        Found : Boolean := False;
-    begin
-        if not Is_Empty (MV_List) then
-            while Count < Index and Has_Element (Curs) loop
-                Count := Count + 1;
-                Next (Curs);
-            end loop;
-            Found := Has_Element (Curs);
-        end if;
-        if not Found then
-            raise MV_Exception with
-              "Multivector.MV_Item, MV_List has no item with index" &
-              Integer'Image (Index);
-        end if;
-        return Element (Curs);
-    end MV_Item;
 
     --  -------------------------------------------------------------------------
 

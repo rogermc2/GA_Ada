@@ -277,12 +277,18 @@ package body GA_Utilities is
                                      MV_List : Multivectors.Multivector_List) is
       use Multivectors;
       MV_List_Length : constant Integer := List_Length (MV_List);
+      MV             : Multivector;
    begin
       New_Line;
-      Put_Line (Name & ":");
-      for index in 1 .. MV_List_Length loop
-         Print_Multivector ("", MV_Item (MV_List, index));
-      end loop;
+      if MV_List_Length < 1 then
+         Put_Line (Name & " is empty.");
+      else
+         Put_Line (Name & ":");
+         for index in 1 .. MV_List_Length loop
+            MV := Get_Multivector (MV_List, index);
+            Print_Multivector ("", MV);
+         end loop;
+      end if;
 
    exception
       when others =>
@@ -297,12 +303,18 @@ package body GA_Utilities is
        MV_Names : Blade_Types.Basis_Vector_Names) is
       use Multivectors;
       MV_List_Length : constant Integer := List_Length (MV_List);
+      MV             : Multivector;
    begin
       New_Line;
-      Put_Line (Name & ", List Length" & Integer'Image (MV_List_Length) & ":");
-      for index in 1 .. MV_List_Length loop
-         Print_Multivector_String ("", MV_Item (MV_List, index), MV_Names);
-      end loop;
+      if MV_List_Length < 1 then
+         Put_Line (Name & " is empty.");
+      else
+         Put_Line (Name & ", List Length" & Integer'Image (MV_List_Length) & ":");
+         for index in 1 .. MV_List_Length loop
+            MV := Get_Multivector (MV_List, index);
+            Print_Multivector_String ("", MV, MV_Names);
+         end loop;
+      end if;
 
 exception
       when others =>

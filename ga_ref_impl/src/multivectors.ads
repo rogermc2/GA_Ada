@@ -1,5 +1,5 @@
 with Interfaces;
-with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;
 
 with Blade;
@@ -84,6 +84,8 @@ package Multivectors is
                        Index : Interfaces.Unsigned_32) return Boolean;
 
    function Get_Blade_List (MV : Multivector) return Blade.Blade_List;
+   function Get_Multivector (MV_List : Multivector_List; Index : Positive)
+                             return Multivector;
    function Get_Random_Blade (Dim, Grade : Integer; Scale : Float)
                               return Multivector;
    function Get_Random_Vector (Dim : Integer; Scale : Float)  return Multivector;
@@ -113,8 +115,6 @@ package Multivectors is
    function Multivector_String (MV : Multivector;
                                 BV_Names : Blade_Types.Basis_Vector_Names)
                                 return Ada.Strings.Unbounded.Unbounded_String;
-   function MV_First (MV_List : Multivector_List) return Multivector;
-   function MV_Item (MV_List : Multivector_List; Index : Integer) return Multivector;
    function MV_Kind (MV : Multivector) return MV_Type;
    function MV_Size (MV : Multivector) return Natural;
    function Negate (MV : Multivector) return Multivector;
@@ -180,8 +180,8 @@ private
       Sorted     : Boolean := False;
    end record;
 
-   package MV_List_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Multivector);
-   type Multivector_List is new MV_List_Package.List with null Record;
+   package MV_List_Package is new Ada.Containers.Vectors
+     (Index_Type => Positive, Element_Type => Multivector);
+   type Multivector_List is new MV_List_Package.Vector with null Record;
 
 end Multivectors;
