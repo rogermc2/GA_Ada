@@ -45,9 +45,9 @@ package body Plane is
                            (X, Y + Step_Size, Z),
                            (X + Step_Size, Y + Step_Size, Z),
 
+                           (Bottom_Left),
                            (X + Step_Size, Y + Step_Size, Z),
-                           (X + Step_Size, Y, Z),
-                           (Bottom_Left));
+                           (X + Step_Size, Y, Z));
     begin
         return Quad_Vertices;
     end Build_Quad_Vertices;
@@ -149,7 +149,7 @@ package body Plane is
                         QY := Scaled_Step_Size * YY_Dir;
                     end case;
                     Quad_Vertices := Build_Quad_Vertices
-                      (0.2 * (Point - X * X_Dir + QY), Scaled_Step_Size);
+                      ((Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     if Palet.Get_Draw_Mode.Magnitude then
                         Quad_Normals := Build_Quad_Vertices
@@ -172,7 +172,6 @@ package body Plane is
                                                   Static_Draw);
                 end if;
 
---                  Display_Plane (6);
                 Display_Plane (Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
