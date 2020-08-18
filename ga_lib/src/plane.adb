@@ -118,9 +118,9 @@ package body Plane is
         end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
 
-        GA_Utilities.Print_E3_Vector ("Plane Point", Point);
-        GA_Utilities.Print_E3_Vector ("Plane X_Dir", X_Dir);
-        GA_Utilities.Print_E3_Vector ("Plane Y_Dir", Y_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Point", Point);
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane X_Dir", X_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Y_Dir", Y_Dir);
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
@@ -169,6 +169,7 @@ package body Plane is
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
                 if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
+--  ???                 GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
                     Normals_Buffer.Initialize_Id;
                     Array_Buffer.Bind (Normals_Buffer);
                     Utilities.Load_Vertex_Buffer (Array_Buffer, Normals,
