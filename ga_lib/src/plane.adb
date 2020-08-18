@@ -55,11 +55,15 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    procedure Display_Plane (Num_Vertices : Int) is
+    procedure Display_Plane
+      (Vertex_Buffer, Normals_Buffer : GL.Objects.Buffers.Buffer;
+       Num_Vertices : Int) is
     begin
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
+        GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Strip,
@@ -147,7 +151,7 @@ package body Plane is
                         QY := Scaled_Step_Size * YY_Dir;
                     end if;
                     Quad_Vertices := Build_Quad_Vertices
-                      (0.8 * (Point - X * X_Dir + QY), Scaled_Step_Size);
+                      ((Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
                     if Palet.Get_Draw_Mode.Magnitude then
                         Quad_Normals := Build_Quad_Vertices
@@ -168,15 +172,14 @@ package body Plane is
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-                if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
---  ???                 GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+--                  if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
+--  --  ???                 GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
                     Normals_Buffer.Initialize_Id;
                     Array_Buffer.Bind (Normals_Buffer);
                     Utilities.Load_Vertex_Buffer (Array_Buffer, Normals,
                                                   Static_Draw);
-                end if;
-
-                Display_Plane (Num_Vertices);
+--                  end if;
+                Display_Plane (Vertex_Buffer, Normals_Buffer, Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
