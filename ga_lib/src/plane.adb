@@ -7,6 +7,7 @@ with GL;
 with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
+with GL.Rasterization;
 with GL.Types; use GL.Types;
 with Utilities;
 
@@ -18,7 +19,7 @@ with Shader_Manager;
 
 package body Plane is
 
-    type Surface_Type is (Back_Surface, Front_Surface);
+   type Surface_Type is (Back_Surface, Front_Surface);
 
     --  ------------------------------------------------------------------------
 
@@ -81,6 +82,7 @@ package body Plane is
                           Weight               : Float := 1.0) is
     --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
         use GL.Objects.Buffers;
+        use Palet;
         use Singles;
         Vertex_Array     : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Vertex_Buffer    : GL.Objects.Buffers.Buffer;
@@ -122,14 +124,11 @@ package body Plane is
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
-            case Surface is
-            when Front_Surface =>
-                null;
-            when Back_Surface =>
-                for n in Int range 1 .. 6 loop
-                    Normals (n) := -Normals (n);
-                end loop;
-            end case;
+            if Wireframe or (Surface = Back_Surface and Palet.Orientation) then
+                GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+            else
+                GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+            end if;
 
             Y := -Plane_Size;
             while Y < Plane_Size - Scaled_Step_Size loop
@@ -142,12 +141,11 @@ package body Plane is
                 --  with each quad drawn as 2 triangles
                 --  X_Dir and Y_Dir are orthogonal
                 while X < Plane_Size - Scaled_Step_Size loop
-                    case Surface is
-                    when Front_Surface =>
+                    if Surface = Front_Surface then
                         QY := YY_Dir;
-                    when Back_Surface =>
+                    else
                         QY := Scaled_Step_Size * YY_Dir;
-                    end case;
+                    end if;
                     Quad_Vertices := Build_Quad_Vertices
                       (0.8 * (Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
@@ -159,6 +157,12 @@ package body Plane is
                     X := X + Scaled_Step_Size;
                     V_Index := V_Index + 6;
                 end loop;
+
+                if Surface = Back_Surface then
+                    for n in Int range 1 .. Num_Vertices loop
+                        Normals (n) := -Normals (n);
+                    end loop;
+                end if;
 
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
