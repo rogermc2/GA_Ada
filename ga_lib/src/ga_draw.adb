@@ -63,6 +63,7 @@ package body GA_Draw is
         GL.Objects.Programs.Use_Program (Render_Program);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
@@ -488,8 +489,9 @@ package body GA_Draw is
         --        Model_Matrix := Translation_Matrix * Model_Matrix;
         Set_Model_Matrix (Model_Matrix);
 
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        Array_Buffer.Bind (Vertex_Buffer);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
                                               First => 0, Count => Num_Vertices);
@@ -533,7 +535,6 @@ package body GA_Draw is
                   Maths.Translation_Matrix ((0.0, 0.0, 2.0 * Step_Length));
             end loop;
         end if;
-        Shader_Manager.Set_Model_Matrix (Identity4);
 
     exception
         when  others =>
