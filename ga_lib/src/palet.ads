@@ -32,9 +32,11 @@ package Palet is
    function Get_Plane_Size return Float;
    function Is_Null return Colour_Palet;
    function Line_Length return Float;
+   function Orientation return Boolean;
+   function Magnitude return Boolean;
    function Outline_Colour (Palet_Data : Colour_Palet) return Color;
    function Point_Size return Float;
-
+   function Shade return Boolean;
    procedure Set_Background_Alpa (Palet_Data : in out Colour_Palet; Alpa : Float);
    procedure Set_Background_Colour (Palet_Data  : in out Colour_Palet;
                                     Back_Colour : Color);
@@ -51,6 +53,7 @@ package Palet is
                                  Outline_Colour : Color);
    procedure Set_Outline_Colour (Palet_Data : Colour_Palet);
    procedure Set_Point_Size (Point_Size : Float);
+   function Wireframe return Boolean;
 
 private
    type Colour_Palet is record
