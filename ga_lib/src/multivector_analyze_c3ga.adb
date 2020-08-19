@@ -370,8 +370,6 @@ package body Multivector_Analyze_C3GA is
 
             --  MV_X checked OK against C++ version
             LC_NI_MV := Left_Contraction (C3GA.ni, MV_X,  Metric.C3_Metric);
-            --              GA_Utilities.Print_Multivector
-            --                ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV);
 --              GA_Utilities.Print_Multivector_String
 --                   ("Multivector_Analyze_C3GA.Analyze_Round LC_NI_MV", LC_NI_MV,
 --                    Blade_Types.Basis_Names_C3GA);
@@ -429,9 +427,15 @@ package body Multivector_Analyze_C3GA is
                 theAnalysis.M_Type.Blade_Subclass := Circle_Subclass;
                 MV_X := Reverse_MV (Left_Contraction (C3GA.no,
                                     Reverse_MV (Attitude), Met));
+--                  GA_Utilities.Print_Multivector_String
+--                    ("Multivector_Analyze_C3GA.Analyze_Round grade 3 MV_X",
+--                     MV_X, Blade_Types.Basis_Names_C3GA);
                 --  Returned scale not used
                 MV_Factors :=
                   Multivector_Utilities.Factorize_Blades (MV_X, Scale);
+--                  GA_Utilities.Print_Multivector_List_String
+--                    ("Multivector_Analyze_C3GA.Analyze_Round MV_Factors",
+--                     MV_Factors, Blade_Types.Basis_Names_C3GA);
                 theAnalysis.M_Vectors (1) :=
                   C3GA.To_VectorE3GA (Get_Multivector (MV_Factors, 1));
                 theAnalysis.M_Vectors (2) :=
@@ -441,8 +445,9 @@ package body Multivector_Analyze_C3GA is
                     theAnalysis.M_Vectors (3) := (0.0, 0.0, 1.0);
                 else
                    theAnalysis.M_Vectors (3) :=
-                      C3GA.To_VectorE3GA (Dual (Outer_Product (Get_Multivector (MV_Factors, 1),
-                                          Get_Multivector (MV_Factors, 2)), Met));
+                      C3GA.To_VectorE3GA
+                        (Dual (Outer_Product (Get_Multivector (MV_Factors, 1),
+                                Get_Multivector (MV_Factors, 2)), Met));
                 end if;
             when 4 =>
                 theAnalysis.M_Type.Blade_Subclass := Sphere_Subclass;

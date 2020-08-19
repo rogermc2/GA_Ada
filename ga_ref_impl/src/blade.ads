@@ -20,6 +20,8 @@ package Blade is
 
     type Complex_Basis_Blade is private;
 
+    type Basis_Blade_Array is array (Integer range <>) of Basis_Blade;
+
     package Blade_List_Package is new Ada.Containers.Doubly_Linked_Lists
       (Element_Type => Basis_Blade);
     type Blade_List is new Blade_List_Package.List with null record;
