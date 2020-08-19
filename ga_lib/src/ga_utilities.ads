@@ -20,6 +20,10 @@ package GA_Utilities is
    procedure Print_Blade_List (Name : String; BL : Blade.Blade_List);
    procedure Print_Blade_String (Name : String; B : Blade.Basis_Blade;
                                  MV_Names : Blade_Types.Basis_Vector_Names);
+
+    procedure Print_Blade_String_Array (Name : String;
+                                        BB_Array : Blade.Basis_Blade_Array;
+                                        MV_Names : Blade_Types.Basis_Vector_Names);
    procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector);
    procedure Print_E3_Vector_Array  (Name : String;
                                      anArray : GL.Types.Singles.Vector3_Array);

@@ -82,6 +82,17 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+    procedure Print_Blade_String_Array (Name : String;
+                                        BB_Array : Blade.Basis_Blade_Array;
+                                        MV_Names : Blade_Types.Basis_Vector_Names) is
+    begin
+        for index in BB_Array'Range loop
+            GA_Utilities.Print_Blade_String (Name, BB_Array (index), MV_Names);
+        end loop;
+    end Print_Blade_String_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector) is
    begin
         Utilities.Print_Vector (Name, aVector);
@@ -105,6 +116,7 @@ package body GA_Utilities is
    end Print_E3_Vector_Array;
 
    --  ------------------------------------------------------------------------
+
    procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D) is
    begin
       if Name = "" then
@@ -329,7 +341,7 @@ exception
       use Ada.Strings.Unbounded;
    begin
       if Name /= "" then
-            Put_Line (Name & ":");
+            Put (Name & ": ");
       end if;
       Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
    exception
