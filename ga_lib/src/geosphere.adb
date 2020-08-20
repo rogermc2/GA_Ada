@@ -224,16 +224,16 @@ package body Geosphere is
     --  -------------------------------------------------------------------------
 
     procedure Draw_Sphere_List (Render_Program : GL.Objects.Programs.Program;
-                                MV_Matrix      : GL.Types.Singles.Matrix4;
                                 Normal         : GL.Types.Single := 0.0) is
         use Sphere_List_Package;
-        Curs : Cursor := Sphere_List.First;
+
+        Curs              : Cursor := Sphere_List.First;
     begin
         if Sphere_List.Is_Empty then
             Put_Line ("Geosphere.Draw_Sphere_List, Sphere_List is empty.");
         else
             while Has_Element (Curs) loop
-                GS_Draw (Render_Program, MV_Matrix, Element (Curs), Normal);
+                GS_Draw (Render_Program,Element (Curs), Normal);
                 Next (Curs);
             end loop;
         end if;
@@ -440,15 +440,16 @@ package body Geosphere is
     --  Based on geosphere.cpp
     --  gsDraw(geosphere * sphere, mv::Float normal /*= 0.0*/)
     procedure GS_Draw (Render_Program    : GL.Objects.Programs.Program;
-                       Model_View_Matrix : GL.Types.Singles.Matrix4;
                        Sphere            : Geosphere;
                        Normal : GL.Types.Single := 0.0) is
         use GL.Objects.Buffers;
         use Face_Vectors;
-        Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-        Vertex_Buffer  : GL.Objects.Buffers.Buffer;
+        Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+        Vertex_Buffer      : GL.Objects.Buffers.Buffer;
         Indices_Buffer     : GL.Objects.Buffers.Buffer;
         Indices_List       : Indices_DL_List;
+        Model_View_Matrix  : constant GL.Types.Singles.Matrix4 :=
+                               GL.Types.Singles.Identity4;
         Vertices           : Singles.Vector3_Array
           (1 .. Int (Length (Sphere.Vertices)));
         Vertex_Data_Bytes  : constant Int := Vertices'Size / 8;
