@@ -155,7 +155,7 @@ package body C3GA_Utilities is
                 DL_1 := Outer_Product (Trans, C3GA.ni);
                 Log_V := 0.5 * (2.0 * GA_Maths.Pi * BV_I - DL_1);
             else  --  Scalar_Part (Rot) >= 0.0
-                Log_V := -0.5 * Outer_Product (Trans, C3GA.ni);
+                Log_V := To_Dual_Line (-0.5 * Outer_Product (Trans, C3GA.ni));
             end if;
         end if;
         return Log_V;
