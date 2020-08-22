@@ -97,7 +97,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Height              : GL.Types.Single;
       --  rotor g_modelRotor(_rotor(1.0f))
 --        Model_Rotor         : constant Rotor := New_Rotor (1.0);
---        Model_Matrix        : constant Matrix4 := Identity4;
       Translation_Matrix  : Matrix4 := Identity4;
       Projection_Matrix   : Matrix4 := Identity4;
       View_Matrix         : Matrix4 := Identity4;
@@ -220,11 +219,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         Translation_Matrix :=
-           Maths.Translation_Matrix ((0.0, 2.0, 0.0)) * Translation_Matrix;
+         Translation_Matrix := Translation_Matrix +
+           Maths.Translation_Matrix ((0.0, 2.0, 0.0));
          Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
---           Shader_Manager.Set_Model_Matrix
---                (Translation_Matrix * Model_Matrix);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
          Rotated_Circle := Draw_1_1.Draw_Rotated_Circle
            (Render_Graphic_Program, aCircle, R_Versor);
