@@ -15,34 +15,6 @@ with E3GA_Utilities;
 package body GL_Util is
 
     --  ------------------------------------------------------------------
-
-    --      function From_GL (V3 : GL.Types.Singles.Vector3) return E3GA.Vector is
-    --      begin
-    --          return (Float (V3 (GL.X)), Float (V3 (GL.X)), Float (V3 (GL.Y)));
-    --      end From_GL;
-
-    --  -------------------------------------------------------------------------
-
-    --      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3 is
-    --      begin
-    --          return C3GA.Set_Coords (Float (V3 (GL.X)), Float (V3 (GL.X)),
-    --                                  Float (V3 (GL.Y)));
-    --      end From_GL;
-
-    --  -------------------------------------------------------------------------
-
-    --      procedure GL_Color_3fm (R, G, B : GL.Types.Single) is
-    --          A       : constant GL.Types.Single := 0.3;
-    --          D       : constant GL.Types.Single := 0.7;
-    --          Ambient : constant array (1 .. 4) of GL.Types.Single
-    --            := (A * R, A * G, A * B, 1.0);
-    --          Dif     : constant array (1 .. 4) of GL.Types.Single
-    --            := (D * R, D * G, D * B, 1.0);
-    --      begin
-    --          null;
-    --      end GL_Color_3fm;
-
-    --  ------------------------------------------------------------------
     --  Load_Pick_Matrix
     procedure Load_Pick_Matrix is
     begin
@@ -213,23 +185,6 @@ package body GL_Util is
             Put_Line ("An exception occurred in GL_Util.To_GL Single.");
             raise;
     end To_GL;
-
-    --  -------------------------------------------------------------------------
-
-    --      function To_GL (V3 : C3GA.Vector_E3) return GL.Types.Singles.Vector3 is
-    --          C3_Coords : constant GA_Maths.Array_3D := C3GA.Get_Coords (V3);
-    --      begin
-    --
-    --          return (Single (C3_Coords (1)), Single (C3_Coords (2)),
-    --                  Single (C3_Coords (3)));
-    --      end To_GL;
-
-    --  -------------------------------------------------------------------------
-
-    --      function To_GL (V3 : E3GA.Vector) return GL.Types.Singles.Vector3 is
-    --      begin
-    --          return (Single (V3 (1)), Single (V3 (2)), Single (V3 (3)));
-    --      end To_GL;
 
     --  -------------------------------------------------------------------------
 

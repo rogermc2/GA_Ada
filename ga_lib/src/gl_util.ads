@@ -9,8 +9,6 @@ package GL_Util is
 
     type GL_Pick is private;
 
---      function From_GL (V3 : GL.Types.Singles.Vector3) return C3GA.Vector_E3;
-    --     procedure GL_Color_3fm (R, G, B : GL.Types.Single);
     procedure Load_Pick_Matrix;
     procedure Pick_Matrix (Centre_X, Centre_Y : GL.Types.Size;
                            Width, Height : GL.Types.Size);
