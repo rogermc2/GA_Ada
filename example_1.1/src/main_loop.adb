@@ -127,7 +127,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -20.0));
 
       View_Matrix := Translation_Matrix * View_Matrix;
       Shader_Manager.Set_View_Matrix (View_Matrix);
@@ -219,8 +219,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         Translation_Matrix := Translation_Matrix +
-           Maths.Translation_Matrix ((0.0, 2.0, 0.0));
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0)) *
+           Translation_Matrix;
          Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
          Rotated_Circle := Draw_1_1.Draw_Rotated_Circle
@@ -246,10 +246,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                (Render_Graphic_Program, aCircle, R_Versor);
              --  draw reflected, rotated circle (light blue)
              Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
---               Draw_1_1.Draw_Reflected_Circle
---                 (Render_Graphic_Program, Rotated_Circle, aDual_Plane);
+             Draw_1_1.Draw_Reflected_Circle
+               (Render_Graphic_Program, Rotated_Circle, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
+
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, -2.0, 0.0)) *
+           Translation_Matrix;
+         Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
 
          --  Draw plane (yellow)
          New_Line;
