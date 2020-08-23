@@ -13,7 +13,6 @@ with Utilities;
 
 with Maths;
 
-with GA_Utilities;
 with Palet;
 with Shader_Manager;
 
@@ -84,7 +83,7 @@ package body Plane is
                           Point,
                           X_Dir, Y_Dir, Normal : C3GA.Vector_E3;
                           Weight               : Float := 1.0) is
-    --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
+    --  Attitude: Normal is perpendicular to plane of X_Dir and Y_Dir.
         use GL.Objects.Buffers;
         use Palet;
         use Singles;
@@ -121,10 +120,6 @@ package body Plane is
             Model_Matrix := Scale_Matrix * Model_Matrix;
         end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
-
-        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Point", Point);
-        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane X_Dir", X_Dir);
-        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Y_Dir", Y_Dir);
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
