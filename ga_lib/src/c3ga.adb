@@ -403,18 +403,23 @@ package body C3GA is
    function Norm_E2 (V : Vector_E3) return Float is
       use GL.Types;
    begin
-      return Float (V (GL.X) * V (GL.X) + V (GL.Y) * V (GL.Y) + V (GL.Z) * V (GL.Z));
+      return Float (V (GL.X) * V (GL.X) + V (GL.Y) * V (GL.Y) +
+                    V (GL.Z) * V (GL.Z));
    end Norm_E2;
 
    --  -------------------------------------------------------------------------
 
-   function NP_To_VectorE3GA (NP : Multivectors.Normalized_Point) return Vector_E3 is
+   function NP_To_VectorE3GA (NP : Multivectors.Normalized_Point)
+                              return Vector_E3 is
       use GL.Types;
       theVector : Vector_E3;
    begin
-      theVector (GL.X) := Single (Multivectors.Component (NP, 2));
-      theVector (GL.Y) := Single (Multivectors.Component (NP, 3));
-      theVector (GL.Z) := Single (Multivectors.Component (NP, 4));
+      theVector (GL.X) := Single (Multivectors.Component
+                                  (NP, C3_Base'Enum_Rep (C3_e1)));
+      theVector (GL.Y) := Single (Multivectors.Component
+                                  (NP, C3_Base'Enum_Rep (C3_e2)));
+      theVector (GL.Z) := Single (Multivectors.Component
+                                  (NP, C3_Base'Enum_Rep (C3_e3)));
       return theVector;
    end NP_To_VectorE3GA;
 

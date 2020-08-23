@@ -7,18 +7,19 @@ with GL;
 with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
+with GL.Rasterization;
 with GL.Types; use GL.Types;
 with Utilities;
 
 with Maths;
 
---  with GA_Utilities;
+with GA_Utilities;
 with Palet;
 with Shader_Manager;
 
 package body Plane is
 
-    type Surface_Type is (Back_Surface, Front_Surface);
+   type Surface_Type is (Back_Surface, Front_Surface);
 
     --  ------------------------------------------------------------------------
 
@@ -41,29 +42,35 @@ package body Plane is
         Y : constant Single := Bottom_Left (GL.Y);
         Z : constant Single := Bottom_Left (GL.Z);
         Quad_Vertices : constant Singles.Vector3_Array (1 .. 6) :=
-                           (Bottom_Left,
+                          (Bottom_Left,
                            (X, Y + Step_Size, Z),
                            (X + Step_Size, Y + Step_Size, Z),
 
-                           (X + Step_Size, Y + Step_Size, Z),
+                           (Bottom_Left),
                            (X + Step_Size, Y, Z),
-                           (Bottom_Left));
+                           (X + Step_Size, Y + Step_Size, Z));
     begin
         return Quad_Vertices;
     end Build_Quad_Vertices;
 
     --  ------------------------------------------------------------------------
 
-    procedure Display_Plane (Mode  : Connection_Mode; Num_Vertices : Int;
-                             Index : GL.Attributes.Attribute ) is
+    procedure Display_Plane
+      (Vertex_Buffer, Normals_Buffer : GL.Objects.Buffers.Buffer;
+       Num_Vertices : Int) is
     begin
-        GL.Attributes.Enable_Vertex_Attrib_Array (Index);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (Index, 3, Single_Type, 0, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
+        GL.Attributes.Enable_Vertex_Attrib_Array (1);
+        GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False, 0, 0);
 
-        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Mode,
+        GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Strip,
                                               First => 0,
                                               Count => Num_Vertices);
-        GL.Attributes.Disable_Vertex_Attrib_Array (Index);
+        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        GL.Attributes.Disable_Vertex_Attrib_Array (1);
 
     exception
         when  others =>
@@ -73,52 +80,59 @@ package body Plane is
 
     --  ------------------------------------------------------------------------
 
-    procedure Draw_Plane (Render_Program              : GL.Objects.Programs.Program;
-                          Point, X_Dir, Y_Dir, Normal : C3GA.Vector_E3;
-                          Weight                      : Float := 1.0) is
+    procedure Draw_Plane (Render_Program       : GL.Objects.Programs.Program;
+                          Point,
+                          X_Dir, Y_Dir, Normal : C3GA.Vector_E3;
+                          Weight               : Float := 1.0) is
     --  Attitude: Normal is perpendicular to plane of Ortho_1 and Ortho_2.
         use GL.Objects.Buffers;
+        use Palet;
         use Singles;
         Vertex_Array     : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
         Vertex_Buffer    : GL.Objects.Buffers.Buffer;
         Normals_Buffer   : GL.Objects.Buffers.Buffer;
-        Scale_Matrix     : Matrix4;
-        Model_Matrix     : constant Matrix4 := Identity4;
+        Model_Matrix     : Matrix4 := Identity4;
         Plane_Size       : constant Single := Single (Palet.Get_Plane_Size);  --  6.0
         Scale_Magnitude  : constant Single := Single (Weight);
         Step_Size        : constant Single := 0.1;
         Scaled_Step_Size : constant Single := Step_Size * Plane_Size;
         Num_Vertices     : constant Int :=
                              Int (2.0 * Plane_Size / Step_Size);
-        GL_Normal        : constant Vector3 := Vector3 (Normal);
-        GL_Point         : constant Vector3 := Vector3 (Point);
+        Scale_Matrix     : constant Matrix4 := Maths.Scaling_Matrix
+          ((Scale_Magnitude, Scale_Magnitude, Scale_Magnitude));
         V_Index          : Int := 0;
         Vertices         : Vector3_Array (1 .. Num_Vertices) :=
                              (others => (others => 0.0));
-        GL_Normals       : Vector3_Array (1 .. 6) := (others => Normal);
+        Normals          : Vector3_Array (1 .. Num_Vertices) :=
+                             (others => (others => 0.0));
         X                : Single;
         Y                : Single;
         YY_Dir           : Vector3;
         QY               : Vector3;
         Quad_Vertices    : Singles.Vector3_Array (1 .. 6);
+        Quad_Normals     : Singles.Vector3_Array (1 .. 6);
 
     begin
         Vertex_Array.Initialize_Id;
         Vertex_Array.Bind;
 
         GL.Objects.Programs.Use_Program (Render_Program);
+        if Palet.Get_Draw_Mode.Magnitude then
+            Model_Matrix := Scale_Matrix * Model_Matrix;
+        end if;
         Shader_Manager.Set_Model_Matrix (Model_Matrix);
+
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Point", Point);
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane X_Dir", X_Dir);
+        GA_Utilities.Print_E3_Vector ("Plane.Draw_Plane Y_Dir", Y_Dir);
 
         --  draw both front and back side individually
         for Surface in Surface_Type'Range loop
-            case Surface is
-            when Front_Surface =>
-                null;
-            when Back_Surface =>
-                for n in Int range 1 .. 6 loop
-                    GL_Normals (n) := -GL_Normals (n);
-                end loop;
-            end case;
+            if Wireframe or (Surface = Back_Surface and Palet.Orientation) then
+                GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Line);
+            else
+                GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+            end if;
 
             Y := -Plane_Size;
             while Y < Plane_Size - Scaled_Step_Size loop
@@ -131,54 +145,44 @@ package body Plane is
                 --  with each quad drawn as 2 triangles
                 --  X_Dir and Y_Dir are orthogonal
                 while X < Plane_Size - Scaled_Step_Size loop
-                    case Surface is
-                    when Front_Surface =>
+                    if Surface = Front_Surface then
                         QY := YY_Dir;
-                    when Back_Surface =>
+                    else
                         QY := Scaled_Step_Size * YY_Dir;
-                    end case;
-
+                    end if;
                     Quad_Vertices := Build_Quad_Vertices
-                      ((GL_Point + X * X_Dir + QY), Scaled_Step_Size);
+                      ((Point - X * X_Dir + QY), Scaled_Step_Size);
                     Add_To_Array (Vertices, V_Index, Quad_Vertices);
+                    if Palet.Get_Draw_Mode.Magnitude then
+                        Quad_Normals := Build_Quad_Vertices
+                          (Point + X * Normal + YY_Dir, Scaled_Step_Size);
+                        Add_To_Array (Normals, V_Index, Quad_Normals);
+                    end if;
                     X := X + Scaled_Step_Size;
                     V_Index := V_Index + 6;
                 end loop;
 
+                if Surface = Back_Surface then
+                    for n in Int range 1 .. Num_Vertices loop
+                        Normals (n) := -Normals (n);
+                    end loop;
+                end if;
+
                 Vertex_Buffer.Initialize_Id;
                 Array_Buffer.Bind (Vertex_Buffer);
                 Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
-                Display_Plane (Triangle_Strip, Num_Vertices, 0);
+
+--                  if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
+--  --  ???                 GL.Rasterization.Set_Polygon_Mode (GL.Rasterization.Fill);
+                    Normals_Buffer.Initialize_Id;
+                    Array_Buffer.Bind (Normals_Buffer);
+                    Utilities.Load_Vertex_Buffer (Array_Buffer, Normals,
+                                                  Static_Draw);
+--                  end if;
+                Display_Plane (Vertex_Buffer, Normals_Buffer, Num_Vertices);
                 Y := Y + Scaled_Step_Size;
             end loop;
         end loop;
-
-        if Palet.Get_Draw_Mode.Magnitude then  --  draw normals
-            Scale_Matrix := Maths.Scaling_Matrix
-              ((Scale_Magnitude, Scale_Magnitude, Scale_Magnitude));
-            Shader_Manager.Set_Model_Matrix (Scale_Matrix * Model_Matrix);
-
-            V_Index := 0;
-            X := -Plane_Size;
-            Y := -Plane_Size;
-            while Y < Plane_Size loop
-                YY_Dir := Y * Y_Dir;
-                while X < Plane_Size loop
-                    V_Index := V_Index + 1;
-                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir;
-                    V_Index := V_Index + 1;
-                    Vertices (V_Index) := GL_Point + X * GL_Normal + YY_Dir -
-                      Scale_Magnitude * Normal;
-                    X := X + Scaled_Step_Size;
-                end loop;
-                Y := Y + Scaled_Step_Size;
-            end loop;
-
-            Normals_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, GL_Normals, Static_Draw);
-            Display_Plane (Lines, 6, 0);
-        end if;
 
     exception
         when  others =>

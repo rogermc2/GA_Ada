@@ -87,7 +87,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        Point_Position      : Normalized_Point := New_Normalized_Point;
       aLine               : Multivectors.Line;
       aCircle             : Circle;
-      Circle_Rotated      : Circle;
+      Rotated_Circle      : Circle;
       aDual_Plane         : Dual_Plane;
       --        Text_Coords           : GA_Maths.Array_3D := (0.0, 0.0, 0.0);
       Window_Width        : Glfw.Size;
@@ -97,7 +97,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Height              : GL.Types.Single;
       --  rotor g_modelRotor(_rotor(1.0f))
 --        Model_Rotor         : constant Rotor := New_Rotor (1.0);
-      Model_Matrix        : constant Matrix4 := Identity4;
       Translation_Matrix  : Matrix4 := Identity4;
       Projection_Matrix   : Matrix4 := Identity4;
       View_Matrix         : Matrix4 := Identity4;
@@ -128,7 +127,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (View_Angle, Width, Height, 0.1, -100.0, Projection_Matrix);
       Shader_Manager.Set_Projection_Matrix (Projection_Matrix);
 
-      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -14.0));
+      Translation_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -20.0));
 
       View_Matrix := Translation_Matrix * View_Matrix;
       Shader_Manager.Set_View_Matrix (View_Matrix);
@@ -181,6 +180,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --          GA_Utilities.Print_Multivector ("Display, L1 ", Points.L1);
       --          GA_Utilities.Print_Multivector ("Display, L2 ", Points.L2);
       if not Pick_Manager.Pick_Active then
+         Shader_Manager.Set_Model_Matrix (Identity4);
          New_Line;
          Put_Line ("Main_Loop.Display drawing a Line.");
          Shader_Manager.Set_Ambient_Colour (Red);
@@ -219,11 +219,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Display drawing rotated circle.");
          --  draw rotated circle
          Shader_Manager.Set_Ambient_Colour (Green);
-         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0));
-         Shader_Manager.Set_Model_Matrix
-              (Translation_Matrix * Model_Matrix);
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, 2.0, 0.0)) *
+           Translation_Matrix;
+         Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
          Palet.Set_Draw_Mode_On (Palet.OD_Orientation);
-         Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+         Rotated_Circle := Draw_1_1.Draw_Rotated_Circle
            (Render_Graphic_Program, aCircle, R_Versor);
 
          New_Line;
@@ -231,7 +231,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  draw reflected, rotated circle (blue)
          Shader_Manager.Set_Ambient_Colour (Blue);
          Draw_1_1.Draw_Reflected_Circle
-           (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+           (Render_Graphic_Program, Rotated_Circle, aDual_Plane);
          Palet.Set_Draw_Mode_Off (Palet.OD_Orientation);
 
          --  Draw interpolated circles
@@ -242,14 +242,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
              R_Versor := To_TRversor (Multivectors.Exp (Alpha * LR));
              --  draw rotated circle (light green)
              Shader_Manager.Set_Ambient_Colour ((0.5, 1.0, 0.5, 1.0));
-             Circle_Rotated := Draw_1_1.Draw_Rotated_Circle
+             Rotated_Circle := Draw_1_1.Draw_Rotated_Circle
                (Render_Graphic_Program, aCircle, R_Versor);
              --  draw reflected, rotated circle (light blue)
              Shader_Manager.Set_Ambient_Colour ((0.5, 0.5, 1.0, 1.0));
              Draw_1_1.Draw_Reflected_Circle
-               (Render_Graphic_Program, Circle_Rotated, aDual_Plane);
+               (Render_Graphic_Program, Rotated_Circle, aDual_Plane);
             Alpha := Alpha + 0.1;
          end loop;
+
+         Translation_Matrix := Maths.Translation_Matrix ((0.0, -2.0, 0.0)) *
+           Translation_Matrix;
+         Shader_Manager.Set_Translation_Matrix (Translation_Matrix);
 
          --  Draw plane (yellow)
          New_Line;

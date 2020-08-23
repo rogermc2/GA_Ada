@@ -1,7 +1,9 @@
 
+--  with Blade_Types;
 with C3GA;
 with C3GA_Draw;
 with GA_Maths;
+--  with GA_Utilities;
 with Metric;
 with Multivector_Utilities;
 
@@ -74,6 +76,7 @@ package body Draw_1_1 is
       OP : Multivector := Outer_Product (E3GA.To_MV_Vector (Normal), C3GA.ni);
    begin
       OP := Left_Contraction (P1, OP, Metric.C3_Metric);
+      --  Checked OK against C++
       return To_Dual_Plane (OP);
    end New_Dual_Plane;
 

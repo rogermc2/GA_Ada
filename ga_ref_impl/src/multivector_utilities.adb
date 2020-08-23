@@ -27,69 +27,83 @@ package body Multivector_Utilities is
         B_Current   : Multivector;
         aFactor     : Multivector;
         Factors     : Multivector_List;
-        E_Array     : array (1 .. Space_Dimension) of Basis_Blade;
+        E_Array     : Basis_Blade_Array (1 .. Space_Dimension);
+        E_Bitmap    : Unsigned_32;
         Idx         : Integer := 0;
     begin
         if Space_Dimension < 1 then
             raise MV_Utilities_Exception with
               "Multivector_Utilities.Factorize_Blades Geometry type has not been set.";
         end if;
-        Grade_Valid := Grade (MV_B, K_Grade);
-        if Grade_Valid = Grade_Inhomogeneous then
-            MV_Type_Rec := Multivector_Type.Init (MV_B);
-            K_Grade := Multivector_Type.MV_Grade (MV_Type_Rec);
-        elsif Grade_Valid = Grade_Null then
-            raise MV_Utilities_Exception with
-              "Multivector_Utilities.Factorize_Blades null grade multivector detected.";
-        end if;
 
-        --  set scale of output
-        if K_Grade = 0 then
-            Scale := Scalar_Part (MV_B);
-        else
-            Scale := Norm_E (MV_B);
-        end if;
+        if not Is_Null (MV_B) then
+            Grade_Valid := Grade (MV_B, K_Grade);
+            if Grade_Valid = Grade_Inhomogeneous then
+                MV_Type_Rec := Multivector_Type.Init (MV_B);
+                K_Grade := Multivector_Type.MV_Grade (MV_Type_Rec);
+            elsif Grade_Valid = Grade_Null then
+                raise MV_Utilities_Exception with
+                  "Multivector_Utilities.Factorize_Blades null grade multivector detected.";
+            end if;
 
-        if K_Grade > 0 and Scale /= 0.0 then
-            --  not a scalar-blade or a null-blade
-            --  get largest basis blade
-            E_Largest := Largest_Basis_Blade (MV_B);
-            --  get basis vectors
-            for Index_G in 0 .. Space_Dimension - 1 loop
-                --  Shift 1 left by Index_G bits
-                Basis_Bit := Shift_Left (1, Index_G);
-                if (Bitmap (E_Largest) and Basis_Bit) /= 0 then
-                    Idx := Idx + 1;
-                    E_Array (Idx) :=
-                      New_Basis_Blade (Basis_Bit);
-                end if;
-            end loop;
+            --  set scale of output
+            if K_Grade = 0 then
+                Scale := Scalar_Part (MV_B);
+            else
+                Scale := Norm_E (MV_B);
+            end if;
 
-            --  setup the 'current input blade'
-            B_Current := Geometric_Product (MV_B, 1.0 / Scale);
+--              Put_Line ("Multivector_Utilities.Factorize_Blades, K_Grade:" &
+--                          Integer'Image (K_Grade));
+            if K_Grade > 0 and Scale /= 0.0 then
+                --  not a scalar-blade or a null-blade
+                --  get largest basis blade
+                E_Largest := Largest_Basis_Blade (MV_B);
+                E_Bitmap := Bitmap (E_Largest);
+--                  GA_Utilities.Print_Blade ("Multivector_Utilities.Factorize_Blades, E_Largest",
+--                                            E_Largest);
+--                  Put_Line ("Multivector_Utilities.Factorize_Blades, E_Bitmap"
+--                  & Unsigned_32'Image (E_Bitmap));
+                --  Determine the K basis vectors that span the largest basis blade
+                for Index_G in 0 .. Space_Dimension - 1 loop
+                    --  Shift 1 left by Index_G bits
+                    Basis_Bit := Shift_Left (1, Index_G);
+                    if (E_Bitmap and Basis_Bit) /= 0 then
+                        Idx := Idx + 1;
+                        E_Array (Idx) :=
+                          New_Basis_Blade (Basis_Bit);
+                    end if;
+                end loop;
+--                  GA_Utilities.Print_Blade_String_Array
+--                    ("Multivector_Utilities.Factorize_Blades, basis vectors that span the largest basis blade", E_Array,
+--                     Blade_Types.Basis_Names_C3GA);
 
-            --  for all but one of the E_Array basis vectors:
-            for index in 1 .. Space_Dimension - 1 loop
-                --  Project basis vector E_Array (index) onto B_Current
-                --  (E(i) lc B_Current) inv(B_Current) but
-                --  inv(B_Current) not required because Bc is a unit vector
-                aFactor := New_Multivector (E_Array (index));
-                aFactor := Inner_Product
-                  (Inner_Product (aFactor, B_Current, Left_Contraction),
-                   B_Current, Left_Contraction);
-                if not Is_Null (aFactor) then
-                    --  Normalize aFactor
-                    aFactor := Unit_E (aFactor);
-                    Add_Multivector (Factors, aFactor);
-                    --  Remove aFactor from B_Current
-                    B_Current :=
-                      Inner_Product (aFactor, B_Current, Left_Contraction);
-                end if;
-            end loop;
-            --  last factor = what is left of the input blade
-            --  B_Current is already normalized but
-            --  renormalize to remove any floating point round-off error
-            Add_Multivector (Factors, Unit_E (B_Current));
+                --  setup the 'current input blade'
+                B_Current := Geometric_Product (MV_B, 1.0 / Scale);
+
+                --  for all but one of the E_Array basis vectors:
+                for index in 1 .. Space_Dimension - 1 loop
+                    --  Project basis vector E_Array (index) onto B_Current
+                    --  (E(i) lc B_Current) inv(B_Current) but
+                    --  inv(B_Current) not required because Bc is a unit vector
+                    aFactor := New_Multivector (E_Array (index));
+                    aFactor := Inner_Product
+                      (Inner_Product (aFactor, B_Current, Left_Contraction),
+                       B_Current, Left_Contraction);
+                    if not Is_Null (aFactor) then
+                        --  Normalize aFactor
+                        aFactor := Unit_E (aFactor);
+                        Add_Multivector (Factors, aFactor);
+                        --  Remove aFactor from B_Current
+                        B_Current :=
+                          Inner_Product (aFactor, B_Current, Left_Contraction);
+                    end if;
+                end loop;
+                --  last factor = what is left of the input blade
+                --  B_Current is already normalized but
+                --  renormalize to remove any floating point round-off error
+                Add_Multivector (Factors, Unit_E (B_Current));
+            end if;
         end if;
         return  Factors;
 
@@ -196,30 +210,30 @@ package body Multivector_Utilities is
 
     --  --------------------------------------------------------------------
 
-   function Reflect (MV : Multivectors.Multivector;
-                     DP: Multivectors.Dual_Plane)
+    function Reflect (MV : Multivectors.Multivector;
+                      DP : Multivectors.Dual_Plane)
                      return Multivectors.Multivector is
         use Metric;
         use Multivectors;
         IDP : constant Multivector := General_Inverse (DP, C3_Metric);
-   begin
+    begin
         return Geometric_Product
           (-DP, Geometric_Product (MV, IDP, C3_Metric), C3_Metric);
-   end Reflect;
+    end Reflect;
 
-   --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
-   function Rotate (MV : Multivectors.Multivector;
-                    aVersor : Multivectors.TR_Versor)
-                     return Multivectors.Multivector is
+    function Rotate (MV : Multivectors.Multivector;
+                     aVersor : Multivectors.TR_Versor)
+                    return Multivectors.Multivector is
         use Metric;
         use Multivectors;
         IV : constant Multivector := General_Inverse (aVersor, C3_Metric);
-   begin
+    begin
         return Geometric_Product
           (aVersor, Geometric_Product (MV, IV, C3_Metric), C3_Metric);
-   end Rotate;
+    end Rotate;
 
-   --  ------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
 end Multivector_Utilities;

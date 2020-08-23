@@ -18,8 +18,8 @@ package body Shader_Manager is
         Direction : constant Singles.Vector3 := (0.0, 0.0, 1.0);
     begin
         Render_Program := Program_From
-          ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
+          ((Src ("src/shaders/vertex_shader_1_1.glsl", Vertex_Shader),
+           Src ("src/shaders/fragment_shader_1_1.glsl", Fragment_Shader)));
 
         Render_Uniforms.View_Matrix_ID :=
           Uniform_Location (Render_Program, "view_matrix");

@@ -104,6 +104,19 @@ package body Palet is
 
    --  ------------------------------------------------------------------------
 
+   function Magnitude return Boolean is
+   begin
+      return G_Draw_State.M_Draw_Mode.Magnitude;
+   end Magnitude;
+
+   --  ------------------------------------------------------------------------
+
+   function Orientation return Boolean is
+   begin
+      return G_Draw_State.M_Draw_Mode.Orientation;
+   end Orientation;
+
+   --  ------------------------------------------------------------------------
    function Outline_Colour (Palet_Data : Colour_Palet) return Color is
    begin
       return Palet_Data.Outline_Colour;
@@ -261,6 +274,20 @@ package body Palet is
    begin
       G_Draw_State.Point_Size := Point_Size;
    end Set_Point_Size;
+
+   --  ------------------------------------------------------------------------
+
+   function Shade return Boolean is
+   begin
+      return G_Draw_State.M_Draw_Mode.Shade;
+   end Shade;
+
+   --  ------------------------------------------------------------------------
+
+   function Wireframe return Boolean is
+   begin
+      return G_Draw_State.M_Draw_Mode.Wireframe;
+   end Wireframe;
 
    --  ------------------------------------------------------------------------
 

@@ -82,6 +82,17 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+    procedure Print_Blade_String_Array (Name : String;
+                                        BB_Array : Blade.Basis_Blade_Array;
+                                        MV_Names : Blade_Types.Basis_Vector_Names) is
+    begin
+        for index in BB_Array'Range loop
+            GA_Utilities.Print_Blade_String (Name, BB_Array (index), MV_Names);
+        end loop;
+    end Print_Blade_String_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_E3_Vector (Name : String; aVector : E3GA.E3_Vector) is
    begin
         Utilities.Print_Vector (Name, aVector);
@@ -105,6 +116,7 @@ package body GA_Utilities is
    end Print_E3_Vector_Array;
 
    --  ------------------------------------------------------------------------
+
    procedure Print_Float_3D (Name : String; aVector : GA_Maths.Float_3D) is
    begin
       if Name = "" then
@@ -277,12 +289,18 @@ package body GA_Utilities is
                                      MV_List : Multivectors.Multivector_List) is
       use Multivectors;
       MV_List_Length : constant Integer := List_Length (MV_List);
+      MV             : Multivector;
    begin
       New_Line;
-      Put_Line (Name & ":");
-      for index in 1 .. MV_List_Length loop
-         Print_Multivector ("", MV_Item (MV_List, index));
-      end loop;
+      if MV_List_Length < 1 then
+         Put_Line (Name & " is empty.");
+      else
+         Put_Line (Name & ":");
+         for index in 1 .. MV_List_Length loop
+            MV := Get_Multivector (MV_List, index);
+            Print_Multivector ("", MV);
+         end loop;
+      end if;
 
    exception
       when others =>
@@ -292,11 +310,39 @@ package body GA_Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Multivector_List_String
+      (Name : String; MV_List : Multivectors.Multivector_List;
+       MV_Names : Blade_Types.Basis_Vector_Names) is
+      use Multivectors;
+      MV_List_Length : constant Integer := List_Length (MV_List);
+      MV             : Multivector;
+   begin
+      New_Line;
+      if MV_List_Length < 1 then
+         Put_Line (Name & " is empty.");
+      else
+         Put_Line (Name & ", List Length" & Integer'Image (MV_List_Length) & ":");
+         for index in 1 .. MV_List_Length loop
+            MV := Get_Multivector (MV_List, index);
+            Print_Multivector_String ("", MV, MV_Names);
+         end loop;
+      end if;
+
+exception
+      when others =>
+         Put_Line ("An exception occurred in GA_Utilities.Print_Multivector_List_String.");
+         raise;
+   end Print_Multivector_List_String;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Multivector_String (Name : String; MV : Multivectors.Multivector;
                                        MV_Names : Blade_Types.Basis_Vector_Names) is
       use Ada.Strings.Unbounded;
    begin
-      Put_Line (Name & ":");
+      if Name /= "" then
+            Put (Name & ": ");
+      end if;
       Put_Line (To_String (Multivectors.Multivector_String (MV, MV_Names)));
    exception
       when others =>

@@ -63,6 +63,7 @@ package body GA_Draw is
         GL.Objects.Programs.Use_Program (Render_Program);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangle_Fan,
@@ -364,6 +365,7 @@ package body GA_Draw is
         end Draw_Part;
 
     begin
+        Shader_Manager.Set_Model_Matrix (Identity4);
         if (Method = Draw_Bivector_Circle)  and then
           (Palet_Type = Is_Null or
              Palet.Foreground_Alpha (Palet_Type) > 0.0000001) then
@@ -487,8 +489,9 @@ package body GA_Draw is
         --        Model_Matrix := Translation_Matrix * Model_Matrix;
         Set_Model_Matrix (Model_Matrix);
 
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        Array_Buffer.Bind (Vertex_Buffer);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Line_Strip,
                                               First => 0, Count => Num_Vertices);
@@ -664,22 +667,21 @@ package body GA_Draw is
     --  ------------------------------------------------------------------------
     --  Based on draw.cpp DrawState::drawSphere(e3ga::mv::Float normal)
     procedure Draw_Sphere (Render_Program : GL.Objects.Programs.Program;
-                           MV_Matrix      : GL.Types.Singles.Matrix4;
                            Normal         : GL.Types.Single) is
         use Geosphere;
-        Sphere  : constant Geosphere.Geosphere := Palet.Current_Sphere;
+        Sphere : constant Geosphere.Geosphere := Palet.Current_Sphere;
     begin
         Count := Count + 1;
         Geosphere.New_Sphere_List (Sphere);
         --  gsDraw(m_sphere, 0.0f);
         Put_Line ("GA_Draw.Draw_Sphere calling GS_Draw Count : " &
                     Integer'Image (Count));
-        Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere);
+        Geosphere.GS_Draw (Render_Program, Sphere);
 
         if Normal = 0.0 then
-            Draw_Sphere_List (Render_Program, MV_Matrix);
+            Draw_Sphere_List (Render_Program);
         else
-            Geosphere.GS_Draw (Render_Program, MV_Matrix, Sphere, Normal);
+            Geosphere.GS_Draw (Render_Program, Sphere, Normal);
         end if;
 
     exception
@@ -711,39 +713,39 @@ package body GA_Draw is
                               Scale             : float := 1.0;
                               Palet_Type        : Palet.Colour_Palet;
                               Method            : Method_Type := Draw_TV_Sphere) is
-        use GL.Types.Singles;
-        use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
-        use GA_Maths;
+--          use GL.Types.Singles;
+--          use Ada.Numerics.Elementary_Functions;  --  needed for fractional powers
+--          use GA_Maths;
         --        Vector_Base       : constant Singles.Vector3 := (0.0, 0.0, 0.0);
-        Scale_Sign        : Float;
-        P_Scale           : Float;
+--          Scale_Sign        : Float;
+--          P_Scale           : Float;
         Normal            : Single;
-        Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
-        Translation       : Singles.Vector3;
-        MV_Matrix         : Matrix4 := Identity4;
+--          Base_Coords       : constant GA_Maths.Float_3D := C3GA.Get_Coords (Base);
+--          Translation       : Singles.Vector3;
+--          MV_Matrix         : Matrix4 := Identity4;
     begin
-        if Scale >= 0.0 then
-            Scale_Sign := 1.0;
-        else
-            Scale_Sign := -1.0;
-        end if;
+--          if Scale >= 0.0 then
+--              Scale_Sign := 1.0;
+--          else
+--              Scale_Sign := -1.0;
+--          end if;
 
         if Method = Draw_TV_Parellelepiped or
           Method = Draw_TV_Parellelepiped_No_Vectors then
             Put_Line ("GA_Draw.Draw_Trivector, Draw_TV_Parellelepiped or Draw_TV_Parellelepiped_No_Vectors");
             Draw_Trivector (Render_Program, Base, Scale,
                             Palet_Type, Draw_TV_Sphere) ;
-            P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
-        else
-            P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
+--              P_Scale :=  Scale_Sign * ((Scale_Sign * Scale) ** 1.0 / 3.0);
+--          else
+--              P_Scale :=  Scale_Sign * ((Scale_Sign * Scale / (4.0 / 3.0 * GA_Maths.PI)) ** 1.0 / 3.0);
         end if;
 
-        if C3GA.Norm_e2 (Base) /= 0.0 then
-            Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
-            MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
-        end if;
-
-        MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
+--          if C3GA.Norm_e2 (Base) /= 0.0 then
+--              Translation := (Single (Base_Coords (1)), Single (Base_Coords (2)), Single (Base_Coords (3)));
+--              MV_Matrix := Maths.Translation_Matrix (Translation) * MV_Matrix;
+--          end if;
+--
+--          MV_Matrix := Maths.Scaling_Matrix (Single (P_Scale)) * MV_Matrix;
 
         case Method is
         when Draw_TV_Sphere =>
@@ -754,7 +756,7 @@ package body GA_Draw is
                 Normal := 0.0;
             end if;
             --  g_drawState.drawSphere (s)
-            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+            Draw_Sphere (Render_Program, Normal);
         when Draw_TV_Cross =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
             null;
@@ -829,7 +831,7 @@ package body GA_Draw is
                 Normal := 0.0;
             end if;
             --  g_drawState.drawSphere (s)
-            Draw_Sphere (Render_Program, MV_Matrix, Normal);
+            Draw_Sphere (Render_Program, Normal);
         when Draw_TV_Cross =>
             Put_Line ("GA_Draw.Draw_Trivector Draw_TV_Cross.");
             null;
