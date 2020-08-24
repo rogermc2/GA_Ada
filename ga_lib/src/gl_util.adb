@@ -20,11 +20,11 @@ package body GL_Util is
    --  Must be set correctly by caller of pick() to get correct distances returned
    Frustum_Near_Pos    : Single := 1.0;
    --  Must be set correctly by caller of pick() to get correct distances returned
-   Frustum_Far_Pos     : Single := 100.0;
+   Frustum_Far_Pos     : Single := -100.0;
    --  not required for pick(), provided for completenes
-   Width_Of_Frustum    : Single := 0.0;
+   Width_Of_Frustum    : Single := -1.0;
    --  not required for pick(), provided for completenes
-   Height_Of_Frustum   : Single := 0.0;
+   Height_Of_Frustum   : Single := -1.0;
    Size_Of_Pick_Window : Int := 4;
 
    --  ------------------------------------------------------------------
@@ -65,9 +65,13 @@ package body GL_Util is
    --  ------------------------------------------------------------------
 
    procedure Load_Pick_Matrix is
+      Viewport_Coords : GL.Types.Int_Array (1 .. 4);
    begin
       if Pick_Is_Active then
-         null;
+         GL.Window.Get_Viewport (Viewport_Coords (1),
+                                 Viewport_Coords (2),
+                                 Viewport_Coords (3),
+                                 Viewport_Coords (4));
       end if;
    end Load_Pick_Matrix;
 
